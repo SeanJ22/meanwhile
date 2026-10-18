@@ -3,7 +3,7 @@ import test from "node:test";
 import { readZipChoice, resolveStoredZip } from "../hooks/use-stored-zip.ts";
 import { recallCamera } from "../lib/map/camera-memory.ts";
 import { GET } from "../app/api/location/zip/route.ts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
 
 test("a link's ZIP overrides a tab's previous ZIP before the map resolves", async (t) => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
@@ -47,7 +47,7 @@ test("ZIP startup returns one source-resolved place, including postal ZIPs, with
     const response = await GET(new Request(`http://localhost/api/location/zip?zip=${zip}`));
     assert.equal(response.status, 200);
     const body = await response.text();
-    assert.deepEqual(JSON.parse(body), { location: lookupZcta(zip) });
+    assert.deepEqual(JSON.parse(body), { location: lookupZcta(zip), resolution: resolveZip(zip) });
     assert.ok(Buffer.byteLength(body) < 2000);
   }
   for (const query of ["", "?zip=8564", "?zip=85643&zip=85122", "?zip=85643&radius=150"]) {

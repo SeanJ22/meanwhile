@@ -1,24 +1,14 @@
 import { withReaderRoute, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
-import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
 
-export function readerRoute<A extends unknown[], R>(path: string, read: (...args: A) => Promise<R>,
-  families: readonly AuthorityFamily[] = []): (...args: A) => Promise<R> {
+export function readerRoute<A extends unknown[], R>(path: string, read: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
   return (...args) => withReaderRoute(path, async () => {
-    const { selection, geographyEdge } = await selectionForReader(args);
-    const { withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
-    return withReaderSelection(selection, () => withReaderAuthorityEdge(geographyEdge, async () => {
-      if (!families.length) return read(...args);
-      const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-      const edge = await ensureReaderAuthorityEdge(await readReaderManifest(), undefined, families);
-      return withReaderAuthorityEdge(edge, () => read(...args));
-    }));
+    const { selection } = await selectionForReader(args);
+    return withReaderSelection(selection, () => read(...args));
   });
 }
 async function selectionForReader(args: readonly unknown[]): Promise<{
   selection: ReaderSelection | undefined;
-  geographyEdge: import("../registry/runtime-edge.ts").ReaderAuthorityEdgeBundle | null;
 }> {
-  let geographyEdge: import("../registry/runtime-edge.ts").ReaderAuthorityEdgeBundle | null = null;
   const keys = new Set<string>();
   let lat: number | undefined, lng: number | undefined, zip: string | undefined;
   let question: string | undefined;
@@ -57,6 +47,11 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
       for (const [key, value] of Object.entries(arg)) collect(await value, key);
     }
   }
+  if (zip) {
+    const { stateForZip } = await import("../reader/national.ts");
+    const state = stateForZip(zip);
+    if (state) keys.add(`state:${state}`);
+  }
   const namedStates = question ? (await import("../ask/reader-officials.ts")).statesNamedInQuestion(question) : [];
   if (namedStates.length) {
     zip = undefined; lat = undefined; lng = undefined;
@@ -76,16 +71,13 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   let point: readonly [number, number] | undefined, divisions: readonly string[] | undefined;
   if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!) <= 90 && Math.abs(lng!) <= 180) {
     point = [lng!, lat!];
-    const { currentReaderAuthorityEdge, withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
-    geographyEdge = currentReaderAuthorityEdge();
-    if (!geographyEdge) {
-      const { ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-      geographyEdge = await ensureReaderAuthorityEdge(null, undefined, ["census-districts"]);
-    }
-    divisions = await withReaderAuthorityEdge(geographyEdge, async () => {
+    if (zip) {
+      const { readZipPlaces } = await import("../reader/national.ts");
+      divisions = (await readZipPlaces()).get(zip)?.ids ?? [];
+    } else {
       const { readerDivisionIdsAt } = await import("../registry/server.ts");
-      return readerDivisionIdsAt(lat!, lng!);
-    });
+      divisions = await readerDivisionIdsAt(lat!, lng!);
+    }
     for (const id of divisions) keys.add(id);
   }
   for (const id of [...keys]) {
@@ -104,5 +96,5 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   }))];
   const selection = keys.size || point || governmentWindow || states.length
     ? { keys, states, ...(point ? { point } : {}), ...(divisions ? { divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
-  return { selection, geographyEdge };
+  return { selection };
 }

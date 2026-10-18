@@ -1,385 +1,86 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { readerMeetingScope } from "@/lib/meetings/reader-scope";
-import { haversineKm } from "@/lib/geo/distance";
-import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
-import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
-import { nearestZctaAsync } from "@/lib/geo/zcta-table";
-import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
-import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
-import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedRegistryStates } from "@/lib/registry/runtime-read-model";
-import { snapshotSourceFor } from "@/lib/meetings/registry";
-import type { Meeting } from "@/lib/sources/types";
-import {
-  requireMeetingsProjection,
-  snapshotClientMeta,
-  type SnapshotClientMeta,
-} from "@/lib/meetings/snapshot";
-import {
-  emptyMeetingsRead,
-  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
-  prefetchReaderEdgeStates,
-  readReaderEdgeMeetings,
-  readReaderManifest,
-  READER_MANIFEST_CACHE_TAG,
-  READER_MAP_AUTHORITY_FAMILIES,
-  servedWholeFromReaderEdge,
-} from "@/lib/meetings/edge-serving";
-import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
-import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
-import { WIRED_STATUSES } from "@/lib/registry/coverage";
-import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, prepareCoverage } from "@/lib/registry/server";
-import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
-import { currentCommentAccess, readCommentAccessFacts, type CommentAccess } from "@/lib/registry/comment-access";
-import {
-  currentEverydayRoutingProjection,
-  readEverydayRoutingProjection,
-} from "@/lib/routing/everyday-data-plane";
-import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
+import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
+import { readerLocation, readerTerritory, territoryBodies, stateZipLocation } from "@/lib/reader/location";
+import { readStatePackage } from "@/lib/reader/state";
+import { readPlacePackage } from "@/lib/reader/place";
+import { stateCoverage } from "@/lib/reader/coverage";
+import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
+import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
+import { readReaderMeetingSettings } from "@/lib/meetings/reader-settings";
+import { readerMeetingScope } from "@/lib/meetings/reader-scope";
+import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
+import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { bindGovernmentBodies } from "@/lib/registration/listings";
+import { readPublicBodyAttempts } from "@/lib/registry/body-attempt-read";
+import { attemptsByFamily } from "@/lib/registry/attempt-families";
+import { lookupZcta } from "@/lib/geo/zcta";
 
-
-
-// The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
 
-
-const CDN_HELD = {
-  "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
-  "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
-  "Netlify-Vary": "query",
-  "Cache-Control": "public, max-age=0, must-revalidate",
-} as const;
-const NOT_HELD = { "Cache-Control": "no-store" } as const;
-
-/** The states a request will most likely read, known before its divisions are. Only a prefetch hint. */
-async function hintedStates(zip: string | null): Promise<string[]> {
-  const entry = await zipDivisionEntry(zip).catch(() => null);
-  return [...new Set((entry?.ids ?? []).map((id) => stateOfOcdId(id)).filter((s): s is string => s !== null))];
-}
-
-/** The nearest ZCTA to a point inside its own state, capped at 60 km: open water, deep wilderness or a far state line honestly has no zip. */
-async function nearestZipWithin60Km(lat: number, lng: number, state: string | undefined): Promise<string | null> {
-  const near = await nearestZctaAsync(lat, lng, state);
-  return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
-}
-
 export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
-  const timing = stageTimer();
-  const params = new URL(request.url).searchParams;
-
-  /* `Number(null)` is 0, not NaN: absent or malformed coordinates refuse with a stated reason (`lib/api/params.ts`), and an unknown parameter is named back. */
-  const KNOWN = ["lat", "lng", "radiusKm", "zip"] as const;
-  const unknown = rejectUnknown(params, KNOWN);
+  const timing = stageTimer(), params = new URL(request.url).searchParams;
+  const unknown = rejectUnknown(params, ["lat", "lng", "radiusKm", "zip"]);
   if (!unknown.ok) return refuse(unknown.error);
-
+  const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
+  if (!zipRead.ok) return refuse(zipRead.error);
+  if (zipRead.value && !params.has("lat") && !params.has("lng")) {
+    const location = lookupZcta(zipRead.value);
+    if (!location) return refuse("That ZIP could not be located");
+    params.set("lat", String(location.lat)); params.set("lng", String(location.lng));
+  }
   const latRead = numericInRange(params, "lat", -90, 90, "refuse");
   if (!latRead.ok) return refuse(latRead.error);
   const lngRead = numericInRange(params, "lng", -180, 180, "refuse");
   if (!lngRead.ok) return refuse(lngRead.error);
-  const lat = latRead.value;
-  const lng = lngRead.value;
-
   const radiusRead = numeric(params, "radiusKm", { default: DEFAULT_RADIUS_KM });
   if (!radiusRead.ok) return refuse(radiusRead.error);
-  if (radiusRead.value <= 0) {
-    return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
-  }
-  const radiusKm = Math.min(
-    radiusRead.value,
-    MAX_RADIUS_KM,
-  );
-
-  /* A malformed zip refuses rather than becoming null; an absent one means the reader panned. Read at the door so a refused request never runs the search. */
-  const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
-  if (!zipRead.ok) return refuse(zipRead.error);
-
-  /* Everything that reads neither the database nor the request's edge context starts here, before the authority families arrive. */
-  prefetchReaderGeography();
-  const pointStates = selectedRegistryStates();
-  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng, pointStates.length === 1 ? pointStates[0] : undefined).catch(() => null);
-
-  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
-
-  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
-  {
-    const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_MAP_AUTHORITY_FAMILIES)),
-    );
-    authorityEdge = await entering;
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
-  await timing.time("registry", () => readRegistryRuntimeProjection(selectedRegistryStates())).catch(error => {
-    console.warn("READER_REGISTRY_LOAD_FAILED", { states: selectedRegistryStates(), error: error instanceof Error ? error.message : String(error) });
-  });
-  if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
-
-  let commentAccess: readonly CommentAccess[] = [];
-  let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
-  let commentAccessDataDetail: string | null = null;
+  if (radiusRead.value <= 0) return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
+  const lat = latRead.value, lng = lngRead.value, radiusKm = Math.min(radiusRead.value, MAX_RADIUS_KM);
   try {
-    if (authorityEdge?.commentAccess) {
-      commentAccess = authorityEdge.commentAccess.value.records;
-      commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (${authorityEdge.commentAccess.versionId}).`;
-    } else {
-      if (process.env.NODE_ENV === "production") {
-        const { versionId } = await readCommentAccessFacts();
-        commentAccessDataState = "PROMOTED";
-        commentAccessDataDetail = `Comment rules read from live facts (${versionId}).`;
-      }
-      commentAccess = currentCommentAccess();
-    }
+    const location = await readerLocation(lat, lng, zipRead.value);
+    const stateRead = timing.time("state", () => readStatePackage(location.state));
+    const attemptsRead = readPublicBodyAttempts();
+    const territoryRead = readerTerritory(location.state);
+    const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
+      bodyIds: territoryBodies(lat, lng, await territoryRead) }));
+    const [state, place, territory, settings, attempts] = await Promise.all([
+      stateRead, placeRead, territoryRead, readReaderMeetingSettings(), attemptsRead,
+    ]);
+    const everyday = state.everyday;
+    const qualified = zipRead.value ? await stateZipLocation(state, zipRead.value) : null;
+    const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
+    const ids = point?.map(division => division.ocdId) ?? qualified?.entry.ids ?? location.divisionIds;
+    const divisionIds = new Set(ids);
+    const bodies = state.registry.registry.bodies;
+    const selectedBodyIds = new Set([...meetingBodyIds(bodies, divisionIds), ...territoryBodies(lat, lng, territory)]);
+    const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
+      selectedBodyIds, new Set(bodies.map(body => body.id)));
+    const coverage = stateCoverage(state, ids, lat, lng, place.meetings, place.bodies, [...place.divisions, ...qualified?.divisions ?? []], territory, result.meetings.length);
+    coverage.governments = bindGovernmentBodies(place.governments, state.registry.registry.bodies);
+    coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [state.state];
+    if (attempts.kind === "HELD") coverage.bodies = coverage.bodies.map(body => ({ ...body,
+      publicationAttempts: attemptsByFamily(attempts.rows.filter(attempt => attempt.bodyId === body.bodyId)) }));
+    const partial = new Set(qualified?.entry.partial ?? location.partial);
+    if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
+    const listingIdentity = withRegistryRuntimeProjection(state.registry, [state.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    return Response.json({
+      ...result, coverage, listingIdentity,
+      readerScope: readerMeetingScope({ heldMeetings: place.meetings, bodies: coverage.bodies, ownDivisionIds: divisionIds,
+        now: new Date(), listingIdentity: meetingListingIdentity(place.meetings, canonicalBodyIdentity) }),
+      commentAccess: place.bodies.flatMap(body => body.comment ?? []), commentAccessDataState: "PROMOTED",
+      everydayRouting: everyday?.kind === "PROMOTED" || everyday?.kind === "BOOTSTRAP" ? everyday.value : null,
+      everydayRoutingDataState: everyday?.kind ?? "STORE_UNREACHABLE",
+      snapshot: { version: 2, generatedAt: place.snapshot.generatedAt, failed: place.snapshot.sources.filter(source => !source.ok)
+        .map(source => ({ source: source.source, ocdIds: source.unreachableOcdIds ?? [] })) },
+      nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
+    }, { headers: { "Cache-Control": "public, max-age=0, must-revalidate",
+      "Netlify-CDN-Cache-Control": "public, s-maxage=30", "Netlify-Vary": "query", "Server-Timing": timing.header() } });
   } catch (error) {
-    // Comment rules are independent of meeting acquisition. Withhold only
-    // this optional family and let the canonical meetings projection answer.
-    commentAccessDataState = "STORE_UNREACHABLE";
-    commentAccessDataDetail = error instanceof Error ? error.message : "The comment-access projection could not be read.";
+    console.error("READER_PLACE_LOAD_FAILED", error);
+    return Response.json({ error: "The place's information could not be loaded", dataState: "STORE_UNREACHABLE" },
+      { status: 503, headers: { "Cache-Control": "no-store", "Server-Timing": timing.header() } });
   }
-  let everydayRouting: EverydayRoutingProjection | null = null;
-  let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
-  let everydayRoutingDataDetail: string | null = null;
-  try {
-    if (authorityEdge?.everydayRouting) {
-      everydayRouting = (authorityEdge.everydayRouting.value.projection as EverydayRoutingProjection | null) ?? null;
-      everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from its reader edge pointer (${authorityEdge.everydayRouting.versionId}).`;
-    } else if (process.env.NODE_ENV === "production") {
-      const read = await readEverydayRoutingProjection();
-      if (read.kind === "PROMOTED") {
-        everydayRouting = read.value;
-        everydayRoutingDataState = "PROMOTED";
-        everydayRoutingDataDetail = `Canonical everyday-routing projection ${read.metadata.versionId} was read.`;
-      } else if (read.kind === "NOT_RECORDED" || read.kind === "STORE_UNREACHABLE") {
-        everydayRoutingDataState = read.kind;
-        everydayRoutingDataDetail = read.detail;
-      } else {
-        everydayRoutingDataState = "INVALID";
-        everydayRoutingDataDetail = "The everyday-routing pointer did not resolve to a promoted projection.";
-      }
-    } else {
-      everydayRouting = currentEverydayRoutingProjection();
-    }
-  } catch (error) {
-    // Direct-owner routing is independent of meetings and every other source.
-    // Withhold only this optional projection; never reopen the tracked seed.
-    everydayRoutingDataState = "INVALID";
-    everydayRoutingDataDetail = error instanceof Error
-      ? error.message
-      : "The everyday-routing projection could not be read.";
-  }
-
-  const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
-
-  let divisionsAtPoint = new Set<string>();
-  /* Null when the lookup failed, never empty: `coverageAt` must not read a failed resolution as "no body governs here". */
-  let resolvedDivisions: Division[] | null = null;
-  try {
-    resolvedDivisions = await timing.time("divisions", () => divisionsAt(lat, lng));
-    divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
-  } catch (error) {
-    console.error("division lookup failed", error);
-  }
-
-
-  /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
-  const pointOwnDivisionIds = new Set(divisionsAtPoint);
-  if (zipRead.value && resolvedDivisions) {
-    const zipArea = timing.start("zipArea");
-    const areaIds = await divisionIdsForZipArea(
-      zipRead.value,
-      resolvedDivisions.map((d) => d.ocdId),
-      undefined, POINT_GEOMETRY_PLANS,
-    );
-    const zipDivisions = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
-    zipArea();
-    resolvedDivisions = zipDivisions;
-    divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
-  }
-
-  const bodyScope = (): [ReadonlySet<string>, ReadonlySet<string>] => {
-    const bodies = resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [];
-    return [meetingBodyIds(bodies, divisionsAtPoint), new Set(bodies.map(({ id }) => id))];
-  };
-
-  const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
-  let result;
-  let snapshotMeta: SnapshotClientMeta | null = null;
-  // Whether the meetings came whole from the published edge: the first of the
-  // conditions for letting the CDN hold this answer (`CDN_HELD`).
-  let meetingsWholeFromEdge = false;
-  let heldMeetings: readonly Meeting[] = [];
-  try {
-    if (meetingSourceName === "snapshot") {
-      const readerStates = resolvedDivisions
-        ? [...new Set(
-            resolvedDivisions
-              .map((d) => stateOfOcdId(d.ocdId))
-              .filter((s): s is string => s !== null),
-          )]
-        : [];
-      const read = resolvedDivisions === null ? emptyMeetingsRead() : await timing.time("meetings", () => readReaderEdgeMeetings({
-        manifest: edgeManifest,
-        includeAgenda: false,
-        ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ocdIds: resolvedDivisions!.map(division => division.ocdId),
-      }));
-      meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
-      const snapshot = requireMeetingsProjection(read);
-      heldMeetings = snapshot.meetings;
-      result = await timing.time("search", () => searchMeetings(
-        lat,
-        lng,
-        radiusKm,
-        new Date(),
-        divisionsAtPoint,
-        snapshotSourceFor(snapshot),
-        undefined,
-        ...bodyScope(),
-      ));
-      snapshotMeta =
-        (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") && read.value.sources.length > 0
-          ? snapshotClientMeta(read.value, read)
-          : null;
-    } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined, ...bodyScope());
-      heldMeetings = result.meetings;
-    }
-  } catch (error) {
-    if (error instanceof CivicDataStoreUnavailableError) {
-      return Response.json(
-        {
-          error: "the meetings corpus is not available right now",
-          dataState: "STORE_UNREACHABLE",
-          code: error.result.code,
-          detail: error.result.detail,
-        },
-        { status: 503, headers: { ...NOT_HELD, "Server-Timing": timing.header() } },
-      );
-    }
-    return Response.json(
-      {
-        error: "the meetings projection could not be validated",
-        dataState: "STORE_UNREACHABLE",
-        code: "MEETINGS_PROJECTION_INVALID",
-        detail: error instanceof Error ? error.message : "unknown meetings projection error",
-      },
-      { status: 503, headers: { ...NOT_HELD, "Server-Timing": timing.header() } },
-    );
-  }
-
-  let coverage = null;
-  try {
-    await coverageReady;
-    coverage = await timing.time("coverage", () => coverageAt(
-      lat,
-      lng,
-      result.meetings.length,
-      resolvedDivisions ?? undefined,
-      heldMeetings,
-    ));
-  } catch (error) {
-    console.error("coverage lookup failed", error);
-  }
-
-  /* On a typed zip, each body carries whether its territory covers the whole zip. Absent means not applicable, never certain. */
-  /* A body arriving only through the widening must be `GOVERNING`; bodies on the point's own divisions are untouched. */
-  if (coverage && zipRead.value) {
-    const before = coverage.bodies.length;
-    const kept = coverage.bodies.filter(
-      (body) =>
-        !body.ocdId || pointOwnDivisionIds.has(body.ocdId) || body.bodyClass === "GOVERNING",
-    );
-    if (kept.length !== before) {
-      /* The counts are recomputed from the kept array, never carried over. */
-      /* `WIRED_STATUSES` is imported, never retyped. */
-      const governingKept = kept.filter((b) => b.bodyClass === "GOVERNING");
-      coverage = {
-        ...coverage,
-        bodies: kept,
-        counts: {
-          ...coverage.counts,
-          total: kept.length,
-          withSource: kept.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length,
-          withoutSource: kept.filter((b) => !WIRED_STATUSES.has(b.coverageStatus)).length,
-          lookedAt: kept.filter((b) => b.lookedAt).length,
-          governing: {
-            total: governingKept.length,
-            withSource: governingKept.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length,
-          },
-        },
-      };
-    }
-  }
-
-  if (coverage && zipRead.value) {
-    const certainty = await zipCertainty(zipRead.value);
-    if (certainty) {
-      coverage = {
-        ...coverage,
-        bodies: coverage.bodies.map((body) =>
-          body.ocdId && needsPill(certainty.certaintyOf(body.ocdId))
-            ? { ...body, couldGovern: true }
-            : body,
-        ),
-      };
-    }
-  }
-
-  const meta = snapshotMeta;
-  const snapshot = meta
-    ? {
-        version: 2 as const,
-        generatedAt: meta.generatedAt,
-        ...(meta.carried ? { carried: meta.carried } : {}),
-        failed: meta.sources
-          .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
-          .map((s) => ({
-            source: s.source,
-            ocdIds: s.unreachableOcdIds ?? [],
-          })),
-      }
-    : null;
-
-  const nearZip: string | null = await nearZipRead;
-  /* The search log is written by the client's `sendBeacon` to `/api/log`, never on the response path. */
-
-  /* The division ids the point resolved into; `null` when the resolution failed, which is not an empty list. */
-  const governingOcdIds = resolvedDivisions
-    ? resolvedDivisions.map((d) => d.ocdId)
-    : null;
-
-  /* Which of those divisions the ZIP could not settle, measured on `nearZip`; `null` where the zip is outside the committed geometry. */
-  const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
-
-  const held =
-    meetingsWholeFromEdge &&
-    resolvedDivisions !== null &&
-    coverage !== null &&
-    commentAccessDataState !== "STORE_UNREACHABLE" &&
-    everydayRoutingDataState !== "STORE_UNREACHABLE" &&
-    everydayRoutingDataState !== "INVALID";
-
-  return Response.json({
-    ...result,
-    readerScope: readerMeetingScope({ heldMeetings: heldMeetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? divisionsAtPoint : null, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings, canonicalBodyIdentity) }),
-    commentAccess,
-    commentAccessDataState,
-    commentAccessDataDetail,
-    everydayRouting,
-    everydayRoutingDataState,
-    everydayRoutingDataDetail,
-    listingIdentity: meetingListingIdentity(result.meetings, canonicalBodyIdentity),
-    coverage,
-    snapshot,
-    nearZip,
-    governingOcdIds,
-    partialOcdIds,
-  }, {
-    headers: { ...(held ? CDN_HELD : NOT_HELD), "Server-Timing": timing.header() },
-  });
 });

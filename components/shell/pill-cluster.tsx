@@ -21,6 +21,7 @@ export function PillCluster({
   onOpenPop,
   onOpenGoverns,
   onOpenBallot,
+  prefetchReady = false,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
@@ -35,6 +36,8 @@ export function PillCluster({
   onOpenGoverns: () => void;
   /** Ballot opens as the large card (an intercepted route); close any popup first. */
   onOpenBallot?: () => void;
+  /** Background ballot reads wait until this place's state and local reads finish. */
+  prefetchReady?: boolean;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
   const ballotParams = new URLSearchParams();
@@ -54,6 +57,7 @@ export function PillCluster({
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
           href={ballotHref}
+          prefetch={prefetchReady ? null : false}
           className="mw-nav-seg mw-nav-ballot"
           onClick={onOpenBallot}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}

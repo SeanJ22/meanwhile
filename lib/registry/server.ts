@@ -1,3 +1,9 @@
+import { nearestZcta } from "../geo/zcta.ts";
+import { stateForZip } from "../reader/national.ts";
+import { readStatePackage } from "../reader/state.ts";
+import { readPlacePackage } from "../reader/place.ts";
+import { stateCoverage } from "../reader/coverage.ts";
+import { readerLocation, readerTerritory, territoryBodies } from "../reader/location.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -14,29 +20,24 @@ import {
 } from "../officials/lookup.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
-import { readPublicBodyAttempts, type PublicBodyAttempt } from "./body-attempt-read.ts";
-import { attemptsByFamily } from "./attempt-families.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterGapForBody, rosterHoldersForBody } from "./body-rosters.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterHoldersForBody } from "./body-rosters.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
-import { membersOfBody } from "./body-membership.ts";
-import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
 import { personIdentityKeys, statePeopleScopeForDivision, statePeopleScopeForId, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 
 import {
   stateLegislatorCoverageAuthority,
-  summarizeCoverage,
   type CoverageSummary,
   type StateLegislatorCoverageAuthority,
 } from "./coverage.ts";
 import { divisionIdsAt, divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
+import { currentReaderAuthorityEdge, currentCampaignSitesEdge, currentCommentAccessEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
@@ -47,7 +48,6 @@ import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
-import { stateOfficesForStates } from "../reference/state-offices.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
@@ -89,7 +89,7 @@ export class RegistryHoldingReadError extends Error {
 
 const loadedCaches = new WeakMap<Registry, { authorityKey: string; value: Promise<Loaded> }>();
 const registryCaches = new WeakMap<Registry, Promise<RegistryLoaded>>();
-let geometryRead: Promise<GeoFeature[]> | null = null;
+const geometryReads = new Map<string, Promise<GeoFeature[]>>();
 let territoryRead: Promise<BodyTerritoryFile> | null = null;
 
 function held<T>(current: Promise<T> | null, start: () => Promise<T>, keep: (value: Promise<T> | null) => void): Promise<T> {
@@ -100,8 +100,13 @@ function held<T>(current: Promise<T> | null, start: () => Promise<T>, keep: (val
   return read;
 }
 
-function resolverGeometry(): Promise<GeoFeature[]> {
-  return held(geometryRead, readResolverGeometry, (read) => { geometryRead = read; });
+function resolverGeometry(states: readonly string[] = selectedRegistryStates()): Promise<GeoFeature[]> {
+  const key = [...states].sort().join("|");
+  const held = geometryReads.get(key);
+  if (held) return held;
+  const read = readResolverGeometry(states).catch(error => { geometryReads.delete(key); throw error; });
+  geometryReads.set(key, read);
+  return read;
 }
 
 function bodyTerritories(): Promise<BodyTerritoryFile> {
@@ -125,7 +130,7 @@ async function loadRegistry(): Promise<RegistryLoaded> {
   };
 }
 
-async function readResolverGeometry(): Promise<GeoFeature[]> {
+async function readResolverGeometry(states: readonly string[]): Promise<GeoFeature[]> {
   const root = process.cwd();
   const stateCodes = new Set(Object.values(FIPS_TO_STATE).map(state => state.postal.toLowerCase()));
 
@@ -133,7 +138,8 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
   const manifest = JSON.parse(
     await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
   ) as { files: string[] };
-  const names = manifest.files;
+  const selected = new Set(states.map(state => state.toLowerCase()));
+  const names = manifest.files.filter(name => !name.startsWith("data/states/") || selected.has(name.split("/")[2]));
   // Read every geometry file concurrently; feature order does not matter. Literal roots keep dynamic
   // reads bounded in the server deployment trace.
   const perFile = await Promise.all(
@@ -154,7 +160,10 @@ async function readResolverGeometry(): Promise<GeoFeature[]> {
       } else {
         throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
       }
-      return (JSON.parse(raw) as { features: GeoFeature[] }).features;
+      return (JSON.parse(raw) as { features: GeoFeature[] }).features.filter(feature => {
+        const state = /\/(?:state|territory|district):([a-z]{2})(?:\/|$)/.exec(feature.properties.ocdId)?.[1];
+        return state === undefined || selected.has(state);
+      });
     }),
   );
   return perFile.flat();
@@ -460,7 +469,9 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
 }
 
 export async function readerDivisionIdsAt(lat: number, lng: number): Promise<string[]> {
-  return divisionIdsAt([lng, lat], await resolverGeometry());
+  const zip = nearestZcta(lat, lng)?.zip;
+  const state = zip ? stateForZip(zip) : null;
+  return divisionIdsAt([lng, lat], await resolverGeometry(state ? [state] : selectedRegistryStates()));
 }
 
 export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,
@@ -496,7 +507,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   // state identity never causes a federal/registry read or a name join.
   const officialStateScope = statePeopleScopeForId(id,stateHint);
   if (officialStateScope) {
-    const held = await heldStateLegislatorsEdgeFirst(officialStateScope);
+    const held = await heldStatePeople(officialStateScope, "PERSON");
     const matches = held?.seats.filter((holder) => personIdentityKeys(holder).has(id)) ?? [];
     return matches.length === 1 ? matches[0] : null;
   }
@@ -537,7 +548,7 @@ function suppliedOfficialPhotos(): PhotoIndex {
 export async function allSeatHolders(divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const states = [...new Set(divisionIds.map(statePeopleScopeForDivision).filter((scope): scope is StatePeopleJurisdiction => scope !== null))];
   const [base, ...stateReads] = await Promise.allSettled([loaded(divisionIds.length ? statesForRegistryDivisions(divisionIds) : selectedRegistryStates()).then(value => [...value.officialsById.values()]),
-    ...states.map(async scope => [...(await heldStateLegislatorsEdgeFirst(scope))?.seats ?? []].flatMap(holder => {
+    ...states.map(async scope => [...(await heldStatePeople(scope, "PERSON"))?.seats ?? []].flatMap(holder => {
       const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
       return selected ? [selected] : [];
     }))]);
@@ -571,7 +582,7 @@ export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
   return readDivisionRepresentatives(ocdId, {
-    statePeople: heldStateLegislatorsEdgeFirst,
+    statePeople: heldStatePeople,
     federal: async () => {
       await settleFederalDirectoryRead(statesForRegistryDivisions([ocdId]));
       return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
@@ -580,8 +591,8 @@ export async function seatHoldersForDivision(
   });
 }
 
-async function heldStateLegislatorsEdgeFirst(scope: StatePeopleJurisdiction) {
-  const read = await settleStateLegislatorsRead(scope);
+async function heldStatePeople(scope: StatePeopleJurisdiction, mode: "DIVISION" | "PERSON" = "DIVISION") {
+  const read = await settleStateLegislatorsRead(scope, mode);
   if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return null;
   return heldOfficialStateLegislatorsFromRead(scope, read);
@@ -591,7 +602,14 @@ export type CoverageStateLegislatorReader = (
   scope: StatePeopleJurisdiction,
 ) => ReturnType<typeof readStatePeopleProjection>;
 
-const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
+const settleStateLegislatorsRead = async (scope: StatePeopleJurisdiction, mode: "DIVISION" | "PERSON" = "DIVISION"): ReturnType<CoverageStateLegislatorReader> => {
+  if (!currentReaderAuthorityEdge()) {
+    const state = await readStatePackage(scope.slice(3)), read = state.peopleRead;
+    if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return read;
+    const value = { ...read.value, roster: (mode === "DIVISION" ? state.legislativePeople : state.people) ?? read.value.roster };
+    primeStatePeopleProjection(value);
+    return { kind: "BOOTSTRAP", value, metadata: read.metadata, detail: "The state's current people, loaded together in memory." };
+  }
   const served = await currentStateLegislatorsEdge()?.load(scope).catch(() => null);
   if (served?.value === null) {
     return { kind: "NOT_RECORDED", value: null, detail: "No state roster is published for this jurisdiction.",
@@ -691,59 +709,15 @@ export async function coverageAt(
   resolvedDivisions?: Division[],
   heldMeetings: readonly Meeting[] = [],
 ): Promise<CoverageSummary> {
-  // Optional metadata starts beside the existing coverage read. Edge-only
-  // requests never open a new database path just to annotate a body card.
-  const attemptRead = currentReaderAuthorityEdge()?.edgeOnly
-    ? Promise.resolve({ kind: "UNREAD" as const }) : readPublicBodyAttempts();
-  const { features, divisionsById, registry, officials, territory, federalAvailable } = await loaded();
-  const exactDivisions = resolvedDivisions ?? resolveDivisionsAt([lng, lat], features, divisionsById);
-  // The governments registered on these divisions' states, beside the reviewed bodies.
-  const divisionIds = exactDivisions.map((d) => d.ocdId);
-  const [registered, governmentListings] = await Promise.all([
-    registrationsFor(divisionIds).catch(() => []), governmentListingsForDivisions(divisionIds),
+  const location = await readerLocation(lat, lng);
+  const state = statesForRegistryDivisions(resolvedDivisions?.map(division => division.ocdId) ?? [])[0] ?? location.state;
+  const ids = resolvedDivisions?.map(division => division.ocdId) ?? await readerDivisionIdsAt(lat, lng);
+  const territory = await readerTerritory(state);
+  const [bundle, place] = await Promise.all([
+    readStatePackage(state), readPlacePackage({ state, divisionIds: ids, bodyIds: territoryBodies(lat, lng, territory) }),
   ]);
-  const bodies = registered.length === 0 ? registry.bodies : [...registry.bodies, ...registered.flatMap((r) => r.layer.bodies)];
-  // A registered body is titled by its division (its name is null until sourced), so the summary needs the
-  // registered divisions too, or the card would render a nameless, labelless row.
-  const divisions = registered.length === 0
-    ? divisionsById
-    : new Map<string, Division>([...divisionsById, ...registered.flatMap((r) => [...r.divisionsById])]);
-  const stateLegislators = await settleCoverageStateLegislators(exactDivisions, officials);
-  const coverage = summarizeCoverage(
-    [lng, lat],
-    features,
-    divisions,
-    bodies,
-    meetingCount,
-    stateLegislators.officials,
-    exactDivisions,
-    territory,
-    stateLegislators.authorities,
-    heldMeetings,
-  );
-  const publicAttempts = await attemptRead;
-  const attemptsByBody = new Map<string, PublicBodyAttempt[]>();
-  if (publicAttempts.kind === "HELD") for (const attempt of publicAttempts.rows) {
-    attemptsByBody.set(attempt.bodyId, [...(attemptsByBody.get(attempt.bodyId) ?? []), attempt]);
-  }
-  return {
-    ...coverage,
-    governments: bindGovernmentBodies(governmentListings.records, registry.bodies),
-    governmentInventoryStates: governmentListings.states,
-    stateOffices: stateOfficesForStates(governmentListings.states),
-    governmentInventoryUnavailableStates: governmentListings.unavailableStates,
-    federalDirectoryUnavailable: !federalAvailable,
-    bodies: coverage.bodies.map((body) => {
-      const gap = rosterGapForBody(body.bodyId);
-      return {
-        ...body,
-        ...(publicAttempts.kind === "HELD" ? { publicationAttempts: attemptsByFamily(attemptsByBody.get(body.bodyId) ?? []) } : {}),
-        readerRoster: {
-          members: membersOfBody(body.bodyId).members,
-          gaps: gap === null ? [] : [gap],
-          officePhone: officePhoneForBody(body.bodyId),
-        },
-      };
-    }),
-  };
+  const meetings = heldMeetings.length ? heldMeetings : place.meetings;
+  const coverage = stateCoverage(bundle, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
+  return { ...coverage, governments: bindGovernmentBodies(place.governments, bundle.registry.registry.bodies),
+    governmentInventoryUnavailableStates: place.registrationHeld ? [] : [state] };
 }

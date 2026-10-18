@@ -1,6 +1,6 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { directoryFor } from "@/lib/officials/directory";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
+import { readNationalShelf } from "@/lib/reader/national";
+import { readStatePackage } from "@/lib/reader/state";
 import { selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
@@ -49,11 +49,12 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   }
 
   const places = selectedRegistryStates();
-  if (!places.length) return refuse("a member of Congress is read from their place's record; add state=<postal code> (e.g. state=AZ)");
   let found;
   try {
-    await refreshFederalDirectoryFromPromoted(places);
-    found = directoryFor(member);
+    const model = places.length ? (await readStatePackage(places[0])).federal : (await readNationalShelf()).congress;
+    const entry = model?.directory.byMember[member.slice(9)];
+    found = entry && model ? { source: model.directory.source, entry,
+      committeeJurisdictions: model.directory.committees } : null;
   }
   catch {
     return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },
@@ -72,9 +73,9 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
       districtOffices: found.entry.districtOffices,
       committees: found.entry.committees.map((seat) => ({
         ...seat,
-        ...found.committeeJurisdictions[seat.committeeId],
+        ...(found.committeeJurisdictions[seat.committeeId] ? { jurisdiction: found.committeeJurisdictions[seat.committeeId].jurisdiction, jurisdictionSource: found.committeeJurisdictions[seat.committeeId].jurisdictionSource, url: found.committeeJurisdictions[seat.committeeId].url } : {}),
       })),
     },
     { headers: { "Cache-Control": "private, no-store" } },
   );
-}, ["federal-directory","member-offices","state-legislators"]);
+});

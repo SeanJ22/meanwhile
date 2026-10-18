@@ -46,4 +46,4 @@ export const POST = readerRoute("/api/ballot/scope", async function POST(request
   }
   if (failed) return Response.json({ ok: false }, { status: 503, headers: NO_STORE });
   return Response.json({ ok: true, contestIds: [...contestIds] }, { headers: NO_STORE });
-}, ["census-districts", "ballot-contests"]);
+});

@@ -1,12 +1,7 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
-import {
-  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
-  READER_MANIFEST_CACHE_TAG,
-  READER_MAP_AUTHORITY_FAMILIES,
-} from "@/lib/meetings/edge-serving";
+import { READER_DATA_CACHE_TAG } from "@/lib/meetings/edge-serving";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
 
 
@@ -15,7 +10,7 @@ export const runtime = "nodejs";
 
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
-  "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
+  "Netlify-Cache-Tag": READER_DATA_CACHE_TAG,
   "Cache-Control": "public, max-age=0, must-revalidate",
 } as const;
 
@@ -39,16 +34,7 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   }
 
   const timing = stageTimer();
-  // The registry load reads the committed geometry too; start it beside the edge fetch.
   prefetchReaderGeography();
-  // The reader authority edge, entered in this handler's own execution
-  // before any edge-aware read below (see the header note).
-  {
-    const edge = await timing.time("authority", () =>
-      ensureReaderAuthorityEdge(null, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_MAP_AUTHORITY_FAMILIES)),
-    );
-    if (edge) enterReaderAuthorityEdge(edge);
-  }
 
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 

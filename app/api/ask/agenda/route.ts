@@ -162,4 +162,4 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     { error: "this route answers one meeting's agenda; pass meetingId" },
     { status: 400 },
   );
-}, ["registry-runtime"]);
+});

@@ -1,6 +1,5 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
@@ -26,10 +25,7 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
 
   let read;
   try {
-    const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-    const authority = await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, ["registry-runtime", "meeting-outcomes"]));
-    if (authority) enterReaderAuthorityEdge(authority);
-    read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, manifest, window: "HELD" });
+    read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, window: "HELD" });
   } catch (error) {
     return Response.json(
       {

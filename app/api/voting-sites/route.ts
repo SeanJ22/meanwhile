@@ -2,8 +2,6 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { parseCensusGeographies } from "@/lib/geo/census-geocoder";
 import { currentRepresentationSelection } from "@/lib/census-geography/selection";
 import { divisionsForCensusGeographies, divisionsByOcdIds } from "@/lib/registry/server";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { loadVotingSites, readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { answerVotingSites, votingJurisdictionCovers, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
@@ -33,10 +31,6 @@ export const POST = readerRoute("/api/voting-sites", async function POST(request
 
   const isZip = /^\d{5}$/.test(address);
   const geocoded = isZip ? Promise.resolve(null) : censusVotingAddress(address, requestFetch);
-  {
-    const edge = await ensureReaderAuthorityEdge(null, undefined, ["census-districts", "voting-sites"]).catch(error => holdReaderAuthorityEdge(error, ["census-districts", "voting-sites"]));
-    if (edge) enterReaderAuthorityEdge(edge);
-  }
   try {
     let place: VotingReaderPlace;
     let readerAddress: VotingAddressInput = { address };

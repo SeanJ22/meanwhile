@@ -3,10 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
-import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
+import { lookupZcta, resolveZip, COVERAGE_IS_COMPLETE, CENTROID_SOURCE } from "../lib/geo/zcta.ts";
 import { lookupIn, resolveIn } from "../lib/geo/zcta-core.ts";
-import { resolveZipAsync } from "../lib/geo/zcta-table.ts";
+import { resolveReaderZip } from "../lib/reader/zip.ts";
+import { GET as zipLocation } from "../app/api/location/zip/route.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
+import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 import { areaLookup, buildPostalTable } from "../lib/geo/build-postal-table.ts";
 import type { Feature } from "../lib/geo/shapefile.ts";
@@ -18,6 +20,26 @@ import { locateAddressInZip, parseCensusPoint, sampleStreetPoints } from "../lib
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${name}`, import.meta.url), "utf8");
 
+test("server module contexts share the complete unchanged postal table", async () => {
+  const second = await import(new URL("../lib/geo/postal.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/postal.ts");
+  assert.equal(second.postalTable(), postalTable());
+  assert.deepEqual(postalTable(), postalFile.zips);
+});
+
+test("server module contexts retain complete Census ZIP coordinates and source metadata", async () => {
+  const second = await import(new URL("../lib/geo/zcta.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/zcta.ts");
+  assert.deepEqual(CENTROID_SOURCE, { url: centroidFile.source, org: centroidFile.sourceOrg, vintage: centroidFile.vintage });
+  assert.deepEqual(second.CENTROID_SOURCE, CENTROID_SOURCE);
+  assert.equal(COVERAGE_IS_COMPLETE, centroidFile.complete === true);
+  assert.equal(second.COVERAGE_IS_COMPLETE, COVERAGE_IS_COMPLETE);
+  for (const [zip, point] of Object.entries(centroidFile.centroids)) {
+    const location = second.lookupZcta(zip);
+    assert.ok(location, zip);
+    assert.deepEqual([location.lat, location.lng], point, zip);
+    assert.deepEqual(location, lookupZcta(zip), zip);
+  }
+});
+
 test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA table", () => {
   const governments = JSON.parse(readFileSync(new URL("../data/derived/zip-governments.json", import.meta.url), "utf8")) as { zips: Record<string, unknown> };
   const zips = Object.keys(governments.zips);
@@ -28,7 +50,8 @@ test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA tabl
   assert.throws(() => assertGovernmentZipCoverage({}, zips), /omits 33791/);
 });
 
-test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async () => {
+test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async (t) => {
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => zipLocation(input instanceof Request ? input : new Request(new URL(input, "http://localhost"))));
   const centroids = parseGazetteer(fixture("gazetteer.tsv"));
   const geonames = parseGeoNames(fixture("geonames.tsv"));
   const types = parsePostalTypes(fixture("postal-types.csv"));
@@ -36,9 +59,9 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
   const table = buildPostalTable(centroids, geonames, types, boundaries);
   for (const zip of Object.keys(geonames)) {
     assert.deepEqual(table[zip], (postalFile.zips as unknown as PostalTable)[zip], zip);
-    const sync = resolveZip(zip), asyncResult = await resolveZipAsync(zip);
+    const sync = resolveZip(zip), asyncResult = await resolveReaderZip(zip);
     assert.ok(sync.ok, zip);
-    assert.deepEqual(asyncResult, sync, "server and lazy browser lookup agree");
+    assert.deepEqual(asyncResult, sync, "resident server table and browser RPC agree");
     assert.deepEqual(lookupZcta(zip), sync.centroid);
   }
   assert.equal(table["73960"][2], "po-box");

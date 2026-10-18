@@ -97,7 +97,7 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
 
   // FEDERAL — the House seat (district scope) before senators
   // (statewide scope).
-  for (const seat of coverage.seats.filter((s) => s.divisionType === "cd")) {
+  for (const seat of coverage.seats.filter((s) => s.divisionType === "cd" || s.divisionType === "country")) {
     for (const holder of seat.representatives) {
       push(federal, holder, seat.label, "national", seat.ocdId);
     }

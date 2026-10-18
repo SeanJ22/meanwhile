@@ -109,15 +109,7 @@ import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction }
 import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
-import {
-  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
-  READER_BALLOT_AUTHORITY_FAMILIES,
-} from "@/lib/meetings/edge-serving";
-import {
-  enterReaderAuthorityEdge,
-  withReaderAuthorityEdge,
-  type ReaderAuthorityEdgeBundle,
-} from "@/lib/registry/runtime-edge";
+
 import {
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
@@ -237,8 +229,8 @@ async function IncumbentName({ name, context, holder }: {
     : <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>;
 }
 
-function withBallotReader<T>(edge: ReaderAuthorityEdgeBundle | null, selection: ReaderSelection | undefined, read: () => T): T {
-  return withReaderAuthorityEdge(edge, () => withReaderSelection(selection, read));
+function withBallotReader<T>(selection: ReaderSelection | undefined, read: () => T): T {
+  return withReaderSelection(selection, read);
 }
 
 async function CandidateFunding({
@@ -246,26 +238,24 @@ async function CandidateFunding({
   targetKey,
   context,
   available,
-  readerEdge,
   readerSelection,
 }: {
   divisions: readonly string[];
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
   available: boolean;
-  readerEdge: ReaderAuthorityEdgeBundle | null;
   readerSelection: ReaderSelection | undefined;
 }) {
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
   try {
-    answer = await withBallotReader(readerEdge, readerSelection, async () => fundingAnswerForTarget(targetKey));
+    answer = await withBallotReader(readerSelection, async () => fundingAnswerForTarget(targetKey));
   } catch {
     return unavailableHolding("federal campaign-finance");
   }
   let partial = false;
   try {
-    const settled = await withBallotReader(readerEdge, readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
+    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
     partial = settled.kind === "ANSWER" && settled.holdingStatus === "PARTIAL";
   } catch {
     partial = true;
@@ -309,7 +299,6 @@ async function BallotBattlecard({
   contestId,
   context,
   authorityAvailability,
-  readerEdge,
   readerSelection,
 }: {
   name: string;
@@ -336,7 +325,6 @@ async function BallotBattlecard({
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
 
-  readerEdge: ReaderAuthorityEdgeBundle | null;
   readerSelection: ReaderSelection | undefined;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
@@ -355,7 +343,7 @@ async function BallotBattlecard({
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = await withBallotReader(readerEdge, readerSelection, async () =>
+      positions = await withBallotReader(readerSelection, async () =>
         positionsFor(state, targetKey, null, await readStanceTopics(), recordHolder?.id));
     } catch {
       positionsUnavailable = true;
@@ -367,12 +355,12 @@ async function BallotBattlecard({
     (authorityAvailability.stateMoneyApplicable && !authorityAvailability.stateMoney));
   if (!federal) {
     try {
-      stateMoney = await withBallotReader(readerEdge, readerSelection, async () => stateMoneyForCard(targetKey, contestId).records);
+      stateMoney = await withBallotReader(readerSelection, async () => stateMoneyForCard(targetKey, contestId).records);
     } catch {
       stateMoneyUnavailable = true;
     }
   }
-  const filingContact = await withBallotReader(readerEdge, readerSelection, async () => {
+  const filingContact = await withBallotReader(readerSelection, async () => {
     const candidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
     return candidacyId ? candidateContactForCandidacy(state, candidacyId) : null;
   });
@@ -424,7 +412,7 @@ async function BallotBattlecard({
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
-          <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} readerSelection={readerSelection} />
+          <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />
         ) : <>{stateMoneyUnavailable && unavailableHolding("state campaign-finance")}{stateCandidateFunding(stateMoney, context)}</>,
 
         record: !officeholdersAvailable ? (
@@ -485,11 +473,6 @@ export const metadata: Metadata = {
   description: "The contests on your ballot, the candidates in them, and where to vote.",
 };
 
-async function readBallotReaderEdge() {
-  const edge = await ensureReaderAuthorityEdge(null, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_BALLOT_AUTHORITY_FAMILIES));
-  return { edge };
-}
-
 export default readerRoute("/ballot", async function BallotPage({
   searchParams,
 }: {
@@ -507,16 +490,10 @@ export default readerRoute("/ballot", async function BallotPage({
   const ballotLoaderFailures: string[] = [];
 
   let askOcdIds: string[] = [];
-  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve({ edge: null });
-  const { edge } = await readerEdgeRead;
-  if (edge) enterReaderAuthorityEdge(edge);
   const readerSelection = currentReaderSelection();
   const startRead = ballotAuxiliaryReads();
-  let certainty = await withReaderAuthorityEdge(edge, () => zipCertainty(zip));
-  let readerEdge: ReaderAuthorityEdgeBundle | null = null;
+  let certainty = await zipCertainty(zip);
   if (centroid) {
-    readerEdge = edge;
-    if (readerEdge) enterReaderAuthorityEdge(readerEdge);
     filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
@@ -1305,7 +1282,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
-                              readerEdge={readerEdge} readerSelection={readerSelection}
+                              readerSelection={readerSelection}
                           />
                         }
                       />
@@ -1431,7 +1408,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                   : null
                               }
                               authorityAvailability={authorityAvailability}
-                              readerEdge={readerEdge} readerSelection={readerSelection}
+                              readerSelection={readerSelection}
                             />
                           }
                         />
@@ -1484,7 +1461,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             contestId={contest.id} resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerEdge={readerEdge} readerSelection={readerSelection} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} />}
                         />
                         <p className="mt-1 t-detail text-muted"><a href={provenance.sourceUrl ?? undefined} className="text-link underline" target="_blank" rel="noreferrer">{provenance.sourceOrg}</a> · read {formatDateMDY(provenance.collectedAt)}</p>
                       </li>;

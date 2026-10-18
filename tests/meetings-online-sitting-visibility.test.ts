@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
-import { snapshotSourceFor } from "../lib/meetings/registry.ts";
+import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 /** The instant the fixture is judged at. */

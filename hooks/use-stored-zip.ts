@@ -4,6 +4,8 @@ import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
 import type { ZctaCentroid } from "@/lib/geo/zcta-core";
+import { readerStartLocation } from "@/lib/reader/bootstrap";
+import { lookupReaderZip } from "@/lib/reader/zip";
 import {
   commitStorageWrite,
   publishToListeners,
@@ -61,11 +63,10 @@ function zipOf(raw: string | null): string | null {
 export async function resolveStoredZip(raw: string | null): Promise<StoredLocation | null> {
   const zip = zipOf(raw);
   if (!zip) return null;
+  const started = readerStartLocation(zip);
+  if (started) return started;
   try {
-    const response = await fetch(`/api/location/zip?zip=${zip}`);
-    if (!response.ok) return null;
-    const payload = await response.json() as { location: StoredLocation | null };
-    return payload.location;
+    return await lookupReaderZip(zip);
   } catch {
     return null;
   }

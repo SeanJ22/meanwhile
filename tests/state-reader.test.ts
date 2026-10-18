@@ -12,6 +12,8 @@ import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-mode
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { authorityPointerKey,ensureReaderAuthorityEdge,holdReaderAuthorityEdge,prepareStateAuthorityArtifact,stateFactsPointerKey } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { stateAuthorityPointers, readStateAuthorityEntry } from "../lib/civic-data/state-reader.ts";
+import { STATE_AUTHORITY_FAMILIES } from "../lib/meetings/edge-artifacts.ts";
 
 const state="AZ",family="registry-runtime",scope="US-AZ:reader-registry-runtime",recordClass="REGISTRY_RUNTIME_BINDING";
 const payload={registry:{bodies:[{id:"az-body",name:"Held Arizona body"}]}},versionId="az-v1",at="2026-10-16T10:00:00Z";
@@ -26,6 +28,36 @@ function fixture(){
     staleAtRetrieval:false,version:"2026",sourceThrough:"2026-10-16"}};
   return {row:{roots:{projection,candidate},proof_valid:true,parts:{},confirmation:null},entry};
 }
+
+test("every state authority pointer can fall back to its held database record", async t => {
+  t.mock.method(console, "warn", () => {});
+  for (const family of STATE_AUTHORITY_FAMILIES) for (const { recordClass, scope } of stateAuthorityPointers(family, state)) {
+    for (const condition of ["missing", "absent", "broken", "invalid-proof", "malformed"] as const) {
+      await withReaderAuthorityEdge({ stateAuthorities: { families: new Set([family]), load: async () => {
+        if (condition === "missing") return null;
+        if (condition === "broken") throw new Error("STATE_ARTIFACT_BYTES_MISSING");
+        if (condition === "malformed") return { kind: "PROMOTED_POINTERS", entries: [null] } as never;
+        const entry = condition === "absent" ? { kind: "NOT_RECORDED", recordClass, scope }
+          : { ...fixture().entry, attested: { ...fixture().entry.attested, payloadSha256: "0".repeat(64) }, projection: { ...fixture().entry.projection, recordClass, scope, key: `${recordClass}:${scope}` } };
+        return { kind: "PROMOTED_POINTERS", entries: [entry] } as never;
+      } } }, async () => {
+        let calls = 0;
+        const read = await readStateAuthorityEntry(family, state, recordClass, scope, async (_sql, params) => {
+          calls++;
+          assert.deepEqual(params, [`${recordClass}:${scope}`]);
+          const row = fixture().row;
+          Object.assign(row.roots.projection, { recordClass, scope, key: `${recordClass}:${scope}` });
+          Object.assign(row.roots.projection.receipt, { recordClass, scope });
+          return [row];
+        });
+        assert.equal(read.source, "DATABASE", `${family}: ${condition}`);
+        assert.equal(read.result.kind, "PROMOTED", `${family}: ${condition}`);
+        assert.deepEqual(read.result.value, payload);
+        assert.equal(calls, 1);
+      });
+    }
+  }
+});
 
 test("real state edge reads make zero SQL calls and reuse the verified entry within a request",async t=>{
   const directory=mkdtempSync(join(tmpdir(),"state-reader-edge-"));t.after(()=>rmSync(directory,{recursive:true,force:true}));

@@ -48,17 +48,17 @@ export function withFederalPortraits(roster: OfficeholderSet, portraits: Officeh
 
 /** One place's members of Congress as published, held to the directory's reader contract. */
 export async function readStateFederalDirectory(state: string, options: PromotedCivicDataReadOptions = {}): Promise<Read> {
-  const result = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state), options);
+  const result = options.store || options.edge
+    ? await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state), options)
+    : (await readStateAuthorityProjection<FederalDirectoryReadModel>("federal-directory", state)).result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") validate(result.value, result.metadata.versionId ?? result.kind);
   return result;
 }
 
 async function readPlace(state: string, options: PromotedCivicDataReadOptions): Promise<Read> {
   type Portraits = { readonly roster: OfficeholderSet };
-  const base = options.store ? await readStateFederalDirectory(state, options)
-    : (await readStateAuthorityProjection<FederalDirectoryReadModel>("federal-directory", state)).result;
+  const base = await readStateFederalDirectory(state, options);
   if (base.kind !== "PROMOTED" && base.kind !== "BOOTSTRAP") return base;
-  if (!options.store) validate(base.value, base.metadata.versionId ?? base.kind);
   // A portrait record that cannot be read leaves the place's directory as it was.
   const portraits = await (options.store ? readPromotedCivicData<Portraits>("STATE_LEGISLATOR", placePortraitsScope(state), options)
     : readStateAuthorityEntry<Portraits>("federal-directory", state, "STATE_LEGISLATOR", placePortraitsScope(state)).then(read => read.result)).catch(() => null);

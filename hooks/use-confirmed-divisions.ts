@@ -6,6 +6,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location";
+import type { FederalVacancy } from "@/lib/officials/chamber-directory";
 
 /**
  * The reader's confirmed divisions, resolved by key. `coverage.seats` is the
@@ -16,6 +17,7 @@ import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location
 export type DivisionStatus = "resolved" | "looking" | "unsourced" | "unavailable";
 
 export interface ConfirmedDivision {
+  readonly vacancy?: FederalVacancy;
   readonly ocdId: string;
   /** The division's own name. Null until known — never an OCD-ID, never a guess. */
   readonly label: string | null;
@@ -26,6 +28,7 @@ export interface ConfirmedDivision {
 }
 
 interface Answer {
+  vacancy?: FederalVacancy;
   label: string | null;
   divisionType: string | null;
   tier: string | null;
@@ -81,6 +84,7 @@ export function useConfirmedDivisions(
               divisionType?: string | null;
               tier?: string | null;
               holders?: SeatHolder[];
+              vacancy?: FederalVacancy;
             } | null,
           ) => {
             if (controller.signal.aborted) return;
@@ -105,6 +109,7 @@ export function useConfirmedDivisions(
                 divisionType: body.divisionType ?? null,
                 tier: body.tier ?? null,
                 holders: body.holders ?? [],
+                vacancy: body.vacancy,
                 failed: false,
               },
             }));
@@ -157,6 +162,7 @@ export function useConfirmedDivisions(
       divisionType: answer.divisionType ?? levelKeyOf(ocdId),
       tier: answer.tier,
       holders,
+      vacancy: answer.vacancy,
       status: holders.length > 0 ? ("resolved" as const) : ("unsourced" as const),
     };
   });

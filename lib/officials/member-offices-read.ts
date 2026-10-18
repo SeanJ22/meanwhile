@@ -22,13 +22,14 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
     const value=read.value;
     const holder=value.roster.officeholders.find(row=>row.id === officeholderId);
     const source=holder?.fieldSources?.districtOffices;
-    return (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office):MemberOfficeRecord=>({
+    const district = (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office):MemberOfficeRecord=>({
       id:`member-office:${officeholderId}:${createHash("sha256").update(JSON.stringify(office)).digest("hex").slice(0,20)}`,
       kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office,
       sourceUrl:source?.sourceUrl ?? `https://raw.githubusercontent.com/unitedstates/congress-legislators/${value.directory.source.sha}/legislators-district-offices.yaml`,
       sourceOrg:source?.sourceOrg ?? value.directory.source.sourceOrg,official:false,
       collectedAt:source?.collectedAt ?? value.directory.source.collectedAt,
     }));
+    return [...(holder ? officeRecordsForHolder(holder) : []),...district];
   }
   const jurisdiction = statePeopleScopeForId(officeholderId,state);
   const aliases = new Set([officeholderId]);

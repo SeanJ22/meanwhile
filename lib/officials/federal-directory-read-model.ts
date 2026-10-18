@@ -76,6 +76,7 @@ function combine(reads: readonly Read[], states: readonly string[]): Read {
   if (states.length === 1) return served[0];
   const values = served.map(read => read.value), first = values[0];
   const value: FederalDirectoryReadModel = { ...first,
+    vacancies: values.flatMap(row=>row.vacancies ?? []),
     currentMembershipComplete: values.every(row => row.currentMembershipComplete === true),
     roster: { ...first.roster, officeholders: values.flatMap(row => row.roster.officeholders), divisions: values.flatMap(row => row.roster.divisions), unmatched: values.flatMap(row => row.roster.unmatched) },
     directory: { ...first.directory, counts: {}, committees: Object.assign({}, ...values.map(row => row.directory.committees)), byMember: Object.assign({}, ...values.map(row => row.directory.byMember)) } };

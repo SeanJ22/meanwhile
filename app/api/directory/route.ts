@@ -66,10 +66,12 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     );
   }
 
+  const offices = await readMemberOffices(member, places[0]);
   return Response.json(
     {
       source: found.source,
-      districtOffices: found.entry.districtOffices,
+      districtOffices: offices.map(row => row.office),
+      officeDetails: offices.map(({officeKind,sourceUrl,sourceOrg,collectedAt,official}) => ({officeKind,sourceUrl,sourceOrg,collectedAt,official})),
       committees: found.entry.committees.map((seat) => ({
         ...seat,
         ...found.committeeJurisdictions[seat.committeeId],

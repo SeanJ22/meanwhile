@@ -7,6 +7,7 @@ import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
+import type { FederalVacancy } from "@/lib/officials/chamber-directory";
 
 export type RepresentationStatus =
   | "resolved"
@@ -15,12 +16,14 @@ export type RepresentationStatus =
   | "unavailable";
 
 export interface DivisionRepresentation {
+  vacancy?: FederalVacancy;
   holders: SeatHolder[];
   status: RepresentationStatus;
   rosterGaps?: RosterReaderGap[];
 }
 
 interface Answer {
+  vacancy?: FederalVacancy;
   ocdId: string;
   holders: SeatHolder[];
   /** The lookup itself failed — not an answer about the division. */
@@ -57,14 +60,14 @@ export function useDivisionsRepresentation(
         .join("/");
       fetch(`/api/representation/${path}`, { signal: controller.signal })
         .then((response) => (response.ok ? response.json() : null))
-        .then((body: { ocdId?: string; holders?: SeatHolder[]; rosterGaps?: RosterReaderGap[] } | null) => {
+        .then((body: { ocdId?: string; holders?: SeatHolder[]; rosterGaps?: RosterReaderGap[]; vacancy?: FederalVacancy } | null) => {
           if (controller.signal.aborted) return;
           // A response naming a different division is not this one's answer.
           if (!body || body.ocdId !== ocdId) {
             record({ ocdId, holders: [], failed: true });
             return;
           }
-          record({ ocdId, holders: body.holders ?? [], rosterGaps: body.rosterGaps ?? [], failed: false });
+          record({ ocdId, holders: body.holders ?? [], rosterGaps: body.rosterGaps ?? [], vacancy: body.vacancy, failed: false });
         })
         .catch(() => {
           if (!controller.signal.aborted) {
@@ -83,6 +86,7 @@ export function useDivisionsRepresentation(
     if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
     return [ocdId, {
       holders: answer.holders,
+      vacancy: answer.vacancy,
       rosterGaps: answer.rosterGaps ?? [],
       status: answer.holders.length ? "resolved" : "unsourced",
     }];

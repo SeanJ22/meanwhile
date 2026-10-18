@@ -49,7 +49,7 @@ test("Congress.gov pagination stays in its native state slice and captures each 
       :{members:[{bioguideId:"B000002"}],pagination:{count:2}});
     const bioguide=parsed.pathname.split("/").at(-1)!;
     return json({member:{bioguideId:bioguide,directOrderName:bioguide==="A000001"?"Jane Doe":"John Doe",currentMember:true,
-      officialWebsiteUrl:bioguide==="A000001"?"https://doe.senate.gov":"https://doe.house.gov",addressInformation:{phoneNumber:"202-224-0000"},
+      officialWebsiteUrl:bioguide==="A000001"?"https://doe.senate.gov":"https://doe.house.gov",addressInformation:{phoneNumber:"202-224-0000",officeAddress:"100 Senate Office Building",city:"Washington",district:"DC",zipCode:"20510"},
       terms:[{chamber:bioguide==="A000001"?"Senate":"House of Representatives",stateCode:"AZ",district:bioguide==="A000001"?undefined:1,startYear:2025}],depiction:{imageUrl:"https://www.congress.gov/img/member.jpg"}}});
   };
   const release=await acquirePeopleSource(options("congress-api",fetchImpl));assert.equal(release.gaps.length,0);assert.equal(release.roster.officeholders.length,2);
@@ -57,6 +57,8 @@ test("Congress.gov pagination stays in its native state slice and captures each 
   assertScoped(release.roster,"congress-api");assert.equal(release.roster.officeholders[0].personId,"congress-api:A000001");
   assert.equal(release.roster.divisions[1].ocdId,"ocd-division/country:us/state:az/cd:1");assert.equal(release.roster.officeholders[0].termStart,"2025");
   assert.equal(release.roster.officeholders[0].photo,null);assert.ok(release.roster.officeholders[0].portraitCandidate);assert.equal(release.roster.currentMembershipComplete,true);
+  assert.equal(release.roster.officeholders[0].offices?.[0].address,"100 Senate Office Building, Washington, DC 20510");
+  assert.equal(release.roster.officeholders[0].fieldSources?.offices.sourceOrg,"Congress.gov / Library of Congress");
   assert.ok(requests.every(value=>value.startsWith("/v3/member/AZ")||value.startsWith("/v3/member/A000001")||value.startsWith("/v3/member/B000002")));
   assert.ok(release.acquisitions.every(row=>!JSON.stringify(row).includes("private-congress-key")));
 });

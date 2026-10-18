@@ -286,6 +286,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           return { key: `division:${person && division ? `${person}:${division}` : `row-${index}`}`, record };
         }),
         ...Object.entries(byMember).map(([key, record]) => ({ key: `directory:${key}`, record })),
+        ...keyed("vacancy", array(root.vacancies), ["ocdId"]),
         ...Object.entries(committees).map(([key, record]) => ({ key: `committee:${key}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
     }

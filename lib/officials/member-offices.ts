@@ -45,10 +45,12 @@ export function officeRecordsForHolder(holder: Officeholder): readonly MemberOff
     const officeKey = office.id ?? createHash("sha256").update(JSON.stringify([office.name ?? "",office.address ?? "",office.phone ?? "",...(office.email ? [office.email] : [])])).digest("hex").slice(0,20);
     if (seen.has(officeKey)) return [];
     seen.add(officeKey);
-    const officialPhone = kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
+    const federal = holder.level === "FEDERAL";
+    const officialPhone = !federal && kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
     return [{id:`member-office:${holder.id}:${officeKey}`,kind:"MEMBER_OFFICE" as const,officeholderId:holder.id,officeKind:kind,
       office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null},
-      sourceUrl:office.sourceUrl,sourceOrg:OPEN_STATES_ORG,official:false,collectedAt:office.collectedAt,
+      sourceUrl:office.sourceUrl,sourceOrg:federal ? holder.fieldSources?.offices?.sourceOrg ?? holder.provenance.sourceOrg : OPEN_STATES_ORG,
+      official:federal && /^https:\/\/(?:[^/]+\.)?(?:house|senate|congress)\.gov\//.test(office.sourceUrl),collectedAt:office.collectedAt,
       ...(officialPhone ? {fieldSources:{phone:holder.fieldSources?.phone ?? holder.provenance}} : {})}];
   });
 }

@@ -722,6 +722,8 @@ export async function coverageAt(
     heldMeetings,
   );
   const publicAttempts = await attemptRead;
+  const federal = federalDirectoryReadState();
+  const vacancies = federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP" ? federal.value.vacancies ?? [] : [];
   const attemptsByBody = new Map<string, PublicBodyAttempt[]>();
   if (publicAttempts.kind === "HELD") for (const attempt of publicAttempts.rows) {
     attemptsByBody.set(attempt.bodyId, [...(attemptsByBody.get(attempt.bodyId) ?? []), attempt]);
@@ -733,6 +735,10 @@ export async function coverageAt(
     stateOffices: stateOfficesForStates(governmentListings.states),
     governmentInventoryUnavailableStates: governmentListings.unavailableStates,
     federalDirectoryUnavailable: !federalAvailable,
+    seats: coverage.seats.map(seat => {
+      const vacancy = !seat.representatives.length && vacancies.find(row => row.ocdId === seat.ocdId);
+      return vacancy ? { ...seat, vacancy } : seat;
+    }),
     bodies: coverage.bodies.map((body) => {
       const gap = rosterGapForBody(body.bodyId);
       return {

@@ -159,8 +159,7 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishReaderStateFacts, publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
-import { readReaderEdgeChanges, type EdgePointer } from "../lib/civic-data/reader-edge-changes.ts";
+import { publishReaderEdge, publishReaderStateFacts, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -191,6 +190,7 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
 const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
+const EDGE_SLICE_MS = Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
@@ -568,7 +568,8 @@ function newestConsideredAt(
 
 async function persistSupervisorOutcome(input: {
   readonly ballotPublications?: BallotPublicationSummaries;
-  readonly readerEdge: ReaderEdgePublicationOutcome;
+  /** Null on the routine lane: publish-now alone publishes the reader edge. */
+  readonly readerEdge: ReaderEdgePublicationOutcome | null;
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
@@ -613,7 +614,7 @@ async function persistSupervisorOutcome(input: {
     attemptedTasks: input.attemptedTasks,
     verifiedSourceSuccesses: input.verifiedSourceSuccesses,
     verifiedSourceFailures: input.verifiedSourceFailures,
-    readerEdge: input.readerEdge,
+    ...(input.readerEdge ? { readerEdge: input.readerEdge } : {}),
     failures: input.failures,
     crashedTasks: input.crashedTasks,
     taskReceipts: input.taskReceipts,
@@ -693,31 +694,20 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 
 
-const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
-  (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
-const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
 const edgeStore = resolveReaderArtifactWriteStore();
 const edgeStoreName = edgeStore?.kind === "local-file" ? "local folder" : edgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
-/** Publishes what moved since the edge last published, with what this pass ran; an unchanged edge is neither read nor written. */
-async function publishChangedReaderEdge(ran: readonly EdgePointer[]): Promise<ReaderEdgePublicationOutcome> {
+/** Publish-now alone publishes the reader edge: what moved since it last published, a piece at a time. */
+async function publishChangedReaderEdge(): Promise<ReaderEdgePublicationOutcome> {
   if (edgeStore) try {
     const facts = await publishReaderStateFacts(readerFactDb().query, edgeStore, new Date().toISOString());
     if (facts.published.length || facts.raced.length) console.log(JSON.stringify({ readerEdgeStateFacts: facts }));
   } catch (error) {
     supervisorFailures.push({ taskId: "state-facts-publication", code: "STATE_FACTS_PUBLISH_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
-  const changes = await readReaderEdgeChanges(readerFactDb().query);
-  const selected = [...changes.pointers, ...ran];
-  if (selected.length === 0) {
-    const unchanged: ReaderEdgePublicationOutcome = { ok: true, readerEdge: "CURRENT", store: edgeStoreName, sequence: null, detail: null };
-    console.log(JSON.stringify(unchanged));
-    return unchanged;
-  }
-  const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), selected);
-  if (outcome.ok) await changes.save();
-  return outcome;
+  // A first publication goes a slice at a time, so the pass's own work still launches and its repairs still run.
+  return publishReaderEdge({ store, query: readerFactDb().query, artifactStore: edgeStore, deadlineMs: Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + EDGE_SLICE_MS) });
 }
-const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
+const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
   store: edgeStoreName,
   readPaused: async () => {
     const connection = controlPlaneUrlFromEnv();
@@ -726,7 +716,7 @@ const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishChangedReaderEdge([]);
+    const outcome = await publishChangedReaderEdge();
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -1517,25 +1507,18 @@ for (const error of pass.errors) {
 const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
-await publishNowEdgeChecks?.stop();
-let retirementOrigins: Awaited<ReturnType<typeof reconcileNationalStatePointers>> | null = null;
+let readerEdge: ReaderEdgePublicationOutcome | null = null;
+if (publishNowEdgeChecks) {
+  await publishNowEdgeChecks.stop();
+  await publishNowEdgeChecks.run();
+  readerEdge = await publishNowEdgeChecks.stop();
+}
 if (!PUBLISH_NOW && ONLY === null) {
   try {
-    const sql = neon(process.env.DATABASE_URL!);
-    retirementOrigins = await reconcileNationalStatePointers({ query: (text, params) => sql.query(text, [...params]), env: process.env });
-  } catch (error) {
-    supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RECONCILIATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-  }
-}
-const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks ? await publishNowEdgeChecks.run()
-  : await publishChangedReaderEdge(selectedTasks.filter(task => ranThisPass.has(task.id)));
-const readerEdge = PUBLISH_NOW && publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
-const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
-if (readerEdgeFailure && !(PUBLISH_NOW && publishNowEdgeChecks)) supervisorFailures.push(readerEdgeFailure);
-if (retirementOrigins !== null && !readerEdgeFailure) {
-  try {
-    const sql = neon(process.env.DATABASE_URL!);
-    const retired = await retireNationalStatePointers((text, params) => sql.query(text, [...params]), resolveReaderArtifactWriteStore(), retirementOrigins);
+    const sql = neon(process.env.DATABASE_URL!), query = (text: string, params: readonly unknown[]) => sql.query(text, [...params]);
+    const origins = await reconcileNationalStatePointers({ query, env: process.env });
+    // Retirement checks the edge already serves each state's replacement, which publish-now publishes.
+    const retired = await retireNationalStatePointers(query, resolveReaderArtifactWriteStore(), origins);
     if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });

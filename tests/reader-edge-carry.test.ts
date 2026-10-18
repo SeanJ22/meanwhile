@@ -1,15 +1,16 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { readerEdgePieces } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { HOUR, PIMA, T1, at, countWrites, readPartition } from "./helpers/meeting-body-fixtures.ts";
+import { publishPieces } from "./helpers/reader-edge-pieces.ts";
 
-const ENV = { WTP_READER_EDGE_LOCAL_OK: "1" };
 const MEETINGS = [{ recordClass: "MEETING" as const, scope: PIMA.scope }];
 
 /** A store that counts the reads that compose a meeting: the work queue and the partitions. */
@@ -25,15 +26,14 @@ function meetingReads(memory: MemoryRoutineDataStore) {
   return { store, reads };
 }
 
-test("shared publication composes meetings only when a meeting pass asks, carries them through an authority-only pass, and writes nothing for a quiet one", async (t) => {
+test("meetings compose only in their own state's piece, are carried through an authority piece, and a quiet piece writes nothing", async (t) => {
   const directory = mkdtempSync(join(tmpdir(), "reader-carry-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const edge = new LocalFileArtifactStore(directory);
   const memory = new MemoryRoutineDataStore();
   await readPartition(memory, PIMA, T1, ["a", "b"]);
   const { store, reads } = meetingReads(memory);
-  const publish = (selected: Parameters<typeof publishSupervisorReaderEdge>[2], now: string) =>
-    publishSupervisorReaderEdge(store, now, selected, { artifactStore: edge }, ENV);
+  const publish = (selected: typeof MEETINGS, now: string, pieces = readerEdgePieces(selected)) => publishPieces(store, edge, selected, { now, pieces });
 
   const first = await publish(MEETINGS, at(T1, HOUR));
   assert.equal(first.readerEdge, "PUBLISHED");
@@ -43,7 +43,8 @@ test("shared publication composes meetings only when a meeting pass asks, carrie
   assert.deepEqual(await memory.readMeetingQueue(), [], "and settled what it covered");
 
   const before = { ...reads };
-  const authorityOnly = await publish([], at(T1, 2 * HOUR));
+  assert.deepEqual(readerEdgePieces(MEETINGS), [{ family: "meetings", place: "AZ" }]);
+  const authorityOnly = await publish([], at(T1, 2 * HOUR), [{ family: "campaign-sites", place: null }]);
   assert.equal(authorityOnly.ok, true);
   assert.deepEqual(reads, before, "an authority-only pass opens no meeting queue or partition");
   assert.deepEqual((await edge.readManifest())!.manifest.meetingStates, held.meetingStates, "the meetings are carried by reference");
@@ -58,10 +59,8 @@ test("shared publication composes meetings only when a meeting pass asks, carrie
   assert.deepEqual((await edge.readManifest())!.manifest.meetingStates, held.meetingStates);
 });
 
-test("every pointer publishes before meetings compose", () => {
-  const child = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
-  const states = child.indexOf("await dispatchStateArtifacts(");
-  const promoted = child.indexOf("await publishPromotedEdgeFamilies(");
-  const plan = child.indexOf("await planMeetingBodies(");
-  assert.ok(states > 0 && promoted > 0 && states < plan && promoted < plan, "no pointer waits on the meeting composition");
+test("a state's meetings publish right after the registry that draws its territories, before every other piece", () => {
+  const registry = { recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: stateRegistryRuntimeScope("AZ") };
+  const pieces = readerEdgePieces([{ recordClass: "STATE_LEGISLATOR", scope: "US-AZ" }, registry, ...MEETINGS]).map(piece => `${piece.family}/${piece.place}`);
+  assert.deepEqual(pieces.slice(0, 2), ["registry-runtime/AZ", "meetings/AZ"]);
 });

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { stateOfOcdId, type ReaderManifest, isStateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
-import { LocalFileArtifactStore, resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { authorityPointerKey, publishReaderMeetings, readReaderEdgeMeetings, readServedMeetingIndex, servedWholeFromReaderEdge, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
 import { publishPointers } from "./helpers/edge-pointers.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -30,8 +30,8 @@ import { registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
-import { prepareStateArtifactChild, stateArtifactResultLine } from "../lib/civic-data/state-artifact-dispatch.ts";
+import { readerEdgePieces } from "../lib/civic-data/reader-edge-publication.ts";
+import { everyPromotion, publishPieces } from "./helpers/reader-edge-pieces.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
@@ -102,26 +102,6 @@ function registryFixtureForState(state: string, value: RegistryRuntimeReadModel 
 }
 
 
-type Inputs = Parameters<typeof publishSupervisorReaderEdge>;
-
-function publishReaderEdgeOutcomeForTest(store: Inputs[0], now: Inputs[1], selected: Inputs[2] = null, options: Inputs[3] = {}) {
-  const artifactStore = options.artifactStore === undefined ? resolveReaderArtifactWriteStore() : options.artifactStore;
-  return publishSupervisorReaderEdge(store, now, selected, { ...options, stateArtifactChildren: {
-    slots: { acquire: async () => () => {} },
-    launch: async command => {
-      const arg = (name: string) => command.args.find(value => value.startsWith(`--${name}=`))!.slice(name.length + 3);
-      const state = arg("state"), family = arg("family");
-      if (!artifactStore || !isStateAuthorityFamily(family)) throw new Error("TEST_STATE_ARTIFACT_INPUT_INVALID");
-      const entry = await prepareStateArtifactChild(store, artifactStore, state, family, arg("version"), now);
-      return { id: command.id, status: 0, signal: null, termination: "EXITED", stderr: "", errorMessage: null,
-        stdout: stateArtifactResultLine(state, family, entry) };
-    },
-  } }, { WTP_READER_EDGE_LOCAL_OK: "1", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "f".repeat(40) });
-}
-
-async function publishReaderEdgeForTest(...args: Parameters<typeof publishReaderEdgeOutcomeForTest>): Promise<boolean> {
-  return (await publishReaderEdgeOutcomeForTest(...args)).ok;
-}
 
 const CHANDLER = MEETING_PARTITION_CONTRACTS.find((p) => p.derivedFamily === null && p.meetingSource === "schedulepage" && p.bodyId === "ocd-division/country:us/state:az/place:chandler#governing")!;
 const MORRIS = MEETING_PARTITION_CONTRACTS.find((p) => p.derivedFamily === null && p.meetingSource === "iqm2" && p.bodyId === "ocd-division/country:us/state:nj/county:morris#governing")!;
@@ -217,7 +197,8 @@ test("state ballot and auxiliary publication leaves country facts, routing and p
     const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
   } });
   for (const pointers of selectedStateEdgePointers(null).filter(row => row.state === "IL").map(row => row.pointers)) {
-    assert.equal(await publishReaderEdgeForTest(scoped, "2026-10-15T00:00:00Z", pointers, { artifactStore: guarded }), true);
+    const pieces = readerEdgePieces(pointers).filter(piece => isStateAuthorityFamily(piece.family));
+    assert.equal((await publishPieces(scoped, guarded, pointers, { pieces, now: "2026-10-15T00:00:00Z" })).ok, true);
     assert.deepEqual(await held(), before, "unrelated publication leaves every other pointer unread and unwritten");
     assert.equal(await artifacts.readManifest(), null, "a state pass writes no manifest");
   }
@@ -257,7 +238,7 @@ test("a lost manifest CAS remains a retryable supervisor publication failure", a
   } });
   const memory = new MemoryRoutineDataStore();
   await readPartition(memory, PIMA, T1, ["a"]);
-  assert.equal(await publishReaderEdgeForTest(memory, "2026-09-06T00:00:00Z", MEETING_POINTERS, { artifactStore: raced }), false);
+  assert.equal((await publishPieces(memory, raced, MEETING_POINTERS, { now: "2026-09-06T00:00:00Z" })).ok, false);
   assert.equal(await artifacts.readManifest(), null);
   assert.equal((await memory.readMeetingQueue()).length, 1, "the change stays queued for the retry");
 });
@@ -311,24 +292,23 @@ test("ordinary publication carries quiet bodies, files a body under every area i
   let registryReads = 0;
   const originalRead = artifacts.readBytes.bind(artifacts);
   t.mock.method(artifacts, "readBytes", async (key: string) => { if (registryKeys.has(key)) registryReads++; return originalRead(key); });
-  const options = { artifactStore: artifacts };
-  assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
+  assert.equal((await publishPieces(memory, artifacts, MEETING_POINTERS, { now: at(T1, HOUR) })).ok, true);
   let held = (await artifacts.readManifest())!;
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-v1:AZ");
   assert.deepEqual(Object.keys((await servedIndex(artifacts, "AZ")).places).sort(), [primary, secondary].sort());
   assert.equal(registryReads, 1);
-  assert.equal(await publishReaderEdgeForTest(memory, at(T1, 2 * HOUR), MEETING_POINTERS, options), true);
+  assert.equal((await publishPieces(memory, artifacts, MEETING_POINTERS, { now: at(T1, 2 * HOUR) })).ok, true);
   assert.equal(registryReads, 1, "a quiet pass does not open the registry again");
   assert.equal((await artifacts.readManifest())!.manifest.sequence, held.manifest.sequence);
   await publishRegistry("registry-v2", []);
-  assert.equal(await publishReaderEdgeForTest(memory, at(T1, 3 * HOUR), MEETING_POINTERS, options), true);
+  assert.equal((await publishPieces(memory, artifacts, MEETING_POINTERS, { now: at(T1, 3 * HOUR) })).ok, true);
   held = (await artifacts.readManifest())!;
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-v2:AZ");
   assert.deepEqual(Object.keys((await servedIndex(artifacts, "AZ")).places), [primary]); assert.equal(registryReads, 2);
   const registryPointer = (await readServedPointer(artifacts, authorityPointerKey("registry-runtime", "AZ")))!;
   await artifacts.writeJsonPointer(authorityPointerKey("registry-runtime", "AZ"), { ...registryPointer.ref, version: "raced-pointer" }, registryPointer.etag);
   const beforeFailure = (await artifacts.readManifest())!.manifest;
-  assert.equal(await publishReaderEdgeForTest(memory, at(T1, 4 * HOUR), MEETING_POINTERS, options), false);
+  assert.equal((await publishPieces(memory, artifacts, MEETING_POINTERS, { now: at(T1, 4 * HOUR) })).ok, false);
   assert.deepEqual((await artifacts.readManifest())!.manifest, beforeFailure);
 });
 
@@ -339,8 +319,7 @@ test("a body that races its row keeps its exact held record while an independent
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "meeting-registry-race-")));
   await readPartition(memory, PIMA, T1, ["held"]);
   await publishPointers(artifacts, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("registry-old", ["AZ"]) } });
-  const options = { artifactStore: artifacts };
-  assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
+  assert.equal((await publishPieces(memory, artifacts, MEETING_POINTERS, { now: at(T1, HOUR) })).ok, true);
   const before = (await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!;
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-old:AZ");
   const held = await readPlace(artifacts, memory, [PIMA.ocdId!], at(T1, HOUR));
@@ -357,7 +336,7 @@ test("a body that races its row keeps its exact held record while an independent
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const selected = [{ recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: projection.scope }, ...MEETING_POINTERS];
-  assert.equal(await publishReaderEdgeForTest(store, at(T2, HOUR), selected, options), false, "the raced body remains owed");
+  assert.equal((await publishPieces(store, artifacts, selected, { now: at(T2, HOUR) })).ok, false, "the raced body remains owed");
   const independent = (await readServedPointer(artifacts, authorityPointerKey("registry-runtime", "AZ")))!.ref.version;
   assert.notEqual(independent, "registry-old:AZ", "verified registry facts publish during meeting recovery");
   assert.deepEqual((await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!.record, before.record, "the body keeps the record it was served from");
@@ -365,7 +344,7 @@ test("a body that races its row keeps its exact held record while an independent
   assert.deepEqual(sittingsOf(stillHeld), sittingsOf(held), "readers keep the held sittings while the new ones are owed");
   assert.deepEqual((await memory.readMeetingQueue()).map((row) => row.scope), [PIMA.scope], "the new version stays queued");
 
-  assert.equal(await publishReaderEdgeForTest(store, at(T2, 2 * HOUR), MEETING_POINTERS, options), true);
+  assert.equal((await publishPieces(store, artifacts, MEETING_POINTERS, { now: at(T2, 2 * HOUR) })).ok, true);
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, independent);
   assert.equal(sittingsOf(await readPlace(artifacts, memory, [PIMA.ocdId!], at(T2, 2 * HOUR))).length, 2, "the next pass serves the new sitting");
   assert.deepEqual(await memory.readMeetingQueue(), []);
@@ -400,7 +379,7 @@ test("publish → read round-trips through the file store and a place reads only
   const published = await publishPass(store, edge, at(T1, HOUR));
   assert.equal(published.status, "PUBLISHED");
   const manifest = (await edge.readManifest())!.manifest;
-  assert.equal(manifest.sequence, 1);
+  assert.equal(manifest.sequence, 2, "each state's meeting piece moves the manifest once");
 
   // An Arizona reader gets Arizona's bodies, never New Jersey's, and needs no database to be answered.
   const azRead = await readReaderEdgeMeetings({ store: edge, states: ["az"], ocdIds: [PIMA.ocdId!], now: at(T1, HOUR) });
@@ -602,7 +581,7 @@ test("an agenda lookup opens only its meeting's body and keeps documents with mi
     assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
     await readPartition(memory, PIMA, NOW, ["held"]);
     const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));
-    assert.equal((await publishReaderEdgeOutcomeForTest(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");
+    assert.equal((await publishPieces(memory, artifacts, await everyPromotion(memory), { now: NOW })).readerEdge, "PUBLISHED");
     const before = (await artifacts.readManifest())!.manifest;
     const meetingStatesBefore = (await artifacts.readManifest())!.manifest.meetingStates;
     assert.ok(meetingStatesBefore?.AZ, "the baseline publishes the held meetings");
@@ -649,7 +628,7 @@ test("an agenda lookup opens only its meeting's body and keeps documents with mi
       check: async () => {
         sweeps++;
         if (gate) await gate;
-        const outcome = await publishReaderEdgeOutcomeForTest(store, NOW, null, { artifactStore: artifacts });
+        const outcome = await publishPieces(store, artifacts, await everyPromotion(memory), { now: NOW });
         outcomes.push(outcome.readerEdge);
         return outcome;
       },
@@ -665,7 +644,7 @@ test("an agenda lookup opens only its meeting's body and keeps documents with mi
       const pointer = async (family: "state-legislators" | "registrations", place: string) => (await readServedPointer(artifacts, authorityPointerKey(family, place)))?.ref;
       assert.equal((await pointer("state-legislators", "US-AZ"))?.version, people.outcome.promoted!.versionId,
         "independent people publish while registration is unavailable");
-      assert.equal((await pointer("registrations", "nh"))?.version, "none", "the failed state keeps its baseline answer");
+      assert.equal(await pointer("registrations", "nh"), undefined, "the failed state keeps its baseline: nothing promoted, nothing served");
       const partial = (await artifacts.readManifest())!.manifest;
       assert.equal(financeSettled, false, "neither the source pass nor its long finance task has settled");
 

@@ -28,7 +28,7 @@ export function stateAuthorityContractId(family: StateAuthorityFamily, state: st
   return stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
 }
 
-function childEnvironment(env: Readonly<Record<string, string | undefined>>): NodeJS.ProcessEnv {
+export function childEnvironment(env: Readonly<Record<string, string | undefined>>): NodeJS.ProcessEnv {
   const mode = env.NODE_ENV;
   return { ...env, NODE_ENV: mode === "production" || mode === "test" ? mode : "development" };
 }

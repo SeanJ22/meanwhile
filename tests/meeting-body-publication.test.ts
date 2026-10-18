@@ -27,7 +27,7 @@ test("a place reads only its own bodies: another state's meetings never stand in
   const bodiesIn = async (state: string) => Object.keys(((await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope(state)))!.payload as MeetingIndexRow).bodies);
   assert.deepEqual(await bodiesIn("AZ"), [PIMA.bodyId]);
   assert.deepEqual(await bodiesIn("NH"), [NEWBURY.bodyId]);
-  assert.deepEqual(await bodiesIn("CA"), [], "a state with no promoted body is published once, empty, and then left alone");
+  assert.equal(await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope("CA")), null, "a state with no promoted meeting has no piece and no index");
 
   const pima = await readPlace(edge, store, [PIMA.ocdId!], at(T1, HOUR));
   assert.equal(pima.kind, "PROMOTED");

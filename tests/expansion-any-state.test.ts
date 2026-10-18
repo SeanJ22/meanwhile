@@ -39,7 +39,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gatewa
 import type { ActionRequest } from "../lib/control-plane/gateway/contract.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { readEveryAssignmentSource } from "./helpers/assignment-sources.ts";
 import { buildAssignmentView } from "../lib/control-plane/assignment-view.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
@@ -317,7 +317,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   assert.equal(created.length, n, "the store holds exactly what the runner counted");
   // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
-  const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
+  const assignmentSources = await readEveryAssignmentSource(repos, T_CYCLE);
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
   const instruction = created[0]!.assignments![0]!.assignmentKey;
   assert.equal(Object.values(publishedWork.instructionCounts?.[instruction] ?? {}).reduce((sum, count) => sum + count, 0), created.length);

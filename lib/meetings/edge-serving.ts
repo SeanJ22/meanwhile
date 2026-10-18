@@ -153,10 +153,16 @@ export async function readServedPointer(store: ReaderArtifactStore, key: string)
 export async function writeAuthorityPointer(store: ReaderArtifactStore, family: AuthorityPointerFamily, place: string | undefined,
   entry: PublishAuthorityValue, served: ServedPointer | null, now: string): Promise<boolean> {
   const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(served?.ref, store));
+  return writeAuthorityIndex(store, family, place, entry.versionId, indexed, served, now);
+}
+
+/** Writes an index whose records are already stored to the family's pointer; false when another writer moved it first. */
+export async function writeAuthorityIndex(store: ReaderArtifactStore, family: AuthorityPointerFamily, place: string | undefined,
+  versionId: string, indexed: RecordIndex, served: ServedPointer | null, now: string): Promise<boolean> {
   const envelope: AuthorityArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family, ...(place === undefined ? {} : { place }),
-    versionId: entry.versionId, generatedAt: now, value: indexed };
+    versionId, generatedAt: now, value: indexed };
   const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-  const ref: AuthorityArtifactRef = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
+  const ref: AuthorityArtifactRef = { key, version: versionId, sha: sha256OfJson(indexed), layout: "records" };
   return (await store.writeJsonPointer(authorityPointerKey(family, place), ref, served?.etag ?? null)).modified;
 }
 
@@ -244,7 +250,7 @@ function heldFetch<K, V>(
   return entry.value;
 }
 
-async function publishedRecords(ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<RecordIndex | undefined> {
+export async function publishedRecords(ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<RecordIndex | undefined> {
   if (ref?.layout !== "records") return undefined;
   try {
     const bytes = await store.readBytes(ref.key);

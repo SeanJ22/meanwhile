@@ -35,8 +35,10 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
@@ -63,6 +65,8 @@ import {
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
+  type ChangedReadOptions,
+  type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
   type HeldSlots,
@@ -342,6 +346,24 @@ export function fileAggregateRepository<T>(
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
+      const wanted = new Set(ids);
+      return (await list()).filter((row) => wanted.has(row.id)).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
+    },
+    listWhereIn: async (jsonPath: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
+      const wanted = new Set(values);
+      return (await list()).filter((row) => wanted.has(jsonTextAtPath(row.value, jsonPath) ?? "")).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
+    },
+    /* A directory has no database clock; a revision's own time stands in for it. */
+    listChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}) => {
+      const through = new Date().toISOString();
+      const skip = heldSlotKeys(held);
+      const rows = (await list()).filter((row) => (since === null || Date.parse(row.updatedAt) >= Date.parse(since)) && !skip.has(`${row.id}\n${row.revision}`))
+        .map(row => read.projection ? { ...row, value: projectAggregate(row.value, read.projection) as T } : row);
+      if (!read.page) return { through, rows };
+      await read.page(rows);
+      return { through, rows: [] };
+    },
   };
 }
 
@@ -501,17 +523,20 @@ export function fileAppendOnlyRepository<T>(
     readSince: async (since: string): Promise<readonly T[]> =>
       (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
       const through = new Date().toISOString();
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      const positions = new Map<string, number>();
-      return { through, records: (await readEveryPartition()).flatMap((line) => {
-        const position = positions.get(line.key) ?? 0;
-        positions.set(line.key, position + 1);
-        return (from !== null && Date.parse(line.at) < from) || skip.has(`${line.key}\n${position}`) ? []
-          : [{ key: line.key, recordId: line.recordId, position, record: line.record }];
-      }) };
+      const records = (await coordinates()).filter(({ changed, line }) => !((from !== null && Date.parse(line.at) < from) || skip.has(`${changed.key}\n${changed.position}`)))
+        .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
+      if (!read.page) return { through, records };
+      await read.page(records);
+      return { through, records: [] };
+    },
+
+    readStampedBetween: async (from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void) => {
+      await page((await coordinates()).filter(({ line }) => Date.parse(line.at) >= Date.parse(from) && Date.parse(line.at) < Date.parse(until))
+        .map(({ changed }) => changed));
     },
 
     keys: async (): Promise<readonly string[]> => {
@@ -525,6 +550,16 @@ export function fileAppendOnlyRepository<T>(
       return [...keys].sort();
     },
   };
+
+  /** Every line with the coordinates and clocks a changed-since read answers with; the line's own time stands in for both clocks. */
+  async function coordinates() {
+    const positions = new Map<string, number>();
+    return (await readEveryPartition()).map((line) => {
+      const position = positions.get(line.key) ?? 0;
+      positions.set(line.key, position + 1);
+      return { line, changed: { key: line.key, recordId: line.recordId, position, record: line.record, changedAt: line.at, stampedAt: line.at } };
+    });
+  }
 
   /** Every line in every partition, in filename then append order. */
   async function readEveryPartition(): Promise<LogLine<T>[]> {
@@ -630,6 +665,10 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "OwnerSnapshot",
       "owner-snapshots",
     ),
+    ownerSnapshotTotals: fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals"),
+    ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
+    ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
+    ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
     fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),

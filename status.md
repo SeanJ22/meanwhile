@@ -5,7 +5,7 @@ worker: codex-river
 provider: Codex
 run_id: codex-river-20261018
 lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
-heartbeat: 2026-10-18T19:42:44Z
+heartbeat: 2026-10-18T19:44:51Z
 
 ## Codex River shift — October 18
 
@@ -13,7 +13,7 @@ Sean assigned Codex to River until Claude resumes October 19 at 8 AM Arizona (15
 
 Release 55 is in progress: UI-01 ee1be9d011c0ba036177595ad31c776bb0940ec2 and UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac folded cleanly. Main release 54 merge was included before testing. Candidate e8dd7e2f7c0f144eca0ae43f92ba16cf697b46b9. No new migrations. The initial gate attempt was stopped after TypeScript found missing polygon-clipping and sharp in the old node_modules snapshot. No UI lane was returned for that environment failure. Committed pnpm-lock.yaml was installed frozen, with no tracked changes. First failure: .scratch/river/release-55-gates-environment-failure.log and test-environment-failure.json. Fresh full river.mjs test --heartbeat is running; log .scratch/river/release-55-gates.log. Nothing is promoted or released yet.
 
-Scan also found meetings, ballot-parity, control-reads, overlay-seats, platform-legistar-members, site-reads, steps-2-6, with earlier returns on this board. Do not retry unchanged rejected SHAs. Overlay-seats 61f6d1449 and site-reads f42bc19c6 are newer than their recorded returns and still need fresh assessment after this release; do not call those repaired or done. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01 and SRC-MN.
+Scan also found meetings, ballot-parity, control-reads, overlay-seats, platform-legistar-members, site-reads, steps-2-6, with earlier returns on this board. Do not retry unchanged rejected SHAs. Overlay-seats 61f6d1449 and site-reads f42bc19c6 were freshly assessed against river 829e6d6e21ca with git merge-tree: both conflict extensively (41 and 36 conflict reports). Both were returned through river.mjs return --check fold-conflict with their exact READY SHAs and preserved output in .scratch/river/reassess-<lane>.log. The board returns now identify these latest SHAs; do not repeat these unchanged attempts. Neither is in release 55. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01 and SRC-MN.
 
 Hourly continuation is configured in this chat from October 18 at 1 PM through October 19 at 7 AM Arizona, with 19 bounded wake-ups; never overlap a live lock owner. Claude takes over at 8 AM. Every run releases its own lock at a safe stop. Current automation: 6ad5209d7df88191a2bba47cb78bfd7f.
 

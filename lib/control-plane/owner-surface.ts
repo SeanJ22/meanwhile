@@ -1072,10 +1072,10 @@ export interface OwnerCostRow {
 }
 
 /** One aggregate rather than several, so the panels agree about one instant. */
-/** One state's rows of the snapshot, in `current:<state>`: every assignment's index row, every body's publication attempt, spend by jurisdiction. */
+/** One state's rows of the snapshot, in `current:<state>`: every assignment's index row by the span it holds, every body's publication attempt, spend by jurisdiction. */
 export interface OwnerSnapshotState {
   readonly builtAt: string;
-  readonly allRowsIndex: readonly import("./assignment-view.ts").AssignmentIndexRow[];
+  readonly allRowsIndex: readonly import("./assignment-view.ts").IndexSegment[];
   readonly bodyAttempts: readonly import("./assignment-view.ts").BodyPublicationAttempt[];
   readonly spendByPlace: readonly import("./cost-panel.ts").SpendByPlaceRow[];
 }

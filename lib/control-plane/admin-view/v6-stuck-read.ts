@@ -5,7 +5,7 @@ import { US_STATES } from "../readiness/catalog.ts";
 import { ageOf, causeOf, NEED_WORDS, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
 import { parseV6PlaceKey, type V6PlaceScope } from "./v6-hunts-read.ts";
 
-/** Each state's index is unpacked inside the database; only stuck rows (failed, blocked, unknown, or waiting past due) return. */
+/** Each state's index is unpacked inside the database, each row as it holds at the database's clock; only stuck rows (failed, blocked, unknown, or waiting past due) return. */
 export const ADMIN_V6_STUCK_CONTRACT = "admin-v6/stuck@1" as const;
 export const ADMIN_V6_SAME_CAUSE_CONTRACT = "admin-v6/sameCause@1" as const;
 export const STUCK_ITEM_LIMIT = 300;
@@ -17,7 +17,8 @@ export const STUCK_INDEX_SQL = `SELECT x->>'id' AS id, x->>'state' AS state, x->
   left(x->>'nextAction', 240) AS next_action, x->'assignmentKeys' AS assignment_keys,
   (SELECT updated_at FROM cp_owner_snapshots WHERE id = 'current') AS published_at
   FROM cp_owner_snapshots s, jsonb_array_elements(s.value->'allRowsIndex') AS x
-  WHERE s.id LIKE 'current:%' AND (x->>'state' IN ('FAILED', 'BLOCKED', 'UNKNOWN') OR (x->>'state' = 'WAITING' AND x->>'overdue' = 'true'))`;
+  WHERE s.id LIKE 'current:%' AND (x->>'from' IS NULL OR (x->>'from')::timestamptz <= now()) AND (x->>'until' IS NULL OR (x->>'until')::timestamptz > now())
+    AND (x->>'state' IN ('FAILED', 'BLOCKED', 'UNKNOWN') OR (x->>'state' = 'WAITING' AND x->>'overdue' = 'true'))`;
 
 export interface StuckPopulation {
   readonly state: "READ";

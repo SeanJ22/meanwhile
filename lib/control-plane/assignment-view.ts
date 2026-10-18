@@ -6,6 +6,7 @@ import {
   askedGapKey,
   askedWords,
   foldAskGapObservations,
+  observationDayStart,
   type AskedGap,
   type AskGapObservation,
 } from "./ask-gap-observations.ts";
@@ -2410,6 +2411,9 @@ export interface AssignmentIndexRow {
   readonly nextAction: string;
 }
 
+/** An index row over the span it holds for: from an instant (null: from before it was derived) to the next its clock changes it at (null: none). */
+export type IndexSegment = AssignmentIndexRow & { readonly from: string | null; readonly until: string | null };
+
 export interface BodyPublicationAttempt {
   readonly bodyId: string;
   readonly family: AttemptFamily | null;
@@ -2539,13 +2543,18 @@ export interface AssignmentClock {
   readonly assignments: readonly ObligationAssignment[];
 }
 
-/** The instants at which a lease, a due time, a backoff, an argued absence or a public readback could change the row on its own. */
+/** The instants at which a lease, a due time, a backoff, an argued absence, a public readback or a reader's telling could change the row on its own. */
 function horizonOf(g: Gathered, idx: Index, src: AssignmentSources): string | null {
   const at: number[] = [];
   for (const a of g.attempts) at.push(ms(idx.leases?.get(a.routeTaskId)?.expiresAt));
   at.push(ms(g.obligation?.nextDueAt), ms(g.obligation?.absentUntil), ms(g.debt?.retryAt));
   const items = new Set([...g.pipeline.map((s) => s.itemId), ...g.workItems.map((w) => w.id)]);
   for (const w of src.servedReader?.witnesses ?? []) if (items.has(w.itemId)) at.push(ms(w.checkedAt), ms(w.checkedAt) + SERVED_READER_MAX_AGE_MS + 1);
+  /* A day's tellings count from its first instant until the window has passed it. */
+  const askGap = g.obligation === null ? null : parseAskGapObligationId(g.obligation.id);
+  for (const o of src.askGapObservations ?? []) {
+    if (askGap !== null && o.bodyId === askGap.bodyId && o.code === askGap.code) at.push(ms(observationDayStart(o.day)), ms(observationDayStart(o.day)) + ASK_GAP_OBSERVATION_WINDOW_DAYS * 24 * HOUR_MS);
+  }
   const next = Math.min(...at.filter((t) => Number.isFinite(t) && t > idx.now));
   return Number.isFinite(next) ? new Date(next).toISOString() : null;
 }

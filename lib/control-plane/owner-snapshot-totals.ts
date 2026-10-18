@@ -11,11 +11,11 @@ import {
   type AssignmentClock,
   type AssignmentCostTotals,
   type AssignmentEntry,
-  type AssignmentIndexRow,
   type AssignmentListRow,
   type AssignmentPart,
   type AssignmentView,
   type BodyPublicationAttempt,
+  type IndexSegment,
   foldAssignmentCost,
 } from "./assignment-view.ts";
 import { addMeasured, measuredSum, subtractMeasured, utcMonthWindow, type CostEntry, type MeasuredSum } from "./cost.ts";
@@ -40,6 +40,8 @@ import {
 } from "./cost-panel.ts";
 import type { ExactSum } from "./exact-sum.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
+import type { AskGapCode } from "../ask/gap-codes.ts";
+import { askGapObligationId } from "./ask-gap-id.ts";
 import { assertAggregateOnly, ownerSnapshotStateId, type OwnerSnapshotState } from "./owner-surface.ts";
 import { deriveItemState, isPipelineRecord } from "./promotion/pipeline.ts";
 import type { PromotionPipelineRecord } from "./promotion/types.ts";
@@ -59,7 +61,7 @@ import { foldSearch, type SearchLedger } from "./provider-billing-collector.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import { countsAsScoutAttempt } from "./research-metrics.ts";
 import { INCREMENTAL_READS_SLACK_MS } from "./repository/incremental-reads.ts";
-import { readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
+import { jsonTextAtPath, readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
 import { unitCarriesState } from "./scheduler/dispatch-target.ts";
 import { isFundedHunt } from "./scheduler/hunt-continuation.ts";
 import { servedWitness, type ServedReaderReadback } from "./served-reader.ts";
@@ -68,7 +70,7 @@ import type { WorkItem } from "./work-item.ts";
 
 /** The national totals row beside the published snapshot in `cp_owner_snapshots`; each state's rows sit beside it. */
 export const OWNER_SNAPSHOT_TOTALS_ID = "totals";
-const OWNER_SNAPSHOT_TOTALS_FORMAT = 2;
+const OWNER_SNAPSHOT_TOTALS_FORMAT = 3;
 const OTHER_STATE = "other";
 const stateTotalsId = (state: string): string => `totals:${state}`;
 const stateInboxId = (state: string): string => `inbox:${state}`;
@@ -145,7 +147,6 @@ export interface CostTotals {
 export interface GroupTotals {
   readonly members: readonly string[];
   readonly usd: ExactSum | null;
-  readonly horizon: string | null;
   readonly items: readonly string[];
   /** The Scout-result log keys its work items and attempts are recorded under. */
   readonly scoutKeys: readonly string[];
@@ -161,13 +162,19 @@ export interface StateTotals {
   readonly builtAt: string;
   readonly groups: Readonly<Record<string, GroupTotals>>;
   readonly places: Readonly<Record<string, PlaceTotals>>;
+  /** The list rows of the state's ranked assignments, each until the instant it could next change on the clock alone. */
+  readonly lists: Readonly<Record<string, TimedList>>;
+}
+
+interface TimedList {
+  readonly row: AssignmentListRow;
+  readonly until: string | null;
 }
 
 /** What a state adds to the national figures, kept so a publish that leaves the state alone need not read it. */
+/** Its figures are as of `builtAt`, the last publish whose changed rows reached the state; its rows carry their own instants. */
 export interface StatePart {
   readonly builtAt: string;
-  /** The earliest instant at which the clock alone could change one of its assignments. */
-  readonly horizon: string | null;
   readonly assignments: AssignmentPart;
   readonly publications: readonly WorkItem[];
   /** The subjects of the standing obligations each instruction marks, by `<assignment key>\n<receipt>`: the hunts' members. */
@@ -488,7 +495,7 @@ class Inboxes {
     return inbox;
   }
 
-  /** Folds the state even with nothing routed to it: a clock passed one of its horizons, or it is emptied. */
+  /** Folds the state even with nothing routed to it, so it is emptied. */
   touch(state: string): void { this.#of(state); }
   group(state: string, id: string): void { this.#of(state).groups.push(id); }
   item(state: string, id: string): void { this.#of(state).items.push(id); }
@@ -541,8 +548,71 @@ interface Loaded {
   readonly totals: Persisted<StateTotals> | null;
   readonly snapshot: Persisted<OwnerSnapshotState> | null;
   readonly groups: Set<string>;
-  readonly lists: Map<string, AssignmentListRow>;
+  readonly lists: Map<string, TimedList>;
   places: Record<string, PlaceTotals>;
+}
+
+type StateEntry = readonly [string, GroupTotals & Pick<AssignmentEntry, "index" | "bodyAttempts">];
+
+/** The segment of an assignment's index row that holds at `at`. */
+const segmentAt = (segments: readonly IndexSegment[], at: string): IndexSegment =>
+  segments.find((s) => (s.from === null || s.from <= at) && (s.until === null || at < s.until)) ?? segments[segments.length - 1]!;
+const listAt = (list: TimedList | undefined, at: string): AssignmentListRow | undefined => list !== undefined && (list.until === null || at < list.until) ? list.row : undefined;
+
+const AGGREGATES = ["obligations", "debts", "occurrences", "workItems", "routeTasks", "attempts", "leases"] as const;
+const LOGS = ["artifacts", "costs", "workerResults", "scoutResults", "promotionPipeline"] as const;
+
+/** The rows one batch's read returned, answering the same reads again for any one of its assignments without the database. */
+class Replay {
+  readonly #rows = new Map<string, Map<string, Persisted<unknown>>>();
+  readonly #records = new Map<string, Map<string, readonly unknown[]>>();
+  readonly #paths = new Map<string, Map<string, Persisted<unknown>[]>>();
+
+  /** `repos`, keeping every row its subset reads return. */
+  recording(repos: ControlPlaneRepositories): ControlPlaneRepositories {
+    const keep = (name: string, rows: readonly Persisted<unknown>[]) => {
+      const held = this.#rows.get(name) ?? new Map<string, Persisted<unknown>>();
+      this.#rows.set(name, held);
+      for (const row of rows) held.set(row.id, row);
+    };
+    const wrap = <R extends object>(repo: R, record: (member: string, args: unknown[], out: unknown) => void): R => new Proxy(repo, { get: (target, member) => {
+      const value = Reflect.get(target, member) as unknown;
+      if (typeof value !== "function") return value;
+      return async (...args: unknown[]) => { const out = await (value as (...a: unknown[]) => Promise<unknown>).apply(target, args); record(String(member), args, out); return out; };
+    } });
+    return new Proxy(repos, { get: (target, name) => {
+      const repo = Reflect.get(target, name) as object;
+      if ((AGGREGATES as readonly unknown[]).includes(name)) return wrap(repo, (member, _args, out) => {
+        if (member === "readManyNarrowed" || member === "listWhereIn" || member === "readMany") keep(String(name), out as Persisted<unknown>[]);
+      });
+      if ((LOGS as readonly unknown[]).includes(name)) return wrap(repo, (member, args, out) => {
+        const held = this.#records.get(String(name)) ?? new Map<string, readonly unknown[]>();
+        this.#records.set(String(name), held);
+        if (member === "readKeys") for (const key of args[0] as string[]) held.set(key, (out as ReadonlyMap<string, readonly unknown[]>).get(key) ?? []);
+        if (member === "read") held.set(args[0] as string, out as unknown[]);
+      });
+      return repo;
+    } });
+  }
+
+  /** A store holding only the kept rows, for the reads `readAssignmentSubset` makes. */
+  repos(): ControlPlaneRepositories {
+    const byIds = (name: string) => async (ids: readonly string[]) =>
+      [...new Set(ids)].sort().flatMap((id) => { const row = this.#rows.get(name)?.get(id); return row === undefined ? [] : [row]; });
+    const where = (name: string) => async (path: readonly string[], values: readonly string[]) => {
+      const key = `${name}\n${path.join(".")}`;
+      let index = this.#paths.get(key);
+      if (index === undefined) {
+        this.#paths.set(key, index = new Map());
+        for (const row of this.#rows.get(name)?.values() ?? []) { const at = jsonTextAtPath(row.value, path); if (at !== null) index.set(at, [...(index.get(at) ?? []), row]); }
+      }
+      return [...new Map([...new Set(values)].flatMap((v) => index!.get(v) ?? []).map((row) => [row.id, row] as const)).values()].sort((a, b) => (a.id < b.id ? -1 : 1));
+    };
+    const keys = (name: string) => async (wanted: readonly string[]) =>
+      new Map(wanted.flatMap((key) => { const records = this.#records.get(name)?.get(key) ?? []; return records.length === 0 ? [] : [[key, records] as const]; }));
+    return Object.fromEntries([...AGGREGATES.map((name) => [name, { readManyNarrowed: byIds(name), readMany: byIds(name), listWhereIn: where(name) }]),
+      ...LOGS.map((name) => [name, { readKeys: keys(name) }])]) as unknown as ControlPlaneRepositories;
+  }
 }
 
 const CHANGE_PROJECTIONS = {
@@ -600,7 +670,8 @@ export class OwnerSnapshotFold {
   readonly #loaded = new Map<string, Loaded>();
   readonly #groups = new Map<string, GroupTotals>();
   readonly #stateOfGroup = new Map<string, string>();
-  readonly #index = new Map<string, AssignmentIndexRow>();
+  /** Each assignment's index row, segment by segment over the instants the clock alone changes it at. */
+  readonly #index = new Map<string, IndexSegment[]>();
   readonly #bodies = new Map<string, readonly BodyPublicationAttempt[]>();
   readonly #groupOf = new Map<string, string>();
   readonly #scouts: Refs = new Map();
@@ -722,27 +793,17 @@ export class OwnerSnapshotFold {
     await this.#drain();
   }
 
-  /** The national view from every state's part, deriving the list rows the ranking newly reaches. */
+  /** The national view from every state's part, as of each state's last fold. */
   async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">): Promise<AssignmentView> {
     const part = this.#part();
-    const wanted = part.candidates.map((c) => c.id).filter((id) => !this.#lists.has(id));
-    if (wanted.length > 0) {
-      const byState = new Map<string, string[]>();
-      for (const [state, s] of Object.entries(this.#states)) {
-        const ids = s.assignments.candidates.map((c) => c.id).filter((id) => wanted.includes(id));
-        if (ids.length > 0) byState.set(state, ids);
-      }
-      for (const [state, ids] of byState) {
-        await this.#load(state);
-        await this.#derive(ids, []);
-        for (const id of ids) {
-          const list = this.#loaded.get(this.#stateOfGroup.get(id) ?? state)?.lists.get(id);
-          if (list !== undefined) this.#lists.set(id, list);
-        }
-        this.#unload();
-      }
-    }
     const kept = new Set(part.candidates.map((c) => c.id));
+    for (const [state, s] of Object.entries(this.#states)) {
+      const wanted = s.assignments.candidates.map((c) => c.id).filter((id) => kept.has(id) && !this.#lists.has(id));
+      if (wanted.length === 0) continue;
+      const row = await this.#repos.ownerSnapshotStateTotals.readNarrowed(stateTotalsId(state), { lists: true });
+      const lists = (row?.value as Pick<StateTotals, "lists"> | undefined)?.lists ?? {};
+      for (const id of wanted) if (lists[id] !== undefined) this.#lists.set(id, lists[id]!.row);
+    }
     for (const id of [...this.#lists.keys()]) if (!kept.has(id)) this.#lists.delete(id);
     const pipeline = this.pipeline;
     return assembleAssignmentView({ ...input, nowIso: this.#input.nowIso, part, lists: (id) => this.#lists.get(id),
@@ -787,6 +848,7 @@ export class OwnerSnapshotFold {
     const changedItems = new Set<string>();
     const scouts: { workItemId?: string; attemptId?: string; key: string }[] = [];
     const pipeline: { workItemId?: string; attemptId?: string; key: string }[] = [];
+    const pipelineKeys = new Set<string>();
     const group = (id: string) => this.#inboxes.group(stateOf(id), id);
     const throughs = await Promise.all([
       eachChanged<{ id: string }>(repos.obligations, since, { id: true }, (rows) => { for (const o of rows) group(o.id); }),
@@ -794,6 +856,9 @@ export class OwnerSnapshotFold {
         for (const o of rows) { group(o.obligationId); items.push(o.workItemId); }
       }),
       eachChanged<{ obligationId: string }>(repos.debts, since, { obligationId: true }, (rows) => { for (const d of rows) group(d.obligationId); }),
+      eachChanged<{ bodyId: string; code: AskGapCode }>(repos.askGapObservations, since, { bodyId: true, code: true }, (rows) => {
+        for (const o of rows) group(askGapObligationId(o.bodyId, o.code));
+      }),
       eachChanged<WorkItem>(repos.workItems, since, CHANGE_PROJECTIONS.workItem, (rows) => {
         for (const w of rows) { this.#noteWorkItem(w); changedItems.add(w.id); items.push(w.id); }
       }),
@@ -811,9 +876,16 @@ export class OwnerSnapshotFold {
         for (const r of records) { scouts.push({ ...r.record, key: r.key }); items.push(r.record.workItemId); }
       }),
       eachLogChanged<PipelineSource>(repos.promotionPipeline as AppendOnlyRepository<unknown>, since, { source: true }, (records) => {
-        for (const r of records) pipeline.push({ workItemId: r.record.source?.workItemId, attemptId: r.record.source?.attemptId, key: r.key });
+        for (const r of records) pipelineKeys.add(r.key);
       }),
     ]);
+    /* A later stage names no source; the item's assignment is the one its scouted record's source names. */
+    for (const keys of chunks([...pipelineKeys].sort(), ASSIGNMENT_BATCH)) {
+      for (const [key, records] of await readByKeys(repos.promotionPipeline, keys)) {
+        const source = (records as readonly unknown[] as readonly PipelineSource[]).find((r) => r.source !== undefined)?.source;
+        pipeline.push({ workItemId: source?.workItemId, attemptId: source?.attemptId, key });
+      }
+    }
     this.#through = throughs.sort()[0]!;
     await this.#routeRefs(scouts, pipeline);
     /* A parent's change can move its children; a work item's state reaches the rows of every work item its dependents wait on. */
@@ -823,7 +895,6 @@ export class OwnerSnapshotFold {
     }
     await this.#routeItems(items);
     for (const r of pipeline) items.push(r.workItemId ?? "");
-    for (const [state, s] of Object.entries(this.#states)) if (s.horizon !== null && Date.parse(s.horizon) <= Date.parse(this.#input.nowIso)) this.#inboxes.touch(state);
     return new Set(unique(items));
   }
 
@@ -905,8 +976,6 @@ export class OwnerSnapshotFold {
         for (const [ref, keys] of Object.entries(inbox.pipeline)) for (const key of keys) addRef(this.#pipelineItems, ref, key);
         for (const [place, totals] of Object.entries(inbox.places)) mergePlaceTotals(loaded.places[place] ??= placeTotals(), totals);
         const targets = new Set(inbox.groups);
-        const now = Date.parse(this.#input.nowIso);
-        for (const id of loaded.groups) if ((this.#groups.get(id)?.horizon ?? null) !== null && Date.parse(this.#groups.get(id)!.horizon!) <= now) targets.add(id);
         /* A new obligation takes in the created work items whose clause names it. */
         for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
         for (const item of inbox.items) { const held = this.#groupOf.get(item); if (held !== undefined) targets.add(held); }
@@ -932,7 +1001,8 @@ export class OwnerSnapshotFold {
     this.#loaded.set(state, loaded);
     if (!carried) return;
     for (const [id, g] of Object.entries(totals!.value.groups)) this.#setGroup(state, id, g);
-    for (const row of snapshot!.value.allRowsIndex) this.#index.set(row.id, row);
+    for (const row of snapshot!.value.allRowsIndex) this.#index.set(row.id, [...(this.#index.get(row.id) ?? []), row]);
+    for (const [id, list] of Object.entries(totals!.value.lists)) loaded.lists.set(id, list);
     const bodies = new Map<string, BodyPublicationAttempt[]>();
     for (const body of snapshot!.value.bodyAttempts) {
       const id = this.#groupOf.get(body.workItemId);
@@ -941,32 +1011,46 @@ export class OwnerSnapshotFold {
     for (const [id, list] of bodies) this.#bodies.set(id, list);
   }
 
+  /** Each loaded state's assignments as they stand at this publish's clock. */
+  #entriesAt(loaded: Loaded): StateEntry[] {
+    return [...loaded.groups].sort().map((id) => [id, { ...this.#groups.get(id)!, index: segmentAt(this.#index.get(id)!, this.#input.nowIso),
+      bodyAttempts: this.#bodies.get(id) ?? [] }] as const);
+  }
+
   /** Writes every loaded state's rows and part, then lets them go. */
   async #emit(): Promise<void> {
     const now = this.#input.nowIso;
-    const rows = new Map<string, readonly (readonly [string, AssignmentEntry & GroupTotals])[]>();
+    /* Every ranked assignment of a state keeps a list row that holds now, so a later publish never reads the state for one. */
+    for (let pass = 0; pass < 2; pass += 1) {
+      const stale = [...this.#loaded.values()].flatMap((loaded) =>
+        assignmentPartOf(this.#entriesAt(loaded), now).candidates.map((c) => c.id).filter((id) => listAt(loaded.lists.get(id), now) === undefined));
+      if (stale.length === 0) break;
+      await this.#derive(stale, []);
+    }
+    const rows = new Map<string, StateEntry[]>();
     for (const [state, loaded] of this.#loaded) {
-      const entries = [...loaded.groups].sort().map((id) => [id, { ...this.#groups.get(id)!, index: this.#index.get(id)!, bodyAttempts: this.#bodies.get(id) ?? [] }] as const);
+      const entries = this.#entriesAt(loaded);
       rows.set(state, entries);
       const obligations: Record<string, number> = {};
       const marks: Record<string, string[]> = {};
-      let horizon: string | null = null;
       for (const [id, g] of entries) {
         if (g.obligation !== null) { const name = obligationStateName(id, g.obligation.subjectId); obligations[name] = (obligations[name] ?? 0) + 1; }
         for (const a of g.obligation?.assignments ?? []) (marks[`${a.assignmentKey}\n${a.ref}`] ??= []).push(g.obligation!.subjectId);
-        if (g.horizon !== null && (horizon === null || g.horizon < horizon)) horizon = g.horizon;
       }
-      this.#states[state] = { builtAt: now, horizon, assignments: assignmentPartOf(entries, now), obligations, spend: placeSumOf(loaded.places),
+      this.#states[state] = { builtAt: now, assignments: assignmentPartOf(entries, now), obligations, spend: placeSumOf(loaded.places),
         publications: entries.flatMap(([, g]) => g.publications), marks };
     }
     /* List rows are kept for the rows the national ranking reaches as far as the states folded so far show it. */
     const ranked = new Set(this.#part().candidates.map((c) => c.id));
     for (const [state, loaded] of this.#loaded) {
-      for (const [id, list] of loaded.lists) if (ranked.has(id) || this.#lists.has(id)) this.#lists.set(id, list);
+      const local = this.#states[state]!.assignments.candidates.map((c) => c.id);
+      for (const id of local) { const row = listAt(loaded.lists.get(id), now); if (row !== undefined && (ranked.has(id) || this.#lists.has(id))) this.#lists.set(id, row); }
       if (!this.#input.write) continue;
       const entries = rows.get(state)!;
-      const totals: StateTotals = { builtAt: now, groups: Object.fromEntries(entries.map(([id]) => [id, this.#groups.get(id)!])), places: loaded.places };
-      const snapshot: OwnerSnapshotState = { builtAt: now, ...assignmentStateRowsOf(entries), spendByPlace: placeRowsOf(state, loaded.places) };
+      const totals: StateTotals = { builtAt: now, groups: Object.fromEntries(entries.map(([id]) => [id, this.#groups.get(id)!])), places: loaded.places,
+        lists: Object.fromEntries(local.map((id) => [id, loaded.lists.get(id)!])) };
+      const snapshot: OwnerSnapshotState = { builtAt: now, allRowsIndex: entries.flatMap(([id]) => this.#index.get(id)!),
+        bodyAttempts: assignmentStateRowsOf(entries).bodyAttempts, spendByPlace: placeRowsOf(state, loaded.places) };
       assertAggregateOnly(snapshot, `owner snapshot rows of ${state}`);
       await (loaded.totals === null ? this.#repos.ownerSnapshotStateTotals.put(stateTotalsId(state), totals, now)
         : this.#repos.ownerSnapshotStateTotals.compareAndSet(stateTotalsId(state), loaded.totals.revision, totals, now));
@@ -1042,9 +1126,8 @@ export class OwnerSnapshotFold {
       if (round > 16) throw new Error(`assignment membership did not settle for ${[...ids].slice(0, 5).join(", ")}`);
       const members = new Set(extra);
       for (const id of ids) for (const m of this.#groups.get(id)?.members ?? [id]) members.add(m);
-      const src = await readAssignmentSubset(this.#repos, this.#base(), { obligations: [...ids], workItems: [...members], context: (owned) => this.#contextOf(owned),
-        scoutKeys: (owned, attempts) => this.#refsFor((g) => g.scoutKeys, this.#scouts, owned, attempts),
-        pipelineItems: (owned, attempts) => this.#refsFor((g) => g.items, this.#pipelineItems, owned, attempts) });
+      const replay = new Replay();
+      const src = await readAssignmentSubset(replay.recording(this.#repos), this.#base(), this.#seeds([...ids], [...members]));
       const produced = deriveAssignmentEntries(src);
       const items = new Map(src.workItems.map((w) => [w.id, w] as const));
       const stateOfEntry = (id: string, entry: AssignmentEntry) => entry.index.kind === "WORK_ITEM" ? homeOf(id, items.get(id)) : stateOf(id);
@@ -1080,19 +1163,44 @@ export class OwnerSnapshotFold {
         if (entry === undefined) continue;
         const state = stateOfEntry(id, entry);
         const own = entry.members.map((m) => items.get(m)).filter((w): w is WorkItem => w !== undefined);
-        this.#setGroup(state, id, { members: entry.members, usd: entry.usd, horizon: entry.horizon, items: entry.items, scoutKeys: scoutKeys.get(id)!, obligation: entry.obligation,
+        this.#setGroup(state, id, { members: entry.members, usd: entry.usd, items: entry.items, scoutKeys: scoutKeys.get(id)!, obligation: entry.obligation,
           publications: own.filter((w) => w.publicationOutcome).map(narrowPublication),
           clause: entry.index.kind === "WORK_ITEM" ? clauseObligation(items.get(id)?.obligation ?? "") : null });
         for (const m of entry.members) {
           if (homeOf(m, items.get(m)) === state) delete this.#crossings[m];
           else this.#crossings[m] = state;
         }
-        this.#index.set(id, entry.index);
-        if (entry.list) this.#loaded.get(state)!.lists.set(id, entry.list);
+        this.#index.set(id, await this.#segments(id, entry, replay));
+        if (entry.list) this.#loaded.get(state)!.lists.set(id, { row: entry.list, until: entry.horizon });
         this.#bodies.set(id, entry.bodyAttempts);
       }
       return;
     }
+  }
+
+  #seeds(obligations: readonly string[], workItems: readonly string[]): Parameters<typeof readAssignmentSubset>[2] {
+    return { obligations, workItems, context: (owned) => this.#contextOf(owned),
+      scoutKeys: (owned, attempts) => this.#refsFor((g) => g.scoutKeys, this.#scouts, owned, attempts),
+      pipelineItems: (owned, attempts) => this.#refsFor((g) => g.items, this.#pipelineItems, owned, attempts) };
+  }
+
+  /** The assignment's index row at each instant its horizon names, derived again from the batch's rows with the clock moved there. */
+  async #segments(id: string, entry: AssignmentEntry, replay: Replay): Promise<IndexSegment[]> {
+    const out: IndexSegment[] = [{ ...entry.index, from: null, until: entry.horizon }];
+    const store = replay.repos();
+    const seeds = this.#seeds(entry.index.kind === "WORK_ITEM" ? [] : [id], entry.members);
+    for (let at = entry.horizon; at !== null;) {
+      if (out.length > 64) throw new Error(`assignment ${id} names more than 64 instants its row changes at`);
+      const next = deriveAssignmentEntries(await readAssignmentSubset(store, { ...this.#base(), nowIso: at }, seeds)).get(id);
+      if (next === undefined) throw new Error(`assignment ${id} could not be derived again at ${at}`);
+      const last = out[out.length - 1]!;
+      const { from: _from, until: _until, ...held } = last;
+      if (JSON.stringify(held) === JSON.stringify(next.index)) out[out.length - 1] = { ...last, until: next.horizon };
+      else out.push({ ...next.index, from: at, until: next.horizon });
+      if (next.horizon !== null && next.horizon <= at) throw new Error(`assignment ${id} names ${next.horizon} after ${at}`);
+      at = next.horizon;
+    }
+    return out;
   }
 
   /** The parents of `owned` and, for each of its work items others wait on, those dependents and everything they wait on. */

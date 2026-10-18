@@ -194,6 +194,11 @@ function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
         held: true,
         says: "read for the items whose source names an assignment's attempt or work item; its counts fold every record appended since the last publish",
       },
+      {
+        what: "the clock",
+        held: false,
+        says: "not read for the counts: each state's figures stand as of the last publish whose changed rows reached it; each state's index rows carry the instants they change at, so a reader shows them as they hold when read",
+      },
     ],
   });
 }

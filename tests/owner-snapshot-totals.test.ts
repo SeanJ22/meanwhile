@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildAssignmentView, type AssignmentSources, type AssignmentView } from "../lib/control-plane/assignment-view.ts";
+import {
+  assembleAssignmentView,
+  assignmentPartOf,
+  buildAssignmentView,
+  deriveAssignmentEntries,
+  mergeAssignmentParts,
+  type AssignmentListRow,
+  type AssignmentSources,
+  type AssignmentView,
+  type IndexSegment,
+} from "../lib/control-plane/assignment-view.ts";
 import { pipelineStatesOf } from "../lib/control-plane/assignment-read.ts";
 import { ASK_GAP_NAMESPACE } from "../lib/control-plane/ask-gap-id.ts";
 import type { AskGapObservation } from "../lib/control-plane/ask-gap-observations.ts";
@@ -274,6 +284,16 @@ interface Published {
   readonly readings: readonly ProviderReading[];
 }
 
+/** Every state's published rows as a reader sees them at `at`: each assignment's index row as it holds then. */
+function rowsAt(states: ReadonlyMap<string, OwnerSnapshotState>, at: string) {
+  const all = [...states.values()];
+  const holds = (r: IndexSegment) => (r.from === null || r.from <= at) && (r.until === null || at < r.until);
+  return {
+    allRowsIndex: all.flatMap((r) => r.allRowsIndex).filter(holds).map(({ from: _from, until: _until, ...row }) => row).sort((a, b) => a.id.localeCompare(b.id)),
+    bodyAttempts: all.flatMap((r) => r.bodyAttempts).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId)),
+  };
+}
+
 /** One publish exactly as `scripts/publish-owner-snapshot.mts` composes it, every panel read back with each state's rows joined in. */
 async function publish(repos: ControlPlaneRepositories, now: string, prior: Published | null, scopes: readonly ExpansionScopeDecision[], served: ServedReaderReadback | null,
   heldRows?: number) {
@@ -288,7 +308,6 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
   const totals = json(fold.totals());
   const states = new Map<string, OwnerSnapshotState>();
   for (const state of Object.keys(totals.assignments!.states)) states.set(state, json((await repos.ownerSnapshotStates.read(ownerSnapshotStateId(state)))!.value));
-  const rows = [...states.values()];
   const spend = fold.spendByPlace();
   const panels = {
     costPanel: costPanelOf(fold.costs.ledger, fold.costs.scouts, { cacheByRole: null, share: null, verifiedRecords: fold.pipeline.verified, nowIso: now }),
@@ -298,36 +317,38 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
     searches: fold.costs.searches[now.slice(0, 7)] ?? {},
     obligationsByState: fold.obligationsByState(),
     publications: fold.publications().map((w) => w.id).sort(),
-    view: { ...view, allRowsIndex: rows.flatMap((r) => r.allRowsIndex).sort((a, b) => a.id.localeCompare(b.id)),
-      bodyAttempts: rows.flatMap((r) => r.bodyAttempts).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId)) },
+    rows: rowsAt(states, now),
   };
   if (priorRow === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, now);
   else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, priorRow.revision, totals, now);
-  return { panels: json(panels), states, published: { totals, servedReader: served, readings: read } satisfies Published };
+  return { panels: json(panels), view: json(view), states, published: { totals, servedReader: served, readings: read } satisfies Published };
+}
+
+async function sourcesAt(repos: ControlPlaneRepositories, now: string, served: ServedReaderReadback | null): Promise<AssignmentSources> {
+  const values = async <T,>(repo: { list(): Promise<readonly { value: T }[]> }) => (await repo.list()).map((r) => r.value);
+  const attempts = await values(repos.attempts as never as { list(): Promise<readonly { value: Attempt }[]> });
+  const open = new Set(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
+  return { nowIso: now, obligations: await values(repos.obligations), occurrences: await values(repos.occurrences), workItems: await values(repos.workItems),
+    routeTasks: await values(repos.routeTasks), attempts, debts: await values(repos.debts),
+    leases: (await values(repos.leases)).filter((l) => open.has(l.routeTaskId)), dispositions: null, artifacts: await repos.artifacts.readAll(),
+    costs: await repos.costs.readAll(), scoutResults: await repos.scoutResults.readAll(), workerResults: await repos.workerResults.readAll(),
+    pipeline: pipelineStatesOf(await repos.promotionPipeline.readAll()), activation: null, servedReader: served, pilotZips: [],
+    askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) };
 }
 
 /** Every panel from every row, as the publisher computed it before it kept totals. */
 async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes: readonly ExpansionScopeDecision[], served: ServedReaderReadback | null,
   read: readonly ProviderReading[]) {
-  const values = async <T,>(repo: { list(): Promise<readonly { value: T }[]> }) => (await repo.list()).map((r) => r.value);
-  const attempts = await values(repos.attempts as never as { list(): Promise<readonly { value: Attempt }[]> });
-  const costs = await repos.costs.readAll();
-  const obligations = await values(repos.obligations);
-  const states = pipelineStatesOf(await repos.promotionPipeline.readAll());
-  const open = new Set(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
-  const askGapObservations = (await repos.askGapObservations.list()).map((r) => r.value);
-  const sources: AssignmentSources = { nowIso: now, obligations, occurrences: await values(repos.occurrences), workItems: await values(repos.workItems),
-    routeTasks: await values(repos.routeTasks), attempts, debts: await values(repos.debts),
-    leases: (await values(repos.leases)).filter((l) => open.has(l.routeTaskId)), dispositions: null, artifacts: await repos.artifacts.readAll(), costs,
-    scoutResults: await repos.scoutResults.readAll(), workerResults: await repos.workerResults.readAll(), pipeline: states, activation: null, servedReader: served,
-    pilotZips: [], askGapObservations };
-  const verifiedRecords = stageCounts(states).byStage.VERIFIED;
+  const sources = await sourcesAt(repos, now, served);
+  const { costs, attempts, obligations } = sources;
+  const verifiedRecords = stageCounts(sources.pipeline!).byStage.VERIFIED;
   const byState: Record<string, number> = {};
   for (const o of obligations) {
     const hay = `${o.id} ${o.subjectId}`.toLowerCase();
     const name = US_STATES.find((st) => unitCarriesState(hay, st.code))?.name ?? "other";
     byState[name] = (byState[name] ?? 0) + 1;
   }
+  const { allRowsIndex, bodyAttempts } = buildAssignmentView(sources);
   return json({
     costPanel: buildCostPanel({ costs, attempts, cacheByRole: null, share: null, verifiedRecords, nowIso: now }),
     spendByDay: spendByDay(costs, now),
@@ -336,8 +357,26 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
     searches: searchLedgersOf(costs, now),
     obligationsByState: byState,
     publications: sources.workItems.filter((w) => w.publicationOutcome).map((w) => w.id).sort(),
-    view: buildAssignmentView(sources),
+    rows: { allRowsIndex, bodyAttempts },
   });
+}
+
+/** The national view from scratch with each state's assignments as they stood at that state's last fold, which is what the view states. */
+async function viewAsOfFolds(repos: ControlPlaneRepositories, published: Published, states: ReadonlyMap<string, OwnerSnapshotState>, now: string,
+  servedAt: (at: string) => ServedReaderReadback | null): Promise<AssignmentView> {
+  const parts = [];
+  const lists = new Map<string, AssignmentListRow>();
+  for (const [state, part] of Object.entries(published.totals.assignments!.states)) {
+    const ids = new Set(states.get(state)!.allRowsIndex.map((r) => r.id));
+    const own = [...deriveAssignmentEntries(await sourcesAt(repos, part.builtAt, servedAt(part.builtAt)))].filter(([id]) => ids.has(id));
+    parts.push(assignmentPartOf(own, part.builtAt));
+    for (const [id, e] of own) if (e.list) lists.set(id, e.list);
+  }
+  const scratch = buildAssignmentView(await sourcesAt(repos, now, servedAt(now)));
+  const linked = scratch.summary.pipeline.held ? scratch.summary.pipeline.value.linked : null;
+  return json(assembleAssignmentView({ nowIso: now, part: mergeAssignmentParts(parts, now), lists: (id) => lists.get(id), activation: null,
+    totals: { costs: scratch.summary.costs, pipeline: linked && { items: linked.denominator, linked: linked.value },
+      askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) } }));
 }
 
 function assertSamePanels(label: string, folded: Record<string, unknown>, scratch: Record<string, unknown>): void {
@@ -345,42 +384,61 @@ function assertSamePanels(label: string, folded: Record<string, unknown>, scratc
 }
 
 for (const [held, says] of [[undefined, "held in memory"], [1, "each written to its state's inbox row as it is routed"]] as const) test(
-  `the folded owner snapshot shows every panel exactly as a from-scratch computation over the same rows, publish after publish (routed rows ${says})`, async () => {
+  `the folded owner snapshot shows every panel exactly as a from-scratch computation over the same rows, publish after publish and between (routed rows ${says})`, async () => {
   const repos = createMemoryRepositories();
   const w = initialWorld();
   await seed(repos, w);
   const witness = (itemId: string, approvalId: string, checkedAt: string) => ({ itemId, approvalId, versionId: "v", readerKey: "k", url: "https://example.org",
     checkedAt, state: "CONFIRMED" as const, reason: "fixture", responseSha256: null });
   const served1: ServedReaderReadback = { checkedAt: T1, witnesses: [witness("wi-0-1", "wr-at-0-1", at(T1, -1))], errors: [] };
+  const served2: ServedReaderReadback = { checkedAt: T2, witnesses: [witness("wi-9-1", "wr-at-9-1", at(T2, -1)), witness("wi-27-4", "wr-at-27-4", at(T2, -0.5))], errors: [] };
+  const servedAt = (t: string) => (t < T2 ? served1 : served2);
+  /* Between publishes a reader evaluates each row at its own clock; the published rows must already hold what a publish then would show. */
+  const between = async (label: string, states: ReadonlyMap<string, OwnerSnapshotState>, from: string) => {
+    for (const hours of [1.5, 9, 30, 24 * 40]) {
+      const later = at(from, hours);
+      const scratch = await fromScratch(repos, later, [HUNT], servedAt(later), []) as { rows: unknown };
+      assert.deepEqual(json(rowsAt(states, later)), scratch.rows, `${label}, ${hours} hours on with no publish: the rows a reader sees differ from the from-scratch computation`);
+    }
+  };
 
   const one = await publish(repos, T1, null, [HUNT], served1, held);
   assertSamePanels("first publish", one.panels, await fromScratch(repos, T1, [HUNT], served1, one.published.readings));
-  const firstView = one.panels.view as AssignmentView;
+  const { allRowsIndex: _rows, bodyAttempts: _bodies, ...national } = json(buildAssignmentView(await sourcesAt(repos, T1, served1)));
+  assert.deepEqual(one.view, national, "first publish: with every state folded now, the view is exactly the from-scratch view");
   assert.ok(one.states.size > 5, "every state's rows are published on their own row");
-  assert.ok(firstView.summary.total > 40 && firstView.rows.length > 0, "the fixture publishes a real list");
+  assert.ok(one.view.summary.total > 40 && one.view.rows.length > 0, "the fixture publishes a real list");
   assert.equal(one.published.totals.costs!.skewed.length, 1, "the charge stamped an hour off its row is carried by itself");
+  await between("after the first publish", one.states, T1);
 
   const c2 = changesBeforeT2(w);
   await seed(repos, c2);
-  const served2: ServedReaderReadback = { checkedAt: T2, witnesses: [witness("wi-9-1", "wr-at-9-1", at(T2, -1)), witness("wi-27-4", "wr-at-27-4", at(T2, -0.5))], errors: [] };
   const two = await publish(repos, T2, one.published, [HUNT], served2, held);
   assertSamePanels("second publish", two.panels, await fromScratch(repos, T2, [HUNT], served2, two.published.readings));
+  assert.deepEqual(two.view, await viewAsOfFolds(repos, two.published, two.states, T2, servedAt), "second publish: the view differs from each state's figures at its fold");
   assert.ok(two.published.readings.some((r) => r.provider === "anthropic-api" && r.periodEnd === T1), "the second publish carries a reading forward");
-  assert.equal(two.panels.view.allRowsIndex.length, (two.panels.view as AssignmentView).summary.total);
-  assert.ok(!two.panels.view.allRowsIndex.some((row) => row.id === "wi-late"), "the created work item joined the obligation its clause names");
+  assert.equal(two.panels.rows.allRowsIndex.length, two.view.summary.total);
+  assert.ok(!two.panels.rows.allRowsIndex.some((row) => row.id === "wi-late"), "the created work item joined the obligation its clause names");
   assert.equal(two.published.totals.costs!.ahead.length, 1, "a charge stamped after the clock waits for it");
   assert.ok(two.published.totals.costs!.orphans.includes("at-unrecorded"), "the second publish folded only what changed");
+  await between("after the second publish", two.states, T2);
 
   const c3 = changesBeforeT3(w);
   await seed(repos, c3);
   const three = await publish(repos, T3, two.published, [HUNT], served2, held);
   assertSamePanels("third publish (a new month; the ledger refolded)", three.panels, await fromScratch(repos, T3, [HUNT], served2, three.published.readings));
+  assert.deepEqual(three.view, await viewAsOfFolds(repos, three.published, three.states, T3, servedAt), "third publish: the view differs from each state's figures at its fold");
   assert.equal(three.published.totals.costs!.orphans.includes("at-unrecorded"), false, "the Attempt's appearance refolded the ledger");
   assert.equal(three.published.totals.costs!.ahead.length, 1);
 
   const four = await publish(repos, T4, three.published, [HUNT], served2, held);
   assertSamePanels("fourth publish (the clock alone)", four.panels, await fromScratch(repos, T4, [HUNT], served2, four.published.readings));
+  assert.deepEqual(four.view, await viewAsOfFolds(repos, four.published, four.states, T4, servedAt), "fourth publish: the view differs from each state's figures at its fold");
+  const foldedAt = (p: Published, t: string) => Object.entries(p.totals.assignments!.states).filter(([, s]) => s.builtAt === t).map(([state]) => state);
+  assert.ok(foldedAt(four.published, T4).every((state) => foldedAt(three.published, T3).includes(state)), "the clock alone folds no state; only the last changes are read once more");
+  assert.ok(Object.values(four.published.totals.assignments!.states).some((s) => s.builtAt < T3), "a state no changed row reached keeps the rows it was folded with");
   assert.equal(four.published.totals.costs!.ahead.length, 0, "the clock passed the held-back charge");
+  await between("after the fourth publish", four.states, T4);
 });
 
 test("a steady publish reads only the rows changed since the last one and derives only the assignments they touch", async () => {
@@ -410,9 +468,18 @@ test("a steady publish reads only the rows changed since the last one and derive
   const two = await publish(watched, now, one.published, [HUNT], null);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
-  assert.ok(derivedFor.size < 10, `only the touched assignments and those the clock reached are derived (${[...derivedFor].join(", ")})`);
-  assert.ok(loaded.has("totals:nh") && loaded.size < one.states.size, `only the states the changed rows and the clock reach are read (${[...loaded].join(", ")})`);
+  assert.deepEqual([...derivedFor], [obligationId(12)], "only the assignment the changed rows reach is derived");
+  assert.deepEqual([...loaded], ["totals:nh"], "only the state the changed rows reach is read");
   assertSamePanels("steady publish", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
+  /* A changed-row read starts where the last one began, so the publish right after a change reads it once more. */
+  const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null);
+  loaded.clear();
+  derivedFor.clear();
+  const idle = at(T1, 9);
+  const three = await publish(watched, idle, settled.published, [HUNT], null);
+  assert.deepEqual([...loaded], [], "an idle publish reads no state, however far the clock has moved");
+  assert.deepEqual(whole, [], "no control-plane table is read whole");
+  assertSamePanels("idle publish", three.panels, await fromScratch(repos, idle, [HUNT], null, three.published.readings));
 });
 
 test("a state whose rows do not pair with the national totals has every state derived again, exactly as from scratch", async () => {

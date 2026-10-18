@@ -1,4 +1,4 @@
-import { readBallotReaderData } from "@/lib/ballot/reader-data";
+import { readBallotReaderData, primeBallotFundingRead } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -18,7 +18,7 @@ import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-re
 
 import { contestsForDivisions } from "@/lib/ballot/contests";
 import { ballotPlaceFromParams, ballotPointDivisions, ballotPointStateDivisions } from "@/lib/ballot/reader-place";
-import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
@@ -493,6 +493,10 @@ export default readerRoute("/ballot", async function BallotPage({
   let askOcdIds: string[] = [];
   const readerSelection = currentReaderSelection();
   const startRead = ballotAuxiliaryReads();
+  const pointDivisionsRead = centroid ? place.state
+    ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
+    : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
+  void pointDivisionsRead.catch(() => undefined);
   const readerData = await readBallotReaderData(place);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
   if (centroid && knownState) {
@@ -513,8 +517,7 @@ export default readerRoute("/ballot", async function BallotPage({
     const pointDivisionIds = [...certainty?.all ?? []];
     divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
     try {
-      pointDivisionIds.push(...place.state ? await ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
-        : await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng));
+      pointDivisionIds.push(...await pointDivisionsRead);
     } catch { divisionHoldingUnavailable = true; }
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
     askOcdIds = ocdIds;
@@ -567,7 +570,7 @@ export default readerRoute("/ballot", async function BallotPage({
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
       preload("federal-funding", async () => {
-        await readerData?.fundingRead;
+        if (readerData) await primeBallotFundingRead(set!, matched.contests.filter(isFederalContest));
         return settleFundingRead();
       });
     }

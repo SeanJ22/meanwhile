@@ -71,9 +71,9 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
       EVERYDAY_ROUTING_POINTER,
     ], [
       { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
-      { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
       ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
     ],
+    [{ recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` }],
   ]), options = { store: canonical };
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const [runtime, people, federal, districts, official, campaigns, everyday, president, offices] = await Promise.all([

@@ -5,7 +5,7 @@ import { readPlacePackage } from "../reader/place.ts";
 import { readZipPlaces, stateForZip } from "../reader/national.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
-import { primeReaderCanonicalStore, readerCanonicalEntry } from "../reader/canonical-context.ts";
+import { primeReaderCanonicalStore } from "../reader/canonical-context.ts";
 import { primeReaderProjection } from "../civic-data/read-model.ts";
 import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
@@ -21,8 +21,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { BallotPlace } from "./reader-place.ts";
-import type { GenericBallotProjection } from "./generic-projection.ts";
-import { officeIdentity } from "../officials/office-identity.ts";
+import type { BallotSet, Contest } from "./types.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
 export async function readBallotReaderData(place: BallotPlace) {
@@ -54,24 +53,9 @@ export async function readBallotReaderData(place: BallotPlace) {
   const candidates = unique.filter(entry => ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"].includes(entry.recordClass));
   const other = unique.filter(entry => !ballots.includes(entry) && !candidates.includes(entry));
   const baseRead = primeReaderCanonicalStore(unique, readCanonicalPackages([ballots, candidates, other]));
-  const fundingRead = (async () => {
-    const keys: string[] = [];
-    for (const state of states) for (const pointer of stateAuthorityPointers("ballot-contests", state)) {
-      const held = await readerCanonicalEntry(pointer.recordClass, pointer.scope);
-      if (held?.kind !== "PROMOTED") continue;
-      for (const ballot of Object.values((held.projection.payload as GenericBallotProjection).ballots)) {
-        const contests = new Set(ballot.contests.filter(contest => ["us_senator", "us_representative"].includes(officeIdentity(contest.title) ?? "")).map(contest => contest.id));
-        keys.push(...[...ballot.candidacies, ...ballot.filingCandidacies ?? []].filter(candidate => contests.has(candidate.contestId)).map(candidate => candidate.id));
-        for (const lineup of ballot.generalLineup?.contests ?? []) if (contests.has(lineup.contestId)) {
-          keys.push(...lineup.nominees.map(nominee => `${lineup.contestId}|${nominee.name}`));
-        }
-      }
-    }
-    if (keys.length) await primeReaderProjection("FEC_FUNDING", requiredRoutineContract("fec-funding").scope, keys);
-  })();
   const entry = async (geography?: GeographySelection) => {
-    if (!place.zip || !rawEntry) return rawEntry;
-    let value = rawEntry;
+    if (!place.zip) return rawEntry;
+    let value = rawEntry ?? { ids: [], partial: [], samples: 0 };
     for (const { districts } of packages) {
       const held = await districts;
       if (held.kind === "HELD") value = withCensusDistricts(value,
@@ -100,6 +84,16 @@ export async function readBallotReaderData(place: BallotPlace) {
   // Early failures remain available to the owning ballot section without unhandled rejections.
   void canonicalRead.catch(() => undefined);
   void registryRead.catch(() => undefined);
-  void fundingRead.catch(() => undefined);
-  return { registryRead, fundingRead, districtRead, entry };
+  return { registryRead, districtRead, entry };
+}
+
+/** Read money for the exact displayed contests, retaining candidates and earlier filings. */
+export async function primeBallotFundingRead(set: BallotSet, contests: readonly Contest[]): Promise<void> {
+  if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
+  const ids = new Set(contests.map(contest => contest.id));
+  const keys = [...set.candidacies, ...set.filingCandidacies ?? []].filter(candidate => ids.has(candidate.contestId)).map(candidate => candidate.id);
+  for (const lineup of set.generalLineup?.contests ?? []) if (ids.has(lineup.contestId)) {
+    keys.push(...lineup.nominees.map(nominee => `${lineup.contestId}|${nominee.name}`));
+  }
+  if (keys.length) await primeReaderProjection("FEC_FUNDING", requiredRoutineContract("fec-funding").scope, keys);
 }

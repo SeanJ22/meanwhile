@@ -2,7 +2,18 @@ name: BS-01 cold Ballot measurement
 on:
   push:
     branches: [stream/bs-01]
-    paths: [scripts/bs-01-check.mjs, .github/workflows/bs-01-measure.yml]
+    paths:
+      - scripts/bs-01-check.mjs
+      - .github/workflows/bs-01-measure.yml
+      - app/ballot/**
+      - components/shell/pill-cluster.tsx
+      - lib/ballot/**
+      - lib/reader/**
+      - lib/civic-data/read-model.ts
+      - lib/civic-data/state-reader.ts
+      - lib/funding/campaign-finance-reader.ts
+      - lib/geo/zip-certainty.ts
+      - instrumentation.ts
 concurrency:
   group: bs-01-measurement
   cancel-in-progress: true

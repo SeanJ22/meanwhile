@@ -59,7 +59,7 @@ export function PillCluster({
           href={ballotHref}
           prefetch={prefetchReady ? null : false}
           className="mw-nav-seg mw-nav-ballot"
-          onClick={onOpenBallot}
+          onClick={pop ? onOpenBallot : undefined}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}
         >
           {/* A marked ballot sheet, not a check in a box: ✓ already means

@@ -237,3 +237,26 @@ test("the map and ballot reuse one in-progress place read and the same held resu
     assert.equal(reads, 1);
   } finally { installFactReader(undefined); }
 });
+
+test("a shared cold place failure reaches both readers without a second query", async () => {
+  const { installFactReader } = await import("../lib/facts/db.ts");
+  const failure = new Error("First place read failed");
+  let reads = 0, rejectRead: ((error: Error) => void) | undefined;
+  installFactReader(async () => {
+    reads++;
+    await new Promise<void>((_resolve, reject) => { rejectRead = reject; });
+    return [];
+  });
+  try {
+    const first = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+    const second = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+    const outcomes = Promise.allSettled([first, second]);
+    await new Promise(resolve => setImmediate(resolve));
+    rejectRead!(failure);
+    for (const result of await outcomes) {
+      assert.equal(result.status, "rejected");
+      if (result.status === "rejected") assert.equal(result.reason, failure);
+    }
+    assert.equal(reads, 1);
+  } finally { installFactReader(undefined); }
+});

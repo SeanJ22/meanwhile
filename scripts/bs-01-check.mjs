@@ -137,7 +137,8 @@ try {
         ids: [...new Set([...document.querySelectorAll('[data-contest-id]')].map(element => element.getAttribute('data-contest-id')))],
         candidates: document.querySelectorAll('[data-candidate-target]').length,
         fundingSections: document.querySelectorAll('[data-candidate-funding]').length,
-        holdingGaps: Boolean(document.querySelector('[data-ballot-canonical-holding-gaps]')) }));
+        holdingGaps: Boolean(document.querySelector('[data-ballot-canonical-holding-gaps]')),
+        missingFamilies: [...document.querySelectorAll('[data-ballot-canonical-holding-gaps] li')].map(element => element.textContent) }));
       if (!same(result.ids, wanted.ids) || result.holdingGaps) errors.push('Complete held ballot was not rendered');
       if (!(result.reactionMs < 100)) errors.push('Click reaction reached 100 ms');
       if (!(result.fullMs < 3000)) errors.push('Cold complete ballot reached 3000 ms');

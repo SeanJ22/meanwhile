@@ -603,7 +603,7 @@ export function AskBox({
         </p>
       )}
 
-      {asked && digest && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && (
+      {asked && digest && !grounded?.answer && !grounded?.aiAnswer && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && (
         <DigestAnswer
           digest={digest}
           coverage={coverage}
@@ -612,7 +612,7 @@ export function AskBox({
         />
       )}
 
-      {asked && asked.destination && !grounded?.confirmation && !grounded?.clarification && (
+      {asked && asked.destination && !grounded?.answer && !grounded?.aiAnswer && !grounded?.confirmation && !grounded?.clarification && (
         <div
           data-ask-destination={asked.destination.destination.id}
           className="mt-3 rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"

@@ -14,6 +14,7 @@ import {
 import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjection } from "../votes/snapshot.ts";
 import type { FederalMemberVotesReadModel, FederalRollCallWindow } from "../votes/data-plane.ts";
 import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
+import { matchingPersonVotes } from "./person-votes.ts";
 import type { RollCallVote } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
@@ -401,7 +402,7 @@ export function voteEvidenceFor(
 
 export async function voteEvidenceForIncludingHistory(
   personName: string,
-  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string; topic?: string | null } = {},
   readers?: NativeMemberVoteReaders,
 ): Promise<VoteEvidence> {
   const stateHint = options.withinStates?.length === 1 ? options.withinStates[0] : undefined;
@@ -435,6 +436,7 @@ export async function voteEvidenceForIncludingHistory(
     ? await readFederalMemberVotes(identity.seat.officeholderId).then(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value
       : read.kind === "NOT_RECORDED" ? null : undefined, () => undefined) : null;
   const current = voteEvidenceFor(personName, { ...options, memberVotes });
+  if (options.topic !== undefined && matchingPersonVotes(current.records, options.topic)?.length) return current;
   if (current.identity.kind !== "JOINED" || current.identity.seat.rosterScope !== "us") return current;
   const seat = current.identity.seat;
   const promoted = await readFederalRollCallsProjection();

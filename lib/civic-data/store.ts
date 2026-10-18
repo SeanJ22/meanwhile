@@ -186,6 +186,7 @@ export interface RoutineDataStore {
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
   readonly pointerMoveEvents?: (candidateId: string) => Promise<readonly CandidateEvent[]>;
+  readonly pointerMoveChain?: (key: string, currentId: string) => Promise<readonly CandidateEvent[]>;
   readonly clock: (
     sourceId: string,
     recordClass: RoutineRecordClass,
@@ -1673,6 +1674,27 @@ export function pointerMoveEventsRead(db: RoutineClockDb, candidateId: string) {
     .orderBy(civicDataCandidateEvents.sequence);
 }
 
+/** Follow only this pointer's anchored links in one round trip, including
+ * conflicting links so the existing history reader can reject ambiguity. */
+export function pointerMoveChainRead(db: Pick<ReturnType<typeof getDb>, "execute">, key: string, currentId: string) {
+  const prefix = `Atomic pointer ${key} moved from `;
+  return db.execute<PostgresCandidateEventRow>(sql`WITH RECURSIVE chain(id, path) AS (
+    SELECT ${currentId}::text, ARRAY[${currentId}]::text[]
+    UNION ALL
+    SELECT link.previous, chain.path || link.previous
+    FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+    CROSS JOIN LATERAL (SELECT substring(e.detail FROM ${prefix.length + 1}
+      FOR greatest(0, length(e.detail) - ${prefix.length} - length(' to ' || chain.id || '.'))) AS previous) link
+    WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}
+      AND right(e.detail, length(' to ' || chain.id || '.')) = ' to ' || chain.id || '.'
+      AND link.previous <> 'bootstrap/no-version' AND link.previous <> ''
+      AND link.previous !~ '\\s' AND NOT link.previous = ANY(chain.path)
+  )
+  SELECT DISTINCT e.candidate_id AS "candidateId", e.sequence, e.state, e.at, e.detail
+  FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+  WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}`);
+}
+
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
   return {
     candidateId: row.candidateId,
@@ -2485,6 +2507,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await pointerMoveEventsRead(this.db, candidateId);
     return rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async pointerMoveChain(key: string, currentId: string): Promise<readonly CandidateEvent[]> {
+    const result = await pointerMoveChainRead(this.db, key, currentId);
+    return result.rows.map(postgresCandidateEventRowToEvent);
   }
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */

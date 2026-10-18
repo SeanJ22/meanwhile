@@ -8,6 +8,7 @@ import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
+  CandidateEvent,
   CandidateVersionRecord,
   PromotedPointerIdentity,
   PromotedProjection,
@@ -956,7 +957,7 @@ export interface ProvenCivicDataHistory<T> {
 
 export interface ProvenCivicDataHistoryOptions {
   readonly store?: Pick<RoutineDataStore, "readCandidate" | "events"> &
-    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents">>;
+    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents" | "pointerMoveChain">>;
   readonly cursor?: string | null;
   /** Payloads per page, not a cap on the historical chain. */
   readonly pageSize?: number;
@@ -993,11 +994,13 @@ export async function readPromotedCivicDataPredecessors<T>(
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
     const store = options.store ?? new PostgresRoutineDataStore();
+    let chain: readonly CandidateEvent[] | null = null;
+    const eventsById = new Map<string, CandidateEvent[]>();
     const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
     const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
     const seen = new Set<string>();
     const link = async (id: string): Promise<{ readonly previous: string | null; readonly at: string } | null> => {
-      const events = await readPointerMoveEvents(store, id);
+      const events = chain === null ? await readPointerMoveEvents(store, id) : eventsById.get(id) ?? [];
       const prefix = `Atomic pointer ${key} moved from `;
       const suffix = ` to ${id}.`;
       const matched = events.filter((event) => event.state === "PROMOTED" &&
@@ -1012,6 +1015,8 @@ export async function readPromotedCivicDataPredecessors<T>(
     const moves = new Map<string, { readonly previous: string | null; readonly at: string }>();
     const pageIds: string[] = [];
     try {
+      chain = typeof store.pointerMoveChain === "function" ? await store.pointerMoveChain(key, currentId) : null;
+      for (const event of chain ?? []) eventsById.set(event.candidateId, [...eventsById.get(event.candidateId) ?? [], event]);
       // Rewalk the exact anchored links on a continuation. No caller-supplied
       // version can jump into an unrelated candidate's history.
       for (;;) {

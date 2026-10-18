@@ -20,7 +20,7 @@ function distance(a: string, b: string): number {
   return d[a.length][b.length];
 }
 
-function initials(entity: BindableEntity): string[] {
+export function bodyInitials(entity: BindableEntity): string[] {
   const all = normalizeName(entity.name).split(" ").filter(word => word !== "the");
   const words = all.filter(word => !["of", "and"].includes(word));
   const core = [...words];
@@ -60,7 +60,7 @@ export function decideNamedBody(question: string, bodies: readonly BindableEntit
   const explicit = mentions.filter(value => normalizeName(question).includes(normalizeName(value)));
   const scored = eligible.flatMap(entity => {
     if (binding.kind === "AMBIGUOUS") return binding.candidates.some(value => value.id === entity.id) ? [{ entity, score: 100 }] : [];
-    if (initials(entity).some(value => acronymWords.has(value))) return [{ entity, score: 90 + Number(Boolean(entity.divisionType)) }];
+    if (bodyInitials(entity).some(value => acronymWords.has(value))) return [{ entity, score: 90 + Number(Boolean(entity.divisionType)) }];
     if (!mention && explicit.length === 0) return [];
     const identifying = distinctiveTokens(entity.name).filter(value => !COMMON_QUESTION_NOUNS.has(value));
     if (!identifying.length) return [];
@@ -83,7 +83,7 @@ export function decideNamedBody(question: string, bodies: readonly BindableEntit
   let choices = distinct.filter(row => best !== undefined && best - row.score < 2);
   // A directory entry and the same district's sourced governing board do
   // not present two plausible calendars. Keep distinct local governments tied.
-  if (/\b(?:meet\w*|agenda|docket|session|decid\w*|vote\w*)\b/i.test(question)) {
+  if (/\b(?:meet\w*|agenda|docket|session|decid\w*|vote\w*|budget|funding|spend\w*|tax\w*)\b/i.test(question)) {
     choices = choices.filter(row => !row.entity.id.startsWith("government:") || !choices.some(other =>
       other.entity.id !== row.entity.id && other.entity.ocdId && other.entity.ocdId === row.entity.ocdId &&
       /#(?:governing|board)$/.test(other.entity.id)));

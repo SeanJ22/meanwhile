@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
 import { decideNamedBody } from "../lib/ask/body-confirmation.ts";
-import { lexicalReading } from "../lib/ask/lexical-reading.ts";
+import { bodyNameFromQuestion, lexicalReading } from "../lib/ask/lexical-reading.ts";
+import { titleCaseName } from "../lib/ask/inventory.ts";
 import { composeSittingAnswer } from "../lib/ask/sitting-answer.ts";
 import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { meteredAskFetch } from "../lib/ask/cost.ts";
@@ -10,13 +11,27 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { composeDistrictAnswer, districtQuestion } from "../lib/ask/districts.ts";
 import { selectSitting } from "../lib/ask/select.ts";
 import type { Division } from "../lib/registry/types.ts";
-import { composePersonVotes } from "../lib/ask/person-votes.ts";
+import { composePersonVotes, personVotesQuestionShape } from "../lib/ask/person-votes.ts";
+import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
+import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { installRegistryAuthority, installFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { contestsOfOffice } from "../lib/ask/ballot-summary.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import { workerSystemPrompt, WORKER_SAFETY_FRAME } from "../lib/control-plane/playbooks.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
+import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 
 const body = (place: string, name: string): BindableEntity => ({ id: `${place}#board`, ocdId: place,
   name, level: "BODY", nameClass: "body", divisionType: "school_district" });
 const tucson = body("ocd-division/country:us/state:az/school_district:tucson", "Tucson Unified School District Governing Board");
 const turlock = body("ocd-division/country:us/state:ca/school_district:turlock", "Turlock Unified School District Board of Education");
+
+test("AQ-01 a governor lookup does not call an empty legislative district a governor loading failure", async () => {
+  await installRegistryAuthority();
+  const read = await readerOfficeholders(["ocd-division/country:us/state:az/sldu:9999"], [], ["governor"]);
+  assert.equal(read.loaderFailures, 0);
+  assert.ok(read.seats.every(seat => /governor/i.test(seat.officeTitle)));
+});
 
 test("AQ-01 abbreviations resolve using the reader's place and skip the model for a simple question", () => {
   const question = "When was the last TUSD meeting?";
@@ -31,12 +46,49 @@ test("AQ-01 abbreviations resolve using the reader's place and skip the model fo
     assert.equal(reading?.interpretation.temporal.kind, "LAST");
   }
   assert.equal(decideNamedBody(question, [tucson, turlock]).kind, "CONFIRM");
+  const loose = lexicalReading({ question: "When's the school board getting together again?", inventory: [tucson], namedBodies: [tucson], readerGoverning: [tucson] });
+  assert.equal(loose?.subjectId, tucson.id);
+  assert.equal(loose?.shape, "MEETING_TIME");
 });
 
 test("AQ-01 a nickname-like typo with one real match does not need a confirmation", () => {
   assert.equal(decideNamedBody("What's on the Tucsno school district agenda?", [tucson]).kind, "BOUND");
   const la = body("ocd-division/country:us/state:ca/school_district:la", "Los Angeles Unified School District Board of Education");
   assert.equal(decideNamedBody("When does LAUSD meet?", [la]).kind, "BOUND");
+});
+
+test("AQ-01 the complete meeting composition preserves the reader's district abbreviation", () => {
+  for (const spelling of ["TUSD", "tusd"]) {
+    const name = bodyNameFromQuestion(`When was the last ${spelling} meeting?`, [tucson], tucson.id);
+    assert.equal(name && titleCaseName(name), "TUSD");
+  }
+});
+
+test("AQ-01 the same publisher person ID is one official; a matching name alone is insufficient", async () => {
+  await installRegistryAuthority();
+  await installFederalDirectory();
+  const holders = [
+    { id: "congress:C001098", name: "Ted Cruz", nativeIds: { bioguide: ["C001098"] } },
+    { id: "plural:tx:cruz", name: "Ted Cruz", nativeIds: { bioguide: ["C001098"] } },
+    { id: "unrelated", name: "Ted Cruz", nativeIds: {} },
+  ] as SeatHolder[];
+  const aliases = canonicalOfficialAliases(holders.map(holder => holder.id), [], holders);
+  assert.equal(aliases.get("plural:tx:cruz"), "congress:C001098");
+  assert.equal(aliases.get("unrelated"), "unrelated");
+  const nativeOnly = canonicalOfficialAliases(["plural:tx:cruz"], [], holders);
+  assert.equal(nativeOnly.get("congress:C001098"), "plural:tx:cruz");
+});
+
+test("AQ-01 governor questions include a joint ticket, preserving a separate lieutenant governor race", () => {
+  const contests = ["Governor and Lt. Governor", "FOR GOVERNOR AND LIEUTENANT GOVERNOR", "GOVERNOR", "LIEUTENANT GOVERNOR"]
+    .map((title, id) => ({ id: String(id), title, type: "CANDIDACY" }) as Contest);
+  assert.deepEqual(contestsOfOffice(contests, "governor").map(row => row.id), ["0", "1", "2"]);
+  assert.deepEqual(contestsOfOffice(contests, "lieutenant_governor").map(row => row.id), ["0", "1", "3"]);
+});
+
+test("AQ-01 general AI answers are not told to require acquired source bytes", () => {
+  assert.equal(workerSystemPrompt("ASK_FALLBACK", "Use general knowledge."), "ASK_FALLBACK PLAYBOOK\nUse general knowledge.");
+  assert.ok(workerSystemPrompt("ASK_WRITER", "Use the supplied evidence.").startsWith(WORKER_SAFETY_FRAME));
 });
 
 test("AQ-01 ordinary question words do not silently name an unrelated body", () => {
@@ -114,6 +166,21 @@ test("AQ-01 abbreviated bill numbers select the requested vote without matching 
   const answer = composePersonVotes({ name: "Casey Example", topic: "HR1", records });
   assert.equal(answer?.answer, "Casey Example voted Yea on A measure (H R 1).");
   assert.deepEqual(answer?.citedUrls, ["https://clerk.house.gov/votes/1"]);
+  const missing = composePersonVotes({ name: "Casey Example", topic: "HR2", records });
+  assert.equal(missing?.answer, "We don't have that answer yet.");
+  assert.equal(missing?.missingAnswer, true);
+});
+
+test("AQ-01 a named confirmation selects that nominee instead of other confirmations", () => {
+  assert.equal(personVotesQuestionShape("How did Mark Kelly vote on Confirmation: Keith Sonderling, of F.L., to be Secretary of Labor?")?.slot, "mark kelly");
+  const actor: BindableEntity = { id: "mark", name: "Mark Kelly", nameClass: "person", divisionType: "person" };
+  const department: BindableEntity = { id: "labor", name: "Department of Labor", nameClass: "body", level: "BODY" };
+  assert.equal(lexicalReading({ question: "How did Mark Kelly vote on Confirmation: Secretary of the Department of Labor?", inventory: [actor, department], namedBodies: [department] })?.subjectId, actor.id);
+  const records = ["Keith Sonderling", "Other Nominee"].map((name, i) => ({ kind: "ROLL_CALL_VOTE" as const,
+    id: `confirmation:${i}`, text: `Confirmation: ${name}`, sourceUrl: `https://senate.gov/votes/${i}`,
+    rollCall: { position: i ? "YES" : "NO", what: `Confirmation: ${name}, to be Secretary of Labor`, when: "September 30, 2026", result: "Confirmed" } }));
+  assert.equal(composePersonVotes({ name: "Casey Example", topic: "Confirmation: Keith Sonderling, to be Secretary of Labor", records })?.answer,
+    "Casey Example voted NO on Confirmation: Keith Sonderling, to be Secretary of Labor.");
 });
 
 test("AQ-01 latest and next compare instants when publishers use different timestamp formats", () => {

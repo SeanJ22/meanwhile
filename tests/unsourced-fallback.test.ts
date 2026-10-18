@@ -92,7 +92,7 @@ test("Sean, October 1, 2026: Ask without a held source may answer, states its so
       return new Response(JSON.stringify({ content: [{ type: "text", text: "I am not sure who holds that seat." }] }), { status: 200 });
     }) as unknown as typeof fetch,
   });
-  assert.match(sent, /One sentence is enough for a simple question/);
+  assert.match(sent, /For a simple question, give one direct sentence/);
   assert.ok(!/DECLINE/.test(sent), "the prompt still orders the model to refuse civic questions");
   assert.equal(outcome.kind, "UNSOURCED");
 });

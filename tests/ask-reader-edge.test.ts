@@ -227,22 +227,14 @@ const DEFERRABLE_FROM_DATABASE = [
 const classOf = (read: string) => read.split(":")[0]!;
 
 const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "ballots", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
-const UNRELATED_TRACE = new Set(["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]);
 
 test("with an identity-only edge, a cold Mesa question reads its place identity inventory but skips unrelated evidence", async () => {
   process.env.WTP_READER_EDGE_DIR = c20EdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
-  assert.deepEqual([...databaseReads].sort(), [
-    "BALLOT_CANDIDACY:US-AZ:state-election-ballots",
-    "CANDIDATE_PROFILE:US-AZ:candidate-profiles",
-    "CANDIDATE_PUBLICATION:US-AZ:candidate-publications",
-    "CURATED_READER_RECORD:US-AZ:candidate-campaign-sites-derived",
-    "FEC_FUNDING:federal-supported",
-    "STATE_CAMPAIGN_FINANCE:US-AZ:campaign-finance:2026",
-  ]);
+  assert.deepEqual([...databaseReads].sort(), []);
   // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls.
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);
+  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], undefined, `the meeting question loaded ${source}`);
 });
 
 test("with every deferrable source on the edge, a cold Mesa question serves its state registry and holdings without database reads", async () => {
@@ -253,8 +245,7 @@ test("with every deferrable source on the edge, a cold Mesa question serves its 
   assert.deepEqual(moved, [], "a source the edge carries was read from the database");
   // State roll calls are read only for a question about a state legislator.
   assert.deepEqual([...databaseReads].sort(), []);
-  assert.equal(fundingReadState().metadata.versionId, EDGE.funding, "FEC was not served from the edge");
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "EDGE", `the trace misnames ${source}`);
+  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], undefined, `the meeting question loaded ${source}`);
 });
 
 test("an unsettled meeting-shaped question restores deferred edge evidence without additional database holdings", async () => {

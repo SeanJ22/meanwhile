@@ -8,7 +8,7 @@ import {
   GENERIC_CIVIC_TOKENS,
   type BindableEntity,
 } from "../routing/named-entity.ts";
-import { decideNamedBody } from "./body-confirmation.ts";
+import { bodyInitials, decideNamedBody } from "./body-confirmation.ts";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
 import { meetingDateInQuestion } from "./meeting-date.ts";
@@ -67,6 +67,8 @@ const WHEN_TAIL = "(?: (?:next|again))?";
 const RECENTLY = "(?: (?:recently|lately|last time|at (?:its|their|the) (?:last|latest|most recent|previous) meeting))?";
 
 const SHAPES: readonly ShapePattern[] = [
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:is|s|are) (?:the )?(.+?) (?:getting together|gathering|holding a meeting)${WHEN_TAIL}$`) },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will) (?:the )?(.+?) (?:get together|gather|hold a meeting)${WHEN_TAIL}$`) },
   /* MEETING_TIME — when a named body sits. */
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s) (?:the )?(.+?) meeting next(?: and where)?$/ },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:(?:next|last|first) )?(?:meet|convene|sit)${WHEN_TAIL}$`) },
@@ -186,6 +188,8 @@ function shapeMatches(question: string, options: { pronouns?: boolean } = {}): {
 
 /** The first shape this question matches, and the words in its name slot, or null. */
 export function lexicalQuestionShape(question: string): { shape: LexicalShape; slot: string } | null {
+  const votes = personVotesQuestionShape(question);
+  if (votes) return { shape: "PERSON_VOTES", slot: votes.slot };
   const found = shapeMatches(question)[0];
   return found ? { shape: found.shape, slot: found.slot } : null;
 }
@@ -203,7 +207,9 @@ export function unheldNamedBodyQuestion(question: string, bodies: readonly Binda
 /** Keep the reader's body name when it binds to the resolved body; a pronoun or another name cannot rename it. */
 export function bodyNameFromQuestion(question: string, inventory: readonly BindableEntity[], bodyId: string): string | null {
   const match = shapeMatches(question).find((entry) => entry.kind === "BODY");
-  return match && slotNames(match.slot, inventory, bodyId) ? match.slot : null;
+  if (!match || !slotNames(match.slot, inventory, bodyId)) return null;
+  const abbreviations = new Set(inventory.filter(entity => entity.id === bodyId).flatMap(bodyInitials));
+  return match.slot.split(" ").map(word => abbreviations.has(word) ? word.toUpperCase() : word).join(" ");
 }
 
 /**
@@ -355,11 +361,6 @@ function personVotesReading(input: LexicalReadingInput): LexicalReading | null {
   const person = boundPersonFor(votes.slot, input.inventory);
   if (!person) return null;
   const temporal = { kind: "NONE" as const };
-  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
-    activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [],
-  });
-  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== person.id) return null;
-  if (namesAnotherSubject(input.question, input.inventory, person.id) || classPhraseIn(input.question)) return null;
   return { shape: "PERSON_VOTES", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.PERSON_VOTES, temporal }, subjectId: person.id };
 }
 

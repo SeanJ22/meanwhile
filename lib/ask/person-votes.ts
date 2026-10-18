@@ -27,13 +27,13 @@ export function personVotesQuestionShape(question: string): PersonVotesQuestion 
 
 function voteQuestionShape(question: string, officePronouns: boolean): PersonVotesQuestion | null {
   const normalized = normalizeName(question);
-  if (!normalized || normalized.length > 140) return null;
+  if (!normalized || normalized.length > 400) return null;
   for (const form of FORMS) {
     const match = form.exec(normalized);
     const slot = match?.[1]?.trim();
     if (!slot || !officePronouns && PRONOUNS.test(slot)) continue;
     const topic = match?.[2]?.trim().replace(/^(?:the|a|an) /, "") ?? null;
-    if (topic !== null && (topic.split(" ").length > 6 || /\b(?:and|or|but)\b/.test(topic))) return null;
+    if (topic !== null && /\b(?:and|or|but)\b/.test(topic) && !/^(?:confirmation|nomination)\b/.test(topic)) return null;
     return { slot, topic: topic && topic.length > 0 ? topic : null };
   }
   return null;
@@ -77,22 +77,30 @@ const MOST_RECENT_SHOWN = 3;
 
 type RollCallRecord = EvidenceRecord & { rollCall: NonNullable<EvidenceRecord["rollCall"]> };
 
+export function matchingPersonVotes(records: readonly EvidenceRecord[], topic: string | null): RollCallRecord[] | null {
+  const held = records.filter((record): record is RollCallRecord => record.kind === "ROLL_CALL_VOTE" && Boolean(record.rollCall) && Boolean(record.sourceUrl));
+  if (!topic) return held;
+  const words = normalizeName(topic);
+  const bill = /\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/.exec(words);
+  if (bill) return held.filter(record => [...normalizeName(record.rollCall.what)
+    .matchAll(/\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/g)]
+    .some(match => `${match[1].replace(/\s/g, "")}:${match[2]}` === `${bill[1].replace(/\s/g, "")}:${bill[2]}`));
+  const terms = topicTerms(topic);
+  if (!terms.length) return null;
+  const exact = held.filter(record => normalizeName(record.rollCall.what).includes(words));
+  return exact.length ? exact : held.filter(record => terms.every(term => `${record.rollCall.what} ${record.text}`.toLowerCase().includes(term)));
+}
+
 export function composePersonVotes(input: {
   name: string;
   topic: string | null;
   records: readonly EvidenceRecord[];
-}): { answer: string; citedUrls: string[] } | null {
-  const held = input.records.filter((record): record is RollCallRecord => record.kind === "ROLL_CALL_VOTE" && Boolean(record.rollCall) && Boolean(record.sourceUrl));
-  if (held.length === 0) return null;
-  const terms = input.topic ? topicTerms(input.topic) : [];
+}): { answer: string; citedUrls: string[]; missingAnswer?: boolean } | null {
   const bill = input.topic && /\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/.exec(normalizeName(input.topic));
-  if (input.topic && terms.length === 0 && !bill) return null;
-  const billNumber = bill ? `${bill[1].replace(/\s/g, "")}:${bill[2]}` : null;
-  const matching = billNumber ? held.filter(record => [...normalizeName(record.rollCall.what)
-    .matchAll(/\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/g)]
-    .some(match => `${match[1].replace(/\s/g, "")}:${match[2]}` === billNumber))
-    : terms.length === 0 ? held : held.filter((record) => terms.some((term) => `${record.rollCall.what} ${record.text}`.toLowerCase().includes(term)));
-  if (matching.length === 0) return null;
+  const missing = { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true };
+  const matching = matchingPersonVotes(input.records, input.topic);
+  if (!matching) return null;
+  if (matching.length === 0) return bill ? missing : null;
   const shown = [...matching].sort((a, b) => (b.occurredAt ?? "").localeCompare(a.occurredAt ?? "")).slice(0, MOST_RECENT_SHOWN);
   const items = shown.map((record) => `${record.rollCall.position} on ${record.rollCall.what}${input.topic && matching.length === 1 ? "" : ` (${record.rollCall.when}; ${record.rollCall.result})`}`);
   const list = items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join("; ")}; and ${items.at(-1)}`;

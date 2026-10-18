@@ -2,7 +2,7 @@ import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePackage, readStateDistricts } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
-import { readZipPlaces, stateForZip } from "../reader/national.ts";
+import { readZipPlace, stateForZip } from "../reader/national.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
 import { primeReaderCanonicalStore } from "../reader/canonical-context.ts";
@@ -32,7 +32,7 @@ export async function readBallotReaderData(place: BallotPlace) {
   if (!states.length) return null;
   const point = place.centroid;
   const packages = states.map(state => ({ state, read: readStatePackage(state), districts: readStateDistricts(state) }));
-  const rawEntry = place.zip ? (await readZipPlaces()).get(postalArea(place.zip)?.zcta ?? place.zip) ?? null : null;
+  const rawEntry = place.zip ? await readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : null;
   const divisions = [...new Set([...rawEntry?.ids ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [

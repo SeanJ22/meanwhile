@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 55 GATES RUNNING: UI-01 ONLY; UI-02 RETURNED
+build_state: RELEASE 55 BUILDS RUNNING: UI-01
 worker: codex-river
 provider: Codex
 run_id: codex-river-20261018
 lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
-heartbeat: 2026-10-18T20:17:32Z
+heartbeat: 2026-10-18T20:20:08Z
 
 ## Codex River shift — October 18
 
@@ -15,13 +15,15 @@ Release 55 now contains UI-01 ONLY, READY ee1be9d011c0ba036177595ad31c776bb0940e
 
 Failed combined run was stopped once that failure was isolated; no complete full-suite result is claimed. Preserved fold, test record, gates log and canonical test log/timings under .scratch/river/release-55-ui01-ui02-failed/. First environment-only attempt failed because old node_modules lacked polygon-clipping and sharp; frozen lock install fixed setup without changing tracked files; preserved separately in release-55-gates-environment-failure.log and test-environment-failure.json.
 
-Fresh UI-01-only fold is ab0c352cf21752d23500fb7ea72ddf712675755e, including main's release-54 merge, with no new migrations. river.mjs test --heartbeat is running; .scratch/river/release-55-gates.log. Not promoted or released. .scratch/river/fold.json is the UI-01-only combination. Candidate's full gates must pass before promote/release 55.
+Fresh UI-01-only fold is ab0c352cf21752d23500fb7ea72ddf712675755e, including main's release-54 merge, with no new migrations. river.mjs test --heartbeat is running; .scratch/river/release-55-gates.log. Not promoted or released. .scratch/river/fold.json is the UI-01-only combination. Full suite passed: 8,638 registered tests, 8,633 pass, zero failures, five skips, 39 suites. Preflight, lint, TypeScript, pinned browser and schema gate also pass. Production builds/bundle still running; all gates must pass before promote/release 55.
 
 Prior open returned READYs: meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562, steps-2-6 6da1efc6b. Newer overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against river 829e6d6e21ca with git merge-tree, both conflict extensively, and were returned through river.mjs with exact SHAs and raw conflicts. Do not repeat unchanged returned inputs. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01, SRC-MN.
 
 Hourly continuation in this chat runs from October 18 1 PM through October 19 7 AM Arizona (19 wake-ups). Automation 6ad5209d7df88191a2bba47cb78bfd7f. Skip overlapping live owners, stop by 8 AM, preserve any interrupted candidate and release the lock. Do not call scheduled work completed work.
 
 Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin first on PATH, PNPM_HOME=/tmp/river-pnpm, XDG_DATA_HOME=/tmp/river-xdg, PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Use permitted network-enabled execution. Existing package lock installed frozen. GitHub CLI and connector access works. Production /api/build serves release 54 main 7298706cb. Cloud Chromium live navigation is blocked by ERR_CERT_AUTHORITY_INVALID despite mirroring the configured managed CAs; TLS stayed enabled. HTTP checks work; local/control browser evidence is separate from a live screen check. No spending, budget, pause or production data changes.
+
+New pending READY: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9, committed 2026-10-18T19:53:50Z. Its two-hour deadline is 21:53:50Z (2:53:50 PM Arizona). Needs hook with RS-01: retain vacancies, Capitol offices, officeDetails/provenance and exact-state fallbacks when delivering from the national shelf. Read .factory/sh-01.md on its stream. It is not in release 55; no new batch starts during these gates.
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

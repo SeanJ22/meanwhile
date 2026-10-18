@@ -34,7 +34,7 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=4096
         run: |
-          ln -s "$GITHUB_WORKSPACE/node_modules" node_modules
+          corepack pnpm install --ignore-workspace --frozen-lockfile
           corepack pnpm run postinstall
           corepack pnpm run prebuild
           corepack pnpm exec next build

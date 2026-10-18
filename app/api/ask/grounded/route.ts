@@ -2112,7 +2112,7 @@ async function answerWithSettings(request: Request) {
     }
     /* The reader's own officials (lib/ask/reader-officials.ts): composed from the held officeholders, held to the same validator. */
     const officialsSettled = settleSittingComposition(
-      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls } : null,
+      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls, missingAnswer: officials.missingAnswer } : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
     if (officialsAsk) {

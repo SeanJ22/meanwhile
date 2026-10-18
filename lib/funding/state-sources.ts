@@ -1,5 +1,7 @@
+import type { SourceAuthorityContract } from "../civic-data/types.ts";
+import type { CampaignSourceRecord } from "./state-source-records.ts";
 import inventory from "../../data/campaign-finance/sources.json" with { type: "json" };
-import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { jurisdictionFromOcdId, US_JURISDICTIONS } from "../coverage/states.ts";
 
 interface CampaignFinanceIndex {
   readonly url: string;
@@ -106,4 +108,71 @@ export function campaignFinanceSource(state: string): CampaignFinanceSource {
   const source = CAMPAIGN_FINANCE_SOURCES.find(row => row.state === state);
   if (!source || !US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("Campaign finance requires a supported state or territory.");
   return source;
+}
+
+export function campaignFinanceStateScope(ocdId: string): string {
+  const state = jurisdictionFromOcdId(ocdId);
+  if (!state) throw new Error("Campaign finance requires one exact state or local jurisdiction.");
+  return campaignFinanceScopeForState(state.usps);
+}
+
+export function campaignFinanceScopeForState(state: string): string {
+  if (!US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("Campaign finance requires a supported state or territory.");
+  return `US-${state}:campaign-finance`;
+}
+
+export function campaignFinanceStateFromScope(scope: string): string | null {
+  const state = /^US-([A-Z]{2}):campaign-finance$/.exec(scope)?.[1];
+  return US_JURISDICTIONS.some(row => row.usps === state) ? state! : null;
+}
+
+export function isCampaignFinanceStateScope(scope: string): boolean {
+  return campaignFinanceStateFromScope(scope) !== null;
+}
+
+export const CAMPAIGN_FINANCE_AUTHORITIES = Object.fromEntries(CAMPAIGN_FINANCE_SOURCES.map(source => {
+  const id = campaignFinanceSourceId(source.state);
+  return [id, {
+    id, publisher: source.publisher, trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: [...new Set([source.officialUrl, source.accessEvidenceUrl, ...source.resources.flatMap(resource => [resource.url.split("?")[0], ...(resource.session ? [resource.session.url] : []), ...(resource.lookup?.url ? [resource.lookup.url] : []), ...(resource.index ? [resource.index.url, resource.index.downloadPrefix] : [])])])],
+    jurisdictions: [`US-${source.state}`], recordClasses: ["CAMPAIGN_FINANCE"],
+    competentFacts: ["source-native campaign filings", "filed transaction amounts", "native committee and local-government identifiers"],
+    expectedIdentifierKeys: ["source_record_id"], expectedTemporalFields: ["publication_date", "retrieved_at"],
+    horizonSemantics: "Each complete native extract retains every row. Native local-government IDs remain distinct from independently bound governments. A source failure preserves the prior accepted publication.",
+    parserVersion: CAMPAIGN_FINANCE_PARSER, freshnessExpectation: "Conditional daily reads following the publisher's updates; provider Retry-After is honored.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  }];
+})) as Readonly<Record<`US-${string}:campaign-finance-source`, SourceAuthorityContract>>;
+
+interface CampaignFinanceRows {
+  readonly kind: "campaign-finance-source-rows";
+  readonly state: string;
+  readonly resource: string;
+  readonly records: readonly CampaignSourceRecord[];
+}
+
+interface CampaignFinanceCheck {
+  readonly kind: "campaign-finance-source-check";
+  readonly state: string;
+  readonly resource: string;
+  readonly records: readonly { readonly id: string; readonly state: string; readonly checkedAt: string; readonly rawHash: string; readonly loaded: number; readonly unjoined: number }[];
+}
+export type CampaignFinancePublication = CampaignFinanceRows | CampaignFinanceCheck;
+
+export function campaignFinancePublicationIssue(value: CampaignFinancePublication, state: string): string | null {
+  if (value?.kind === "campaign-finance-source-check") {
+    const row = value.records[0];
+    return value.state !== state || value.records.length !== 1 || !row || row.state !== state || row.id !== value.resource ||
+      !Number.isFinite(Date.parse(row.checkedAt)) || !/^[a-f0-9]{64}$/.test(row.rawHash) || !Number.isSafeInteger(row.loaded) || row.loaded < 0 ||
+      !Number.isSafeInteger(row.unjoined) || row.unjoined < 0 || row.unjoined > row.loaded ? "Campaign source check is invalid." : null;
+  }
+  if (value?.kind !== "campaign-finance-source-rows" || value.state !== state || !value.resource ||
+      !Array.isArray(value.records) || value.records.length > 500) return "Campaign publication requires one bounded batch from its own state.";
+  for (const row of value.records as readonly CampaignSourceRecord[]) {
+    if (row.state !== state || row.resource !== value.resource || typeof row.id !== "string" || !row.id.startsWith(`${state}:`) ||
+        row.governmentOcdId !== null && campaignFinanceStateScope(row.governmentOcdId) !== `US-${state}:campaign-finance` ||
+        !row.provenance?.official || !/^[a-f0-9]{64}$/.test(row.provenance.rawHash) || !row.provenance.vaultKey ||
+        !Number.isFinite(Date.parse(row.provenance.retrievedAt)) || row.amounts.some(amount => !Number.isFinite(amount.amount))) return "Campaign fact crosses its source, state or saved evidence.";
+  }
+  return null;
 }

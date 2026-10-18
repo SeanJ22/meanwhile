@@ -1,4 +1,3 @@
-import { isCampaignFinanceStateScope } from "../funding/campaign-scopes.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "./state-scopes.ts";
 import { stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { parseUnchangedConfirmation } from "./unchanged-confirmation.ts";
@@ -82,7 +81,7 @@ function decodeStateParts(roots: unknown, parts: Record<string, unknown>): unkno
 
 export async function readStateReaderPromotion<T>(query: Query, recordClass: RoutineRecordClass, scope: string): Promise<StateReaderPromotion<T> | null> {
   const state = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope)
-    : recordClass === "CURATED_READER_RECORD" && isCampaignFinanceStateScope(scope) || STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
+    : STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   const rows = await query(READ_STATE, [`${recordClass}:${scope}`]);
   if (!rows.length) return null;

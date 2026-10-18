@@ -1,5 +1,5 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { campaignFinanceStateScope, isCampaignFinanceStateScope } from "../funding/campaign-scopes.ts";
+import { campaignFinanceStateScope, isCampaignFinanceStateScope } from "../funding/state-sources.ts";
 import { federalMemberOfScope, federalMemberVotesScope } from "../votes/data-plane.ts";
 
 const PREFIXES: Readonly<Record<string, string>> = {

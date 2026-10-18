@@ -1,3 +1,4 @@
+import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
@@ -170,14 +171,14 @@ async function checkpoint<T>(path: string): Promise<T | null> {
 }
 async function saveCheckpoint(path: string, value: unknown) {
   const temporary = `${path}.${randomUUID()}`;
-  await writeFile(temporary, JSON.stringify(value));
-  await rename(temporary, path);
+  await writeFile(temporaryPath(temporary), JSON.stringify(value));
+  await rename(temporaryPath(temporary), temporaryPath(path));
 }
 async function download(state: string, url: string, resource: CampaignFinanceResource, body: Record<string, unknown> | null, options: Options): Promise<Download> {
   const key = digest(requestIdentity(url, body, resource));
 
   const directory = join(options.directory, state, "downloads", key);
-  await mkdir(directory, { recursive: true });
+  await mkdir(temporaryPath(directory), { recursive: true });
   const head = join(directory, "download.json");
   let prior = await checkpoint<Download>(head);
   if (prior) {
@@ -201,7 +202,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     return value;
   }
   const generation = join(directory, randomUUID());
-  await mkdir(generation, { recursive: true });
+  await mkdir(temporaryPath(generation), { recursive: true });
   try {
     if (!acquired.body) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign publication has no response bytes.");
     const bodyHash = createHash("sha256");
@@ -215,10 +216,10 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     };
     const value: Download = { ...bytesHeld, runId: options.runId ?? null, sourceCheck: { requestedUrl: url, finalUrl: acquired.url || url, httpStatus: 200, rawHash, checkedAt } };
     await saveCheckpoint(head, value);
-    if (value.path !== path) await rm(generation, { recursive: true, force: true });
-    else if (prior) await rm(dirname(prior.path), { recursive: true, force: true });
+    if (value.path !== path) await rm(temporaryPath(generation), { recursive: true, force: true });
+    else if (prior) await rm(temporaryPath(dirname(prior.path)), { recursive: true, force: true });
     return value;
-  } catch (error) { await rm(generation, { recursive: true, force: true }); throw error; }
+  } catch (error) { await rm(temporaryPath(generation), { recursive: true, force: true }); throw error; }
 }
 
 export async function* acquireCampaignFinanceResource(state: string, resource: CampaignFinanceResource, options: Options): AsyncGenerator<CampaignSourcePage> {
@@ -257,7 +258,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     }
     if (resource.jsonQuery) url.searchParams.set(resource.jsonQuery.parameter, JSON.stringify({ [resource.jsonQuery.field]: body }));
     const directory = join(options.directory, state, resource.id);
-    await mkdir(directory, { recursive: true });
+    await mkdir(temporaryPath(directory), { recursive: true });
     const checkpointPath = join(directory, digest(requestIdentity(url.href, body, resource)) + ".json");
     const prior = await checkpoint<ResourceCheckpoint>(checkpointPath);
     const raw = await download(state, url.href, resource, body, options);

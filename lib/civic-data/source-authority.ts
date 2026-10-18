@@ -4,7 +4,7 @@ import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
-import { CAMPAIGN_FINANCE_AUTHORITIES } from "../funding/state-authorities.ts";
+import { CAMPAIGN_FINANCE_AUTHORITIES } from "../funding/state-sources.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,

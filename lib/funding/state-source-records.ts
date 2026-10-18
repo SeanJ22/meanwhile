@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { campaignFinanceSource, type CampaignFinanceResource } from "./state-sources.ts";
-import { campaignFinanceStateScope } from "./campaign-scopes.ts";
+import { campaignFinanceStateScope } from "./state-sources.ts";
 
 export interface CampaignSourceCapture {
   readonly url: string;
@@ -151,6 +151,6 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
 
 export function campaignSourceRecordHash(row: CampaignSourceRecord): string {
   const { provenance, amounts, projectionOrdinal: _projectionOrdinal, ...native } = row;
-  return hash(JSON.stringify({ ...native, nativeId: row.nativeIdScope === "PUBLICATION" ? null : row.nativeId, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
+  return hash(canonicalCivicDataJson({ ...native, nativeId: row.nativeIdScope === "PUBLICATION" ? null : row.nativeId, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
     publicationDate: (own ?? provenance).publicationDate, publisher: (own ?? provenance).publisher })), publicationDate: provenance.publicationDate, publisher: provenance.publisher }));
 }

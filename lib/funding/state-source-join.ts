@@ -1,3 +1,4 @@
+import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { mkdir, open, rm } from "node:fs/promises";
@@ -39,9 +40,9 @@ async function* tables(path: string, resource: CampaignFinanceResource, lookupPa
 export async function* joinedCampaignSourceRows(path: string, resource: CampaignFinanceResource, directory: string, signal: AbortSignal, lookupPath?: string): AsyncGenerator<Uint8Array> {
   const lookup = resource.lookup;
   if (!lookup) throw new Error("The source-native cover join has no declared keys.");
-  await mkdir(directory, { recursive: true });
+  await mkdir(temporaryPath(directory), { recursive: true });
   const leftPath = join(directory, "filings"), rightPath = join(directory, "covers");
-  const left = await open(leftPath, "w"), right = await open(rightPath, "w");
+  const left = await open(temporaryPath(leftPath), "w"), right = await open(temporaryPath(rightPath), "w");
   let foundCover = false, foundFilings = false;
   try {
     try {
@@ -73,9 +74,9 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
     if (!foundCover || !foundFilings) throw new Error("The source archive is missing its declared cover or filing table.");
     const sortedLeft = `${leftPath}.sorted`, sortedRight = `${rightPath}.sorted`;
     await sortSourceRecords(leftPath, sortedLeft, signal);
-    await rm(leftPath);
+    await rm(temporaryPath(leftPath));
     await sortSourceRecords(rightPath, sortedRight, signal);
-    await rm(rightPath);
+    await rm(temporaryPath(rightPath));
     const covers = keyedRows(sortedRight)[Symbol.asyncIterator]();
     let next = await covers.next(), heldKey = "", held: Row | null = null;
     try {
@@ -105,5 +106,5 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
       while (!next.done) { if (!lookup.publicationResource) yield encode(unmatchedCover(next.value.row)); next = await covers.next(); }
       yield Buffer.from("]");
     } finally { await covers.return?.(); }
-  } finally { await rm(directory, { recursive: true, force: true }); }
+  } finally { await rm(temporaryPath(directory), { recursive: true, force: true }); }
 }

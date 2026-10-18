@@ -210,7 +210,6 @@ export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "federal-directory",
   "federal-funding",
   "state-money",
-  "campaign-finance",
   "ballot-contests",
   "candidate-profiles",
 ];

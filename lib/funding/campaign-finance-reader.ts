@@ -5,7 +5,7 @@ import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord } from "./state-money.ts";
 import { stateMoneyFundingIssue } from "./state-money-funding.ts";
-import { campaignFinanceStateScope, isCampaignFinanceStateScope } from "./campaign-scopes.ts";
+import { campaignFinanceStateScope, isCampaignFinanceStateScope, campaignFinanceNativeScope, campaignFinanceSourceId, campaignFinancePublicationIssue, type CampaignFinancePublication } from "./state-sources.ts";
 
 export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>> {
   readonly kind: "CAMPAIGN_FINANCE_FILING" | "CAMPAIGN_FINANCE_DOCUMENT";
@@ -89,4 +89,11 @@ export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] 
     }
   }
   return records;
+}
+
+export async function readCampaignFinancePublication(state: string, scope = campaignFinanceNativeScope(state), options: PromotedCivicDataReadOptions = {}) {
+  if (scope !== campaignFinanceNativeScope(state) && !scope.startsWith(`${campaignFinanceSourceId(state)}:resource:`)) throw new Error("Campaign finance cannot read another state's records.");
+  const result = await readPromotedCivicData<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope, options);
+  if (result.kind === "PROMOTED" && (result.metadata.sourceId !== campaignFinanceSourceId(state) || campaignFinancePublicationIssue(result.value, state))) throw new Error("Campaign source publication crosses its registered state or schema.");
+  return result;
 }

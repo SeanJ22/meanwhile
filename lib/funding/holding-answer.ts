@@ -1,5 +1,5 @@
 import { REGISTRY_STATES, type BallotState } from "../civic-data/state-scopes.ts";
-import { campaignFinanceScopeForState } from "./campaign-scopes.ts";
+import { campaignFinanceScopeForState } from "./state-sources.ts";
 import { readCampaignFinance, settleCampaignFinanceReads } from "./campaign-finance-reader.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { settleFundingSnapshotRead } from "./snapshot.ts";
@@ -11,6 +11,7 @@ import { directFundingTargetPlan, stateFromContest, FEDERAL_CONTEST, type Fundin
 import { campaignMoneyApiAnswer, resolvedCandidacyForOfficial, type CampaignMoneyApiAnswer } from "./campaign-money.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "./data-plane.ts";
 import { mayUseTestFixture, type CivicDataReadMetadata } from "../civic-data/read-model.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
 
 interface FundingHoldingReaders {
   readonly identityPlan: (target: string) => Promise<FundingTargetPlan>;
@@ -146,6 +147,7 @@ async function currentFundingTargetPlan(target: string, divisions: readonly stri
   await timedRead(timings, "registry", () => settleRegistryAuthorityReads("REGISTRY"));
   if (target.startsWith("congress:")) await timedRead(timings, "federalDirectory", settleFederalDirectoryRead);
   const candidacy = resolvedCandidacyForOfficial(target);
+  if (candidacy) currentReaderSelection()?.keys.add(candidacy.candidacyId);
   const contestId = direct.contestId ?? candidacy?.contestId ?? null;
   for (const { source } of await readerBallotSourcesForDivisions(divisions)) {
     const ballot = source.normalize(await source.fetch());

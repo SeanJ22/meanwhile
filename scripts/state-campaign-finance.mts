@@ -15,7 +15,7 @@ import { publishCampaignFinanceResource } from "../lib/funding/state-publication
 import { recordCampaignFinanceDoor } from "../lib/funding/state-source-doors.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";
 import { CAMPAIGN_FINANCE_PARSER, campaignFinanceSource, campaignFinanceSourceId, campaignFinanceNativeScope } from "../lib/funding/state-sources.ts";
-import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { assignment } from "./cli-args.mts";
@@ -26,8 +26,7 @@ const source = campaignFinanceSource(state), sourceId = campaignFinanceSourceId(
 try {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
-  const store = new PostgresRoutineDataStore(), artifacts = resolveReaderArtifactWriteStore();
-  if (!artifacts) throw new Error("The campaign-finance reader artifact store is unavailable.");
+  const store = new PostgresRoutineDataStore(), facts = readerFactDb();
   const vault = new DurableEvidenceStore(join(process.cwd(), "data", "control-plane", "vault"));
   const url = controlPlaneUrlFromEnv();
   const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true }) : null;
@@ -49,7 +48,7 @@ try {
     } })) {
     const route = resource.url, id = resource.id;
     try {
-      const result = await publishCampaignFinanceResource(state, resource, { store, artifacts, vault, directory, runId, signal: new AbortController().signal });
+      const result = await publishCampaignFinanceResource(state, resource, { store, facts, vault, directory, runId, signal: new AbortController().signal });
       outcome = result.outcome;
       if (repos) await recordCampaignFinanceDoor({ doors: repos.doors, state, resource: id, url: route, at: new Date().toISOString(), evidence: { kind: "GOOD", rows: result.records }, reason: null });
       console.log(`CAMPAIGN_FINANCE_RESOURCE=${JSON.stringify({ state, resource: id, records: result.records, joined: result.records - result.unjoined, unjoined: result.unjoined, versionId: outcome.promoted?.versionId })}`);

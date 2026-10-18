@@ -1,4 +1,3 @@
-import { isCampaignFinanceStateScope } from "../funding/campaign-scopes.ts";
 import { types } from "node:util";
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -19,7 +18,7 @@ export function heldStatePublication(recordClass: string, scope: string): Promot
 
 export function statePublicationScope(scope: string): boolean {
   return STATE_BALLOT_FAMILIES.some(family => stateFromBallotScope(scope, family) !== null) ||
-    stateFromRegistryRuntimeScope(scope) !== null || isCampaignFinanceStateScope(scope);
+    stateFromRegistryRuntimeScope(scope) !== null;
 }
 
 const immutableValues = new WeakSet<object>();

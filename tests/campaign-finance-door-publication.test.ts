@@ -12,7 +12,7 @@ import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublication } from "../lib/funding/campaign-finance.ts";
 import { readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
-import { campaignFinanceStateScope } from "../lib/funding/campaign-scopes.ts";
+import { campaignFinanceStateScope } from "../lib/funding/state-sources.ts";
 import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { filedOrganizations, stateSmallDonorSentence } from "../lib/funding/state-money-funding.ts";

@@ -7,20 +7,19 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualPayloadScope, scopedManualContractScope } from "../lib/civic-data/scoped-manual-contracts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
-import { FederalMoneyIndex, readFederalMoneyJson } from "../lib/federal-money/edge.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { acquireCampaignFinanceResource } from "../lib/funding/state-acquisition.ts";
 import { publishCampaignFinanceResource } from "../lib/funding/state-publication.ts";
-import { readCampaignFinancePage, type CampaignFinancePageRef } from "../lib/funding/state-pages.ts";
-import { readCampaignFinancePublication, type CampaignFinanceFiler, type CampaignFinancePublication } from "../lib/funding/state-projection.ts";
+import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
+import { readCampaignFinancePublication } from "../lib/funding/campaign-finance-reader.ts";
 import { readCampaignFinanceForPlace } from "../lib/funding/state-reader.ts";
 import { stateCampaignEvidence } from "../lib/ask/state-campaign.ts";
-import { CampaignFinanceSpool } from "../lib/funding/state-spool.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceNativeScope, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
 import { zip } from "../scripts/xlsx.mjs";
+import { sha256 } from "../lib/civic-data/candidate-builders.ts";
 
 const now = "2026-10-17T00:00:00.000Z";
 beforeEach(context => { if ("mock" in context) context.mock.method(Date, "now", () => Date.parse("2026-10-17T03:00:00.000Z")); });
@@ -46,16 +45,26 @@ test("all 56 jurisdictions have one official source and curated filings split ex
   assert.throws(() => manualPayloadScope("campaign-finance", "unused", { records: [sourceRows[0], sourceRows[2]] }), /crosses/);
 });
 
-test("native campaign filer publications stay out of the national curated reader catalogue", async () => {
-  const { readPromotedEdgeFamilies } = await import("../lib/civic-data/promoted-edge-publication.ts");
-  const store = new MemoryRoutineDataStore();
-  const seen = [];
-  store.listPromotionScopes = async classes => { seen.push(...classes!); return []; };
-  const result = await readPromotedEdgeFamilies({ store, now, servedManifest: null, families: { "other-reader-data": [] } });
-  assert.equal(result.skipped.length, 0);
-  assert.ok(!seen.includes("CAMPAIGN_FINANCE"));
-  assert.deepEqual(result.authority["other-reader-data"]?.value, { kind: "PROMOTED_POINTERS", entries: [] });
+test("native campaign facts do not create national reader artifacts", async () => {
+  const { promotedEdgePieces } = await import("../lib/civic-data/promoted-edge-publication.ts");
+  assert.deepEqual(promotedEdgePieces([{ recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope("WA") }]), []);
 });
+
+test("one native committee's filings stay with each bound place when a filing moves", async () => {
+  const options = await context(), state = "ocd-division/country:us/state:wa", first = `${state}/county:king`, second = `${state}/county:pierce`;
+  try {
+    const base = campaignSourceRecord("WA", resource, fixture[0], capture);
+    const rows = [{ ...base, id: "WA:place:first", governmentOcdId: first }, { ...base, id: "WA:place:second", governmentOcdId: second }];
+    await fileCampaignMoneyFacts(options.facts, "WA", rows, now);
+    assert.deepEqual((await readCampaignFinanceForPlace(first, { query: options.facts.query })).records.map(row => row.id), [rows[0].id]);
+    assert.deepEqual((await readCampaignFinanceForPlace(second, { query: options.facts.query })).records.map(row => row.id), [rows[1].id]);
+    await fileCampaignMoneyFacts(options.facts, "WA", [{ ...rows[0], governmentOcdId: second }], now);
+    assert.equal((await readCampaignFinanceForPlace(first, { query: options.facts.query })).status, "NOT_HELD");
+    assert.equal((await readCampaignFinanceForPlace(second, { query: options.facts.query })).records.length, 2);
+    assert.equal((await readCampaignFinanceForPlace(state, { query: options.facts.query })).records.length, 2);
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
+});
+
 
 test("native source mapping keeps unmatched rows, zero amounts and source dates without donor/contact data", () => {
   const row = campaignSourceRecord("WA", resource, { ...fixture[0], contributions_amount: "0", donor_name: "Private donor", treasurer_address: "Private home" }, capture);
@@ -103,7 +112,7 @@ test("Missouri follows published export years and retains both native columns wi
       for await (const page of acquireCampaignFinanceResource("MO", source, { ...options, fetch: request, acceptedPublicationId: "accepted" })) assert.equal(page.records.length, 0);
       assert.equal(conditional, true);
     }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("Mississippi streams escaped public report rows, retaining unsupported bindings and filed organizations", async () => {
@@ -129,7 +138,7 @@ test("Mississippi streams escaped public report rows, retaining unsupported bind
       const individual = campaignSourceRecord("MS", source, { ...rows[0], ContributorType: "Individual", Contributor: "Private donor", AddressLine1: "Private home" }, capture);
       assert.doesNotMatch(JSON.stringify(individual), /Private donor|Private home/);
     }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("Wisconsin sends native JSON query pages and keeps registrant fields separate from donor fields", async () => {
@@ -156,7 +165,7 @@ test("Wisconsin sends native JSON query pages and keeps registrant fields separa
     }
     const privateRow = campaignSourceRecord("WI", source, { ...rows[0], from_entity: { name: "Private donor", entityContactProfiles: [{ address: "Private home" }] } }, capture);
     assert.doesNotMatch(JSON.stringify(privateRow), /Private donor|Private home/);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("Massachusetts historical reports retain native categories, amounts, dates and explicit candidate roles", async () => {
@@ -187,28 +196,12 @@ test("Connecticut periods retain both filed dates and organization names require
 
 async function context() {
   const directory = await mkdtemp(join(tmpdir(), "campaign-finance-test-"));
-  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), artifacts = new LocalFileArtifactStore(join(directory, "artifacts"));
-  return { directory, store, vault, artifacts, signal: new AbortController().signal, now: () => now };
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), facts = await factDb();
+  return { directory, store, vault, facts, query: facts.query, signal: new AbortController().signal, now: () => now };
 }
 async function* heldRows(options: Awaited<ReturnType<typeof context>>, usps = "WA") {
-  const scope = campaignFinanceNativeScope(usps);
-  const state = await options.store.readPromotion<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope);
-  assert.equal(state?.payload.kind, "campaign-finance-source-state");
-  if (state?.payload.kind !== "campaign-finance-source-state") return;
-  const groups = new FederalMoneyIndex(options.artifacts, `${scope}:groups`);
-  let after = "", exclusive = false;
-  for (;;) {
-    const entry = await groups.next(state.payload.records[0].groups, after, exclusive);
-    if (!entry) return;
-    const government = await readFederalMoneyJson<CampaignFinanceFiler>(options.artifacts, entry.value);
-    const pages = new FederalMoneyIndex(options.artifacts, `${scope}:filer:${government.id}:pages`);
-    for (let index = 0; index < government.pageCount; index++) {
-      const key = await pages.get(government.pages, String(index).padStart(12, "0"));
-      assert.ok(key);
-      yield* await readCampaignFinancePage(options.artifacts, await readFederalMoneyJson<CampaignFinancePageRef>(options.artifacts, key), usps);
-    }
-    after = entry.key; exclusive = true;
-  }
+  const rows = await options.facts.query(`SELECT f.value FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.state=$1 AND f.status='live' AND f.field LIKE 'campaign-money:%' ORDER BY f.field`, [usps]);
+  for (const row of rows) yield row.value as import("../lib/funding/state-source-records.ts").CampaignSourceRecord;
 }
 
 test("real source sample reaches typed readback and corrupt updates preserve independently verified amounts and omitted rows", async () => {
@@ -243,10 +236,11 @@ test("real source sample reaches typed readback and corrupt updates preserve ind
     assert.equal(retained.amounts.find(value => value.label === "Contributions")?.amount, original.amounts.find(value => value.label === "Contributions")?.amount);
     assert.deepEqual(retained.amounts.find(value => value.label === "Contributions")?.provenance, original.provenance);
     assert.equal(retained.amounts.find(value => value.label === "Expenditures")?.amount, 234.56);
-    const read = await readCampaignFinancePublication("WA", undefined, { store: options.store, now: at, bypassCache: true });
+    const sourceScope = `US-WA:campaign-finance-source:resource:${sha256(resource.id)}`;
+    const read = await readCampaignFinancePublication("WA", sourceScope, { store: options.store, now: at, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     await assert.rejects(readCampaignFinancePublication("WA", campaignFinanceNativeScope("CA"), { store: options.store }), /another state/);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("an API with mixed 304 and changed pages replays the whole native resource with original capture dates", async () => {
@@ -276,7 +270,7 @@ test("an API with mixed 304 and changed pages replays the whole native resource 
     }
     assert.equal(count, 501);
     assert.equal(calls, 4);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("real California and Pennsylvania native cover joins stream independently and an archive shared by profiles downloads once", async () => {
@@ -299,7 +293,7 @@ test("real California and Pennsylvania native cover joins stream independently a
         assert.equal(count, 2);
       }
       assert.equal(calls, 1);
-    } finally { await rm(options.directory, { recursive: true, force: true }); }
+    } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
   }
 });
 
@@ -317,7 +311,7 @@ test("a parsed page left by an interrupted publication is replayed despite uncha
     count = 0;
     for await (const page of acquireCampaignFinanceResource("WA", resource, { ...options, fetch: sourceFetch, acceptedPublicationId: "retry", publicationId: "next-completed-pass" })) count += page.records.length;
     assert.equal(count, 0);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("bulk indexes follow the publisher's public form pagination and reject an empty declared table", async () => {
@@ -340,7 +334,7 @@ test("bulk indexes follow the publisher's public form pagination and reject an e
     const missing = { ...resource, kind: "ZIP" as const, filePattern: "^absent.csv$" };
     const archive = zip([{ name: "other.csv", data: Buffer.from("id\n1\n") }], "2026-10-16");
     await assert.rejects(async () => { for await (const _page of acquireCampaignFinanceResource("WA", missing, { ...options, fetch: async () => new Response(archive) })) { /* Consume through the archive's source table check. */ } }, /no declared native filing table/);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -377,7 +371,7 @@ test("Vermont pages its complete native APIs through current filings without ann
       const privateRow = campaignSourceRecord("VT", source, { ...rows[0], sourceName: "Private donor", addressLine1: "Private home" }, { ...capture, url: source.url });
       assert.doesNotMatch(JSON.stringify(privateRow), /Private home/);
     }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -401,26 +395,8 @@ test("native joins retain cover-only rows and quarantine malformed cover details
     const coverOnly = rows.find(row => !row.amounts.length)!;
     assert.match(coverOnly.issues.join(" "), /no matching filing/);
     assert.ok(coverOnly.unjoinedReason);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
-
-test("compact disk rows preserve every normalized field across source observations", async () => {
-  const options = await context();
-  try {
-    for (const state of ["WA", "VT"]) {
-      const source = campaignFinanceSource(state).resources[0];
-      const raw = state === "WA" ? fixture : JSON.parse(await readFile(new URL("./fixtures/campaign-finance/vt-native-contributions.json", import.meta.url), "utf8"));
-      const spool = new CampaignFinanceSpool(options.directory, state, source);
-      const encoded = [];
-      for (const [index, value] of raw.entries()) {
-        const row = campaignSourceRecord(state, source, value, { ...capture, url: source.url, vaultKey: "test/" + capture.rawHash, retrievedAt: index ? "2026-10-17T01:00:00Z" : now }, index);
-        encoded.push({ row, text: await spool.encode(row) });
-      }
-      for (const { row, text } of encoded.reverse()) assert.deepEqual(await spool.decode(row.id.split(":").at(-1)!, text), row);
-    }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
-});
-
 
 test("Maryland bulk publications expand primitive year lists and stream past their source preamble", async () => {
   const options = await context();
@@ -450,37 +426,27 @@ test("Maryland bulk publications expand primitive year lists and stream past the
       }
     }
     assert.equal(count, 2);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
-test("D.C. native epoch dates and publication-scoped IDs reach a government artifact without merging stale object IDs", async () => {
-  const options = await context();
-  const source = campaignFinanceSource("DC").resources[0];
+test("D.C. native dates and publication IDs file directly by state and preserve omitted source facts", async () => {
+  const options = await context(), source = campaignFinanceSource("DC").resources[0];
   const saved = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/dc-native-contributions.json", import.meta.url), "utf8"));
   let rows = saved.features;
   try {
     const fetch: typeof globalThis.fetch = async () => new Response(JSON.stringify({ ...saved, features: rows }));
     await publishCampaignFinanceResource("DC", source, { ...options, fetch });
-    const scope = campaignFinanceNativeScope("DC");
-    const state = await options.store.readPromotion<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope);
-    assert.equal(state?.payload.kind, "campaign-finance-source-state");
-    if (state?.payload.kind !== "campaign-finance-source-state") throw new Error("D.C. state publication is missing.");
-    const held = state.payload.records[0];
-    assert.equal(held.count, 2);
-    const placeKey = await new FederalMoneyIndex(options.artifacts, `${scope}:places`).get(held.places, "ocd-division/country:us/district:dc");
-    assert.ok(placeKey);
-    const first = campaignSourceRecord("DC", source, rows[0], { ...capture, url: source.url });
-    assert.equal(first.transactionDate, new Date(rows[0].attributes.DATEOFRECEIPT).toISOString());
-    assert.equal(first.provenance.publicationDate, null);
+    const read = await readCampaignFinanceForPlace("ocd-division/country:us/district:dc", { query: options.facts.query });
+    assert.equal(read.records.length, 2);
+    const first = read.records.find(row => row.transactionDate === new Date(rows[0].attributes.DATEOFRECEIPT).toISOString())!;
+    assert.ok(first); assert.equal(first.provenance.publicationDate, null);
     assert.equal(first.provenance.sourcePublicationDate, new Date(rows[0].attributes.GIS_LAST_MOD_DTTM).toISOString());
-    assert.equal(first.filerId, null);
-    assert.equal(first.unjoinedReason, null);
+    assert.equal(first.filerId, null); assert.equal(first.unjoinedReason, null);
     rows = rows.slice(0, 1);
     await publishCampaignFinanceResource("DC", source, { ...options, fetch, now: () => "2026-10-17T01:00:00.000Z" });
-    const updated = await options.store.readPromotion<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope);
-    assert.equal(updated?.payload.records[0].count, 1);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+    assert.equal((await readCampaignFinanceForPlace(read.division, { query: options.facts.query })).records.length, 2);
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -512,7 +478,7 @@ test("South Carolina keeps source-native candidate IDs and advances its query da
       assert.equal(count, 2);
     }
     assert.deepEqual(dates, ["2026-10-17", "2026-10-18"]);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -542,7 +508,7 @@ test("Utah expands every published year, keeps unfiled documents without amounts
       complete ||= page.complete;
     }
     assert.equal(complete, true);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -574,7 +540,7 @@ test("Kentucky bulk exports follow its native election-date list and preserve or
       assert.equal(row.period, raw.expDate);
       assert.equal(row.amounts[0].amount, raw.amount);
     }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -595,7 +561,7 @@ test("idless source snapshots retain identical rows and stable identities when c
     for await (const row of heldRows(options, "MD")) after.push(row);
     assert.deepEqual(after.map(row => row.id).sort(), first.map(row => row.id).sort());
     assert.ok(after.every(row => row.provenance.retrievedAt === now));
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -635,7 +601,7 @@ test("Virginia joins separate official CSV files once per pass and a corrected c
       }
       assert.equal(coverDownloads, pass);
     }
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("Virginia discovers monthly file links and records one failed index without abandoning other months", async () => {
@@ -652,7 +618,7 @@ test("Virginia discovers monthly file links and records one failed index without
     assert.equal(found.length, 10);
     assert.equal(failed, 10);
     assert.ok(found.every(resource => resource.url.includes("/2026_10/") && resource.url.endsWith(".csv")));
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -692,7 +658,7 @@ test("NYC candidate identifiers stay inside their election cycle and unfiled reg
   assert.equal(registration.amounts.length, 0);
 });
 
-test("a replacement publication that changes only generated row IDs and dataset timestamps reuses accepted fact pages", async () => {
+test("a replacement publication that changes only generated row IDs and dataset timestamps confirms accepted facts without creating reader copies", async () => {
   const options = await context();
   const source = campaignFinanceSource("DC").resources[0];
   const saved = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/dc-native-contributions.json", import.meta.url), "utf8"));
@@ -711,37 +677,37 @@ test("a replacement publication that changes only generated row IDs and dataset 
     for await (const row of heldRows(options, "DC")) after.push(row);
     assert.deepEqual(after, first);
     assert.ok(after.every(row => row.nativeIdScope === "PUBLICATION"));
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
-test("campaign readers seek one bounded place page, keep cursor snapshots and use the same facts in Ask", async () => {
+test("campaign readers seek one bounded place page, page the shared state-place fact store and use the same facts in Ask", async () => {
   const options = await context(), division = "ocd-division/country:us/state:wa";
   let rows = Array.from({ length: 207 }, (_, index) => ({ ...fixture[0], id: `reader-${index}`, contributions_amount: String(index) }));
   const fetch: typeof globalThis.fetch = async () => new Response(JSON.stringify(rows));
   try {
     await publishCampaignFinanceResource("WA", resource, { ...options, fetch });
-    let reads = 0, bytesRead = 0;
-    const readBytes = options.artifacts.readBytes.bind(options.artifacts);
-    options.artifacts.readBytes = async key => { reads++; const bytes = await readBytes(key); bytesRead += bytes?.byteLength ?? 0; return bytes; };
-    const first = await readCampaignFinanceForPlace(division, { artifactStore: options.artifacts });
-    assert.equal(first.status, "HELD"); assert.equal(first.records.length, 100); assert.equal(first.count, 207); assert.ok(first.nextCursor);
-    assert.ok(reads < 15); assert.ok(bytesRead < 40_000);
-    assert.equal((await readCampaignFinanceForPlace(division + "/place:seattle", { artifactStore: options.artifacts })).status, "NOT_HELD");
-    await assert.rejects(() => readCampaignFinanceForPlace("ocd-division/country:us/state:or", { artifactStore: options.artifacts, cursor: first.nextCursor }), /invalid/);
-    const altered = JSON.parse(Buffer.from(first.nextCursor, "base64url").toString()); altered.page = 99999;
-    await assert.rejects(() => readCampaignFinanceForPlace(division, { artifactStore: options.artifacts, cursor: Buffer.from(JSON.stringify(altered)).toString("base64url") }), /page/);
-    const second = await readCampaignFinanceForPlace(division, { artifactStore: options.artifacts, cursor: first.nextCursor });
+    let returned = 0;
+    const query = async (sql: string, params?: readonly unknown[]) => { const rows = await options.facts.query(sql, params); returned += rows.length; return rows; };
+    const first = await readCampaignFinanceForPlace(division, { query });
+    assert.equal(first.status, "HELD"); assert.equal(first.records.length, 100); assert.equal(first.count, null); assert.ok(first.nextCursor);
+    assert.ok(returned <= 103);
+    assert.equal((await readCampaignFinanceForPlace(division + "/place:seattle", { query: options.facts.query })).status, "NOT_HELD");
+    await assert.rejects(() => readCampaignFinanceForPlace("ocd-division/country:us/state:or", { query: options.facts.query, cursor: first.nextCursor }), /invalid/);
+    const altered = JSON.parse(Buffer.from(first.nextCursor, "base64url").toString()); altered.entity = "campaign-committee:OR:" + "a".repeat(64);
+    await assert.rejects(() => readCampaignFinanceForPlace(division, { query: options.facts.query, cursor: Buffer.from(JSON.stringify(altered)).toString("base64url") }), /page/);
+    const second = await readCampaignFinanceForPlace(division, { query: options.facts.query, cursor: first.nextCursor });
     assert.equal(second.records.length, 100); assert.equal(new Set([...first.records, ...second.records].map(row => row.id)).size, 200);
     rows = rows.map(row => ({ ...row, contributions_amount: "99999" }));
     await publishCampaignFinanceResource("WA", resource, { ...options, fetch, now: () => "2026-10-17T01:00:00Z" });
-    const frozen = await readCampaignFinanceForPlace(division, { artifactStore: options.artifacts, cursor: first.nextCursor });
-    assert.deepEqual(frozen.records, second.records); assert.equal(frozen.count, null);
-    const evidence = await stateCampaignEvidence([division], division, { artifactStore: options.artifacts });
+    const updated = await readCampaignFinanceForPlace(division, { query: options.facts.query, cursor: first.nextCursor });
+    assert.deepEqual(updated.records.map(row => row.id), second.records.map(row => row.id));
+    assert.ok(updated.records.every(row => row.amounts.find(amount => amount.label === "Contributions")?.amount === 99999));
+    const evidence = await stateCampaignEvidence([division], division, { query: options.facts.query });
     assert.equal(evidence.records.length, 100); assert.ok(evidence.records.every(row => row.official && row.sourceUrl && row.publicationDate));
     assert.equal(evidence.denominators.stateCampaignMorePages, 1);
     assert.ok(evidence.gaps.some(row => row.statement.includes("More campaign filings")));
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -764,7 +730,7 @@ test("Florida follows published elections and streams the official form's tab-de
       assert.doesNotMatch(JSON.stringify(row), /Contributor Name|Address|Occupation/);
     }
     assert.equal(count, 2); assert.equal(source.encoding, "windows-1252");
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 test("Puerto Rico uses its normal public form token and cookie, retains anonymous source rows and reuses unchanged bytes across sessions", async () => {
@@ -785,12 +751,13 @@ test("Puerto Rico uses its normal public form token and cookie, retains anonymou
   try {
     const first = await publishCampaignFinanceResource("PR", source, { ...options, fetch });
     assert.equal(first.records, 2); assert.equal(first.unjoined, 2);
-    const read = await readCampaignFinanceForPlace("ocd-division/country:us/territory:pr", { artifactStore: options.artifacts });
+    const read = await readCampaignFinanceForPlace("ocd-division/country:us/territory:pr", { query: options.facts.query });
     assert.equal(read.records[0].transactionDate?.endsWith("Z"), true);
     assert.ok(read.records.every(row => row.amounts.length === 1 && row.organizationName === null && row.provenance.official));
     const next = await publishCampaignFinanceResource("PR", source, { ...options, fetch, now: () => "2026-10-17T01:00:00Z" });
-    assert.equal(next.records, 0); assert.equal(session, 2);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+    assert.equal(next.records, 2);
+    assert.ok(next.outcome.confirmed); assert.equal(session, 2);
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -798,7 +765,7 @@ test("the native campaign card attributes every fact in the containing card's si
   const options = await context(), division = "ocd-division/country:us/state:wa";
   try {
     await publishCampaignFinanceResource("WA", resource, { ...options, fetch: async () => Response.json(fixture) });
-    const read = await readCampaignFinanceForPlace(division, { artifactStore: options.artifacts });
+    const read = await readCampaignFinanceForPlace(division, { query: options.facts.query });
     const records = [];
     for await (const row of heldRows(options)) records.push(row);
     const registration = records.find(row => row.filerId === fixture[1].filer_id)!;
@@ -807,7 +774,7 @@ test("the native campaign card attributes every fact in the containing card's si
       props: { divisionId: division, data: { ...read, records, nextCursor: null } }, sourceUrls: [...new Set(records.map(row => row.provenance.url))] });
     assert.match(markup, /Campaign money/); assert.match(markup, /Contributions:.*0/); assert.match(markup, /Registration on file/);
     assert.doesNotMatch(markup, /Private donor|Private home/);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -821,7 +788,7 @@ test("a corrected native field map replays unchanged source bytes instead of ret
     const records = [];
     for await (const page of acquireCampaignFinanceResource("WA", corrected, { ...options, fetch, publicationId: "corrected-map", acceptedPublicationId: "accepted-before-map-correction" })) records.push(...page.records);
     assert.equal(records.length, 2); assert.ok(records.some(row => row.amounts.some(amount => amount.label === "Filed Contributions")));
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
 
@@ -841,9 +808,12 @@ test("Massachusetts streams the complete filer index and expands each native rep
     assert.equal(calls.length, 1 + filers.length);
     const reports = resources.filter(row => row.id.startsWith("ocpf-report-history:"));
     assert.equal(new Set(reports.map(row => row.id)).size, reports.length);
-    assert.ok(reports.every(row => row.expectedFields?.cpfId === new URL(row.url).pathname.split("/").at(-1)));
+    assert.ok(reports.every(row => {
+      const route = new URL(row.url);
+      return row.expectedFields?.cpfId === route.pathname.split("/").at(-1);
+    }));
     assert.ok(reports.every(row => row.rowPath === "items" && row.totalPath === "summary.count"));
     const [raw] = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/ma-native-excerpt.json", import.meta.url), "utf8"));
     assert.throws(() => campaignSourceRecord("MA", { ...source, expectedFields: { cpfId: "different-native-id" } }, raw, capture), /indexed native identity/);
-  } finally { await rm(options.directory, { recursive: true, force: true }); }
+  } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });

@@ -1,0 +1,168 @@
+{
+  "displayFieldName": "COMMITTEENAME",
+  "fieldAliases": {
+    "COMMITTEENAME": "Committee Name",
+    "CANDIDATENAME": "Candidate Name",
+    "ELECTIONYEAR": "Eleciton Year",
+    "CONTRIBUTORNAME": "Contributor Name",
+    "CONTRIBUTORTYPE": "Contributor Type",
+    "CONTRIBUTIONTYPE": "Contribution Type",
+    "ADDRESS": "Address",
+    "FULLADDRESS": "Full Address",
+    "WARD": "Ward",
+    "EMPLOYER": "Employer",
+    "EMPLOYERADDRESS": "Employer Address",
+    "AMOUNT": "Amount",
+    "DATEOFRECEIPT": "Date of Receipt",
+    "ADDRESS_ID": "Master Address Repository Identifier",
+    "XCOORD": "X Coordinate",
+    "YCOORD": "Y Coordinate",
+    "LATITUDE": "Latitude",
+    "LONGITUDE": "Longitude",
+    "GIS_LAST_MOD_DTTM": "GIS_LAST_MOD_DTTM",
+    "OBJECTID": "OBJECTID"
+  },
+  "fields": [
+    {
+      "name": "COMMITTEENAME",
+      "type": "esriFieldTypeString",
+      "alias": "Committee Name",
+      "length": 250
+    },
+    {
+      "name": "CANDIDATENAME",
+      "type": "esriFieldTypeString",
+      "alias": "Candidate Name",
+      "length": 250
+    },
+    {
+      "name": "ELECTIONYEAR",
+      "type": "esriFieldTypeInteger",
+      "alias": "Eleciton Year"
+    },
+    {
+      "name": "CONTRIBUTORNAME",
+      "type": "esriFieldTypeString",
+      "alias": "Contributor Name",
+      "length": 150
+    },
+    {
+      "name": "CONTRIBUTORTYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Contributor Type",
+      "length": 150
+    },
+    {
+      "name": "CONTRIBUTIONTYPE",
+      "type": "esriFieldTypeString",
+      "alias": "Contribution Type",
+      "length": 50
+    },
+    {
+      "name": "ADDRESS",
+      "type": "esriFieldTypeString",
+      "alias": "Address",
+      "length": 150
+    },
+    {
+      "name": "FULLADDRESS",
+      "type": "esriFieldTypeString",
+      "alias": "Full Address",
+      "length": 200
+    },
+    {
+      "name": "WARD",
+      "type": "esriFieldTypeString",
+      "alias": "Ward",
+      "length": 25
+    },
+    {
+      "name": "EMPLOYER",
+      "type": "esriFieldTypeString",
+      "alias": "Employer",
+      "length": 120
+    },
+    {
+      "name": "EMPLOYERADDRESS",
+      "type": "esriFieldTypeString",
+      "alias": "Employer Address",
+      "length": 500
+    },
+    {
+      "name": "AMOUNT",
+      "type": "esriFieldTypeInteger",
+      "alias": "Amount"
+    },
+    {
+      "name": "DATEOFRECEIPT",
+      "type": "esriFieldTypeDate",
+      "alias": "Date of Receipt",
+      "length": 8
+    },
+    {
+      "name": "ADDRESS_ID",
+      "type": "esriFieldTypeDouble",
+      "alias": "Master Address Repository Identifier"
+    },
+    {
+      "name": "XCOORD",
+      "type": "esriFieldTypeDouble",
+      "alias": "X Coordinate"
+    },
+    {
+      "name": "YCOORD",
+      "type": "esriFieldTypeDouble",
+      "alias": "Y Coordinate"
+    },
+    {
+      "name": "LATITUDE",
+      "type": "esriFieldTypeDouble",
+      "alias": "Latitude"
+    },
+    {
+      "name": "LONGITUDE",
+      "type": "esriFieldTypeDouble",
+      "alias": "Longitude"
+    },
+    {
+      "name": "GIS_LAST_MOD_DTTM",
+      "type": "esriFieldTypeDate",
+      "alias": "GIS_LAST_MOD_DTTM",
+      "length": 8
+    },
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "COMMITTEENAME": "Running Against Bush DC Slate",
+        "CANDIDATENAME": "Running Against Bush",
+        "ELECTIONYEAR": 2004,
+        "CONTRIBUTORTYPE": "Individual",
+        "CONTRIBUTIONTYPE": "Cash",
+        "AMOUNT": 50,
+        "DATEOFRECEIPT": 1093579200000,
+        "GIS_LAST_MOD_DTTM": 1791802296000,
+        "OBJECTID": 103850714
+      }
+    },
+    {
+      "attributes": {
+        "COMMITTEENAME": "Running Against Bush DC Slate",
+        "CANDIDATENAME": "Running Against Bush",
+        "ELECTIONYEAR": 2004,
+        "CONTRIBUTORTYPE": "Individual",
+        "CONTRIBUTIONTYPE": "Check",
+        "AMOUNT": 60,
+        "DATEOFRECEIPT": 1093579200000,
+        "GIS_LAST_MOD_DTTM": 1791802296000,
+        "OBJECTID": 103850715
+      }
+    }
+  ],
+  "exceededTransferLimit": true
+}

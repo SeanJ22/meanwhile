@@ -1,0 +1,36 @@
+[
+  {
+    "reportInfoIdent": "132307",
+    "receivedDt": "20000118",
+    "filerIdent": "00010066",
+    "filerName": "Lucero, Homero R. (Mr.)",
+    "filedDt": "20000118",
+    "periodEndDt": "20000118",
+    "unitemizedContribAmount": "100.00",
+    "totalContribAmount": "200.00",
+    "totalExpendAmount": "59.00",
+    "loanBalanceAmount": "",
+    "contribsMaintainedAmount": "",
+    "filerHoldOfficeDescr": "",
+    "filerHoldOfficeCountyCd": "",
+    "filerSeekOfficeDescr": "",
+    "filerSeekOfficeCountyCd": ""
+  },
+  {
+    "reportInfoIdent": "188588",
+    "receivedDt": "20020124",
+    "filerIdent": "00010066",
+    "filerName": "Lucero, Homero R. (Mr.)",
+    "filedDt": "20020122",
+    "periodEndDt": "20011231",
+    "unitemizedContribAmount": "",
+    "totalContribAmount": "",
+    "totalExpendAmount": "",
+    "loanBalanceAmount": "",
+    "contribsMaintainedAmount": "",
+    "filerHoldOfficeDescr": "",
+    "filerHoldOfficeCountyCd": "",
+    "filerSeekOfficeDescr": "",
+    "filerSeekOfficeCountyCd": ""
+  }
+]

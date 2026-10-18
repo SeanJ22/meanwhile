@@ -1285,7 +1285,7 @@ function confirmedClock(
 }
 
 /** Only the source's promoted national marker owns the unfinished acquisition pages. */
-export function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
+function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
   const marker = payload as { readonly state?: unknown; readonly source?: unknown; readonly states?: unknown };
   if (marker.state !== "US" || marker.source !== sourceId || !Array.isArray(marker.states)) return false;

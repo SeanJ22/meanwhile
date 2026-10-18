@@ -1,0 +1,64 @@
+[
+  {
+    "amount": 50,
+    "createdByEntityId": 11550344,
+    "date": "1950-10-31T00:00:00.000Z",
+    "id": 11946698,
+    "relatedDistrict": null,
+    "relatedOffice": null,
+    "reports": [
+      {
+        "id": 126763,
+        "name": "2022 Fall General - Fall Pre-Election"
+      }
+    ],
+    "transactionCategory": {
+      "id": 33,
+      "label": "Independent Expenditure"
+    },
+    "transactionPurpose": {
+      "id": 60,
+      "label": "Phone Bank"
+    },
+    "transactionType": {
+      "id": 2,
+      "name": "Disbursement",
+      "direction": "OUTGOING"
+    },
+    "createdByEntity": {
+      "id": 11550344,
+      "name": "American Majority Action"
+    }
+  },
+  {
+    "amount": 27.5,
+    "createdByEntityId": 6671032,
+    "date": "1950-11-27T00:00:00.000Z",
+    "id": 11837568,
+    "relatedDistrict": null,
+    "relatedOffice": null,
+    "reports": [
+      {
+        "id": 124855,
+        "name": "2023 January Continuing"
+      }
+    ],
+    "transactionCategory": {
+      "id": 33,
+      "label": "Independent Expenditure"
+    },
+    "transactionPurpose": {
+      "id": 40,
+      "label": "Media - Online Advertising"
+    },
+    "transactionType": {
+      "id": 2,
+      "name": "Disbursement",
+      "direction": "OUTGOING"
+    },
+    "createdByEntity": {
+      "id": 6671032,
+      "name": "Voces de la Frontera Action Inc."
+    }
+  }
+]

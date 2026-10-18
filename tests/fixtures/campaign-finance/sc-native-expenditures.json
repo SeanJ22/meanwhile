@@ -1,0 +1,22 @@
+[
+  {
+    "candidateFilerId": 56749,
+    "credentialId": 100768,
+    "campaignId": 80470,
+    "office": "Beaufort 8",
+    "candidateName": "Seifert, Douglas J ",
+    "expDate": "2026-10-14T04:00:00",
+    "expId": 1142730,
+    "amount": 11.3
+  },
+  {
+    "candidateFilerId": 56145,
+    "credentialId": 100162,
+    "campaignId": 78756,
+    "office": "School Board Trustee District FAIRFIELD",
+    "candidateName": "Harrison, Sylvia   ",
+    "expDate": "2026-10-14T04:00:00",
+    "expId": 1142736,
+    "amount": 125.0
+  }
+]

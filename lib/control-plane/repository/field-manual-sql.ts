@@ -17,8 +17,8 @@ export const MANUAL_ROUTE_ID_SQL = `(CASE WHEN jsonb_typeof(value #> '{payload,i
   WHEN jsonb_typeof(value #> '{payload,routeId}')='string' THEN value #>> '{payload,routeId}' END)`;
 export const MANUAL_LEARNED_ROUTES_SQL = `SELECT jsonb_build_object(
   'present',EXISTS(SELECT 1 FROM cp_field_manual_entries WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL} IS NOT NULL),
-  'routeIds',ARRAY(SELECT DISTINCT ${MANUAL_ROUTE_ID_SQL} FROM cp_field_manual_entries
-    WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL}=ANY($1::text[]) ORDER BY 1)) AS summary`;
+  'routeIds',ARRAY(SELECT route_id FROM (SELECT DISTINCT unnest($1::text[]) AS route_id) requested
+    WHERE EXISTS(SELECT 1 FROM cp_field_manual_entries WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL}=requested.route_id OFFSET 0) ORDER BY route_id)) AS summary`;
 
 export const MANUAL_ORDER_INDEXES = [
   `CREATE INDEX IF NOT EXISTS cp_field_manual_route_id ON cp_field_manual_entries (${MANUAL_ROUTE_ID_SQL})

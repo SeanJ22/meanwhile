@@ -82,11 +82,27 @@ async function worker() {
     results.push(report);
     process.send!({ type: "progress", scenario, run, responseBytes: report.responseBytes, requestBytes: report.requestBytes, ms: report.ms });
   }
+  if(scenario==="manual") {
+    const reports=[];
+    for(let run=0;run<repetitions;run++) {
+      const walBefore=BigInt(await proxy("wal")),began=performance.now();
+      const output=await workload(repos,places,run,"source-hints"),ms=performance.now()-began;
+      const walAfter=BigInt(await proxy("wal")),hours=transfer.takeNeonBytesHours();
+      for(const hour of hours) {
+        const summary=transfer.summarizeNeonBytes(hour,1000);
+        assert.equal(summary.byCaller.reduce((sum:number,row:{bytes:number})=>sum+row.bytes,0),summary.controlPlaneBytes+summary.readerBytes);
+      }
+      reports.push({run,ms,responseBytes:hours.reduce((n:number,hour:{bytes:Record<string,number>})=>n+hour.bytes["control-plane"],0),
+        requestBytes:hours.reduce((n:number,hour:{sent:Record<string,{bytes:number}>})=>n+hour.sent["control-plane"].bytes,0),
+        databaseWalBytes:Number(walAfter-walBefore),peakRssBytes:Number(/VmHWM:\s+(\d+) kB/.exec(readFileSync("/proc/self/status","utf8"))![1])*1024,digest:digest(output),hours});
+    }
+    process.stderr.write(`${JSON.stringify({type:"companion-source-hints",reports})}\n`);
+  }
   process.send!({ type: "done", results }, () => process.disconnect!());
 }
 
-async function workload(repos: ControlPlaneRepositories, places: string[], run: number): Promise<unknown> {
-  if(scenario==="orders") {
+async function workload(repos: ControlPlaneRepositories, places: string[], run: number, kind=scenario): Promise<unknown> {
+  if(kind==="orders") {
     const {ADMIN_CONFIG_ID,withExpansionScopes}=await importAt("lib/control-plane/gateway/admin-config.ts");
     const {expansionScopesOf}=await importAt("lib/control-plane/expansion/scopes.ts");
     const {requestHuntStop,applyHuntOrders,HUNT_STATES}=await importAt("lib/control-plane/hunt-orders.ts");
@@ -114,7 +130,7 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     assert.equal(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.length,0);
     return {independentOrders:79,stateOrders:1,globalOrders:HUNT_STATES.length,remaining:0,configRevisionUnchanged:revision===(await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision};
   }
-  if(scenario==="pipeline") {
+  if(kind==="pipeline") {
     const {readPipelineStates}=await importAt("lib/control-plane/promotion/pipeline.ts");
     const states=await readPipelineStates(repos);
     assert.equal(states.length,Number(arg("expected-subjects"))*history);
@@ -128,7 +144,7 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     return {state:arg("planning-state"),items:states.length,verified:states.filter((row:{stage:string})=>row.stage==="VERIFIED").length,heldReadClock};
   }
 
-  if (scenario === "planner") {
+  if (kind === "planner") {
     const state=arg("planning-state");
     const policy=await repos.adminConfig.mustRead("current",{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
     const scopes=(await importAt("lib/control-plane/expansion/scopes.ts")).expansionScopesOf(policy.value).scopes;
@@ -168,12 +184,12 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     return {state,registered:ids.size,owed:owed.length,owedDigest:digest(owed),members:scopeMembers,open:snapshot.occurrences.size,
       resumed:resumed.length,lineages:held.length,coordinator:selected.length,scanned:scanned.settled.length+scanned.abandoned.length};
   }
-  if (scenario === "admin") {
+  if (kind === "admin") {
     const values = [];
     for (let call = 0; call < 79; call++) values.push((await repos.adminConfig.read("current"))?.value.apiFallback);
     return { calls: values.length, settings: values[0] };
   }
-  if (scenario === "spend") {
+  if (kind === "spend") {
     const spend = await importAt("lib/control-plane/spend-window.ts");
     const entry = costEntry(`added-${run}`, places[0]);
     await spend.countCharge(repos, entry, now);
@@ -184,14 +200,14 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     }
     return { admissions: totals.length, usd: totals[0] };
   }
-  if (scenario === "method") {
+  if (kind === "method") {
     let works = await repos.fixMap.worksFor(["scale-method"]);
     for (let packet = 1; packet < places.length; packet++) works = await repos.fixMap.worksFor(["scale-method"]);
     const proof = await repos.fixMap.statistics("scale-method");
     const tried = await repos.fixMap.forPlaces("scale-method", places);
     return { packets: places.length, works: [...works], proofCount: proof.total, triedCount: tried.length };
   }
-  if(scenario==="source-hints") {
+  if(kind==="source-hints") {
     const sample=JSON.parse(await readFile(join(sourceRoot,"tests/fixtures/field-manual-pages/manual.json"),"utf8")) as {entries:{url:string|null}[]};
     const origins=new Map<string,number>();
     for(const entry of sample.entries) {
@@ -209,7 +225,7 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     }
     return hints;
   }
-  if (scenario === "manual") {
+  if (kind === "manual") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
     const changed = await repos.fieldManual.mustRead("note-0-1");
     await repos.fieldManual.compareAndSet(changed.id, changed.revision, { ...changed.value, summary: `Calendar lesson ${run}` }, now);
@@ -221,25 +237,25 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
       assert.ok(result.projection.entryIds.length<=query.limit);
       assert.ok(result.store.entries.length<=query.limit);
       notes.push({ place, ids: [...result.projection.entryIds].sort() });
-      process.stderr.write(`${JSON.stringify({type:"packet-progress",scenario,run,completed:notes.length,total:places.length})}\n`);
+      process.stderr.write(`${JSON.stringify({type:"packet-progress",kind,run,completed:notes.length,total:places.length})}\n`);
     }
     return notes;
   }
-  if (scenario === "coordinator") {
+  if (kind === "coordinator") {
     const pg = await importAt("lib/control-plane/repository/pg-store.ts");
     const rows = await pg.readCoordinatorWorkItems(repos);
     assert.equal(rows.length, places.length + 1);
     assert.ok(rows.some((row: { id: string }) => row.id === "wi-0-1"), "Archived non-hunt continuation must remain visible");
     return rows.map((row: { id: string }) => row.id).sort();
   }
-  if (scenario === "dispatch") {
+  if (kind === "dispatch") {
     const durable = await importAt("lib/control-plane/scheduler/durable.ts");
     const obligations = places.map((subjectId, index) => ({ id: `o-${index}`, subjectId, openOccurrenceId: `open-${index}`, occurrenceCount: history + 1, updatedAt: now } as StandingObligation));
     const snapshot = await repos.dispatchState.readOpen({ since: run === 0 ? null : now });
     await durable.scanOccurrences(repos, { obligations, settledRouteTaskIds: new Set(), neverClaimedRouteTaskIds: new Set(snapshot.routeTasks.keys()), snapshot });
     return Promise.all(obligations.map(obligation => durable.resumeOpenOccurrence(repos, obligation, snapshot)));
   }
-  throw new Error(`Unknown scenario ${scenario}`);
+  throw new Error(`Unknown kind ${kind}`);
 }
 
 function costEntry(id: string, place: string) {
@@ -428,11 +444,12 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
     assert.ok(samples.length);
     await pg.exec("CREATE TABLE scale_manual_samples(ordinal integer PRIMARY KEY,value jsonb NOT NULL)");
     await pg.query("INSERT INTO scale_manual_samples SELECT (ordinal-1)::integer,value FROM jsonb_array_elements($1::jsonb) WITH ORDINALITY samples(value,ordinal)",[JSON.stringify(samples)]);
-    await pg.query(`WITH source AS (
+    for(let at=0;at<places.length;at+=250)await pg.query(`WITH source AS (
       SELECT p.ordinal,p.id,p.state,h.n,sample.value,
         (p.ordinal::bigint*$3::integer+h.n-1)%7126 AS bucket,(p.ordinal::bigint*$3::integer+h.n-1)%1000 AS size_bucket
       FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n)
       JOIN scale_manual_samples sample ON sample.ordinal=(p.ordinal::bigint*$3::integer+h.n-1)%$2::integer
+      WHERE p.ordinal>=$4::integer AND p.ordinal<$5::integer
     ), scope AS (
       SELECT *,bucket>=6571 AS is_place,bucket>=1467 AND bucket<6571 AS is_state,
         (bucket>=368 AND bucket<1467 OR bucket=6570 OR bucket>=7066) AS is_platform,
@@ -451,7 +468,7 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
       FROM scope
     ) ${template("field_manual_entries")} SELECT 'note-'||ordinal||'-'||n,1,$1::timestamptz,$1::timestamptz,
       jsonb_set(value,'{payload,scaleExcerpt}',to_jsonb(left(repeat(md5(id||n),((target_bytes+31)/32)::integer),greatest(0,target_bytes-octet_length(value::text)))))
-      FROM shaped`,[now,samples.length,history]);
+      FROM shaped`,[now,samples.length,history,at,at+250]);
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
       SELECT 'scale-method',id,'WORKS',$1::timestamptz,'attempt-' || ordinal,NULL,$1::timestamptz FROM scale_places`, [now]);

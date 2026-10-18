@@ -104,9 +104,14 @@ test("expand copies no production rows; runner jobs backfill one state and retai
         {key:"cross-nh",geography:{stateAbbr:"NH"},planningStates:["AZ","NH"],decidedAt:"2026-10-14T12:00:00.000Z"}],
       placeTargets:[{key:"st:az",goalPercent:75},{key:"st:nh",goalPercent:80}],settingHistory:[{id:"old-change",key:"alerts.on",before:false,after:true,at:now}]};
     await sql.query("INSERT INTO cp_admin_config(id,revision,updated_at,value) VALUES('current',1,$1,$2::jsonb)",[now,JSON.stringify(config)]);
+    const {newFieldManualEntry,normalizeEntry}=await import("../lib/control-plane/field-manual.ts");
+    const notes=[...Array.from({length:105},(_,n)=>normalizeEntry(newFieldManualEntry("backfill",`az-${String(n).padStart(3,"0")}`,{
+      role:"SCOUT",kind:"METHOD",title:"Existing method",summary:"A method to inherit",outcome:"YIELDED",states:["az"]}))),
+      normalizeEntry(newFieldManualEntry("backfill","nh",{role:"SCOUT",kind:"METHOD",title:"Other state",summary:"Other state",outcome:"YIELDED",states:["nh"]}))];
+    await sql.query("INSERT INTO cp_field_manual_entries(id,revision,updated_at,value) SELECT entry->>'id',1,$2::timestamptz,entry FROM jsonb_array_elements($1::jsonb) entry",[JSON.stringify(notes),now]);
     await applyControlPlaneMigrations(expandArgs,{env:buildEnv,committed,withDatabase:async(_connection,operation)=>operation(sql)});
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,2);
-    for(const table of ["cp_occurrences_archive","cp_model_charges","cp_admin_place_targets","cp_admin_setting_history"])
+    for(const table of ["cp_occurrences_archive","cp_model_charges","cp_admin_place_targets","cp_admin_setting_history","cp_manual_method_rank","cp_manual_source_facts"])
       assert.equal((await sql.query(`SELECT count(*)::integer AS n FROM ${table}`))[0].n,0,`${table} stays empty during expand`);
     assert.deepEqual((await sql.query("SELECT value FROM cp_admin_config"))[0].value,config);
     await sql.query("CREATE TABLE cp_field_manual(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL)");
@@ -115,7 +120,11 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     await sql.query("INSERT INTO cp_hunt_orders(id,revision,updated_at,value) VALUES('stop-az',1,$1,$2::jsonb)",[now,
       JSON.stringify({id:"stop-az",state:"az",scopeKey:null,requestedAt:now,confirmedAt:null,receiptId:"stop-az"})]);
     const manual=createMemoryRepositories();
-    const jobs=pgControlReadsBackfill(sql,()=>manual);const first=await jobs.runState("az");assert.equal(first.complete,true);
+    const jobs=pgControlReadsBackfill(sql,()=>manual);const first=await jobs.runState("az");assert.equal(first.complete,false);
+    assert.equal((await sql.query("SELECT count(*)::int AS n FROM cp_manual_method_meta"))[0].n,100);
+    assert.equal((await sql.query("SELECT count(*)::int AS n FROM cp_manual_method_meta WHERE states ? 'nh'"))[0].n,0);
+    assert.equal((await jobs.runState("az")).complete,true);
+    assert.equal((await sql.query("SELECT count(*)::int AS n FROM cp_manual_method_meta"))[0].n,105);
     assert.deepEqual((await sql.query("SELECT id FROM cp_occurrences_archive")).map(row=>row.id),["az"]);
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_place_targets")).map(row=>row.id),["st:az"]);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,7);

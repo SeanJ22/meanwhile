@@ -163,6 +163,15 @@ test("source hints keep successful routes beyond the advisory limit and reduce h
       url:"https://state.gov/route",outcome:"FAILED",observedAt:"2026-10-02T00:00:00.000Z",worked:true,workedFor:["ballot"],
     });
     assert.ok(Buffer.byteLength(JSON.stringify(hints))<500);
+    const changed=make("worked",{role:"DETECTIVE",url:"https://state.gov/moved",recordClasses:["funding"],states:["nh"]});
+    await db.query("UPDATE cp_field_manual_entries SET value=$2::jsonb WHERE id=$1",[changed.id,JSON.stringify(changed)]);
+    const after=entries.map(entry=>entry.id===changed.id?changed:entry);
+    assert.deepEqual(await repo.sourceHints(scope,origin),sourceHintsOf(after,scope,origin));
+    assert.equal((await repo.sourceHints(scope,origin)).find(hint=>hint.url.endsWith("/route"))!.worked,false);
+    assert.deepEqual(await repo.sourceHints({state:"nh"},origin),sourceHintsOf(after,{state:"nh"},origin));
+    await db.query("DELETE FROM cp_field_manual_entries WHERE id=$1",[changed.id]);
+    assert.deepEqual(await repo.sourceHints({state:"nh"},origin),sourceHintsOf(after.filter(entry=>entry.id!==changed.id),{state:"nh"},origin));
+
   }finally{await db.close();}
 });
 
@@ -236,6 +245,15 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
     }
     const full=await pg.select(queries[1]),tiers=new Map(full.projection.entryIds.map((id,index)=>[id,full.projection.tiers[index]]));
     for(const [title,tier] of [["works",1],["untried",1],["state",2],["three-states",3],["legacy-three",3],["legacy-one",4],["legacy-two",4],["legacy-here",2],["two-states",4],["no-proof",5]] as const)assert.equal(tiers.get(byTitle.get(title)!),tier,title);
+    await put("works",place,"FAILS");
+    assert.deepEqual(await pg.select(queries[0]),await memory.fieldManual.select(queries[0]));
+    await put("works",place,"WORKS");
+    assert.deepEqual(await pg.select(queries[0]),await memory.fieldManual.select(queries[0]));
+    const old=entries.find(entry=>entry.title==="three-states")!,changed=normalizeEntry({...old,kind:"LESSON",platforms:[],states:["nh"],reach:{places:[],states:["nh"],platforms:[],everywhere:false,method:false}});
+    await db.query("UPDATE cp_field_manual_entries SET value=$2::jsonb WHERE id=$1",[old.id,JSON.stringify(changed)]);
+    await memory.fieldManual.compareAndSet(old.id,(await memory.fieldManual.mustRead(old.id)).revision,changed,at);
+    assert.equal((await db.query<{n:number}>("SELECT count(*)::int AS n FROM cp_manual_method_rank WHERE entry_id=$1",[old.id])).rows[0]!.n,0);
+    assert.deepEqual(await pg.select(queries[0]),await memory.fieldManual.select(queries[0]));
   }finally{await db.close();}
 });
 
@@ -249,6 +267,8 @@ test("maturity reads indexed route IDs without returning unrelated national rout
     const entries=Array.from({length:1000},(_,index)=>newFieldManualEntry("route-summary",String(index),{
       role:"SHARED",kind:"ROUTE",title:"Learned route",summary:"Indexed metadata",outcome:"YIELDED",
       payload:index%2?{routeId:`route-${index}`,body:"x".repeat(4000)}:{id:`route-${index}`,body:"x".repeat(4000)}}));
+    entries.push(...Array.from({length:20000},(_,index)=>newFieldManualEntry("route-history",String(index),{
+      role:"SHARED",kind:"ROUTE",title:"Successful hunt method",summary:"An earlier successful hunt",outcome:"YIELDED",payload:{routeId:"route-7",body:"x".repeat(1800)}})));
     entries.push(newFieldManualEntry("route-summary","malformed",{role:"SHARED",kind:"ROUTE",title:"Wrong ID type",summary:"Invalid ID falls through",outcome:"YIELDED",payload:{id:7,routeId:"fallback-route"}}));
     await db.query("INSERT INTO cp_field_manual_entries SELECT value->>'id',1,now(),value FROM jsonb_array_elements($1::jsonb) value",[JSON.stringify(entries)]);
     const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
@@ -257,6 +277,15 @@ test("maturity reads indexed route IDs without returning unrelated national rout
     assert.deepEqual(await repo.learnedRoutes(routeIds),{present:true,routeIds:[...new Set(routeIds)].filter(id=>learnedRouteIds({entries}).has(id)).sort()});
     assert.deepEqual(await repo.learnedRoutes([]),{present:true,routeIds:[]});
     assert.ok(Buffer.byteLength(JSON.stringify(await repo.learnedRoutes(routeIds)))<100);
+    await db.exec("ANALYZE cp_field_manual_entries");
+    const {MANUAL_LEARNED_ROUTES_SQL}=await import("../lib/control-plane/repository/field-manual-sql.ts");
+    const explain=await db.query<{"QUERY PLAN":{Plan:Record<string,unknown>}[] }>(`EXPLAIN(ANALYZE,FORMAT JSON) ${MANUAL_LEARNED_ROUTES_SQL}`,[routeIds]);
+    const visits:Record<string,unknown>[]=[];
+    const walk=(node:Record<string,unknown>)=>{if(node["Relation Name"]==="cp_field_manual_entries")visits.push(node);for(const child of node.Plans as Record<string,unknown>[]??[])walk(child);};
+    walk(explain.rows[0]!["QUERY PLAN"][0]!.Plan);
+    assert.ok(visits.length>0);
+    assert.ok(visits.every(node=>Number(node["Actual Rows"])<=1),"each route lookup stops at its first proof even with 20,000 repeated successes");
+
     await db.exec("DELETE FROM cp_field_manual_entries");
     assert.deepEqual(await repo.learnedRoutes(routeIds),{present:false,routeIds:[]});
   }finally{await db.close();}

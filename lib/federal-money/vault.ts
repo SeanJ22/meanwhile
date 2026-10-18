@@ -4,8 +4,8 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { FederalMoneyCapture } from "./model.ts";
 
 const context = new AsyncLocalStorage<EvidenceStore>();
-export const FEDERAL_MONEY_CAPTURE_BYTES = 8 * 1024 * 1024;
-export function federalMoneyVault(): EvidenceStore {
+const FEDERAL_MONEY_CAPTURE_BYTES = 8 * 1024 * 1024;
+function federalMoneyVault(): EvidenceStore {
   const vault = context.getStore();
   if (!vault) throw new Error("Federal evidence requires an acquisition vault context.");
   return vault;

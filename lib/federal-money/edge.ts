@@ -4,8 +4,8 @@ import type { FederalMoneyFact, FederalMoneySource } from "./model.ts";
 import type { FederalMoneyTarget } from "./view.ts";
 
 export const FEDERAL_MONEY_PAGE_SIZE = 100;
-export interface FederalMoneyPageRef { readonly key: string; readonly hash: string; readonly count: number }
-export interface FederalMoneyPlaceSegment {
+interface FederalMoneyPageRef { readonly key: string; readonly hash: string; readonly count: number }
+interface FederalMoneyPlaceSegment {
   readonly year: string;
   readonly source: FederalMoneySource;
   readonly versionId: string;
@@ -45,7 +45,7 @@ export interface FederalMoneyPlacePage {
   readonly versionId: string;
   readonly records: readonly FederalMoneyFact[];
 }
-export interface FederalMoneySourceStatus {
+interface FederalMoneySourceStatus {
   readonly checkedAt: string;
   readonly complete: boolean;
   readonly reason: string | null;
@@ -67,7 +67,7 @@ export function federalMoneyTargetPlaces(target: FederalMoneyTarget): string[] {
   return [...new Set([`division:${target.divisionId}`, ...(target.bodyId ? [`body:${target.bodyId}`] : []), ...(county ? [`division:${county}`] : [])])];
 }
 
-export const FEDERAL_MONEY_INDEX_PAGE_SIZE = 64;
+const FEDERAL_MONEY_INDEX_PAGE_SIZE = 64;
 export interface FederalMoneyIndexEntry { key: string; value: string }
 interface IndexPage { formatVersion: 3; identity: string; leaf: boolean; entries: FederalMoneyIndexEntry[] }
 export function federalMoneyArtifactKey(value: unknown): value is string { return typeof value === "string" && /^reader\/artifacts\/[a-f0-9]{64}\.json(?:\.gz)?$/.test(value); }

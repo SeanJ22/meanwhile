@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { RegistrationGovernmentListing } from "@/lib/registration/listings";
 import { governmentStateOf } from "@/lib/registration/listings";
+import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardFooter } from "@/components/ui/card-footer";
@@ -32,6 +33,7 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
           provenance: { sourceUrl: link.sourceUrl, sourceOrg: "CISA .gov registry", collectedAt: link.checkedAt, verifiedAt: null } })),
       ]} />
       {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id} /></div>}
+      {open && row.associations.length === 1 && <StateCampaignSection divisionId={row.associations[0].divisionId} />}
       {!insideCard && <CardFooter gaps={[]} sources={sources} />}
     </div>
   </details></CardSourceContext>;

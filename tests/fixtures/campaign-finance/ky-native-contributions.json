@@ -1,0 +1,31 @@
+[
+  {
+    "To Organization": "",
+    "Recipient Last Name": "Campbell",
+    "Recipient First Name": "Laurie",
+    "Office Sought": "STATE REPRESENTATIVE",
+    "Location": "7TH DISTRICT",
+    "Election Date": "11/3/2026",
+    "Election Type": "GENERAL",
+    "Amount": "100.00",
+    "Contribution Type": "INDIVIDUAL",
+    "Contribution Mode": "DIRECT",
+    "Receipt Date": "10/4/2026",
+    "Statement Type": "30 DAY PRE"
+  },
+  {
+    "To Organization": "",
+    "Recipient Last Name": " McKeehan",
+    "Recipient First Name": "Carrie",
+    "Office Sought": "STATE REPRESENTATIVE",
+    "Location": "38TH DISTRICT",
+    "Election Date": "11/3/2026",
+    "Election Type": "GENERAL",
+    "Amount": "500.00",
+    "Contribution Type": "KYPAC",
+    "Contribution Mode": "EVENT_FUNDRAISING",
+    "Receipt Date": "10/4/2026",
+    "Statement Type": "30 DAY PRE",
+    "From Organization Name": "creating opportunities markets and enthusiasm in rural ky pac "
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "Amount": 150,
+    "PoliticalOrganizationInitials": "PNP",
+    "CommitteeName": "COMITE PEDRO PIERLUISI INC.  ",
+    "IncomeMethodDescription": "Cheque",
+    "Date": "/Date(1702339200000)/"
+  },
+  {
+    "Amount": 100,
+    "PoliticalOrganizationInitials": "PPD",
+    "CommitteeName": "Comité de Amigos Marlese Sifre Rodríguez",
+    "IncomeMethodDescription": "Efectivo",
+    "Date": "/Date(1720742400000)/"
+  }
+]

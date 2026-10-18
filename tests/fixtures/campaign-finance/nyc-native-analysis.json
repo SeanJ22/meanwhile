@@ -1,0 +1,30 @@
+[
+  {
+    "el_cycle": "2001",
+    "from_stmt": "1",
+    "to_stmt": "15",
+    "office": "1",
+    "cand_name": "Badillo, Herman (ID:81-P)",
+    "cand_id": "81",
+    "boro_dist": "()",
+    "net_cntns": "543671",
+    "sml_amt": "95584",
+    "pubfnd_pmt": "356723",
+    "net_expnd": "659919",
+    "outstanding_bills": "241163"
+  },
+  {
+    "el_cycle": "2001",
+    "from_stmt": "1",
+    "to_stmt": "15",
+    "office": "1",
+    "cand_name": "Cohen, Mitchel (ID:JH-P) *",
+    "cand_id": "JH",
+    "boro_dist": "()",
+    "net_cntns": "0",
+    "sml_amt": "0",
+    "pubfnd_pmt": "0",
+    "net_expnd": "0",
+    "outstanding_bills": "0"
+  }
+]

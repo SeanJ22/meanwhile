@@ -1,3 +1,5 @@
+import { stateCampaignEvidence, stateCampaignQuestion } from "@/lib/ask/state-campaign";
+import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
@@ -637,6 +639,7 @@ async function answerWithSettings(request: Request) {
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
+    timed("campaignFinance", () => settleCampaignFinanceReads(ocdIds)),
     timed("stateMoney", () => Promise.all(ballotStatesForDivisions(ocdIds).filter(state => state in STATE_CAMPAIGN_FINANCE_SOURCES).map(state => settleStateMoneyRead(state as StateCampaignFinanceJurisdiction)))),
     timed("candidateProfiles", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state)))),
     timed("candidateCorpus", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state)))),
@@ -1387,6 +1390,10 @@ async function answerWithSettings(request: Request) {
         Object.assign(denominators, federal.denominators);
         if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);
       }
+      if (financeDivision && stateCampaignQuestion(question)) {
+        const campaign = await stateCampaignEvidence([financeDivision], subject.id);
+        records.push(...campaign.records); gaps.push(...campaign.gaps); Object.assign(denominators, campaign.denominators);
+      }
       if (financeDivision && governmentFinanceQuestion(question)) {
         const finance = await governmentFinanceEvidence(subject.id, financeDivision).catch(() => []);
         records.push(...finance);
@@ -1837,6 +1844,10 @@ async function answerWithSettings(request: Request) {
       records.push(...federal.records);
       gaps.push(...federal.gaps);
       Object.assign(denominators, federal.denominators);
+    }
+    if (!subject && stateCampaignQuestion(question)) {
+      const campaign = await stateCampaignEvidence(ocdIds);
+      records.push(...campaign.records); gaps.push(...campaign.gaps); Object.assign(denominators, campaign.denominators);
     }
     const shownContacts = gateContactsToSubject(subject, contacts).contacts;
     const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);

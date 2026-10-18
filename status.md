@@ -5,7 +5,7 @@ worker: codex-river
 provider: Codex
 run_id: codex-river-20261018
 lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
-heartbeat: 2026-10-18T19:52:43Z
+heartbeat: 2026-10-18T19:53:14Z
 
 ## Codex River shift — October 18
 
@@ -18,6 +18,8 @@ Scan also found meetings, ballot-parity, control-reads, overlay-seats, platform-
 Hourly continuation is configured in this chat from October 18 at 1 PM through October 19 at 7 AM Arizona, with 19 bounded wake-ups; never overlap a live lock owner. Claude takes over at 8 AM. Every run releases its own lock at a safe stop. Current automation: 6ad5209d7df88191a2bba47cb78bfd7f.
 
 Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin (first on PATH), PNPM_HOME=/tmp/river-pnpm, XDG_DATA_HOME=/tmp/river-xdg, PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Use permitted network-enabled shell execution for network/child-process commands. No package files changed. GitHub CLI read access and connector admin/push permission verified. All prior budgets, spending controls and pauses remain as set.
+
+Verification in this shift: UI-02 browser regression passed for real resolved bodies in AZ/NH/NJ on desktop and phone layouts; generated compact-list and recorded body-card screenshots were visually inspected. These are controlled/local pages. Production /api/build currently serves release 54 main 7298706cb. Direct cloud Chromium production navigation remains blocked by ERR_CERT_AUTHORITY_INVALID despite importing the existing managed CA certificates into NSS; TLS checks were kept enabled. No live rendered-page success is claimed. Full combined suite still running; lint, TypeScript and pinned-browser checks pass.
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

@@ -34,25 +34,3 @@ export const MANUAL_ORDER_INDEXES = [
     (${MANUAL_SOURCE_ORIGIN_SQL},(value->>'url'),(coalesce(value->>'observedAt','')) COLLATE "C" DESC,id COLLATE "C")
     WHERE value->>'url' IS NOT NULL;`,
 ] as const;
-
-export const MANUAL_SOURCE_HINTS_SQL = `WITH source_rows AS MATERIALIZED (
-  SELECT id,value->>'url' AS url,value->>'outcome' AS outcome,value->>'observedAt' AS observed_at,
-    coalesce(value->'recordClasses','[]'::jsonb) AS classes
-  FROM cp_field_manual_entries WHERE value->>'url' IS NOT NULL AND ${MANUAL_SOURCE_ORIGIN_SQL}=ANY($3::text[])
-    AND (coalesce(value->'reach'->'places','[]'::jsonb) ?| $1::text[]
-      OR ($2::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $2)
-      OR coalesce((value->'reach'->>'everywhere')::boolean,false)
-      OR jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0 OR ${MANUAL_METHOD_SQL})
-), latest AS (
-  SELECT DISTINCT ON(url) url,outcome,observed_at FROM source_rows
-  ORDER BY url,coalesce(observed_at,'') COLLATE "C" DESC,id COLLATE "C"
-), worked AS (
-  SELECT url,min(id COLLATE "C") AS first_worked,
-    array_agg(DISTINCT kind COLLATE "C" ORDER BY kind COLLATE "C") FILTER(WHERE kind IS NOT NULL) AS classes
-  FROM source_rows LEFT JOIN LATERAL jsonb_array_elements_text(classes) kinds(kind) ON true
-  WHERE outcome='YIELDED' GROUP BY url
-)
-SELECT jsonb_build_object('url',l.url,'outcome',outcome,'observedAt',observed_at,
-  'worked',w.url IS NOT NULL,'workedFor',coalesce(w.classes,'{}'::text[])) AS hint
-FROM latest l LEFT JOIN worked w ON w.url=l.url
-ORDER BY w.first_worked COLLATE "C" NULLS LAST,l.url COLLATE "C"`;

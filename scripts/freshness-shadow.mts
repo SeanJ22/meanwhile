@@ -413,6 +413,16 @@ if(STATE===null) {
   const parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
   crashRepos=parentRepos;
   const roundIntents=await readPlanningIntents(parentRepos);
+  if(parentRepos.controlReadsBackfill && !await parentRepos.controlReadsBackfill.finished()) {
+    if(dry || filteredCycle)throw new Error("Complete the scoped control backfill in a full runner round before filtered planning");
+    for(const state of PLANNING_STATES) {
+      await applyHuntOrders(parentRepos,state,nowIso());
+      await runStateControlBackfill(parentRepos.controlReadsBackfill,state,(state,copied,archived)=>{
+        if((copied+archived)%1000===0)console.log(`planning backfill ${state}: ${copied} copied, ${archived} archived`);
+      });
+    }
+    await parentRepos.controlReadsBackfill.finish(PLANNING_STATES);
+  }
   const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
     if(releaseDrainRequested){resolve(false);return;}
     const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
@@ -440,7 +450,6 @@ if(STATE===null) {
     const extra=await runStatePlanningRound(runState,pending);
     result={...result,failed:[...result.failed,...extra.failed]};
   }
-  if(!dry && !filteredCycle && !result.failed.length && parentRepos.controlReadsBackfill && !await parentRepos.controlReadsBackfill.finished())await parentRepos.controlReadsBackfill.finish(PLANNING_STATES);
   if(!dry && !filteredCycle)for(const intent of readIntents(roundIntents).pendingDispatch) {
     const target=parseDispatchTarget(intent.note??"");
     const states=target.states.length?target.states:PLANNING_STATES.filter(state=>state!=="system");
@@ -509,12 +518,7 @@ const planningRevision=await repos.planningControls?.revision(PLANNING_STATE)??0
 if(!dry && !filteredCycle) {
   writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)),{writtenAt:NOW,taskIds:[],plainTaskIds:[]});
   await applyHuntOrders(repos,PLANNING_STATE,NOW);
-  if(repos.controlReadsBackfill && !await repos.controlReadsBackfill.finished()) {
-    await runStateControlBackfill(repos.controlReadsBackfill,PLANNING_STATE,(state,copied,archived)=>{
-      if((copied+archived)%1000===0)console.log(`planning backfill ${state}: ${copied} copied, ${archived} archived`);
-    });
-    await applyHuntOrders(repos,PLANNING_STATE,nowIso());
-  }
+
 }
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;

@@ -10,6 +10,8 @@ import { entryInSlice, newFieldManualEntry, normalizeEntry, type FieldManualQuer
 import { openHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { FIELD_MANUAL_SLICE_SQL, fieldManualSliceParams, pgFieldManualRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { createFixMapRepository, FIX_MAP_DDL, methodWorksOf, stateOfPlace, type FixMapRow } from "../lib/method/fix-map.ts";
+import { MANUAL_SOURCE_INDEX_DDL } from "../lib/control-plane/repository/manual-source-index.ts";
+import { MANUAL_METHOD_INDEX_DDL } from "../lib/control-plane/repository/manual-method-index.ts";
 import { MANUAL_ORDER_INDEXES } from "../lib/control-plane/repository/field-manual-sql.ts";
 import { sourceHintsOf } from "../lib/control-plane/field-manual-sources.ts";
 
@@ -73,6 +75,7 @@ test("SQL manual slices exclude other places and source routes while preserving 
   try {
     await db.exec("CREATE TABLE cp_field_manual_entries (id text PRIMARY KEY, revision integer, updated_at timestamptz, value jsonb)");
     for(const ddl of FIX_MAP_DDL)await db.exec(ddl);
+    for(const ddl of [...MANUAL_METHOD_INDEX_DDL,...MANUAL_SOURCE_INDEX_DDL])await db.exec(ddl);
     for (const ddl of BOOTSTRAP_DDL.filter(ddl => ddl.startsWith("CREATE INDEX") && /cp_field_manual_(reach|everywhere|transferable|platform_reach)/.test(ddl))) await db.exec(ddl);
     await db.exec(FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL);
     const states = ["al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", "ms", "mo", "mt", "ne", "nv", "nh", "nj", "nm", "ny", "nc", "nd", "oh", "ok", "or", "pa", "ri", "sc", "sd", "tn", "tx", "ut", "vt", "va", "wa", "wv", "wi", "wy", "dc"];
@@ -146,6 +149,7 @@ test("source hints keep successful routes beyond the advisory limit and reduce h
     await db.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,revision integer,updated_at timestamptz,value jsonb)");
     for(const ddl of MANUAL_ORDER_INDEXES)await db.exec(ddl);
     for(const ddl of FIX_MAP_DDL)await db.exec(ddl);
+    for(const ddl of [...MANUAL_METHOD_INDEX_DDL,...MANUAL_SOURCE_INDEX_DDL])await db.exec(ddl);
     await db.query("INSERT INTO cp_field_manual_entries SELECT value->>'id',1,now(),value FROM jsonb_array_elements($1::jsonb) value",[JSON.stringify(entries)]);
     const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
     const repo=pgFieldManualRepository(sql,{},()=>createFixMapRepository(async()=>[]));
@@ -170,6 +174,7 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
   try {
     await db.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,revision integer,updated_at timestamptz,value jsonb)");
     for(const ddl of FIX_MAP_DDL)await db.exec(ddl);
+    for(const ddl of [...MANUAL_METHOD_INDEX_DDL,...MANUAL_SOURCE_INDEX_DDL])await db.exec(ddl);
     const make=(key:string,kind:string="METHOD",fields:Partial<import("../lib/control-plane/field-manual.ts").FieldManualEntry>={})=>normalizeEntry(newFieldManualEntry("bounded",key,{
       role:"SCOUT",kind,title:key,summary:key,outcome:"REFERENCE",observedAt:at,platforms:["legistar"],...fields}));
     const entries=[make("works"),make("fails", "METHOD",{ocdIds:[place],outcome:"YIELDED"}),

@@ -1,3 +1,5 @@
+import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
+import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, planningStateOf } from "../scheduler/state-planning.ts";
 import type { HuntOrder, HuntOrderRepository } from "../hunt-orders.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
@@ -30,9 +32,9 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import { BOOKKEEPING_KINDS, FIELD_MANUAL_ROLES, OUTCOME_RANK, coveringPlaces, methodEvidencePlaces, projectFieldManual, queryState, readMethodEvidence, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
-import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL, MANUAL_LEARNED_ROUTES_SQL, MANUAL_SOURCE_HINTS_SQL } from "./field-manual-sql.ts";
+import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL, MANUAL_LEARNED_ROUTES_SQL } from "./field-manual-sql.ts";
 import { sourceOriginKeys,type FieldManualSourceHint } from "../field-manual-sources.ts";
-import { createFixMapRepository, PLACE_STATE_SQL, type FixMapRepository } from "../../method/fix-map.ts";
+import { createFixMapRepository, type FixMapRepository } from "../../method/fix-map.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
 import { seedFieldManualNotes } from "../field-manual-notes.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
@@ -1077,20 +1079,24 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
     ORDER BY ${MANUAL_OUTCOME_SQL},coalesce(value->>'observedAt','') COLLATE "C" DESC,id COLLATE "C"
     LIMIT $8::int
   ) picked
+), method_pool AS (
+  ${MANUAL_METHOD_POOL_SQL}
 ), candidates AS NOT MATERIALIZED (
   SELECT id FROM broad
   UNION SELECT id FROM eligible WHERE coalesce(value->'reach'->'places','[]'::jsonb) ?| $5::text[]
     AND (NOT $4 OR $6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
-  UNION SELECT id FROM eligible WHERE $7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7
+  UNION SELECT id FROM eligible WHERE NOT ${MANUAL_METHOD_SQL} AND $7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7
     AND (NOT $4 OR $6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
-  UNION SELECT id FROM eligible WHERE $6::text IS NOT NULL AND coalesce(value->'reach'->'platforms','[]'::jsonb) ? $6
+  UNION SELECT id FROM eligible WHERE NOT ${MANUAL_METHOD_SQL} AND $6::text IS NOT NULL AND coalesce(value->'reach'->'platforms','[]'::jsonb) ? $6
     AND (NOT $4 OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
   UNION SELECT id FROM eligible WHERE value->>'kind'='EXHAUSTED_RUNGS' AND value #>> '{payload,subjectId}'=$9
     AND (($4 AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6))
       OR (NOT $4 AND (coalesce((value->'reach'->>'everywhere')::boolean,false)
         OR (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0 AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6)))))
-  UNION SELECT id FROM eligible WHERE ${MANUAL_METHOD_SQL}
-    AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
+  UNION SELECT id FROM method_pool
+  UNION SELECT id FROM eligible WHERE id IN(SELECT method_id FROM cp_fix_map WHERE place_id=ANY($10::text[]) AND state='WORKS')
+  UNION SELECT id FROM eligible WHERE id IN(SELECT entry_id FROM cp_manual_method_meta WHERE legacy_here ?| $5::text[])
+
 ), scored AS NOT MATERIALIZED (
   SELECT e.id,
     CASE WHEN flags.method THEN method.tier
@@ -1118,19 +1124,11 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
     LEFT JOIN LATERAL (SELECT state FROM cp_fix_map
       WHERE method_id=e.id AND place_id=ANY($10::text[]) ORDER BY place_id LIMIT 1) fixed ON true
   LEFT JOIN LATERAL (
-    SELECT bool_or(item->>'place'=ANY($5::text[]) AND item->>'outcome' IN('FAILED','BLOCKED')) AS failed_here,
-      bool_or(item->>'place'=ANY($5::text[]) AND item->>'outcome'='YIELDED') AS worked_here,
-      count(*) FILTER(WHERE item->>'outcome'='YIELDED' AND item->>'place'<>'any' AND left(item->>'place',6)<>'state:')>0 AS any_place,
-      array_agg(DISTINCT nullif(lower(btrim(CASE WHEN left(item->>'place',6)='state:' THEN substring(item->>'place' FROM 7)
-        ELSE ${PLACE_STATE_SQL.replaceAll("place_id","(item->>'place')")} END)),'')) FILTER(WHERE item->>'outcome'='YIELDED' AND item->>'place'<>'any') AS states
-    FROM jsonb_array_elements(coalesce(n."placeResults",(SELECT jsonb_agg(jsonb_build_object('place',place,'outcome',n.outcome))
-      FROM jsonb_array_elements_text(CASE WHEN jsonb_array_length(coalesce(n."ocdIds",'[]'::jsonb))+jsonb_array_length(coalesce(n."bodyIds",'[]'::jsonb))>0
-        THEN coalesce(n."ocdIds",'[]'::jsonb)||coalesce((SELECT jsonb_agg('body:'||body.id) FROM jsonb_array_elements_text(coalesce(n."bodyIds",'[]'::jsonb)) body(id)),'[]'::jsonb)
-        WHEN jsonb_array_length(coalesce(n.states,'[]'::jsonb))>0 THEN (SELECT jsonb_agg('state:'||region.id) FROM jsonb_array_elements_text(n.states) region(id))
-        ELSE '["any"]'::jsonb END) scope_places(place)))) legacy_rows(item)
+    SELECT EXISTS(SELECT 1 FROM jsonb_each_text(m.legacy_here) legacy(place,status) WHERE place=ANY($5::text[]) AND status='FAILS') AS failed_here,
+      EXISTS(SELECT 1 FROM jsonb_each_text(m.legacy_here) legacy(place,status) WHERE place=ANY($5::text[]) AND status='WORKS') AS worked_here,
+      m.legacy_any AS any_place,m.legacy_states AS states FROM cp_manual_method_meta m WHERE m.entry_id=e.id
   ) legacy ON true
-  LEFT JOIN LATERAL (SELECT count(*)>0 AS any_place,array_agg(DISTINCT ${PLACE_STATE_SQL}) FILTER(WHERE ${PLACE_STATE_SQL} IS NOT NULL) AS states
-    FROM cp_fix_map WHERE method_id=e.id AND state='WORKS') working ON true
+  LEFT JOIN LATERAL (SELECT m.working_any AS any_place,m.working_states AS states FROM cp_manual_method_meta m WHERE m.entry_id=e.id) working ON true
   CROSS JOIN LATERAL (SELECT coalesce(nullif(fixed.state,'UNTRIED'),CASE WHEN legacy.failed_here THEN 'FAILS' WHEN legacy.worked_here THEN 'WORKS' END) AS here) status
     WHERE flags.method OFFSET 0
   ) method ON true

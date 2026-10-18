@@ -1,3 +1,4 @@
+import { MANUAL_OWNER_DDL } from "./manual-method-index.ts";
 import { BANK_WRITE_HEALTH_ID } from "../bank-write-health.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { copyFieldManualPage } from "../field-manual-copy.ts";
@@ -30,9 +31,11 @@ export const CONTROL_READS_BACKFILL_DDL = [
     RETURN CASE WHEN candidate=ANY(ARRAY[${Object.values(FIPS_TO_STATE).map(state=>`'${state.postal.toLowerCase()}'`).join(",")}]) THEN candidate ELSE 'system' END;
     END
   $$`,
+  MANUAL_OWNER_DDL,
   `CREATE TABLE IF NOT EXISTS cp_control_backfill_jobs (
     state text NOT NULL, kind text NOT NULL, cursor jsonb, completed boolean NOT NULL DEFAULT false,
     updated_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(state,kind))`,
+  `CREATE INDEX IF NOT EXISTS cp_manual_indexes_backfill_state ON cp_field_manual_entries (cp_manual_state(value),id)`,
   "CREATE INDEX IF NOT EXISTS cp_work_items_state ON cp_work_items (cp_control_state(value),id)",
   "CREATE INDEX IF NOT EXISTS cp_work_items_archive_state ON cp_work_items_archive (cp_control_state(value),id)",
   "CREATE INDEX IF NOT EXISTS cp_obligations_state_active ON cp_obligations (cp_control_state(value),id) WHERE value->>'active'='true'",
@@ -69,13 +72,16 @@ async function insertCharges(sql: Sql, charges: readonly PricedCharge[]): Promis
 export function pgControlReadsBackfill(sql: Sql, manual?:()=>FieldManualRepos): ControlReadsBackfill {
   return {
     async finished() {
-      const rows=await sql.query("SELECT completed FROM cp_control_backfill_jobs WHERE state='system' AND kind='complete'") as {completed:boolean}[];
+      const rows=await sql.query(`SELECT completed FROM cp_control_backfill_jobs WHERE state='system' AND kind='complete'
+        AND NOT EXISTS(SELECT 1 FROM unnest($1::text[]) states(state_key) WHERE NOT EXISTS(
+          SELECT 1 FROM cp_control_backfill_jobs j WHERE j.state=state_key AND j.kind='manual-indexes' AND j.completed))`,
+        [[...new Set(Object.values(FIPS_TO_STATE).map(state=>state.postal.toLowerCase())),"system"]]) as {completed:boolean}[];
       return rows[0]?.completed===true;
     },
     async finish(states) {
       const pending=await sql.query(`SELECT count(*)::integer AS n FROM unnest($1::text[]) AS states(state_key) CROSS JOIN unnest($2::text[]) AS kinds(kind_key)
         WHERE NOT EXISTS(SELECT 1 FROM cp_control_backfill_jobs j WHERE j.state=states.state_key AND j.kind=kinds.kind_key AND j.completed)`,
-      [states,[...Object.keys(ADMIN_SECTIONS),"spend-window","costs",...(manual?["manual"]:[])]]) as {n:number}[];
+      [states,[...Object.keys(ADMIN_SECTIONS),"spend-window","costs","manual-indexes",...(manual?["manual"]:[])]]) as {n:number}[];
       if(Number(pending[0].n)>0) throw new Error("Scoped control backfills remain pending");
       await sql.query(`UPDATE cp_admin_config SET value=value-ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}],revision=revision+1
         WHERE value ?| ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}]`);
@@ -137,6 +143,13 @@ export function pgControlReadsBackfill(sql: Sql, manual?:()=>FieldManualRepos): 
             'state',entry #>> '{reach,states,0}'))=$1 ORDER BY entry->>'id' LIMIT 100`,[state,held?.cursor??""]) as {entry:FieldManualEntry;updated_at:string}[]:[];
         copied+=await copyFieldManualPage(manual(),rows.map(row=>row.entry),rows.length?new Date(rows[0].updated_at).toISOString():new Date().toISOString());await save("manual",rows.at(-1)?.entry.id??held?.cursor??"",rows.length<100);
       }
+    }
+    const methods=await job("manual-indexes");
+    if(!methods?.completed) {
+      const rows=await sql.query(`SELECT id FROM cp_field_manual_entries WHERE cp_manual_state(value)=$1
+        AND id>$2 ORDER BY id LIMIT 100`,[state,methods?.cursor??""]) as {id:string}[];
+      if(rows.length)await sql.query("SELECT cp_manual_refresh_method(id),cp_manual_refresh_source(id) FROM unnest($1::text[]) entries(id)",[rows.map(row=>row.id)]);
+      copied+=rows.length;await save("manual-indexes",rows.at(-1)?.id??methods?.cursor??"",rows.length<100);
     }
     if(manual && state==="system" && ((await sql.query("SELECT to_regclass('cp_field_manual') AS name")) as {name:string|null}[])[0]?.name) {
       const entry=normalizeEntry(newFieldManualEntry("bank-health","write-errors",{role:"SHARED",kind:"WRITE_HEALTH",

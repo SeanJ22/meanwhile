@@ -1,3 +1,5 @@
+import { MANUAL_SOURCE_INDEX_DDL } from "./manual-source-index.ts";
+import {MANUAL_METHOD_INDEX_DDL} from "./manual-method-index.ts";
 import { PLANNING_CONTROL_DDL } from "../scheduler/state-planning.ts";
 import { HUNT_ORDER_DDL } from "../hunt-orders.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "./control-reads-backfill.ts";
@@ -74,6 +76,10 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_spend_holds",
   "cp_vital_signs",
   "cp_fix_map",
+  "cp_manual_method_meta",
+  "cp_manual_method_rank",
+  "cp_manual_source_facts",
+  "cp_manual_source_classes",
   "cp_model_charges",
   "cp_control_backfill_jobs",
   "cp_hunt_orders",
@@ -415,6 +421,8 @@ export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
   ...CONTROL_READS_BACKFILL_DDL,
   ...PLANNING_CONTROL_DDL,
   ...MANUAL_ORDER_INDEXES,
+  ...MANUAL_METHOD_INDEX_DDL,
+  ...MANUAL_SOURCE_INDEX_DDL,
   ...DISPATCH_ARCHIVE_TABLES.map(changedAtColumnDdl),
   ...WORK_ITEM_PUBLICATION_INDEXES.map(index => `DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_index WHERE indrelid = 'cp_work_items_archive'::regclass AND indisvalid AND indpred IS NULL

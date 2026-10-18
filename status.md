@@ -4,8 +4,8 @@ build_state: RELEASE 56 MERGED + DEPLOYED; BS-01 BLOCKED ON RS-01 READY
 worker: codex-river
 provider: Codex
 run_id: release-56-2026-10-18
-lock: codex-river-2026-10-18T21-58-56-963Z-b8dfe721-3948-4695-96e2-ac9eaa808a2a
-heartbeat: 2026-10-18T23:13:54Z
+lock: none
+heartbeat: 2026-10-18T23:15:02Z
 
 ## Codex River shift — October 18
 

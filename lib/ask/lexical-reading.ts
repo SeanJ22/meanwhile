@@ -212,6 +212,20 @@ export function bodyNameFromQuestion(question: string, inventory: readonly Binda
   return match.slot.split(" ").map(word => abbreviations.has(word) ? word.toUpperCase() : word).join(" ");
 }
 
+/** A district calendar may also carry its committees. An explicitly requested
+ * school board uses the publisher's board sittings when those are identified. */
+export function requestedSchoolBoardSittings<T extends { bodyId?: string | null; title?: string | null }>(
+  question: string, bodyId: string | undefined, meetings: readonly T[],
+): T[] {
+  const words = normalizeName(question);
+  if (!bodyId?.includes("/school_district:") || !/\b(?:school board|governing board|board of education|board of trustees)\b/.test(words) ||
+    /\bcommittee\b/.test(words)) return [...meetings];
+  const isBoard = (meeting: T) => /\b(?:(?:governing|school) board|board of (?:education|trustees))\b/i.test(meeting.title ?? "") &&
+    !/\b(?:committee|advisory)\b/i.test(meeting.title ?? "");
+  if (!meetings.some(meeting => meeting.bodyId === bodyId && isBoard(meeting))) return [...meetings];
+  return meetings.filter(meeting => meeting.bodyId !== bodyId || isBoard(meeting));
+}
+
 /**
  * The intent a shape carries for a subject of its kind, for a looser caller
  * (`lib/ask/speculative-reading.ts`) where a pronoun may fill the slot. Only a
@@ -529,9 +543,12 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   // 1. The whole question binds one subject on the reader's own words, and names no other.
   const explicitDate = meetingDateInQuestion(input.question);
   if (explicitDate && !explicitDate.date) return null;
-  const temporal: AskInterpretation["temporal"] = explicitDate?.date
+  const readTemporal: AskInterpretation["temporal"] = explicitDate?.date
     ? { kind: "DATE", localDate: explicitDate.date }
     : interpretWithoutModel(input.question).temporal;
+  const temporal: AskInterpretation["temporal"] = readTemporal.kind === "NONE" && matches[0]?.shape === "MEETING_TIME" &&
+    /\b(?:getting together|get together|gather(?:ing)?|hold(?:ing)? a meeting)\b/.test(normalizeName(input.question))
+    ? { kind: "NEXT" } : readTemporal;
   const area = areaBodyOfClass(matches, input.readerGoverning ?? []);
   if (area && !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id))) {
     const areaIntent = tenseIntent(area.match.shape, temporal);

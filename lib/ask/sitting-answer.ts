@@ -104,7 +104,7 @@ function squash(text: string): string {
 /** Remove portal document labels and a repeated date without changing the event's name. */
 function eventTitle(title: string): string {
   let text = squash(title).replace(/\s*[-–—]\s*(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},?\s+\d{4}$/i, "");
-  text = text.replace(/\s+agenda$/i, "");
+  text = text.replace(/\bagenda\b/ig, "").replace(/\s+/g, " ").trim();
   if (text.split(" ").length > 2) text = text.replace(/\s+meeting$/i, "");
   return text;
 }
@@ -266,9 +266,13 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   }).format(new Date(chosen.startsAt))}` : "; the start time isn't posted";
   const title = eventTitle(chosen.title);
   const titled = /^(?:the|a|an)\s/i.test(title) ? title : `the ${title}`;
+  const titleSubject = title.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/)
+    .filter(word => word && !/^(?:the|a|an|regular|special|executive|session|meeting)$/.test(word));
+  const subjectWords = new Set(subjectName.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/));
+  const repeatsSubject = titleSubject.length > 0 && titleSubject.every(word => subjectWords.has(word));
   const event = title.toLowerCase().includes(subjectName.toLowerCase()) ? title : `${subjectName} ${title}`;
   const lead = input.requestedLocalDate ? `${event} ${upcoming ? "is" : "was"} on ${day}${time}`
-    : `The ${upcoming ? "next" : "most recent"} ${subjectName} meeting ${upcoming ? "is" : "was"} ${titled} on ${day}${time}`;
+    : `The ${upcoming ? "next" : "most recent"} ${subjectName} meeting ${upcoming ? "is" : "was"}${repeatsSubject ? "" : ` ${titled}`} on ${day}${time}`;
   const answer = `${lead}.${input.includeLocation ? ` ${sittingVenue(chosen) || "We don't have its location yet"}.` : ""}`;
   if (overLengthBudget(answer)) return null;
   return { answer, citedUrls: record.sourceUrl ? [record.sourceUrl] : [] };

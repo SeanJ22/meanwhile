@@ -2,7 +2,27 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { PgDialect } from "drizzle-orm/pg-core";
-import { pointerMoveChainRead } from "../lib/civic-data/store.ts";
+import { historicalVoteBillVersionsRead, pointerMoveChainRead } from "../lib/civic-data/store.ts";
+
+test("bill history searches only anchored candidates, distinguishes HR1 from HR10, and retains unreadable candidates for proof", async () => {
+  const pg = new PGlite();
+  try {
+    await pg.exec("CREATE TABLE civic_data_candidates(id text, candidate jsonb)");
+    for (const [id, readModel] of Object.entries({
+      member: { votes: [{ legisNum: "H.R. 1" }] },
+      window: { snapshot: { votes: [{ title: "On passage of H.R. 1" }] } },
+      otherBill: { snapshot: { votes: [{ legisNum: "H.R. 10" }] } },
+      encoded: { $civicPayloadPart: "encoded" },
+      unrelated: { votes: [{ legisNum: "H.R. 1" }] },
+    })) await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2)", [id, { readModel }]);
+    const db = { execute: async (statement: Parameters<PgDialect["sqlToQuery"]>[0]) => {
+      const query = new PgDialect().sqlToQuery(statement); return pg.query(query.sql, query.params);
+    } } as unknown as Parameters<typeof historicalVoteBillVersionsRead>[0];
+    const result = await historicalVoteBillVersionsRead(db, ["member", "window", "otherBill", "encoded", "missing"], "hr1");
+    assert.deepEqual(result.rows.map(row => row.id).sort(), ["encoded", "member", "missing", "window"]);
+    assert.throws(() => historicalVoteBillVersionsRead(db, ["member"], "hr1) OR true"), /BILL_INVALID/);
+  } finally { await pg.close(); }
+});
 
 test("Ask history reads its anchored chain in one query, retaining ambiguous links and terminating cycles", async () => {
   const pg = new PGlite();

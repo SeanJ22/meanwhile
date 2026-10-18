@@ -13,6 +13,18 @@ const rollCall = (n: number, what: string, date = `2026-09-${String(10 + n).padS
   occurredAt: date, sourceUrl: `https://clerk.example/${n}`, sourceOrg: "U.S. House of Representatives",
 });
 
+test("a sourced key-vote position answers an exact bill as directly as a recent roll call", () => {
+  const record: EvidenceRecord = { ...rollCall(1, "Example law — On Passage of the Bill H.R. 1", "2025-07-01", "NO"),
+    kind: "KEY_VOTE_POSITION", canonicalSubjectId: "congress:C1",
+    keyVote: { entryIds: ["example"], positionKeys: ["example|senate|119-1:372"], chamber: "senate", congress: 119, session: 1,
+      rollNumber: 372, position: "NO", referenceVerifiedAt: "2026-10-18" } };
+  const answer = composePersonVotes({ name: "Example Senator", topic: "hr1", records: [record] });
+  assert.equal(answer?.answer, "Example Senator voted NO on H.R. 1.");
+  assert.deepEqual(answer?.citedUrls, [record.sourceUrl]);
+  assert.equal(composePersonVotes({ name: "Example Senator", topic: "hr1 in 2021", records: [record] })?.missingAnswer, true);
+  assert.equal(composePersonVotes({ name: "Example Senator", topic: "hr1 in the 117th congress", records: [record] })?.missingAnswer, true);
+});
+
 test("the vote questions read in code, with the words naming the person and the topic", () => {
   assert.deepEqual(personVotesQuestionShape("How has Juan Ciscomani voted?"), { slot: "juan ciscomani", topic: null });
   assert.deepEqual(personVotesQuestionShape("How did Juan Ciscomani vote on the budget?"), { slot: "juan ciscomani", topic: "budget" });

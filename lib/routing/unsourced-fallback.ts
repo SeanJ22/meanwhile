@@ -6,7 +6,8 @@ import { askPlaybook } from "../ask/runtime-settings.ts";
  * 1. A different result type: `UNSOURCED`, never a `RoutingAnswer`.
  * 2. No sources field exists on it (no `sources`, `provenance` or `sourceUrl`).
  * 3. The plain-language mark leads, above the answer.
- * 4. It is last, never first: `shouldFallBack` refuses unless the sourced path has already declined.
+ * 4. It is displayed only after the sourced path declines. A missing recent vote may prepare it while
+ * retained votes are checked; a held answer wins and cancels the unused call.
  * Every answer states the source it used (`sourceLine`, on the record) and is one or two sentences. An
  * unsourced answer is not reader signal, not a position, and is not aggregated.
  */
@@ -30,7 +31,7 @@ export function unsourcedSourceLine(model: string): string {
 /** What an unsourced answer is. Deliberately not a `RoutingAnswer`. */
 export interface UnsourcedAnswer {
   readonly kind: "UNSOURCED";
-  /** The generated text, verbatim. */
+  /** The generated answer, or the model's explicit unknown response. */
   readonly text: string;
   /** Always the mark. Present on the record so it cannot be rendered without. */
   readonly mark: typeof UNSOURCED_MARK;
@@ -89,6 +90,7 @@ export interface FallbackOptions {
   fetchImpl?: typeof fetch;
   recordCost?: AskCostWriter;
   place?: string | null;
+  signal?: AbortSignal;
 }
 
 export type FallbackOutcome =
@@ -112,6 +114,13 @@ export async function askUnsourced(
      leaves room for the thinking (lib/models.ts). */
   const model = askModel();
   const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.UNSOURCED.thinking, effort: ASK_MODEL_ROLES.UNSOURCED.effort });
+  const today = new Date();
+  const year = today.getUTCFullYear();
+  // A new Congress starts at noon Eastern on January 3 (17:00 UTC in January).
+  const congressionalYear = year % 2 === 1 && today.getTime() < Date.UTC(year, 0, 3, 17) ? year - 1 : year;
+  const congress = Math.floor((congressionalYear - 1789) / 2) + 1;
+  const firstYear = 1789 + (congress - 1) * 2;
+  const billQuestion = /\b(?:h\s*\.?\s*r\s*\.?|s\s*\.?)\s*\d+\b/i.test(question);
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",
@@ -126,20 +135,27 @@ export async function askUnsourced(
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
         ...(fields.effort ? { output_config: { effort: fields.effort } } : {}),
         system: [{ type: "text", text: fallbackPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
+        tools: [{ name: "answer_reader", description: "Answer only what was asked. If you do not know the requested fact, return known=false and an empty answer; do not narrate uncertainty or suggest a lookup.",
+            input_schema: { type: "object", properties: { known: { type: "boolean" }, answer: { type: "string",
+              description: "The fewest words that fully answer the question, normally 5–20 words for a simple question. No background, caveats, extra figures, or repeated place/date. Empty if unknown; never substitute an approximate number for an unknown exact one." } },
+              required: ["known", "answer"], additionalProperties: false } }],
+        tool_choice: fields.thinking?.type === "disabled" ? { type: "tool", name: "answer_reader" } : { type: "auto" },
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address
         // leaves this origin.
-        messages: [{ role: "user", content: JSON.stringify({ question: scrubFreeText(question),
-          place: options.place ? scrubFreeText(options.place) : null }) }],
+        messages: [{ role: "user", content: `Today: ${today.toISOString().slice(0, 10)}.${options.place ? ` Reader's ZIP or place: ${scrubFreeText(options.place)}.` : ""}${billQuestion ? ` Current Congress: ${congress} (${firstYear}–${firstYear + 1}). Unless the question gives another Congress or year, its bill number refers to this Congress.` : ""}\n\n${scrubFreeText(question)}\n\nGive only the answer; for a simple question, one short sentence. Return it with answer_reader.` }],
       }),
-      signal: AbortSignal.timeout(2_500),
+      signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(2_500)]) : AbortSignal.timeout(2_500),
     });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
 
     const body = (await response.json()) as {
-      content?: Array<{ type?: string; text?: string }>;
+      content?: Array<{ type?: string; text?: string; name?: string; input?: { known?: boolean; answer?: unknown } }>;
     };
-    const text = (body.content?.find((b) => b.type === "text")?.text ?? "").trim();
+    const general = body.content?.find(b => b.type === "tool_use" && b.name === "answer_reader")?.input;
+    const text = general?.known === false ? "I don't know."
+      : general?.known && typeof general.answer === "string" ? general.answer.trim()
+      : (body.content?.find(b => b.type === "text")?.text ?? "").trim();
     if (text === "" || /^DECLINE\b/i.test(text)) {
       // The model judged it civic. That verdict is honoured rather than
       // second-guessed: it is the same direction our own guard points, and

@@ -874,7 +874,7 @@ async function loadBody(
   let row: MeetingBodyRow | null;
   let history: MeetingsSnapshot | null = null;
   try {
-    row = await readMeetingBodyRow(state, bodyId, options.dataStore);
+    row = await readMeetingBodyRow(state, bodyId, options.dataStore, wantAgenda);
     if (row !== null && wantHistory) history = await readMeetingBodyHistory(row, options.dataStore);
   } catch {
     return null;

@@ -15,6 +15,7 @@ import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjectio
 import type { FederalMemberVotesReadModel, FederalRollCallWindow } from "../votes/data-plane.ts";
 import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import { matchingPersonVotes } from "./person-votes.ts";
+import { keyVoteEvidenceFor } from "./key-votes.ts";
 import type { RollCallVote } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
@@ -402,7 +403,7 @@ export function voteEvidenceFor(
 
 export async function voteEvidenceForIncludingHistory(
   personName: string,
-  options: { withinStates?: readonly string[]; officeholderId?: string; topic?: string | null } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string; topic?: string | null; onRecentMiss?: () => void } = {},
   readers?: NativeMemberVoteReaders,
 ): Promise<VoteEvidence> {
   const stateHint = options.withinStates?.length === 1 ? options.withinStates[0] : undefined;
@@ -438,6 +439,14 @@ export async function voteEvidenceForIncludingHistory(
   const current = voteEvidenceFor(personName, { ...options, memberVotes });
   if (options.topic !== undefined && matchingPersonVotes(current.records, options.topic)?.length) return current;
   if (current.identity.kind !== "JOINED" || current.identity.seat.rosterScope !== "us") return current;
+  if (options.topic) {
+    const key = await keyVoteEvidenceFor({ kind: "PERSON", id: current.identity.seat.officeholderId, name: current.identity.seat.name },
+      [current.identity.seat.officeholderId], undefined, { includeSummaries: false });
+    const matching = matchingPersonVotes(key.records, options.topic);
+    if (matching?.length) return { ...current, records: [...current.records, ...matching],
+      denominators: { ...current.denominators, keyVotePositionsShown: matching.length } };
+  }
+  options.onRecentMiss?.();
   const seat = current.identity.seat;
   const promoted = await readFederalRollCallsProjection();
   if (promoted.kind !== "PROMOTED") return { ...current, gaps: [...current.gaps, {
@@ -449,9 +458,11 @@ export async function voteEvidenceForIncludingHistory(
     .map((record) => record.id));
   const seenCursors = new Set<string>();
   let cursor: string | null = null;
+  const bill = options.topic && /\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/i.exec(options.topic);
+  const voteBill = bill ? `${bill[1].toLowerCase().replace(/\s/g, "")}${bill[2]}` : undefined;
   for (;;) {
     const page = await readHistoricalFederalVotesForMember(seat.officeholderId, promoted,
-      { cursor, pageSize: 16 });
+      { cursor, pageSize: 16, voteBill });
     for (const vote of page.votes) {
       const id = `${seat.officeholderId}#${vote.id}`;
       if (seenVoteIds.has(id)) continue;

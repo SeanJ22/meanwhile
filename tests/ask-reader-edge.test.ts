@@ -248,6 +248,18 @@ test("with every deferrable source on the edge, a cold Mesa question serves its 
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], undefined, `the meeting question loaded ${source}`);
 });
 
+test("an area-meeting question reads no unrelated officeholder inventory or federal directory", async () => {
+  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
+  const payload = await askMesa("Are there any meetings near me this week?");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
+  const preloads = payload.trace.preloads;
+  assert.ok(preloads);
+  assert.equal(preloads.officeholders, undefined);
+  assert.equal(preloads.namedOfficeholders, undefined);
+  assert.equal(payload.trace.preloadSources?.federalDirectory, undefined);
+  assert.deepEqual(databaseReads, []);
+});
+
 test("an unsettled meeting-shaped question restores deferred edge evidence without additional database holdings", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa("When does the Unheld Example City Council meet next?");

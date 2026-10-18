@@ -10,6 +10,7 @@ import {
   type MeetingStateIndex,
 } from "./body-records.ts";
 import { MEETINGS_RECORD_CLASS, type MeetingsSnapshot } from "./snapshot.ts";
+import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 
 type RowStore = Pick<RoutineDataStore, "readPreparedReaderProjection" | "readPromotions">;
 
@@ -27,10 +28,17 @@ export async function readMeetingIndexRow(state: string, store?: RowStore): Prom
 }
 
 /** One body's row in one state, read by key after the edge could not supply its record. */
-export async function readMeetingBodyRow(state: string, bodyId: string, store?: RowStore): Promise<MeetingBodyRow | null> {
+export async function readMeetingBodyRow(state: string, bodyId: string, store?: RowStore, includeAgenda = true): Promise<MeetingBodyRow | null> {
   const scope = meetingBodyRowScope(state, bodyId);
   refuseDatabaseInEdgeOnlyContext(`${MEETINGS_RECORD_CLASS}:${scope}`);
   try {
+    // The exact body's prepared row is already place-scoped. A time lookup
+    // needs no agenda text or recursive place filtering of that same body.
+    const query = !store && !includeAgenda ? readerQuery() : null;
+    if (query) {
+      const [rows] = await query([{ text: MEETING_BODY_WITHOUT_AGENDA, params: [MEETINGS_RECORD_CLASS, scope] }]);
+      return rows[0]?.payload as MeetingBodyRow ?? null;
+    }
     const row = await (store ?? new PostgresRoutineDataStore()).readPreparedReaderProjection(MEETINGS_RECORD_CLASS, scope);
     return row === null ? null : row.payload as MeetingBodyRow;
   } catch (error) {
@@ -38,6 +46,9 @@ export async function readMeetingBodyRow(state: string, bodyId: string, store?: 
     throw error;
   }
 }
+
+export const MEETING_BODY_WITHOUT_AGENDA = `SELECT jsonb_set(payload, '{snapshot,agendaDocuments}', '[]'::jsonb) AS payload
+  FROM civic_data_reader_projections WHERE record_class = $1 AND scope = $2 LIMIT 1`;
 
 /** A body's kept past sittings, from the history partitions its row names. */
 export async function readMeetingBodyHistory(row: MeetingBodyRow, store?: RowStore): Promise<MeetingsSnapshot | null> {

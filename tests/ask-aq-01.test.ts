@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
 import { decideNamedBody } from "../lib/ask/body-confirmation.ts";
-import { bodyNameFromQuestion, lexicalReading } from "../lib/ask/lexical-reading.ts";
+import { bodyNameFromQuestion, lexicalReading, requestedSchoolBoardSittings } from "../lib/ask/lexical-reading.ts";
 import { titleCaseName } from "../lib/ask/inventory.ts";
 import { composeSittingAnswer } from "../lib/ask/sitting-answer.ts";
 import { withResponseLifetime } from "../lib/log/after-response.ts";
@@ -25,6 +25,15 @@ const body = (place: string, name: string): BindableEntity => ({ id: `${place}#b
   name, level: "BODY", nameClass: "body", divisionType: "school_district" });
 const tucson = body("ocd-division/country:us/state:az/school_district:tucson", "Tucson Unified School District Governing Board");
 const turlock = body("ocd-division/country:us/state:ca/school_district:turlock", "Turlock Unified School District Board of Education");
+
+test("AQ-01 a requested school-board sitting is not replaced by its district's advisory committee", () => {
+  const meetings = [{ bodyId: tucson.id, title: "Alternative Education Advisory Committee Meeting Agenda" },
+    { bodyId: tucson.id, title: "GOVERNING BOARD AGENDA SPECIAL MEETING" }];
+  assert.deepEqual(requestedSchoolBoardSittings("When's the school board getting together again?", tucson.id, meetings), [meetings[1]]);
+  assert.deepEqual(requestedSchoolBoardSittings("When was the last TUSD meeting?", tucson.id, meetings), meetings);
+  assert.deepEqual(requestedSchoolBoardSittings("When does the school board meet?", tucson.id,
+    [{ bodyId: tucson.id, title: "Regular meeting" }]), [{ bodyId: tucson.id, title: "Regular meeting" }]);
+});
 
 test("AQ-01 a governor lookup does not call an empty legislative district a governor loading failure", async () => {
   await installRegistryAuthority();
@@ -164,7 +173,7 @@ test("AQ-01 abbreviated bill numbers select the requested vote without matching 
   const records = [1, 10].map(n => ({ kind: "ROLL_CALL_VOTE" as const, id: `vote:${n}`, text: `Vote on H.R. ${n}`,
     sourceUrl: `https://clerk.house.gov/votes/${n}`, rollCall: { position: n === 1 ? "Yea" : "Nay", what: `A measure (H R ${n})`, when: "October 7, 2026", result: "Passed" } }));
   const answer = composePersonVotes({ name: "Casey Example", topic: "HR1", records });
-  assert.equal(answer?.answer, "Casey Example voted Yea on A measure (H R 1).");
+  assert.equal(answer?.answer, "Casey Example voted Yea on H.R. 1.");
   assert.deepEqual(answer?.citedUrls, ["https://clerk.house.gov/votes/1"]);
   const missing = composePersonVotes({ name: "Casey Example", topic: "HR2", records });
   assert.equal(missing?.answer, "We don't have that answer yet.");

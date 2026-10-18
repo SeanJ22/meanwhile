@@ -78,13 +78,21 @@ const MOST_RECENT_SHOWN = 3;
 type RollCallRecord = EvidenceRecord & { rollCall: NonNullable<EvidenceRecord["rollCall"]> };
 
 export function matchingPersonVotes(records: readonly EvidenceRecord[], topic: string | null): RollCallRecord[] | null {
-  const held = records.filter((record): record is RollCallRecord => record.kind === "ROLL_CALL_VOTE" && Boolean(record.rollCall) && Boolean(record.sourceUrl));
+  const held = records.filter((record): record is RollCallRecord => (record.kind === "ROLL_CALL_VOTE" || record.kind === "KEY_VOTE_POSITION") && Boolean(record.rollCall) && Boolean(record.sourceUrl));
   if (!topic) return held;
   const words = normalizeName(topic);
   const bill = /\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/.exec(words);
-  if (bill) return held.filter(record => [...normalizeName(record.rollCall.what)
+  if (bill) {
+    const qualification = words.replace(bill[0], "");
+    const year = qualification.match(/\b((?:19|20)\d{2})\b/)?.[1];
+    const congress = qualification.match(/\b(\d{1,3})(?:st|nd|rd|th)? congress\b/)?.[1];
+    return held.filter(record => (!year || (record.keyVote
+      ? String(1787 + record.keyVote.congress * 2 + record.keyVote.session - 1)
+      : record.occurredAt?.slice(0, 4) ?? record.rollCall.when.match(/\b(?:19|20)\d{2}\b/)?.[0]) === year) &&
+      (!congress || record.keyVote?.congress === Number(congress)) && [...normalizeName(record.rollCall.what)
     .matchAll(/\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/g)]
     .some(match => `${match[1].replace(/\s/g, "")}:${match[2]}` === `${bill[1].replace(/\s/g, "")}:${bill[2]}`));
+  }
   const terms = topicTerms(topic);
   if (!terms.length) return null;
   const exact = held.filter(record => normalizeName(record.rollCall.what).includes(words));
@@ -102,7 +110,9 @@ export function composePersonVotes(input: {
   if (!matching) return null;
   if (matching.length === 0) return bill ? missing : null;
   const shown = [...matching].sort((a, b) => (b.occurredAt ?? "").localeCompare(a.occurredAt ?? "")).slice(0, MOST_RECENT_SHOWN);
-  const items = shown.map((record) => `${record.rollCall.position} on ${record.rollCall.what}${input.topic && matching.length === 1 ? "" : ` (${record.rollCall.when}; ${record.rollCall.result})`}`);
+  const billLabels: Readonly<Record<string, string>> = { hr: "H.R.", s: "S.", hres: "H.Res.", hconres: "H.Con.Res.", sres: "S.Res.", sconres: "S.Con.Res." };
+  const billName = bill && (billLabels[bill[1].replace(/\s/g, "")] ?? bill[1].toUpperCase());
+  const items = shown.map((record) => `${record.rollCall.position} on ${billName && matching.length === 1 ? `${billName} ${bill![2]}` : record.rollCall.what}${input.topic && matching.length === 1 ? "" : ` (${record.rollCall.when}; ${record.rollCall.result})`}`);
   const list = items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join("; ")}; and ${items.at(-1)}`;
   const lead = !input.topic ? `${input.name}'s latest votes: ` : `${input.name} voted `;
   const sentences = [`${lead}${list}`];

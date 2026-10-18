@@ -165,6 +165,8 @@ export interface RoutineDataStore {
   readonly readPublishedCandidateMetadata: (candidateId: string) => Promise<PublishedCandidateMetadata | null>;
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
+  /** Potential bill matches only; callers still prove every selected version. */
+  readonly historicalVoteBillVersions?: (candidateIds: readonly string[], bill: string) => Promise<readonly string[]>;
   readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
@@ -1695,6 +1697,20 @@ export function pointerMoveChainRead(db: Pick<ReturnType<typeof getDb>, "execute
   WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}`);
 }
 
+/** Filter only the already anchored history, without transferring unrelated
+ * roll calls. Encoded payloads remain candidates for the normal full reader. */
+export function historicalVoteBillVersionsRead(db: Pick<ReturnType<typeof getDb>, "execute">, ids: readonly string[], bill: string) {
+  const parsed = /^(hr|s|hres|hconres|sres|sconres)([0-9]+)$/.exec(bill);
+  if (!parsed) throw new Error("HISTORICAL_VOTE_BILL_INVALID");
+  const titlePattern = `\\m${parsed[1].split("").join("[[:space:].]*")}[[:space:].]*${parsed[2]}\\M`;
+  return db.execute<{ id: string }>(sql`SELECT requested.id FROM unnest(${sql.param([...ids])}::text[]) requested(id)
+    LEFT JOIN civic_data_candidates USING(id) WHERE candidate IS NULL OR (
+      jsonb_path_exists(candidate->'readModel', 'strict $.**."$civicPayloadPart"', '{}'::jsonb, true)
+      OR EXISTS (SELECT 1 FROM jsonb_array_elements(coalesce(candidate#>'{readModel,votes}', candidate#>'{readModel,snapshot,votes}', '[]'::jsonb)) vote
+        WHERE regexp_replace(lower(coalesce(vote->>'legisNum','')), '[^a-z0-9]', '', 'g') = ${bill}
+          OR lower(coalesce(vote->>'title','')) ~ ${titlePattern}))`);
+}
+
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
   return {
     candidateId: row.candidateId,
@@ -2512,6 +2528,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async pointerMoveChain(key: string, currentId: string): Promise<readonly CandidateEvent[]> {
     const result = await pointerMoveChainRead(this.db, key, currentId);
     return result.rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async historicalVoteBillVersions(ids: readonly string[], bill: string): Promise<readonly string[]> {
+    if (!ids.length) return [];
+    return (await historicalVoteBillVersionsRead(this.db, ids, bill)).rows.map(row => row.id);
   }
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */

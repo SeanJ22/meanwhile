@@ -35,10 +35,7 @@ test("ASK-12: it is a DIFFERENT KIND, so it cannot be rendered where a routed an
 });
 
 test("ASK-12: the mark is PLAIN LANGUAGE, and it is not a footnote", () => {
-  assert.ok(UNSOURCED_MARK.length > 60, "the mark is too short to say what it has to say");
-  assert.ok(!/^\s*[*†‡]/.test(UNSOURCED_MARK), "the mark opens as a footnote marker");
-  assert.match(UNSOURCED_MARK, /did not come from any public record/i);
-  assert.match(UNSOURCED_MARK, /have not checked it/i);
+  assert.equal(UNSOURCED_MARK, "AI answer");
   for (const jargon of ["provenance", "corpus", "LLM", "heuristic", "unsourced provenance"]) {
     assert.ok(!UNSOURCED_MARK.includes(jargon), `the mark uses jargon: ${jargon}`);
   }
@@ -95,7 +92,7 @@ test("Sean, October 1, 2026: Ask without a held source may answer, states its so
       return new Response(JSON.stringify({ content: [{ type: "text", text: "I am not sure who holds that seat." }] }), { status: 200 });
     }) as unknown as typeof fetch,
   });
-  assert.match(sent, /ONE or TWO sentences/);
+  assert.match(sent, /One sentence is enough for a simple question/);
   assert.ok(!/DECLINE/.test(sent), "the prompt still orders the model to refuse civic questions");
   assert.equal(outcome.kind, "UNSOURCED");
 });

@@ -1,4 +1,3 @@
-import { floored, floorLine } from "../ops/denominator-floor.ts";
 import { normalizeName } from "../routing/exact-name.ts";
 import { formatDateLong, spellOutDates } from "../text/format-date.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
@@ -196,16 +195,20 @@ function federalHeld(records: readonly EvidenceRecord[], personId: string): Evid
   return mine.length === 1 && mine[0]!.id.startsWith("fec:") && mine[0]!.sourceUrl && mine[0]!.text.trim() ? mine[0]! : null;
 }
 
-function composeFederalMoney(input: MoneyAnswerInput, record: EvidenceRecord): { answer: string; citedUrls: string[] } | null {
+function composeFederalMoney(input: MoneyAnswerInput, record: EvidenceRecord): { answer: string; citedUrls: string[]; missingAnswer?: boolean } | null {
   const person = input.subject;
-  const text = record.text.trim();
-  const body = /^This\s+campaign\b/.test(text) ? text.replace(/^This\s+campaign\b/, `${possessive(person.name)} campaign`) : `For ${person.name}: ${text}`;
-  const read = record.retrievedAt ? formatDateLong(record.retrievedAt) ?? record.retrievedAt : null;
-  const source = `Filed with the Federal Election Commission${read ? `; read ${read}` : ""}`;
-  const lead = input.ask.kind === "WHO_GAVE"
-    ? [`Our records for ${person.name} hold campaign totals, not the identities of donors (${floorLine(floored("money records we hold for this candidate that name a donor", `a composed money answer for ${person.id}`, 1, 0))})`]
-    : [];
-  const answer = assemble([...(input.lead ? [input.lead] : []), ...lead, body, source], []);
+  if (input.ask.kind === "WHO_GAVE") return { answer: `We don't have ${person.name}'s campaign funding sources yet.`, citedUrls: [], missingAnswer: true };
+  const totals = record.fecTotals;
+  if (!totals || input.ask.kind !== "HOW_MUCH") return null;
+  const parts = input.ask.measures.flatMap(measure => {
+    const amount = measure === "RAISED" ? totals.receipts : measure === "SPENT" ? totals.disbursements : totals.cashOnHand;
+    if (amount === null) return [];
+    return [measure === "RAISED" ? `raised ${dollars(amount)}`
+      : measure === "SPENT" ? `spent ${dollars(amount)}` : `had ${dollars(amount)} cash on hand`];
+  });
+  if (parts.length !== input.ask.measures.length) return null;
+  const body = `${possessive(person.name)} campaign ${parts.join(" and ")} in the ${totals.cycle} cycle${totals.through ? ` through ${formatDateLong(totals.through) ?? totals.through}` : ""}`;
+  const answer = assemble([...(input.lead ? [input.lead] : []), body], []);
   return answer ? { answer, citedUrls: [record.sourceUrl!] } : null;
 }
 
@@ -264,26 +267,6 @@ function heldClause(person: MoneyPerson, held: Held, committee: string, only?: M
 
 const capitalized = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
-/** "Filed with the <agency>; read <date>" — once when every record shares both. */
-function sourceSentence(held: readonly Held[]): string {
-  const filed = held.filter((entry) => entry.finance.filingState === "FILED");
-  const pairs = [...new Map((filed.length ? filed : held).map((entry) => [`${entry.finance.agency}|${entry.finance.checkedAt}`, entry])).values()];
-  return pairs.map((entry, index) => `${index === 0 ? "Filed" : "and filed"} with the ${entry.finance.agency}; read ${formatDateLong(entry.finance.checkedAt) ?? entry.finance.checkedAt}`).join(", ");
-}
-
-const STATE_NOTE_LEAD = /^State filings: this answer uses the same state campaign-money records as the card\.\s+/;
-
-/**
- * The state regime note's second sentence (campaigns' own filings, no outside
- * spending): everything after the fixed first sentence, never a split on the
- * next period, which would cut a middle initial.
- */
-function outsideSpendingSentence(gaps: readonly EvidenceGap[]): string | null {
-  const note = gaps.find((gap) => STATE_NOTE_LEAD.test(gap.statement));
-  const second = note?.statement.replace(STATE_NOTE_LEAD, "");
-  return second ? second.replace(/[.\s]+$/, "") : null;
-}
-
 function assemble(required: readonly string[], optional: readonly string[]): string | null {
   const sentences = required.map((sentence) => sentence.replace(/[.\s]+$/, ""));
   const text = (list: readonly string[]) => `${list.join(". ")}.`;
@@ -299,7 +282,7 @@ function assemble(required: readonly string[], optional: readonly string[]): str
  * Compose the money answer, or null when a model should write it. See the
  * module note for exactly when each applies.
  */
-export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; citedUrls: string[] } | null {
+export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; citedUrls: string[]; missingAnswer?: boolean } | null {
   // Anything the pack holds beyond state committee totals is for a writer to read.
   if (input.records.some((record) => record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION")) return null;
   if (input.ask.kind !== "COMPARE") {
@@ -314,8 +297,6 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   const all = heldBy.flat() as Held[];
   if (heldBy.some((held) => held!.filter((entry) => entry.finance.filingState === "FILED").length > 2)) return null;
   const cited = [...new Set(all.flatMap((entry) => entry.record.sourceUrl ? [entry.record.sourceUrl] : []))];
-  const caveat = outsideSpendingSentence(input.gaps);
-  const where = `a composed money answer for ${input.subject.id}`;
 
   if (input.ask.kind === "COMPARE") {
     const measure = input.ask.measure;
@@ -354,8 +335,7 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
           : `By these filings, ${quoted((x > y ? a! : b!).finance.registeredName)} reported ${MEASURE_WORDS[measure].more}`);
       }
     }
-    const answer = assemble([...sentences, sourceSentence(all)],
-      ["These are the campaigns' own filings; they do not show outside spending for or against either candidate"]);
+    const answer = assemble(sentences, []);
     return answer ? { answer, citedUrls: cited } : null;
   }
 
@@ -363,7 +343,19 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   const person = input.subject;
   const filed = held.filter((entry) => entry.finance.filingState === "FILED");
   const shown = filed.length ? filed : held.slice(0, 1);
-  const source = filed.length ? sourceSentence(held) : null;
+  if (input.ask.kind === "HOW_MUCH" && shown.length === 1 && filed.length === 1) {
+    const { finance } = shown[0];
+    const parts = input.ask.measures.flatMap(measure => {
+      const amount = finance.totals[MEASURE_WORDS[measure].key];
+      if (amount === null) return [];
+      return [measure === "CASH" ? `had ${dollars(amount)} cash on hand`
+        : `${measure === "RAISED" ? "raised" : "spent"} ${dollars(amount)}`];
+    });
+    if (parts.length === input.ask.measures.length) {
+      const answer = `${quoted(finance.registeredName)} ${parts.join(" and ")} ${periodPhrase(finance)}.`;
+      return overLengthBudget(answer) === null ? { answer, citedUrls: [shown[0].record.sourceUrl!] } : null;
+    }
+  }
   /* The WHO_GAVE lead names the person, so the filing is "The campaign
      committee"; two filings are "One" and "the other", in one sentence. */
   const statement = (named: boolean): string | null => {
@@ -386,17 +378,10 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
           stateSmallDonorSentence(funding)].filter((text): text is string => Boolean(text));
       });
       const answer = assemble([...(input.lead ? [input.lead] : []), `${person.name}'s filings report these organization amounts: ${amounts.join("; ")}`,
-        ...individuals, ...(source ? [source] : [])], caveat ? [caveat] : []);
+        ...individuals], []);
       return answer ? { answer, citedUrls: cited } : null;
     }
-    const count = floorLine(floored("money records we hold for this candidate that name a donor", where, held.length, 0));
-    const lead = filed.length
-      ? `Our records for ${person.name} hold campaign totals, not the identities of donors (${count})`
-      : `Our records for ${person.name} name no donors (${count})`;
-    const body = statement(false);
-    if (!body) return null;
-    const answer = assemble([...first, lead, ...(shown.length === 2 ? ["They are 2 committee filings, each stated on its own and not added together"] : []), body, ...(source ? [source] : [])], caveat ? [caveat] : []);
-    return answer ? { answer, citedUrls: cited } : null;
+    return { answer: `We don't have ${person.name}'s campaign funding sources yet.`, citedUrls: [], missingAnswer: true };
   }
 
   // HOW_MUCH: a figure the reader asked for that the filing does not carry is said to be missing from OUR record.
@@ -407,7 +392,7 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
     ? input.ask.measures.filter((measure) => filed.every((entry) => entry.finance.totals[MEASURE_WORDS[measure].key] === null))
     : [];
   const absent = missing.map((measure) => `Our record of ${filed.length === 1 ? "this filing" : "these filings"} does not include ${MEASURE_WORDS[measure].noun}`);
-  const answer = assemble([...first, ...(two ? [two] : []), body, ...(source ? [source] : []), ...absent], caveat ? [caveat] : []);
+  const answer = assemble([...first, body, ...absent], []);
   return answer ? { answer, citedUrls: cited } : null;
 }
 
@@ -534,7 +519,7 @@ function filedFacts(finance: Held["finance"], measures: readonly MoneyMeasure[])
 function candidateClause(person: GroupCandidate, held: readonly Held[], measures: readonly MoneyMeasure[], withPeriod: boolean): { name: string; text: string; gap?: string } | null {
   const period = (finance: Held["finance"]) => withPeriod ? ` ${periodPhrase(finance)}` : "";
   if (held.length === 0) {
-    return { name: person.name, text: "", gap: person.matched ? "no state committee filing in our records" : "not yet matched to a state filing in our records" };
+    return { name: person.name, text: "", gap: "we don't have a campaign filing yet" };
   }
   if (held.length === 2) {
     if (!held.every((entry) => entry.finance.filingState === "FILED")) return null;
@@ -571,7 +556,7 @@ function joinedClauses(clauses: readonly { name: string; text: string; gap?: str
 }
 
 /** Compose a contest's candidates' money from their held state filings, or null when a model should write it. */
-export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer: string; citedUrls: string[] } | null {
+export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer: string; citedUrls: string[]; missingAnswer?: boolean } | null {
   if (input.candidates.length === 0) return null;
   if (input.records.some((record) => record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION")) return null;
   const ids = new Set(input.candidates.map((person) => person.id));
@@ -583,7 +568,6 @@ export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer
   const all = chosen.flat();
   // A race where we hold no state filing at all (a federal race, say) is for the records and a writer, not a list of "none".
   if (all.length === 0) return null;
-  const where = `a composed race money answer for ${input.contest.id}`;
   const measures: readonly MoneyMeasure[] = input.ask.kind === "HOW_MUCH" ? input.ask.measures
     : input.ask.kind === "MOST" ? [input.ask.measure] : ["RAISED"];
   const filed = all.filter((held) => held.finance.filingState === "FILED");
@@ -593,18 +577,13 @@ export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer
   const clauses = input.candidates.map((person, index) => candidateClause(person, chosen[index], measures, !shared));
   if (clauses.some((clause) => clause === null)) return null;
   const list = joinedClauses(clauses as { name: string; text: string; gap?: string }[]);
-  const withFiling = chosen.filter((held) => held.length > 0).length;
-  const count = floorLine(floored("candidates with a state money record we hold", where, input.candidates.length, withFiling));
   const race = `the ${input.contest.title} race`;
   const sentences: string[] = [];
   if (input.ask.kind === "WHO_GAVE") {
     if (all.some(entry => filedOrganizations(entry.finance.funding).length > 0)) return null;
-    const donors = floorLine(floored("money records naming a donor", where, all.length, 0));
-    sentences.push(`Our records for ${race} hold campaign totals, not the identities of donors (${donors}; ${count})`);
-    sentences.push(`What we hold for each${shared ? `, filed ${shared}` : ""}: ${list}`);
-  } else {
-    sentences.push(`For ${race}, by each candidate's own committee filing${shared ? ` ${shared}` : ""} (${count}): ${list}`);
+    return { answer: `We don't have the campaign funding sources for ${race} yet.`, citedUrls: [], missingAnswer: true };
   }
+  sentences.push(`${list}${shared ? `, ${shared}` : ""}`);
   if (input.ask.kind === "MOST") {
     const key = MEASURE_WORDS[input.ask.measure].key;
     // Like for like only: one filing each, every candidate, the same agency and period, the asked figure present.
@@ -620,10 +599,7 @@ export function composeGroupMoneyAnswer(input: GroupMoneyContestInput): { answer
       sentences.push("Not every candidate has one like filing for the same period, so none is ranked");
     }
   }
-  sentences.push(sourceSentence(all));
-  const caveat = outsideSpendingSentence(input.gaps)
-    ? ["These are the campaigns' own filings; they do not show outside spending for or against any candidate"] : [];
-  const answer = assemble(sentences, caveat);
+  const answer = assemble(sentences, []);
   const cited = [...new Set(all.flatMap((entry) => entry.record.sourceUrl ? [entry.record.sourceUrl] : []))];
   return answer ? { answer, citedUrls: cited } : null;
 }
@@ -636,51 +612,12 @@ export interface GroupMoneyNoRaceInput {
   records: readonly EvidenceRecord[];
 }
 
-interface RegisterRow { record: EvidenceRecord; name: string; status: string; agency: string; office: string; filings: string }
-/* The register row's own sentence (`lib/ask/local-finance.ts`), read back field by field; anything else refuses. */
-const REGISTER_ROW = new RegExp("^\"(?<name>[^\"]+)\" is an? (?<status>active|inactive) .+? in the (?<agency>.+?) campaign-finance register, registered for the office the register names \"(?<office>[^\"]+)\", with (?<filings>\\d+) campaign-finance filings? on record\\.$");
-
-/**
- * A body whose race the authority says is not on the ballot: that statement,
- * then the committees the county register links to the office, as the register
- * states them. Only the register rows are restated; the itemized rows stay in
- * the records below the answer, never added into a total. Null when the pack
- * holds anything this cannot state plainly.
- */
-export function composeNoRaceMoneyAnswer(input: GroupMoneyNoRaceInput): { answer: string; citedUrls: string[] } | null {
+export function composeNoRaceMoneyAnswer(input: GroupMoneyNoRaceInput): { answer: string; citedUrls: string[]; missingAnswer?: boolean } | null {
   if (input.absence.kind !== "BALLOT_ABSENCE" || !input.absence.text.trim()) return null;
   if (input.records.some((record) => record.kind === "FINANCE_SUMMARY")) return null;
   const mine = (record: EvidenceRecord) => record.bodyId === input.body.id;
   const money = input.records.filter((record) => (record.kind === "FINANCE_COMMITTEE" || record.kind === "FINANCE_TRANSACTION") && mine(record));
-  const rows = input.records.filter((record) => record.kind === "FINANCE_COMMITTEE" && mine(record)).map((record): RegisterRow | null => {
-    const groups = REGISTER_ROW.exec(record.text)?.groups;
-    return groups ? { record, name: groups.name, status: groups.status, agency: groups.agency, office: groups.office, filings: groups.filings } : null;
-  });
-  if (rows.some((row) => row === null)) return null;
-  const register = rows as RegisterRow[];
-  const one = <T>(values: T[]): T | null => new Set(values).size === 1 ? values[0] : null;
-  // A held row that names who gave is for a writer to read; the count below is measured, never assumed.
-  const namingDonor = money.filter((record) => record.kind === "FINANCE_TRANSACTION" && /\bcontribution\b.*\bfrom\b/.test(record.text)).length;
-  if (namingDonor > 0) return null;
-  const agency = one(register.map((row) => row.agency));
-  const office = one(register.map((row) => row.office));
-  const readOn = one(register.map((row) => row.record.retrievedAt ?? ""));
-  if (register.length > 0 && (!agency || !office || !readOn)) return null;
-  const where = `a composed no-race money answer for ${input.body.id}`;
-  const sentences = [input.absence.text.trim()];
-  if (register.length === 0) {
-    sentences.push(`We have not linked any campaign-finance committee to ${input.body.name} in the records we hold`);
-  } else {
-    const listed = register.map((row) => `${quoted(row.name)} (${row.status}, ${row.filings} filing${row.filings === "1" ? "" : "s"})`);
-    const joined = listed.length > 1 ? `${listed.slice(0, -1).join(", ")} and ${listed[listed.length - 1]}` : listed[0];
-    sentences.push(`The ${agency} register we hold (read ${formatDateLong(readOn!) ?? readOn}) links ${register.length === 1 ? "one committee" : `${register.length} committees`} to ${quoted(office!)}: ${joined}`);
-    sentences.push(input.ask.kind === "WHO_GAVE"
-      ? `Our money records for them name no donor (${floorLine(floored("money records naming a donor", where, money.length, namingDonor))})`
-      : "We do not add their itemized rows into totals; the rows we hold are listed below");
-  }
-  /* The authority's whole statement, or its first sentence when that is all that fits. */
-  const lead = input.absence.text.trim().split(/(?<=\.)\s+(?=[A-Z])/)[0];
-  const answer = assemble(sentences, []) ?? assemble([lead, ...sentences.slice(1)], []);
-  const cited = [...new Set([input.absence, ...register.map((row) => row.record)].flatMap((record) => record.sourceUrl ? [record.sourceUrl] : []))];
-  return answer ? { answer, citedUrls: cited } : null;
+  if (money.some(record => record.kind === "FINANCE_TRANSACTION" && /\bcontribution\b.*\bfrom\b/.test(record.text))) return null;
+  return { answer: `We don't have ${input.body.name}'s campaign ${input.ask.kind === "WHO_GAVE" ? "funding sources" : "totals"} yet.`,
+    citedUrls: [], missingAnswer: true };
 }

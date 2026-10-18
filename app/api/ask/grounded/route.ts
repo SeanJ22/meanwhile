@@ -4,6 +4,8 @@ import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model
 import { currentStateAuthorityProjection } from "@/lib/civic-data/state-reader";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
+import { recordQuestionWork } from "@/lib/ask/question-work";
+import { districtQuestion, composeDistrictAnswer } from "@/lib/ask/districts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
@@ -20,7 +22,7 @@ import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { divisionsByOcdIds, seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
@@ -122,10 +124,10 @@ import {
   type BallotSubjectRecord,
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
-import { captureAskInteraction } from "@/lib/db/ask-signal";
+import { captureAskInteraction, writeAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
-import { askUnsourced, shouldFallBack } from "@/lib/routing/unsourced-fallback";
+import { askUnsourced } from "@/lib/routing/unsourced-fallback";
 import {
   interpretationCacheKey,
   synthesisCacheKey,
@@ -414,6 +416,19 @@ async function answerWithSettings(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
+  const completeMissingAnswer = async (payload: AskAnswerPayload): Promise<AskAnswerPayload> => {
+    payload.answer ??= "We don't have that answer yet.";
+    const general = await askUnsourced(question, { place: typeof body.approximateLocation === "string" ? body.approximateLocation : null });
+    if (general.kind === "UNSOURCED") payload.aiAnswer = general.answer.text;
+    await afterResponse(async () => {
+      try { await recordQuestionWork({ question, divisions: ocdIds,
+        place: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+        subjectId: payload.subject?.id, runClass: markerFromRequest(request).runClass, now: new Date().toISOString() }); }
+      catch (error) { console.error("Ask acquisition work was not saved:", error instanceof Error ? error.message : "unknown"); }
+    });
+    payload.trace.totalMs = Date.now() - started;
+    return payload;
+  };
   const namedStates = statesNamedInQuestion(question);
   const ballotZip = !namedStates.length && typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
   const namedStateDivisions = namedStates.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
@@ -461,7 +476,8 @@ async function answerWithSettings(request: Request) {
     readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused)
     ? areaMeetingsQuestion(question) : null;
   /* Both answer from the registry and what is already held for the reader's divisions: no ballot, no money, no votes, no recorded outcomes. */
-  const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
+  const districtAsk = districtQuestion(question);
+  const leanAsk = Boolean(officialsAsk || areaMeetingsAsk || districtAsk);
   const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
     readSubjectRefs(body.priorSubjects, 8).length === 0 &&
@@ -577,7 +593,7 @@ async function answerWithSettings(request: Request) {
   await readRegistryRuntimeProjection(registryStates);
   const registrySource = registryStates.every(state => currentStateAuthorityProjection("registry-runtime", state)?.source === "EDGE") ? "EDGE" : "DATABASE";
   const questionShape = lexicalQuestionShape(question);
-  const needsMeetings = ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
+  const needsMeetings = !districtAsk && ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
     manifest: edgeManifest,
@@ -658,6 +674,30 @@ async function answerWithSettings(request: Request) {
   }
   lap("sourcePreloads");
   trace.preloads = preloadMs;
+  if (districtAsk) {
+    const composed = composeDistrictAnswer(districtAsk, await divisionsByOcdIds(ocdIds), ballotZip ?? null);
+    if (composed) {
+      const pack: EvidencePack = { question, intent: "CIVICS", temporal: { kind: "NONE" }, subject: null,
+        records: composed.records, gaps: [], denominators: { districts: composed.records.length }, today: new Date().toISOString().slice(0, 10) };
+      const verdict = validateAnswer(composed.answer, composed.citedUrls, pack);
+      if (verdict.kind === "PASSED") {
+        trace.interpretation = { ran: false, why: "place-districts", intent: "CIVICS", temporal: { kind: "NONE" }, fellBackToDeterministic: true };
+        trace.resolution = { state: "NONE", basis: "READER_PLACE" };
+        trace.retrieval = { selection: "READER_PLACE", recordCount: pack.records.length, sourceCount: composed.citedUrls.length,
+          gapCount: 0, denominators: pack.denominators };
+        trace.answerMode = "GROUNDED_COMPOSED";
+        trace.totalMs = Date.now() - started;
+        trace.synthesis = { ran: false, why: "place-districts" };
+        trace.validation = { ran: true, passed: true, checked: verdict.checked };
+        await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
+          resolutionState: "NONE", mode: "GROUNDED_COMPOSED", subjectIds: [], answer: composed.answer, answerModel: null,
+          validationPassed: true, records: composed.records, gaps: [], surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
+          approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+          continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        return Response.json(askAnswer({ mode: "GROUNDED_COMPOSED", pack, answer: composed.answer, contacts: [], trace }));
+      }
+    }
+  }
   let snapshot: MeetingsSnapshot | null = null;
   let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" | "NOT_NEEDED" =
     needsMeetings ? "STORE_UNREACHABLE" : "NOT_NEEDED";
@@ -705,7 +745,12 @@ async function answerWithSettings(request: Request) {
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
   const governmentListings = officialsAsk?.unresolvedPlace ? { records: [], unavailableStates: [] }
     : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
-  const listedGovernments = governmentListings.records.map(governmentListingEntity);
+  const listedGovernments = governmentListings.records.map(row => {
+    const entity = governmentListingEntity(row);
+    const canonical = row.bodyIds.flatMap(id => canonicalBodyIdentity(id) ?? []);
+    return canonical.length === 1 ? { ...entity, id: canonical[0].bodyId, ocdId: canonical[0].ocdId,
+      divisionType: canonical[0].divisionType } : entity;
+  });
   /* A body named in the reader's state may be guessed from a typo; the state's index says which bodies hold meetings. */
   const heldBodyIds = needsMeetings ? await readHeldBodyIds({ manifest: edgeManifest, states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
@@ -899,7 +944,8 @@ async function answerWithSettings(request: Request) {
   let interpretation: AskInterpretation = unavailableInterpretation();
   const interpretationStarted = Date.now();
   const interpretContext = {
-    inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType })),
+    inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType,
+      local: Boolean(e.ocdId && ocdIds.includes(e.ocdId)) })),
     today,
     approximateLocation:
       typeof body.approximateLocation === "string" ? body.approximateLocation : null,
@@ -1026,12 +1072,13 @@ async function answerWithSettings(request: Request) {
       });
     let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place || officialsAsk?.unresolvedPlace ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
-        ? interpretation.entityMentions : []);
+        ? interpretation.entityMentions : [], ocdIds);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
-    // Model expansions cannot silently convert a named body hypothesis into an
-    // answer. No lexical candidate means a neutral clarification, not a default.
-    if (bodyDecision.kind === "NONE" && initialResolution.binding.kind === "BOUND" &&
-      initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
+    // A nickname read by the model must resolve to a real body in the reader's
+    // place. An unresolved name never substitutes a nearby government.
+    if ((bodyDecision.kind === "CLARIFY" || bodyDecision.kind === "CONFIRM") && initialResolution.binding.kind === "BOUND" &&
+      initialResolution.basis.startsWith("MODEL_EXPANSION") && initialResolution.binding.entity.ocdId &&
+      ocdIds.includes(initialResolution.binding.entity.ocdId)) bodyDecision = { kind: "NONE" };
     const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
     /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
     const resolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
@@ -1091,6 +1138,7 @@ async function answerWithSettings(request: Request) {
           : unheldBody.shape === "BODY_AGENDA" ? "agendas"
           : unheldBody.shape === "PUBLIC_COMMENT" ? "public-comment rules" : "calendar";
         const answer = unheldBodyAnswer(titleCaseName(unheldBody.name), information, trace);
+        await completeMissingAnswer(answer);
         await capture("NO_EVIDENCE", [], answer.answer, null, null, [], answer.gaps);
         return Response.json(answer);
       } };
@@ -1103,11 +1151,18 @@ async function answerWithSettings(request: Request) {
         const answer = clarifyAnswer(question, [], trace);
         // A suggestion is not the subject of an answer or of an attributed record.
         delete answer.candidates;
-        if (decision.kind === "CONFIRM") answer.confirmation = {
-          bodyId: decision.candidate.id, name: titleCaseName(decision.candidate.name), question,
-        };
-        else answer.clarification = "Which government do you mean? A city or state can help me identify it.";
-        await capture("CLARIFY", [], null, null, null, [], []);
+        if (decision.kind === "CONFIRM") {
+          answer.bodyChoices = [decision.candidate, ...decision.alternatives].map(candidate => ({
+            bodyId: candidate.id, name: titleCaseName(candidate.name), question,
+          }));
+          answer.confirmation = answer.bodyChoices[0];
+        }
+        else {
+          answer.mode = "NO_EVIDENCE";
+          answer.trace.answerMode = "NO_EVIDENCE";
+          await completeMissingAnswer(answer);
+        }
+        await capture(answer.mode, [], answer.answer, null, null, [], []);
         return Response.json(answer);
       } };
     }
@@ -1145,6 +1200,7 @@ async function answerWithSettings(request: Request) {
         trace.totalMs = Date.now() - started;
         await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
         const answer = unresolvedAnswer(binding.mention, trace);
+        await completeMissingAnswer(answer);
         if (resolution.unresolvedCanonicalId) {
           answer.denominators.identityUnresolved = 1;
           answer.gaps.push({ whose: "OURS", statement: `We couldn't match ${binding.mention} to a person in our records. We haven't shown another person's information.` });
@@ -1986,7 +2042,7 @@ async function answerWithSettings(request: Request) {
     /* "What did they decide" is read off the recorded actions: each quoted action phrase must pass the same validator on
        its own. */
     const sittingComposition = sittingShape && subject
-      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
+      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: titleCaseName(bodyNameFromQuestion(question, namedBodies, subject.id) ?? subject.name), sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
         actions: heldActions, admissible: (text) => validateAnswer(text, [], pack, bodies).kind === "PASSED" })
       : null;
     const sittingSettled = settleSittingComposition(
@@ -2160,6 +2216,11 @@ async function answerWithSettings(request: Request) {
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,
+      requestedEvidenceMissing: Boolean(sittingShape && (
+        sittingShape === "MEETING_TIME" ? resolvedSittings.length === 0
+        : sittingShape === "BODY_AGENDA" ? !packRecords.some(row => row.kind === "AGENDA_ITEM" || row.kind === "AGENDA_DOCUMENT")
+        : sittingShape === "MEETING_OUTCOME" ? !packRecords.some(row => ["MEETING_ACTION", "MEETING_MEMBER_VOTE", "MEETING_MINUTES_SUMMARY"].includes(row.kind))
+        : !packRecords.some(row => row.kind === "PUBLIC_COMMENT_ACCESS"))),
       composedWhy,
     };
   }
@@ -2303,21 +2364,6 @@ async function answerWithSettings(request: Request) {
   trace.answerMode = mode;
   trace.totalMs = Date.now() - started;
 
-  /* Written after the answer exists, so the row describes what the reader received. `captureAskInteraction` writes only when the request carries the returning-reader ID. */
-  /* Only when no held record stood behind the answer and no composed or synthesised answer exists: a short general-knowledge answer that names its source. The mode stays NO_EVIDENCE, and a failure leaves the answer as it was. */
-  if (
-    mode === "NO_EVIDENCE" &&
-    answer === null &&
-    packRecords.length === 0 &&
-    shouldFallBack({ routerAnswered: false, routerDeclined: true })
-  ) {
-    const general = await askUnsourced(question);
-    if (general.kind === "UNSOURCED") {
-      answer = `${general.answer.text} ${general.answer.sourceLine}`;
-      answerModel = resolveAskRoleModel("UNSOURCED");
-    }
-  }
-
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 
   /* Each coded gap the delivered answer states adds one to its body's count for that gap and day (`lib/ask/gap-observation.ts`). The plan is decided here; the write runs after the response and never reaches the reader. Synthetic runs count nothing. */
@@ -2333,13 +2379,19 @@ async function answerWithSettings(request: Request) {
     pack,
     answer,
     contacts: shownContacts,
-    /* In start order, de-duplicated by id: the chosen sitting first, then other sittings the body holds that local day. A client reads [0] as the meeting the answer is about. */
+    /* Keep the selected sitting first, including for LAST; controls and prose refer to the same event. */
     meetings: resolvedSittings
-      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i)
-      .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
+      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i),
     trace,
   });
   payload.agendaLead = Boolean(agendaQuestion);
+  if (mode === "NO_EVIDENCE" || missingMeasureMeaning || path.requestedEvidenceMissing ||
+    synthesis?.kind === "WROTE" && synthesis.missingAnswer ||
+    composed && "missingAnswer" in composed && composed.missingAnswer === true) {
+    await completeMissingAnswer(payload);
+    payload.agendaLead = false;
+  }
+  trace.totalMs = Date.now() - started;
   payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return Response.json(payload);
 }
@@ -2363,37 +2415,41 @@ async function captureDelivered(input: {
   residency: ReturnType<typeof stampResidency>;
   continuityKey: string;
 }): Promise<void> {
-  try {
-    const marker = markerFromRequest(input.request);
-    await captureAskInteraction({
-      question: input.question,
-      intent: input.interpretation.intent,
-      temporalKind: input.interpretation.temporal.kind,
-      subjectIds: input.subjectIds,
-      resolutionState: input.resolutionState,
-      answerMode: input.mode,
-      answerText: input.answer,
-      answerModel: input.answerModel,
-      validationPassed: input.validationPassed,
-      evidenceRecordCount: input.records.length,
-      evidenceSourceCount: new Set(
-        input.records.map((r) => r.sourceUrl).filter(Boolean),
-      ).size,
-      namedGapCount: input.gaps.length,
-      evidenceProvenance: evidenceProvenance(input.records),
-      surface: input.surface,
-      approximateLocation: input.approximateLocation,
-      ocdIds: input.ocdIds,
-      divisionVintage: DIVISION_VINTAGE,
-      residencyRelation: input.residency.relation,
-      locationConfidence: input.residency.confidence,
-      /* The coverage stamp is derived by `captureAskInteraction`, never put in the reader's tree. */
-      continuityKey: input.continuityKey,
-      runClass: marker.runClass,
-      runId: marker.runId,
-      occurredAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error("ask signal capture failed", error);
-  }
+  if (markerFromRequest(input.request).runClass !== "ORGANIC") return;
+  await afterResponse(async () => {
+    try {
+      const marker = markerFromRequest(input.request);
+      const saved = await captureAskInteraction({
+        question: input.question,
+        intent: input.interpretation.intent,
+        temporalKind: input.interpretation.temporal.kind,
+        subjectIds: input.subjectIds,
+        resolutionState: input.resolutionState,
+        answerMode: input.mode,
+        answerText: input.answer,
+        answerModel: input.answerModel,
+        validationPassed: input.validationPassed,
+        evidenceRecordCount: input.records.length,
+        evidenceSourceCount: new Set(
+          input.records.map((r) => r.sourceUrl).filter(Boolean),
+        ).size,
+        namedGapCount: input.gaps.length,
+        evidenceProvenance: evidenceProvenance(input.records),
+        surface: input.surface,
+        approximateLocation: input.approximateLocation,
+        ocdIds: input.ocdIds,
+        divisionVintage: DIVISION_VINTAGE,
+        residencyRelation: input.residency.relation,
+        locationConfidence: input.residency.confidence,
+        /* The coverage stamp is derived by `captureAskInteraction`, never put in the reader's tree. */
+        continuityKey: input.continuityKey,
+        runClass: marker.runClass,
+        runId: marker.runId,
+        occurredAt: new Date().toISOString(),
+      }, writeAskInteraction);
+      if (saved.kind === "FAILED") console.error("Ask question was not saved:", saved.why);
+    } catch (error) {
+      console.error("ask signal capture failed", error);
+    }
+  });
 }

@@ -31,7 +31,7 @@ test("no topic: the most recent recorded votes, newest first, and how many we ho
   const records = [1, 2, 3, 4, 5].map((n) => rollCall(n, `Measure ${n} (H R ${n})`));
   const composed = composePersonVotes({ name: "Juan Ciscomani", topic: null, records });
   assert.equal(composed?.answer,
-    "Juan Ciscomani's most recent recorded votes: YES on Measure 5 (H R 5) (2026-09-15; Passed 300–100); YES on Measure 4 (H R 4) (2026-09-14; Passed 300–100); and YES on Measure 3 (H R 3) (2026-09-13; Passed 300–100). We hold 5 recorded votes for Juan Ciscomani; the rest are listed below.");
+    "Juan Ciscomani's latest votes: YES on Measure 5 (H R 5) (2026-09-15; Passed 300–100); YES on Measure 4 (H R 4) (2026-09-14; Passed 300–100); and YES on Measure 3 (H R 3) (2026-09-13; Passed 300–100).");
   assert.deepEqual(composed?.citedUrls, ["https://clerk.example/5", "https://clerk.example/4", "https://clerk.example/3"]);
   const pack: EvidencePack = { question: "How has Juan Ciscomani voted?", intent: "PERSON_RECORD", temporal: { kind: "NONE" }, subject: { kind: "PERSON", id: "p", name: "Juan Ciscomani" }, records, gaps: [], denominators: {}, today: "2026-09-29" };
   assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack).kind, "PASSED", "the same validator a model answer faces");
@@ -40,7 +40,7 @@ test("no topic: the most recent recorded votes, newest first, and how many we ho
 test("a topic: only the held votes whose own words carry it; a topic no held vote names is the writer's", () => {
   const records = [rollCall(1, "Water Resources Development Act of 2026 (H R 9497)"), rollCall(2, "Establishing the congressional budget for fiscal year 2027 (H CON RES 113)", "2026-07-22"), rollCall(3, "Continuing Appropriations and Budget Extensions Act (H R 6500)", "2026-09-01", "NO")];
   const composed = composePersonVotes({ name: "Juan Ciscomani", topic: "budget", records });
-  assert.match(composed?.answer ?? "", /^Juan Ciscomani's recorded votes that match the question, newest first: NO on Continuing Appropriations and Budget Extensions Act \(H R 6500\) \(2026-09-01; Passed 300–100\) and YES on Establishing the congressional budget for fiscal year 2027 \(H CON RES 113\) \(2026-07-22; Passed 300–100\)\.$/);
+  assert.match(composed?.answer ?? "", /^Juan Ciscomani voted NO on Continuing Appropriations and Budget Extensions Act \(H R 6500\) \(2026-09-01; Passed 300–100\) and YES on Establishing the congressional budget for fiscal year 2027 \(H CON RES 113\) \(2026-07-22; Passed 300–100\)\.$/);
   assert.equal(composePersonVotes({ name: "Juan Ciscomani", topic: "immigration", records }), null, "the Laken Riley Act's title says nothing of immigration: a writer reads it");
   assert.equal(composePersonVotes({ name: "Juan Ciscomani", topic: "bills", records }), null, "a topic of filler words names nothing");
   assert.equal(composePersonVotes({ name: "Juan Ciscomani", topic: null, records: [] }), null, "no roll call held: the named gap and the writer");

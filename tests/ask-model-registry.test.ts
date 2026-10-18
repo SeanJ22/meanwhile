@@ -213,7 +213,7 @@ test("the reading rung sends each registry model only what it accepts, and recor
 test("both writing rungs send each registry model only what it accepts, and the ladder records the served model", async () => {
   for (const { id } of ACTIVE_MODELS) {
     for (const effort of ["low", "medium"] as const) {
-      assertAccepted(synthesisRequestBody(pack(), { model: id, cached: true, effort }), id, "ADAPTIVE", `writer/${id}/${effort}`);
+      assertAccepted(synthesisRequestBody(pack(), { model: id, cached: true, effort }), id, id === MODELS.haiku.model ? "OFF" : "ADAPTIVE", `writer/${id}/${effort}`);
     }
     const { fetchImpl } = capture({ answer: "The council next meets on September 15, 2026.", citedSources: [1] }, `${id}-served`);
     const rung: SynthesisRung = { model: id, effort: capsOf(id).effort ? "low" : null, role: "FAST", timeoutMs: 5000 };

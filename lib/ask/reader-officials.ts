@@ -292,9 +292,15 @@ export function composeReaderOfficials(input: {
     for (const held of input.held) {
       if (officeKeyOf(held) !== key) continue;
       if (input.ask.place && !inPlace(held, input.ask.place)) continue;
-      const prior = seats.get(held.seat.id);
-      seats.set(held.seat.id, prior
-        ? { ...prior, divisionIds: [...new Set([...prior.divisionIds, ...held.divisionIds])], bodyId: prior.bodyId ?? held.bodyId, bodyName: prior.bodyName ?? held.bodyName }
+      // A state has one holder of these offices. Two sourced IDs naming that
+      // same holder in the same office are complementary records of one seat.
+      const singleOffice = ["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"].includes(key);
+      const seatKey = singleOffice && held.seat.officeJurisdictionOcdId
+        ? `${held.seat.officeJurisdictionOcdId}|${key}|${normalizeName(held.seat.name)}` : held.seat.id;
+      const prior = seats.get(seatKey);
+      const preferred = prior && prior.seat.partyLabel && !held.seat.partyLabel ? prior : held;
+      seats.set(seatKey, prior
+        ? { ...preferred, divisionIds: [...new Set([...prior.divisionIds, ...held.divisionIds])], bodyId: prior.bodyId ?? held.bodyId, bodyName: prior.bodyName ?? held.bodyName }
         : held);
     }
     const holders = [...seats.values()];

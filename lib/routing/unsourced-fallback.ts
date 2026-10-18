@@ -18,7 +18,7 @@ import { MODELS, modelRequestFields, modelTierFor } from "../models.ts";
  * The mark, in plain language: this did not come from a record the site holds.
  */
 export const UNSOURCED_MARK =
-  "This answer did not come from any public record, and we have not checked it. It is a general answer from an AI, not something this site sourced.";
+  "AI answer";
 
 /** The source an unsourced answer states, naming the model that wrote it. */
 export function unsourcedSourceLine(model: string): string {
@@ -79,14 +79,7 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  */
 const askModel = (): string => resolveAskRoleModel("UNSOURCED");
 
-/**
- * The system prompt, and every line of it is a constraint rather than a style.
- *
- * The model is told what it is NOT for, because the failure that matters is a
- * general model answering a civic question confidently — the router already
- * refused to route it, and a model that decides to have a go anyway would put
- * an unsourced claim about a real government in front of a reader.
- */
+/** The same published instructions used by every general AI answer. */
 function fallbackPrompt(): string {
   return askPlaybook("ASK_FALLBACK");
 }
@@ -95,6 +88,7 @@ export interface FallbackOptions {
   /** Overridden in tests so the suite never touches the network. */
   fetchImpl?: typeof fetch;
   recordCost?: AskCostWriter;
+  place?: string | null;
 }
 
 export type FallbackOutcome =
@@ -135,8 +129,10 @@ export async function askUnsourced(
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address
         // leaves this origin.
-        messages: [{ role: "user", content: scrubFreeText(question) }],
+        messages: [{ role: "user", content: JSON.stringify({ question: scrubFreeText(question),
+          place: options.place ? scrubFreeText(options.place) : null }) }],
       }),
+      signal: AbortSignal.timeout(2_500),
     });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
 

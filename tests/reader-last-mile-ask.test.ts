@@ -341,7 +341,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
   /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
-  if (body.answer !== null) {
+  if (body.answer !== null && body.mode !== "UNRESOLVED" && body.mode !== "NO_EVIDENCE") {
     assert.equal(body.mode, body.trace.composition?.kind === "BALLOT" && body.trace.sourcesLoaded === "ESSENTIAL" ? "STRUCTURED_GROUNDED" : "GROUNDED_COMPOSED", "the response is composed from held records");
     assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
   }
@@ -401,7 +401,7 @@ for (const row of [
     assert.ok(body.records.filter((record) => record.finance).every((record) => record.finance!.filingState === "FILED"), "a held filing cannot be contradicted by the fallback agency-absence row");
     // The composed answer states exactly the selector's figures.
     const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    assert.ok((body.answer ?? "").includes(`raising ${dollars(row.receipts)} and spending ${dollars(row.expenditures)}`), body.answer ?? "no answer");
+    assert.ok((body.answer ?? "").includes(`raised ${dollars(row.receipts)} and spent ${dollars(row.expenditures)}`), body.answer ?? "no answer");
     if (row.state !== "AZ") {
       assert.doesNotMatch(body.gaps.map((gap) => gap.statement).join(" "), /Pima County|Arizona legislature|bills she signed|her letters|executive orders/i,
         "an unrelated state's action and county-finance diagnostics cannot contaminate the answer");

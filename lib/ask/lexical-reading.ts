@@ -261,10 +261,15 @@ function namesAnotherSubject(question: string, inventory: readonly BindableEntit
 }
 
 /** The slot binds `id` in the inventory, through a name variant that is the slot and nothing else. */
-function slotNames(slot: string, inventory: readonly BindableEntity[], id: string): boolean {
+function slotNames(slot: string, inventory: readonly BindableEntity[], id: string, localDivisionIds: readonly string[] = []): boolean {
   const binding = bindNamedEntity(slot, inventory);
-  if (binding.kind !== "BOUND" || binding.entity.id !== id) return false;
-  return inventory.some((entity) => entity.id === id && slotIsOnlyTheName(slot, entity));
+  if (binding.kind === "BOUND" && binding.entity.id === id &&
+      inventory.some((entity) => entity.id === id && slotIsOnlyTheName(slot, entity))) return true;
+  // A short name slot can be an acronym, nickname, or typo. Qualifiers still
+  // need the model reader; they must not disappear into a name match.
+  if (normalizeName(slot).split(" ").length > 1) return false;
+  const body = decideNamedBody(slot, inventory, undefined, [], localDivisionIds);
+  return body.kind === "BOUND" && body.entity.id === id;
 }
 
 /**
@@ -537,21 +542,25 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
     activeSubjects: input.activeSubjects ?? [],
     priorSubjects: input.priorSubjects ?? [],
   });
-  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION") return null;
-  const entity = resolved.binding.entity;
+  const named = decideNamedBody(input.question, input.namedBodies, input.confirmation, [],
+    (input.readerGoverning ?? []).flatMap(entity => entity.ocdId ? [entity.ocdId] : []));
+  const entity = named.kind === "BOUND" ? named.entity
+    : resolved.binding.kind === "BOUND" && resolved.basis === "WHOLE_QUESTION" ? resolved.binding.entity : null;
+  if (!entity) return null;
   if (namesAnotherSubject(input.question, input.inventory, entity.id)) return null;
   const kind = kindOf(entity);
   const found = matches.find((match) => match.kind === kind);
   if (!found || !kind) return null;
 
   // 2. The slot is the name and nothing else, and it binds the same subject.
-  if (!slotNames(found.slot, input.inventory, entity.id)) return null;
+  if (!slotNames(found.slot, input.inventory, entity.id,
+    (input.readerGoverning ?? []).flatMap(entity => entity.ocdId ? [entity.ocdId] : []))) return null;
 
   // 3. For a body, the route's named-body decision binds the same body on the
   //    reader's words alone (never a model mention), unconfirmed. A class phrase
   //    on anything else sends the route down that decision too, so it is refused.
   if (kind === "BODY") {
-    const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
+    const decision = named;
     if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== entity.id) return null;
   } else if (classPhraseIn(input.question)) {
     return null;

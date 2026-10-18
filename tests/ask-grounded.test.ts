@@ -9,7 +9,7 @@ import { packHasEvidence, packSourceUrls } from "../lib/ask/evidence.ts";
 import { readInterpretation, unavailableInterpretation } from "../lib/ask/intent.ts";
 import { interpretPrompt, interpretWithoutModel, MAX_INVENTORY } from "../lib/ask/interpret.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
-import { emptySelectionState, selectSitting } from "../lib/ask/select.ts";
+import { selectSitting } from "../lib/ask/select.ts";
 import { synthesizeAnswer, synthesisPrompt, synthesisDateBlock } from "../lib/ask/synthesize.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
@@ -164,7 +164,7 @@ test("ASK01: the interpretation prompt carries civic context and is bounded", ()
   assert.match(prompt, /Today is 2026-08-27/);
   assert.match(prompt, /85641/);
   // It is told to READ, never to answer.
-  assert.match(prompt, /not answering it/i);
+  assert.match(prompt, /not an answer/i);
 
   const huge = interpretPrompt({
     inventory: Array.from({ length: MAX_INVENTORY + 200 }, (_, i) => ({ name: `Body ${i}` })),
@@ -459,10 +459,10 @@ test("ASK01: synthesis REFUSES an empty pack and never touches the network", asy
 
 test("ASK01: the synthesis prompt restates every rule it could break", () => {
   const prompt = synthesisPrompt(pack());
-  assert.match(prompt, /ONLY the records supplied/i);
-  assert.match(prompt, /Never tell the reader how to vote/i);
-  assert.match(prompt, /rank or score candidates/i);
-  assert.match(prompt, /gap marked OURS is about us/i);
+  assert.match(prompt, /Use only sourced facts in the supplied records/i);
+  assert.match(prompt, /Never recommend how to vote/i);
+  assert.match(prompt, /rank candidates, or score officials/i);
+  assert.match(prompt, /A missing holding never means the government has not published it/i);
   // The date sentence is not in the cacheable system prefix: it is a block of the first user turn, so the
   // instructions above are byte-stable across a midnight.
   assert.doesNotMatch(prompt, /Today is/);

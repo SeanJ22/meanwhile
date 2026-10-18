@@ -5,6 +5,7 @@ import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMetered
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { canonicalModelId } from "../models.ts";
+import { afterResponse } from "../log/after-response.ts";
 
 export type AskCostWriter = (entry: CostEntry) => Promise<void>;
 let repositories: ReturnType<typeof createPgRepositories> | undefined;
@@ -49,8 +50,10 @@ export function meteredAskFetch(impl: typeof fetch, lane: string, write: AskCost
           durationMs: Math.round(performance.now() - started), requestCount: 1,
           listPriceUsd: model === null ? null : listPriceUsdForUsage(model, metering),
           modelRequestCount: 1, batchEligibleRequestCount: 0, batchRequestCount: 0 } }, model);
-      try { await write(entry); }
-      catch (error) { repositories = undefined; console.error(`Ask cost recording unavailable: ${id}; ${error instanceof Error ? error.name : "Error"}`); }
+      await afterResponse(async () => {
+        try { await write(entry); }
+        catch (error) { repositories = undefined; console.error(`Ask cost recording unavailable: ${id}; ${error instanceof Error ? error.name : "Error"}`); }
+      });
     }
   };
 }

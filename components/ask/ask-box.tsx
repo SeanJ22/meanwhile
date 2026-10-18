@@ -710,7 +710,7 @@ export function AskBox({
             </p>
           )}
 
-          {grounded.mode === "UNRESOLVED" && (
+          {grounded.mode === "UNRESOLVED" && !grounded.answer && (
             <p
               data-ask-grounded-state="UNRESOLVED"
               className="t-body leading-relaxed text-voice"
@@ -732,11 +732,15 @@ export function AskBox({
             </p>
           )}
 
-          {grounded.answer && !grounded.agendaLead && (
+          {grounded.answer && (
             <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
           )}
+          {grounded.aiAnswer && <div className="mt-2 t-body leading-relaxed" data-ask-ai-answer>
+            <p className="t-caption text-muted">AI answer</p>
+            <p>{grounded.aiAnswer}</p>
+          </div>}
 
           {/* Keyed on record body ids, never on names in the prose. */}
           <AnswerBodies
@@ -768,9 +772,9 @@ export function AskBox({
           {[...new Map((grounded.records ?? []).flatMap(record => record.fecProfile ? [[record.fecProfile.candidateId, record.fecProfile] as const] : [])).values()].map(profile => (
             <p key={profile.candidateId} className="mt-2 t-detail"><a href={`/candidates/${profile.candidateId}`} className="text-link underline underline-offset-2">{profile.name} · Profile and campaign money</a></p>
           ))}
-          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={grounded.agendaLead} prose={grounded.agendaLead ? grounded.answer : null} />
+          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={!grounded.answer && grounded.agendaLead} />
 
-          {gapsNotInAnswer(grounded.answer, grounded.gaps ?? []).map((g) => (
+          {(!grounded.answer ? gapsNotInAnswer(grounded.answer, grounded.gaps ?? []) : []).map((g) => (
             <p
               key={g.statement}
               data-ask-gap={g.whose}

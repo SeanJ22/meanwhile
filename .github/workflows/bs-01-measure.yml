@@ -1,0 +1,50 @@
+name: BS-01 cold Ballot measurement
+on:
+  push:
+    branches: [stream/bs-01]
+    paths: [scripts/bs-01-check.mjs, .github/workflows/bs-01-measure.yml]
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack pnpm install --frozen-lockfile
+      - run: corepack pnpm exec playwright install --with-deps chromium
+      - name: Build the Ballot integration
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: corepack pnpm run prebuild && corepack pnpm exec next build && corepack pnpm run postbuild
+      - uses: actions/checkout@v7
+        with:
+          ref: 6c21e18b7
+          path: .scratch/bs01-before
+      - name: Build the unchanged before version
+        working-directory: .scratch/bs01-before
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          ln -s "$GITHUB_WORKSPACE/node_modules" node_modules
+          corepack pnpm run postinstall
+          corepack pnpm run prebuild
+          corepack pnpm exec next build
+      - name: Cold production data reads and painted ballots, every state plus DC
+        env:
+          DATABASE_URL: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+          WTP_DB_ROLE: production
+          WTP_VITAL_SIGNS_REPORT: '1'
+          BS01_BASELINE_ROOT: ${{ github.workspace }}/.scratch/bs01-before
+          BS01_OUTPUT: ${{ github.workspace }}/.scratch/bs01-results
+        run: node scripts/bs-01-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bs-01-cold-measurement
+          path: .scratch/bs01-results

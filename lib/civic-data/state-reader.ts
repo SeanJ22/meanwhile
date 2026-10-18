@@ -7,7 +7,7 @@ import { peopleSourceScope } from "../officials/people-sources.ts";
 import type { PromotedFamilyArtifactValue, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import { civicDataReadNotInitialized, readPromotedCivicData, registerIntegrityCheckedEdgeEntries, type CivicDataReadResult, type PromotedEdgeEntry } from "./read-model.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
-import { readStateReaderPromotion } from "./state-reader-store.ts";
+import { readStateReaderEntry, type readStateReaderPromotion } from "./state-reader-store.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 type StateRead<T> = { readonly result: CivicDataReadResult<T>; readonly source: "EDGE" | "DATABASE" };
@@ -53,20 +53,25 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
     let entry: PromotedEdgeEntry | null = null;
     let artifact: PromotedFamilyArtifactValue | null = null;
     if (!edge?.stateAuthorities) reportReaderStateFailure(family, state, null, new Error("STATE_ARTIFACT_REFERENCE_MISSING"));
-    try { artifact = await edge?.stateAuthorities?.load(family, state) ?? null; }
+    try {
+      artifact = await edge?.stateAuthorities?.load(family, state) ?? null;
+      if (artifact) entry = artifact.entries.find(row => row.kind === "PROMOTED" ? row.projection.key === key : row.recordClass === recordClass && row.scope === scope) ?? null;
+    }
     catch (error) { reportReaderStateFailure(family, state, edge?.stateAuthorities?.key?.(family, state) ?? key, error); }
-    if (artifact) entry = artifact.entries.find(row => row.kind === "PROMOTED" ? row.projection.key === key : row.recordClass === recordClass && row.scope === scope) ?? null;
-    if (entry) return { source: "EDGE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: entry }) };
+    if (entry) {
+      try {
+        const result = await readPromotedCivicData<T>(recordClass, scope, { edge: entry });
+        const checkFederalAbsence = recordClass === "FEDERAL_DIRECTORY" && !edge?.edgeOnly && (query || process.env.DATABASE_URL);
+        if (result.kind === "PROMOTED" || result.kind === "NOT_RECORDED" && !checkFederalAbsence)
+          return { source: "EDGE", result };
+        if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
+      } catch (error) { reportReaderStateFailure(family, state, edge?.stateAuthorities?.key?.(family, state) ?? key, error); }
+    }
     refuseDatabaseInEdgeOnlyContext(key);
     try {
       const batch = query ? null : readerQuery();
       if (!query && !batch) throw new Error("STATE_READER_DATABASE_UNAVAILABLE");
-      const read = await readStateReaderPromotion<T>(query ?? (async (text, params) => (await batch!([{ text, params }]))[0]), recordClass, scope);
-      entry = read ? { kind: "PROMOTED", projection: read.projection, attested: {
-        recordClass, scope, versionId: read.projection.versionId, payloadSha256: read.candidate.candidate.normalization.normalizedHash!,
-        retrievedAt: read.candidate.candidate.retrieval.retrievedAt, staleAtRetrieval: read.candidate.candidate.temporal.staleAtRetrieval === true,
-        version: read.candidate.candidate.temporal.version, sourceThrough: read.candidate.candidate.temporal.sourceThrough,
-      } } : { kind: "NOT_RECORDED", recordClass, scope };
+      entry = await readStateReaderEntry(query ?? (async (text, params) => (await batch!([{ text, params }]))[0]), recordClass, scope);
       registerIntegrityCheckedEdgeEntries([entry]);
       return { source: "DATABASE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: entry }) };
     } catch (error) {

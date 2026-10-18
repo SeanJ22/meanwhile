@@ -75,3 +75,7 @@ Fix on stream/src-money and publish a new READY commit; River folds the new READ
 ## Changed combination — 22:29Z October 18
 
 The return above applies to the SH-01 + SRC-MN combination. SH-01 was subsequently returned after its independent full gates failed tests/seat-grouping.test.ts:117 (new valid vacancy row made a stale 4-count assertion observe 5). The failing SH-01 input is now removed. SRC-MN alone passed the focused preflight; this is new combination evidence, not a retry of the unchanged failing pair. River is now running full gates on SRC-MN alone with main release 55 included so the remaining batch can ship. AQ-01 was assessed freshly but its actual fold conflicts in app/api/ask/grounded/route.ts, so it is excluded. The original combined import-graph interaction remains relevant when a future SH-01 replacement integrates SRC-MN.
+
+## Standalone result — 22:55Z October 18
+
+SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584 passed all eight full gates on 6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c with main release 55 included and SH-01/AQ-01 excluded: 8,668 pass, zero fail, five skip. Promoted to River; release 56 PR 765 open. This standalone candidate clears SRC-MN's return; the original SH/SRC import-graph interaction remains a required fix for a future SH-01 replacement. No failed combination was promoted.

@@ -15,5 +15,38 @@
     "number": 765,
     "url": "https://github.com/SeanJ22/meanwhile/pull/765"
   },
-  "at": "2026-10-18T22:52:49Z"
+  "at": "2026-10-18T22:52:49Z",
+  "state": "open; required hosted checks pending",
+  "auto_merge": false,
+  "local_verification": {
+    "tested_sha": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c",
+    "tree": "87c51f3e32e0e1287ef786099e7c0b4c042180d0",
+    "gates": "8/8 pass",
+    "tests": {
+      "registered": 8673,
+      "passed": 8668,
+      "failed": 0,
+      "skipped": 5
+    },
+    "migrations": 0,
+    "main_included": "4bdb43a7048b4fa407fa236602e93a85e0efd2b6",
+    "log": ".scratch/river/release-56-src-only-gates.log"
+  },
+  "returned_lanes": [
+    {
+      "lane": "sh-01",
+      "ready_sha": "445e511dab21766cbfde79b3a0bd1c933e4fb4d9",
+      "reason": "Stale seat-grouping.test.ts:117 assertion requires 4 indent blocks; sourced vacancy adds a valid fifth. 7/8 gates passed."
+    },
+    {
+      "lane": "aq-01",
+      "ready_sha": "01f987827b9dd5d4fbb9bd823b6ba18d9900442f",
+      "reason": "Actual merge conflict in app/api/ask/grounded/route.ts after SRC-MN."
+    },
+    {
+      "lane": "control-reads",
+      "ready_sha": "aa787c762bbd9a11bad97a2754878f4b24ca65dd",
+      "reason": "Prior scan: 39 merge conflicts; earlier migration defect repaired."
+    }
+  ]
 }

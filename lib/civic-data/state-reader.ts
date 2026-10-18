@@ -61,7 +61,9 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
     if (entry) {
       try {
         const result = await readPromotedCivicData<T>(recordClass, scope, { edge: entry });
-        if (result.kind === "PROMOTED" || edge?.edgeOnly && result.kind === "NOT_RECORDED") return { source: "EDGE", result };
+        const checkFederalAbsence = recordClass === "FEDERAL_DIRECTORY" && !edge?.edgeOnly && (query || process.env.DATABASE_URL);
+        if (result.kind === "PROMOTED" || result.kind === "NOT_RECORDED" && !checkFederalAbsence)
+          return { source: "EDGE", result };
         if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
       } catch (error) { reportReaderStateFailure(family, state, edge?.stateAuthorities?.key?.(family, state) ?? key, error); }
     }

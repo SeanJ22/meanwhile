@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 55 BUILDS RUNNING: UI-01
+build_state: RELEASE 55 PR #764 OPEN: UI-01; REQUIRED CI RUNNING
 worker: codex-river
 provider: Codex
 run_id: codex-river-20261018
 lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
-heartbeat: 2026-10-18T20:20:08Z
+heartbeat: 2026-10-18T20:22:03Z
 
 ## Codex River shift — October 18
 
@@ -15,7 +15,7 @@ Release 55 now contains UI-01 ONLY, READY ee1be9d011c0ba036177595ad31c776bb0940e
 
 Failed combined run was stopped once that failure was isolated; no complete full-suite result is claimed. Preserved fold, test record, gates log and canonical test log/timings under .scratch/river/release-55-ui01-ui02-failed/. First environment-only attempt failed because old node_modules lacked polygon-clipping and sharp; frozen lock install fixed setup without changing tracked files; preserved separately in release-55-gates-environment-failure.log and test-environment-failure.json.
 
-Fresh UI-01-only fold is ab0c352cf21752d23500fb7ea72ddf712675755e, including main's release-54 merge, with no new migrations. river.mjs test --heartbeat is running; .scratch/river/release-55-gates.log. Not promoted or released. .scratch/river/fold.json is the UI-01-only combination. Full suite passed: 8,638 registered tests, 8,633 pass, zero failures, five skips, 39 suites. Preflight, lint, TypeScript, pinned browser and schema gate also pass. Production builds/bundle still running; all gates must pass before promote/release 55.
+Fresh UI-01-only fold is ab0c352cf21752d23500fb7ea72ddf712675755e, including main's release-54 merge, with no new migrations. river.mjs test --heartbeat is running; .scratch/river/release-55-gates.log. Promoted to river; release/55 and PR https://github.com/SeanJ22/meanwhile/pull/764 are open. .scratch/river/fold.json is the UI-01-only combination. All 8 gates passed, including both production builds and 16 bundle checks. Full suite: 8,638 registered tests, 8,633 pass, zero failures, five skips, 39 suites. Native auto-merge enabled by river.mjs was disabled to honor Sean's request to merge manually after green required checks. PR is attached to the chat. Hosted CI is running; do not rerun passing local gates. The first superseded hosted run was cancelled; inspect the latest run and required contexts on head ab0c352cf21752d23500fb7ea72ddf712675755e.
 
 Prior open returned READYs: meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562, steps-2-6 6da1efc6b. Newer overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against river 829e6d6e21ca with git merge-tree, both conflict extensively, and were returned through river.mjs with exact SHAs and raw conflicts. Do not repeat unchanged returned inputs. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01, SRC-MN.
 

@@ -15,5 +15,95 @@
     "number": 764,
     "url": "https://github.com/SeanJ22/meanwhile/pull/764"
   },
-  "at": "2026-10-18T20:20:49Z"
+  "at": "2026-10-18T20:20:49Z",
+  "merged_sha": "4bdb43a7048b4fa407fa236602e93a85e0efd2b6",
+  "merged_at": "2026-10-18T20:33:36Z",
+  "merge_method": "merge",
+  "hosted_ci": {
+    "run_id": 39162886394,
+    "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39162886394",
+    "head": "ab0c352cf21752d23500fb7ea72ddf712675755e",
+    "required_checks": [
+      {
+        "name": "build (default)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39162886394/job/117780067865"
+      },
+      {
+        "name": "build (standalone)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39162886394/job/117780067657"
+      },
+      {
+        "name": "gates (test \u00b7 lint \u00b7 tsc)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39162886394/job/117782183712"
+      }
+    ]
+  },
+  "local_gates": {
+    "passed": 8,
+    "registered_tests": 8638,
+    "passed_tests": 8633,
+    "failed_tests": 0,
+    "skipped_tests": 5
+  },
+  "production": {
+    "checkedAt": "2026-10-18T20:35:25.236Z",
+    "expected": "4bdb43a7048b4fa407fa236602e93a85e0efd2b6",
+    "build": {
+      "commit": "4bdb43a7048b4fa407fa236602e93a85e0efd2b6",
+      "commitShort": "4bdb43a",
+      "branch": "main",
+      "context": "production",
+      "deployId": "6ad52d22e0e2a0c9b010a0b1",
+      "buildEnv": {
+        "hasCommitRef": true,
+        "hasNetlify": true,
+        "hasContext": true
+      },
+      "runtime": {
+        "nodeEnv": "production",
+        "hasNetlify": false,
+        "hasContext": false,
+        "contextValue": null,
+        "hasDeployId": false,
+        "dbRole": "production"
+      }
+    },
+    "observer": {
+      "id": 39163857692,
+      "head_sha": "4bdb43a7048b4fa407fa236602e93a85e0efd2b6",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39163857692"
+    }
+  },
+  "returned": [
+    {
+      "lane": "ui-02",
+      "ready_sha": "e7d321a3659d8d34a00e3f99b56472f54a26faac",
+      "check": "gates",
+      "reason": "Two meeting-online-marker assertions still require MeetingRow in the compact Bodies list; UI-02 moved meetings into the body card."
+    }
+  ],
+  "also_returned_during_shift": [
+    {
+      "lane": "overlay-seats",
+      "ready_sha": "61f6d1449a41e8033eb51a02a6cfe9be380fd36e",
+      "reason": "Merge conflicts with current River."
+    },
+    {
+      "lane": "site-reads",
+      "ready_sha": "f42bc19c66a0d40a51cb156cd9bc86a529b03870",
+      "reason": "Merge conflicts with current River."
+    }
+  ],
+  "live_screen_check": {
+    "state": "blocked",
+    "reason": "Cloud Chromium returns ERR_CERT_AUTHORITY_INVALID despite managed CA imports. TLS verification remained enabled. Controlled browser regressions and production HTTP/observer checks passed."
+  }
 }

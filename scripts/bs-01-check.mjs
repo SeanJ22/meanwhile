@@ -88,7 +88,9 @@ const settingsResponse = await fetch('https://meanwhileusa.com/api/reader/settin
 if (!settingsResponse.ok) throw Error('Public reader settings could not be read');
 const settings = Buffer.from(await settingsResponse.arrayBuffer());
 const map = await start(root, 3221), browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
+let ballotRequests = [];
 const proxy = http.createServer((request, response) => {
+  if (request.url.startsWith('/ballot')) ballotRequests.push(Date.now());
   const upstream = http.request({ host: '127.0.0.1', port: request.url.startsWith('/ballot') ? 3222 : 3221,
     path: request.url, method: request.method, headers: request.headers }, incoming => { response.writeHead(incoming.statusCode, incoming.headers); incoming.pipe(response); });
   upstream.on('error', () => { if (!response.headersSent) response.writeHead(502); response.end(); });
@@ -98,12 +100,14 @@ await new Promise(ready => proxy.listen(3220, '127.0.0.1', ready));
 const painted = [];
 try {
   for (const [state, zip] of places) {
+    ballotRequests = [];
     const server = await start(root, 3222), context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
     const page = await context.newPage(), errors = []; let clicked = false;
     page.on('pageerror', error => errors.push(message(error)));
     await context.route('**/*', route => {
       const request = route.request(), url = new URL(request.url());
       if (!['GET','HEAD'].includes(request.method()) || (!clicked && url.pathname === '/ballot')) return route.abort();
+      if (url.pathname === '/ballot' && (request.headers()['next-router-prefetch'] || request.headers()['next-router-segment-prefetch'])) return route.abort();
       if (url.pathname === '/api/reader/settings') return route.fulfill({ status: 200, contentType: 'application/json', body: settings });
       if (url.pathname.startsWith('/api/boundaries/')) return route.abort();
       return route.continue();
@@ -119,6 +123,7 @@ try {
       await page.waitForFunction(() => Number(document.querySelector('[data-stat="officials"] .num')?.textContent) > 0, null, { timeout: 30000 });
       const wanted = after.find(row => row.state === state);
       if (!wanted.ids?.length) throw Error('No complete reference ballot');
+      await page.locator(`.mw-nav-ballot[href*="${zip}"]:visible`).hover();
       clicked = true;
       await page.evaluate(wanted => {
         const link = [...document.querySelectorAll('.mw-nav-ballot')].find(element => element.getClientRects().length);
@@ -135,7 +140,7 @@ try {
             requestAnimationFrame(() => requestAnimationFrame(() => { if (complete()) state.fullMs = performance.now() - state.click; else state.paintPending = false; }));
           }
         }).observe(document.body, { subtree: true, childList: true, characterData: true });
-        link.addEventListener('click', () => { window.bs01.click = performance.now(); }, { once: true });
+        link.addEventListener('click', () => { window.bs01.click = performance.now(); window.bs01.clickEpoch = Date.now(); }, { once: true });
       }, wanted);
       await page.locator(`.mw-nav-ballot[href*="${zip}"]:visible`).click();
       await page.waitForFunction(() => window.bs01.fullMs, null, { timeout: 20000 });
@@ -146,9 +151,10 @@ try {
         holdingGaps: Boolean(document.querySelector('[data-ballot-canonical-holding-gaps]')),
         missingFamilies: [...document.querySelectorAll('[data-ballot-canonical-holding-gaps] li')].map(element => element.textContent) }));
       if (!same(result.ids, wanted.ids) || result.holdingGaps) errors.push('Complete held ballot was not rendered');
+      if (!ballotRequests.length || ballotRequests.some(at => at < result.clickEpoch)) errors.push('Ballot server received a request before the click');
       if (!(result.reactionMs < 100)) errors.push('Click reaction reached 100 ms');
       if (!(result.fullMs < 3000)) errors.push('Cold complete ballot reached 3000 ms');
-      painted.push({ state, zip, ...result, ids: undefined, errors });
+      painted.push({ state, zip, ...result, firstBallotRequestMs: ballotRequests[0] - result.clickEpoch, ids: undefined, errors });
       if (state === 'AZ') await page.screenshot({ path: `${output}/85701.png` });
     } catch (error) { painted.push({ state, zip, errors: [...errors, message(error)] }); }
     finally { await context.close(); await stop(server); await save('browser', painted); console.log(JSON.stringify({ phase: 'browser', ...painted.at(-1) })); }

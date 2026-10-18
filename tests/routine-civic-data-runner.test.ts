@@ -1391,28 +1391,20 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.doesNotMatch(runner, /task\.id === "meetings"|ONLY\.has\("meetings"\)/);
 });
 
-test("an ordinary pass publishes the sources it ran when federal minute checks are active; publish-now finishes its checks", async () => {
+test("publish-now alone publishes the reader edge: it finishes its minute checks, and an ordinary pass publishes nothing", async () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const start = runner.indexOf("const finalReaderEdge =");
-  const end = runner.indexOf("\nif (retirementOrigins !== null", start);
-  assert.ok(runner.indexOf("await publishNowEdgeChecks?.stop();") < start && start > 0 && end > start);
+  const start = runner.indexOf("let readerEdge: ReaderEdgePublicationOutcome | null = null;");
+  const end = runner.indexOf("\nif (!PUBLISH_NOW && ONLY === null) {", start);
+  assert.ok(start > 0 && end > start);
   for (const publishNow of [false, true]) {
-    const calls: unknown[] = [];
-    const selected = [{ id: "openfema" }, { id: "congress-bulk-roster:AZ" }];
-    const final = { status: "PUBLISHED", families: "all-selected" };
+    const calls: string[] = [];
     const periodic = { status: "PUBLISHED", families: "periodic" };
-    const context = {
-      PUBLISH_NOW: publishNow, selectedTasks: selected, ranThisPass: new Set(["openfema"]),
-      publishNowEdgeChecks: { stop: async () => periodic, run: async () => { calls.push("periodic"); return periodic; } },
-      publishChangedReaderEdge: async (tasks: unknown) => { calls.push(tasks); return final; },
-      readerEdgeSupervisorFailure: () => null, supervisorFailures: [],
-    };
+    const context = { publishNowEdgeChecks: publishNow ? { stop: async () => { calls.push("stop"); return periodic; }, run: async () => { calls.push("run"); return periodic; } } : null };
     const complete = runInNewContext(transpileModule(`async function complete() {\n${runner.slice(start, end)}\nreturn readerEdge;\n}\ncomplete;`, {
       compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
     }).outputText, context) as () => Promise<unknown>;
-    const result = await complete();
-    assert.deepEqual(calls, publishNow ? ["periodic"] : [[{ id: "openfema" }]]);
-    assert.equal(result, publishNow ? periodic : final);
+    assert.equal(await complete(), publishNow ? periodic : null);
+    assert.deepEqual(calls, publishNow ? ["stop", "run", "stop"] : []);
   }
 });
 
@@ -1434,10 +1426,10 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderMeetings/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);[\s\S]*?const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishChangedReaderEdge\(selectedTasks\.filter\(task => ranThisPass\.has\(task\.id\)\)\)/,
-    "publish-now completes its pointer sweep while an ordinary pass publishes what it ran");
+  assert.match(runner, /if \(publishNowEdgeChecks\) \{\n  await publishNowEdgeChecks\.stop\(\);\n  await publishNowEdgeChecks\.run\(\);/,
+    "publish-now completes its pointer sweep; an ordinary pass publishes nothing");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\[\]\)/,
+  assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\)/,
     "minute checks publish only what was promoted since the edge last published");
   assert.doesNotMatch(child, /readMeetingsProjection\(/, "the child composes nothing: it reads each body's own partition");
   assert.match(child, /serializeRoutineReaderRepairRecord/);

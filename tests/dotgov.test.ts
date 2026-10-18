@@ -13,7 +13,7 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import type { RegistrationReadModel } from "../lib/registration/candidate.ts";
-import { promotedEdgePointers, publishPromotedEdgeFamilies } from "../lib/civic-data/promoted-edge-publication.ts";
+import { promotedEdgePointers, publishPromotedEdgeFamily } from "../lib/civic-data/promoted-edge-publication.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { authorityPointerKey, READER_MAP_AUTHORITY_FAMILIES, readServedPromotedFamily } from "../lib/meetings/edge-serving.ts";
 
@@ -101,8 +101,7 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   const directory = mkdtempSync(join(tmpdir(), "dotgov-edge-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const artifactStore = new LocalFileArtifactStore(directory);
-  const published = await publishPromotedEdgeFamilies({ store, artifactStore, now: NOW,
-    families: { "government-domains": promotedEdgePointers()["government-domains"] } });
+  const published = await publishPromotedEdgeFamily({ store, artifactStore, now: NOW, family: "government-domains", place: null });
   assert.deepEqual(published, { published: ["government-domains"], skipped: [] });
   const ref = (await artifactStore.readJsonPointer<Parameters<typeof readServedPromotedFamily>[1]>(authorityPointerKey("government-domains")))!.value;
   const edge = (await readServedPromotedFamily("government-domains", ref, artifactStore))!.entries[0]!;

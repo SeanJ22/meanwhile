@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { ZERO_COST, WORKER_ROLES, type AttemptCost, type WorkerRole } from "../lib/control-plane/attempt.ts";
-import { entriesInWindow, utcMonthWindow, type CostEntry } from "../lib/control-plane/cost.ts";
+import { utcMonthWindow, type CostEntry } from "../lib/control-plane/cost.ts";
 import {
   ATTEMPT_NOT_ON_RECORD,
   COST_CLASS_WORDS,
@@ -273,12 +273,11 @@ test("§9A.23: rows are counted into their own month, both bounds inclusive, and
     entry("c", "SCOUT", 1, "2026-09-06T18:00:00.000Z"),
     entry("d", "SCOUT", 1, "whenever"),
   ];
-  const september = entriesInWindow(rows, utcMonthWindow("2026-09-06T18:00:00.000Z"));
-  assert.deepEqual(september.map((r) => r.attemptId), ["a", "c"], "both bounds inclusive; the August row stays in August");
-  const august = entriesInWindow(rows, utcMonthWindow("2026-09-06T18:00:00.000Z", 1));
-  assert.deepEqual(august.map((r) => r.attemptId), ["b"]);
-  assert.equal(september.length + august.length, 2 + 1, "no row lands in two months and none is lost between them");
-  assert.ok(!entriesInWindow(rows, utcMonthWindow("1970-01-15T00:00:00.000Z")).some((r) => r.attemptId === "d"));
+  const [september, august] = buildMonthlySpend({ costs: rows, attempts: [], nowIso: "2026-09-06T18:00:00.000Z" }).history;
+  assert.equal(september!.rows, 2, "both bounds inclusive; the August row stays in August");
+  assert.equal(august!.rows, 1);
+  assert.equal(september!.rows + august!.rows, 2 + 1, "no row lands in two months and none is lost between them");
+  assert.equal(buildMonthlySpend({ costs: rows, attempts: [], nowIso: "1970-01-15T00:00:00.000Z" }).history[0]!.rows, 0, "the unreadable stamp is not filed at the epoch");
 });
 
 test("§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00", () => {

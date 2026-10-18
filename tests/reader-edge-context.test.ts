@@ -23,9 +23,8 @@ import { factDb } from "./helpers/fact-db.ts";
 import { installRegistryAuthority, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
-import { at } from "./helpers/meeting-body-fixtures.ts";
+import { at, planEveryState } from "./helpers/meeting-body-fixtures.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
 import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
@@ -117,7 +116,7 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     const body: BodyFacts = { id: comment.bodyId, division: comment.bodyId.split("#")[0], fields: {}, roster: null, comment, sittings: [], dispositions: [] };
     return { path: ["bodies", index], ...await writeFactRecord(store, body), tags: [body.id, body.division] };
   }));
-  const plan = await planMeetingBodies({ store: meetings, artifacts: store, now: at(snapshot.generatedAt, 3_600_000), served: undefined, registryVersion: () => null, registry: async () => null });
+  const plan = await planEveryState({ store: meetings, artifacts: store, now: at(snapshot.generatedAt, 3_600_000), served: undefined, registryVersion: () => null, registry: async () => null });
   assert.deepEqual(plan.stats.failed, []);
   if (versions.commentAccess) await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: versions.commentAccess,
     buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess, { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] }, null);

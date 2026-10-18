@@ -32,8 +32,10 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
@@ -57,6 +59,8 @@ import {
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
+  type ChangedReadOptions,
+  type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
   type HeldSlots,
@@ -158,12 +162,23 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
-    listChangedSince: async (since: string | null, held?: HeldSlots) => {
+    readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: projectAggregate(jsonCopy(row.value), projection) }]; }),
+
+    listWhereIn: async (jsonPath: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
+      const wanted = new Set(values);
+      return (await list()).filter((row) => wanted.has(jsonTextAtPath(row.value, jsonPath) ?? "")).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
+    },
+
+    listChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      return { through, rows: (await list()).filter((row) => (from === null || (changedAt.get(row.id) ?? 0) >= from) &&
-        !skip.has(`${row.id}\n${row.revision}`)) };
+      const changed = (await list()).filter((row) => (from === null || (changedAt.get(row.id) ?? 0) >= from) &&
+        !skip.has(`${row.id}\n${row.revision}`)).map(row => read.projection ? { ...row, value: projectAggregate(row.value, read.projection) as T } : row);
+      if (!read.page) return { through, rows: changed };
+      await read.page(changed);
+      return { through, rows: [] };
     },
   };
 }
@@ -178,6 +193,11 @@ interface LoggedRecord<T> {
 /** One in-memory append-only log, partitioned by key. */
 export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository<T> {
   const partitions = new Map<string, LoggedRecord<T>[]>();
+  /** Every record in `readAll()` order with the coordinates and clocks a changed-since read answers with. */
+  const coordinates = () => [...partitions.entries()]
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .flatMap(([key, entries]) => entries.map((entry, position) => ({ key, position, entry,
+      changed: { key, recordId: entry.recordId, position, record: jsonCopy(entry.record), changedAt: changeIso(entry.changedAt), stampedAt: entry.at } })));
 
   return {
     append: async (
@@ -274,18 +294,20 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      return {
-        through,
-        records: [...partitions.entries()]
-          .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-          .flatMap(([key, entries]) => entries.flatMap((entry, position) =>
-            (from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`) ? []
-              : [{ key, recordId: entry.recordId, position, record: jsonCopy(entry.record) }])),
-      };
+      const records = coordinates().filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
+        .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
+      if (!read.page) return { through, records };
+      await read.page(records);
+      return { through, records: [] };
+    },
+
+    readStampedBetween: async (from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void) => {
+      await page(coordinates().filter(({ entry }) => Date.parse(entry.at) >= Date.parse(from) && Date.parse(entry.at) < Date.parse(until))
+        .map(({ changed }) => changed));
     },
 
     readKeys: async (keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>> => {
@@ -359,6 +381,10 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
+    ownerSnapshotTotals: memoryAggregateRepository<OwnerSnapshotTotals>("OwnerSnapshotTotals"),
+    ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
+    ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
+    ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
     websitePacing: memoryWebsitePacing(),

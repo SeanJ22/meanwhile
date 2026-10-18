@@ -3,6 +3,7 @@
 import { createHash } from "node:crypto";
 import { BILLING_KEYS, BILLING_SYNC_MS, REPORTING_PROVIDERS, retainBillingReading, type ProviderBillingSnapshot, type ProviderDay, type ProviderReading, type ReportingProvider } from "./provider-billing.ts";
 import type { CostEntry } from "./cost.ts";
+import { addExact, exactSum, exactValue, type ExactSum } from "./exact-sum.ts";
 import { billingCollectorEnvironment } from "./provider-billing-environment.ts";
 
 type Json = Record<string, unknown>;
@@ -24,11 +25,41 @@ async function eachLimited<T>(items: readonly T[], limit: number, run: (item: T)
 }
 const NEON_METRICS = ["compute_unit_seconds", "root_branch_bytes_month", "child_branch_bytes_month", "instant_restore_bytes_month", "snapshot_storage_bytes_month", "public_network_transfer_bytes", "private_network_transfer_bytes", "extra_branches_month"];
 
+/** One search host's recorded requests, as the estimate states them. */
+export interface SearchLedger {
+  rows: number;
+  unpriced: number;
+  readonly usd: ExactSum;
+  readonly requests: ExactSum;
+}
+
+const SEARCH_HOSTS: ReadonlySet<string> = new Set(["api.exa.ai", "api.search.brave.com"]);
+
+const searchLedger = (): SearchLedger => ({ rows: 0, unpriced: 0, usd: exactSum(), requests: exactSum() });
+
+export function foldSearch(into: Record<string, SearchLedger>, c: CostEntry): void {
+  if (c.source === null || !SEARCH_HOSTS.has(c.source)) return;
+  const row = (into[c.source] ??= searchLedger());
+  row.rows += 1;
+  if (c.cost.usd === null) row.unpriced += 1;
+  addExact(row.usd, c.cost.usd ?? 0);
+  addExact(row.requests, c.cost.requestCount ?? 0);
+}
+
+/** The search requests recorded from the start of `now`'s UTC month through `now`. */
+export function searchLedgersOf(costs: readonly CostEntry[], now: string): Record<string, SearchLedger> {
+  const start = now.slice(0,7) + "-01T00:00:00.000Z";
+  const out: Record<string, SearchLedger> = {};
+  for (const c of costs) if (c.recordedAt >= start && c.recordedAt <= now) foldSearch(out, c);
+  return out;
+}
+
 export interface BillingCollectorInput {
   readonly now: string;
   readonly env?: Readonly<Record<string, string | undefined>>;
   readonly previous?: ProviderBillingSnapshot | null;
-  readonly costs?: readonly CostEntry[] | null;
+  /** This UTC month's recorded search requests by API host, up to `now`; null when the ledger was not read. */
+  readonly searches?: Readonly<Record<string, SearchLedger>> | null;
   readonly fetcher?: typeof fetch;
 }
 
@@ -165,9 +196,9 @@ export async function collectProviderBilling(input: BillingCollectorInput): Prom
     return reported(r, { reportedUsd: net, credits: { amount: discount, kind: "DISCOUNT_USD", unit: "USD" }, units: [...units].map(([label, u]) => ({ label, ...u })), days: usdDays(byDay), accountIds: [account], source: "GitHub billing usage report", detail: "Provider net metered usage after reported discounts. Discounts are included in net cost and must not be deducted twice. Fixed subscriptions and unreported products require invoice facts. Platform cost, not hunt token spending." });
   }
   function searchEstimate(r: ProviderReading, host: string, name: string, error: string | null = null): ProviderReading {
-    const rows = input.costs?.filter(c => c.recordedAt >= start && c.recordedAt <= input.now && c.source === host);
-    const known = rows !== undefined && rows.every(c => c.cost.usd !== null);
-    return reported(r, { status: "ESTIMATED", error, estimatedUsd: known ? rows.reduce((n,c) => n + (c.cost.usd ?? 0),0) : null, units: rows ? [{ label: "Recorded search requests", value: rows.reduce((n,c) => n + (c.cost.requestCount ?? 0),0), unit: "requests" }] : [], source: `Internal ${name} request ledger`, detail: `Estimate from recorded request prices, limited to this system's recorded requests; not the provider's billing total or prepaid balance. ${name === "Exa" ? "Per-key provider billing awaits EXA_SERVICE_API_KEY service access." : "Public Search API documentation provides no account billing-read endpoint. Console balance, credits and monthly limits remain manual billing facts."} ${rows === undefined ? "The request ledger was not read, so the estimate is unknown." : ""} No search call is made to collect billing.` });
+    const rows = input.searches === undefined || input.searches === null ? undefined : input.searches[host] ?? searchLedger();
+    const known = rows !== undefined && rows.unpriced === 0;
+    return reported(r, { status: "ESTIMATED", error, estimatedUsd: known ? exactValue(rows.usd) : null, units: rows ? [{ label: "Recorded search requests", value: exactValue(rows.requests), unit: "requests" }] : [], source: `Internal ${name} request ledger`, detail: `Estimate from recorded request prices, limited to this system's recorded requests; not the provider's billing total or prepaid balance. ${name === "Exa" ? "Per-key provider billing awaits EXA_SERVICE_API_KEY service access." : "Public Search API documentation provides no account billing-read endpoint. Console balance, credits and monthly limits remain manual billing facts."} ${rows === undefined ? "The request ledger was not read, so the estimate is unknown." : ""} No search call is made to collect billing.` });
   }
   async function brave(r: ProviderReading): Promise<ProviderReading> {
     return searchEstimate(r, "api.search.brave.com", "Brave");

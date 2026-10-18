@@ -230,7 +230,7 @@ test("ADM-6: nothing measured is a gap in every row, never a zero", () => {
   assert.ok(!panel.deterministicShare.held);
   assert.ok(!panel.costPerVerifiedRecord.held);
   assert.equal(panel.summary.measuredUsd, null);
-  assert.match(src("scripts/publish-owner-snapshot.mts"), /buildCostPanel\(/);
+  assert.match(src("scripts/publish-owner-snapshot.mts"), /costPanelOf\(/);
 });
 
 /* ================================================================== *

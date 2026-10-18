@@ -588,13 +588,16 @@ async function worker() {
     assert.ok(!process.exitCode, "The actual state artifact CLI must succeed.");
     result = { entry: "scripts/publish-state-authority.mts" };
   } else if (phase === "artifact" || phase === "artifact-all" || phase === "unchanged") {
-    const { publishSupervisorReaderEdge } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { readerEdgePieces } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { dispatchStateArtifacts } = await import("../lib/civic-data/state-artifact-dispatch.ts");
     const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
     const children: unknown[] = [];
     const { selectedStateEdgePointers } = await import("../lib/civic-data/promoted-edge-publication.ts");
     const selected = phase === "artifact" ? [{ recordClass, scope }] : selectedStateEdgePointers(null).flatMap(unit => unit.pointers);
-    const published = await stage("edge:metadata-coordinator", () => publishSupervisorReaderEdge(new PostgresRoutineDataStore(), now,
-      selected, { artifactStore, stateArtifactChildren: { launch: async command => {
+    const pieces = new Set(readerEdgePieces(selected).map(piece => `${piece.family}/${piece.place}`));
+    const store = new PostgresRoutineDataStore();
+    const published = await stage("edge:metadata-coordinator", () => dispatchStateArtifacts({ store, currentStore: store, artifactStore, now, env: process.env,
+      selected: selectedStateEdgePointers(null).filter(unit => pieces.has(`${unit.family}/${unit.state}`)), children: { launch: async command => {
         assert.notEqual(phase, "unchanged", "An unchanged national poll must launch no artifact child.");
         const version = command.args.find(value => value.startsWith("--version="))!;
         const authority = command.args.find(value => value.startsWith("--family="))!.slice("--family=".length);
@@ -608,7 +611,7 @@ async function worker() {
         children.push({ ...JSON.parse(line.slice("SCALE_RESULT=".length)), stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes });
         return { id: command.id, status: 0, signal: null, stdout: measured.output, stderr: "", termination: "EXITED", errorMessage: null };
       } } }));
-    assert.ok(published.ok, JSON.stringify(published));
+    assert.deepEqual(published.skipped, [], JSON.stringify(published));
     if (phase === "unchanged") {
       assert.equal(artifactTransfer.writes.length, 0);
       assert.equal(artifactTransfer.reads.length, 0);

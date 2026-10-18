@@ -59,9 +59,8 @@ import { installRegistryAuthority, registryTransferImport, stateFederalDirectory
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
 import { promoteRecorded, promoteRows, ownPartition } from "./helpers/reader-edge-meetings.ts";
-import { row as partitionRow } from "./helpers/meeting-body-fixtures.ts";
+import { planEveryState, row as partitionRow } from "./helpers/meeting-body-fixtures.ts";
 
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
@@ -179,7 +178,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
   const store = new LocalFileArtifactStore(dir);
-  const plan = await planMeetingBodies({ store: await recordedMeetingsStore(), artifacts: store, now: PUBLISHED_AT, served: undefined, registryVersion: () => null, registry: async () => null });
+  const plan = await planEveryState({ store: await recordedMeetingsStore(), artifacts: store, now: PUBLISHED_AT, served: undefined, registryVersion: () => null, registry: async () => null });
   assert.deepEqual(plan.stats.failed, []);
   assert.ok(Object.keys(plan.entries).length > 0, "the recorded meetings publish the edge's meeting indexes");
   const registry = registryTransferImport().projection.payload;

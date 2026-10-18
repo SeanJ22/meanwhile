@@ -7,10 +7,10 @@ import { join, resolve } from "node:path";
 import { test, type TestContext } from "node:test";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
-import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderEdgePieces, readerEdgePieces } from "../lib/civic-data/reader-edge-publication.ts";
 import { promotedPointerVersion, selectedStateEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
-import { stateArtifactResultLine } from "../lib/civic-data/state-artifact-dispatch.ts";
+import { stateArtifactResultLine, type StateArtifactChildren } from "../lib/civic-data/state-artifact-dispatch.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { federalDirectoryScope } from "../lib/officials/federal-directory-data-plane.ts";
 import type { BoundedChildCommand, BoundedChildLauncher } from "../lib/civic-data/bounded-child-pass.ts";
@@ -19,7 +19,7 @@ import type { WorkerMemoryRelease, WorkerProcessSlots } from "../lib/control-pla
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { authorityPointerKey, ensureReaderAuthorityEdge, type PublishedStateAuthority } from "../lib/meetings/edge-serving.ts";
 import type { AuthorityArtifactRef } from "../lib/meetings/edge-artifacts.ts";
-import type { StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+import { isStateAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 
 const NOW = "2026-10-16T12:00:00.000Z";
 const IL = { recordClass: "BALLOT_CANDIDACY" as const, scope: stateBallotScope("ballot-contests", "IL") };
@@ -46,6 +46,11 @@ async function seed(store: ReaderArtifactStore, states: Readonly<Record<string, 
 }
 async function served(store: ReaderArtifactStore, state: string, family: StateAuthorityFamily = "ballot-contests") {
   return (await store.readJsonPointer<AuthorityArtifactRef>(authorityPointerKey(family, state)))?.value;
+}
+/** The state pieces these pointers move, published one at a time as publish-now publishes them. */
+async function publishStates(f: ReturnType<typeof fixture>, selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[], children: StateArtifactChildren) {
+  const pieces = readerEdgePieces(selected).filter(piece => isStateAuthorityFamily(piece.family));
+  return (await publishReaderEdgePieces({ store: f.store, artifactStore: f.boundedArtifacts, pieces, deadlineMs: Number.MAX_SAFE_INTEGER, env: ENV, children })).outcome;
 }
 function fixture(t: TestContext) {
   const directory = mkdtempSync(join(tmpdir(), "state-artifact-dispatch-"));
@@ -91,9 +96,7 @@ test("production state supervisor dispatches zero unchanged children and only Il
   await seed(f.artifacts, { IL: ref(first), NH: nh });
   const launched: BoundedChildCommand[] = [];
   const launch: BoundedChildLauncher = async command => { launched.push(command); command.onStarted?.(123); return success(command); };
-  const publish = () => publishSupervisorReaderEdge(f.store, NOW, [IL], {
-    artifactStore: f.boundedArtifacts, stateArtifactChildren: { launch, slots: f.slots },
-  }, ENV);
+  const publish = () => publishStates(f, [IL], { launch, slots: f.slots });
   assert.equal((await publish()).ok, true);
   assert.equal(launched.length, 0);
   const next = f.put(IL.recordClass, IL.scope, "il-v2");
@@ -114,12 +117,11 @@ test("targeted ballot delivery includes the five other state families without re
   const f = fixture(t), units = selectedStateEdgePointers(null).filter(unit => unit.state === "IL");
   for (const unit of units) for (const p of unit.pointers) f.put(p.recordClass, p.scope, `${unit.family}-v1`);
   const launches: string[] = [];
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch: async command => {
+  const outcome = await publishStates(f, [IL], { slots: f.slots, launch: async command => {
       launches.push(command.id);
       assert.equal(command.env?.WTP_RUNTIME_AUTHORITY_CAPABILITY, command.id.startsWith("candidate-campaign-sites-derived:") ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT");
       return success(command);
-    } } }, ENV);
+    } });
   assert.equal(outcome.ok, true);
   assert.equal(launches.length, 6);
   assert.equal(f.active.size, 0);
@@ -131,12 +133,11 @@ test("a place's members of Congress publish to that place's own pointer and no o
   const f = fixture(t), units = selectedStateEdgePointers(null).filter(unit => unit.state === "IL" || unit.family === "federal-directory");
   for (const unit of units) for (const p of unit.pointers) f.put(p.recordClass, p.scope, `${unit.family}-v1`);
   const launches: string[] = [];
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [{ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope("IL") }], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch: async command => {
+  const outcome = await publishStates(f, [{ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope("IL") }], { slots: f.slots, launch: async command => {
       launches.push(command.id);
       assert.equal(command.env?.WTP_RUNTIME_AUTHORITY_CAPABILITY, "MANUAL_CONTRACT");
       return success(command);
-    } } }, ENV);
+    } });
   assert.equal(outcome.ok, true);
   assert.deepEqual(launches, ["congress-bulk-roster:IL:reader-artifact"]);
   assert.ok(await served(f.artifacts, "IL", "federal-directory"));
@@ -154,8 +155,7 @@ test("an unchanged sweep of every state and territory ballot launches no child a
   }
   assert.equal(Object.keys(states).length, REGISTRY_STATES.length);
   await seed(f.artifacts, states);
-  const sweep = () => publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") } }, ENV);
+  const sweep = () => publishStates(f, units.flatMap(unit => unit.pointers), { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") });
   assert.equal((await sweep()).ok, true, "the first sweep answers every unpromoted family absent without a child");
   t.mock.method(f.artifacts, "writeJsonPointer", (key: string) => assert.fail(`unchanged sweep wrote ${key}`));
   const outcome = await sweep();
@@ -165,20 +165,14 @@ test("an unchanged sweep of every state and territory ballot launches no child a
   assert.equal(f.active.size, 0);
 });
 
-test("independent state children overlap while each holds its own memory admission", { timeout: 2_000 }, async t => {
+test("state pieces publish one at a time, each releasing its memory admission before the next starts", async t => {
   const f = fixture(t), nh = { recordClass: IL.recordClass, scope: stateBallotScope("ballot-contests", "NH") };
   f.put(IL.recordClass, IL.scope, "il-v1"); f.put(nh.recordClass, nh.scope, "nh-v1");
-  let started = 0, release!: () => void;
-  const both = new Promise<void>(resolve => { release = resolve; });
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL, nh], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch: async command => {
-      started++;
-      if (started === 2) { assert.equal(f.active.size, 2); release(); }
-      await both;
-      return success(command);
-    } } }, ENV);
+  const held: number[] = [];
+  const outcome = await publishStates(f, [IL, nh], { slots: f.slots, launch: async command => { held.push(f.active.size); return success(command); } });
   assert.equal(outcome.ok, true);
-  assert.equal(started, 2);
+  assert.equal(held.length, 2, "each state's promoted ballot family needs a child of its own");
+  assert.deepEqual(new Set(held), new Set([1]), "no piece runs beside another");
   assert.equal(f.active.size, 0);
 });
 
@@ -188,8 +182,7 @@ test("failed child launch releases admission, retains the served state, and retr
   const next = f.put(IL.recordClass, IL.scope, "il-v2");
   let attempts = 0;
   const launch: BoundedChildLauncher = async command => { if (++attempts === 1) throw new Error("spawn failed"); return success(command); };
-  const publish = () => publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch } }, ENV);
+  const publish = () => publishStates(f, [IL], { slots: f.slots, launch });
   assert.equal((await publish()).ok, false);
   assert.equal(f.active.size, 0);
   assert.equal((await served(f.artifacts, "IL"))?.version, first);
@@ -201,9 +194,8 @@ test("failed child launch releases admission, retains the served state, and retr
 
 test("admission failure never launches a child or leaves a reservation", async t => {
   const f = fixture(t); f.put(IL.recordClass, IL.scope, "il-v1");
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: { acquire: async () => { throw new Error("admission closed"); } },
-      launch: async () => assert.fail("launch must await admission") } }, ENV);
+  const outcome = await publishStates(f, [IL], { slots: { acquire: async () => { throw new Error("admission closed"); } },
+      launch: async () => assert.fail("launch must await admission") });
   assert.equal(outcome.ok, false);
   assert.equal(f.active.size, 0);
   assert.equal(await served(f.artifacts, "IL"), undefined);
@@ -214,12 +206,11 @@ for (const race of ["promotion", "edge pointer"] as const) test(`a concurrent ${
   await seed(f.artifacts, { IL: ref(first) });
   f.put(IL.recordClass, IL.scope, "il-v2");
   const third = promotedPointerVersion(IL.recordClass, IL.scope, pointer(IL.recordClass, IL.scope, "il-v3"));
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
-    stateArtifactChildren: { slots: f.slots, launch: async command => {
+  const outcome = await publishStates(f, [IL], { slots: f.slots, launch: async command => {
       if (race === "promotion") f.put(IL.recordClass, IL.scope, "il-v3");
       else await seed(f.artifacts, { IL: ref(third) });
       return success(command);
-    } } }, ENV);
+    } });
   assert.equal(outcome.ok, false);
   assert.equal(f.active.size, 0);
   assert.equal((await served(f.artifacts, "IL"))?.version, race === "promotion" ? first : third);

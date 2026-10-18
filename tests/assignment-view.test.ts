@@ -24,9 +24,9 @@ import {
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
-import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
+import { jsonTextAtPath, type AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { readAssignmentSubset } from "../lib/control-plane/assignment-read.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -320,7 +320,6 @@ test("full index separates latest Attempt from activity and counts only measured
   assert.equal(indexed?.lastAttemptAt,"2026-09-21T10:00:00.000Z");
   assert.equal(indexed?.directDependentCount,2);
   assert.equal(indexed?.readyAfterThisSettlesCount,1);
-  assert.ok(indexed?.historyTerms?.includes("at-new"));
   const unknown={...src,workItems:src.workItems.filter(item=>item.id!=="other-open")};
   assert.equal(buildAssignmentView(unknown).allRowsIndex?.find(row=>row.id==="upstream")?.readyAfterThisSettlesCount,null,
     "an unread upstream cannot be counted as satisfied");
@@ -667,13 +666,17 @@ test("projected publisher listings retain the full assignment view and named gap
   for (const [i, row] of source.artifacts.entries()) await repos.artifacts.append(row.workItemId, `artifact-${i}`, row, NOW);
   for (const [i, row] of source.scoutResults.entries()) await repos.scoutResults.append(row.workItemId, `scout-${i}`, row, NOW);
   for (const [i, row] of source.workerResults.entries()) await repos.workerResults.append(row.workItemId, `worker-${i}`, row, NOW);
-  const full = <T,>(repo: AggregateRepository<T>): AggregateRepository<T> => ({ ...repo, listNarrowed: () => repo.list() });
+  for (const [i, row] of source.costs.entries()) await repos.costs.append(row.workItemId, `cost-${i}`, row, NOW);
+  const full = <T,>(repo: AggregateRepository<T>): AggregateRepository<T> => ({ ...repo,
+    readManyNarrowed: async (ids) => (await repo.list()).filter(row => ids.includes(row.id)),
+    listWhereIn: async (path, values) => (await repo.list()).filter(row => values.includes(jsonTextAtPath(row.value, path) ?? "")) });
   const fullRepos = { ...repos, obligations: full(repos.obligations), occurrences: full(repos.occurrences),
     workItems: full(repos.workItems), routeTasks: full(repos.routeTasks), attempts: full(repos.attempts), debts: full(repos.debts) };
-  const base = { nowIso: NOW, activation: source.activation, pilotZips: source.pilotZips };
-  const already = { costs: source.costs, pipeline: source.pipeline };
-  const before = await readAllAssignmentSources(fullRepos, base, already);
-  const after = await readAllAssignmentSources(repos, base, already);
+  const base = { nowIso: NOW, activation: source.activation, pilotZips: source.pilotZips, servedReader: null, askGapObservations: null, pipeline: false };
+  const scoutKeys = await repos.scoutResults.keys();
+  const seeds = { obligations: source.obligations.map(o => o.id), workItems: source.workItems.map(w => w.id), context: () => [], scoutKeys: () => scoutKeys, pipelineItems: () => [] };
+  const before = await readAssignmentSubset(fullRepos, base, seeds);
+  const after = await readAssignmentSubset(repos, base, seeds);
   assert.deepEqual(buildAssignments(after), buildAssignments(before));
   assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
   assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),

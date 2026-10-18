@@ -25,11 +25,11 @@ export const MANUAL_METHOD_INDEX_DDL=[
   DECLARE v jsonb; item jsonb; place text; region text; legacy jsonb; here jsonb:='{}';
     regions text[]:='{}'; worked text[]:='{}'; any_legacy boolean:=false; any_work boolean:=false;
   BEGIN
+    PERFORM pg_advisory_xact_lock(hashtextextended('manual-method:'||target,0));
     SELECT value INTO v FROM cp_field_manual_entries WHERE id=target;
     IF v IS NULL OR NOT coalesce((${MANUAL_METHOD_SQL.replaceAll('value','v')}),false) THEN
       DELETE FROM cp_manual_method_meta WHERE entry_id=target; RETURN;
     END IF;
-    PERFORM pg_advisory_xact_lock(hashtextextended('manual-method:'||target,0));
     legacy:=v->'placeResults';
     IF legacy IS NULL THEN
       IF jsonb_array_length(coalesce(v->'ocdIds','[]'))+jsonb_array_length(coalesce(v->'bodyIds','[]'))>0 THEN

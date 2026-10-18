@@ -57,6 +57,36 @@ async function worker() {
   pg.installHeldCopies(() => copies.openHeldCopies(arg("copies"), { slackMs: 0 }));
   const repos = await pg.createPgRepositories("postgresql://fixture:fixture@ep-cp-scale.us-east-2.aws.neon.tech/fixture", now, { skipBootstrap: true,...(arg("planning-state")?{planningState:arg("planning-state")}: {}) });
   const places = JSON.parse(await readFile(arg("selected"), "utf8")) as string[];
+  if(scenario==="manual") {
+    const reports=[];
+    for(const size of [1,20001]) {
+      for(let offset=size===1?0:1;offset<size;offset+=1000)await proxy("query",JSON.stringify({query:`INSERT INTO cp_field_manual_entries(id,revision,updated_at,value)
+        SELECT 'history-route-'||n,1,$1::timestamptz,jsonb_build_object('id','history-route-'||n,'role','HUNTER','kind','ROUTE',
+          'title','Successful route','summary','Saved source proof','outcome','YIELDED','observedAt',$1::text,
+          'states','["az"]'::jsonb,'ocdIds','[]'::jsonb,'bodyIds','[]'::jsonb,'platforms','[]'::jsonb,
+          'recordClasses','["meetings"]'::jsonb,'url','https://history-scale.invalid/route',
+          'reach','{"states":["az"],"places":[],"platforms":[],"everywhere":false}'::jsonb,
+          'payload',jsonb_build_object('id','scale-history-route','body',repeat(md5(n::text),56)))
+        FROM generate_series($2::int,$3::int) n`,params:[now,offset,Math.min(size-1,offset+999)]}));
+      const before=transfer.processNeonBytes().reduce((n:number,h:{bytes:Record<string,number>})=>n+h.bytes["control-plane"],0);
+      const sentBefore=transfer.processNeonBytes().reduce((n:number,h:{sent:Record<string,{bytes:number}>})=>n+h.sent["control-plane"].bytes,0);
+      const start=performance.now(),known=await repos.fieldManual.learnedRoutes(["scale-history-route","absent-route"]);
+      assert.deepEqual(known,{present:true,routeIds:["scale-history-route"]});
+      const routeMs=performance.now()-start,sourceStart=performance.now();
+      const hints=await repos.fieldManual.sourceHints({state:"az"},"https://history-scale.invalid/");
+      assert.equal(hints.length,1);assert.deepEqual(hints[0].workedFor,["meetings"]);
+      const hours=transfer.takeNeonBytesHours();
+      for(const hour of hours) {
+        const summary=transfer.summarizeNeonBytes(hour,1000);
+        assert.equal(summary.byCaller.reduce((n:number,row:{bytes:number})=>n+row.bytes,0),summary.controlPlaneBytes+summary.readerBytes);
+      }
+      reports.push({historyRows:size,routeMs,sourceMs:performance.now()-sourceStart,
+        responseBytes:hours.reduce((n:number,h:{bytes:Record<string,number>})=>n+h.bytes["control-plane"],0)-before,
+        requestBytes:hours.reduce((n:number,h:{sent:Record<string,{bytes:number}>})=>n+h.sent["control-plane"].bytes,0)-sentBefore,digest:digest({known,hints}),hours});
+    }
+    assert.equal(reports[0].digest,reports[1].digest);assert.equal(reports[0].responseBytes,reports[1].responseBytes);
+    process.stderr.write(`${JSON.stringify({type:"repeated-history",reports})}\n`);
+  }
   const results: RunReport[] = [];
   for (let run = 0; run < repetitions; run++) {
     const before = transfer.processNeonBytes().reduce((sum: number, hour: { bytes: Record<string, number> }) => sum + hour.bytes["control-plane"], 0);
@@ -85,6 +115,8 @@ async function worker() {
   if(scenario==="manual") {
     const reports=[];
     for(let run=0;run<repetitions;run++) {
+      const before=transfer.processNeonBytes().reduce((n:number,h:{bytes:Record<string,number>})=>n+h.bytes["control-plane"],0);
+      const sentBefore=transfer.processNeonBytes().reduce((n:number,h:{sent:Record<string,{bytes:number}>})=>n+h.sent["control-plane"].bytes,0);
       const walBefore=BigInt(await proxy("wal")),began=performance.now();
       const output=await workload(repos,places,run,"source-hints"),ms=performance.now()-began;
       const walAfter=BigInt(await proxy("wal")),hours=transfer.takeNeonBytesHours();
@@ -92,8 +124,8 @@ async function worker() {
         const summary=transfer.summarizeNeonBytes(hour,1000);
         assert.equal(summary.byCaller.reduce((sum:number,row:{bytes:number})=>sum+row.bytes,0),summary.controlPlaneBytes+summary.readerBytes);
       }
-      reports.push({run,ms,responseBytes:hours.reduce((n:number,hour:{bytes:Record<string,number>})=>n+hour.bytes["control-plane"],0),
-        requestBytes:hours.reduce((n:number,hour:{sent:Record<string,{bytes:number}>})=>n+hour.sent["control-plane"].bytes,0),
+      reports.push({run,ms,responseBytes:hours.reduce((n:number,hour:{bytes:Record<string,number>})=>n+hour.bytes["control-plane"],0)-before,
+        requestBytes:hours.reduce((n:number,hour:{sent:Record<string,{bytes:number}>})=>n+hour.sent["control-plane"].bytes,0)-sentBefore,
         databaseWalBytes:Number(walAfter-walBefore),peakRssBytes:Number(/VmHWM:\s+(\d+) kB/.exec(readFileSync("/proc/self/status","utf8"))![1])*1024,digest:digest(output),hours});
     }
     process.stderr.write(`${JSON.stringify({type:"companion-source-hints",reports})}\n`);
@@ -444,7 +476,8 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
     assert.ok(samples.length);
     await pg.exec("CREATE TABLE scale_manual_samples(ordinal integer PRIMARY KEY,value jsonb NOT NULL)");
     await pg.query("INSERT INTO scale_manual_samples SELECT (ordinal-1)::integer,value FROM jsonb_array_elements($1::jsonb) WITH ORDINALITY samples(value,ordinal)",[JSON.stringify(samples)]);
-    for(let at=0;at<places.length;at+=250)await pg.query(`WITH source AS (
+    for(let at=0;at<places.length;at+=250) {
+      await pg.query(`WITH source AS (
       SELECT p.ordinal,p.id,p.state,h.n,sample.value,
         (p.ordinal::bigint*$3::integer+h.n-1)%7126 AS bucket,(p.ordinal::bigint*$3::integer+h.n-1)%1000 AS size_bucket
       FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n)
@@ -469,6 +502,8 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
     ) ${template("field_manual_entries")} SELECT 'note-'||ordinal||'-'||n,1,$1::timestamptz,$1::timestamptz,
       jsonb_set(value,'{payload,scaleExcerpt}',to_jsonb(left(repeat(md5(id||n),((target_bytes+31)/32)::integer),greatest(0,target_bytes-octet_length(value::text)))))
       FROM shaped`,[now,samples.length,history,at,at+250]);
+      if(at%2500===0)await pg.exec("ANALYZE cp_field_manual_entries; ANALYZE cp_manual_method_meta; ANALYZE cp_manual_method_rank; ANALYZE cp_manual_source_facts; ANALYZE cp_manual_source_classes");
+    }
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
       SELECT 'scale-method',id,'WORKS',$1::timestamptz,'attempt-' || ordinal,NULL,$1::timestamptz FROM scale_places`, [now]);

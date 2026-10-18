@@ -87,7 +87,8 @@ export function pgControlReadsBackfill(sql: Sql, manual?:()=>FieldManualRepos): 
         WHERE value ?| ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}]`);
       await sql.query("DROP TABLE IF EXISTS cp_spend_window");
       if(manual) await sql.query("DROP TABLE IF EXISTS cp_field_manual");
-      if(manual) await sql.query("ANALYZE cp_field_manual_entries");
+      for(const table of ["cp_field_manual_entries","cp_manual_method_meta","cp_manual_method_rank","cp_manual_source_facts","cp_manual_source_classes"])
+        await sql.query(`ANALYZE ${table}`);
       await sql.query("INSERT INTO cp_control_backfill_jobs(state,kind,completed) VALUES('system','complete',true) ON CONFLICT(state,kind) DO UPDATE SET completed=true,updated_at=now()");
     },
     async runState(state) {
@@ -146,10 +147,19 @@ export function pgControlReadsBackfill(sql: Sql, manual?:()=>FieldManualRepos): 
     }
     const methods=await job("manual-indexes");
     if(!methods?.completed) {
+      const cursor=methods?.cursor as {after:string;batches:number}|null;
       const rows=await sql.query(`SELECT id FROM cp_field_manual_entries WHERE cp_manual_state(value)=$1
-        AND id>$2 ORDER BY id LIMIT 100`,[state,methods?.cursor??""]) as {id:string}[];
-      if(rows.length)await sql.query("SELECT cp_manual_refresh_method(id),cp_manual_refresh_source(id) FROM unnest($1::text[]) entries(id)",[rows.map(row=>row.id)]);
-      copied+=rows.length;await save("manual-indexes",rows.at(-1)?.id??methods?.cursor??"",rows.length<100);
+        AND id>$2 ORDER BY id LIMIT 100`,[state,cursor?.after??""]) as {id:string}[];
+      if(rows.length) {
+        const ids=rows.map(row=>row.id);
+        await sql.query("SELECT cp_manual_refresh_method(id) FROM unnest($1::text[]) entries(id)",[ids]);
+        await sql.query("SELECT cp_manual_refresh_sources($1::text[])",[ids]);
+      }
+      const batches=(cursor?.batches??0)+1;
+      if(rows.length && (batches===1 || batches%10===0))
+        for(const table of ["cp_manual_method_meta","cp_manual_method_rank","cp_manual_source_facts","cp_manual_source_classes"])
+          await sql.query(`ANALYZE ${table}`);
+      copied+=rows.length;await save("manual-indexes",{after:rows.at(-1)?.id??cursor?.after??"",batches},rows.length<100);
     }
     if(manual && state==="system" && ((await sql.query("SELECT to_regclass('cp_field_manual') AS name")) as {name:string|null}[])[0]?.name) {
       const entry=normalizeEntry(newFieldManualEntry("bank-health","write-errors",{role:"SHARED",kind:"WRITE_HEALTH",

@@ -30,7 +30,5 @@ export const MANUAL_ORDER_INDEXES = [
     ((value->'role'),(coalesce(value->'recordClasses','[]'::jsonb))) WHERE ${MANUAL_PLAIN_SQL} AND ${MANUAL_BROAD_SQL};`,
   `CREATE INDEX IF NOT EXISTS cp_field_manual_exhausted_subject ON cp_field_manual_entries
     ((value #>> '{payload,subjectId}')) WHERE value->>'kind'='EXHAUSTED_RUNGS';`,
-  `CREATE INDEX IF NOT EXISTS cp_field_manual_source_order ON cp_field_manual_entries
-    (${MANUAL_SOURCE_ORIGIN_SQL},(value->>'url'),(coalesce(value->>'observedAt','')) COLLATE "C" DESC,id COLLATE "C")
-    WHERE value->>'url' IS NOT NULL;`,
+
 ] as const;

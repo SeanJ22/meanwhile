@@ -71,3 +71,7 @@ preflight — the cheap deterministic checks
 ## Repair
 
 Fix on stream/src-money and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## Changed combination — 22:29Z October 18
+
+The return above applies to the SH-01 + SRC-MN combination. SH-01 was subsequently returned after its independent full gates failed tests/seat-grouping.test.ts:117 (new valid vacancy row made a stale 4-count assertion observe 5). The failing SH-01 input is now removed. SRC-MN alone passed the focused preflight; this is new combination evidence, not a retry of the unchanged failing pair. River is now running full gates on SRC-MN alone with main release 55 included so the remaining batch can ship. AQ-01 was assessed freshly but its actual fold conflicts in app/api/ask/grounded/route.ts, so it is excluded. The original combined import-graph interaction remains relevant when a future SH-01 replacement integrates SRC-MN.

@@ -1,25 +1,27 @@
 # River status
 
-build_state: RELEASE 55 GATES RUNNING: UI-01 + UI-02
+build_state: RELEASE 55 GATES RUNNING: UI-01 ONLY; UI-02 RETURNED
 worker: codex-river
 provider: Codex
 run_id: codex-river-20261018
 lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
-heartbeat: 2026-10-18T19:53:14Z
+heartbeat: 2026-10-18T19:57:33Z
 
 ## Codex River shift — October 18
 
-Sean assigned Codex to River until Claude resumes October 19 at 8 AM Arizona (15:00 UTC). Run scripts/river.mjs as its header describes. Ship with 3–5 eligible READY lanes or once any has waited two hours. Return a failing lane with the concrete error and ship the remainder. No automatic revert. Merge each release PR once its checks are green; if access blocks it, give Sean the exact link. Release the lock when stopping.
+Sean assigned Codex to River until Claude resumes October 19 at 8 AM Arizona (15:00 UTC). Use scripts/river.mjs exactly as its header describes. Ship at 3–5 eligible READY lanes or once any has waited two hours. Return failing lanes with concrete errors and ship the remainder. No automatic revert. Merge release PRs on green required checks. Release the lock on stopping and before the Claude handoff.
 
-Release 55 is in progress: UI-01 ee1be9d011c0ba036177595ad31c776bb0940ec2 and UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac folded cleanly. Main release 54 merge was included before testing. Candidate e8dd7e2f7c0f144eca0ae43f92ba16cf697b46b9. No new migrations. The initial gate attempt was stopped after TypeScript found missing polygon-clipping and sharp in the old node_modules snapshot. No UI lane was returned for that environment failure. Committed pnpm-lock.yaml was installed frozen, with no tracked changes. First failure: .scratch/river/release-55-gates-environment-failure.log and test-environment-failure.json. Fresh full river.mjs test --heartbeat is running; log .scratch/river/release-55-gates.log. Nothing is promoted or released yet.
+Release 55 now contains UI-01 ONLY, READY ee1be9d011c0ba036177595ad31c776bb0940ec2. Original fold UI-01 + UI-02 failed two checks in tests/meeting-online-marker.test.ts; UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac was returned with river.mjs return --check gates. It moved meetings out of the compact Bodies list but left assertions requiring MeetingRow in that list. Same 13-test file fails those two cases on the combination and passes all 13 on exact UI-01. Repair tests around the new body-card meeting surface, preserve online labels, send a new READY. UI-02's controlled AZ/NH/NJ desktop/phone regression and inspected screenshots did pass; no live UI failure is inferred.
 
-Scan also found meetings, ballot-parity, control-reads, overlay-seats, platform-legistar-members, site-reads, steps-2-6, with earlier returns on this board. Do not retry unchanged rejected SHAs. Overlay-seats 61f6d1449 and site-reads f42bc19c6 were freshly assessed against river 829e6d6e21ca with git merge-tree: both conflict extensively (41 and 36 conflict reports). Both were returned through river.mjs return --check fold-conflict with their exact READY SHAs and preserved output in .scratch/river/reassess-<lane>.log. The board returns now identify these latest SHAs; do not repeat these unchanged attempts. Neither is in release 55. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01 and SRC-MN.
+Failed combined run was stopped once that failure was isolated; no complete full-suite result is claimed. Preserved fold, test record, gates log and canonical test log/timings under .scratch/river/release-55-ui01-ui02-failed/. First environment-only attempt failed because old node_modules lacked polygon-clipping and sharp; frozen lock install fixed setup without changing tracked files; preserved separately in release-55-gates-environment-failure.log and test-environment-failure.json.
 
-Hourly continuation is configured in this chat from October 18 at 1 PM through October 19 at 7 AM Arizona, with 19 bounded wake-ups; never overlap a live lock owner. Claude takes over at 8 AM. Every run releases its own lock at a safe stop. Current automation: 6ad5209d7df88191a2bba47cb78bfd7f.
+Fresh UI-01-only fold is ab0c352cf21752d23500fb7ea72ddf712675755e, including main's release-54 merge, with no new migrations. river.mjs test --heartbeat is running; .scratch/river/release-55-gates.log. Not promoted or released. .scratch/river/fold.json is the UI-01-only combination. Candidate's full gates must pass before promote/release 55.
 
-Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin (first on PATH), PNPM_HOME=/tmp/river-pnpm, XDG_DATA_HOME=/tmp/river-xdg, PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Use permitted network-enabled shell execution for network/child-process commands. No package files changed. GitHub CLI read access and connector admin/push permission verified. All prior budgets, spending controls and pauses remain as set.
+Prior open returned READYs: meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562, steps-2-6 6da1efc6b. Newer overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against river 829e6d6e21ca with git merge-tree, both conflict extensively, and were returned through river.mjs with exact SHAs and raw conflicts. Do not repeat unchanged returned inputs. Expected today: RS-01, SH-01, BS-01, AQ-01, CP-01, SRC-MN.
 
-Verification in this shift: UI-02 browser regression passed for real resolved bodies in AZ/NH/NJ on desktop and phone layouts; generated compact-list and recorded body-card screenshots were visually inspected. These are controlled/local pages. Production /api/build currently serves release 54 main 7298706cb. Direct cloud Chromium production navigation remains blocked by ERR_CERT_AUTHORITY_INVALID despite importing the existing managed CA certificates into NSS; TLS checks were kept enabled. No live rendered-page success is claimed. Full combined suite still running; lint, TypeScript and pinned-browser checks pass.
+Hourly continuation in this chat runs from October 18 1 PM through October 19 7 AM Arizona (19 wake-ups). Automation 6ad5209d7df88191a2bba47cb78bfd7f. Skip overlapping live owners, stop by 8 AM, preserve any interrupted candidate and release the lock. Do not call scheduled work completed work.
+
+Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin first on PATH, PNPM_HOME=/tmp/river-pnpm, XDG_DATA_HOME=/tmp/river-xdg, PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Use permitted network-enabled execution. Existing package lock installed frozen. GitHub CLI and connector access works. Production /api/build serves release 54 main 7298706cb. Cloud Chromium live navigation is blocked by ERR_CERT_AUTHORITY_INVALID despite mirroring the configured managed CAs; TLS stayed enabled. HTTP checks work; local/control browser evidence is separate from a live screen check. No spending, budget, pause or production data changes.
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

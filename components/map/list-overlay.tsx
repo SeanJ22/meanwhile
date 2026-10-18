@@ -193,7 +193,7 @@ export function ListOverlay({
       <div className="al-panel">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
-          {sorted.length} {listingCount.unit}
+          {result?.localPending ? "…" : sorted.length} {listingCount.unit}
         </span>
         {/* The focus is stated and one tap clears it. */}
         {focused.applied && focused.chip && (
@@ -209,7 +209,7 @@ export function ListOverlay({
             {focused.chip} · show all ✕
           </button>
         )}
-        {focused.unmatched && focused.chip && (
+        {!result?.localPending && focused.unmatched && focused.chip && (
           /* The subject has no sittings in this window: said, with the full list underneath. */
           <span className="al-focus-chip" data-list-focus-empty>
             {focused.chip}
@@ -265,7 +265,8 @@ export function ListOverlay({
       <div className="al-overlay-body">
         {/* In the scrolling body: in the pinned header a long notice can take the whole height cap. */}
         {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
-        {sorted.length === 0 && (
+        {result?.localPending && <p className="al-empty">Loading meetings…</p>}
+        {!result?.localPending && sorted.length === 0 && (
           <p className="al-empty">
             Nothing matches the current filters.
             <br />

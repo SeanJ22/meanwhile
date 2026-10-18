@@ -35,9 +35,6 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
-  "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
-  // The largest production piece, New Hampshire's 421 roll calls, peaked at 837 MiB.
-  "publish-reader-edge-piece.mts": 896,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -194,7 +191,7 @@ function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
   const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
   if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
-  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "publish-state-authority.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

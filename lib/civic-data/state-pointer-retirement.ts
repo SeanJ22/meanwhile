@@ -7,8 +7,6 @@ import { REGISTRY_STATES, STATE_BALLOT_FAMILIES, stateBallotContractId } from ".
 import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
 import { CONTROL_PLANE_READS_DIR_ENV, databaseIdentity } from "../control-plane/repository/incremental-reads.ts";
 import { routineProcessSlots, type WorkerMemoryRelease, type WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
-import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
-import { authorityPointerKey, readServedPointer } from "../meetings/edge-serving.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";
 import { admittedRuntimeChildEnvironment } from "./runtime-authority.ts";
@@ -112,9 +110,8 @@ export async function reconcileNationalStatePointers(input: {
   } finally { for (const free of releases.values()) free(); await rm(temporaryPath(directory), { recursive: true, force: true }); }
 }
 
-export async function retireNationalStatePointers(query: Query, store: ReaderArtifactStore | null, origins: readonly StateRetirementOrigin[]): Promise<number> {
+export async function retireNationalStatePointers(query: Query, origins: readonly StateRetirementOrigin[]): Promise<number> {
   if (!origins.length) return 0;
-  if (!store) throw new Error("STATE_RETIREMENT_STORE_MISSING");
   for (const state of REGISTRY_STATES) {
     const descriptors = [
       { family: "registry-runtime" as const, contract: requiredManualProductionContract(stateRegistryRuntimeContractId(state)) },
@@ -131,11 +128,8 @@ export async function retireNationalStatePointers(query: Query, store: ReaderArt
     const byKey = new Map(rows.map(row => [row.key, row]));
     for (const { family, contract } of descriptors) {
       const key = `${contract.recordClass}:${contract.scope}`, row = byKey.get(key);
-      const ref = (await readServedPointer(store, authorityPointerKey(family, state)))?.ref;
       if (!row || row.source_id !== contract.sourceId || row.decision !== "GOOD"
-        || row.current_version_id !== row.last_known_good_version_id || !ref?.key || !ref.sha
-        || ref.version !== `${key}=${row.current_version_id}` &&
-          !(ref.version.startsWith(`${key}=${row.current_version_id}~`) && /^[a-f0-9]{16}$/.test(ref.version.slice(`${key}=${row.current_version_id}~`.length)))) throw new Error(`STATE_RETIREMENT_REPLACEMENT_MISSING:${family}:${state}`);
+        || !row.current_version_id || row.current_version_id !== row.last_known_good_version_id) throw new Error(`STATE_RETIREMENT_REPLACEMENT_MISSING:${family}:${state}`);
     }
   }
   const expected = origins.map(origin => ({ key: `${origin.recordClass}:${origin.scope}`, current_version_id: origin.versionId }));

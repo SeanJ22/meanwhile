@@ -242,4 +242,4 @@ async function postWithSettings(request: Request) {
 
 export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}, ["state-money", "registry-runtime", "ballot-contests"]);
+});

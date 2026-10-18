@@ -14,8 +14,12 @@ const cached = new Map<string, { at: number; read: Promise<Slice<CodeSlice>>; go
  * A registration boundary file need not contain a newly published district. */
 export async function publishedDivisionsForZip(zip: string, selection: GeographySelection = currentRepresentationSelection()): Promise<import("../registry/types.ts").Division[]> {
   if (zipNeedsAddress(zip)) return [];
-  const slice = await publishedZipDistricts(zip);
-  if (slice.kind !== "HELD" || !slice.value.known) return [];
+  return divisionsFromZipDistricts(zip, await publishedZipDistricts(zip), selection);
+}
+
+/** District descriptions from the same state package that established ZIP membership. */
+export function divisionsFromZipDistricts(zip: string, slice: Slice<CodeSlice>, selection: GeographySelection = currentRepresentationSelection()): import("../registry/types.ts").Division[] {
+  if (zipNeedsAddress(zip) || slice.kind !== "HELD" || !slice.value.known) return [];
   const out: import("../registry/types.ts").Division[] = [];
   const versions = slice.value.scopes.map(scope => ({ ...scope, key: scope.version }));
   for (const type of TYPES) {
@@ -38,31 +42,43 @@ export async function publishedDivisionsForZip(zip: string, selection: Geography
 /** A selected plan replaces only the state/family for which it supplies ZIP
  * rows. Other held membership remains available for its own plan qualification. */
 export function withCensusDistricts(entry: ZipDivisionEntry, slice: Slice<CodeSlice>, zip: string, selection: GeographySelection = currentRepresentationSelection()): ZipDivisionEntry {
-  if (slice.kind !== "HELD" || !slice.value.known) return entry;
-  const ids = new Set(entry.ids), partial = new Set(entry.partial);
-  const qualifiedDistricts = new Set<string>();
+  return censusDistrictsForZips(slice, selection)(entry, zip);
+}
+
+/** Index a selected plan once when qualifying every ZIP in a state's package. */
+export function censusDistrictsForZips(slice: Slice<CodeSlice>, selection: GeographySelection = currentRepresentationSelection()): (entry: ZipDivisionEntry, zip: string) => ZipDivisionEntry {
+  if (slice.kind !== "HELD" || !slice.value.known) return entry => entry;
+  const byZip = new Map<string, Map<string, { id: string; whole: boolean }[]>>();
   const versions = slice.value.scopes.map(scope => ({ ...scope, key: scope.version }));
   for (const type of TYPES) {
     const states = new Set(slice.value.containers.filter(c => c.ref.type === type).map(c => c.ref.stateAbbr));
     for (const state of states) {
       const selected = selectGeographyVersion(versions, type, selection, state);
       if (!selected) continue;
-      const found = slice.value.containers.filter(c => c.ref.type === type && c.ref.stateAbbr === state && c.ref.version === selected.key)
-        .flatMap(container => {
-          const id = censusWorkDivision(container.ref), overlap = container.overlaps?.find(o => o.zcta5 === zip);
-          return id && overlap ? [{ id, overlap }] : [];
-        });
-      if (!found.length) continue;
-      const family = districtFamilyKey(found[0].id)!;
-      for (const id of ids) if (districtFamilyKey(id) === family) { ids.delete(id); partial.delete(id); }
-      qualifiedDistricts.add(family);
-      for (const { id, overlap } of found) {
-        ids.add(id);
-        if (overlap.whole) partial.delete(id); else partial.add(id);
+      for (const container of slice.value.containers) {
+        if (container.ref.type !== type || container.ref.stateAbbr !== state || container.ref.version !== selected.key) continue;
+        const id = censusWorkDivision(container.ref), family = id && districtFamilyKey(id);
+        if (!id || !family) continue;
+        const seen = new Set<string>();
+        for (const overlap of container.overlaps ?? []) {
+          if (seen.has(overlap.zcta5)) continue;
+          seen.add(overlap.zcta5);
+          const groups = byZip.get(overlap.zcta5) ?? new Map<string, { id: string; whole: boolean }[]>();
+          const members = groups.get(family) ?? [];
+          members.push({ id, whole: overlap.whole }); groups.set(family, members); byZip.set(overlap.zcta5, groups);
+        }
       }
     }
   }
-  return { ...entry, ids: [...ids], partial: [...partial], qualifiedDistricts: [...qualifiedDistricts] };
+  return (entry, zip) => {
+    const ids = new Set(entry.ids), partial = new Set(entry.partial), qualifiedDistricts: string[] = [];
+    for (const [family, found] of byZip.get(zip) ?? []) {
+      for (const id of ids) if (districtFamilyKey(id) === family) { ids.delete(id); partial.delete(id); }
+      qualifiedDistricts.push(family);
+      for (const { id, whole } of found) { ids.add(id); if (whole) partial.delete(id); else partial.add(id); }
+    }
+    return { ...entry, ids: [...ids], partial: [...partial], qualifiedDistricts };
+  };
 }
 
 /** Same promoted Census slice Admin reads; bounded and shared for a ZIP.

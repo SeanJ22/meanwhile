@@ -26,14 +26,8 @@ import {
 export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
-import {
-  PostgresRoutineDataStore,
-  projectionKey,
-  readPointerMoveEvents,
-  type CandidateVersionReadback,
-  type PublishedCandidateMetadata,
-  type RoutineDataStore,
-} from "./store.ts";
+import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
+import { projectionKey } from "./projection-key.ts";
 
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -116,7 +110,10 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">>;
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">> & {
+  /** Already published canonical database rows, read together for the reader shelf. */
+  readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
+};
 
 type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
@@ -490,6 +487,7 @@ export async function readPromotedCivicData<T>(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<T>> {
   const now = options.now ?? new Date().toISOString();
+  if (options.store?.readPromotedEntry) return readPromotedFromEdge<T>(recordClass, scope, await options.store.readPromotedEntry(recordClass, scope), now, options.maxAgeMs);
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
   if (!injected && isStateAuthorityScope(scope)) {
@@ -579,7 +577,7 @@ async function loadPromotedCivicData<T>(
   const cacheable = !injected && !stateAuthority;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
-    const store = options.store ?? new PostgresRoutineDataStore();
+    const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
     const known = options.bypassCache ? undefined : provenPointersOf(options.store, scope).get(key);
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
@@ -707,7 +705,7 @@ export async function readPromotedCivicDataBatch<T>(
     }));
   }
 
-  const store = options.store ?? new PostgresRoutineDataStore();
+  const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
   if (!hasBatchReadDoor(store)) {
     return Promise.all(scopes.map((scope) => readPromotedCivicData<T>(recordClass, scope, options)));
   }
@@ -992,7 +990,8 @@ export async function readPromotedCivicDataPredecessors<T>(
     if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
-    const store = options.store ?? new PostgresRoutineDataStore();
+    const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
+    const { readPointerMoveEvents } = await import("./store.ts");
     const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
     const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
     const seen = new Set<string>();

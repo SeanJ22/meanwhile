@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
   outputFileTracingIncludes: {
+    "/api/reader/state": ["./data/derived/zip-divisions/*.json", ...stateOfficeTrace],
     "/api/location/zip": ["./lib/geo/zcta-centroids.json", "./lib/geo/postal-zips.json"],
     // Bulk hunts compute ZIP shard names, which static tracing cannot discover.
     "/api/admin/bulk-hunts": ["./data/derived/zip-divisions/*.json"],

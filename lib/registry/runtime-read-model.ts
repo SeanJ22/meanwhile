@@ -25,6 +25,19 @@ export function withRegistryRuntimeStates<T>(states: readonly string[], read: ()
   return jobs.run({ states: [...new Set(states.map(requireRegistryState))].sort() }, read);
 }
 
+/** Bind an already loaded state package while composing its reader answer. */
+export function withRegistryRuntimeProjection<T>(value: RegistryRuntimeReadModel, states: readonly string[], read: () => T): T {
+  const selected = [...new Set(states.map(requireRegistryState))].sort();
+  const context: Context = { states: selected, read: { kind: "BOOTSTRAP", value,
+    metadata: { recordClass: "REGISTRY_RUNTIME_BINDING", scope: selected.map(stateRegistryRuntimeScope).join("|"),
+      sourceId: null, version: null, versionId: value.registry.generatedAt, lastKnownGoodVersionId: null,
+      sourceThrough: null, retrievedAt: value.registry.generatedAt, promotedAt: null, stale: "UNKNOWN", staleAt: null },
+    detail: "The state's current records, loaded together in memory." } };
+  const key = contextKey();
+  if (key) requests.set(key, context);
+  return jobs.run(context, read);
+}
+
 export async function readRegistryRuntimeProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
   const selected = [...new Set(states.map(requireRegistryState))].sort();
   if (!selected.length) throw new Error("REGISTRY_STATES_NOT_SELECTED");
@@ -37,8 +50,11 @@ export async function readRegistryRuntimeProjection(states: readonly string[], o
   const context: Context = sameStates ? existing : { states: selected };
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
   const load = async (): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> => {
-  const reads: CivicDataReadResult<RegistryRuntimeReadModel>[] = [];
-  for (const state of selected) {
+  const reads = await Promise.all(selected.map(async state => {
+    if (!options.store && !currentReaderAuthorityEdge()) {
+      const { readStatePackage } = await import("../reader/state.ts");
+      return (await readStatePackage(state)).registryRead;
+    }
     const read = options.store ? await readStateRegistryRuntimeProjection(state, options)
       : (await readStateAuthorityProjection<RegistryRuntimeReadModel>("registry-runtime", state)).result;
     if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
@@ -46,9 +62,10 @@ export async function readRegistryRuntimeProjection(states: readonly string[], o
       const facts = await overlay?.load(state).catch(error => {
         reportReaderStateFailure("state-facts", state, overlay.key?.(state) ?? null, error); return null;
       });
-      reads.push({ ...read, value: withStateRegistryFacts(read.value, facts?.bodies ?? []) });
-    } else reads.push(read);
-  }
+      return { ...read, value: withStateRegistryFacts(read.value, facts?.bodies ?? []) };
+    }
+    return read;
+  }));
   const served = reads.filter(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP");
   if (!served.length) context.read = reads[0];
   else if (selected.length === 1) context.read = served[0];

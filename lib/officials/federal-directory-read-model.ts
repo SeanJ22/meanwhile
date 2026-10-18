@@ -54,6 +54,10 @@ export async function readStateFederalDirectory(state: string, options: Promoted
 }
 
 async function readPlace(state: string, options: PromotedCivicDataReadOptions): Promise<Read> {
+  if (!options.store && !currentReaderAuthorityEdge()) {
+    const { readStatePackage } = await import("../reader/state.ts");
+    return (await readStatePackage(state)).federalRead;
+  }
   type Portraits = { readonly roster: OfficeholderSet };
   const base = options.store ? await readStateFederalDirectory(state, options)
     : (await readStateAuthorityProjection<FederalDirectoryReadModel>("federal-directory", state)).result;
@@ -102,11 +106,7 @@ export async function readFederalDirectoryProjection(states: readonly string[], 
   if (!options.store && !options.bypassCache && sameStates && (existing.read || existing.pending)) return selectMembers(existing.read ?? await existing.pending!);
   const context: Context = sameStates ? existing : { states: selected };
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
-  context.pending = (async () => {
-    const reads: Read[] = [];
-    for (const state of selected) reads.push(await readPlace(state, options));
-    return context.read = combine(reads, selected);
-  })();
+  context.pending = Promise.all(selected.map(state => readPlace(state, options))).then(reads => context.read = combine(reads, selected));
   return selectMembers(await context.pending);
 }
 

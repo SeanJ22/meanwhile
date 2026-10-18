@@ -1,4 +1,3 @@
-import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -7,14 +6,15 @@ import { join } from "node:path";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
-import { publishReaderMeetings, type PublishAuthorityValue } from "../../lib/meetings/edge-serving.ts";
+import type { ReaderValue as PublishAuthorityValue } from "./canonical-reader-fixtures.ts";
+import { installCanonicalMeetings } from "./canonical-reader-fixtures.ts";
 import type { GlobalAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
 import { publishPointers } from "./edge-pointers.ts";
 import { LocalFileArtifactStore } from "../../lib/meetings/edge-store.ts";
 import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../../scripts/ingest.ts";
-import { ACQUIRED_URL, planEveryState } from "./meeting-body-fixtures.ts";
+import { ACQUIRED_URL } from "./meeting-body-fixtures.ts";
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { registryTransferImport } from "./promoted-fixtures.ts";
 
@@ -74,15 +74,11 @@ export async function publishRecordedEdge(meetings: readonly Meeting[], agendaDo
   process.env.WTP_READER_EDGE_DIR = dir;
   process.once("exit", () => rmSync(dir, { recursive: true, force: true }));
   const edge = new LocalFileArtifactStore(dir);
-  const plan = await planEveryState({ store, artifacts: edge, now: publishedAt, served: undefined, registryVersion: () => null, registry: async () => null });
-  assert.deepEqual(plan.stats.failed, []);
   const versionId = `recorded:registry:AZ:${publishedAt}`;
   const registry = { AZ: { versionId, value: { kind: "PROMOTED_POINTERS" as const, entries: [provenEdgeEntry({
     recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("AZ"), sourceId: "registry-reviewed-bindings",
     versionId, value: registryTransferImport().projection.payload })] } } };
   await publishPointers(edge, { authority, stateAuthorities: { "registry-runtime": registry } }, publishedAt);
-  const published = await publishReaderMeetings({ store: edge, now: publishedAt, meetingStates: plan.entries });
-  assert.equal(published.status, "PUBLISHED");
-  await plan.settle();
+  installCanonicalMeetings(store);
   return { store, edge, promoted };
 }

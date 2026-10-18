@@ -1,23 +1,6 @@
 import type { CompositeSource } from "../sources/composite/index.ts";
 import { buildCompositeSource } from "../sources/composite/wiring.ts";
-import { makeSnapshotSource } from "../sources/snapshot/index.ts";
-import type { MeetingsSnapshot } from "./snapshot.ts";
-import type { Meeting, MeetingQuery, MeetingSource } from "../sources/types.ts";
-
-export interface ResolvedMeetingSource {
-  readonly name: string;
-  load(query: MeetingQuery, now?: Date): Promise<Meeting[]>;
-}
-
-function resolve<Raw>(source: MeetingSource<Raw>): ResolvedMeetingSource {
-  return {
-    name: source.name,
-    async load(query, now) {
-      const raw = await source.fetch(query);
-      return source.normalize(raw, now);
-    },
-  };
-}
+import { resolveMeetingSource, type ResolvedMeetingSource } from "./snapshot-source.ts";
 
 const resolved = new Map<string, ResolvedMeetingSource>();
 
@@ -34,7 +17,7 @@ export function getMeetingSource(): ResolvedMeetingSource {
   let source = resolved.get(name);
   if (!source) {
     activeComposite = buildCompositeSource();
-    source = resolve(activeComposite);
+    source = resolveMeetingSource(activeComposite);
     resolved.set(name, source);
   }
   return source;
@@ -44,8 +27,5 @@ export function getActiveComposite(): CompositeSource | null {
   return activeComposite;
 }
 
-export function snapshotSourceFor(snapshot: MeetingsSnapshot): ResolvedMeetingSource {
-  return resolve(makeSnapshotSource({ load: () => snapshot }));
-}
 
 // This module is on the client-reachable import graph and must stay free of node:fs.

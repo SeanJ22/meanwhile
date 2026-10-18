@@ -1,29 +1,39 @@
 import { geometryFiles } from "../lib/holdings/discovery.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { resolveZip } from "../lib/geo/zcta.ts";
-import { summarizeCoverage } from "../lib/registry/coverage.ts";
+import { summarizeCoverage, type CoverageSummary } from "../lib/registry/coverage.ts";
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
+import { GET as stateGET } from "../app/api/reader/state/route.ts";
+import type { DirectoryFile } from "../lib/officials/directory.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
-import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, installFederalDirectory, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
+import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 
 await installRegistryAuthority();
 {
   const recorded = recordedMeetingsSnapshot();
-  await publishRecordedEdge(recorded.meetings, recorded.agendaDocuments);
+  await publishRecordedEdge(recorded.meetings, recorded.agendaDocuments, recorded.generatedAt, {
+    "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
+  });
+  const federal = syntheticFederalDirectory();
+  for (const holder of federal.roster.officeholders.filter(holder => holder.state === "AZ")) {
+    federal.directory.byMember[holder.id.slice("congress:".length)]!.districtOffices = [{ city: "Tucson", state: "AZ", address: "Fixture public office",
+      zip: "85701", phone: "520-555-0100", lat: 32.22, lng: -110.97 }];
+  }
+  await installFederalDirectory(federal);
 }
 
 /**
- * `/api/meetings` resolves the governing geography once per request and hands the resolved divisions to
- * `coverageAt`, instead of sweeping the same polygons twice.
+ * `/api/meetings` reads ZIP divisions from the national index and composes coverage from its state and place packages.
+ * The polygon resolver remains available for arbitrary map points.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -99,37 +109,35 @@ test("an EMPTY pre-resolved set is not silently treated as an answer", () => {
   );
 });
 
-test("the route passes its divisions only when the lookup succeeded", () => {
-  // The route must hand `undefined`, never `[]`, when its own lookup failed.
-  const source = readFileSync(
-    join(here, "..", "app", "api", "meetings", "route.ts"),
-    "utf8",
-  );
-
-  assert.match(
-    source,
-    /resolvedDivisions\s*\?\?\s*undefined/,
-    "a failed lookup falls back to resolving inside coverageAt, never to an empty answer",
-  );
-  assert.ok(
-    !/resolvedDivisions\s*\?\?\s*\[\]/.test(source),
-    "an empty array must never stand in for a failed division lookup",
-  );
-  assert.match(
-    source,
-    /let resolvedDivisions: Division\[\] \| null = null/,
-    "the failed state is representable — null means resolve it yourself",
-  );
+test("ZIP-only state and meetings requests independently return the state's officials and Tucson's local holdings", async () => {
+  const [stateResponse, placeResponse] = await Promise.all([
+    stateGET(new Request("https://example.test/api/reader/state?zip=85701")),
+    meetingsGET(new Request("https://example.test/api/meetings?zip=85701")),
+  ]);
+  assert.equal(stateResponse.status, 200);
+  assert.equal(placeResponse.status, 200);
+  const state = await stateResponse.json() as { state: string; coverage: CoverageSummary; zipPlaces: Record<string, { ids: string[] }>;
+    directory: DirectoryFile; boundaryUrl: string };
+  const place = await placeResponse.json() as { coverage: CoverageSummary; meetings: { bodyId?: string }[]; nearZip: string };
+  assert.equal(state.state, "AZ");
+  assert.ok(state.coverage.statewideExecutives.some(holder => holder.name === "Katie Hobbs"), "the state request names Arizona's governor");
+  assert.equal(state.coverage.senators.length, 2);
+  assert.ok(state.zipPlaces["85701"]?.ids.includes("ocd-division/country:us/state:az/cd:7"));
+  assert.ok(state.zipPlaces["85701"]?.ids.includes("ocd-division/country:us/state:az/place:tucson"));
+  assert.ok(state.boundaryUrl.length > 0, "the state request gives the map its boundary source");
+  assert.equal(place.nearZip, "85701");
+  assert.ok(place.coverage.bodies.some(body => body.bodyId === "ocd-division/country:us/state:az/place:tucson#governing"), "the place request retains Tucson's council");
+  assert.ok(place.meetings.length > 0, "the place request retains held meetings");
+  const house = place.coverage.seats.find(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7")?.representatives;
+  assert.ok(house?.length, "the place request retains Tucson's House member");
+  assert.equal(place.coverage.senators.length, 2);
+  for (const holder of [...house, ...place.coverage.senators]) {
+    assert.ok(holder.name.length > 0);
+    assert.ok(state.directory.byMember[holder.id.slice("congress:".length)]?.districtOffices.some(office => office.address && office.phone), `${holder.name}'s office survives the state package`);
+  }
 });
 
-/* -- the count itself, which is the only thing that can see a second sweep -- */
-
-/**
- * Only a count can see a second sweep: `sweepsRun()` in lib/registry/resolve.ts increments inside
- * `divisionsAt`. Deltas, never totals; the counter is process-wide.
- */
-
-test("one /api/meetings request runs exactly one point-in-polygon sweep", async () => {
+test("an indexed ZIP request shows its held meetings and officials without a polygon sweep", async () => {
   const before = sweepsRun();
   const response = await meetingsGET(
     new Request("https://example.test/api/meetings?zip=85701&lat=32.21696&lng=-110.971"),
@@ -137,20 +145,15 @@ test("one /api/meetings request runs exactly one point-in-polygon sweep", async 
   const swept = sweepsRun() - before;
 
   assert.equal(response.status, 200, "the probe request did not succeed");
-  const body = (await response.json()) as { meetings: unknown[]; coverage: unknown };
+  const body = (await response.json()) as { meetings: unknown[]; coverage: CoverageSummary };
   assert.ok(Array.isArray(body.meetings), "no meetings array — the request did not do the work");
   assert.ok(body.coverage, "no coverage block — the second consumer of the geometry never ran");
 
-  assert.equal(
-    swept,
-    1,
-    `the request ran ${swept} point-in-polygon sweep(s) over the committed geometry.\n` +
-      "  Exactly one is the condition: the route resolves the point for its\n" +
-      "  online-meeting filter and hands that same answer to coverageAt. Two means a\n" +
-      "  caller stopped passing its resolved divisions and is paying for the identical\n" +
-      "  sweep again; zero means this request answered without consulting the geometry\n" +
-      "  at all, which is a different and worse defect.",
-  );
+  assert.ok(body.meetings.length > 0, "85701 retains its recorded meetings");
+  assert.ok(body.coverage.bodies.some(body => body.bodyId === "ocd-division/country:us/state:az/county:pima#governing"), "85701 retains its county board");
+  assert.ok(body.coverage.seats.some(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7" && seat.representatives.length > 0), `85701 retains its House member: ${JSON.stringify(body.coverage.seats.map(seat => ({ id: seat.ocdId, people: seat.representatives.map(holder => holder.name) })))}`);
+  assert.equal(body.coverage.senators.length, 2, "85701 retains both senators");
+  assert.equal(swept, 0, "the ZIP-to-places index supplies the held divisions without sweeping the state's polygons");
 });
 
 test("the counter can read two, so a one is a measurement and not a constant", () => {

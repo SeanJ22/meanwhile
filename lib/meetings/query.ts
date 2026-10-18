@@ -8,7 +8,7 @@ import {
   DEFAULT_RADIUS_KM,
   type CoverageTier,
 } from "./constants.ts";
-import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
+import type { ResolvedMeetingSource } from "./snapshot-source.ts";
 
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
 export {
@@ -18,6 +18,8 @@ export {
 export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
+  /** State officials are ready while the independent local read is still pending. */
+  localPending?: boolean;
   /** Held meetings of the place’s governments. */
   readerScope?: import("./reader-scope.ts").ReaderMeetingScope;
   meetings: Meeting[];
@@ -111,7 +113,7 @@ export async function searchMeetings(
   /** The bodies the registry lists; a meeting of any other body is placed by its own division. */
   registeredBodyIds?: ReadonlySet<string>,
 ): Promise<MeetingSearchResult> {
-  const source = injectedSource ?? getMeetingSource();
+  const source = injectedSource ?? (await import("./registry.ts")).getMeetingSource();
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;

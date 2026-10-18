@@ -111,6 +111,11 @@ try {
     try {
       await page.goto(`http://127.0.0.1:3220/?zip=${zip}`, { waitUntil: 'domcontentloaded' });
       await page.locator(`.mw-nav-ballot[href*="${zip}"]:visible`).waitFor({ timeout: 30000 });
+      // A resident must dismiss first-visit dialogs before the map's Ballot link is clickable.
+      // A DOM click behind the native tour modal measures its opening layout as navigation.
+      await page.getByRole('button', { name: 'Skip the tour', exact: true }).click({ timeout: 30000 });
+      const keepView = page.getByRole('button', { name: 'Keep current view', exact: true });
+      if (await keepView.isVisible()) await keepView.click();
       await page.waitForFunction(() => Number(document.querySelector('[data-stat="officials"] .num')?.textContent) > 0, null, { timeout: 30000 });
       const wanted = after.find(row => row.state === state);
       if (!wanted.ids?.length) throw Error('No complete reference ballot');
@@ -130,8 +135,9 @@ try {
             requestAnimationFrame(() => requestAnimationFrame(() => { if (complete()) state.fullMs = performance.now() - state.click; else state.paintPending = false; }));
           }
         }).observe(document.body, { subtree: true, childList: true, characterData: true });
-        link.addEventListener('click', () => { window.bs01.click = performance.now(); }, { once: true }); link.click();
+        link.addEventListener('click', () => { window.bs01.click = performance.now(); }, { once: true });
       }, wanted);
+      await page.locator(`.mw-nav-ballot[href*="${zip}"]:visible`).click();
       await page.waitForFunction(() => window.bs01.fullMs, null, { timeout: 20000 });
       const result = await page.evaluate(() => ({ ...window.bs01,
         ids: [...new Set([...document.querySelectorAll('[data-contest-id]')].map(element => element.getAttribute('data-contest-id')))],

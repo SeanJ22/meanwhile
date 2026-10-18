@@ -4,8 +4,8 @@ build_state: RELEASE 55 LIVE; CP-01 RETURNED; SH-01 FOLDED, UNTESTED; BELOW BATC
 worker: codex-river
 provider: Codex
 run_id: release-56-2026-10-18
-lock: none
-heartbeat: 2026-10-18T21:58:55Z
+lock: codex-river-2026-10-18T21-58-56-963Z-b8dfe721-3948-4695-96e2-ac9eaa808a2a
+heartbeat: 2026-10-18T21:58:57Z
 
 ## Codex River shift — October 18
 

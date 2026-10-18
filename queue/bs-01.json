@@ -1,0 +1,17 @@
+{
+  "lane": "bs-01",
+  "ready_sha": "027144fa187f0710c2c1ca5c673512952ede1316",
+  "ready_at": "2026-10-18T22:35:12Z",
+  "age_trigger": "2026-10-19T00:35:12Z",
+  "eligible": false,
+  "dependency": {
+    "lane": "rs-01",
+    "borrowed_sha": "04fe5ae6dc266844b42150bd21139bf286f7215b",
+    "status": "WIP; no READY",
+    "open_checks": [
+      "Indiana cold browser load 5.71 seconds in carried report",
+      "Current President publication not yet verified"
+    ]
+  },
+  "next": "Assess validated RS-01 READY, fold RS-01 before BS-01, reconcile shared reader interfaces preserving sourced vacancy/office hooks and SRC-MN facts."
+}

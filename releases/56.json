@@ -16,7 +16,7 @@
     "url": "https://github.com/SeanJ22/meanwhile/pull/765"
   },
   "at": "2026-10-18T22:52:49Z",
-  "state": "open; required hosted checks pending",
+  "state": "merged and web deployed; post-deploy observer succeeded; live rendered pages and ingestion unverified",
   "auto_merge": false,
   "local_verification": {
     "tested_sha": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c",
@@ -48,5 +48,67 @@
       "ready_sha": "aa787c762bbd9a11bad97a2754878f4b24ca65dd",
       "reason": "Prior scan: 39 merge conflicts; earlier migration defect repaired."
     }
-  ]
+  ],
+  "merged": {
+    "sha": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+    "at": "2026-10-18T23:09:15Z",
+    "method": "merge",
+    "expected_head_sha": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c",
+    "tree_matches_tested": true,
+    "manual": true
+  },
+  "hosted_checks": {
+    "run_id": 39174135045,
+    "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39174135045",
+    "verified_at": "2026-10-18T23:09:11.382Z",
+    "required": [
+      {
+        "name": "build (default)",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39174135045/job/117813415329",
+        "id": 117813415329,
+        "app": 15368,
+        "head": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c"
+      },
+      {
+        "name": "build (standalone)",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39174135045/job/117813415368",
+        "id": 117813415368,
+        "app": 15368,
+        "head": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c"
+      },
+      {
+        "name": "gates (test \u00b7 lint \u00b7 tsc)",
+        "conclusion": "success",
+        "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39174135045/job/117816283400",
+        "id": 117816283400,
+        "app": 15368,
+        "head": "6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c"
+      }
+    ],
+    "result": "success"
+  },
+  "production": {
+    "sha": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+    "deploy_id": "6ad5519e8591bcc684c8e66e",
+    "checked_at": "2026-10-18T23:11:59.008Z",
+    "http_build": "confirmed",
+    "observer": {
+      "id": 39175302021,
+      "head_sha": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SeanJ22/meanwhile/actions/runs/39175302021"
+    },
+    "rendered_pages": "blocked: existing Chromium ERR_CERT_AUTHORITY_INVALID",
+    "native_campaign_ingestion": "not performed by River; production counts and live examples unverified",
+    "runtime_adoption": "not separately verified"
+  },
+  "chat_attachment": {
+    "url": "https://github.com/SeanJ22/meanwhile/pull/765",
+    "requested": true,
+    "acknowledged": false,
+    "blocker": "Native Codex app attachment service connection closed, then did not respond. PR URL is retained here and in chat."
+  }
 }

@@ -21,6 +21,7 @@ import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
+  ballotAuxiliaryReads,
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
@@ -508,8 +509,10 @@ export default readerRoute("/ballot", async function BallotPage({
   let askOcdIds: string[] = [];
   const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve({ edge: null });
   const { edge } = await readerEdgeRead;
-  let certainty = await withReaderAuthorityEdge(edge, () => zipCertainty(zip));
+  if (edge) enterReaderAuthorityEdge(edge);
   const readerSelection = currentReaderSelection();
+  const startRead = ballotAuxiliaryReads();
+  let certainty = await withReaderAuthorityEdge(edge, () => zipCertainty(zip));
   let readerEdge: ReaderAuthorityEdgeBundle | null = null;
   if (centroid) {
     readerEdge = edge;
@@ -554,31 +557,51 @@ export default readerRoute("/ballot", async function BallotPage({
     }
   }
 
+  const officeBlurbsRead = readCuratedContestOfficeBlurbs(matched?.contests ?? []);
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
-  if (centroid) auxiliaryPreloads.set("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
+  const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
+    auxiliaryPreloads.set(family, startRead(family, read));
+  if (centroid) preload("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
-    auxiliaryPreloads.set("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
-    auxiliaryPreloads.set("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
-    auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
+    preload("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
+    preload("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
+    preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
-      auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
+      preload("federal-directory", settleFederalDirectoryRead);
     }
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
-      auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
+      preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      auxiliaryPreloads.set("federal-funding", settleFundingRead);
+      preload("federal-funding", settleFundingRead);
     }
-    auxiliaryPreloads.set("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
+    preload("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
     if (matched.contests.some((contest) => !isFederalContest(contest)) &&
         Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, set.election.state)) {
       const state = set.election.state as StateCampaignFinanceJurisdiction;
-      auxiliaryPreloads.set(
+      preload(
         "state-money",
         () => settleStateMoneyRead(state),
       );
     }
   }
+  const candidacyContests =
+    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
+  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
+  const contestResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
+    const read = auxiliaryPreloads.get(family);
+    return read ? [read()] : [];
+  })).then(() => Promise.all(candidacyContests.map(async contest => {
+    const lineup = lineupForContest(set!.election.state, contest.id);
+    const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
+      display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
+      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
+    }));
+    const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
+      incumbentHolderFor).catch(() => null);
+    return [contest.id, result] as const;
+  })));
+
   const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
   const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
     .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
@@ -630,18 +653,7 @@ export default readerRoute("/ballot", async function BallotPage({
       ? electionDatesFor(set.election.state)
       : null;
 
-  const candidacyContests =
-    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const contestResolutions = new Map(await Promise.all(candidacyContests.map(async contest => {
-    const lineup = lineupForContest(set!.election.state, contest.id);
-    const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
-      display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
-      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
-    }));
-    const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
-      incumbentHolderFor).catch(() => null);
-    return [contest.id, result] as const;
-  })));
+  const contestResolutions = new Map(await contestResolutionsRead);
   const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
 
   const measureRecords = set ? measureRecordsForBallot(set) : [];
@@ -794,7 +806,7 @@ export default readerRoute("/ballot", async function BallotPage({
     if (candidate.filing) rows.push(candidate.filing.provenance);
     filingSources.set(candidate.contestId, rows);
   }
-  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
+  const officeBlurbs = await officeBlurbsRead;
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"

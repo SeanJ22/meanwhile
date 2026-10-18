@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 56 GATES RUNNING: SH-01 + SRC-MN
+build_state: RELEASE 56 GATES RUNNING: SH-01 ONLY; SRC-MN RETURNED
 worker: codex-river
 provider: Codex
 run_id: release-56-2026-10-18
 lock: codex-river-2026-10-18T21-58-56-963Z-b8dfe721-3948-4695-96e2-ac9eaa808a2a
-heartbeat: 2026-10-18T21:59:51Z
+heartbeat: 2026-10-18T22:02:29Z
 
 ## Codex River shift — October 18
 
@@ -15,7 +15,9 @@ RELEASE 55 MERGED AND DEPLOYED: UI-01 only, READY ee1be9d011c0ba036177595ad31c77
 
 RETURNED THIS SHIFT: UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac failed two meeting-online-marker.test.ts assertions still requiring MeetingRow in the compact Bodies list. They pass on UI-01 alone; repair the tests around the new body-card meeting surface, preserve online labels and send a new READY. UI-02's AZ/NH/NJ controlled desktop/phone regression and screenshots passed. Overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against current River, still conflict, and were returned with exact SHAs/raw conflict output. Existing unchanged returns also cover meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562 and steps-2-6 6da1efc6b. Do not repeat unchanged returned inputs. Details remain in returns/<lane>.md.
 
-RELEASE 56 IN PROGRESS AT 22:00Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 and SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584 folded cleanly. SH-01 reached its two-hour trigger at 21:53:50Z; SRC-MN was READY at 21:00:49Z. Main release-55 merge 4bdb43a7 is included. Migrations: zero new. Candidate c9e009037d93abc5e63ef48bdb8c94974f406031 is UNTESTED until this run finishes, unpromoted, no release PR yet. Combined gates log: .scratch/river/release-56-gates.log. Earlier prepared SH-only candidate 8ce8d440 remains saved locally at river-saved-sh-01-20261018-2058. Do not reuse release-55 test.json as a pass on this candidate. SRC-MN adds state campaign filings to the shared state/place fact store and reader/Ask path; no production data was written in this run. Per-source production ingestion counts and live examples remain post-release work.
+RELEASE 56 IN PROGRESS AT 22:02Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 only. Its two-hour trigger passed at 21:53:50Z. Current candidate 474b0c27f1d08405f1395ab8dd8579404cd05105 includes main release-55 merge 4bdb43a7; no new migrations. Full gates are running with heartbeat. This candidate is unpromoted and has no release PR; never promote until exact test.json is pass. Log .scratch/river/release-56-gates.log.
+
+NEW RETURN AT 22:02Z: SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584 folded cleanly with SH-01, but actual combined gates on c9e009037d93abc5e63ef48bdb8c94974f406031 stopped in preflight: scripts/promote-registry-runtime.mts registered executable import closure exceeds 512 files. Expensive gates never ran on that combination. Focused isolation proved SH-01 alone (8ce8d440) AND SRC-MN alone (exact READY) pass both preflight checks. This is a combined import-graph interaction, not a standalone SRC failure or machine failure. Returned the later SRC-MN batch through river.mjs return --check combined-preflight-import-closure with all three logs, preserving the older SH-01 two-hour release. Owner src-money must integrate the SH-01 release, reduce the shared import graph without raising limits/bypasses, and send a new READY. Details returns/src-money.md and .scratch/river/release-56-src-money-return.log. Combined candidate saved locally as river-saved-sh-srcmn-20261018; fold/test failure saved under .scratch/river/release-56-preparation/. No production campaign ingestion or live examples claimed.
 
 NEW RETURN: replacement CP-01 aa787c762bbd9a11bad97a2754878f4b24ca65dd (20:46:31Z) was assessed freshly. Its old national row-copy migration was replaced by expand DDL and schema-version recording, so the old migration defect was not reused as a refusal. The actual river.mjs fold then failed in 39 files against current River ab0c352c: runtime, pg-store/schema/types, reader paths and tests. Merge aborted cleanly. Returned through river.mjs return --check fold-conflict with full exact conflict evidence. Owner control-reads must merge current River/main, resolve the current interfaces while preserving state-scoped backfills/reads, run focused checks, and send a new READY. Do not retry aa787c762 unchanged. Details: returns/control-reads.md and .scratch/river/release-56-control-reads-conflicts.log.
 

@@ -3220,5 +3220,17 @@
     "gates": "pass",
     "at": "2026-10-17T16:49:57Z",
     "note": "folded by hand after the road fold conflicted with MT-02 in tests/reader-edge-context.test.ts (resolved: kept MT-02 meeting publish call and R0 federal-directory state pointers); gates run once on the combined river-next"
+  },
+  {
+    "lane": "runner-memory",
+    "steps": [
+      "RM-01"
+    ],
+    "ready_sha": "2dfcbc279d43929956f2cd8ccb25e11af381f12a",
+    "merge_sha": "87a2f0f6ab0b0cfe58d6eb49d0d66d05f62c1ccc",
+    "river_sha": "829e6d6e21caf7ccb99ee90c9e0c3e3ff1e98d53",
+    "tested_sha": "829e6d6e21caf7ccb99ee90c9e0c3e3ff1e98d53",
+    "gates": "pass",
+    "at": "2026-10-18T02:46:27Z"
   }
 ]

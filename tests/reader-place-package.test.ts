@@ -250,18 +250,28 @@ test("an opened agenda keeps exact documents and neighbour URL ownership without
     const foreign = {...meeting,id:"onbase:county",mergedMeetingIds:[],bodyId:COUNTY_BODY,ocdId:COUNTY,bodyName:"Supervisors"};
     const future = {...neighbor,id:"onbase:future",startsAt:"2028-10-25T17:00:00-07:00"};
     const noticeUrl = "https://example.gov/county-notice";
+    const partUrl = "https://example.gov/held-part-url";
     installMeetingDoors([{bodyId:COUNTY_BODY,ocdId:COUNTY,agendaSourceType:"ICAL",jurisdiction:"Pima County",publishingOrg:"Pima County",
       timeZone:"America/Phoenix",config:{},noticeUrl,verifiedAt:AT}]);
     const document = {id:"target-doc",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,contentHash:"a".repeat(64),retrievedAt:AT,
       contentType:"text/html",text:"Public hearing. 1. Approve the budget.",extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
     const documents = [document,{...document,id:"peer-doc",meetingId:peer.id,contentHash:"b".repeat(64)},
+      {...document,id:"part-backed-target",documentUrl:partUrl,contentHash:"c".repeat(64)},
       {...document,id:"wrong-notice",documentUrl:noticeUrl},
       {...document,id:"neighbor-doc",meetingId:neighbor.id,text:"NEIGHBOUR TEXT",extractionNote:"NEIGHBOUR SOURCE METADATA ".repeat(3000)},
+      {...document,id:"neighbor-refetch",meetingId:neighbor.id,text:null,retrievedAt:"2026-10-16T12:00:00Z"},
+      {...document,id:"neighbor-unrelated",meetingId:neighbor.id,documentUrl:"https://example.gov/UNOPENED-URL",text:null},
       {...document,id:"neighbor-peer-doc",meetingId:neighborPeer.id,text:"NEIGHBOUR TEXT"},
       {...document,id:"foreign-doc",meetingId:foreign.id,ocdId:COUNTY,text:"FOREIGN TEXT",extractionNote:"FOREIGN SOURCE METADATA ".repeat(3000)},
+      {...document,id:"foreign-part-backed",meetingId:foreign.id,ocdId:COUNTY,documentUrl:partUrl,text:null},
       {...document,id:"future-doc",meetingId:future.id}];
     const scope = derivedMeetingFamilyScope("US-AZ");
-    const encoded = partitionCivicPayload({formatVersion:1,generatedAt:AT,meetings:[meeting,peer,neighbor,neighborPeer,foreign,future],agendaDocuments:documents,
+    const encodedUrl = partitionCivicPayload({url:partUrl},undefined,["url"]);
+    assert.ok(encodedUrl.value && typeof encodedUrl.value==="object" && "url" in encodedUrl.value);
+    const urlReference = encodedUrl.value.url;
+    for (const part of encodedUrl.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    const sourceDocuments = documents.map(document=>document.documentUrl===partUrl ? {...document,documentUrl:urlReference} : document);
+    const encoded = partitionCivicPayload({formatVersion:1,generatedAt:AT,meetings:[meeting,peer,neighbor,neighborPeer,foreign,future],agendaDocuments:sourceDocuments,
       sources:[],counts:{fresh:6,carried:0,total:6}});
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'agenda-version')",
@@ -277,6 +287,10 @@ test("an opened agenda keeps exact documents and neighbour URL ownership without
       assert.equal(wire.includes("FOREIGN TEXT"),false);
       assert.equal(wire.includes("NEIGHBOUR SOURCE METADATA"),false);
       assert.equal(wire.includes("FOREIGN SOURCE METADATA"),false);
+      assert.equal(wire.includes("UNOPENED-URL"),false,"unrelated URLs cannot classify any full target document");
+      const links = (rows[0].meeting_rows as {payload:{agendaDocumentLinks?:{meetingId:string;documentUrl:string}[]}}[]).flatMap(row=>row.payload.agendaDocumentLinks ?? []);
+      assert.equal(links.filter(link=>link.meetingId===neighbor.id && link.documentUrl===document.documentUrl).length,1,
+        "repeat acquisitions of a neighbour's URL contribute the same ownership pair once");
       return rows;
     });
     assert.equal(calls,1);
@@ -286,9 +300,12 @@ test("an opened agenda keeps exact documents and neighbour URL ownership without
     assert.deepEqual(own,full.snapshot.agendaDocuments.filter(row => row.meetingId===target.id),"the alias and every source contributing to the sitting retain their full documents");
     const selectedContext = {documentsAcrossCorpus:[...selected.snapshot.agendaDocuments,...selected.agendaDocumentLinks],meetingsAcrossCorpus:selected.meetings};
     const fullContext = {documentsAcrossCorpus:full.snapshot.agendaDocuments,meetingsAcrossCorpus:full.meetings};
-    const links = (rows: readonly {meetingId:string;documentUrl:string}[]) => rows.map(({meetingId,documentUrl})=>({meetingId,documentUrl}))
+    const links = (rows: readonly {meetingId:string;documentUrl:string}[]) => [...new Map(rows.map(({meetingId,documentUrl})=>
+      [JSON.stringify([meetingId,documentUrl]),{meetingId,documentUrl}])).values()]
       .sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
-    assert.deepEqual(links(selectedContext.documentsAcrossCorpus),links(full.snapshot.agendaDocuments),"neighbouring document ownership and shared URLs are unchanged");
+    const openedUrls = new Set(selected.snapshot.agendaDocuments.map(doc=>doc.documentUrl));
+    assert.deepEqual(links(selectedContext.documentsAcrossCorpus),links(full.snapshot.agendaDocuments.filter(doc=>openedUrls.has(doc.documentUrl))),
+      "every opened URL retains all neighbouring owners, including part-backed URLs");
     const reading = readerAgendaDocuments(own,selectedContext);
     assert.deepEqual(reading,
       readerAgendaDocuments(own,{documentsAcrossCorpus:full.snapshot.agendaDocuments,meetingsAcrossCorpus:full.meetings}),
@@ -302,7 +319,7 @@ test("an opened agenda keeps exact documents and neighbour URL ownership without
     const neighborId = openedNeighbor.meetings.find(row=>row.id===neighbor.id || row.mergedMeetingIds?.includes(neighbor.id))!.id;
     assert.equal(selected.agendaDocumentLinks.filter(link=>link.meetingId===neighborId).length,2,"neighbour links use the same merged sitting ID as their full documents");
     const neighborDocuments = openedNeighbor.snapshot.agendaDocuments.filter(doc=>doc.meetingId===neighborId);
-    assert.equal(neighborDocuments.length,2);
+    assert.equal(neighborDocuments.length,4);
     assert.deepEqual(neighborDocuments,full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===neighborId),
       "opening a previously unselected neighbour retrieves every original source field and text");
     const edge: {context?:ReaderMeetingsContext} = {};
@@ -328,17 +345,26 @@ test("archive recovery keeps every document revision and neighbour identity acro
     const latest = {...old,title:"Revised historical title"};
     const current = {...old,id:"ical:current",startsAt:"2026-10-22T20:00:00Z",title:"Current source title"};
     const originalDocument = {id:"archive-original",meetingId:old.id,documentUrl:old.agendaUrl,text:"Original verified agenda"};
-    const revisedDocument = {...originalDocument,id:"archive-revised",text:"Revised verified agenda"};
-    const neighborDocument = {...originalDocument,id:"archive-neighbor",meetingId:neighbor.id,text:"NEIGHBOUR ARCHIVE TEXT ".repeat(4000)};
+    const revisedDocument = {...originalDocument,id:"archive-revised",documentUrl:"https://example.gov/archive-part-url",text:"Revised verified agenda"};
+    const neighborDocument = {...originalDocument,id:"archive-neighbor",meetingId:neighbor.id,documentUrl:revisedDocument.documentUrl,text:"NEIGHBOUR ARCHIVE TEXT ".repeat(4000)};
+    const neighborRefetch = {...neighborDocument,id:"archive-neighbor-refetch",text:null};
+    const unrelatedDocument = {...neighborDocument,id:"archive-unrelated",documentUrl:"https://example.gov/unopened-archive",text:null};
     const hugeUnowned = Array.from({length:12},(_,index)=>({...old,id:`ical:unowned:${index}`,bodyId:"another-body",title:"UNOWNED RECORD ".repeat(1000)}));
     const snapshot = (meetings:unknown[],agendaDocuments:unknown[]) => ({formatVersion:1,generatedAt:AT,meetings,agendaDocuments,sources:[],counts:{fresh:meetings.length,carried:0,total:meetings.length}});
-    const candidate = async(id:string,at:string,payload:unknown,promoted = true) => {
+    const encodedUrl = partitionCivicPayload({url:revisedDocument.documentUrl},undefined,["url"]);
+    assert.ok(encodedUrl.value && typeof encodedUrl.value==="object" && "url" in encodedUrl.value);
+    const urlReference = encodedUrl.value.url;
+    for (const part of encodedUrl.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    const candidate = async(id:string,at:string,payload:ReturnType<typeof snapshot>,promoted = true) => {
       const receipt = {decision:"GOOD",candidateId:id,recordClass:"MEETING",scope,sourceId:"archive-source"};
+      const encoded = partitionCivicPayload({...payload,agendaDocuments:payload.agendaDocuments.map(document=>document && typeof document==="object" &&
+        "documentUrl" in document && document.documentUrl===revisedDocument.documentUrl ? {...document,documentUrl:urlReference} : document)});
+      for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
       await db.query("INSERT INTO civic_data_candidates VALUES($1,'MEETING',$2,'archive-source',$3,$4,$5,true,$1,$1,$6,$7)",
-        [id,scope,at,JSON.stringify({readModel:payload}),promoted?"PROMOTED":"VALIDATED",canonicalCivicDataHash(payload),JSON.stringify(receipt)]);
+        [id,scope,at,JSON.stringify({readModel:encoded.value}),promoted?"PROMOTED":"VALIDATED",canonicalCivicDataHash(payload),JSON.stringify(receipt)]);
     };
-    await candidate("archive-first","2026-10-15T12:00:00Z",snapshot([old,neighbor,...hugeUnowned],[originalDocument,neighborDocument]));
-    await candidate("archive-next","2026-10-16T12:00:00Z",snapshot([latest,neighbor,...hugeUnowned],[originalDocument,revisedDocument,neighborDocument]));
+    await candidate("archive-first","2026-10-15T12:00:00Z",snapshot([old,neighbor,...hugeUnowned],[originalDocument,neighborDocument,neighborRefetch,unrelatedDocument]));
+    await candidate("archive-next","2026-10-16T12:00:00Z",snapshot([latest,neighbor,...hugeUnowned],[originalDocument,revisedDocument,neighborDocument,neighborRefetch,unrelatedDocument]));
     await candidate("archive-unpublished",AT,snapshot([{...old,id:"ical:unpublished"}],[]),false);
     const live = snapshot([current],[]);
     await candidate("archive-live",AT,live);

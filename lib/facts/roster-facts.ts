@@ -6,6 +6,7 @@ import { ensureEntity, resolvePerson } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
+import { invalidateReaderCache, readerCacheScopeForPublication, type ReaderCachePurger } from "../reader/cache.ts";
 
 export interface RosterMember {
   readonly recordId: string;
@@ -20,6 +21,7 @@ interface RosterFactsInput {
   /** Every member row on the page was read, so a member it no longer lists has left. */
   readonly complete: boolean;
   readonly producedBy: string;
+  readonly purge?: ReaderCachePurger;
   /** Member ids already shown to readers, kept so links to them still resolve. */
   readonly shownMemberIds?: ReadonlyMap<string, string>;
 }
@@ -85,7 +87,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };
     const claim = async (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
       const quote = member.fieldSources?.[sourceField]?.quote ?? valueText;
-      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now),
+      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge }),
         member.recordId, sourceField);
     };
     await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
@@ -114,6 +116,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
         AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
     [body.id, capture.evidence.canonicalUrl, [...seated]]));
     tally.departed = gone.length;
+    if (gone.length) await invalidateReaderCache(readerCacheScopeForPublication(body.state ?? body.id), input.purge);
   }
   return tally;
 }
@@ -121,6 +124,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
 /** Facts about a body itself (its name, schedule, agenda link, office address and phone), each in the page's own words. */
 export async function publishBodyFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+    readonly purge?: ReaderCachePurger;
     readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
   const entity = await readCheckEntity(db.query, input.bodyId);
@@ -130,7 +134,7 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
   const out: PublishOutcome[] = [];
   for (const { field, value, quote } of input.facts) {
     out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : field.startsWith("office_") ? "contact" : "meeting", provenance, value, valueText: quote, quote, copy,
-      producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge }));
   }
   return out;
 }

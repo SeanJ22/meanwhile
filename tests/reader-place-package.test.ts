@@ -12,6 +12,8 @@ import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
+import { attemptsByFamily } from "../lib/registry/attempt-families.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -24,6 +26,8 @@ const unrecorded = (recordClass: RoutineRecordClass,scope: string): Extract<Civi
 
 async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text);
+    CREATE TABLE cp_work_items(id text PRIMARY KEY,value jsonb);
+    CREATE INDEX cp_work_items_publication_body ON cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'));
     CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,
@@ -212,5 +216,133 @@ test("held history reads retain verified old calendar rows and agenda text from 
     assert.deepEqual(held.meetings.find(m => m.id === old.id),old);
     assert.equal(held.meetings.find(m => m.id === live.id)?.title,live.title,"live source rows take precedence over prior versions");
     assert.deepEqual(held.snapshot.agendaDocuments,[document]);
+  } finally { await db.pg.close(); }
+});
+
+test("a place transfers only its family meetings and opens its encoded agenda text on request", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const siblingBody = `${CITY}#elsewhere`;
+    const held: Meeting = {id:"ical:own",bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
+      startsAt:"2026-10-21T18:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://tucsonaz.gov/agenda",
+      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT},
+      carried:{source:"ical",lastFreshAt:AT}};
+    const unowned = {...held,id:"ical:elsewhere",bodyId:siblingBody,title:"ELSEWHERE ".repeat(6000)};
+    const document = {id:"own-agenda",meetingId:held.id,text:"OWN AGENDA ".repeat(6000)};
+    const sources = [{source:"ical",ok:false,error:"Calendar unavailable",failure:"WALL",fetched:0,normalized:0,
+      drops:{placeless:0,unknownVenue:0,unplaceableInTime:0,notConfigured:0},carriedForward:2}];
+    const member = {id:`ical:${BODY}`,source:"ical",bodyId:BODY,status:"ACTIVE",outcome:"HELD",detail:"Calendar unavailable"};
+    const family = {formatVersion:1,generatedAt:AT,meetings:[held,unowned],agendaDocuments:[document,
+      {id:"elsewhere-agenda",meetingId:unowned.id,text:"ELSEWHERE AGENDA ".repeat(6000)}],sources,
+      counts:{fresh:0,carried:2,total:2,duplicatesCollapsed:0},carriedSummary:{count:2,lastFreshAt:AT},
+      derivedMembers:[member,{...member,id:`ical:${siblingBody}`,bodyId:siblingBody,detail:"ELSEWHERE MEMBER ".repeat(6000)}]};
+    const scope = derivedMeetingFamilyScope("US-AZ");
+    const encoded = partitionCivicPayload(family);
+    assert.ok(encoded.parts.length > 10,"fixture uses encoded root, collection and text parts");
+    for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
+      [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
+    let wire = "", calls = 0;
+    const cold = await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[BODY]},async(sql,params) => {
+      calls++;
+      const rows = await db.query(sql,params);
+      wire = JSON.stringify(rows);
+      const payload = (rows[0].meeting_rows as {payload:Record<string,unknown>}[])[0].payload;
+      assert.deepEqual(payload.carriedSummary,family.carriedSummary,"the family freshness summary survives selection");
+      assert.deepEqual(payload.sources,sources,"source attribution survives selection");
+      assert.deepEqual(payload.derivedMembers,[member],"only this body's source outcome crosses the database connection");
+      return rows;
+    });
+    assert.equal(calls,1);
+    assert.ok(Buffer.byteLength(wire)<12_000,`cold place transfer was ${Buffer.byteLength(wire)} bytes`);
+    assert.equal(wire.includes("ELSEWHERE"),false,"unrelated meeting, agenda and source-member parts stay at the database");
+    assert.equal(wire.includes("OWN AGENDA"),false,"even an encoded root does not transfer agenda text before it is opened");
+    assert.deepEqual(cold.meetings.map(meeting => meeting.id),[held.id]);
+    assert.deepEqual(cold.meetings[0].carried,held.carried);
+    assert.deepEqual(cold.snapshot.agendaDocuments,[]);
+    assert.equal(cold.snapshot.sources[0].error,member.detail);
+    assert.equal(cold.snapshot.sources[0].carriedForward,1);
+    const opened = await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[BODY],includeAgenda:true},async(sql,params) => {
+      const rows = await db.query(sql,params);
+      assert.equal(JSON.stringify(rows).includes("ELSEWHERE"),false,"opening an agenda still reads only this body");
+      return rows;
+    });
+    assert.deepEqual(opened.snapshot.agendaDocuments,[document]);
+    assert.equal(opened.meetings[0].agendaUrl,held.agendaUrl);
+  } finally { await db.pg.close(); }
+});
+
+test("one place query preserves source-only bodies, local runtime records and their calendars without a state read", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const elsewhere = `${STATE}/place:elsewhere`, elsewhereBody = `${elsewhere}#governing`;
+    const member = {id:`roster:${BODY}#1`,personId:"person:local",sourceRecordId:"source:local",nativeIds:{official:["alias:local"]},
+      name:"Jane Mayor",officeTitle:"Mayor",phone:"520-555-0123",email:"mayor@tucsonaz.gov",websiteUrl:SOURCE,termNote:"Through 2028",
+      membershipSource:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT},fieldSources:{phone:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}}};
+    const specialMember = {...member,id:`roster:${SPECIAL}#1`,personId:"person:special",sourceRecordId:"source:special",nativeIds:{official:["alias:special"]}};
+    const body = {id:BODY,ocdId:CITY,name:"Mayor and Council",homepageUrl:SOURCE,officePhone:"520-555-0123",officeAddress:"City Hall",
+      provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT},fieldSources:{officePhone:member.fieldSources.phone}};
+    const special = {...body,id:SPECIAL,ocdId:COUNTY,name:"Water district"};
+    const roster = {bodyId:BODY,bodyName:body.name,members:[member],sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,partisanship:"NONPARTISAN"};
+    const specialRoster = {...roster,bodyId:SPECIAL,bodyName:special.name,members:[specialMember]};
+    const eligible = {sourceId:member.id,canonicalId:member.id,state:"READER_ELIGIBLE",reason:"Sourced member"};
+    const unresolved = {...eligible,sourceId:`roster:${BODY}#missing`,canonicalId:null,state:"IDENTITY_UNRESOLVED",reason:"The published slot is still unresolved"};
+    const candidacy = {holder:{id:member.id,name:member.name,officeTitle:"Mayor",divisions:[CITY],authority:"REGISTRY_BODY_ROSTER",sourceUrl:SOURCE},
+      status:"NOT_CHECKED",candidacy:null,reason:"Not yet checked",unresolvedCandidacyIds:[]};
+    const photo = {officeholderId:"alias:local",personId:member.personId,name:member.name,url:"/officials/mayor.jpg",sourceUrl:SOURCE,license:"CC0",collectedAt:AT};
+    const localDivision = {ocdId:CITY,parentOcdId:STATE,label:"Tucson",divisionType:"place",state:"AZ",provenance:body.provenance};
+    const countyDivision = {...localDivision,ocdId:COUNTY,label:"Pima"}, stateDivision = {...localDivision,ocdId:STATE,parentOcdId:"ocd-division/country:us",label:"Arizona"};
+    const runtime = {formatVersion:1,registry:{generatedAt:AT,divisions:[localDivision,countyDivision,stateDivision,{...localDivision,ocdId:elsewhere,label:"ELSEWHERE"}],
+      bodies:[body,special,{...body,id:elsewhereBody,ocdId:elsewhere,name:"ELSEWHERE ".repeat(6000)}]},
+      bodyRosters:[roster,specialRoster,{...roster,bodyId:elsewhereBody,members:[{...member,id:"elsewhere-member",name:"ELSEWHERE ".repeat(6000)}]}],
+      rosterReaderDispositions:[eligible,unresolved,{...eligible,sourceId:"elsewhere-member",canonicalId:"elsewhere-member"}],statewideExecutives:[],
+      officialCandidacies:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[candidacy,{...candidacy,holder:{...candidacy.holder,id:"elsewhere-member",divisions:[elsewhere]}}]},
+      officialPhotos:{photos:[photo,{...photo,officeholderId:"elsewhere-member",personId:"elsewhere-member",name:"ELSEWHERE"}]},
+      rosterPhotos:{[member.id]:photo.url,"elsewhere-member":"/officials/elsewhere.jpg"}};
+    const encoded = partitionCivicPayload(runtime);
+    for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'REGISTRY_RUNTIME_BINDING',$2,$3,$4,'runtime-version')",
+      ["REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime","US-AZ:reader-registry-runtime",JSON.stringify(encoded.value),AT]);
+    const routing = {kind:"everyday-routing",formatVersion:1,denominator:{zips:["85701"]},records:[{id:"local-route",sourceUrl:SOURCE}]};
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'CURATED_READER_RECORD',$2,$3,$4,'routing-version')",
+      [`${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`,EVERYDAY_ROUTING_POINTER.scope,JSON.stringify(routing),AT]);
+    const attempt = (id:string,at:string,status:string,accepted:unknown,bodyId = BODY) => db.query("INSERT INTO cp_work_items VALUES($1,$2)",[id,JSON.stringify({
+      autonomousPlan:{publication:{bodyId,contractId:"comment-access"},contract:{schemaVersion:2,sourceScope:{canonicalUrls:[SOURCE]}}},
+      publicationOutcome:{at,status,code:status,versionId:status==="HELD"?null:"published-version",...accepted as object}})]);
+    await attempt("older-good","2026-10-16T12:00:00.000Z","PUBLISHED",{acceptedMembers:[{recordId:"one",memberId:"member-one"}],acceptedRecordIds:["a","b"],bodyIds:[BODY,SPECIAL]});
+    await attempt("newer-held",AT,"HELD",{});
+    await attempt("elsewhere",AT,"PUBLISHED",{acceptedRecordIds:["ELSEWHERE"]},elsewhereBody);
+    const meeting = {id:"ical:source-only",bodyId:BODY,ocdId:CITY,bodyName:body.name,title:"Public hearing",startsAt:"2026-10-21T18:00:00-07:00",
+      timeZone:"America/Phoenix",location:null,agendaUrl:SOURCE,jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:body.provenance};
+    const family = {formatVersion:1,generatedAt:AT,meetings:[meeting,{...meeting,id:"ical:special",bodyId:SPECIAL,bodyName:special.name},
+      {...meeting,id:"ical:elsewhere",bodyId:elsewhereBody}],agendaDocuments:[],sources:[],counts:{fresh:3,carried:0,total:3}};
+    const scope = derivedMeetingFamilyScope("US-AZ");
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
+      [`MEETING:${scope}`,scope,JSON.stringify(family),AT]);
+    let calls = 0;
+    const result = await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL]},async(sql,params) => {
+      calls++;const rows = await db.query(sql,params);
+      assert.equal(JSON.stringify(rows).includes("ELSEWHERE"),false,"unrelated runtime records remain in the store");
+      return rows;
+    });
+    assert.equal(calls,1);
+    assert.deepEqual(result.bodies.map(row => row.id).sort(),[BODY,SPECIAL].sort(),"registry bodies are selected even without fact-store entity rows");
+    assert.deepEqual(result.meetings.map(row => row.id).sort(),["ical:source-only","ical:special"]);
+    assert.deepEqual(result.registry?.registry,{generatedAt:AT,bodies:[body,special],divisions:[localDivision,countyDivision,stateDivision]});
+    assert.deepEqual(result.registry?.bodyRosters,[roster,specialRoster]);
+    assert.deepEqual(result.registry?.rosterReaderDispositions,[eligible,unresolved]);
+    assert.deepEqual(result.registry?.officialCandidacies,{...runtime.officialCandidacies,rows:[candidacy]});
+    assert.deepEqual(result.registry?.officialPhotos,{photos:[photo]});
+    assert.deepEqual(result.registry?.rosterPhotos,{[member.id]:photo.url});
+    assert.deepEqual(result.everydayRouting,routing,"global routing accompanies the local answer without a state read");
+    assert.equal(result.publicationAttempts.length,2,"only this body's original publication outcomes are read");
+    const attempts = attemptsByFamily(result.publicationAttempts).meetings!;
+    assert.equal(attempts.latest.status,"HELD");
+    assert.equal(attempts.lastGood?.status,"PUBLISHED","a later held attempt does not hide the last successful publication");
+    assert.equal(attempts.lastGood?.acceptedCount,1,"exact accepted members take precedence over legacy record and body counts");
+    assert.equal(attempts.lastGood?.sourceUrl,SOURCE);
+    assert.equal(attempts.publishedNow?.versionId,"published-version");
   } finally { await db.pg.close(); }
 });

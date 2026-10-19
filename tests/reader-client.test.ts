@@ -81,6 +81,29 @@ test("subsequent ZIPs share the state's request and recheck after thirty seconds
   } finally { globalThis.fetch = original; Date.now = now; }
 });
 
+test("compact ZIP responses neither fetch the state directory nor suppress unopened districts", async () => {
+  const original = globalThis.fetch;
+  const root = "ocd-division/country:us/state:vt", first = `${root}/sldu:1`, second = `${root}/sldu:2`;
+  const urls: string[] = [];
+  globalThis.fetch = async input => {
+    const url = String(input), zip = new URL(url, "http://localhost").searchParams.get("zip")!;
+    urls.push(url);
+    const ocdId = zip === "05001" ? first : second;
+    return Response.json({ ...state, state: "VT", zip, coverage: { ...coverage,
+      seats: [{ ocdId, label: ocdId, divisionType: "sldu", tier: "state", representatives: [] }],
+    }, zipPlaces: { [zip]: { ids: [ocdId], partial: [], samples: 1 } } });
+  };
+  try {
+    await loadReaderState("VT", "05001");
+    assert.deepEqual(getCachedStateDivision(first)?.holders, [], "a held empty seat answers without another fetch");
+    assert.equal(getCachedStateDivision(second), null, "a district outside the selected ZIP remains available on click");
+    await loadReaderState("VT", "05001");
+    await loadReaderState("VT", "05401");
+    assert.deepEqual(getCachedStateDivision(second)?.holders, []);
+    assert.deepEqual(urls, ["/api/reader/state?state=VT&zip=05001", "/api/reader/state?state=VT&zip=05401"]);
+  } finally { globalThis.fetch = original; }
+});
+
 test("the complete state answers other state seats, including empty seats, while local divisions stay with place facts", async () => {
   const original = globalThis.fetch, now = Date.now;
   const pending = deferred<Response>();

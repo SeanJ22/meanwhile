@@ -2,7 +2,7 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
-import { readerLocation, readerTerritory, territoryBodies, stateZipLocation } from "@/lib/reader/location";
+import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
 import { readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage } from "@/lib/reader/coverage";
@@ -14,7 +14,7 @@ import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { bindGovernmentBodies } from "@/lib/registration/listings";
-import { readPublicBodyAttempts } from "@/lib/registry/body-attempt-read";
+import { readerCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import { lookupZcta } from "@/lib/geo/zcta";
 
@@ -41,43 +41,46 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const lat = latRead.value, lng = lngRead.value, radiusKm = Math.min(radiusRead.value, MAX_RADIUS_KM);
   try {
     const location = await readerLocation(lat, lng, zipRead.value);
-    const stateRead = timing.time("state", () => readStatePackage(location.state));
-    const attemptsRead = readPublicBodyAttempts();
+    // A map movement has one state read and one place read in this handler.
+    // ZIP entry already starts its independent state endpoint before this read.
+    const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const territoryRead = readerTerritory(location.state);
     const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
       bodyIds: territoryBodies(lat, lng, await territoryRead) }));
-    const [state, place, territory, settings, attempts] = await Promise.all([
-      stateRead, placeRead, territoryRead, readReaderMeetingSettings(), attemptsRead,
+    const [state, place, territory, settings] = await Promise.all([
+      stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
     ]);
-    const everyday = state.everyday;
-    const qualified = zipRead.value ? await stateZipLocation(state, zipRead.value) : null;
+    if (!place.registry) throw new Error("The place's government records could not be loaded");
     const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
-    const ids = point?.map(division => division.ocdId) ?? qualified?.entry.ids ?? location.divisionIds;
+    const ids = point?.map(division => division.ocdId) ?? location.divisionIds;
     const divisionIds = new Set(ids);
-    const bodies = state.registry.registry.bodies;
+    const registry = state?.registry ?? place.registry;
+    const bodies = registry.registry.bodies;
     const selectedBodyIds = new Set([...meetingBodyIds(bodies, divisionIds), ...territoryBodies(lat, lng, territory)]);
     const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
       selectedBodyIds, new Set(bodies.map(body => body.id)));
-    const coverage = stateCoverage(state, ids, lat, lng, place.meetings, place.bodies, [...place.divisions, ...qualified?.divisions ?? []], territory, result.meetings.length);
-    coverage.governments = bindGovernmentBodies(place.governments, state.registry.registry.bodies);
-    coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [state.state];
-    if (attempts.kind === "HELD") coverage.bodies = coverage.bodies.map(body => ({ ...body,
-      publicationAttempts: attemptsByFamily(attempts.rows.filter(attempt => attempt.bodyId === body.bodyId)) }));
-    const partial = new Set(qualified?.entry.partial ?? location.partial);
+    const localIds = state ? ids : ids.filter(id => !/\/(?:cd|sldu|sldl):/.test(id));
+    const coverage = stateCoverage(state ?? { state: location.state, registry, version: place.snapshot.generatedAt },
+      localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
+    coverage.governments = bindGovernmentBodies(place.governments, bodies);
+    coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];
+    coverage.bodies = coverage.bodies.map(body => ({ ...body,
+      publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
+    const partial = new Set(location.partial);
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
-    const listingIdentity = withRegistryRuntimeProjection(state.registry, [state.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    const listingIdentity = withRegistryRuntimeProjection(registry, [location.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
     return Response.json({
       ...result, coverage, listingIdentity,
       readerScope: readerMeetingScope({ heldMeetings: place.meetings, bodies: coverage.bodies, ownDivisionIds: divisionIds,
         now: new Date(), listingIdentity: meetingListingIdentity(place.meetings, canonicalBodyIdentity) }),
       commentAccess: place.bodies.flatMap(body => body.comment ?? []), commentAccessDataState: "PROMOTED",
-      everydayRouting: everyday?.kind === "PROMOTED" || everyday?.kind === "BOOTSTRAP" ? everyday.value : null,
-      everydayRoutingDataState: everyday?.kind ?? "STORE_UNREACHABLE",
+      everydayRouting: place.everydayRouting,
+      everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
       snapshot: { version: 2, generatedAt: place.snapshot.generatedAt, failed: place.snapshot.sources.filter(source => !source.ok)
         .map(source => ({ source: source.source, ocdIds: source.unreachableOcdIds ?? [] })) },
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
-    }, { headers: { "Cache-Control": "public, max-age=0, must-revalidate",
-      "Netlify-CDN-Cache-Control": "public, s-maxage=30", "Netlify-Vary": "query", "Server-Timing": timing.header() } });
+    }, { headers: { ...readerCacheHeaders({ states: [location.state], places: ids }),
+      "Netlify-Vary": "query=lat|lng|radiusKm|zip", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);
     return Response.json({ error: "The place's information could not be loaded", dataState: "STORE_UNREACHABLE" },

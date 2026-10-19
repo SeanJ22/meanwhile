@@ -18,7 +18,7 @@ const state=early("/api/reader/state?zip="+zip),place=early("/api/meetings?zip="
 state.catch(()=>{});place.catch(()=>{});
 start.location=fetch("/api/location/zip?zip="+zip).then(r=>r.ok?r.json():null).then(d=>{
 const p=d?.location;if(!p)return null;
-if(p.postal?.state)requests["/api/reader/state?state="+encodeURIComponent(p.postal.state)]=state;
+if(p.postal?.state)requests["/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip]=state;
 requests["/api/meetings?lat="+p.lat+"&lng="+p.lng+"&zip="+zip]=place;
 return p}).catch(()=>null);window.__readerStart=start;
 }}}catch(e){}`;

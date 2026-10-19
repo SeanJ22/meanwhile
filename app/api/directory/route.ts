@@ -1,7 +1,6 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { readNationalShelf } from "@/lib/reader/national";
-import { readStatePackage } from "@/lib/reader/state";
-import { selectedRegistryStates } from "@/lib/registry/runtime-read-model";
+import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
@@ -48,10 +47,9 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     }, { headers: { "Cache-Control": "private, no-store" } });
   }
 
-  const places = selectedRegistryStates();
   let found;
   try {
-    const model = places.length ? (await readStatePackage(places[0])).federal : (await readNationalShelf()).congress;
+    const model = (await readNationalShelf()).congress;
     const entry = model?.directory.byMember[member.slice(9)];
     found = entry && model ? { source: model.directory.source, entry,
       committeeJurisdictions: model.directory.committees } : null;
@@ -76,6 +74,6 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
         ...(found.committeeJurisdictions[seat.committeeId] ? { jurisdiction: found.committeeJurisdictions[seat.committeeId].jurisdiction, jurisdictionSource: found.committeeJurisdictions[seat.committeeId].jurisdictionSource, url: found.committeeJurisdictions[seat.committeeId].url } : {}),
       })),
     },
-    { headers: { "Cache-Control": "private, no-store" } },
+    { headers: { ...readerCacheHeaders({ national: true }), "Netlify-Vary": "query=member|state" } },
   );
 });

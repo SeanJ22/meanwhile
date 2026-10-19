@@ -18,6 +18,7 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome,
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 
 /** How far back the Box is read for findings to publish. */
 const HUNTER_FINDING_DAYS = 30;
@@ -115,7 +116,7 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
 }
 
 /** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
-async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; readonly flagged: number }> {
+async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-seats") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
@@ -126,6 +127,7 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; 
     const seat = seatIn(member.words, member.bodyId);
     if (!seat) {
       await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
+      await invalidateReaderCache(await readerCacheScopeForEntity(query, member.bodyId), purge);
       pulled++;
     } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
@@ -146,10 +148,11 @@ export async function publishBoxFindings(input: {
   readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "artifacts">;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
+  readonly purge?: ReaderCachePurger;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now), since = new Date(now.getTime() - HUNTER_FINDING_DAYS * 86_400_000).toISOString();
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
@@ -253,7 +256,7 @@ export async function publishBoxFindings(input: {
       const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
         !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
       const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
-        complete: false, producedBy: "box" }, clocks, now);
+        complete: false, producedBy: "box", purge: input.purge }, clocks, now);
       for (const { finding, slot } of people) {
         const at = sourceFieldOf.get(finding.row);
         if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
@@ -265,7 +268,7 @@ export async function publishBoxFindings(input: {
     const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
     const provenance = captureProvenance(read.capture, entity.hosts);
     const claim = (field: string, value: unknown, valueText: string, quote: string) =>
-      publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now);
+      publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now, { purge: input.purge });
     for (const { finding, slot } of own) {
       const value = String(finding.value), quote = linkQuote(value, finding.exactQuote);
       if (slot.class === "official hosts") {

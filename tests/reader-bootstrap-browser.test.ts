@@ -13,7 +13,7 @@ test("the arriving page starts state and place before hydration and the reader c
     const location=await resolveStoredZip(JSON.stringify({zip:'85701'}));
     const response=await fetchReaderResponse('/api/meetings?lat=32&lng=-110&zip=85701');
     const bodyUsedBefore=response.bodyUsed;
-    const [state,place]=await Promise.all([loadReaderState(location.postal.state),readReaderJson(response)]);
+    const [state,place]=await Promise.all([loadReaderState(location.postal.state,location.zip),readReaderJson(response)]);
     const bodyUsedAfter=response.bodyUsed;
     const rejectsSecondRead=await response.json().then(()=>false,error=>error.name==='TypeError');
     window.answer={location,state,place,bodyUsedBefore,bodyUsedAfter,rejectsSecondRead};

@@ -17,11 +17,13 @@ import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 
-type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: ReaderStatePackage["federal"]; people: ReaderStatePackage["legislativePeople"]; president: ReaderStatePackage["president"]; version: string; officials: ReturnType<typeof indexByDivision>; presidents: ReturnType<typeof indexByDivision> };
+type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
+  "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
+type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; president: CoverageState["president"]; version: string; officials: ReturnType<typeof indexByDivision>; presidents: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
 
 /** The state and place responses use the same immutable people, even with different local facts. */
-function stateOfficials(state: ReaderStatePackage): Officials {
+function stateOfficials(state: CoverageState): Officials {
   const people = state.legislativePeople ?? state.people;
   const photos = state.registry.officialPhotos;
   const key = people ?? state.federal ?? photos;
@@ -51,7 +53,7 @@ function stateOfficials(state: ReaderStatePackage): Officials {
 
 /** Compose from one held state and the indexed place facts; there are no reads here. */
 export function stateCoverage(
-  state: ReaderStatePackage,
+  state: CoverageState,
   divisionIds: readonly string[],
   lat: number,
   lng: number,
@@ -77,7 +79,7 @@ export function stateCoverage(
   const { officials, presidents } = stateOfficials(state);
   const president = presidents.get("ocd-division/country:us") ?? [];
   return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
-    const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, [state.stateLegislatorAuthority], meetings);
+    const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
     const seats = president.length ? [...coverage.seats, { ocdId: "ocd-division/country:us", label: "United States", divisionType: "country", tier: "national" as const, representatives: president }] : coverage.seats;
     return {
       ...coverage,
@@ -87,7 +89,7 @@ export function stateCoverage(
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),
-      federalDirectoryUnavailable: state.federal === null,
+      ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
       bodies: coverage.bodies.map(body => {
         const gap = rosterGapForBody(body.bodyId);
         return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };

@@ -5,7 +5,7 @@ import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 
 const entry = { recordClass: "FEDERAL_DIRECTORY" as const, scope: "US-AZ:current-congress-directory" };
 const payload = { people: [{ name: "An official", sourceUrl: "https://example.gov/member" }] };
-const row = { key: `${entry.recordClass}:${entry.scope}`, record_class: entry.recordClass, scope: entry.scope, source_id: "official-source",
+const row = { row_kind: "promotion", key: `${entry.recordClass}:${entry.scope}`, record_class: entry.recordClass, scope: entry.scope, source_id: "official-source",
   current_version_id: "version-1", last_known_good_version_id: "version-1", promoted_at: "2026-10-17T00:00:00Z",
   retrieved_at: "2026-10-16T00:00:00Z", validation_receipt: { decision: "GOOD" }, normalized_hash: canonicalCivicDataHash(payload), payload, published: true };
 
@@ -81,6 +81,11 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     }
     assert.equal(reads,1);
     assert.equal(partCounts[0],encoded.parts.length);
+    const combined = await readCanonicalShelf([selection], query, {
+      text: "SELECT $1::text AS version_id, $2::jsonb AS geography", params: ["geo-version", JSON.stringify({ type: "state_leg_upper", state: "AZ" })],
+    });
+    assert.deepEqual(combined.additionalRows, [{ version_id: "geo-version", geography: { type: "state_leg_upper", state: "AZ" } }]);
+    assert.equal((await combined.readPromotedEntry!(selection.recordClass, selection.scope)).kind, "PROMOTED");
     await readCanonicalShelf([selection],query);
     assert.equal(partCounts[1],0,"unchanged verified versions do not resend or decode payload parts");
     const packedExclusions = [{ ...excluded, record: { biography: "Excluded source evidence. ".repeat(6000) } }];

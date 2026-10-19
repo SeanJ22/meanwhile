@@ -276,7 +276,7 @@ function MapEntryInner() {
       setFailure(null);
     };
     void loadStateAndPlace({
-      state: () => zip && view.state ? loadReaderState(view.state) : Promise.resolve(null),
+      state: () => zip && view.state ? loadReaderState(view.state, zip) : Promise.resolve(null),
       place: async () => {
         const zipParam = zip ? `&zip=${zip}` : "";
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
@@ -304,12 +304,12 @@ function MapEntryInner() {
         });
       },
       onPlace: (payload, state) => {
+        const entry = state && zip ? state.zipPlaces[zip] : undefined;
         const complete = {
           ...payload,
+          ...(entry ? { governingOcdIds: [...entry.ids], partialOcdIds: [...entry.partial] } : {}),
           localPending: false,
-          coverage: mergeReaderCoverage(state && zip ? stateCoverageForZip(state, zip,
-            payload.governingOcdIds ? { ids: payload.governingOcdIds, partial: payload.partialOcdIds ?? [], samples: 0 } : undefined,
-          ) : null, payload.coverage, payload.meetings.length),
+          coverage: mergeReaderCoverage(state && zip ? stateCoverageForZip(state, zip) : null, payload.coverage, payload.meetings.length),
         };
         // Both async reads are complete. Commit their answer before another
         // map animation frame can postpone the reader's ready information.

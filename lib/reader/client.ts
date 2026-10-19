@@ -16,6 +16,8 @@ export interface ReaderStateResponse {
   directory: DirectoryFile | null;
   memberDirectories?: readonly StateMemberDirectory[];
   boundaryUrl: string;
+  /** A ZIP response covers its named divisions; other districts load when opened. */
+  zip?: string;
 }
 
 const stateCache = new Map<string, { promise: Promise<ReaderStateResponse>; expires: number; value?: ReaderStateResponse }>();
@@ -24,7 +26,12 @@ const stateCache = new Map<string, { promise: Promise<ReaderStateResponse>; expi
 function stateCacheForDivision(ocdId: string) {
   const match = /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/(?:cd|sldu|sldl):[^/#]+)?$/.exec(ocdId);
   if (!match) return null;
-  return stateCache.get(match[1].toUpperCase()) ?? null;
+  const state = match[1].toUpperCase();
+  return [...stateCache.entries()].filter(([key]) => key === state || key.startsWith(`${state}|`))
+    .map(([, value]) => value).find(value => value.expires > Date.now() && (!value.value || !value.value.zip
+      || value.value.coverage.divisions.some(division => division.ocdId === ocdId)
+      || value.value.coverage.seats.some(seat => seat.ocdId === ocdId)
+      || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(ocdId))) ?? null;
 }
 
 export function getCachedStateCoverageForDivision(ocdId: string): CoverageSummary | null {
@@ -51,23 +58,24 @@ export function getCachedStateDivision(ocdId: string) {
     rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) };
 }
 
-/** The whole state is shared by subsequent ZIPs and card clicks for thirty seconds. */
-export function loadReaderState(state: string): Promise<ReaderStateResponse> {
+/** Cache the divisions requested by this ZIP; unopened districts stay on the server. */
+export function loadReaderState(state: string, zip?: string): Promise<ReaderStateResponse> {
   const code = state.toUpperCase().replace(/^US-/, "");
-  const held = stateCache.get(code);
+  const key = zip ? `${code}|${zip}` : code;
+  const held = stateCache.get(key);
   if (held && held.expires > Date.now()) return held.promise;
-  const promise: Promise<ReaderStateResponse> = fetchReaderResponse(`/api/reader/state?state=${encodeURIComponent(code)}`, {
+  const promise: Promise<ReaderStateResponse> = fetchReaderResponse(`/api/reader/state?state=${encodeURIComponent(code)}${zip ? `&zip=${zip}` : ""}`, {
     headers: { accept: "application/json" },
   }).then(async response => {
     if (!response.ok) throw new Error(`State request failed: ${response.status}`);
     const value = await readReaderJson<ReaderStateResponse>(response);
-    if (stateCache.get(code)?.promise === promise) stateCache.set(code, { promise, value, expires: Date.now() + 30_000 });
+    if (stateCache.get(key)?.promise === promise) stateCache.set(key, { promise, value, expires: Date.now() + 30_000 });
     return value;
   }).catch(error => {
-    if (stateCache.get(code)?.promise === promise) stateCache.delete(code);
+    if (stateCache.get(key)?.promise === promise) stateCache.delete(key);
     throw error;
   });
-  stateCache.set(code, { promise, expires: Infinity });
+  stateCache.set(key, { promise, expires: Infinity });
   return promise;
 }
 
@@ -115,6 +123,7 @@ export function mergeReaderCoverage(state: CoverageSummary | null, place: Covera
     divisions: mergeRows(state.divisions, place.divisions, row => row.ocdId),
     senators: mergeRows(state.senators, place.senators, row => row.id),
     statewideExecutives: mergeRows(state.statewideExecutives, place.statewideExecutives, row => row.id),
+    stateLegislatorAuthorities: mergeRows(state.stateLegislatorAuthorities, place.stateLegislatorAuthorities, row => row.scope),
   }, meetingCount);
 }
 

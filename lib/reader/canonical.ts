@@ -1,7 +1,7 @@
 import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
-import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { readerQuery } from "../civic-data/promoted-reader-query.ts";
+import type { ReadOnlyQuery, Statement, Row } from "../control-plane/admin-view/promoted-slices.ts";
+import { readerDatabaseQuery } from "./database.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
@@ -43,11 +43,16 @@ SELECT 'part',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,p
 const cached = serverReaderValue("canonical", () => new Map<string, Extract<PromotedEdgeEntry, { kind: "PROMOTED" }>>());
 
 /** Read canonical promotions once; source evidence was checked when each fact was published. */
-export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerQuery()): Promise<CivicDataReadStore> {
+export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Statement): Promise<CivicDataReadStore & { additionalRows: readonly Row[] }> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
-  const [loaded] = await query([{ text: SHELF_WITH_PARTS, params: [keys, keys.flatMap(key => cached.get(key)?.projection.versionId ?? [])] }]);
-  const rows = loaded.filter(row => row.row_kind !== "part");
+  const extra = additional ? ` UNION ALL SELECT 'additional', empty.*, NULL::text, extra.rows
+    FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
+      ${additional.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 2}`)}
+    ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
+  const [loaded] = await query([{ text: SHELF_WITH_PARTS + extra, params: [keys, keys.flatMap(key => cached.get(key)?.projection.versionId ?? []), ...additional?.params ?? []] }]);
+  const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
+  const rows = loaded.filter(row => row.row_kind === "promotion");
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
   const reused = new Set<string>();
   for (const row of rows) {
@@ -83,6 +88,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   }
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {
+    additionalRows: additionalRows ?? [],
     async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readPromotedEntry(recordClass, scope) {

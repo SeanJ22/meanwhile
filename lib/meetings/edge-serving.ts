@@ -7,25 +7,7 @@ import { MEETINGS_RECORD_CLASS, MEETINGS_SCOPE, MEETINGS_SOURCE_ID, snapshotCoun
 import type { MeetingSettings } from "./settings.ts";
 import { readReaderMeetingSettings } from "./reader-settings.ts";
 
-export async function purgeReaderCacheTags(
-  tags: readonly string[],
-): Promise<{ readonly purged: boolean; readonly detail?: string }> {
-  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_API_TOKEN?.trim() || process.env.NETLIFY_BLOBS_TOKEN?.trim();
-  if (!siteID || !token || tags.length === 0) return { purged: false, detail: "no purge credentials or tags" };
-  try {
-    const res = await fetch("https://api.netlify.com/api/v1/purge", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ site_id: siteID, cache_tags: [...tags] }),
-    });
-    return res.ok ? { purged: true } : { purged: false, detail: `purge HTTP ${res.status}` };
-  } catch (error) {
-    return { purged: false, detail: error instanceof Error ? error.message : String(error) };
-  }
-}
-
-export const READER_DATA_CACHE_TAG = "reader-data";
+export { purgeReaderCacheTags } from "../reader/cache.ts";
 
 export async function readReaderEdgeMeetings(options: ReaderMeetingsOptions = {}): Promise<MeetingsProjectionReadResult> {
   const [read, settings] = await Promise.all([readPlaceMeetings(options), options.settings ?? readReaderMeetingSettings()]);

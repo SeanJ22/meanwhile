@@ -74,7 +74,7 @@ try {
           try {
             const reader = neon(process.env.DATABASE_URL);
             const held = await readPlacePackage({ state: state.toUpperCase(), divisionIds: [], allBodies: true, includeAgenda: false },
-              (sql, parameters) => reader.query(sql, parameters));
+              (sql, parameters) => reader.query(sql, [...parameters ?? []]));
             return new Set(held.meetings.filter(meeting => meeting.ocdId?.startsWith(censusDivisionPrefix(state)))
               .map(meeting => meeting.ocdId)).size;
           } catch { console.error(`CENSUS_METRICS ${state}: published meeting counts could not be read`); return null; }

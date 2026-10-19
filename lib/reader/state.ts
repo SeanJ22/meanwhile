@@ -1,5 +1,5 @@
-import { stateContainers, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
-import { readerQuery } from "../civic-data/promoted-reader-query.ts";
+import { stateContainersStatement, geographyOfRows, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
+import { readerDatabaseQuery } from "./database.ts";
 import { createHash } from "node:crypto";
 import { readPromotedCivicData, CivicDataStoreUnavailableError, type CivicDataReadResult } from "../civic-data/read-model.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
@@ -12,7 +12,7 @@ import type { FederalDirectoryReadModel } from "../officials/federal-directory-d
 import { readStateFederalDirectory, withFederalPortraits } from "../officials/federal-directory-read-model.ts";
 import { stateLegislatorCoverageAuthority, type StateLegislatorCoverageAuthority } from "../registry/coverage.ts";
 import { BOUNDARY_ARCHIVE_FALLBACK } from "../map/districts.ts";
-import { readerMemory, serverReaderValue } from "./memory.ts";
+import { serverReaderValue } from "./memory.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
@@ -44,12 +44,11 @@ export interface ReaderStatePackage {
   readonly boundaryUrl: string;
 }
 
-const states = serverReaderValue("states", () => new Map<string, () => Promise<ReaderStatePackage>>());
+const states = serverReaderValue("state-reads", () => new Map<string, Promise<ReaderStatePackage>>());
 
 async function loadState(state: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = readNationalPresident().catch(() => null);
-  const districtsRead = stateContainers(state, ["congressional_district", "state_leg_upper", "state_leg_lower"], true, readerQuery());
   const canonical = await readCanonicalShelf([
     { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
     { recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) },
@@ -59,13 +58,16 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
     EVERYDAY_ROUTING_POINTER,
     { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
     ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
-  ]), options = { store: canonical };
+  ], readerDatabaseQuery(), stateContainersStatement(state)), options = { store: canonical };
+  const geoVersion = canonical.additionalRows[0]?.version_id;
+  const districts: Slice<GeographySlice> = typeof geoVersion === "string"
+    ? { kind: "HELD", versionId: geoVersion, value: geographyOfRows(canonical.additionalRows, true) }
+    : { kind: "NOT_PUBLISHED" };
   const target = officialStateLegislatorTargetByScope(jurisdiction);
-  const [runtime, people, federal, districts, official, campaigns, everyday, president, offices] = await Promise.all([
+  const [runtime, people, federal, official, campaigns, everyday, president, offices] = await Promise.all([
     readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options),
     readStatePeopleProjection(`US-${state}`, options),
     readStateFederalDirectory(state, options),
-    districtsRead,
     target ? readOfficialStateLegislatorsProjection(target.jurisdiction, options) : Promise.resolve(null),
     readCuratedReaderProjection("campaign-sites", options),
     readEverydayRoutingProjection(options),
@@ -104,10 +106,13 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
   };
 }
 
-/** One complete state per request, shared across readers and checked against canonical promotions. */
+/** Coalesce concurrent reads; an edge miss always sees the current published state. */
 export function readStatePackage(value: string): Promise<ReaderStatePackage> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   let read = states.get(state);
-  if (!read) { read = readerMemory(() => loadState(state)); states.set(state, read); }
-  return read();
+  if (!read) {
+    read = loadState(state).finally(() => { if (states.get(state) === read) states.delete(state); });
+    states.set(state, read);
+  }
+  return read;
 }

@@ -157,6 +157,17 @@ export async function stateContainers(
   return (await geography(query, `The Census geography for ${st}`, [statement], withOverlaps)).slice;
 }
 
+/** Include geography metadata in the state's single canonical read, without geometry. */
+export function stateContainersStatement(state: string): Statement {
+  return {
+    text: `SELECT geography.*, pointer.current_version_id AS version_id
+      FROM civic_data_promotions pointer
+      LEFT JOIN LATERAL (${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))")}) geography ON true
+      WHERE pointer.key=$1||':'||$2`,
+    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, ["congressional_district", "state_leg_upper", "state_leg_lower"], state],
+  };
+}
+
 export async function oneContainer(type: GeographyType, geoid: string, query: ReadOnlyQuery | null): Promise<Slice<GeographySlice>> {
   const statement = { text: groupingsQuery(true, "g->>'geoid' = $4"), params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [type], geoid] };
   return (await geography(query, `The Census geography for ${type.replace(/_/g, " ")} ${geoid}`, [statement], true)).slice;

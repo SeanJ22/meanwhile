@@ -17,6 +17,13 @@ import type { RegistrationGovernmentListing } from "../registration/listings.ts"
 import type { Division } from "../registry/types.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { carriedFromAnswer } from "../meetings/carry-forward.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { EVERYDAY_ROUTING_POINTER } from "../routing/everyday-data-plane.ts";
+import type { EverydayRoutingProjection } from "../routing/everyday.ts";
+import type { PublicBodyAttempt } from "../registry/body-attempt-read.ts";
+import { attemptFamilyOf } from "../registry/attempt-families.ts";
+
+const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 
 const normalizedGovernmentSql = (value: string) => {
   const flat = `btrim(regexp_replace(regexp_replace(replace(upper(${value}),'&',' AND '),'[^A-Z0-9, ]',' ','g'),'\\s+',' ','g'))`;
@@ -40,6 +47,16 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE registration AS MATERIALIZED (
 ), domains AS MATERIALIZED (
   SELECT d,${normalizedGovernmentSql("d->>'organization'")} AS identity,source FROM dotgov,
     LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=$1
+), runtime_root AS MATERIALIZED (
+  SELECT reader_payload_node(payload) AS value FROM civic_data_promotions
+    WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime' AND record_class='REGISTRY_RUNTIME_BINDING'
+), runtime_registry AS MATERIALIZED (
+  SELECT reader_payload_node(value->'registry') AS value FROM runtime_root
+), runtime_bodies AS MATERIALIZED (
+  SELECT b.item,header.value FROM runtime_registry r,LATERAL reader_payload_members(r.value->'bodies') b,
+    LATERAL (SELECT reader_payload_node(b.item) AS value) header
+    WHERE header.value->>'ocdId'=ANY($2::text[]) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
+      OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body')
 ), ancestors AS (
   SELECT id, parent_id FROM entity WHERE id=ANY($2::text[]) AND state=$1 AND id<>$4
   UNION
@@ -54,11 +71,15 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE registration AS MATERIALIZED (
     WHERE e.state=$1 AND e.kind IN ('government','body')
 ), bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
-  UNION SELECT id,kind,name,parent_id,state FROM entity WHERE (id=ANY($3::text[]) OR $5::boolean) AND state=$1 AND kind='body'
-  UNION SELECT id,'body',id,split_part(id,'#',1),$1 FROM unnest($3::text[]) requested(id)
+  UNION SELECT id,kind,name,parent_id,state FROM entity
+    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1 AND kind='body'
+  UNION SELECT requested.id,'body',coalesce(r.value->>'name',requested.id),coalesce(r.value->>'ocdId',split_part(requested.id,'#',1)),$1
+    FROM (SELECT unnest($3::text[]) AS id UNION SELECT value->>'id' FROM runtime_bodies) requested
+    LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
 ), body_facts AS MATERIALIZED (
-  SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b JOIN fact f ON f.entity_id=b.id AND f.status='live'
+  SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
+    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live' OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
 ), members AS (
   SELECT f.entity_id AS body_id,f.body_name,substr(f.field,8) AS person_id,f.value,f.quote,f.checked_at,f.provenance_kind,f.url,
@@ -66,27 +87,86 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE registration AS MATERIALIZED (
     coalesce((SELECT jsonb_object_agg(p.field,jsonb_build_object('value',p.value,'quote',p.quote,'url',s.url,'checked',p.checked_at))
       FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'),'{}'::jsonb) AS person
   FROM body_facts f WHERE f.field LIKE 'member:%'
+), runtime_rosters AS MATERIALIZED (
+  SELECT r.item,header.value FROM runtime_root root,LATERAL reader_payload_members(root.value->'bodyRosters') r,
+    LATERAL (SELECT reader_payload_node(r.item) AS value) header
+    WHERE header.value->>'bodyId' IN (SELECT id FROM bodies)
+), runtime_members AS MATERIALIZED (
+  SELECT reader_payload_node(m.item) AS value FROM runtime_rosters r,LATERAL reader_payload_members(r.value->'members') m
+), runtime_people AS MATERIALIZED (
+  SELECT value->>'id' AS id FROM runtime_members
+  UNION SELECT value->>'personId' FROM runtime_members
+  UNION SELECT value->>'sourceRecordId' FROM runtime_members
+  UNION SELECT alias#>>'{}' FROM runtime_members,
+    LATERAL jsonb_path_query(reader_payload_value(value->'nativeIds'),'$.*[*]') alias
+  UNION SELECT person_id FROM members
+  UNION SELECT shown_id FROM members
+  UNION SELECT reader_payload_node(reader_payload_node(e.item)->'holder')->>'id'
+    FROM runtime_root root,LATERAL reader_payload_members(root.value->'statewideExecutives') e
+    WHERE reader_payload_node(e.item)->>'stateOcdId'=ANY($2::text[])
+), runtime_divisions AS MATERIALIZED (
+  SELECT d.item,header.value FROM runtime_registry r,LATERAL reader_payload_members(r.value->'divisions') d,
+    LATERAL (SELECT reader_payload_node(d.item) AS value) header
+), runtime_division_ids(id) AS (
+  SELECT unnest($2::text[])
+  UNION SELECT value->>'ocdId' FROM runtime_bodies
+  UNION SELECT d.value->>'parentOcdId' FROM runtime_division_ids selected JOIN runtime_divisions d ON d.value->>'ocdId'=selected.id
+    WHERE d.value->>'parentOcdId' IS NOT NULL
+), runtime_candidacies AS MATERIALIZED (
+  SELECT c.item,reader_payload_node(header.value->'holder') AS holder
+    FROM runtime_root root,LATERAL reader_payload_members(reader_payload_node(root.value->'officialCandidacies')->'rows') c,
+      LATERAL (SELECT reader_payload_node(c.item) AS value) header
+    WHERE reader_payload_node(header.value->'holder')->>'id' IN (SELECT id FROM runtime_people)
+      OR EXISTS (SELECT 1 FROM reader_payload_members(reader_payload_node(header.value->'holder')->'divisions') d
+        WHERE d.item#>>'{}' IN (SELECT id FROM runtime_division_ids))
+), runtime_photos AS MATERIALIZED (
+  SELECT p.item,header.value FROM runtime_root root,LATERAL reader_payload_members(reader_payload_node(root.value->'officialPhotos')->'photos') p,
+    LATERAL (SELECT reader_payload_node(p.item) AS value) header
+    WHERE header.value->>'officeholderId' IN (SELECT id FROM runtime_people UNION SELECT holder->>'id' FROM runtime_candidacies)
+      OR header.value->>'personId' IN (SELECT id FROM runtime_people)
 ), sittings AS MATERIALIZED (
   SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,s.url
-    FROM bodies b JOIN entity m ON m.parent_id=b.id AND m.kind='meeting'
-    JOIN fact f ON f.entity_id=m.id AND f.status='live' LEFT JOIN source_copy s ON s.id=f.source_copy_id
-), meeting_rows AS MATERIALIZED (
-  SELECT p.scope,CASE WHEN $7::boolean OR p.payload ? '$civicPayloadPart' THEN p.payload ELSE (p.payload-'agendaDocuments') || jsonb_build_object('agendaDocuments','[]'::jsonb) END AS payload,p.current_version_id,
-    (SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
-      AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
-  FROM bodies b
+    FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
+    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
+    LEFT JOIN source_copy s ON s.id=f.source_copy_id
+), encoded_bodies AS MATERIALIZED (
+  SELECT b.id,encoded.id AS encoded_id FROM bodies b
   CROSS JOIN LATERAL (SELECT string_agg(CASE WHEN ch ~ '^[A-Za-z0-9_.!~*''()-]$' THEN ch
     ELSE regexp_replace(upper(encode(convert_to(ch,'UTF8'),'hex')),'(..)','%\\1','g') END,'' ORDER BY n) AS id
     FROM regexp_split_to_table(b.id,'') WITH ORDINALITY AS chars(ch,n)) encoded
+), meeting_partitions AS MATERIALIZED (
+  SELECT p.scope,reader_payload_node(p.payload) AS header,p.current_version_id,
+    (SELECT detail FROM (SELECT detail,sequence FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id OFFSET 0) e
+      WHERE left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
+  FROM encoded_bodies b
   JOIN civic_data_promotions p ON p.record_class='MEETING' AND left(p.scope,7)='source:'
-    AND split_part(p.scope,':',3)='body' AND split_part(p.scope,':',4)=encoded.id
+    AND split_part(p.scope,':',3)='body' AND split_part(p.scope,':',4)=b.encoded_id
     AND ($6::boolean OR right(p.scope,8)<>':history')
   UNION
-  SELECT p.scope,CASE WHEN $7::boolean OR p.payload ? '$civicPayloadPart' THEN p.payload ELSE (p.payload-'agendaDocuments') || jsonb_build_object('agendaDocuments','[]'::jsonb) END AS payload,p.current_version_id,
-    (SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
-      AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
+  SELECT p.scope,reader_payload_node(p.payload) AS header,p.current_version_id,
+    (SELECT detail FROM (SELECT detail,sequence FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id OFFSET 0) e
+      WHERE left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
   FROM (SELECT '' AS suffix UNION ALL SELECT ':history' WHERE $6::boolean) suffixes
   JOIN civic_data_promotions p ON p.key='MEETING:source:derived:family:US-'||$1||suffix AND p.record_class='MEETING'
+), family_meetings AS MATERIALIZED (
+  SELECT p.scope,m.ordinal_index,m.item,header.value->>'id' AS id
+  FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
+    LATERAL (SELECT reader_payload_node(m.item) AS value) header
+  WHERE p.scope LIKE 'source:derived:family:%' AND (
+    header.value->>'bodyId' IN (SELECT id FROM bodies)
+    OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY($2::text[]))
+), meeting_rows AS MATERIALIZED (
+  SELECT p.scope,CASE WHEN p.scope LIKE 'source:derived:family:%' THEN
+    (p.header-'meetings'-'agendaDocuments'-'derivedMembers') || jsonb_build_object(
+      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM family_meetings m WHERE m.scope=p.scope),'[]'::jsonb),
+      'agendaDocuments',coalesce((SELECT jsonb_agg(d.item ORDER BY d.ordinal_index)
+        FROM reader_payload_members(p.header->'agendaDocuments') d
+        WHERE $7::boolean AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb))
+      || CASE WHEN p.header ? 'derivedMembers' THEN jsonb_build_object('derivedMembers',coalesce((
+        SELECT jsonb_agg(d.item ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'derivedMembers') d
+        WHERE reader_payload_node(d.item)->>'bodyId' IN (SELECT id FROM bodies)),'[]'::jsonb)) ELSE '{}'::jsonb END
+    ELSE CASE WHEN $7::boolean THEN p.header ELSE (p.header-'agendaDocuments') || jsonb_build_object('agendaDocuments','[]'::jsonb) END
+    END AS payload,p.current_version_id,p.confirmation FROM meeting_partitions p
 ), archived_versions AS MATERIALIZED (
   SELECT c.scope,c.retrieved_at,c.candidate->'readModel' AS payload
     FROM meeting_rows p JOIN civic_data_candidates current ON current.id=p.current_version_id
@@ -120,6 +200,35 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE registration AS MATERIALIZED (
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
 SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,
+  (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') AS everyday_routing,
+  coalesce((SELECT jsonb_agg(jsonb_build_object(
+      'bodyId',w.value#>'{autonomousPlan,publication,bodyId}','contractId',w.value#>'{autonomousPlan,publication,contractId}',
+      'at',w.value#>'{publicationOutcome,at}','status',w.value#>'{publicationOutcome,status}','code',w.value#>'{publicationOutcome,code}',
+      'sourceUrl',CASE WHEN w.value#>>'{autonomousPlan,contract,schemaVersion}'='2' THEN w.value#>'{autonomousPlan,contract,sourceScope,canonicalUrls,0}' ELSE NULL END,
+      'acceptedCount',coalesce(jsonb_array_length(w.value#>'{publicationOutcome,acceptedMembers}'),
+        jsonb_array_length(w.value#>'{publicationOutcome,acceptedRecordIds}'),jsonb_array_length(w.value#>'{publicationOutcome,bodyIds}')),
+      'versionId',w.value#>'{publicationOutcome,versionId}') ORDER BY w.value#>>'{publicationOutcome,at}' DESC,w.id)
+    FROM cp_work_items w WHERE (w.value#>>'{autonomousPlan,publication,bodyId}')=ANY(ARRAY(SELECT id FROM bodies))
+      AND w.value ? 'publicationOutcome'),'[]'::jsonb) AS publication_attempts,
+  (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
+    || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
+      'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(b.item)) FROM runtime_bodies b),'[]'::jsonb),
+      'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(d.item)) FROM runtime_divisions d WHERE d.value->>'ocdId' IN (SELECT id FROM runtime_division_ids)),'[]'::jsonb)),
+      'bodyRosters',coalesce((SELECT jsonb_agg(reader_payload_value(item)) FROM runtime_rosters),'[]'::jsonb),
+      'rosterReaderDispositions',coalesce((SELECT jsonb_agg(reader_payload_value(d.item))
+        FROM reader_payload_members(root.value->'rosterReaderDispositions') d,LATERAL (SELECT reader_payload_node(d.item) AS value) header
+        WHERE header.value->>'sourceId' IN (SELECT id FROM runtime_people) OR header.value->>'canonicalId' IN (SELECT id FROM runtime_people)
+          OR EXISTS (SELECT 1 FROM bodies b WHERE starts_with(header.value->>'sourceId','roster:'||b.id||'#'))),'[]'::jsonb),
+      'statewideExecutives',coalesce((SELECT jsonb_agg(reader_payload_value(e.item)) FROM reader_payload_members(root.value->'statewideExecutives') e
+        WHERE reader_payload_node(e.item)->>'stateOcdId'=ANY($2::text[])),'[]'::jsonb),
+      'officialCandidacies',reader_payload_value(reader_payload_node(root.value->'officialCandidacies')-'rows') || jsonb_build_object(
+        'rows',coalesce((SELECT jsonb_agg(reader_payload_value(item)) FROM runtime_candidacies),'[]'::jsonb)),
+      'officialPhotos',reader_payload_value(reader_payload_node(root.value->'officialPhotos')-'photos') || jsonb_build_object(
+        'photos',coalesce((SELECT jsonb_agg(reader_payload_value(item)) FROM runtime_photos),'[]'::jsonb)),
+      'rosterPhotos',coalesce((SELECT jsonb_object_agg(photo.key,reader_payload_value(photo.value))
+        FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
+        WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb))
+    FROM runtime_root root CROSS JOIN runtime_registry r) AS registry,
   coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) AS governments,
@@ -140,6 +249,9 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,
 
 type Row = Record<string, unknown>;
 export interface PlacePackage {
+  readonly registry: RegistryRuntimeReadModel | null;
+  readonly everydayRouting: EverydayRoutingProjection | null;
+  readonly publicationAttempts: readonly PublicBodyAttempt[];
   readonly bodies: readonly BodyFacts[];
   readonly governments: readonly RegistrationGovernmentListing[];
   readonly divisions: readonly Division[];
@@ -247,7 +359,10 @@ export async function readPlacePackage(input: { readonly state: string; readonly
     return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
       counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
-  return { bodies,meetings: overlaid,snapshot,bodySnapshots,governments:row.governments as RegistrationGovernmentListing[],
+  return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
+    publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
+      .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
+    bodies,meetings: overlaid,snapshot,bodySnapshots,governments:row.governments as RegistrationGovernmentListing[],
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };
 }
 

@@ -128,4 +128,4 @@ export const POST = readerRoute("/api/address/resolve", async function POST(requ
     { ok: true, resolution, contestIds: await contestIdsFor(confirmed, selection).catch(() => []), point },
     { headers: NO_STORE },
   );
-}, ["census-districts", "ballot-contests"]);
+});

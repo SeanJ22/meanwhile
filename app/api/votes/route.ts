@@ -302,4 +302,4 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
     keyVotesCriteria: keyVoteRows.length > 0 ? KEY_VOTES_CRITERIA : null,
     pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, record?.votes ?? [], record?.positions ?? [], member),
   });
-}, ["registry-runtime","federal-directory","state-legislators","state-votes","federal-votes","federal-key-votes"]);
+});

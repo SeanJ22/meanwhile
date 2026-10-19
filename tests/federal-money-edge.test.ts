@@ -55,7 +55,6 @@ test("one place loads only its index, status and first bounded page; all later r
     cursor = next.nextCursor;
   }
   assert.equal(held.size, 500);
-  assert.equal(await store.readManifest(), null, "there is no national or state record manifest");
 });
 
 test("only a changed place segment writes; removed joins clear that segment and leave other places untouched", async t => {

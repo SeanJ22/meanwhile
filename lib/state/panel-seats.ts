@@ -38,7 +38,7 @@ import {
 
 /** The legislative levels this panel splits into State and Federal sections. */
 export const STATE_SEAT_TYPES = ["sldl", "sldu"] as const;
-export const FEDERAL_SEAT_TYPES = ["cd"] as const;
+export const FEDERAL_SEAT_TYPES = ["cd", "country"] as const;
 export const LOCAL_SEAT_TYPES = ["place", "county", "cousub", "county_subdivision", "school_district", "ward", "council_district"] as const;
 
 /**

@@ -3,6 +3,8 @@ import test from "node:test";
 
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as directoryGET } from "../app/api/directory/route.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { resolveZip } from "../lib/geo/zcta.ts";
 import {
   matching,
   numeric,
@@ -11,6 +13,7 @@ import {
 } from "../lib/api/params.ts";
 
 const url = (path: string) => new Request(`https://example.test${path}`);
+await installRegistryAuthority();
 
 test("Number(null) is 0 — the coercion this whole file exists for", () => {
   assert.equal(Number(null), 0);
@@ -60,13 +63,15 @@ test("matching() refuses a malformed value instead of silently nulling it", () =
   assert.ok(absent.ok && absent.value === null, "absent optional is honestly null");
 });
 
-test("/api/meetings refuses h's exact probe rather than answering at 0,0", async () => {
+test("/api/meetings resolves a ZIP-only request to its own centroid rather than 0,0", async () => {
   const response = await meetingsGET(url("/api/meetings?zip=85701"));
-  assert.equal(response.status, 400, "the probe that produced 0,0 must be refused");
+  assert.equal(response.status, 200);
 
-  const body = (await response.json()) as { error?: string; center?: unknown };
-  assert.ok(typeof body.error === "string" && body.error.length > 0, "the refusal states a reason");
-  assert.equal(body.center, undefined, "a refusal carries no centre to mistake for an answer");
+  const body = (await response.json()) as { center: { lat: number; lng: number }; nearZip: string };
+  const zip = resolveZip("85701");
+  assert.ok(zip.ok);
+  assert.deepEqual(body.center, { lat: zip.centroid.lat, lng: zip.centroid.lng });
+  assert.equal(body.nearZip, "85701");
 });
 
 test("/api/meetings refuses a missing coordinate, each named separately", async () => {

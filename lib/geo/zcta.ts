@@ -1,7 +1,7 @@
-// The import attribute lets this module load under `node --test` as well as the bundler.
-import centroidFile from "./zcta-centroids.json" with { type: "json" };
-import postalFile from "./postal-zips.json" with { type: "json" };
-import type { PostalTable } from "./postal-core.ts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { postalTable } from "./postal.ts";
+import { serverReaderValue } from "../reader/memory.ts";
 import {
   isWellFormedZip,
   lookupIn,
@@ -14,7 +14,8 @@ import {
 
 /**
  * Zip → map coordinate, synchronously, with the whole table in the module.
- * For the server and scripts only; client components use `./zcta-table.ts`.
+ * Server and scripts only. Typed/restored browser ZIPs use `../reader/zip.ts`;
+ * `./zcta-table.ts` loads lazily for explicit nearest-ZIP location actions.
  *
  * Orientation only: a ZCTA crosses city, county, school district and
  * legislative lines. Anything that needs actual districts asks for a street
@@ -24,9 +25,11 @@ import {
 export type { ZctaCentroid, ZipResolution };
 export { isWellFormedZip };
 
-// JSON arrays widen to number[]; the file's contract is a pair per zip.
-const CENTROIDS = centroidFile.centroids as unknown as CentroidTable;
-const POSTAL = postalFile.zips as unknown as PostalTable;
+const centroidFile = serverReaderValue("zcta-centroids", () => JSON.parse(
+  readFileSync(join(process.cwd(), "lib/geo/zcta-centroids.json"), "utf8"),
+) as { centroids: CentroidTable; complete: boolean; source: string; sourceOrg: string; vintage: string });
+const CENTROIDS = centroidFile.centroids;
+const POSTAL = postalTable();
 
 /**
  * Whether every Census ZCTA is held. This does not establish USPS completeness.

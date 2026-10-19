@@ -6,7 +6,6 @@ import { doorPartitionIds } from "../doors/mission-refresh.ts";
 import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
-import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
 /** A publish-now pass ends within this; what it did not finish stays owed to the next minute. */
@@ -16,47 +15,9 @@ export function publishNowLane(run: (deadlineMs: number) => Promise<void>): Inde
   return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, budgetMs: PUBLISH_NOW_PASS_BUDGET_MS, run };
 }
 
-/** An unchanged minute with no source work ends quietly; a copied pointer or failed copy still owes its existing supervisor receipt. */
-export function publishNowHasNothingOwed(publishNow: boolean, selectedTasks: number, failures: number, edge: ReaderEdgePublicationOutcome): boolean {
-  return publishNow && selectedTasks === 0 && failures === 0 && edge.ok &&
-    (edge.readerEdge === "CURRENT" || edge.readerEdge === "SKIPPED_OWNER_PAUSE");
-}
-
-/** Keep the existing publication minute moving during a long outbox pass. Concurrent ticks share one sweep. */
-export function startPublishNowEdgeChecks(input: {
-  readonly check: () => Promise<ReaderEdgePublicationOutcome>;
-  readonly readPaused: () => Promise<boolean>;
-  readonly store: ReaderEdgePublicationOutcome["store"];
-  readonly onError: (error: unknown) => void;
-  readonly schedule?: (tick: () => void, everyMs: number) => () => void;
-}): { run: () => Promise<ReaderEdgePublicationOutcome>; stop: () => Promise<ReaderEdgePublicationOutcome | null> } {
-  const schedule = input.schedule ?? ((tick, everyMs) => {
-    const timer = setInterval(tick, everyMs);
-    timer.unref();
-    return () => clearInterval(timer);
-  });
-  let inFlight: Promise<ReaderEdgePublicationOutcome> | null = null;
-  let outcome: ReaderEdgePublicationOutcome | null = null;
-  let stopped = false;
-  const run = (): Promise<ReaderEdgePublicationOutcome> => {
-    if (inFlight) return inFlight;
-    inFlight = Promise.resolve().then(async (): Promise<ReaderEdgePublicationOutcome> => await input.readPaused()
-      ? { ok: true, readerEdge: "SKIPPED_OWNER_PAUSE", store: input.store, sequence: null,
-        detail: "The owner paused publication; no source pointers were copied." }
-      : input.check()).catch((error): ReaderEdgePublicationOutcome => {
-      input.onError(error);
-      return { ok: false, readerEdge: "FAILED", store: input.store, sequence: outcome?.sequence ?? null,
-        detail: "The publication check could not read its owner control or copy source pointers; retry remains owed." };
-    }).then(next => {
-      // A quiet later check must not erase an earlier publication or failure from this pass's receipt.
-      if (!["CURRENT", "SKIPPED_OWNER_PAUSE"].includes(next.readerEdge) || outcome === null ||
-          ["CURRENT", "SKIPPED_OWNER_PAUSE"].includes(outcome.readerEdge)) outcome = next;
-      return next;
-    }).finally(() => { inFlight = null; });
-    return inFlight;
-  };
-  const cancel = schedule(() => { if (!stopped) void run().catch(input.onError); }, PUBLISH_NOW_INTERVAL_MS);
-  return { run, stop: async () => { stopped = true; cancel(); if (inFlight) await inFlight; return outcome; } };
+/** An unchanged minute with no source work ends quietly. */
+export function publishNowHasNothingOwed(publishNow: boolean, selectedTasks: number, failures: number): boolean {
+  return publishNow && selectedTasks === 0 && failures === 0;
 }
 
 /** Parser results and held-page fallbacks share this outbox; publicationOutcome keeps each retry clock durable. */

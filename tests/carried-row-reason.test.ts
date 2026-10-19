@@ -10,7 +10,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
 import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
-import { snapshotSourceFor } from "../lib/meetings/registry.ts";
+import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";

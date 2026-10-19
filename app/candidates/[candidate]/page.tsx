@@ -36,4 +36,4 @@ export default readerRoute("/candidates/[candidate]", async function FecCandidat
         afterSections={<PublicStatementsProfile subjectId={personId} />} />
     </div>
   </main>;
-}, ["federal-funding","registry-runtime","federal-directory","candidate-publications","officeholder-statements","prl-archives"]);
+});

@@ -64,6 +64,13 @@ function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
   };
 }
 
+/** The held local divisions in one ZIP shard, before Census district qualification. */
+export async function indexedZipDivisionEntry(zip: string | null): Promise<ZipDivisionEntry | null> {
+  if (zip === null || !/^\d{5}$/.test(zip)) return null;
+  const shard = await shardFor(zipShardOf(zip));
+  return shard === null ? null : entryOf(shard, zip);
+}
+
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
 export async function zipDivisionEntry(zip: string | null, selection?: GeographySelection): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
@@ -71,15 +78,13 @@ export async function zipDivisionEntry(zip: string | null, selection?: Geography
   const area = postalArea(zip);
   const lookupZip = area?.zcta ?? zip;
   if (zipNeedsAddress(zip)) {
-    const shard = await shardFor(zipShardOf(lookupZip));
-    const entry = shard === null ? null : entryOf(shard, lookupZip);
+    const entry = await indexedZipDivisionEntry(lookupZip);
     if (!entry) return null;
     const ids = entry.ids.filter(isTownOrCountyDivision);
     return { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 };
   }
   const { publishedZipDistricts, withCensusDistricts } = await import("./zip-census-districts.ts");
-  const [shard, districts] = await Promise.all([shardFor(zipShardOf(lookupZip)), publishedZipDistricts(lookupZip)]);
-  const entry = shard === null ? null : entryOf(shard, lookupZip);
+  const [entry, districts] = await Promise.all([indexedZipDivisionEntry(lookupZip), publishedZipDistricts(lookupZip)]);
   const base = entry ?? { ids: [], partial: [], samples: 0 };
   const qualified = withCensusDistricts(base, districts, lookupZip, selection);
   return entry === null && qualified.ids.length === 0 ? null : qualified;

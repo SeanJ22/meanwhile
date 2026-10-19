@@ -15,6 +15,7 @@ import { agendaItems } from "@/lib/routing/agenda-search";
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
 import { MeetingRecords } from "./meeting-records";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
+import { fetchReaderAgendaResponse } from "@/lib/reader/bootstrap";
 
 /**
  * The meeting's stored notice or agenda text on the meeting surface: public
@@ -98,10 +99,7 @@ function AgendaForMeeting({
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(
-          `/api/agenda?meetingId=${encodeURIComponent(meetingId)}&bodyId=${encodeURIComponent(bodyId)}`,
-          { signal: controller.signal },
-        );
+        const response = await fetchReaderAgendaResponse(meetingId, bodyId, controller.signal);
         if (!response.ok) throw new Error(String(response.status));
         const payload = (await response.json()) as {
           documents: AgendaDocumentView[];

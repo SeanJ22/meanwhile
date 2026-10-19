@@ -99,4 +99,4 @@ export default readerRoute("/about-area", async function AboutAreaPage({
       </p>
     </main>
   );
-}, ["registry-runtime"]);
+});

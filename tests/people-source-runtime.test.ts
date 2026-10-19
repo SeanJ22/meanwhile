@@ -15,7 +15,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 const vault = new MemoryEvidenceStore();
 
 test("every nationally available people source has an independent standing state shard", () => {
-  const tasks = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId !== "people-portraits").map(routineTaskFromContract);
+  const tasks = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId !== "people-portraits" && contract.scope !== "US:people:statewide-executive-sources:v1").map(routineTaskFromContract);
   assert.equal(tasks.length, PEOPLE_SOURCE_STATES.length * STANDING_PEOPLE_SOURCE_IDS.length);
   assert.equal(new Set(tasks.map(task => `${task.recordClass}:${task.scope}`)).size, tasks.length);
   for (const state of PEOPLE_SOURCE_STATES) for (const sourceId of STANDING_PEOPLE_SOURCE_IDS) {

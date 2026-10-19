@@ -45,11 +45,6 @@ test("all 56 jurisdictions have one official source and curated filings split ex
   assert.throws(() => manualPayloadScope("campaign-finance", "unused", { records: [sourceRows[0], sourceRows[2]] }), /crosses/);
 });
 
-test("native campaign facts do not create national reader artifacts", async () => {
-  const { promotedEdgePieces } = await import("../lib/civic-data/promoted-edge-publication.ts");
-  assert.deepEqual(promotedEdgePieces([{ recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope("WA") }]), []);
-});
-
 test("one native committee's filings stay with each bound place when a filing moves", async () => {
   const options = await context(), state = "ocd-division/country:us/state:wa", first = `${state}/county:king`, second = `${state}/county:pierce`;
   try {

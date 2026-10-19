@@ -12,7 +12,6 @@ import {
 } from "../../civic-data/runner.ts";
 import { heldBodyGaps, type HeldAskGap } from "../../ask/held-gaps.ts";
 import { readMeetingBodies, type StateMeetingBody } from "../../meetings/edge-serving.ts";
-import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
 import type { MeetingsSnapshot } from "../../meetings/snapshot.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
@@ -29,7 +28,7 @@ const message = (error: unknown): string => (error instanceof Error ? error.mess
 
 /** Every body Ask reads, one state at a time from each state's index. */
 function readHeldBodies(): AsyncGenerator<StateMeetingBody> {
-  return readMeetingBodies({ store: resolveReaderArtifactWriteStore(), window: "HELD" });
+  return readMeetingBodies({ window: "HELD" });
 }
 
 /** The recorded outcomes Ask reads, and whether they could be read (Ask's own test: an empty store is unreadable). */

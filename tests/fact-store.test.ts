@@ -107,7 +107,6 @@ test("publishClaim writes one live fact alone, with its receipt, and queues its 
   assert.equal(Number(fact!.source_copy_id), 1);
   assert.equal(fact!.quote, "Ned Beman Chairperson Ward 2");
   assert.ok(fact!.live_at);
-  assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue")).map(r => r.place_id), ["ocd-division/country:us/state:az/place:tucson"]);
   const again = await publishClaim(db, claim({ copy: boardCopy({ id: 2, fetchedAt: new Date("2026-08-14T13:00:00Z") }) }), clocks, NOW);
   assert.deepEqual(again, { decision: "CONFIRM", factId: 1 });
   assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 1);

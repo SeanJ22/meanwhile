@@ -9,6 +9,20 @@ export type BallotAuxiliaryFamily =
   | "nh-members"
   | "ballot-navigation";
 
+/** Start independent reads now; selecting a family later reuses the same result and failure. */
+export function ballotAuxiliaryReads() {
+  const reads = new Map<BallotAuxiliaryFamily, Promise<unknown>>();
+  return (family: BallotAuxiliaryFamily, read: () => Promise<unknown>): (() => Promise<unknown>) => {
+    let pending = reads.get(family);
+    if (!pending) {
+      pending = Promise.resolve().then(read);
+      reads.set(family, pending);
+      void pending.catch(() => undefined);
+    }
+    return () => pending;
+  };
+}
+
 export async function settleBallotAuxiliaryPreloads(
   preloads: ReadonlyMap<BallotAuxiliaryFamily, () => Promise<unknown>>,
 ): Promise<ReadonlyMap<BallotAuxiliaryFamily, PromiseSettledResult<unknown>>> {

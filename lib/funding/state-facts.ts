@@ -3,6 +3,7 @@ import { US_JURISDICTIONS } from "../coverage/states.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { campaignFinanceStateScope } from "./state-sources.ts";
 import { campaignSourceRecordHash, type CampaignSourceRecord } from "./state-source-records.ts";
+import { invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
 
 const FIELD = "campaign-money:";
 const SCHEME = "campaign-money-record";
@@ -24,10 +25,11 @@ export async function readCampaignPredecessors(query: Query, state: string, ids:
   return new Map(held.map(row => [String(row.record_id), row.value as CampaignSourceRecord]));
 }
 
-export async function fileCampaignMoneyFacts(db: FactDb, state: string, records: readonly CampaignSourceRecord[], at: string): Promise<{ written: number; confirmed: number }> {
+export async function fileCampaignMoneyFacts(db: FactDb, state: string, records: readonly CampaignSourceRecord[], at: string,
+  options: { readonly purge?: ReaderCachePurger } = {}): Promise<{ written: number; confirmed: number }> {
   if (records.length > 500 || records.some(row => row.state !== state || row.governmentOcdId !== null && campaignFinanceStateScope(row.governmentOcdId) !== `US-${state}:campaign-finance`)) throw new Error("Campaign facts exceed their state or source batch.");
   if (!records.length) return { written: 0, confirmed: 0 };
-  return db.transaction(async query => {
+  const outcome = await db.transaction(async query => {
     const stateDivision = campaignStateDivision(state);
     const places = [...new Set([stateDivision, ...records.flatMap(row => row.governmentOcdId ?? [])])];
     await query(`INSERT INTO entity (id,kind,name,state,parent_id)
@@ -70,4 +72,6 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
     return { written: changed.length, confirmed: confirmed.length };
   });
+  if (outcome.written || outcome.confirmed) await invalidateReaderCache({ states: [state] }, options.purge);
+  return outcome;
 }

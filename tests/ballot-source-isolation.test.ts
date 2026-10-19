@@ -19,6 +19,7 @@ import { displayFor } from "../lib/questionnaire/candidacy-display.ts";
 import { validReactionTargetsFor } from "../lib/reactions/authority-targets.ts";
 import {
   ballotAuxiliaryPreloadSucceeded,
+  ballotAuxiliaryReads,
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "../lib/ballot/auxiliary-preloads.ts";
@@ -324,6 +325,26 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
   assert.equal(outcomes.get("state-money")?.status, "fulfilled");
 });
 
+test("ballot supporting reads overlap contest selection and retain their original failure without retrying", async () => {
+  const start = ballotAuxiliaryReads();
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  let calls = 0;
+  const original = new Error("original profile failure");
+  start("candidate-profiles", async () => { calls++; await gate; throw original; });
+  await Promise.resolve();
+  assert.equal(calls, 1, "the read starts before contest selection finishes");
+  release();
+  await Promise.resolve();
+  const outcomes = await settleBallotAuxiliaryPreloads(new Map([
+    ["candidate-profiles", start("candidate-profiles", async () => { calls++; })],
+    ["state-money", start("state-money", async () => ({ kind: "PROMOTED" }))],
+  ]));
+  assert.equal(calls, 1);
+  assert.deepEqual(outcomes.get("candidate-profiles"), { status: "rejected", reason: original });
+  assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("state-money")), true);
+});
+
 test("all production ballot entry points use state-scoped selection", () => {
   for (const path of [
     "app/ballot/page.tsx",
@@ -345,7 +366,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
     "supporting authority failures contribute to the card footer");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
-  assert.match(page, /auxiliaryPreloads\.set\("nh-members", settleNhSeatHolders\)/);
+  assert.match(page, /preload\("nh-members", settleNhSeatHolders\)/);
 
   const reactions = readFileSync(join(process.cwd(), "app/api/reactions/route.ts"), "utf8");
   assert.match(reactions, /candidateTargets:\s*targetId => getCandidateTargetIds\(divisions, targetId\)/);

@@ -4,7 +4,7 @@ import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
 import { US_STATES } from "../readiness/catalog.ts";
-import { siteOrigins } from "../../hunt/meetings-site-discovery.ts";
+import { siteOrigins } from "../../hunt/site-origins.ts";
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";

@@ -1,6 +1,6 @@
 import { consumeStatePublicationRecord, immutableStateValue, reuseStatePublicationRecord } from "./state-publication.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
@@ -450,7 +450,7 @@ export async function publishWorkerBallotContestsResults(input: {
         recovery: verified ? "PUBLISHER" : "WORKER", candidateId, versionId };
     }
     const latest = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
     report.push({ workItemId: id, outcome });
   }
   return report;

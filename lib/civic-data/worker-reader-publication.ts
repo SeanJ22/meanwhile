@@ -1,5 +1,5 @@
 import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import { publishWorkerPollingResults, type PollingRegistrySlice } from "./worker-polling-publication.ts";
@@ -286,7 +286,7 @@ export async function publishWorkerReaderResults(input: {
     }
     if (plan) outcome = await withPageDoor(input.repos, outcome, captures[0], plan.contract.recordClass);
     const latest = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (plan) await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, ocdId: plan.contract.schemaVersion === 2 ? plan.contract.jurisdiction.canonicalId : null, bodyId: plan.publication?.bodyId, workItemId: id, published: wentLive, now: input.now });
     if (plan) learned.push(validatorObservation({ plan, workItemId: id, page: captures[0], captures, published: wentLive, outcome }));

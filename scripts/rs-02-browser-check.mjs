@@ -2,9 +2,11 @@
  * NODE_USE_ENV_PROXY=1 PLAYWRIGHT_BROWSERS_PATH=/tmp/rs02-playwright node \
  *   --env-file=/tmp/rs02-production.env --experimental-strip-types scripts/rs-02-browser-check.mjs
  * --states=AZ,CA limits a diagnostic run; --out=<directory> keeps separate first-run evidence.
- * --native-boundaries=1 serves the build at a virtual production origin so Chromium reads
- * the exact public boundary API over native HTTP/2 through the managed session proxy.
- * Only that probe context accepts the known proxy CA, which Node independently verifies.
+ * Chromium reads app HTML/assets/APIs directly from localhost with Next compression,
+ * and the configured external boundary archive natively. Only Netlify-only public
+ * reads and the relative boundary API fallback use the GET bridge, preserving paths
+ * and Range headers. With a configured session proxy, this isolated public read-only
+ * context accepts its known CA, which Node independently verifies; otherwise TLS is strict.
  * Requires an existing production build. Never builds, warms reader APIs, or writes production data.
  */
 import { spawn } from 'node:child_process';
@@ -17,11 +19,15 @@ import { launchGuarded, seedZip } from './browser.mts';
 
 const arg = name => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const output = resolve(arg('out') ?? '.scratch/rs02/browser');
-const nativeBoundaries = arg('native-boundaries') === '1';
+const appTransport = 'Native Chromium localhost HTTP with Next compression';
 const productionOrigin = 'https://meanwhileusa.com';
-const proxyUrl = nativeBoundaries ? new URL(process.env.HTTPS_PROXY ?? process.env.HTTP_PROXY) : null;
+const proxyAddress = process.env.HTTPS_PROXY ?? process.env.HTTP_PROXY;
+const proxyUrl = proxyAddress ? new URL(proxyAddress) : null;
 const sessionProxy = proxyUrl ? { server: `${proxyUrl.protocol}//${proxyUrl.hostname}:${proxyUrl.port}`,
   bypass: 'localhost,127.0.0.1', ...(proxyUrl.username ? { username: decodeURIComponent(proxyUrl.username), password: decodeURIComponent(proxyUrl.password) } : {}) } : undefined;
+const boundaryTransport = sessionProxy ? 'Native Chromium primary archive through managed session proxy' : 'Native Chromium primary archive with strict TLS';
+const boundaryFallback = 'Only the relative localhost /api/boundaries path is bridged to the identical production path and Range; the configured external primary archive is native.';
+const proxyCaException = sessionProxy ? 'Isolated public read-only browser context; Node probes verify the configured proxy CA' : null;
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 if (!connection) throw Error('The existing production readonly connection is required');
 const target = new URL(connection);
@@ -46,7 +52,7 @@ const isBoundaryArchive = url => url.pathname.startsWith('/api/boundaries/') ||
   (url.origin === 'https://tiles.meanwhilemaps.com' && url.pathname === '/us-2025.pmtiles');
 const save = () => writeFile(`${output}/summary.json`, JSON.stringify({ checkedAt: new Date().toISOString(), buildId,
   productionReadonly: true, freshServerAndBrowserPerState: true, basemapProviderAccess: false,
-  boundaryTransport: nativeBoundaries ? 'native Chromium through managed session proxy' : 'Node fetch bridge to configured public archive', results }, null, 2));
+  appTransport, boundaryTransport, boundaryFallback, proxyCaException, results }, null, 2));
 
 async function startServer(port) {
   const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(port)], {
@@ -240,47 +246,44 @@ async function followContent(page, output, evidence) {
 for (const probe of probes) {
   const tag = `${probe.state}${probe.followUp ? '-followup' : ''}`;
   const errors = [], blocked = [], boundaryRequests = [], bridgeFailures = [], abortedReads = [];
-  const result = { state: probe.state, zip: probe.zip, followUp: Boolean(probe.followUp), errors, boundaryRequests, bridgeFailures, abortedReads };
+  const result = { state: probe.state, zip: probe.zip, followUp: Boolean(probe.followUp), appTransport, boundaryTransport, boundaryFallback, proxyCaException, errors, boundaryRequests, bridgeFailures, abortedReads };
   let server, browser, page;
   try {
     const port = Number(arg('port') ?? 3260);
+    const appOrigin = `http://localhost:${port}`;
     server = await startServer(port);
     browser = await launchGuarded({ label: `rs-02-cold-${probe.state}`, headless: true, blockWrites: true,
       ...(sessionProxy ? { proxy: sessionProxy } : {}),
       args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
-    page = await browser.page({ viewport: { width: 1440, height: 1000 }, ...(nativeBoundaries ? { ignoreHTTPSErrors: true } : {}) });
+    page = await browser.page({ viewport: { width: 1440, height: 1000 }, ...(sessionProxy ? { ignoreHTTPSErrors: true } : {}) });
     const context = page.context();
-    if (nativeBoundaries) {
-      // A context-wide custom header causes Chrome to preflight cross-origin tiles
-      // before the guarded route can strip it. Declare our origin at the route
-      // instead; the shared write/provider/confinement guards remain installed.
-      await context.setExtraHTTPHeaders({});
-      result.boundaryTransport = 'Chromium native HTTP/2 through managed session proxy';
-      result.proxyCaException = 'Isolated public read-only browser context; Node probes verify the configured proxy CA';
-      const cdp = await context.newCDPSession(page);
-      await cdp.send('Network.enable');
-      const requests = new Map();
-      let navigationStarted;
-      cdp.on('Network.requestWillBeSent', event => {
-        if (event.type === 'Document' && new URL(event.request.url).origin === productionOrigin) navigationStarted ??= event.timestamp;
-        if (isBoundaryArchive(new URL(event.request.url))) requests.set(event.requestId, {
-          url: event.request.url, range: event.request.headers.Range ?? event.request.headers.range ?? null, started: event.timestamp,
-          startMs: navigationStarted === undefined ? null : (event.timestamp - navigationStarted) * 1000,
-        });
+    // A context-wide marker makes Chrome preflight cross-origin tiles before
+    // confinement can strip it. Add it only to our local origin at the route;
+    // the shared write/provider/confinement guards remain installed.
+    await context.setExtraHTTPHeaders({});
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('Network.enable');
+    const requests = new Map();
+    let navigationStarted;
+    cdp.on('Network.requestWillBeSent', event => {
+      if (event.type === 'Document' && new URL(event.request.url).origin === appOrigin) navigationStarted ??= event.timestamp;
+      if (isBoundaryArchive(new URL(event.request.url))) requests.set(event.requestId, {
+        url: event.request.url, range: event.request.headers.Range ?? event.request.headers.range ?? null, started: event.timestamp,
+        startMs: navigationStarted === undefined ? null : (event.timestamp - navigationStarted) * 1000,
       });
-      cdp.on('Network.responseReceived', event => {
-        const request = requests.get(event.requestId);
-        if (request) Object.assign(request, { status: event.response.status, protocol: event.response.protocol,
-          bytes: Number(event.response.headers['content-length'] ?? event.response.headers['Content-Length']),
-          connectionId: event.response.connectionId, connectionReused: event.response.connectionReused, timing: event.response.timing,
-          responseHeaders: Object.fromEntries(Object.entries(event.response.headers).filter(([key]) => /^(age|cache-control|cache-status|cf-cache-status|etag|server-timing|content-range)$/i.test(key))),
-        });
+    });
+    cdp.on('Network.responseReceived', event => {
+      const request = requests.get(event.requestId);
+      if (request) Object.assign(request, { status: event.response.status, protocol: event.response.protocol,
+        bytes: Number(event.response.headers['content-length'] ?? event.response.headers['Content-Length']),
+        connectionId: event.response.connectionId, connectionReused: event.response.connectionReused, timing: event.response.timing,
+        responseHeaders: Object.fromEntries(Object.entries(event.response.headers).filter(([key]) => /^(age|cache-control|cache-status|cf-cache-status|etag|server-timing|content-range)$/i.test(key))),
       });
-      cdp.on('Network.loadingFinished', event => {
-        const request = requests.get(event.requestId);
-        if (request) { const { started, ...record } = request; boundaryRequests.push({ ...record, ms: Math.round((event.timestamp - started) * 1000) }); }
-      });
-    }
+    });
+    cdp.on('Network.loadingFinished', event => {
+      const request = requests.get(event.requestId);
+      if (request) { const { started, ...record } = request; boundaryRequests.push({ ...record, ms: Math.round((event.timestamp - started) * 1000) }); }
+    });
     page.on('pageerror', error => errors.push(safeError(error)));
     page.on('response', response => { if (response.status() >= 400) errors.push(`HTTP ${response.status()} ${new URL(response.url()).pathname}`); });
     page.on('requestfailed', request => {
@@ -294,25 +297,22 @@ for (const probe of probes) {
     await context.route('**/*', async route => {
       const request = route.request(), url = new URL(request.url());
       if (!['GET', 'HEAD'].includes(request.method())) { blocked.push(url.pathname); return route.abort('blockedbyclient'); }
-      const boundary = isBoundaryArchive(url);
-      const publicOnly = url.pathname === '/api/reader/settings' || url.pathname === '/api/reader/link-health' || url.pathname.startsWith('/api/portraits/');
-      if (nativeBoundaries && (boundary || publicOnly)) return route.fallback({ headers: {
-        ...request.headers(), ...(url.origin === productionOrigin ? { 'x-wtp-synthetic-run': browser.runId } : {}),
+      const boundary = url.origin === appOrigin && url.pathname.startsWith('/api/boundaries/');
+      const publicOnly = (url.origin === appOrigin || url.origin === productionOrigin)
+        && (url.pathname === '/api/reader/settings' || url.pathname === '/api/reader/link-health' || url.pathname.startsWith('/api/portraits/'));
+      if (url.origin === appOrigin && !boundary && !publicOnly) return route.fallback({ headers: {
+        ...request.headers(), 'x-wtp-synthetic-run': browser.runId,
       } });
-      const localBuild = nativeBoundaries && url.origin === productionOrigin;
-      const bridge = localBuild || boundary || publicOnly;
-      if (!bridge) return route.fallback();
-      const upstreamOrigin = localBuild ? `http://localhost:${port}` : boundary && url.origin === 'https://tiles.meanwhilemaps.com' ? url.origin : productionOrigin;
-      const productionUrl = `${upstreamOrigin}${url.pathname}${url.search}`;
+      if (!boundary && !publicOnly) return route.fallback();
+      const productionUrl = `${productionOrigin}${url.pathname}${url.search}`;
       const started = performance.now();
       try {
         const response = await fetch(productionUrl, { signal: AbortSignal.timeout(15000), headers: {
-          ...(localBuild ? Object.fromEntries(Object.entries(request.headers()).filter(([key]) => !['host', 'connection', 'content-length'].includes(key))) : {}),
           'x-wtp-synthetic-run': browser.runId,
           ...(request.headers().range ? { Range: request.headers().range } : {}),
         } });
         const body = Buffer.from(await response.arrayBuffer());
-        const record = { url: productionUrl, range: request.headers().range ?? null, status: response.status, bytes: body.length, ms: Math.round(performance.now() - started) };
+        const record = { url: productionUrl, range: request.headers().range ?? null, status: response.status, bytes: body.length, ms: Math.round(performance.now() - started), transport: 'Netlify-only public GET bridge' };
         if (boundary) boundaryRequests.push(record);
         if (!response.ok) bridgeFailures.push(record);
         const headers = Object.fromEntries([...response.headers].filter(([key]) => !['content-encoding', 'content-length', 'transfer-encoding'].includes(key)));
@@ -381,7 +381,7 @@ for (const probe of probes) {
         return data;
       };
     });
-    await page.goto(`${nativeBoundaries ? productionOrigin : `http://localhost:${port}`}/?zip=${probe.zip}`, { waitUntil: 'commit' });
+    await page.goto(`${appOrigin}/?zip=${probe.zip}`, { waitUntil: 'commit' });
     try { await page.waitForFunction(() => window.rs02?.informationPaint && window.rs02?.boundaryPaint, null, { timeout: 20000 }); }
     catch (error) { errors.push(`Information or boundary paint did not finish: ${safeError(error)}`); }
     const measured = await page.evaluate(() => {

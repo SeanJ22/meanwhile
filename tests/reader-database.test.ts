@@ -12,7 +12,7 @@ test("a small detail uses one read-only HTTP transaction and preserves transport
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   const calls: { body: unknown; readOnly: string | null }[] = [];
   const failure = new Error("The detail transport failed");
-  neonConfig.fetchFunction = async (_url, init) => {
+  neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     calls.push({ body: JSON.parse(String(init?.body)), readOnly: new Headers(init?.headers).get("Neon-Batch-Read-Only") });
     if (calls.length > 1) throw failure;
     return Response.json({ results: [{ command: "SELECT", rowCount: 1, fields: [{ name: "selected", dataTypeID: 25 }], rows: [["this place"]] }] });

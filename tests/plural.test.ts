@@ -1,7 +1,7 @@
 import {sourceHintsOf} from "../lib/control-plane/field-manual-sources.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 
 import {
@@ -46,6 +46,39 @@ function placeTasks(zips: readonly string[], state = "NH") {
   return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, zip, state }));
 }
 
+function installPlaceLookup(t: TestContext): void {
+  const previousUrl = process.env.DATABASE_URL, previousFetch = neonConfig.fetchFunction;
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
+  t.after(() => {
+    neonConfig.fetchFunction = previousFetch;
+    if (previousUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = previousUrl;
+  });
+  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
+    const results = body.queries.map(statement => {
+      assert.ok(statement.query.includes("Selected places and in-state touching districts"));
+      const selected = ["86515", "03060", "03101"].filter(zip => String(statement.params[2]).includes(zip));
+      const counties = [
+        { state: "AZ", fips: "04", geoid: "04001", zip: "86515" },
+        { state: "NM", fips: "35", geoid: "35045", zip: "86515" },
+        { state: "NH", fips: "33", geoid: "33011", zip: "03060" },
+        { state: "NH", fips: "33", geoid: "33013", zip: "03101" },
+      ].filter(row => selected.includes(row.zip));
+      const dataset: BuiltDataset = { formatVersion: 1, builtAt: "2026-10-01T00:00:00.000Z", coverage: "Fixture ZIP memberships",
+        zctaUniverse: selected, scopes: [{ type: "county", version: "county:2020", fractionBasis: "area", instanceCount: counties.length,
+          zctaEdgeCount: counties.length, versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020",
+            effectiveFor: "fixture", provenance: { sourceUrls: ["https://census.gov/fixture"], sourceDataset: "CENSUS_TAB20_REL2020",
+              sourceFiles: ["fixture"], sourceChecksums: ["fixture"], method: "Fixture overlaps", computedAt: "2026-10-01T00:00:00.000Z" } },
+          groupings: counties.map(row => ({ geoid: row.geoid, ocdId: `ocd-division/country:us/state:${row.state.toLowerCase()}/county:${row.geoid}`,
+            label: row.geoid, stateFips: row.fips, stateAbbr: row.state, memberStates: [row.state],
+            overlaps: [{ zcta5: row.zip, whole: row.zip !== "86515", fraction: row.zip === "86515" ? 0.5 : 1 }] })) }] };
+      return { command: "SELECT", rowCount: 1, rowAsArray: true, fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }],
+        rows: [["fixture:place-lookup", JSON.stringify(dataset)]] };
+    });
+    return Response.json({ results });
+  };
+}
+
 await installRegistryAuthority();
 for (const scope of ["US-AZ", "US-NH", "US-NJ"] as const) installStateLegislators(scope);
 
@@ -66,7 +99,8 @@ test("a 20-place Send offers independent jobs instead of one joined ZIP command"
   assert.throws(() => nationalPlaceJobs(placeTasks(["bad"]), { requestedAt, instructions: [] }), /five-digit ZIPs/);
 });
 
-test("a cross-state ZIP preserves independent state contracts and durable clocks", async () => {
+test("a cross-state ZIP preserves independent state contracts and durable clocks", async t => {
+  installPlaceLookup(t);
   const places = ["AZ", "NM"].map(state => ({ id: `national-place:86515:${state}`, zip: "86515", state }));
   const jobs = nationalPlaceJobs(places);
   assert.deepEqual(jobs.map(job => job.registeredContractId), ["registry-runtime:AZ", "registry-runtime:NM"]);
@@ -168,7 +202,8 @@ async function settledPlace(repos: ReturnType<typeof createMemoryRepositories>, 
   return (await repos.obligations.mustRead(row.id)).value;
 }
 
-test("a newer applicable Send wakes a settled no-progress place once without borrowing another place's request", async () => {
+test("a newer applicable Send wakes a settled no-progress place once without borrowing another place's request", async t => {
+  installPlaceLookup(t);
   const repos = createMemoryRepositories();
   const completedAt = "2026-10-01T01:00:00.000Z", now = "2026-10-01T03:00:00.000Z";
   const row = await settledPlace(repos, "03060", completedAt);

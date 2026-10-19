@@ -3,7 +3,7 @@
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
-import { fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
+import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -167,6 +167,7 @@ function MapEntryInner() {
   const dispatch = useUiDispatch();
 
   const takeForeground = useCallback(() => {
+    discardReaderAgendaStart();
     dispatch({ type: "select/venue", key: null });
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
@@ -223,6 +224,7 @@ function MapEntryInner() {
   const setLarge = useCallback((next: LargeSurface | null) => {
     setLargeStack(next ? [next] : []);
   }, []);
+  useEffect(() => discardReaderAgendaStart, []);
   // The last district hits, so the popup can recover the full set.
   const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
 
@@ -341,6 +343,7 @@ function MapEntryInner() {
 
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
+      discardReaderAgendaStart();
       dispatch({ type: "select/venue", key: null });
       // A new area clears every entity of the previous one.
       dispatch({ type: "select/district", ocdId: null, districtType: null });
@@ -468,6 +471,7 @@ function MapEntryInner() {
 
   /** Open a card from inside another one, keeping the way back. */
   const pushLarge = useCallback((next: LargeSurface) => {
+    beginReaderAgenda(next.kind === "entity" ? next.subject.agenda : null);
     setLargeStack((stack) =>
       [...stack, next].slice(-LARGE_STACK_LIMIT),
     );
@@ -476,6 +480,7 @@ function MapEntryInner() {
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
     (next: LargeSurface) => {
+      beginReaderAgenda(next.kind === "entity" ? next.subject.agenda : null);
       captureEvent(
         next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
@@ -980,6 +985,7 @@ function MapEntryInner() {
 
   const onSelectVenue = useCallback(
     (venue: Venue) => {
+      discardReaderAgendaStart();
       // A pin opens its venue card and focuses the map on the room.
       setLarge(null);
       dispatch({ type: "list/open", open: false });
@@ -1141,6 +1147,7 @@ function MapEntryInner() {
   });
 
   const closeCard = useCallback(() => {
+    discardReaderAgendaStart();
     setLargeStack([]);
     dispatch({ type: "list/open", open: false });
     dispatch({ type: "door/close" });
@@ -1152,6 +1159,8 @@ function MapEntryInner() {
 
   const applySnapshot = useCallback(
     (snap: CardSnapshot) => {
+      const restored = snap.largeStack.at(-1);
+      beginReaderAgenda(restored?.kind === "entity" ? restored.subject.agenda : null);
       setLargeStack(snap.largeStack);
       dispatch({ type: "select/venue", key: snap.venueKey });
       if (snap.listOpen) {

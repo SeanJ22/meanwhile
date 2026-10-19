@@ -71,3 +71,59 @@ export function discardReaderZipStart(zip: string, location: Promise<ZctaCentroi
   const early = typeof window === "undefined" ? undefined : window.__readerStart;
   if (early?.zip === zip && early.location === location) early.expires = 0;
 }
+
+type AgendaStart = { url: string; controller: AbortController; response: Promise<Response>; expires: number; timer: ReturnType<typeof setTimeout> };
+let agendaStart: AgendaStart | undefined;
+const agendaRequestUrl = (meetingId: string, bodyId: string) => `/api/agenda?meetingId=${encodeURIComponent(meetingId)}&bodyId=${encodeURIComponent(bodyId)}`;
+
+/** A dismissed or replaced card must not leave an unclaimed request running. */
+export function discardReaderAgendaStart(): void {
+  const start = agendaStart;
+  agendaStart = undefined;
+  if (start) { clearTimeout(start.timer); start.controller.abort(); }
+}
+
+/** Start only at the selection click, alongside the card's lazy module. */
+export function beginReaderAgenda(agenda: { meetingId: string; bodyId: string } | null | undefined): void {
+  if (typeof window === "undefined") return;
+  let controller: AbortController | undefined;
+  try {
+    if (!agenda) { discardReaderAgendaStart(); return; }
+    const url = agendaRequestUrl(agenda.meetingId, agenda.bodyId);
+    if (agendaStart?.url === url && agendaStart.expires > Date.now()) return;
+    discardReaderAgendaStart();
+    controller = new AbortController();
+    let response: Promise<Response>;
+    try { response = fetch(url, { signal: controller.signal }); }
+    catch (error) { response = Promise.reject(error); }
+    // A failure still reaches the card; this only handles rejection while its
+    // module is loading. Reopening the card starts a fresh attempt.
+    void response.catch(() => {});
+    const start: AgendaStart = { url, controller, response, expires: Date.now() + 30_000,
+      timer: setTimeout(() => { if (agendaStart === start) discardReaderAgendaStart(); }, 30_000) };
+    agendaStart = start;
+  } catch {
+    // Starting early must never prevent the card opening. Its existing read
+    // and error UI still handle an invalid URL or unavailable browser facility.
+    controller?.abort();
+    discardReaderAgendaStart();
+  }
+}
+
+/** Hand the one pending response to its exact meeting/body card, with its abort lifecycle. */
+export function fetchReaderAgendaResponse(meetingId: string, bodyId: string, signal: AbortSignal): Promise<Response> {
+  const url = agendaRequestUrl(meetingId, bodyId);
+  if (agendaStart && agendaStart.expires <= Date.now()) discardReaderAgendaStart();
+  const start = agendaStart?.url === url ? agendaStart : undefined;
+  if (!start) return fetch(url, { signal });
+  agendaStart = undefined;
+  clearTimeout(start.timer);
+  const { controller, response } = start;
+  if (signal.aborted) {
+    controller.abort(signal.reason);
+    return Promise.reject(signal.reason ?? new DOMException("The operation was aborted.", "AbortError"));
+  }
+  // Keep the link through body consumption, not just until headers arrive.
+  signal.addEventListener("abort", () => controller.abort(signal.reason), { once: true });
+  return response;
+}

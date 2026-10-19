@@ -80,7 +80,7 @@ type ReaderMeetingsOptions = {
     /** With `bodyIds`: also the bodies that serve any division those bodies serve, so shared documents are seen against their neighbours. */
     readonly neighbors?: boolean;
     readonly includeAgenda?: boolean;
-    /** Keep neighboring identities, but load agenda text only for the opened sitting and its merge candidates. */
+    /** Select the opened sitting with the merge, identity and document-ownership context its agenda needs. */
     readonly meetingIds?: readonly string[];
     readonly onContext?: (context: ReaderMeetingsContext) => void;
     readonly query?: Query;

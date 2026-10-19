@@ -29,6 +29,8 @@ import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerDatabaseQuery } from "./database.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
+const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
+  `'source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}'`).join(",") || "NULL";
 
 const normalizedGovernmentSql = (value: string) => {
   const flat = `btrim(regexp_replace(regexp_replace(replace(upper(${value}),'&',' AND '),'[^A-Z0-9, ]',' ','g'),'\\s+',' ','g'))`;
@@ -40,7 +42,10 @@ const agendaDocumentSql = (row: string) => `CASE WHEN $8::text[] IS NULL OR read
       (reader_payload_node(${row}.item)-'text') || jsonb_build_object('text',jsonb_build_object('$readerAgendaText',(
         SELECT text_id FROM agenda_texts WHERE value=reader_payload_value(reader_payload_node(${row}.item)->'text') LIMIT 1)))
     ELSE ${row}.item END`;
-const fullAgendaDocumentSql = (row: string) => `($8::text[] IS NULL OR reader_payload_node(${row}.item)->>'meetingId' IN (SELECT id FROM agenda_full_ids))`;
+const fullAgendaDocumentSql = (row: string) => `($8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback)
+    OR reader_payload_node(${row}.item)->>'meetingId' IN (SELECT id FROM agenda_full_ids))`;
+const ownedAgendaDocumentSql = (row: string) => `EXISTS (SELECT 1 FROM agenda_current_headers m WHERE m.scope=p.scope
+    AND reader_payload_value(m.value->'id') IS NOT DISTINCT FROM reader_payload_value(reader_payload_node(${row}.item)->'meetingId'))`;
 // For unopened sittings, only URL ownership participates in the agenda reading.
 const agendaDocumentLinkSql = (row: string) => `jsonb_build_object(
   'meetingId',reader_payload_value(reader_payload_node(${row}.item)->'meetingId'),
@@ -160,6 +165,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
     CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
+    WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (
   SELECT b.id,encoded.id AS encoded_id FROM bodies b
   CROSS JOIN LATERAL (SELECT string_agg(CASE WHEN ch ~ '^[A-Za-z0-9_.!~*''()-]$' THEN ch
@@ -189,7 +195,8 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
 ), meeting_rows AS MATERIALIZED (
   SELECT p.scope,CASE WHEN p.scope LIKE 'source:derived:family:%' THEN
     (p.header-'meetings'-'agendaDocuments'-'derivedMembers') || jsonb_build_object(
-      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM family_meetings m WHERE m.scope=p.scope),'[]'::jsonb),
+      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM family_meetings m WHERE m.scope=p.scope
+        AND ($8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR m.id IN (SELECT id FROM agenda_relevant_ids))),'[]'::jsonb),
       'agendaDocuments',coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
         FROM reader_payload_members(p.header->'agendaDocuments') d
         WHERE $7::boolean AND ${fullAgendaDocumentSql("d")} AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb))
@@ -197,9 +204,13 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
       || CASE WHEN p.header ? 'derivedMembers' THEN jsonb_build_object('derivedMembers',coalesce((
         SELECT jsonb_agg(d.item ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'derivedMembers') d
         WHERE reader_payload_node(d.item)->>'bodyId' IN (SELECT id FROM bodies)),'[]'::jsonb)) ELSE '{}'::jsonb END
-    ELSE (p.header-'agendaDocuments') || jsonb_build_object('agendaDocuments',CASE WHEN $7::boolean THEN
+    ELSE (p.header-'agendaDocuments') || CASE WHEN $8::text[] IS NULL THEN '{}'::jsonb ELSE jsonb_build_object(
+      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM reader_payload_members(p.header->'meetings') m
+        WHERE EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR reader_payload_node(m.item)->>'id' IN (SELECT id FROM agenda_relevant_ids)),'[]'::jsonb)) END
+      || jsonb_build_object('agendaDocuments',CASE WHEN $7::boolean THEN
       coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
-        FROM reader_payload_members(p.header->'agendaDocuments') d WHERE ${fullAgendaDocumentSql("d")}), '[]'::jsonb) ELSE '[]'::jsonb END)
+        FROM reader_payload_members(p.header->'agendaDocuments') d WHERE ${fullAgendaDocumentSql("d")}
+          AND ($8::text[] IS NULL OR ${ownedAgendaDocumentSql("d")})), '[]'::jsonb) ELSE '[]'::jsonb END)
       || CASE WHEN $8::text[] IS NOT NULL THEN jsonb_build_object('agendaDocumentLinks',${agendaDocumentLinksSql()}) ELSE '{}'::jsonb END
     END AS payload,p.current_version_id,p.confirmation FROM meeting_partitions p
 ), archived_versions AS MATERIALIZED (
@@ -219,46 +230,96 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     WHERE header.value->>'bodyId' IN (SELECT id FROM bodies) AND header.value->>'id' IS NOT NULL
       AND CASE WHEN header.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
         THEN (header.value->>'startsAt')::timestamptz < now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS}) ELSE false END
-), archived_meetings AS MATERIALIZED (
+), archived_calendar AS MATERIALIZED (
   SELECT DISTINCT ON (header->>'id') scope,retrieved_at,item FROM archived_records
     ORDER BY header->>'id',retrieved_at DESC
+), archived_meetings AS MATERIALIZED (
+  SELECT * FROM archived_calendar WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback)
+    OR reader_payload_node(item)->>'id' IN (SELECT id FROM agenda_relevant_ids)
 ), archived_document_records AS MATERIALIZED (
   SELECT DISTINCT ON (reader_payload_node(d.item)->>'id') d.item FROM archived_versions v
     CROSS JOIN LATERAL (SELECT candidate->'readModel' AS payload FROM civic_data_candidates WHERE id=v.id LIMIT 1) candidate
     CROSS JOIN LATERAL reader_payload_members(reader_payload_node(candidate.payload)->'agendaDocuments') d
-    WHERE $7::boolean AND reader_payload_node(d.item)->>'meetingId' IN (SELECT reader_payload_node(item)->>'id' FROM archived_meetings)
+    WHERE $7::boolean AND reader_payload_node(d.item)->>'meetingId' IN (SELECT reader_payload_node(item)->>'id' FROM archived_calendar)
     ORDER BY reader_payload_node(d.item)->>'id',v.retrieved_at DESC
 ), archived_documents AS MATERIALIZED (
   SELECT ${agendaDocumentSql("d")} AS item FROM archived_document_records d WHERE ${fullAgendaDocumentSql("d")}
 ), archived_document_links AS MATERIALIZED (
   SELECT DISTINCT ${agendaDocumentLinkSql("d")} AS item FROM archived_document_records d WHERE NOT ${fullAgendaDocumentSql("d")}
     AND reader_payload_value(reader_payload_node(d.item)->'documentUrl') IN (SELECT value FROM agenda_full_urls)
-), agenda_meeting_headers AS MATERIALIZED (
-  SELECT header.value FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
+), agenda_current_headers AS MATERIALIZED (
+  SELECT p.scope,header.value FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
     WHERE $8::text[] IS NOT NULL AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
       OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
-  UNION ALL SELECT reader_payload_node(item) FROM archived_meetings WHERE $8::text[] IS NOT NULL
+), agenda_raw_headers AS MATERIALIZED (
+  SELECT * FROM agenda_current_headers
+  UNION ALL SELECT scope,reader_payload_node(item) FROM archived_calendar WHERE $8::text[] IS NOT NULL
+), agenda_meeting_headers AS MATERIALIZED (
+  SELECT scope,value,coalesce(nullif(value->>'bodyId',''),(value->>'ocdId')||':'||(value->>'bodyName')) AS body_key,
+    CASE WHEN value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND pg_input_is_valid(value->>'startsAt','timestamptz')
+      THEN (value->>'startsAt')::timestamptz END AS raw_at
+  FROM agenda_raw_headers
+), agenda_header_ids AS MATERIALIZED (
+  SELECT h.scope,h.value,h.body_key,h.raw_at,identity.id FROM agenda_meeting_headers h CROSS JOIN LATERAL (
+    SELECT h.value->>'id' AS id UNION SELECT jsonb_array_elements_text(reader_payload_value(h.value->'mergedMeetingIds'))
+  ) identity
+), agenda_start_facts AS MATERIALIZED (
+  SELECT substr(m.id,9) AS id,f.value->>'startsAt' AS value,
+    CASE WHEN f.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND pg_input_is_valid(f.value->>'startsAt','timestamptz')
+      THEN (f.value->>'startsAt')::timestamptz END AS starts_at
+  FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
+    CROSS JOIN LATERAL (SELECT value FROM fact WHERE $8::text[] IS NOT NULL AND entity_id=m.id AND status='live' AND field='starts_at' OFFSET 0) f
+), agenda_calendar_fallback AS MATERIALIZED (
+  -- Ambiguous identities can change global duplicate-ID/merge decisions. Keep their original corpus intact.
+  SELECT true AS needed WHERE EXISTS (SELECT 1 FROM agenda_meeting_headers h WHERE nullif(h.value->>'id','') IS NULL
+    OR h.value->>'bodyId'='' OR h.body_key IS NULL OR h.raw_at IS NULL
+    OR NOT EXISTS (SELECT 1 FROM pg_timezone_names z WHERE z.name=h.value->>'timeZone'))
+    OR EXISTS (SELECT 1 FROM agenda_header_ids GROUP BY id HAVING count(DISTINCT jsonb_build_array(body_key,value->>'startsAt',value->>'timeZone'))>1)
+    OR EXISTS (SELECT 1 FROM agenda_start_facts WHERE starts_at IS NULL)
+    OR EXISTS (SELECT 1 FROM agenda_start_facts f WHERE f.id=ANY($8::text[]) AND NOT EXISTS (SELECT 1 FROM agenda_header_ids h WHERE h.id=f.id))
 ), agenda_targets AS MATERIALIZED (
-  SELECT value FROM agenda_meeting_headers WHERE value->>'id'=ANY($8::text[])
+  SELECT * FROM agenda_meeting_headers WHERE value->>'id'=ANY($8::text[])
     OR reader_payload_value(value->'mergedMeetingIds') ?| $8::text[]
 ), agenda_full_ids AS MATERIALIZED (
   SELECT unnest($8::text[]) AS id
-  UNION SELECT m.value->>'id' FROM agenda_meeting_headers m WHERE EXISTS (
+  UNION SELECT m.value->>'id' FROM agenda_meeting_headers m WHERE EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR EXISTS (
     SELECT 1 FROM agenda_targets target WHERE m.value->>'id'=target.value->>'id'
-      OR coalesce(m.value->>'bodyId',(m.value->>'ocdId')||':'||(m.value->>'bodyName'))
-        =coalesce(target.value->>'bodyId',(target.value->>'ocdId')||':'||(target.value->>'bodyName'))
-      AND CASE WHEN m.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND target.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
-        THEN abs(extract(epoch FROM (m.value->>'startsAt')::timestamptz-(target.value->>'startsAt')::timestamptz))<=48*60*60
-        ELSE false END)
+      OR m.body_key=target.body_key AND abs(extract(epoch FROM m.raw_at-target.raw_at))<=72*60*60)
 ), agenda_full_documents AS MATERIALIZED (
   SELECT header.value FROM (
-    SELECT d.item FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'agendaDocuments') d WHERE $7::boolean AND $8::text[] IS NOT NULL
+    SELECT d.item FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'agendaDocuments') d
+      WHERE $7::boolean AND $8::text[] IS NOT NULL AND CASE WHEN p.scope LIKE 'source:derived:family:%'
+        THEN reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)
+        ELSE ${ownedAgendaDocumentSql("d")} END
     UNION ALL SELECT item FROM archived_document_records WHERE $8::text[] IS NOT NULL
   ) d,LATERAL (SELECT reader_payload_node(d.item) AS value) header
-    WHERE header.value->>'meetingId' IN (SELECT id FROM agenda_full_ids)
+    WHERE EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR header.value->>'meetingId' IN (SELECT id FROM agenda_full_ids)
 ), agenda_full_urls AS MATERIALIZED (
   SELECT DISTINCT reader_payload_value(value->'documentUrl') AS value FROM agenda_full_documents
+), agenda_possible_times AS MATERIALIZED (
+  SELECT value,body_key,raw_at AS starts_at FROM agenda_meeting_headers
+  UNION SELECT h.value,h.body_key,f.starts_at FROM agenda_header_ids h JOIN agenda_start_facts f USING(id)
+), agenda_context_seeds AS MATERIALIZED (
+  SELECT id FROM agenda_full_ids
+  UNION SELECT m.value->>'id' FROM agenda_possible_times m WHERE EXISTS (
+    SELECT 1 FROM agenda_possible_times target WHERE target.value->>'id' IN (SELECT id FROM agenda_full_ids)
+      AND m.body_key=target.body_key AND abs(extract(epoch FROM m.starts_at-target.starts_at))<=72*60*60)
+  UNION SELECT reader_payload_node(d.item)->>'meetingId' FROM (
+    SELECT d.item FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'agendaDocuments') d
+      WHERE $7::boolean AND $8::text[] IS NOT NULL
+    UNION ALL SELECT item FROM archived_document_records WHERE $8::text[] IS NOT NULL
+  ) d WHERE reader_payload_value(reader_payload_node(d.item)->'documentUrl') IN (SELECT value FROM agenda_full_urls)
+), agenda_relevant_ids AS MATERIALIZED (
+  SELECT id FROM agenda_context_seeds
+  UNION SELECT m.value->>'id' FROM agenda_meeting_headers m WHERE EXISTS (
+    SELECT 1 FROM agenda_meeting_headers seed WHERE seed.value->>'id' IN (SELECT id FROM agenda_context_seeds)
+      AND m.body_key=seed.body_key AND abs(extract(epoch FROM m.raw_at-seed.raw_at))<=72*60*60)
+), agenda_fact_ids AS MATERIALIZED (
+  SELECT h.id FROM agenda_header_ids h WHERE h.value->>'id' IN (SELECT id FROM agenda_relevant_ids)
+  UNION SELECT id FROM agenda_header_ids WHERE scope IN (${retiredMeetingScopesSql})
+  UNION SELECT substr(m.id,9) FROM bodies b JOIN entity m ON m.parent_id=b.id AND m.kind='meeting'
+    WHERE $8::text[] IS NOT NULL AND NOT EXISTS (SELECT 1 FROM agenda_header_ids h WHERE h.id=substr(m.id,9))
 ), agenda_text_candidates AS MATERIALIZED (
   SELECT reader_payload_value(value->'text') AS value FROM agenda_full_documents
     WHERE NOT coalesce(value->'text' ? '$civicPayloadPart',false)
@@ -342,7 +403,7 @@ export interface PlacePackage {
 }
 
 type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean;
-  /** Load text for these sittings and their merge candidates; retain neighbouring document metadata for agenda classification. */
+  /** Load these sittings and their merge/identity/URL context; ordinary body reads retain the complete calendar. */
   readonly meetingIds?: readonly string[];
   readonly neighbors?: boolean };
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());

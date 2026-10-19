@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 57 NOT SHIPPED; RS-02 RETURNED; BS-01 DEPENDENCY BLOCKED
+build_state: CODEX SHIFT ENDED; RELEASE 56 SHIPPED; RELEASE 57 NOT SHIPPED
 worker: codex-river
 provider: Codex
 run_id: river-final-handoff-20261019
 lock: codex-river-final-handoff-0031e85e-232a-47ca-9782-a99d237d3bf2
-heartbeat: 2026-10-19T14:42:26Z
+heartbeat: 2026-10-19T14:42:28Z
 
 ## Codex River shift — October 18
 
@@ -34,6 +34,11 @@ Release 55 already shipped UI-01 only in PR 764, source ab0c352c, merge 4bdb43a7
 Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin first on PATH; PNPM_HOME=/tmp/river-pnpm; XDG_DATA_HOME=/tmp/river-xdg; PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (Chromium 1234). Use network-enabled additional permissions for shell subprocess/network work. Do not print credentials. .scratch/river/update-board.mjs checks lock ownership and uses fast-forward board pushes. Current .scratch/river/test.json is FAIL on release-57 candidate a0ba47a17014; the release-56 PASS is preserved under .scratch/river/release-56-passed/.
 
 This run is at a safe stopping point. Bounded continuation stays quiet on unchanged states and skips fresh owners. The final run must stop only its own checks if necessary, preserve any unpromoted candidate/logs and release its own lock before 15:00 UTC. The lock is released in cleanup after saving this handoff; read its current field before claiming with a new token.
+
+
+FINAL CODEX REPLACEMENT HANDOFF — 2026-10-19T14:42:27.678Z: final scheduled scan at 14:41:38Z found no new eligible READY. All returned exact inputs remain unchanged; BS-01 remains blocked on an eligible validated reader successor. Release 55 shipped UI-01 only; release 56 shipped SRC-MN only, with their already-recorded tested/merged/web-deployed/observer evidence. No release 57 shipped. Remote River is 6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c and main is 16679a9ea0ec479bf0edad680d916b01418d0ad9. Local river-next remains failed, unpromoted candidate a0ba47a1701482328d2a89da00ea47c9d6053679, saved also as river-saved-rs02-bs01-failed-20261019. Current test.json is FAIL on that candidate. Full logs and fold/test are preserved in .scratch/river/release-57-preparation/; release-56 PASS remains separately in .scratch/river/release-56-passed/. No owned gates or release checks are running.
+
+Claude River can resume at October19 8AM America/Phoenix (15:00UTC): claim a new token only when the lock is free, re-scan current READY and exact prior returns, assess any repaired RS-02/SH/AQ/CP or other replacement freshly, and preserve sourced vacancies, Capitol offices, officeDetails/source provenance and exact-state fallback. Do not retry RS-02 9a7cd4dca64c or candidate a0ba47a17014 unchanged. BS-01 is already past its age trigger and is due once its reader dependency is eligible. Include current main in the next changed combination, number migrations through river.mjs and run gates once; only then promote and open next release number57. Disable native auto-merge while required checks run and merge manually with expected head SHA and method merge once green. Reuse the existing post-deploy reading. No automatic revert or budget/pause/spending/production-data changes. Existing live browser certificate limitation and PR765 native attachment gap remain explicitly unverified. This Codex replacement is stopping now before the deadline; its lock is released in finally cleanup and read back below. No further release work is scheduled for this replacement.
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

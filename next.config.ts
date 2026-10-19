@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 // Static geography is file-backed; mutable civic facts resolve production pointers.
 const staticGeographyTrace = [
   "./data/states/*/geo/**/*.geojson",
-  "./data/derived/resolver-geometry.json",
+  // The resolver manifest is read by a literal path and traces itself.
   "./public/geo/*.geojson",
 ];
 const stateOfficeTrace = [

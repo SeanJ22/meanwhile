@@ -81,7 +81,7 @@ test("send many writes every hunt in ONE config write, with its own budget and g
   }), deps(repos));
   assert.equal(out.ok, true, out.receipt.says);
   assert.equal(writes, 1, "one write for the whole list");
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true});
   assert.ok(row && isAdminConfig(row.value));
   const scopes = expansionScopesOf(row.value as never).scopes;
   assert.equal(scopes.length, 3);
@@ -110,7 +110,7 @@ test("a hunt's budget can be changed, paused at zero and resumed at what it had"
   const repos = createMemoryRepositories();
   await submit(ask("expansion.scope.setMany", "many-key-00000005", { items: [{ zip: "85635", stateAbbr: "AZ", budgetUsd: 25 }] }), deps(repos));
   const key = "zcta:2020/85635";
-  const at = async () => expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as never).scopes.find((s) => s.key === key)!;
+  const at = async () => expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{ids:[key]}}))!.value as never).scopes.find((s) => s.key === key)!;
   const cut = await submit(ask("expansion.scope.budget", "budget-key-0000001", { key, change: "set", budgetUsd: 40 }), deps(repos));
   assert.equal(cut.ok, true, cut.receipt.says);
   assert.equal((await at()).budgetUsd, 40);
@@ -168,7 +168,7 @@ test("one pick is one mission: a state is sent as one scope with its own budget,
     { geography: { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, AZ", stateAbbr: "AZ" }, budgetUsd: 10, group: null },
   ], priority: 1 }), deps(repos));
   assert.equal(out.ok, true, out.receipt.says);
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true});
   const scopes = expansionScopesOf(row!.value as never).scopes;
   assert.deepEqual(scopes.map(s => s.key).sort(), ["county:2020/04019", "state:2020/04"]);
   assert.equal(scopes.find(s => s.key === "state:2020/04")?.budgetUsd, 40);

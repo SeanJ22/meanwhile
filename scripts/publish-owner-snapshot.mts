@@ -78,6 +78,7 @@ const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
   ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
   : null;
 
+// Candidate display names belong to the canonical candidate-profile projection, not this snapshot.
 function candidateNames(): Record<string, string> {
   return {};
 }

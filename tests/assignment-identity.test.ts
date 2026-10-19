@@ -304,7 +304,7 @@ test("the owner's questions travel typed through expansion.scope.set onto the de
   const out = await submit(request("expansion.scope.set", { geography: PIMA, priority: 1, budgetUsd: 5, note: "start here", questions: ["HAS_CHANGED", "HAVE_IT", "HAVE_IT"] }, "question-0001"), deps);
   assert.equal(out.ok, true, out.receipt.says);
   assert.match(out.receipt.says, /Your questions are kept on it and on every piece of work it reaches: Do we have this record at all\? Has it changed since we last looked\?/);
-  const [scope] = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).scopes;
+  const [scope] = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}))?.value ?? null).scopes;
   assert.deepEqual(scope.questions, ["HAVE_IT", "HAS_CHANGED"], "typed, once each, in the canonical order");
   assert.equal(scope.note, "start here", "and never folded into the words");
 

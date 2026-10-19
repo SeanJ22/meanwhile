@@ -4,6 +4,8 @@ import { serializeUnchangedConfirmation } from "../../lib/civic-data/unchanged-c
 import { canonicalCivicDataHash } from "../../lib/civic-data/canonical-hash.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../../lib/civic-data/types.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
+import { installReaderDatabaseQuery } from "../../lib/reader/database.ts";
+import type { Query } from "../../lib/facts/publish.ts";
 import { meetingStateOf } from "../../lib/meetings/body-scope.ts";
 import type { MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
@@ -15,6 +17,7 @@ import type { OutcomeSnapshot } from "../../lib/outcomes/types.ts";
 import { neonConfig } from "@neondatabase/serverless";
 import { isCensusPlaceholderDivision } from "../../lib/registry/census-placeholders.ts";
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
+import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
 export interface ReaderValues {
@@ -27,6 +30,41 @@ interface Fixture { store: MemoryRoutineDataStore; meetings?: RoutineDataStore; 
 const fixtures = new Map<string, Fixture>();
 let active = "default";
 const fixture = (key = active) => { let held = fixtures.get(key); if (!held) { held = {store:new MemoryRoutineDataStore()}; fixtures.set(key,held); } return held; };
+
+function canonicalRows(sql: string, params: readonly unknown[]): Record<string, unknown>[] | undefined {
+  const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
+  const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("p.record_class='MEETING_OUTCOME'");
+  const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[])");
+  if (!selectedOutcomes && !selectedKeys) return undefined;
+  const keys = Array.isArray(params[0]) ? params[0] : String(params[0]).match(/"((?:[^"\\]|\\.)*)"/g)?.map(key => JSON.parse(key)) ?? [];
+  const exactKeys = selectedOutcomes ? params[3] as readonly string[] : [];
+  const stateOutcomes = selectedOutcomes && params[2] === null;
+  const ids = new Set(selectedOutcomes && !stateOutcomes ? params[2] as readonly string[] : []);
+  const selectors = stateOutcomes ? params[1] as readonly string[] : [], states = stateOutcomes ? params[4] as readonly string[] : [];
+  const doorPrefixes = stateOutcomes ? (params[5] as readonly string[]).map(prefix => prefix.slice(0, -1).replace(/\\([\\%_])/g, "$1")) : [];
+  const bodySelected = (sitting: OutcomeSnapshot["sittings"][number]) => selectors.includes(sitting.bodyId ?? "") || selectors.includes(sitting.meetingId)
+    || states.includes(meetingStateOf(sitting.bodyId));
+  const stateScoped = (p: PromotedProjection) => keys.some(prefix => p.scope.startsWith(String(prefix).replace(/%$/, ""))) || doorPrefixes.some(prefix => p.scope.startsWith(prefix));
+  return [...held.promotions.values()].filter(p => selectedOutcomes
+    ? p.recordClass === "MEETING_OUTCOME" && (stateScoped(p) || exactKeys.includes(p.key)
+      || stateOutcomes && p.scope.startsWith("door:") && (p.payload as OutcomeSnapshot).sittings?.some(bodySelected))
+    : keys.includes(p.key)).map(p => {
+      const c = held.candidates.get(p.versionId);
+      const snapshot = p.payload as OutcomeSnapshot;
+      const shape = Array.isArray(snapshot?.sittings) && Array.isArray(snapshot?.tenants);
+      const published = c?.state === "PROMOTED" && c.acquisitionSucceeded && c.promotedVersion === p.versionId && c.lastKnownGoodVersion === p.versionId &&
+        p.lastKnownGoodVersionId === p.versionId && c.candidate.sourceId === p.sourceId && c.candidate.recordClass === p.recordClass && c.candidate.scope === p.scope &&
+        p.receipt.decision === "GOOD" && p.receipt.candidateId === p.versionId && p.receipt.sourceId === p.sourceId && p.receipt.recordClass === p.recordClass && p.receipt.scope === p.scope;
+      return { row_kind: "promotion", key: p.key, record_class: p.recordClass, scope: p.scope, source_id: p.sourceId,
+        current_version_id: p.versionId, last_known_good_version_id: p.lastKnownGoodVersionId,
+        promoted_at: p.promotedAt, validation_receipt: p.receipt,
+        payload: selectedOutcomes && shape ? { ...snapshot, sittings: snapshot.sittings.filter(sitting => stateOutcomes ? stateScoped(p) || bodySelected(sitting) : ids.has(sitting.meetingId)) } : p.payload,
+        normalized_hash: c?.candidate.normalization.normalizedHash, retrieved_at: c?.candidate.retrieval.retrievedAt,
+        temporal: c?.candidate.temporal, confirmation: null, published, ...(selectedOutcomes ? { snapshot_shape_valid: shape,
+          selected_by_body: stateOutcomes && shape && snapshot.sittings.some(bodySelected) } : {}) };
+    });
+}
+
 let patched = false;
 function patchStore() {
   if (patched) return;
@@ -34,7 +72,6 @@ function patchStore() {
   process.env.DATABASE_URL ??= "postgresql://fixture:fixture@canonical-reader.invalid/fixture";
   neonConfig.fetchFunction = async (_input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const request = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
-    const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
     const results = (request.queries ?? [request]).map(statement => {
       const sql = statement.query ?? "", params = statement.params ?? [];
       let rows: Record<string, unknown>[] = [];
@@ -54,19 +91,7 @@ function patchStore() {
           });
         }
       }
-      if (sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[])")) {
-        const keys = Array.isArray(params[0]) ? params[0] : String(params[0]).match(/"((?:[^"\\]|\\.)*)"/g)?.map(key => JSON.parse(key)) ?? [];
-        rows = keys.flatMap(key => {
-          const p = held.promotions.get(key);
-          if (!p) return [];
-          const c = held.candidates.get(p.versionId)!;
-          return [{ key: p.key, record_class: p.recordClass, scope: p.scope, source_id: p.sourceId,
-            current_version_id: p.versionId, last_known_good_version_id: p.lastKnownGoodVersionId,
-            promoted_at: p.promotedAt, validation_receipt: p.receipt, payload: p.payload,
-            normalized_hash: c.candidate.normalization.normalizedHash, retrieved_at: c.candidate.retrieval.retrievedAt,
-            confirmation: null, published: true }];
-        });
-      }
+      rows = canonicalRows(sql, params) ?? rows;
       const names = [...new Set(rows.flatMap(row => Object.keys(row)))];
       return { command: "SELECT", rowCount: rows.length, rowAsArray: true,
         fields: names.map(name => ({ name, dataTypeID: 114 })), rows: rows.map(row => names.map(name => JSON.stringify(row[name]))) };
@@ -112,6 +137,16 @@ export function installReaderValues(input: ReaderValues, key = active): void {
     const value = entry?.value as {kind?:string;entries?:PromotedEdgeEntry[]} | undefined;
     if (value?.kind === "PROMOTED_POINTERS") installCanonicalEntries(value.entries ?? [],key);
   }
+  const outcomes = input.authority?.["meeting-outcomes"];
+  if (outcomes) {
+    const snapshot = outcomes.value as OutcomeSnapshot;
+    for (const state of new Set(snapshot.sittings.map(sitting => meetingStateOf(sitting.bodyId ?? sitting.ocdId)))) {
+      const sittings = snapshot.sittings.filter(sitting => meetingStateOf(sitting.bodyId ?? sitting.ocdId) === state);
+      installCanonicalEntries([provenEdgeEntry({ recordClass: "MEETING_OUTCOME", scope: `US-${state}:fixture:meeting-outcomes`,
+        sourceId: "fixture-meeting-outcomes", versionId: `${outcomes.versionId}:${state}`,
+        value: { ...snapshot, sittings, tenants: [...new Set(sittings.map(sitting => sitting.slug))] } })], key);
+    }
+  }
   activateCanonicalFixture(key);
 }
 
@@ -135,7 +170,7 @@ export function activateCanonicalFixture(key: string): void {
   } as unknown as ReaderAuthorityEdgeBundle;
   if (held.values) { clearPromotedReadModelCache(); enterReaderAuthorityEdge(bundle); }
   if(input.authority?.["meeting-outcomes"]) primeOutcomeProjection(input.authority["meeting-outcomes"].value as OutcomeSnapshot,input.authority["meeting-outcomes"].versionId);
-  installFactReader(async (sql,params=[]) => {
+  const readFacts: Query = async (sql,params=[]) => {
     const values = [...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries = values.filter(p => p.recordClass === "REGISTRY_RUNTIME_BINDING").map(p => p.payload as RegistryRuntimeReadModel);
     const rosters = registries.flatMap(r => r.bodyRosters ?? []);
@@ -144,7 +179,8 @@ export function activateCanonicalFixture(key: string): void {
       if (sql.includes("SELECT place_id FROM entity_place")) return (params[0] as string[]).map(id => ({place_id:id.split("#")[0]}));
       return rosterFactReader(rosters)(sql,params);
     }
-    const state = String(params[0]), divisions = params[1] as string[], named = params[2] as string[], all = params[4] === true;
+    const state = String(params[0]), named = params[2] as string[], all = params[4] === true;
+    const divisions = [...new Set([...(params[1] as string[]), ...(params[8] ? named.filter(id => id.startsWith("ocd-division/")).map(id => id.split("#")[0]) : [])])];
     const registration = values.find(p => p.recordClass === "REGISTRATION" && p.scope === `US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
     const governments = (registration?.governments ?? []).filter(government => government.associations.some(association => divisions.includes(association.divisionId)));
     const registrationDivisions = (registration?.divisions ?? []).filter(division => divisions.includes(division.ocdId));
@@ -158,6 +194,10 @@ export function activateCanonicalFixture(key: string): void {
     const ids = entities.map(e => e.id);
     const meeting_rows = pointers.filter(p => (params[5] || !p.scope.endsWith(":history")) && p.payload.meetings.some(m => m.bodyId && ids.includes(m.bodyId)))
       .map(p => ({scope:p.scope,payload:structuredClone(p.payload),current_version_id:p.versionId,confirmation:p.latestConfirmation ? serializeUnchangedConfirmation(p.latestConfirmation) : null}));
-    return [{registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
-  });
+    const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
+    return [{registry,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
+  };
+  installFactReader(readFacts);
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(statement =>
+    canonicalRows(statement.text, statement.params) ?? readFacts(statement.text, statement.params))));
 }

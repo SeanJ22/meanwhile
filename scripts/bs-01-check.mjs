@@ -1,19 +1,28 @@
-/** Read-only cold Ballot measurement. Both directories must already contain production builds.
+/** Read-only cold Ballot measurement. Run Node with --experimental-strip-types for the shared browser guard.
+ * Both directories must already contain production builds.
  * DATABASE_URL must have no write privileges. BS01_BASELINE_ROOT identifies the before build.
+ * BS01_BEFORE_HTTP_FILE reuses an explicitly selected 51-response capture and its
+ * .metadata.json sidecar after verifying its bytes, states, status and build identity.
  * BS01_OUTPUT selects the results directory. Each Ballot request gets a fresh server process.
  */
-import { chromium } from 'playwright';
+import { launchGuarded, runIdFor } from './browser.mts';
+import { syntheticRunHeaders } from '../lib/db/run-marker.ts';
 import { neon } from '@neondatabase/serverless';
 import { spawn, execFileSync } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import http from 'node:http';
 
 const root = process.cwd();
+const runId = runIdFor('bs-01-cold');
+process.env.WTP_RUN_ID = runId;
+const runHeaders = syntheticRunHeaders({ WTP_RUN_ID: runId });
 const beforeRoot = process.env.BS01_BASELINE_ROOT && resolve(process.env.BS01_BASELINE_ROOT);
+const beforeFile = process.env.BS01_BEFORE_HTTP_FILE && resolve(process.env.BS01_BEFORE_HTTP_FILE);
 const output = resolve(process.env.BS01_OUTPUT ?? '.scratch/bs01-measurement');
-if (!beforeRoot || !process.env.DATABASE_URL) throw Error('BS01_BASELINE_ROOT and a production read-only DATABASE_URL are required');
+if ((!beforeRoot && !beforeFile) || !process.env.DATABASE_URL) throw Error('A baseline build or explicit HTTP capture and a production read-only DATABASE_URL are required');
 const sql = neon(process.env.DATABASE_URL);
 const [[role]] = await sql.transaction([sql.query(`SELECT current_user AS role, current_setting('transaction_read_only') AS read_only,
   EXISTS(SELECT 1 FROM pg_tables WHERE schemaname='public' AND has_table_privilege(current_user,quote_ident(schemaname)||'.'||quote_ident(tablename),'INSERT,UPDATE,DELETE')) AS can_write`)], { readOnly: true });
@@ -22,6 +31,8 @@ const zips = { AL:'36104',AK:'99801',AZ:'85701',AR:'72201',CA:'95814',CO:'80203'
 const places = Object.entries(zips);
 await mkdir(output, { recursive: true });
 const save = (name, value) => writeFile(`${output}/${name}.json`, JSON.stringify(value, null, 2));
+const measuredBuildId = (await readFile(`${root}/.next/BUILD_ID`, 'utf8')).trim();
+await save('measurement-context', { startedAt: new Date().toISOString(), buildId: measuredBuildId, runId, role });
 const message = error => String(error).split(process.env.DATABASE_URL).join('[read-only connection]');
 const same = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
 
@@ -57,7 +68,7 @@ async function responseSweep(directory, name) {
     const server = await start(directory, port);
     try {
       const start = performance.now();
-      const response = await fetch(`http://127.0.0.1:${port}/ballot?zip=${zip}`, { signal: AbortSignal.timeout(30000) });
+      const response = await fetch(`http://127.0.0.1:${port}/ballot?zip=${zip}`, { signal: AbortSignal.timeout(30000), headers: runHeaders });
       const firstMs = performance.now() - start;
       const html = await response.text(), fullMs = performance.now() - start;
       const ids = [...new Set([...html.matchAll(/data-contest-id="([^"]+)"/g)].map(match => match[1]))];
@@ -71,7 +82,30 @@ async function responseSweep(directory, name) {
   return rows;
 }
 
-const before = await responseSweep(beforeRoot, 'before-http');
+let before, beforeSource;
+if (beforeFile) {
+  const bytes = await readFile(beforeFile);
+  before = JSON.parse(bytes);
+  beforeSource = JSON.parse(await readFile(`${beforeFile}.metadata.json`, 'utf8'));
+  const validIdentity = /^[a-f0-9]{40}$/.test(beforeSource.sourceSha ?? '') &&
+    typeof beforeSource.sourceBuildId === 'string' && beforeSource.sourceBuildId.length > 0 && beforeSource.readonlyRole === 'readonly';
+  const validRows = Array.isArray(before) && before.length === places.length && new Set(before.map(row => row.state)).size === places.length &&
+    places.every(([state, zip]) => before.some(row => row.state === state && row.zip === zip && row.status === 200 && !row.error &&
+      Array.isArray(row.ids) && row.ids.every(id => typeof id === 'string') && Number.isFinite(row.fullMs) && row.fullMs > 0 &&
+      Number.isInteger(row.candidates) && row.candidates >= 0 && Number.isInteger(row.fundingSections) && row.fundingSections >= 0));
+  if (!validIdentity || !validRows || beforeSource.sha256 !== createHash('sha256').update(bytes).digest('hex')) throw Error('The selected before capture failed state/status/build/hash validation');
+  if (resolve(beforeFile) !== `${output}/before-http.json`) await writeFile(`${output}/before-http.json`, bytes);
+  beforeSource = { ...beforeSource, reusedFrom: beforeFile, reuseCheckedAt: new Date().toISOString() };
+  console.log(JSON.stringify({ phase: 'before-http-reused', places: before.length, sourceSha: beforeSource.sourceSha, sourceBuildId: beforeSource.sourceBuildId }));
+} else {
+  before = await responseSweep(beforeRoot, 'before-http');
+  const bytes = await readFile(`${output}/before-http.json`);
+  beforeSource = { capturedAt: new Date().toISOString(), sourceRoot: beforeRoot,
+    sourceSha: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: beforeRoot, encoding: 'utf8' }).trim(),
+    sourceBuildId: (await readFile(`${beforeRoot}/.next/BUILD_ID`, 'utf8')).trim(), readonlyRole: role.role,
+    rows: before.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+}
+await writeFile(`${output}/before-http.json.metadata.json`, JSON.stringify(beforeSource, null, 2));
 const after = await responseSweep(root, 'after-http');
 const failures = [];
 for (const row of after) {
@@ -82,10 +116,10 @@ for (const row of after) {
 }
 
 // The map uses another process. Every Ballot server below has empty state, place and ballot caches.
-const settingsResponse = await fetch('https://meanwhileusa.com/api/reader/settings', { signal: AbortSignal.timeout(15000) });
+const settingsResponse = await fetch('https://meanwhileusa.com/api/reader/settings', { signal: AbortSignal.timeout(15000), headers: runHeaders });
 if (!settingsResponse.ok) throw Error('Public reader settings could not be read');
 const settings = Buffer.from(await settingsResponse.arrayBuffer());
-const map = await start(root, 3221), browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
+const map = await start(root, 3221), browser = await launchGuarded({ label: 'bs-01-cold', blockWrites: true, headless: true, args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
 let ballotRequests = [];
 const proxy = http.createServer((request, response) => {
   if (request.url.startsWith('/ballot')) ballotRequests.push(Date.now());
@@ -99,7 +133,7 @@ const painted = [];
 try {
   for (const [state, zip] of places) {
     ballotRequests = [];
-    const server = await start(root, 3222), context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+    const server = await start(root, 3222), context = await browser.context({ viewport: { width: 1440, height: 1000 } });
     const page = await context.newPage(), errors = []; let clicked = false;
     page.on('pageerror', error => errors.push(message(error)));
     await context.route('**/*', route => {
@@ -108,7 +142,7 @@ try {
       if (url.pathname === '/ballot' && (request.headers()['next-router-prefetch'] || request.headers()['next-router-segment-prefetch'])) return route.abort();
       if (url.pathname === '/api/reader/settings') return route.fulfill({ status: 200, contentType: 'application/json', body: settings });
       if (url.pathname.startsWith('/api/boundaries/')) return route.abort();
-      return route.continue();
+      return route.fallback();
     });
     try {
       await page.goto(`http://127.0.0.1:3220/?zip=${zip}`, { waitUntil: 'domcontentloaded' });
@@ -161,6 +195,8 @@ try {
 for (const row of painted) if (row.errors.length) failures.push(`${row.state}: ${row.errors.join('; ')}`);
 const slowest = (rows, field) => rows.filter(row => Number.isFinite(row[field])).sort((a, b) => b[field] - a[field])[0];
 const report = { sha: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), role,
+  buildId: measuredBuildId,
+  beforeSource,
   places: places.length, before: slowest(before, 'fullMs'), after: slowest(after, 'fullMs'),
   browser: slowest(painted, 'fullMs'), reaction: slowest(painted, 'reactionMs'), failures };
 await save('summary', report); console.log(JSON.stringify(report, null, 2));

@@ -4,11 +4,13 @@ import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support"
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-import { settleOutcomeRead } from "@/lib/outcomes/store";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { readRegistryRuntimeProjection, withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
-
-
+import type { RegistryRuntimeReadModel } from "@/lib/registry/runtime-data-plane";
+import { readerCacheHeaders } from "@/lib/reader/cache";
+import { readerDatabaseQuery } from "@/lib/reader/database";
+import { statementQuery } from "@/lib/facts/db";
+import { readSelectedMeetingOutcomes } from "@/lib/reader/outcomes";
 
 export const runtime = "nodejs";
 
@@ -23,9 +25,14 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
     return Response.json({ error: "bodyId required" }, { status: 400 });
   }
 
+  // The selected registry travels with the calendar query; its source aliases identify the outcomes.
+  const context: { registry?: { value: RegistryRuntimeReadModel; states: readonly string[] } } = {};
   let read;
   try {
-    read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, window: "HELD" });
+    const database = readerDatabaseQuery();
+    read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, window: "HELD", meetingIds: [meetingId],
+      query: database ? statementQuery(database) : undefined,
+      onRegistry: (value, states) => { context.registry = { value, states }; } });
   } catch (error) {
     return Response.json(
       {
@@ -48,18 +55,21 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
       { status: 503 },
     );
   }
+  const registry = context.registry;
   const snapshot = read.value;
   const meeting = snapshot.meetings.find((row) => row.id === meetingId || row.mergedMeetingIds?.includes(meetingId));
-  const support = await settleAgendaSupportingHoldings(meetingId, meeting?.bodyId ?? null, {
+  const supporting = () => settleAgendaSupportingHoldings(meetingId, meeting?.bodyId ?? null, {
     outcomes: async () => {
-      await settleOutcomeRead();
-      return meetingReaderRecords(meetingId, meeting?.bodyId, meeting?.mergedMeetingIds);
+      const outcomes = await readSelectedMeetingOutcomes(registry?.states ?? statesForRegistryDivisions([bodyId]),
+        meeting?.bodyId ?? bodyId, [...new Set([meetingId, meeting?.id ?? meetingId, ...meeting?.mergedMeetingIds ?? []])]);
+      return meetingReaderRecords(meetingId, meeting?.bodyId ?? bodyId, meeting?.mergedMeetingIds, outcomes);
     },
     listingIdentity: async () => {
       await readRegistryRuntimeProjection(statesForRegistryDivisions([meeting?.ocdId ?? "", meeting?.bodyId ?? ""]));
-      return meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
+      return meetingListingKnowledgeFor(snapshot.meetings, [meeting?.id ?? meetingId]).readback;
     },
   });
+  const support = await (registry ? withRegistryRuntimeProjection(registry.value, registry.states, supporting) : supporting());
   const observation = meeting ? observationFromMeetingRecord(meeting) : null;
   const heldDocuments = snapshot.agendaDocuments.filter(doc => doc.meetingId === (meeting?.id ?? meetingId));
   const bodyName = meeting?.bodyName ?? heldDocuments[0]?.sourceOrg;
@@ -103,5 +113,8 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
     supportingHoldingStatus: support.supportingHoldingStatus,
     unavailableAuthorities: support.unavailableAuthorities,
     records: support.records, publication,
-    listingIdentity: support.listingIdentity });
+    listingIdentity: support.listingIdentity }, { headers: {
+      ...readerCacheHeaders({ states: registry?.states ?? statesForRegistryDivisions([bodyId]), places: [bodyId] }),
+      "Netlify-Vary": "query=meetingId|bodyId",
+    } });
 });

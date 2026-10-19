@@ -1,11 +1,11 @@
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { readStatePackage, readStateDistricts } from "../reader/state.ts";
+import { readStatePackage, readStateDistricts, primeStateDistrictPointers } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
 import { readZipPlace, stateForZip } from "../reader/national.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
-import { primeReaderCanonicalStore } from "../reader/canonical-context.ts";
+import { primeReaderCanonicalStore, readerCanonicalEntry } from "../reader/canonical-context.ts";
 import { primeReaderProjection } from "../civic-data/read-model.ts";
 import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
@@ -31,7 +31,8 @@ export async function readBallotReaderData(place: BallotPlace) {
     ? [...new Set([stateForZip(place.zip)!, ...selection.states ?? []])] : [...selection.states ?? []];
   if (!states.length) return null;
   const point = place.centroid;
-  const packages = states.map(state => ({ state, read: readStatePackage(state), districts: readStateDistricts(state) }));
+  const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
+  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip), districts: readStateDistricts(state) }));
   const rawEntry = place.zip ? await readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : null;
   const divisions = [...new Set([...rawEntry?.ids ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
@@ -65,11 +66,13 @@ export async function readBallotReaderData(place: BallotPlace) {
     return value;
   };
   const districtRead = entry().then(async value => {
+    await Promise.all(packages.map(async ({ read }) => primeStateDistrictPointers(await read)));
     const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
       { recordClass: "CURATED_READER_RECORD" as const, scope: campaignFinanceStateScope(id) },
     ]);
-    if (extra.length) await primeReaderCanonicalStore(extra, readCanonicalShelf(extra));
+    const missing = extra.filter(entry => !readerCanonicalEntry(entry.recordClass, entry.scope));
+    if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
   });
   const canonicalRead = Promise.all([baseRead, districtRead]).then(() => undefined);
   const places = packages.map(async ({ state, read }) => {

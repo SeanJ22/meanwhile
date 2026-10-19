@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { stateContainersStatement } from "../lib/control-plane/admin-view/promoted-slices.ts";
 
 const entry = { recordClass: "FEDERAL_DIRECTORY" as const, scope: "US-AZ:current-congress-directory" };
 const payload = { people: [{ name: "An official", sourceUrl: "https://example.gov/member" }] };
@@ -86,8 +87,51 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     });
     assert.deepEqual(combined.additionalRows, [{ version_id: "geo-version", geography: { type: "state_leg_upper", state: "AZ" } }]);
     assert.equal((await combined.readPromotedEntry!(selection.recordClass, selection.scope)).kind, "PROMOTED");
+    const city = { ocdId: "ocd-division/country:us/state:az/place:tucson", label: "Tucson", divisionType: "place", tier: "local" };
+    await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload)
+      VALUES('REGISTRATION:US-AZ:registration:v1','REGISTRATION','US-AZ:registration:v1',$1)`,
+      [JSON.stringify({ divisions: [city, { ...city, ocdId: "another-place" }] })]);
+    const local = await readCanonicalShelf([selection], query, stateContainersStatement("AZ", [city.ocdId]));
+    assert.deepEqual(local.additionalRows[0].local_divisions, [city], "the same state query includes the selected local seat's sourced division even if Census is not held");
+    assert.equal(local.additionalRows[0].version_id, null);
     await readCanonicalShelf([selection],query);
     assert.equal(partCounts[1],0,"unchanged verified versions do not resend or decode payload parts");
+    const district = (type: string, geoid: string, zcta5 = "85701", state = "AZ") => ({ type, version: `${type}:fixture`, versionMeta: {},
+      groupings: [{ geoid, ocdId: null, label: geoid, stateAbbr: state, stateFips: geoid.slice(0,2), overlaps: [{ zcta5, whole: true }] }] });
+    await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload,current_version_id)
+      VALUES('CENSUS_GEOGRAPHY:US:zcta-geography-overlaps','CENSUS_GEOGRAPHY','US:zcta-geography-overlaps',$1,'geography-fixture')`,
+      [JSON.stringify({ scopes: [district("congressional_district","0407"), district("congressional_district","0407"),
+        district("state_leg_upper","04003"), district("state_leg_lower","04A-B"), district("congressional_district","0409","85001"),
+        district("congressional_district","0200","99501","AK"),district("congressional_district","1198","20001","DC"),
+        district("state_leg_lower","3300B","03255","NH")] })]);
+    const translation = { recordClass: "CURATED_READER_RECORD" as const, scope: "US:plain-english-translations:ocd-division/country:us/state:az/cd:7" };
+    const { provenEdgeEntry } = await import("./helpers/promoted-edge-entry.ts");
+    const translated = provenEdgeEntry({ ...translation, sourceId: "official-source", versionId: "zip-translation-version", value: expected });
+    await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,$3,'PROMOTED',true,$1,$1,$4,$5,'official-source')`,
+      [translated.projection.versionId,translated.attested.payloadSha256,row.retrieved_at,translation.recordClass,translation.scope]);
+    await pg.query(`INSERT INTO civic_data_promotions VALUES($1,$2,$3,'official-source',$4,$4,$5,$6,$7)`,
+      [translated.projection.key,translation.recordClass,translation.scope,translated.projection.versionId,row.promoted_at,JSON.stringify(translated.projection.receipt),JSON.stringify(encoded.value)]);
+    const beforeFolded = reads;
+    const folded = await readCanonicalShelf([selection],query,stateContainersStatement("AZ",[],"85701"));
+    assert.equal(reads,beforeFolded+1,"ZIP district pointers and state geography use the same single SQL query");
+    assert.deepEqual(folded.additionalEntries.map(entry=>entry.scope).sort(),[
+      translation.scope,"US:plain-english-translations:ocd-division/country:us/state:az/sldu:3",
+      "US:plain-english-translations:ocd-division/country:us/state:az/sldl:a_b",
+    ].sort(),"only the requested ZIP's district identities are preloaded across held plans, including absent pointers");
+    const heldTranslation = await folded.readPromotedEntry!(translation.recordClass,translation.scope);
+    assert.equal(heldTranslation.kind,"PROMOTED");
+    if (heldTranslation.kind === "PROMOTED") assert.deepEqual(heldTranslation.projection.payload,expected);
+    assert.equal((await folded.readPromotedEntry!("CURATED_READER_RECORD",folded.additionalEntries.find(entry=>entry.scope.endsWith("/sldu:3"))!.scope)).kind,"NOT_RECORDED");
+    await assert.rejects(folded.readPromotedEntry!("CURATED_READER_RECORD",translation.scope.replace("cd:7","cd:9")),/SCOPE_NOT_SELECTED/);
+    await readCanonicalShelf([selection],query,stateContainersStatement("AZ",[],"85701"));
+    assert.equal(partCounts.at(-1),0,"unchanged ZIP-derived pointers reuse their verified payloads too");
+    for (const [state,zip,id] of [["AK","99501","state:ak/cd:at-large"],["DC","20001","district:dc/cd:at-large"],["NH","03255","state:nh/sldl:00b"]]) {
+      const selected = await readCanonicalShelf([selection],query,stateContainersStatement(state,[],zip));
+      assert.deepEqual(selected.additionalEntries.map(entry=>entry.scope),[`US:plain-english-translations:ocd-division/country:us/${id}`],"district pointer identities preserve at-large, delegate and alphanumeric rules");
+    }
+    await pg.query("UPDATE civic_data_candidates SET acquisition_succeeded=false WHERE id=$1",[translated.projection.versionId]);
+    await assert.rejects(readCanonicalShelf([selection],query,stateContainersStatement("AZ",[],"85701")),/POINTER_INVALID/);
+    await pg.query("UPDATE civic_data_candidates SET acquisition_succeeded=true WHERE id=$1",[translated.projection.versionId]);
     const packedExclusions = [{ ...excluded, record: { biography: "Excluded source evidence. ".repeat(6000) } }];
     const packedReceipt = partitionCivicPayload(packedExclusions);
     assert.ok(!Array.isArray(packedReceipt.value) && packedReceipt.parts.length > 0,"the receipt fixture requires a packed exclusion array");

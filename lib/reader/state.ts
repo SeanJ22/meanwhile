@@ -24,6 +24,9 @@ import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../rout
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { readNationalPresident } from "./national.ts";
 import type { MemberOfficeRecord } from "../officials/member-offices.ts";
+import type { Division } from "../registry/types.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { primeReaderCanonicalStore } from "./canonical-context.ts";
 
 export interface ReaderStatePackage {
   readonly state: string;
@@ -32,6 +35,7 @@ export interface ReaderStatePackage {
   readonly peopleRead: CivicDataReadResult<OfficialStateLegislatorReadModel>;
   readonly everyday: CivicDataReadResult<EverydayRoutingProjection>;
   readonly districts: Slice<GeographySlice>;
+  readonly localDivisions?: readonly Division[];
   readonly version: string;
   readonly registry: RegistryRuntimeReadModel;
   readonly people: OfficeholderSet | null;
@@ -46,16 +50,26 @@ export interface ReaderStatePackage {
 
 const states = serverReaderValue("state-reads", () => new Map<string, Promise<ReaderStatePackage>>());
 const districtReads = serverReaderValue("district-reads", () => new Map<string, Promise<Slice<GeographySlice>>>());
+const requests = serverReaderValue("state-requests", () => new WeakMap<object, Map<string, Promise<ReaderStatePackage>>>());
+const districtCanonical = serverReaderValue("state-district-canonical", () => new WeakMap<ReaderStatePackage, Awaited<ReturnType<typeof readCanonicalShelf>>>());
+
+/** The ZIP's district pointers travelled with its state and keep the same canonical proof. */
+export function primeStateDistrictPointers(state: ReaderStatePackage): Promise<void> {
+  const canonical = districtCanonical.get(state);
+  return canonical ? primeReaderCanonicalStore(canonical.additionalEntries, canonical) : Promise.resolve();
+}
 
 /** Ballot and its streamed cards share the geography from the state's one query. */
 export function readStateDistricts(value: string): Promise<Slice<GeographySlice>> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   const pending = readStatePackage(state);
   void pending.catch(() => {});
-  return districtReads.get(state)!;
+  const active = [...states].find(([, read]) => read === pending)?.[0];
+  const districts = active ? districtReads.get(active) : undefined;
+  return districts ?? pending.then(value => value.districts);
 }
 
-async function loadState(state: string): Promise<ReaderStatePackage> {
+async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = readNationalPresident().catch(() => null);
   const canonicalRead = readCanonicalShelf([
@@ -67,16 +81,17 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
     EVERYDAY_ROUTING_POINTER,
     { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
     ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
-  ], readerDatabaseQuery(), stateContainersStatement(state));
+  ], readerDatabaseQuery(), stateContainersStatement(state, divisionIds, zip));
   const districtsRead = canonicalRead.then((canonical): Slice<GeographySlice> => {
     const geoVersion = canonical.additionalRows[0]?.version_id;
     return typeof geoVersion === "string"
-      ? { kind: "HELD", versionId: geoVersion, value: geographyOfRows(canonical.additionalRows, true) }
+      ? { kind: "HELD", versionId: geoVersion, value: geographyOfRows(canonical.additionalRows[0].geography as readonly import("../control-plane/admin-view/promoted-slices.ts").Row[], true) }
       : { kind: "NOT_PUBLISHED" };
   });
-  districtReads.set(state, districtsRead);
+  if (!divisionIds.length) districtReads.set(key, districtsRead);
   void districtsRead.catch(() => {});
   const canonical = await canonicalRead, options = { store: canonical }, districts = await districtsRead;
+  const localDivisions = (canonical.additionalRows[0]?.local_divisions ?? []) as readonly Division[];
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const [runtime, people, federal, official, campaigns, everyday, president, offices] = await Promise.all([
     readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options),
@@ -109,26 +124,40 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
   } } : null;
   const memberOffices = offices.kind === "PROMOTED" || offices.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
   const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices.metadata.versionId,
-    districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president)].join("|")).digest("hex");
-  return {
-    state, version, districts,
+    districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
+  const result: ReaderStatePackage = {
+    state, version, districts, localDivisions,
     registryRead: runtime, peopleRead: people, everyday,
     federalRead: directory ? { kind: "BOOTSTRAP", value: directory, metadata: federal.metadata, detail: "The state's current delegation, loaded with its offices and contact details." } : federal,
     registry: runtime.value, people: roster, legislativePeople,
     stateLegislatorAuthority: stateLegislatorCoverageAuthority(`US-${state}`, people),
     federal: directory, president, memberOffices, boundaryUrl: BOUNDARY_ARCHIVE_FALLBACK,
   };
+  if (zip) districtCanonical.set(result, canonical);
+  return result;
 }
 
-/** Coalesce concurrent reads; an edge miss always sees the current published state. */
-export function readStatePackage(value: string): Promise<ReaderStatePackage> {
+/** Reuse one state's read within a request; other requests share only work still in progress. */
+export function readStatePackage(value: string, divisionIds: readonly string[] = [], zip?: string): Promise<ReaderStatePackage> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
-  let read = states.get(state);
+  const divisions = [...new Set(divisionIds)].sort();
+  const base = `${state}|${divisions.join("|")}`, key = zip ? `${base}|zip:${zip}` : base;
+  const selection = currentReaderSelection();
+  let request = selection ? requests.get(selection) : undefined;
+  if (selection && !request) { request = new Map(); requests.set(selection, request); }
+  const held = request?.get(key);
+  if (held) return held;
+  let read = states.get(key);
   if (!read) {
-    read = loadState(state).finally(() => {
-      if (states.get(state) === read) { states.delete(state); districtReads.delete(state); }
+    read = loadState(state, divisions, zip, key).finally(() => {
+      if (states.get(key) === read) {
+        states.delete(key);
+        if (!divisions.length) districtReads.delete(key);
+      }
     });
-    states.set(state, read);
+    states.set(key, read);
   }
+  request?.set(key, read);
+  if (zip && !request?.has(base)) request?.set(base, read);
   return read;
 }

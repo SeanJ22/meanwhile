@@ -1,7 +1,7 @@
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
-import { readerQuery } from "./promoted-reader-query.ts";
+import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
@@ -1426,7 +1426,7 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
 async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  const query = readerQuery(1800);
+  const query = readerDatabaseQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
   const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;

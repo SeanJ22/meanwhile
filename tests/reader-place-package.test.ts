@@ -15,6 +15,8 @@ import { factDb } from "./helpers/fact-db.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { attemptsByFamily } from "../lib/registry/attempt-families.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
+import { readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -131,6 +133,15 @@ test("one indexed place read joins local facts and complete calendars from any s
     assert.equal(next.bodies.find(b => b.id === BODY)?.fields.officeAddress,"255 W Alameda Street","freshly published facts are read without a repack");
     assert.deepEqual(next.snapshot.agendaDocuments,[],"map loads exclude full agenda text while keeping each meeting's agenda link");
     assert.equal(next.meetings.find(m => m.id === "existing")?.agendaUrl,held.agendaUrl);
+    let neighborQueries = 0;
+    const neighbors = await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[SPECIAL],neighbors:true},async(sql,params) => {
+      neighborQueries++;return db.query(sql,params);
+    });
+    assert.equal(neighborQueries,1,"the body's places and neighbouring governments resolve in the same query");
+    assert.deepEqual(neighbors.bodies.map(body => body.id).sort(),[SPECIAL,COUNTY_BODY].sort());
+    const agendaOnly = await readPlacePackage({state:"AZ",divisionIds:[CITY,COUNTY],bodyIds:[BODY],meetingIds:["existing"],includeAgenda:true},db.query);
+    assert.equal(agendaOnly.bodies.find(body => body.id===BODY)?.roster,null,"opening an agenda does not read unrelated membership/person facts");
+    assert.deepEqual(agendaOnly.meetings,next.meetings,"sitting facts still overlay every held calendar row");
   } finally { await db.pg.close(); }
 });
 
@@ -217,6 +228,138 @@ test("held history reads retain verified old calendar rows and agenda text from 
     assert.deepEqual(held.meetings.find(m => m.id === old.id),old);
     assert.equal(held.meetings.find(m => m.id === live.id)?.title,live.title,"live source rows take precedence over prior versions");
     assert.deepEqual(held.snapshot.agendaDocuments,[document]);
+    const selected = await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[bodyId],includeHistory:true,includeAgenda:true,meetingIds:[old.id]},db.query);
+    assert.deepEqual(selected.snapshot.agendaDocuments,[document],"targeted reads retain full text from archived canonical versions");
+  } finally { await db.pg.close(); }
+});
+
+test("an opened agenda keeps neighbour identities and merge contributions while leaving other document text in the store", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const meeting = {id:"onbase:target",mergedMeetingIds:["alias:target"],bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
+      startsAt:"2026-10-20T17:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://example.gov/shared-agenda",
+      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
+    const peer = {...meeting,id:"ical:target",mergedMeetingIds:[],videoUrl:"https://example.gov/video"};
+    const neighbor = {...meeting,id:"onbase:neighbor",mergedMeetingIds:[],startsAt:"2026-10-25T17:00:00-07:00"};
+    const foreign = {...meeting,id:"onbase:county",mergedMeetingIds:[],bodyId:COUNTY_BODY,ocdId:COUNTY,bodyName:"Supervisors"};
+    const document = {id:"target-doc",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,contentHash:"a".repeat(64),retrievedAt:AT,
+      contentType:"text/html",text:"Public hearing. 1. Approve the budget.",extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
+    const documents = [document,{...document,id:"peer-doc",meetingId:peer.id,documentUrl:"https://example.gov/sitting-agenda",contentHash:"b".repeat(64)},
+      {...document,id:"neighbor-doc",meetingId:neighbor.id,text:"NEIGHBOUR TEXT ".repeat(6000)},
+      {...document,id:"foreign-doc",meetingId:foreign.id,ocdId:COUNTY,text:"FOREIGN TEXT ".repeat(6000)}];
+    const scope = derivedMeetingFamilyScope("US-AZ");
+    const encoded = partitionCivicPayload({formatVersion:1,generatedAt:AT,meetings:[meeting,peer,neighbor,foreign],agendaDocuments:documents,
+      sources:[],counts:{fresh:4,carried:0,total:4}});
+    for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'agenda-version')",
+      [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
+    const input = {state:"AZ",divisionIds:[CITY,COUNTY],bodyIds:[BODY,COUNTY_BODY],includeAgenda:true};
+    const full = await readPlacePackage(input,db.query);
+    let calls = 0;
+    const selected = await readPlacePackage({...input,meetingIds:["alias:target"]},async(sql,params) => {
+      calls++;const rows = await db.query(sql,params);const wire = JSON.stringify(rows);
+      assert.equal(wire.includes("NEIGHBOUR TEXT"),false);
+      assert.equal(wire.includes("FOREIGN TEXT"),false);
+      return rows;
+    });
+    assert.equal(calls,1);
+    assert.deepEqual(selected.meetings,full.meetings,"all meeting identities and cross-source merged fields remain available");
+    const target = selected.meetings.find(row => row.id===meeting.id || row.mergedMeetingIds?.includes("alias:target"))!;
+    const own = selected.snapshot.agendaDocuments.filter(row => row.meetingId===target.id);
+    assert.deepEqual(own,full.snapshot.agendaDocuments.filter(row => row.meetingId===target.id),"the alias and every source contributing to the sitting retain their full documents");
+    assert.deepEqual(selected.snapshot.agendaDocuments.map(({meetingId,documentUrl})=>({meetingId,documentUrl})),
+      full.snapshot.agendaDocuments.map(({meetingId,documentUrl})=>({meetingId,documentUrl})),"neighbouring document ownership and shared URLs are unchanged");
+    assert.deepEqual(readerAgendaDocuments(own,{documentsAcrossCorpus:selected.snapshot.agendaDocuments,meetingsAcrossCorpus:selected.meetings}),
+      readerAgendaDocuments(own,{documentsAcrossCorpus:full.snapshot.agendaDocuments,meetingsAcrossCorpus:full.meetings}),
+      "shared portals and other governments' documents receive the same reading with compact context");
+  } finally { await db.pg.close(); }
+});
+
+test("archive recovery keeps every document revision and neighbour identity across large prior calendar versions", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const bodyId = `${CITY}#archive-board`,scope = meetingPartitionScope("ical",bodyId);
+    const old = {id:"ical:archive-target",bodyId,ocdId:CITY,bodyName:"Archive Board",title:"Original title",startsAt:"2020-06-18T20:00:00Z",
+      timeZone:"UTC",location:null,agendaUrl:"https://example.gov/shared-archive",jurisdiction:"Tucson, AZ",status:"CONCLUDED",
+      provenance:{sourceUrl:SOURCE,sourceOrg:"Town Clerk",collectedAt:AT,verifiedAt:AT}};
+    const neighbor = {...old,id:"ical:archive-neighbor",startsAt:"2020-06-25T20:00:00Z"};
+    const latest = {...old,title:"Revised historical title"};
+    const current = {...old,id:"ical:current",startsAt:"2026-10-22T20:00:00Z",title:"Current source title"};
+    const originalDocument = {id:"archive-original",meetingId:old.id,documentUrl:old.agendaUrl,text:"Original verified agenda"};
+    const revisedDocument = {...originalDocument,id:"archive-revised",text:"Revised verified agenda"};
+    const neighborDocument = {...originalDocument,id:"archive-neighbor",meetingId:neighbor.id,text:"NEIGHBOUR ARCHIVE TEXT ".repeat(4000)};
+    const hugeUnowned = Array.from({length:12},(_,index)=>({...old,id:`ical:unowned:${index}`,bodyId:"another-body",title:"UNOWNED RECORD ".repeat(1000)}));
+    const snapshot = (meetings:unknown[],agendaDocuments:unknown[]) => ({formatVersion:1,generatedAt:AT,meetings,agendaDocuments,sources:[],counts:{fresh:meetings.length,carried:0,total:meetings.length}});
+    const candidate = async(id:string,at:string,payload:unknown,promoted = true) => {
+      const receipt = {decision:"GOOD",candidateId:id,recordClass:"MEETING",scope,sourceId:"archive-source"};
+      await db.query("INSERT INTO civic_data_candidates VALUES($1,'MEETING',$2,'archive-source',$3,$4,$5,true,$1,$1,$6,$7)",
+        [id,scope,at,JSON.stringify({readModel:payload}),promoted?"PROMOTED":"VALIDATED",canonicalCivicDataHash(payload),JSON.stringify(receipt)]);
+    };
+    await candidate("archive-first","2026-10-15T12:00:00Z",snapshot([old,neighbor,...hugeUnowned],[originalDocument,neighborDocument]));
+    await candidate("archive-next","2026-10-16T12:00:00Z",snapshot([latest,neighbor,...hugeUnowned],[originalDocument,revisedDocument,neighborDocument]));
+    await candidate("archive-unpublished",AT,snapshot([{...old,id:"ical:unpublished"}],[]),false);
+    const live = snapshot([current],[]);
+    await candidate("archive-live",AT,live);
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'archive-live')",[`MEETING:${scope}`,scope,JSON.stringify(live),AT]);
+    const input = {state:"AZ",divisionIds:[],bodyIds:[bodyId],includeHistory:true,includeAgenda:true};
+    let calls = 0;
+    const full = await readPlacePackage(input,async(sql,params) => {calls++;const rows=await db.query(sql,params);
+      assert.equal(JSON.stringify(rows).includes("UNOWNED RECORD"),false);return rows;});
+    assert.equal(calls,1);
+    assert.deepEqual(full.meetings.map(row=>row.id).sort(),[old.id,neighbor.id,current.id].sort());
+    assert.equal(full.meetings.find(row=>row.id===old.id)?.title,latest.title,"the newest verified historical record wins");
+    assert.deepEqual(full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id).sort((a,b)=>a.id.localeCompare(b.id)),
+      [originalDocument,revisedDocument].sort((a,b)=>a.id.localeCompare(b.id)),"distinct verified document versions remain available");
+    const compact = await readPlacePackage({...input,meetingIds:[old.id]},db.query);
+    assert.deepEqual(compact.meetings,full.meetings);
+    assert.deepEqual(compact.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id),full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id));
+    assert.deepEqual(compact.snapshot.agendaDocuments.find(doc=>doc.id===neighborDocument.id),{...neighborDocument,text:null},"neighbour ownership and shared URLs remain available without loading their text");
+  } finally { await db.pg.close(); }
+});
+
+test("agenda transfer shares exact text bytes while restoring every document, alias and extraction variant", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const meeting = {id:"portal:agenda",mergedMeetingIds:["alias:opened-agenda"],bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
+      startsAt:"2026-10-20T17:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://example.gov/agenda",
+      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
+    const other = {...meeting,id:"ical:agenda",mergedMeetingIds:[],videoUrl:"https://example.gov/video"};
+    const text = "EXACT AGENDA TEXT ".repeat(2500),variant = text+"\nDifferent verified extraction.";
+    const document = {id:"portal-original",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,contentHash:"c".repeat(64),retrievedAt:AT,
+      contentType:"text/html",text,extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
+    const originals = [document,{...document,id:"portal-duplicate"},{...document,id:"portal-empty",text:""},{...document,id:"portal-null",text:null}];
+    const copies = [{...document,id:"ical-copy",meetingId:other.id},{...document,id:"ical-variant",meetingId:other.id,text:variant}];
+    const encodedPromotions: {key:string;payload:unknown}[] = [];
+    for (const [source,row,documents] of [["portal",meeting,originals],["ical",other,copies]] as const) {
+      const scope = meetingPartitionScope(source,BODY),snapshot = {formatVersion:1,generatedAt:AT,meetings:[row],agendaDocuments:documents,
+        sources:[],counts:{fresh:1,carried:0,total:1}};
+      const encoded = partitionCivicPayload(snapshot);
+      encodedPromotions.push({key:`MEETING:${scope}`,payload:encoded.value});
+      for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
+      await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,$5)",[`MEETING:${scope}`,scope,JSON.stringify(snapshot),AT,source]);
+    }
+    const input = {state:"AZ",divisionIds:[CITY],bodyIds:[BODY],includeAgenda:true};
+    let fullBytes = 0,compactBytes = 0;
+    const full = await readPlacePackage(input,async(sql,params)=>{const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
+    const compact = await readPlacePackage({...input,meetingIds:["alias:opened-agenda"]},async(sql,params)=>{
+      const rows=await db.query(sql,params);compactBytes=Buffer.byteLength(JSON.stringify(rows));
+      assert.deepEqual(new Set(rows[0].agenda_texts as string[]),new Set([text,variant,""]),"exact text, rather than raw document hash, defines the shared response bytes");
+      return rows;
+    });
+    assert.deepEqual(compact.snapshot,full.snapshot,"every source field, document version and alias is restored before existing composition");
+    assert.deepEqual(compact.meetings,full.meetings);
+    assert.equal(compact.snapshot.agendaDocuments.find(doc=>doc.id==="portal-empty")?.text,"");
+    assert.equal(compact.snapshot.agendaDocuments.find(doc=>doc.id==="portal-null")?.text,null);
+    assert.equal(compact.snapshot.agendaDocuments.find(doc=>doc.id==="ical-variant")?.text,variant,"a different extraction with the same content hash remains distinct");
+    assert.ok(compactBytes<fullBytes*0.8,`shared transfer ${compactBytes}B must avoid repeated source text from ${fullBytes}B`);
+    for (const entry of encodedPromotions) await db.query("UPDATE civic_data_promotions SET payload=$2 WHERE key=$1",[entry.key,JSON.stringify(entry.payload)]);
+    const encodedFull = await readPlacePackage(input,async(sql,params)=>{const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
+    const encodedCompact = await readPlacePackage({...input,meetingIds:["alias:opened-agenda"]},async(sql,params)=>{const rows=await db.query(sql,params);compactBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
+    assert.deepEqual(encodedCompact.snapshot,encodedFull.snapshot,"existing shared payload parts retain their original decoding");
+    assert.ok(compactBytes<fullBytes*1.1,"response text sharing must not expand text already stored as shared immutable parts");
   } finally { await db.pg.close(); }
 });
 
@@ -345,17 +488,31 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.equal(attempts.lastGood?.acceptedCount,1,"exact accepted members take precedence over legacy record and body counts");
     assert.equal(attempts.lastGood?.sourceUrl,SOURCE);
     assert.equal(attempts.publishedNow?.versionId,"published-version");
+    let compactWire = "";
+    const compact = await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],meetingIds:[meeting.id],includeAgenda:true},async(sql,params) => {
+      const rows = await db.query(sql,params);compactWire=JSON.stringify(rows);return rows;
+    });
+    assert.deepEqual(compact.registry?.registry,result.registry?.registry,"agenda identity keeps every selected registry body and division");
+    assert.deepEqual(compact.registry?.bodyRosters,[{...roster,members:[]},{...specialRoster,members:[]}],"body-name fallback keeps full roster headers and source receipts");
+    assert.deepEqual(compact.registry?.rosterReaderDispositions,[]);
+    assert.deepEqual(compact.registry?.officialCandidacies,{...runtime.officialCandidacies,rows:[]});
+    assert.deepEqual(compact.registry?.officialPhotos,{photos:[]});
+    assert.deepEqual(compact.registry?.rosterPhotos,{});
+    assert.equal(compactWire.includes(member.name),false,"unrequested roster/candidacy/photo person records remain in the store");
+    assert.deepEqual(compact.meetings,result.meetings,"agenda mode keeps all listing identities and meeting facts");
   } finally { await db.pg.close(); }
 });
 
 test("the map and ballot reuse one place read for their request, and a later request reads current data", async () => {
-  const { installFactReader } = await import("../lib/facts/db.ts");
   let reads = 0, release: (() => void) | undefined;
-  installFactReader(async () => {
+  installReaderDatabaseQuery(async statements => {
+    assert.equal(statements.length, 1, "the default place transport sends one statement through the shared socket");
+    assert.match(statements[0].text, /WITH RECURSIVE selected_places/);
+    assert.equal(statements[0].params[0], "AZ");
     reads++;
     if (reads === 1) await new Promise<void>(resolve => { release = resolve; });
-    return [{ registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }];
+    return [[{ registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
+      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }]];
   });
   try {
     let first: Awaited<ReturnType<typeof readPlacePackage>> | undefined;
@@ -376,14 +533,13 @@ test("the map and ballot reuse one place read for their request, and a later req
       readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY], bodyIds: [BODY] }));
     assert.notEqual(next, first, "a settled place response cannot outlive its reader request after a data-tag purge");
     assert.equal(reads, 2);
-  } finally { installFactReader(undefined); }
+  } finally { installReaderDatabaseQuery(undefined); }
 });
 
 test("a shared cold place failure reaches both readers without a second query", async () => {
-  const { installFactReader } = await import("../lib/facts/db.ts");
   const failure = new Error("First place read failed");
   let reads = 0, rejectRead: ((error: Error) => void) | undefined;
-  installFactReader(async () => {
+  installReaderDatabaseQuery(async () => {
     reads++;
     await new Promise<void>((_resolve, reject) => { rejectRead = reject; });
     return [];
@@ -399,5 +555,5 @@ test("a shared cold place failure reaches both readers without a second query", 
       if (result.status === "rejected") assert.equal(result.reason, failure);
     }
     assert.equal(reads, 1);
-  } finally { installFactReader(undefined); }
+  } finally { installReaderDatabaseQuery(undefined); }
 });

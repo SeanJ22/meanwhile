@@ -64,15 +64,24 @@ SELECT 'part',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,p
 const cached = serverReaderValue("canonical", () => new Map<string, Extract<PromotedEdgeEntry, { kind: "PROMOTED" }>>());
 
 /** Read canonical promotions once; source evidence was checked when each fact was published. */
-export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Statement): Promise<CivicDataReadStore & { additionalRows: readonly Row[] }> {
+export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Statement & { readonly canonicalKeys?: true }): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
+  const additionalSql = additional?.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 2}`);
+  const shelfSql = additional?.canonicalKeys ? SHELF_WITH_PARTS
+    .replace("WITH RECURSIVE shelf", () => `WITH RECURSIVE additional AS MATERIALIZED (${additionalSql}), shelf`)
+    .replace("p.key=ANY($1::text[])", "p.key=ANY($1::text[] || ARRAY(SELECT DISTINCT unnest(canonical_keys) FROM additional))") : SHELF_WITH_PARTS;
   const extra = additional ? ` UNION ALL SELECT 'additional', empty.*, NULL::text, extra.rows
     FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
-      ${additional.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 2}`)}
+      ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
     ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
-  const [loaded] = await query([{ text: SHELF_WITH_PARTS + extra, params: [keys, keys.flatMap(key => cached.get(key)?.projection.versionId ?? []), ...additional?.params ?? []] }]);
+  const versions = additional?.canonicalKeys ? [...cached.values()].map(entry => entry.projection.versionId)
+    : keys.flatMap(key => cached.get(key)?.projection.versionId ?? []);
+  const [loaded] = await query([{ text: shelfSql + extra, params: [keys, versions, ...additional?.params ?? []] }]);
   const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
+  const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
+    .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];
+  keys.push(...additionalEntries.map(entry => `${entry.recordClass}:${entry.scope}`));
   const rows = loaded.filter(row => row.row_kind === "promotion");
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
   const reused = new Set<string>();
@@ -109,7 +118,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   }
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {
-    additionalRows: additionalRows ?? [],
+    additionalRows: additionalRows ?? [], additionalEntries,
     async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readPromotedEntry(recordClass, scope) {

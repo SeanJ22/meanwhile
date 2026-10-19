@@ -265,8 +265,13 @@ async function child(probe: Probe): Promise<Result> {
 
 if (arg("child")) {
   const probe = JSON.parse(arg("child")!) as Probe;
-  try { console.log(MARKER + JSON.stringify(await child(probe))); }
-  catch (error) { console.log(MARKER + JSON.stringify({ state: probe.state, zip: probe.zip, errors: [String(error)] } satisfies Result)); }
+  let result: Result;
+  try { result = await child(probe); }
+  catch (error) { result = { state: probe.state, zip: probe.zip, errors: [String(error)] }; }
+  // The measured reads are complete. A fresh-state test need not wait for the
+  // reusable socket's idle timer; flush its evidence before ending this child.
+  await new Promise<void>(resolve => process.stdout.write(MARKER + JSON.stringify(result) + "\n", () => resolve()));
+  process.exit(0);
 } else {
   const { neon } = await import("@neondatabase/serverless");
   const sql = neon(connection);

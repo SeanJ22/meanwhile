@@ -28,6 +28,9 @@ import {
 import { MESA_OUTCOME_TENANT, PIMA_OUTCOME_TENANT } from "./data-plane.ts";
 import { currentMeetingOutcomesEdge, settleEdgeFirst } from "../registry/runtime-edge.ts";
 import { DOOR_OUTCOME_POINTERS, doorOutcomeScopeIssue, type DoorOutcomePointer } from "./door-outcome-pointers.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { readStateMeetingOutcomes } from "../reader/outcomes.ts";
 
 const EMPTY: OutcomeSnapshot = {
   generatedOn: "UNKNOWN",
@@ -48,6 +51,9 @@ export function outcomePointers(): readonly DoorOutcomePointer[] {
 
 /** One door's read; a failed read is recorded here and never costs a reader another door's answers. */
 const readStates = new Map<string, { readonly pointer: DoorOutcomePointer; readonly state: CivicDataReadResult<OutcomeSnapshot> }>();
+type RequestOutcomes = { pending: Promise<string | null>; value?: OutcomeSnapshot; detail?: string };
+let readerOutcomes = new WeakMap<object, RequestOutcomes>();
+const requestOutcomes = () => { const selection = currentReaderSelection(); return selection ? readerOutcomes.get(selection) : undefined; };
 /** The edge artifact this process was primed from, or null when the doors were read from the database. */
 let edgePart: { readonly value: OutcomeSnapshot; readonly versionId: string } | null = null;
 
@@ -116,6 +122,17 @@ export async function readDoorOutcomeProjections(options: PromotedCivicDataReadO
 export async function refreshOutcomeSnapshotFromPromoted(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<string | null> {
+  const selection = currentReaderSelection();
+  if (selection && !options.store && options.edge === undefined) {
+    const prior = readerOutcomes.get(selection);
+    if (prior) return prior.pending;
+    const held: RequestOutcomes = { pending: Promise.resolve(null) };
+    readerOutcomes.set(selection, held);
+    held.pending = readStateMeetingOutcomes(selection.states?.length ? selection.states : statesForRegistryDivisions([...selection.keys]), [...selection.keys])
+      .then(value => { held.value = value; return combinedOutcomeVersionId(value.pointers ?? []); })
+      .catch(error => { held.detail = error instanceof Error ? error.message : String(error); throw error; });
+    return held.pending;
+  }
   await readDoorOutcomeProjections(options);
   const states = [...readStates.values()].map(({ state }) => state);
   const unreachable = states.find((state) => state.kind === "STORE_UNREACHABLE");
@@ -140,6 +157,8 @@ export function doorOutcomeParts(): readonly { readonly pointer: DoorOutcomePoin
 }
 
 export function outcomeProjectionReadState(): { readonly kind: CivicDataReadResult<OutcomeSnapshot>["kind"]; readonly detail?: string } {
+  const request = requestOutcomes();
+  if (request) return request.value ? { kind: "PROMOTED" } : { kind: "STORE_UNREACHABLE", detail: request.detail ?? "The selected states' outcomes have not finished loading." };
   if (edgePart !== null) return { kind: "BOOTSTRAP", detail: `Served from the meeting-outcomes edge artifact (version ${edgePart.versionId}).` };
   const states = [...readStates.values()].map(({ state }) => state);
   if (states.length === 0) return { kind: "STORE_UNREACHABLE", detail: "The outcome pointers have not been read for this process." };
@@ -198,6 +217,8 @@ let combinedMemo: { parts: readonly OutcomeSnapshot[]; value: OutcomeSnapshot } 
 /** The snapshot every Reader consumer reads: every door read, else the edge artifact. One door alone is returned as read. */
 export function getOutcomeSnapshot(): OutcomeSnapshot {
   if (injected !== null) return injected;
+  const request = requestOutcomes();
+  if (request) return request.value ?? EMPTY;
   const parts = doorOutcomeParts().filter((part) => part.value.sittings.length > 0);
   if (parts.length === 0) return readStates.size === 0 && edgePart !== null ? edgePart.value : EMPTY;
   if (parts.length === 1) return parts[0]!.value;
@@ -211,6 +232,7 @@ export function getOutcomeSnapshot(): OutcomeSnapshot {
 }
 
 export function resetOutcomeSnapshotCache(): void {
+  readerOutcomes = new WeakMap();
   readStates.clear();
   edgePart = null;
   combinedMemo = null;
@@ -218,6 +240,8 @@ export function resetOutcomeSnapshotCache(): void {
 
 export function loadedFrom(): "DATA_PLANE" | "TEST_FIXTURE" | "EMPTY_STORE" {
   if (injected !== null) return injected.sittings.length === 0 && injected.generatedAt === "UNKNOWN" ? "EMPTY_STORE" : "TEST_FIXTURE";
+  const request = requestOutcomes();
+  if (request) return request.value ? "DATA_PLANE" : "EMPTY_STORE";
   if (edgePart !== null || [...readStates.values()].some(({ state }) => state.kind === "PROMOTED")) return "DATA_PLANE";
   if ([...readStates.values()].some(({ state }) => state.kind === "BOOTSTRAP")) return "TEST_FIXTURE";
   return "EMPTY_STORE";
@@ -314,8 +338,8 @@ function selectSittings(
 /** Outcome evidence for one question about one body. Pure over the held store: no network, clock or database. */
 export function outcomeEvidenceFor(
   query: OutcomeQuery,
+  snapshot: OutcomeSnapshot = getOutcomeSnapshot(),
 ): OutcomeEvidence {
-  const snapshot = getOutcomeSnapshot();
   const sittings = selectSittings(query, snapshot);
 
   if (sittings.length === 0) {

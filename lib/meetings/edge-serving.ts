@@ -6,6 +6,9 @@ import { MEETINGS_RECORD_CLASS, MEETINGS_SCOPE, MEETINGS_SOURCE_ID, snapshotCoun
   type MeetingsProjectionReadResult, type MeetingsSnapshot } from "./snapshot.ts";
 import type { MeetingSettings } from "./settings.ts";
 import { readReaderMeetingSettings } from "./reader-settings.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { combineStateRegistries } from "../registry/state-composition.ts";
+import type { Query } from "../facts/publish.ts";
 
 export { purgeReaderCacheTags } from "../reader/cache.ts";
 
@@ -66,6 +69,10 @@ type ReaderMeetingsOptions = {
     /** With `bodyIds`: also the bodies that serve any division those bodies serve, so shared documents are seen against their neighbours. */
     readonly neighbors?: boolean;
     readonly includeAgenda?: boolean;
+    /** Keep neighboring identities, but load agenda text only for the opened sitting and its merge candidates. */
+    readonly meetingIds?: readonly string[];
+    readonly onRegistry?: (registry: RegistryRuntimeReadModel, states: readonly string[]) => void;
+    readonly query?: Query;
     readonly now?: string;
     readonly window?: ReaderMeetingsWindow;
     readonly settings?: MeetingSettings;
@@ -129,14 +136,11 @@ async function readPlaceMeetings(options: ReaderMeetingsOptions): Promise<Meetin
   const states = [...new Set([...(options.states ?? []).map(state => state.toUpperCase()),
     ...divisions.map(meetingStateOf), ...bodyIds.map(meetingStateOf)])];
   try {
-    let nearby = divisions;
-    if (options.neighbors && bodyIds.length) {
-      const query = factReader();
-      if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-      const rows = await query("SELECT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [bodyIds]);
-      nearby = [...new Set([...divisions, ...bodyIds.filter(id => id.startsWith("ocd-division/")).map(divisionOf), ...rows.map(row => String(row.place_id))])];
-    }
-    const packages = await Promise.all(states.map(state => readPlacePackage({ state, divisionIds: nearby, bodyIds, includeHistory: options.window === "HELD", includeAgenda: options.includeAgenda !== false })));
+    const packages = await Promise.all(states.map(state => readPlacePackage({ state, divisionIds: divisions, bodyIds,
+      neighbors: options.neighbors, meetingIds: options.meetingIds,
+      includeHistory: options.window === "HELD", includeAgenda: options.includeAgenda !== false }, options.query)));
+    const registries = packages.flatMap(held => held.registry ? [held.registry] : []);
+    if (registries.length && registries.length === packages.length) options.onRegistry?.(combineStateRegistries(registries), states);
     const snapshots = packages.map(held => held.snapshot);
     const meetings = snapshots.flatMap(snapshot => snapshot.meetings);
     const value: MeetingsSnapshot = { formatVersion: 1,

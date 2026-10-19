@@ -9,8 +9,9 @@ export type ReaderCachePurger = (tags: readonly string[]) => Promise<ReaderCache
 
 /** The same tag purge is used by publication jobs and deployed reader functions. */
 export async function purgeReaderCacheTags(tags: readonly string[]): Promise<ReaderCachePurgeResult> {
-  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_API_TOKEN?.trim() || process.env.NETLIFY_BLOBS_TOKEN?.trim();
+  const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim() || process.env.WTP_BLOBS_SITE_ID?.trim();
+  const token = process.env.NETLIFY_API_TOKEN?.trim() || process.env.NETLIFY_AUTH_TOKEN?.trim() || process.env.NETLIFY_TOKEN?.trim()
+    || process.env.WTP_BLOBS_TOKEN?.trim() || process.env.NETLIFY_BLOBS_TOKEN?.trim();
   if (!siteID || !token || tags.length === 0) return { purged: false, detail: "no purge credentials or tags" };
   try {
     const response = await fetch("https://api.netlify.com/api/v1/purge", {

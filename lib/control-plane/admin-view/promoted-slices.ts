@@ -1,6 +1,7 @@
 import type { CbsaClass, GeographyRef, GeographyType } from "../../census-geography/contract.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
+import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 export type Row = Readonly<Record<string, unknown>>;
 
@@ -158,13 +159,34 @@ export async function stateContainers(
 }
 
 /** Include geography metadata in the state's single canonical read, without geometry. */
-export function stateContainersStatement(state: string): Statement {
+export function stateContainersStatement(state: string, divisionIds: readonly string[] = [], zip?: string): Statement & { readonly canonicalKeys?: true } {
+  const place = Object.entries(FIPS_TO_STATE).find(([, entry]) => entry.postal === state);
+  const districtKeys = zip && place ? `, coalesce((SELECT array_agg(DISTINCT 'CURATED_READER_RECORD:US:plain-english-translations:'||ocd_id) FROM (
+      SELECT coalesce(g.ocd_id, CASE
+        WHEN g.type='congressional_district' AND g.geoid ~ '^${place[0]}[0-9]{2}$' THEN $7::text||'/cd:'||
+          CASE WHEN $8::boolean OR right(g.geoid,2) IN ('00','98') THEN 'at-large'
+            WHEN right(g.geoid,2)::int>0 THEN (right(g.geoid,2)::int)::text END
+        WHEN g.type IN ('state_leg_upper','state_leg_lower') AND g.geoid ~ '^${place[0]}[a-zA-Z0-9-]{1,8}$'
+          AND substring(g.geoid FROM 3) !~ '^[zZ]+$' THEN $7::text||CASE WHEN g.type='state_leg_upper' THEN '/sldu:' ELSE '/sldl:' END||
+          CASE WHEN substring(g.geoid FROM 3) ~ '^[0-9]+$' THEN
+            CASE WHEN substring(g.geoid FROM 3)::int>0 THEN (substring(g.geoid FROM 3)::int)::text END
+          ELSE nullif(trim(both '_' FROM regexp_replace(lower(substring(g.geoid FROM 3)),'[^a-z0-9]+','_','g')),'') END
+        END) AS ocd_id FROM geography g WHERE g.row_kind='grouping'
+          AND EXISTS(SELECT 1 FROM jsonb_array_elements(g.overlaps) overlap WHERE overlap->>'zcta5'=$6)
+      ) selected WHERE ocd_id IS NOT NULL), '{}'::text[]) AS canonical_keys` : "";
   return {
-    text: `SELECT geography.*, pointer.current_version_id AS version_id
-      FROM civic_data_promotions pointer
-      LEFT JOIN LATERAL (${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))")}) geography ON true
-      WHERE pointer.key=$1||':'||$2`,
-    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, ["congressional_district", "state_leg_upper", "state_leg_lower"], state],
+    ...(districtKeys ? { canonicalKeys: true as const } : {}),
+    text: `WITH geography AS MATERIALIZED (
+      ${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))")}
+    ) SELECT (SELECT pointer.current_version_id FROM civic_data_promotions pointer WHERE pointer.key=$1||':'||$2) AS version_id,
+      coalesce((SELECT jsonb_agg(to_jsonb(g)) FROM geography g),'[]'::jsonb) AS geography,
+      coalesce((SELECT jsonb_agg(d) FROM civic_data_promotions registration,
+        LATERAL jsonb_array_elements(registration.payload->'divisions') d
+        WHERE registration.key='REGISTRATION:US-'||$4||':registration:v1' AND d->>'ocdId'=ANY($5::text[])), '[]'::jsonb) AS local_divisions
+      ${districtKeys}
+      `,
+    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, ["congressional_district", "state_leg_upper", "state_leg_lower"], state, divisionIds,
+      ...(districtKeys ? [zip, `ocd-division/country:us/${place![1].prefix}:${state.toLowerCase()}`, place![1].prefix !== "state"] : [])],
   };
 }
 

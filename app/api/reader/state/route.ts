@@ -3,7 +3,7 @@ import { censusDistrictsForZips } from "@/lib/geo/zip-census-districts";
 import { censusWorkDivision } from "@/lib/census-geography/division-id";
 import { selectGeographyVersion, currentRepresentationSelection } from "@/lib/census-geography/selection";
 import type { Division } from "@/lib/registry/types";
-import { readStateZipPlaces, stateForZip } from "@/lib/reader/national";
+import { readStateZipPlaces, readZipPlace, stateForZip } from "@/lib/reader/national";
 import { stateCoverage } from "@/lib/reader/coverage";
 import { readStatePackage } from "@/lib/reader/state";
 import { requireRegistryState } from "@/lib/civic-data/state-scopes";
@@ -22,16 +22,17 @@ export async function GET(request: Request) {
   try { state = requireRegistryState(input.replace(/^US-/i, "")); }
   catch { return Response.json({ error: "A US state or territory is required" }, { status: 400 }); }
   try {
-    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state), readStateZipPlaces(state)]));
+    const divisionIds = zip ? (await readZipPlace(zip))?.ids ?? [] : [];
+    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds), readStateZipPlaces(state)]));
     const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
     const selection = currentRepresentationSelection();
     const selected = new Map((["congressional_district", "state_leg_upper", "state_leg_lower"] as const).map(type => [type, selectGeographyVersion(versions, type, selection, state)]));
-    const extraDivisions: Division[] = value.districts.kind === "HELD" ? value.districts.value.containers.flatMap(container => {
+    const extraDivisions: Division[] = [...value.localDivisions ?? [], ...(value.districts.kind === "HELD" ? value.districts.value.containers.flatMap<Division>(container => {
       const scope = selected.get(container.ref.type as "congressional_district" | "state_leg_upper" | "state_leg_lower");
       const id = censusWorkDivision(container.ref);
       if (!id || !scope?.sourceUrls?.[0] || !scope.observedAt || container.ref.version !== scope.key) return [];
       return [{ ocdId: id, divisionType: container.ref.type === "congressional_district" ? "cd" : container.ref.type === "state_leg_upper" ? "sldu" : "sldl", tier: container.ref.type === "congressional_district" ? "national" : "state", state, label: container.ref.label, parentOcdId: id.slice(0, id.lastIndexOf("/")), lsad: null, funcstat: null, classfp: null, geoid: container.ref.geoid, canonicalOcdId: null, canonicalMatch: "none", canonicalGap: "UNDETERMINED", sourceDataset: "CENSUS_RELATIONSHIPS", provenance: { sourceUrl: scope.sourceUrls[0], sourceOrg: "U.S. Census Bureau", collectedAt: scope.observedAt, verifiedAt: null } }];
-    }) : [];
+    }) : [])];
     const districtSlice = value.districts.kind === "HELD" ? { ...value.districts, value: { ...value.districts.value, known: true } } : value.districts;
     const qualify = censusDistrictsForZips(districtSlice);
     const ownState = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);

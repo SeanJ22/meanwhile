@@ -2,17 +2,26 @@
  * NODE_USE_ENV_PROXY=1 PLAYWRIGHT_BROWSERS_PATH=/tmp/rs02-playwright node \
  *   --env-file=/tmp/rs02-production.env --experimental-strip-types scripts/rs-02-browser-check.mjs
  * --states=AZ,CA limits a diagnostic run; --out=<directory> keeps separate first-run evidence.
+ * --native-boundaries=1 serves the build at a virtual production origin so Chromium reads
+ * the exact public boundary API over native HTTP/2 through the managed session proxy.
+ * Only that probe context accepts the known proxy CA, which Node independently verifies.
  * Requires an existing production build. Never builds, warms reader APIs, or writes production data.
  */
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 import { neon } from '@neondatabase/serverless';
 import { launchGuarded, seedZip } from './browser.mts';
 
 const arg = name => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const output = resolve(arg('out') ?? '.scratch/rs02/browser');
+const nativeBoundaries = arg('native-boundaries') === '1';
+const productionOrigin = 'https://meanwhileusa.com';
+const proxyUrl = nativeBoundaries ? new URL(process.env.HTTPS_PROXY ?? process.env.HTTP_PROXY) : null;
+const sessionProxy = proxyUrl ? { server: `${proxyUrl.protocol}//${proxyUrl.hostname}:${proxyUrl.port}`,
+  bypass: 'localhost,127.0.0.1', ...(proxyUrl.username ? { username: decodeURIComponent(proxyUrl.username), password: decodeURIComponent(proxyUrl.password) } : {}) } : undefined;
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 if (!connection) throw Error('The existing production readonly connection is required');
 const target = new URL(connection);
@@ -29,11 +38,15 @@ const allProbes = JSON.parse(raw.replace(/,\s*\]$/, ']'));
 const requested = arg('states')?.toUpperCase().split(',');
 const probes = allProbes.filter(probe => !requested || requested.includes(probe.state));
 if (!probes.length || (!requested && new Set(probes.map(probe => probe.state)).size !== 50)) throw Error('Expected one probe in every state');
+if (arg('follow-up') === '1') probes.push({ ...allProbes.find(probe => probe.state === 'AZ'), followUp: true });
 await mkdir(output, { recursive: true });
 const results = [];
 const safeError = error => String(error).split(connection).join('[production readonly connection]');
+const isBoundaryArchive = url => url.pathname.startsWith('/api/boundaries/') ||
+  (url.origin === 'https://tiles.meanwhilemaps.com' && url.pathname === '/us-2025.pmtiles');
 const save = () => writeFile(`${output}/summary.json`, JSON.stringify({ checkedAt: new Date().toISOString(), buildId,
-  productionReadonly: true, freshServerAndBrowserPerState: true, basemapProviderAccess: false, results }, null, 2));
+  productionReadonly: true, freshServerAndBrowserPerState: true, basemapProviderAccess: false,
+  boundaryTransport: nativeBoundaries ? 'native Chromium through managed session proxy' : 'Node fetch bridge to configured public archive', results }, null, 2));
 
 async function startServer(port) {
   const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '-p', String(port)], {
@@ -62,33 +75,213 @@ async function stopServer(server) {
   clearTimeout(timer);
 }
 
+async function closeReaderCards(page) {
+  for (let depth = 0; depth < 8; depth++) {
+    const close = page.locator('[data-reader-card]:visible').getByRole('button', { name: 'Close', exact: true });
+    if (!(await close.count())) return;
+    await close.click();
+  }
+  throw Error('Reader cards did not close through their visible Close controls');
+}
+
+async function followReader(page, output, evidence) {
+  const { offices, navigation } = evidence;
+  const people = arg('actions') === 'navigation' ? [] : [{ name: 'Adelita', offices: 1 }, { name: 'Mark Kelly', offices: 2 }, { name: 'Ruben Gallego', offices: 2 }, { name: 'Adelita', offices: 1 }];
+  if (people.length) await page.locator('[data-stat="officials"]').click();
+  for (const person of people) {
+    const button = page.locator('[data-reader-card="door:officials"]').getByRole('button', { name: new RegExp(person.name) }).first();
+    await button.evaluate(element => {
+      window.rs02Contact = { click: 0 };
+      element.addEventListener('click', () => { window.rs02Contact.click = performance.now(); }, { once: true });
+    });
+    await button.click();
+    await page.locator('[data-person-identity]:visible').filter({ hasText: person.name }).waitFor();
+    await page.getByRole('button', { name: /^Offices near you/ }).click();
+    await page.waitForFunction(expected => [...document.querySelectorAll('[data-directory-office]')].filter(element => element.getClientRects().length).length === expected, person.offices);
+    const contact = await page.evaluate(async () => {
+      await new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)));
+      return { ms: performance.now() - window.rs02Contact.click,
+        offices: [...document.querySelectorAll('[data-directory-office]')].filter(element => element.getClientRects().length).map(element => ({
+          text: element.textContent, phone: element.querySelector('a[href^="tel:"]')?.textContent,
+          address: element.querySelector('a[title^="Directions to"]')?.textContent,
+        })) };
+    });
+    offices.push({ name: person.name, ...contact });
+    if (!(contact.ms < 3000)) throw Error(`${person.name}'s office card did not finish below three seconds`);
+    if (contact.offices.some(office => !office.address || !office.phone)) throw Error(`${person.name}'s office address or phone is absent`);
+    await page.screenshot({ path: `${output}/AZ-contact-${offices.length}.png`, fullPage: true });
+    await page.getByRole('button', { name: /Back to Officials/ }).click();
+  }
+  await closeReaderCards(page);
+  for (const zip of ['85701', '85003', '85701']) {
+    await closeReaderCards(page);
+    await page.locator('.mw-nav-zip:visible').click();
+    const dialog = page.getByRole('dialog').filter({ has: page.getByRole('textbox', { name: /^zip code$/i }) });
+    await dialog.getByRole('textbox', { name: /^zip code$/i }).fill(zip);
+    const go = dialog.getByRole('button', { name: 'Go', exact: true });
+    await go.evaluate((element, zip) => {
+      window.rs02.action = { zip, clicked: 0 };
+      element.addEventListener('click', () => { window.rs02.action.clicked = performance.now(); }, { once: true });
+    }, zip);
+    await go.click();
+    await page.waitForFunction(() => window.rs02.action.paintMs, null, { timeout: 20000 });
+    const action = await page.evaluate(() => window.rs02.action);
+    navigation.push(action);
+    if (!(action.paintMs < 3000)) throw Error(`Changing ZIP to ${zip} did not finish below three seconds`);
+  }
+  return { offices, navigation };
+}
+
+async function followContent(page, output, evidence) {
+  const selected = arg('content') === 'remaining'
+    ? ['legistar-insite:pima:1381579', 'diligent:tusd1:2026-10-22T1730-bond-oversight']
+    : ['onbase:tucson:1961', 'legistar-insite:pima:1381579', 'diligent:tusd1:2026-10-22T1730-bond-oversight'];
+  const ids = arg('meeting') ? selected.filter(id => id === arg('meeting')) : selected;
+  if (!ids.length) throw Error('The requested held meeting is not one of the original browser probes');
+  evidence.failures = [];
+  const clicked = async button => {
+    await button.evaluate(element => element.addEventListener('click', () => { window.rs02.contentClick = performance.now(); }, { once: true }));
+    await button.click();
+  };
+  const paint = () => page.evaluate(async () => {
+    await new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)));
+    return performance.now() - window.rs02.contentClick;
+  });
+  for (const id of ids) {
+    await closeReaderCards(page);
+    await page.locator('[data-stat="meetings"]').click();
+    await page.getByRole('combobox', { name: 'Group by' }).selectOption('none');
+    const row = page.locator(`.al-overlay:visible [data-meeting-id="${id}"]`);
+    await row.waitFor();
+    const meeting = await page.evaluate(id => window.rs02.payloads.place.meetings.find(meeting => meeting.id === id), id);
+    if (!meeting) throw Error(`Selected held meeting ${id} disappeared from the place response`);
+    await clicked(row.locator('h3 button'));
+    await page.locator(`[data-meeting-card="${id}"]:visible`).waitFor();
+    await page.waitForFunction(id => window.rs02.agendaReads?.some(read => read.meetingId === id), id);
+    const agenda = await page.evaluate(id => window.rs02.agendaReads.find(read => read.meetingId === id), id);
+    if (agenda.status !== 200) throw Error(`The opened meeting agenda returned HTTP ${agenda.status}`);
+    const preservation = [];
+    const normalizedComparisonFields = [];
+    if (arg('agenda-before')) {
+      const before = JSON.parse(await readFile(resolve(arg('agenda-before'), `${encodeURIComponent(id)}.json`), 'utf8'));
+      for (const key of ['documents', 'documentCount', 'documentAccounting', 'holdingStatus', 'supportingHoldingStatus', 'unavailableAuthorities', 'records', 'publication', 'listingIdentity']) {
+        let oldValue = before[key], newValue = agenda.payload[key];
+        if (key === 'publication' && oldValue && newValue) {
+          for (const [label, value] of [['before', oldValue.recheckDueAt], ['after', newValue.recheckDueAt]]) {
+            if (value != null && (typeof value !== 'string' || !Number.isFinite(Date.parse(value)))) evidence.failures.push(`Held agenda ${id} has an invalid ${label} publication.recheckDueAt`);
+          }
+          // This deadline is computed from the current request time. Preserve
+          // its presence and validity; compare every other publication field.
+          if (typeof oldValue.recheckDueAt === 'string' && typeof newValue.recheckDueAt === 'string') {
+            oldValue = { ...oldValue, recheckDueAt: '[valid dynamic recheck timestamp]' };
+            newValue = { ...newValue, recheckDueAt: '[valid dynamic recheck timestamp]' };
+            normalizedComparisonFields.push('publication.recheckDueAt');
+          }
+        }
+        if (!isDeepStrictEqual(oldValue, newValue)) evidence.failures.push(`Held agenda ${id} changed ${key}`);
+        else preservation.push(key);
+      }
+    }
+    if (agenda.payload.records?.status === 'HELD') await page.locator(`[data-meeting-records="${id}"]`).waitFor();
+    const snippet = agenda.payload.documents?.[0]?.text?.replace(/\s+/g, ' ').trim().slice(0, 80);
+    if (snippet && agenda.payload.publication?.acquisition !== 'ACQUIRED_IS_PUBLICATION_INDEX') {
+      await page.waitForFunction(({ id, snippet }) => document.querySelector(`[data-meeting-card="${id}"]`)?.textContent.replace(/\s+/g, ' ').includes(snippet), { id, snippet });
+    }
+    const ms = await paint();
+    const rendered = await page.locator(`[data-meeting-card="${id}"]`).innerText();
+    const network = await page.evaluate(id => performance.getEntriesByType('resource').filter(entry => entry.name.includes('/api/agenda?') && new URL(entry.name).searchParams.get('meetingId') === id).map(entry => ({
+      name: entry.name, startMs: entry.startTime, requestStartMs: entry.requestStart, responseStartMs: entry.responseStart,
+      responseEndMs: entry.responseEnd, durationMs: entry.duration, transferBytes: entry.transferSize, decodedBytes: entry.decodedBodySize,
+    })), id);
+    evidence.meetings.push({ id, title: meeting.title, bodyId: meeting.bodyId, ms, rendered, agenda, network, preservedFields: preservation, normalizedComparisonFields });
+    await page.screenshot({ path: `${output}/AZ-meeting-${evidence.meetings.length}.png`, fullPage: true });
+    if (!(ms < 3000)) evidence.failures.push(`Held meeting and agenda ${id} did not finish below three seconds`);
+    if (id === ids[0] && arg('body') !== '0') {
+      const heldBy = page.getByRole('button').filter({ has: page.locator('.mw-row-link-label').filter({ hasText: /^Held by$/ }) });
+      await clicked(heldBy);
+      await page.locator('.mw-entity:visible .account-modal-title').filter({ hasText: meeting.bodyName }).waitFor();
+      const bodyMs = await paint();
+      evidence.bodies.push({ bodyId: meeting.bodyId, ms: bodyMs, rendered: await page.locator('.mw-entity:visible').innerText() });
+      await page.screenshot({ path: `${output}/AZ-body.png`, fullPage: true });
+      if (!(bodyMs < 3000)) evidence.failures.push('The held body card did not finish below three seconds');
+    }
+    await closeReaderCards(page);
+  }
+  if (!evidence.meetings.some(meeting => meeting.agenda.payload.documents?.length > 0)) evidence.failures.push('No held agenda document was exercised by the meeting clicks');
+  if (evidence.failures.length) throw Error(evidence.failures.join('; '));
+}
+
 for (const probe of probes) {
-  const errors = [], blocked = [], boundaryRequests = [], bridgeFailures = [];
-  const result = { state: probe.state, zip: probe.zip, errors, boundaryRequests, bridgeFailures };
+  const tag = `${probe.state}${probe.followUp ? '-followup' : ''}`;
+  const errors = [], blocked = [], boundaryRequests = [], bridgeFailures = [], abortedReads = [];
+  const result = { state: probe.state, zip: probe.zip, followUp: Boolean(probe.followUp), errors, boundaryRequests, bridgeFailures, abortedReads };
   let server, browser, page;
   try {
     const port = Number(arg('port') ?? 3260);
     server = await startServer(port);
     browser = await launchGuarded({ label: `rs-02-cold-${probe.state}`, headless: true, blockWrites: true,
+      ...(sessionProxy ? { proxy: sessionProxy } : {}),
       args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
-    page = await browser.page({ viewport: { width: 1440, height: 1000 } });
+    page = await browser.page({ viewport: { width: 1440, height: 1000 }, ...(nativeBoundaries ? { ignoreHTTPSErrors: true } : {}) });
     const context = page.context();
+    if (nativeBoundaries) {
+      // A context-wide custom header causes Chrome to preflight cross-origin tiles
+      // before the guarded route can strip it. Declare our origin at the route
+      // instead; the shared write/provider/confinement guards remain installed.
+      await context.setExtraHTTPHeaders({});
+      result.boundaryTransport = 'Chromium native HTTP/2 through managed session proxy';
+      result.proxyCaException = 'Isolated public read-only browser context; Node probes verify the configured proxy CA';
+      const cdp = await context.newCDPSession(page);
+      await cdp.send('Network.enable');
+      const requests = new Map();
+      let navigationStarted;
+      cdp.on('Network.requestWillBeSent', event => {
+        if (event.type === 'Document' && new URL(event.request.url).origin === productionOrigin) navigationStarted ??= event.timestamp;
+        if (isBoundaryArchive(new URL(event.request.url))) requests.set(event.requestId, {
+          url: event.request.url, range: event.request.headers.Range ?? event.request.headers.range ?? null, started: event.timestamp,
+          startMs: navigationStarted === undefined ? null : (event.timestamp - navigationStarted) * 1000,
+        });
+      });
+      cdp.on('Network.responseReceived', event => {
+        const request = requests.get(event.requestId);
+        if (request) Object.assign(request, { status: event.response.status, protocol: event.response.protocol,
+          bytes: Number(event.response.headers['content-length'] ?? event.response.headers['Content-Length']),
+          connectionId: event.response.connectionId, connectionReused: event.response.connectionReused, timing: event.response.timing,
+          responseHeaders: Object.fromEntries(Object.entries(event.response.headers).filter(([key]) => /^(age|cache-control|cache-status|cf-cache-status|etag|server-timing|content-range)$/i.test(key))),
+        });
+      });
+      cdp.on('Network.loadingFinished', event => {
+        const request = requests.get(event.requestId);
+        if (request) { const { started, ...record } = request; boundaryRequests.push({ ...record, ms: Math.round((event.timestamp - started) * 1000) }); }
+      });
+    }
     page.on('pageerror', error => errors.push(safeError(error)));
     page.on('response', response => { if (response.status() >= 400) errors.push(`HTTP ${response.status()} ${new URL(response.url()).pathname}`); });
     page.on('requestfailed', request => {
       const url = new URL(request.url());
-      if (['GET', 'HEAD'].includes(request.method()) && url.origin.startsWith('http://localhost:') && url.pathname.startsWith('/api/')) errors.push(`GET failed ${url.pathname}: ${request.failure()?.errorText ?? 'unknown'}`);
+      if (request.failure()?.errorText === 'net::ERR_ABORTED' && !['/api/meetings', '/api/reader/state', '/api/agenda'].includes(url.pathname)) {
+        abortedReads.push({ path: url.pathname, error: request.failure().errorText });
+        return;
+      }
+      if (['GET', 'HEAD'].includes(request.method()) && (url.origin.startsWith('http://localhost:') || url.origin === productionOrigin) && url.pathname.startsWith('/api/')) errors.push(`GET failed ${url.pathname}: ${request.failure()?.errorText ?? 'unknown'}`);
     });
     await context.route('**/*', async route => {
       const request = route.request(), url = new URL(request.url());
       if (!['GET', 'HEAD'].includes(request.method())) { blocked.push(url.pathname); return route.abort('blockedbyclient'); }
-      const boundary = url.pathname.startsWith('/api/boundaries/');
-      const bridge = boundary || url.pathname === '/api/reader/settings' || url.pathname === '/api/reader/link-health' || url.pathname.startsWith('/api/portraits/');
+      const boundary = isBoundaryArchive(url);
+      const publicOnly = url.pathname === '/api/reader/settings' || url.pathname === '/api/reader/link-health' || url.pathname.startsWith('/api/portraits/');
+      if (nativeBoundaries && (boundary || publicOnly)) return route.fallback({ headers: {
+        ...request.headers(), ...(url.origin === productionOrigin ? { 'x-wtp-synthetic-run': browser.runId } : {}),
+      } });
+      const localBuild = nativeBoundaries && url.origin === productionOrigin;
+      const bridge = localBuild || boundary || publicOnly;
       if (!bridge) return route.fallback();
-      const productionUrl = `https://meanwhileusa.com${url.pathname}${url.search}`;
+      const upstreamOrigin = localBuild ? `http://localhost:${port}` : boundary && url.origin === 'https://tiles.meanwhilemaps.com' ? url.origin : productionOrigin;
+      const productionUrl = `${upstreamOrigin}${url.pathname}${url.search}`;
       const started = performance.now();
       try {
         const response = await fetch(productionUrl, { signal: AbortSignal.timeout(15000), headers: {
+          ...(localBuild ? Object.fromEntries(Object.entries(request.headers()).filter(([key]) => !['host', 'connection', 'content-length'].includes(key))) : {}),
           'x-wtp-synthetic-run': browser.runId,
           ...(request.headers().range ? { Range: request.headers().range } : {}),
         } });
@@ -105,7 +298,7 @@ for (const probe of probes) {
     });
     await seedZip(page, probe.zip);
     await page.addInitScript(() => {
-      const evidence = window.rs02 = { reads: [], renders: [], payloads: {} };
+      const evidence = window.rs02 = { reads: [], renders: [], payloads: {}, payloadsByZip: {} };
       const now = () => performance.now();
       const number = key => {
         const value = document.querySelector(`[data-stat="${key}"] .num`)?.textContent;
@@ -128,23 +321,37 @@ for (const probe of probes) {
           if (row.officials > 0 && row.meetings === place.meetings.length && row.bodies === bodies) paint('information');
         }
         if (row.districts > 0) paint('boundary');
+        const action = evidence.action;
+        const held = action && evidence.payloadsByZip[action.zip];
+        if (action?.clicked && !action.paintMs && !action.pending && held?.state?.coverage && held?.place?.coverage) {
+          const bodies = new Set([...held.state.coverage.bodies, ...held.place.coverage.bodies].map(body => body.bodyId)).size;
+          const link = document.querySelector(`.mw-nav-ballot[href*="${action.zip}"]`);
+          if (link?.getClientRects().length && row.officials > 0 && row.meetings === held.place.meetings.length && row.bodies === bodies) {
+            action.pending = true;
+            requestAnimationFrame(() => requestAnimationFrame(() => { action.paintMs = now() - action.clicked; }));
+          }
+        }
       };
       new MutationObserver(observe).observe(document, { childList: true, subtree: true, characterData: true });
       const original = Response.prototype.json;
       Response.prototype.json = async function () {
         const data = await original.call(this), url = this.url;
+        if (url.includes('/api/agenda?')) (evidence.agendaReads ??= []).push({ meetingId: new URL(url).searchParams.get('meetingId'), status: this.status, parsedMs: now(), serverTiming: this.headers.get('server-timing'), payload: data });
         if (url.includes('/api/meetings?') || url.includes('/api/reader/state?')) {
           const kind = url.includes('/api/meetings?') ? 'place' : 'state';
+          const zip = new URL(url).searchParams.get('zip');
+          if (zip) (evidence.payloadsByZip[zip] ??= {})[kind] = data;
           if (!evidence.payloads[kind]) {
             evidence.payloads[kind] = data;
             evidence.reads.push({ url, kind, status: this.status, ms: now(), serverTiming: this.headers.get('server-timing') });
             observe();
           }
+          observe();
         }
         return data;
       };
     });
-    await page.goto(`http://localhost:${port}/?zip=${probe.zip}`, { waitUntil: 'commit' });
+    await page.goto(`${nativeBoundaries ? productionOrigin : `http://localhost:${port}`}/?zip=${probe.zip}`, { waitUntil: 'commit' });
     try { await page.waitForFunction(() => window.rs02?.informationPaint && window.rs02?.boundaryPaint, null, { timeout: 20000 }); }
     catch (error) { errors.push(`Information or boundary paint did not finish: ${safeError(error)}`); }
     const measured = await page.evaluate(() => {
@@ -156,18 +363,34 @@ for (const probe of probes) {
         resources: performance.getEntriesByType('resource').map(resource => ({ name: resource.name, start: resource.startTime, duration: resource.duration, bytes: resource.encodedBodySize })),
         body: document.body.innerText };
     });
-    Object.assign(result, measured, { runId: browser.runId });
+    Object.assign(result, measured, { runId: browser.runId, usableMs: measured.informationMs && measured.boundaryMs ? Math.max(measured.informationMs, measured.boundaryMs) : null });
     if (!(measured.informationMs > 0 && measured.informationMs < 3000)) errors.push('Cold usable information did not finish below three seconds');
     if (!measured.boundaryMs || !(measured.dom.districts > 0)) errors.push('No district lines were rendered');
+    else if (!(measured.boundaryMs < 3000)) errors.push('Cold district lines did not finish below three seconds');
     if (!boundaryRequests.some(request => request.status === 200 || request.status === 206)) errors.push('No successful request reached the existing boundary archive');
     if (measured.reads.length !== 2 || measured.reads.some(read => read.status !== 200)) errors.push('Both requested information endpoints must return HTTP 200');
+    for (const path of ['/api/reader/state', '/api/meetings']) {
+      if (measured.resources.filter(resource => new URL(resource.name).pathname === path).length !== 1) errors.push(`${path} must be fetched exactly once on the cold visit`);
+    }
     const placeParsedMs = measured.reads.find(read => read.kind === 'place')?.ms;
     if (measured.resources.some(resource => new URL(resource.name).pathname === '/ballot' && (!placeParsedMs || resource.start < placeParsedMs))) errors.push('Ballot prefetched before the requested place was parsed');
     if (measured.resources.some(resource => { const path = new URL(resource.name).pathname; return path.startsWith('/geo/') && path !== '/geo/state-outlines.geojson'; })) errors.push('A boundary GeoJSON outside the existing state outlines was requested');
     if (bridgeFailures.length) errors.push('A public production GET bridge failed');
+    // A cold boundary miss remains a failure; it must not suppress independent
+    // click-path evidence when both held information responses succeeded.
+    const informationAvailable = measured.reads.length === 2 && measured.reads.every(read => read.status === 200) && measured.informationMs > 0;
+    if ((probe.followUp || arg('actions')) && informationAvailable) {
+      await page.screenshot({ path: `${output}/${tag}-cold.png`, fullPage: true });
+      result.readerActions = { offices: [], navigation: [] };
+      await followReader(page, output, result.readerActions);
+    }
+    if (arg('content') && informationAvailable) {
+      result.readerContent = { meetings: [], bodies: [] };
+      await followContent(page, output, result.readerContent);
+    }
   } catch (error) { errors.push(safeError(error)); }
   finally {
-    if (page) await page.screenshot({ path: `${output}/${probe.state}-${probe.zip}.png`, fullPage: true }).catch(error => errors.push(`Screenshot failed: ${safeError(error)}`));
+    if (page) await page.screenshot({ path: `${output}/${tag}-${probe.zip}.png`, fullPage: true }).catch(error => errors.push(`Screenshot failed: ${safeError(error)}`));
     if (browser) {
       result.writesBlocked = browser.writesBlocked.count + blocked.length;
       result.blockedPaths = [...new Set([...browser.writesBlocked.paths, ...blocked])];
@@ -175,14 +398,14 @@ for (const probe of probes) {
       await browser.close().catch(error => errors.push(safeError(error)));
     }
     await stopServer(server);
-    if (server) await writeFile(`${output}/${probe.state}-server.log`, server.log());
+    if (server) await writeFile(`${output}/${tag}-server.log`, server.log());
     results.push(result);
-    await writeFile(`${output}/${probe.state}.json`, JSON.stringify(result, null, 2));
+    await writeFile(`${output}/${tag}.json`, JSON.stringify(result, null, 2));
     await save();
     console.log(`${probe.state} ${probe.zip}: information ${result.informationMs?.toFixed(0) ?? 'missing'} ms; boundaries ${result.boundaryMs?.toFixed(0) ?? 'missing'} ms; ${errors.join('; ') || 'PASS'}`);
   }
 }
-for (const field of ['informationMs', 'boundaryMs']) {
+for (const field of ['usableMs', 'informationMs', 'boundaryMs']) {
   const slowest = results.filter(result => Number.isFinite(result[field])).sort((a, b) => b[field] - a[field])[0];
   if (slowest) console.log(`Slowest ${field}: ${slowest.state} ${slowest.zip}, ${slowest[field].toFixed(0)} ms`);
 }

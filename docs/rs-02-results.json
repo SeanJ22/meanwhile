@@ -1,0 +1,1070 @@
+{
+  "step": "RS-02",
+  "status": "verification open: final build, browser and Ballot checks pending; latest cold boundary miss 3444 ms",
+  "productionReadOnly": true,
+  "baselineCommit": "04fe5ae6d",
+  "riverCommit": "6b4ea17af",
+  "ballotCommit": "027144fa1",
+  "national": {
+    "members": 539,
+    "jurisdictions": 56,
+    "zipPlaces": 41831,
+    "presidentStatus": "NOT_RECORDED",
+    "presidentSourceGap": "Production holds no verified current President record."
+  },
+  "data": {
+    "states": 50,
+    "checks": 150,
+    "statesWithMissingHeldData": 0,
+    "statesWithErrors": 0,
+    "checkedAt": "2026-10-19T02:48:49.874Z",
+    "evidence": ".scratch/rs02/final-reader-all50.json",
+    "results": [
+      {
+        "state": "AL",
+        "zip": "36003",
+        "coldMs": 1316,
+        "coldWithImportsMs": 1866,
+        "repeatMs": 859,
+        "nextZip": "35004",
+        "nextZipMs": 397,
+        "stateBytes": 70101,
+        "placeBytes": 32022
+      },
+      {
+        "state": "AK",
+        "zip": "99631",
+        "coldMs": 1297,
+        "coldWithImportsMs": 1786,
+        "repeatMs": 849,
+        "nextZip": "99501",
+        "nextZipMs": 827,
+        "stateBytes": 47777,
+        "placeBytes": 31351
+      },
+      {
+        "state": "AZ",
+        "zip": "85701",
+        "coldMs": 1454,
+        "coldWithImportsMs": 2034,
+        "repeatMs": 672,
+        "nextZip": "85003",
+        "nextZipMs": 861,
+        "stateBytes": 36928,
+        "placeBytes": 567626
+      },
+      {
+        "state": "AR",
+        "zip": "72370",
+        "coldMs": 1649,
+        "coldWithImportsMs": 2199,
+        "repeatMs": 715,
+        "nextZip": "71601",
+        "nextZipMs": 320,
+        "stateBytes": 79033,
+        "placeBytes": 44370
+      },
+      {
+        "state": "CA",
+        "zip": "93636",
+        "coldMs": 1559,
+        "coldWithImportsMs": 2047,
+        "repeatMs": 980,
+        "nextZip": "90001",
+        "nextZipMs": 890,
+        "stateBytes": 84998,
+        "placeBytes": 42087
+      },
+      {
+        "state": "CO",
+        "zip": "80757",
+        "coldMs": 1149,
+        "coldWithImportsMs": 1682,
+        "repeatMs": 331,
+        "nextZip": "80002",
+        "nextZipMs": 454,
+        "stateBytes": 53994,
+        "placeBytes": 30890
+      },
+      {
+        "state": "CT",
+        "zip": "06412",
+        "coldMs": 1347,
+        "coldWithImportsMs": 1913,
+        "repeatMs": 366,
+        "nextZip": "06001",
+        "nextZipMs": 393,
+        "stateBytes": 61684,
+        "placeBytes": 34640
+      },
+      {
+        "state": "DE",
+        "zip": "19934",
+        "coldMs": 1265,
+        "coldWithImportsMs": 1857,
+        "repeatMs": 428,
+        "nextZip": "19701",
+        "nextZipMs": 372,
+        "stateBytes": 114678,
+        "placeBytes": 36630
+      },
+      {
+        "state": "FL",
+        "zip": "33183",
+        "coldMs": 1608,
+        "coldWithImportsMs": 2178,
+        "repeatMs": 338,
+        "nextZip": "32003",
+        "nextZipMs": 378,
+        "stateBytes": 82483,
+        "placeBytes": 31159
+      },
+      {
+        "state": "GA",
+        "zip": "30720",
+        "coldMs": 1375,
+        "coldWithImportsMs": 1911,
+        "repeatMs": 776,
+        "nextZip": "30002",
+        "nextZipMs": 373,
+        "stateBytes": 72617,
+        "placeBytes": 36838
+      },
+      {
+        "state": "HI",
+        "zip": "96768",
+        "coldMs": 1210,
+        "coldWithImportsMs": 1754,
+        "repeatMs": 796,
+        "nextZip": "96701",
+        "nextZipMs": 331,
+        "stateBytes": 60152,
+        "placeBytes": 32545
+      },
+      {
+        "state": "ID",
+        "zip": "83537",
+        "coldMs": 1642,
+        "coldWithImportsMs": 2164,
+        "repeatMs": 437,
+        "nextZip": "83120",
+        "nextZipMs": 412,
+        "stateBytes": 338846,
+        "placeBytes": 46417
+      },
+      {
+        "state": "IL",
+        "zip": "61569",
+        "coldMs": 1321,
+        "coldWithImportsMs": 1787,
+        "repeatMs": 473,
+        "nextZip": "60002",
+        "nextZipMs": 462,
+        "stateBytes": 55207,
+        "placeBytes": 44710
+      },
+      {
+        "state": "IN",
+        "zip": "46992",
+        "coldMs": 1353,
+        "coldWithImportsMs": 1915,
+        "repeatMs": 390,
+        "nextZip": "46001",
+        "nextZipMs": 433,
+        "stateBytes": 70010,
+        "placeBytes": 46226
+      },
+      {
+        "state": "IA",
+        "zip": "51047",
+        "coldMs": 1395,
+        "coldWithImportsMs": 1917,
+        "repeatMs": 377,
+        "nextZip": "50001",
+        "nextZipMs": 405,
+        "stateBytes": 67499,
+        "placeBytes": 46121
+      },
+      {
+        "state": "KS",
+        "zip": "67038",
+        "coldMs": 1447,
+        "coldWithImportsMs": 2033,
+        "repeatMs": 413,
+        "nextZip": "66002",
+        "nextZipMs": 452,
+        "stateBytes": 60337,
+        "placeBytes": 42158
+      },
+      {
+        "state": "KY",
+        "zip": "41365",
+        "coldMs": 1267,
+        "coldWithImportsMs": 1854,
+        "repeatMs": 336,
+        "nextZip": "40003",
+        "nextZipMs": 358,
+        "stateBytes": 61128,
+        "placeBytes": 31179
+      },
+      {
+        "state": "LA",
+        "zip": "70757",
+        "coldMs": 1350,
+        "coldWithImportsMs": 1946,
+        "repeatMs": 382,
+        "nextZip": "70001",
+        "nextZipMs": 368,
+        "stateBytes": 66664,
+        "placeBytes": 38568
+      },
+      {
+        "state": "ME",
+        "zip": "04493",
+        "coldMs": 1343,
+        "coldWithImportsMs": 1848,
+        "repeatMs": 370,
+        "nextZip": "03579",
+        "nextZipMs": 388,
+        "stateBytes": 55947,
+        "placeBytes": 39169
+      },
+      {
+        "state": "MD",
+        "zip": "21155",
+        "coldMs": 1670,
+        "coldWithImportsMs": 2221,
+        "repeatMs": 320,
+        "nextZip": "20601",
+        "nextZipMs": 441,
+        "stateBytes": 88209,
+        "placeBytes": 35917
+      },
+      {
+        "state": "MA",
+        "zip": "01879",
+        "coldMs": 1320,
+        "coldWithImportsMs": 1810,
+        "repeatMs": 352,
+        "nextZip": "01001",
+        "nextZipMs": 363,
+        "stateBytes": 71779,
+        "placeBytes": 30950
+      },
+      {
+        "state": "MI",
+        "zip": "48897",
+        "coldMs": 1197,
+        "coldWithImportsMs": 1780,
+        "repeatMs": 438,
+        "nextZip": "48001",
+        "nextZipMs": 436,
+        "stateBytes": 66015,
+        "placeBytes": 42737
+      },
+      {
+        "state": "MN",
+        "zip": "56051",
+        "coldMs": 1170,
+        "coldWithImportsMs": 1749,
+        "repeatMs": 403,
+        "nextZip": "55001",
+        "nextZipMs": 428,
+        "stateBytes": 57977,
+        "placeBytes": 33252
+      },
+      {
+        "state": "MS",
+        "zip": "39145",
+        "coldMs": 1373,
+        "coldWithImportsMs": 1920,
+        "repeatMs": 366,
+        "nextZip": "38601",
+        "nextZipMs": 379,
+        "stateBytes": 80086,
+        "placeBytes": 36654
+      },
+      {
+        "state": "MO",
+        "zip": "64470",
+        "coldMs": 1338,
+        "coldWithImportsMs": 1920,
+        "repeatMs": 410,
+        "nextZip": "63005",
+        "nextZipMs": 397,
+        "stateBytes": 56192,
+        "placeBytes": 38895
+      },
+      {
+        "state": "MT",
+        "zip": "59446",
+        "coldMs": 1180,
+        "coldWithImportsMs": 1713,
+        "repeatMs": 389,
+        "nextZip": "59001",
+        "nextZipMs": 453,
+        "stateBytes": 52325,
+        "placeBytes": 33625
+      },
+      {
+        "state": "NE",
+        "zip": "68725",
+        "coldMs": 1068,
+        "coldWithImportsMs": 1602,
+        "repeatMs": 421,
+        "nextZip": "68001",
+        "nextZipMs": 369,
+        "stateBytes": 63495,
+        "placeBytes": 46149
+      },
+      {
+        "state": "NV",
+        "zip": "89148",
+        "coldMs": 1164,
+        "coldWithImportsMs": 1747,
+        "repeatMs": 348,
+        "nextZip": "89001",
+        "nextZipMs": 340,
+        "stateBytes": 83351,
+        "placeBytes": 31535
+      },
+      {
+        "state": "NH",
+        "zip": "03461",
+        "coldMs": 1785,
+        "coldWithImportsMs": 2336,
+        "repeatMs": 410,
+        "nextZip": "03031",
+        "nextZipMs": 408,
+        "stateBytes": 20480,
+        "placeBytes": 33424
+      },
+      {
+        "state": "NJ",
+        "zip": "07927",
+        "coldMs": 1445,
+        "coldWithImportsMs": 1930,
+        "repeatMs": 480,
+        "nextZip": "07001",
+        "nextZipMs": 481,
+        "stateBytes": 36039,
+        "placeBytes": 85501
+      },
+      {
+        "state": "NM",
+        "zip": "87735",
+        "coldMs": 1062,
+        "coldWithImportsMs": 1569,
+        "repeatMs": 326,
+        "nextZip": "79837",
+        "nextZipMs": 358,
+        "stateBytes": 50452,
+        "placeBytes": 30769
+      },
+      {
+        "state": "NY",
+        "zip": "12803",
+        "coldMs": 1626,
+        "coldWithImportsMs": 2120,
+        "repeatMs": 481,
+        "nextZip": "06390",
+        "nextZipMs": 414,
+        "stateBytes": 56692,
+        "placeBytes": 36901
+      },
+      {
+        "state": "NC",
+        "zip": "28124",
+        "coldMs": 1463,
+        "coldWithImportsMs": 1991,
+        "repeatMs": 463,
+        "nextZip": "27006",
+        "nextZipMs": 396,
+        "stateBytes": 75572,
+        "placeBytes": 39470
+      },
+      {
+        "state": "ND",
+        "zip": "58443",
+        "coldMs": 1430,
+        "coldWithImportsMs": 1937,
+        "repeatMs": 472,
+        "nextZip": "58001",
+        "nextZipMs": 819,
+        "stateBytes": 65605,
+        "placeBytes": 43668
+      },
+      {
+        "state": "OH",
+        "zip": "44438",
+        "coldMs": 1474,
+        "coldWithImportsMs": 1992,
+        "repeatMs": 444,
+        "nextZip": "43001",
+        "nextZipMs": 458,
+        "stateBytes": 56643,
+        "placeBytes": 41030
+      },
+      {
+        "state": "OK",
+        "zip": "73942",
+        "coldMs": 1252,
+        "coldWithImportsMs": 1761,
+        "repeatMs": 407,
+        "nextZip": "73001",
+        "nextZipMs": 357,
+        "stateBytes": 57166,
+        "placeBytes": 47231
+      },
+      {
+        "state": "OR",
+        "zip": "97414",
+        "coldMs": 1059,
+        "coldWithImportsMs": 1552,
+        "repeatMs": 702,
+        "nextZip": "89421",
+        "nextZipMs": 381,
+        "stateBytes": 53528,
+        "placeBytes": 31105
+      },
+      {
+        "state": "PA",
+        "zip": "17058",
+        "coldMs": 1528,
+        "coldWithImportsMs": 2059,
+        "repeatMs": 423,
+        "nextZip": "15001",
+        "nextZipMs": 493,
+        "stateBytes": 57120,
+        "placeBytes": 34620
+      },
+      {
+        "state": "RI",
+        "zip": "02865",
+        "coldMs": 1173,
+        "coldWithImportsMs": 1666,
+        "repeatMs": 295,
+        "nextZip": "02802",
+        "nextZipMs": 349,
+        "stateBytes": 82383,
+        "placeBytes": 31443
+      },
+      {
+        "state": "SC",
+        "zip": "29512",
+        "coldMs": 1525,
+        "coldWithImportsMs": 2148,
+        "repeatMs": 362,
+        "nextZip": "29001",
+        "nextZipMs": 424,
+        "stateBytes": 56376,
+        "placeBytes": 33175
+      },
+      {
+        "state": "SD",
+        "zip": "57375",
+        "coldMs": 1423,
+        "coldWithImportsMs": 1922,
+        "repeatMs": 352,
+        "nextZip": "57001",
+        "nextZipMs": 392,
+        "stateBytes": 82582,
+        "placeBytes": 46175
+      },
+      {
+        "state": "TN",
+        "zip": "37810",
+        "coldMs": 1423,
+        "coldWithImportsMs": 1904,
+        "repeatMs": 338,
+        "nextZip": "37010",
+        "nextZipMs": 408,
+        "stateBytes": 45292,
+        "placeBytes": 30866
+      },
+      {
+        "state": "TX",
+        "zip": "77346",
+        "coldMs": 1316,
+        "coldWithImportsMs": 1791,
+        "repeatMs": 398,
+        "nextZip": "73960",
+        "nextZipMs": 449,
+        "stateBytes": 93842,
+        "placeBytes": 33072
+      },
+      {
+        "state": "UT",
+        "zip": "84304",
+        "coldMs": 1127,
+        "coldWithImportsMs": 1619,
+        "repeatMs": 343,
+        "nextZip": "82930",
+        "nextZipMs": 433,
+        "stateBytes": 53407,
+        "placeBytes": 30949
+      },
+      {
+        "state": "VT",
+        "zip": "05478",
+        "coldMs": 1350,
+        "coldWithImportsMs": 1841,
+        "repeatMs": 370,
+        "nextZip": "05001",
+        "nextZipMs": 402,
+        "stateBytes": 133422,
+        "placeBytes": 51757
+      },
+      {
+        "state": "VA",
+        "zip": "23418",
+        "coldMs": 1331,
+        "coldWithImportsMs": 1834,
+        "repeatMs": 322,
+        "nextZip": "20105",
+        "nextZipMs": 302,
+        "stateBytes": 55029,
+        "placeBytes": 32226
+      },
+      {
+        "state": "WA",
+        "zip": "98570",
+        "coldMs": 1177,
+        "coldWithImportsMs": 1689,
+        "repeatMs": 454,
+        "nextZip": "98001",
+        "nextZipMs": 406,
+        "stateBytes": 66708,
+        "placeBytes": 37637
+      },
+      {
+        "state": "WV",
+        "zip": "25823",
+        "coldMs": 1087,
+        "coldWithImportsMs": 1570,
+        "repeatMs": 307,
+        "nextZip": "24701",
+        "nextZipMs": 372,
+        "stateBytes": 50793,
+        "placeBytes": 31054
+      },
+      {
+        "state": "WI",
+        "zip": "54161",
+        "coldMs": 1261,
+        "coldWithImportsMs": 1762,
+        "repeatMs": 398,
+        "nextZip": "53001",
+        "nextZipMs": 369,
+        "stateBytes": 52958,
+        "placeBytes": 46946
+      },
+      {
+        "state": "WY",
+        "zip": "82601",
+        "coldMs": 1188,
+        "coldWithImportsMs": 1710,
+        "repeatMs": 385,
+        "nextZip": "82001",
+        "nextZipMs": 359,
+        "stateBytes": 124011,
+        "placeBytes": 36055
+      }
+    ]
+  },
+  "baseline": {
+    "dataColdMaxMs": 1936,
+    "dataColdWithImportsMaxMs": 3734,
+    "threeStateBrowserInformation": [
+      {
+        "zip": "46992",
+        "exitCode": 0,
+        "stateMs": 1679.2999999998137,
+        "placeMs": 1679.2999999998137,
+        "allMs": 1679.2999999998137,
+        "errors": []
+      },
+      {
+        "zip": "93636",
+        "exitCode": 0,
+        "stateMs": 1753.6999999999534,
+        "placeMs": 1753.6999999999534,
+        "allMs": 1753.6999999999534,
+        "errors": []
+      },
+      {
+        "zip": "77346",
+        "exitCode": 0,
+        "stateMs": 1796.5,
+        "placeMs": 1796.5,
+        "allMs": 1796.5,
+        "errors": []
+      }
+    ],
+    "browserLimitation": "RS-01 stopped at information paint and did not establish district paint for IN or CA."
+  },
+  "browser": {
+    "status": "fifty-state sweep passed; additional cold Tucson visit missed the threshold",
+    "buildId": "6pMdWoNlYc9ABEt2XWqjo",
+    "states": 50,
+    "transport": "native Chromium through managed session proxy",
+    "freshServerAndBrowserPerState": true,
+    "statesWithErrors": 0,
+    "results": [
+      {
+        "state": "AL",
+        "zip": "36003",
+        "informationMs": 1292.1,
+        "boundaryMs": 2089.3,
+        "usableMs": 2089.3
+      },
+      {
+        "state": "AK",
+        "zip": "99631",
+        "informationMs": 1385.5,
+        "boundaryMs": 2082.2,
+        "usableMs": 2082.2
+      },
+      {
+        "state": "AZ",
+        "zip": "85701",
+        "informationMs": 1753.7,
+        "boundaryMs": 2036.4,
+        "usableMs": 2036.4
+      },
+      {
+        "state": "AR",
+        "zip": "72370",
+        "informationMs": 1703.6,
+        "boundaryMs": 1991.4,
+        "usableMs": 1991.4
+      },
+      {
+        "state": "CA",
+        "zip": "93636",
+        "informationMs": 1400,
+        "boundaryMs": 2084.6,
+        "usableMs": 2084.6
+      },
+      {
+        "state": "CO",
+        "zip": "80757",
+        "informationMs": 1268.6,
+        "boundaryMs": 1870.7,
+        "usableMs": 1870.7
+      },
+      {
+        "state": "CT",
+        "zip": "06412",
+        "informationMs": 1421.1,
+        "boundaryMs": 2023.9,
+        "usableMs": 2023.9
+      },
+      {
+        "state": "DE",
+        "zip": "19934",
+        "informationMs": 1493.3,
+        "boundaryMs": 1767.6,
+        "usableMs": 1767.6
+      },
+      {
+        "state": "FL",
+        "zip": "33183",
+        "informationMs": 1299.1,
+        "boundaryMs": 1972.6,
+        "usableMs": 1972.6
+      },
+      {
+        "state": "GA",
+        "zip": "30720",
+        "informationMs": 1372.4,
+        "boundaryMs": 1999.5,
+        "usableMs": 1999.5
+      },
+      {
+        "state": "HI",
+        "zip": "96768",
+        "informationMs": 1342.1,
+        "boundaryMs": 2031.3,
+        "usableMs": 2031.3
+      },
+      {
+        "state": "ID",
+        "zip": "83537",
+        "informationMs": 1462.3,
+        "boundaryMs": 2155.7,
+        "usableMs": 2155.7
+      },
+      {
+        "state": "IL",
+        "zip": "61569",
+        "informationMs": 1489.6,
+        "boundaryMs": 2085.7,
+        "usableMs": 2085.7
+      },
+      {
+        "state": "IN",
+        "zip": "46992",
+        "informationMs": 1343.7,
+        "boundaryMs": 1949.1,
+        "usableMs": 1949.1
+      },
+      {
+        "state": "IA",
+        "zip": "51047",
+        "informationMs": 1637,
+        "boundaryMs": 2169.6,
+        "usableMs": 2169.6
+      },
+      {
+        "state": "KS",
+        "zip": "67038",
+        "informationMs": 1517.2,
+        "boundaryMs": 1847,
+        "usableMs": 1847
+      },
+      {
+        "state": "KY",
+        "zip": "41365",
+        "informationMs": 1306.3,
+        "boundaryMs": 1901,
+        "usableMs": 1901
+      },
+      {
+        "state": "LA",
+        "zip": "70757",
+        "informationMs": 1397.9,
+        "boundaryMs": 2105.5,
+        "usableMs": 2105.5
+      },
+      {
+        "state": "ME",
+        "zip": "04493",
+        "informationMs": 1345.3,
+        "boundaryMs": 1971.8,
+        "usableMs": 1971.8
+      },
+      {
+        "state": "MD",
+        "zip": "21155",
+        "informationMs": 1354.8,
+        "boundaryMs": 2016.9,
+        "usableMs": 2016.9
+      },
+      {
+        "state": "MA",
+        "zip": "01879",
+        "informationMs": 1442.2,
+        "boundaryMs": 2029.5,
+        "usableMs": 2029.5
+      },
+      {
+        "state": "MI",
+        "zip": "48897",
+        "informationMs": 1482.6,
+        "boundaryMs": 2152,
+        "usableMs": 2152
+      },
+      {
+        "state": "MN",
+        "zip": "56051",
+        "informationMs": 1417.9,
+        "boundaryMs": 1991.4,
+        "usableMs": 1991.4
+      },
+      {
+        "state": "MS",
+        "zip": "39145",
+        "informationMs": 1405.8,
+        "boundaryMs": 2101.6,
+        "usableMs": 2101.6
+      },
+      {
+        "state": "MO",
+        "zip": "64470",
+        "informationMs": 1416.8,
+        "boundaryMs": 2041.3,
+        "usableMs": 2041.3
+      },
+      {
+        "state": "MT",
+        "zip": "59446",
+        "informationMs": 1368,
+        "boundaryMs": 2058,
+        "usableMs": 2058
+      },
+      {
+        "state": "NE",
+        "zip": "68725",
+        "informationMs": 1288.9,
+        "boundaryMs": 1844.6,
+        "usableMs": 1844.6
+      },
+      {
+        "state": "NV",
+        "zip": "89148",
+        "informationMs": 1385.7,
+        "boundaryMs": 1897,
+        "usableMs": 1897
+      },
+      {
+        "state": "NH",
+        "zip": "03461",
+        "informationMs": 1527.5,
+        "boundaryMs": 1918.2,
+        "usableMs": 1918.2
+      },
+      {
+        "state": "NJ",
+        "zip": "07927",
+        "informationMs": 1531.3,
+        "boundaryMs": 2020.6,
+        "usableMs": 2020.6
+      },
+      {
+        "state": "NM",
+        "zip": "87735",
+        "informationMs": 1254.8,
+        "boundaryMs": 1894.5,
+        "usableMs": 1894.5
+      },
+      {
+        "state": "NY",
+        "zip": "12803",
+        "informationMs": 1471.3,
+        "boundaryMs": 2025.4,
+        "usableMs": 2025.4
+      },
+      {
+        "state": "NC",
+        "zip": "28124",
+        "informationMs": 1323.8,
+        "boundaryMs": 1985.4,
+        "usableMs": 1985.4
+      },
+      {
+        "state": "ND",
+        "zip": "58443",
+        "informationMs": 1310.1,
+        "boundaryMs": 1942.4,
+        "usableMs": 1942.4
+      },
+      {
+        "state": "OH",
+        "zip": "44438",
+        "informationMs": 1312.1,
+        "boundaryMs": 1843.2,
+        "usableMs": 1843.2
+      },
+      {
+        "state": "OK",
+        "zip": "73942",
+        "informationMs": 1500.3,
+        "boundaryMs": 1901.4,
+        "usableMs": 1901.4
+      },
+      {
+        "state": "OR",
+        "zip": "97414",
+        "informationMs": 1348.8,
+        "boundaryMs": 1962.7,
+        "usableMs": 1962.7
+      },
+      {
+        "state": "PA",
+        "zip": "17058",
+        "informationMs": 1336.7,
+        "boundaryMs": 1824.5,
+        "usableMs": 1824.5
+      },
+      {
+        "state": "RI",
+        "zip": "02865",
+        "informationMs": 1288.2,
+        "boundaryMs": 2269,
+        "usableMs": 2269
+      },
+      {
+        "state": "SC",
+        "zip": "29512",
+        "informationMs": 1617.3,
+        "boundaryMs": 1836.8,
+        "usableMs": 1836.8
+      },
+      {
+        "state": "SD",
+        "zip": "57375",
+        "informationMs": 1590.8,
+        "boundaryMs": 1845.8,
+        "usableMs": 1845.8
+      },
+      {
+        "state": "TN",
+        "zip": "37810",
+        "informationMs": 1632.9,
+        "boundaryMs": 1902.2,
+        "usableMs": 1902.2
+      },
+      {
+        "state": "TX",
+        "zip": "77346",
+        "informationMs": 1630,
+        "boundaryMs": 2005.1,
+        "usableMs": 2005.1
+      },
+      {
+        "state": "UT",
+        "zip": "84304",
+        "informationMs": 1233.3,
+        "boundaryMs": 1858.2,
+        "usableMs": 1858.2
+      },
+      {
+        "state": "VT",
+        "zip": "05478",
+        "informationMs": 1412.5,
+        "boundaryMs": 1945.9,
+        "usableMs": 1945.9
+      },
+      {
+        "state": "VA",
+        "zip": "23418",
+        "informationMs": 1328.1,
+        "boundaryMs": 1966.9,
+        "usableMs": 1966.9
+      },
+      {
+        "state": "WA",
+        "zip": "98570",
+        "informationMs": 1462.8,
+        "boundaryMs": 1941.3,
+        "usableMs": 1941.3
+      },
+      {
+        "state": "WV",
+        "zip": "25823",
+        "informationMs": 1282.3,
+        "boundaryMs": 1982.6,
+        "usableMs": 1982.6
+      },
+      {
+        "state": "WI",
+        "zip": "54161",
+        "informationMs": 1439.5,
+        "boundaryMs": 1834.2,
+        "usableMs": 1834.2
+      },
+      {
+        "state": "WY",
+        "zip": "82601",
+        "informationMs": 1252.5,
+        "boundaryMs": 1903.2,
+        "usableMs": 1903.2
+      }
+    ],
+    "slowest": {
+      "state": "RI",
+      "zip": "02865",
+      "informationMs": 1288.2,
+      "boundaryMs": 2269,
+      "usableMs": 2269
+    },
+    "firstFollowUpFailure": "Harness matched a map office pin behind the Officials dialog; scoped dialog selector repair is being checked separately. All fifty cold rows are preserved.",
+    "additionalColdMiss": {
+      "state": "AZ",
+      "zip": "85701",
+      "informationMs": 1956.8,
+      "boundaryMs": 3261.2,
+      "transport": "native HTTP/2, unchanged live edge archive",
+      "headerRangeMs": 926,
+      "directoryRangeMs": 796,
+      "evidence": ".scratch/rs02/browser-native-actions/AZ.json",
+      "cause": "under investigation; no application boundary changes"
+    }
+  },
+  "deployment": "Not deployed. Actual branch CDN hits and purges require River deployment.",
+  "buildId": "BjVVlgdBpucrSMKrzKcLb",
+  "boundaries": {
+    "threeMapFilesExactlyMatch": "origin/main@16679a9ea",
+    "liveUrl": "https://tiles.meanwhilemaps.com/us-2025.pmtiles",
+    "fallbackUrl": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+    "stateOutlines": "/geo/state-outlines.geojson",
+    "sampleRangesIdentical": true,
+    "archiveBytes": 225944259,
+    "originalApiFallbackDiagnostic": {
+      "state": "CA",
+      "informationMs": 1384,
+      "boundaryMs": 3207.9,
+      "passed": false,
+      "cause": "Local build omitted the existing live edge URL override. Native probes did not establish the Node bridge caused the delay."
+    }
+  },
+  "cache": {
+    "seconds": 60,
+    "durable": true,
+    "taggedPostCommitInvalidationTests": "passed",
+    "productionCredentialAliases": "existing WTP_BLOBS and Netlify runner names",
+    "liveBranchHitAndPurgeVerification": "not performed; branch is not deployed and production testing is read-only",
+    "currentTokenPurgeAuthorization": "unverified; env tooling masks secrets"
+  },
+  "agendaHandler": {
+    "readOnly": true,
+    "comparison": "All nine fields match; publication recheck time varies with clock, valid timestamps retained.",
+    "profiles": [
+      {
+        "meetingId": "onbase:tucson:1961",
+        "ms": 2932,
+        "documents": 1,
+        "records": {
+          "agenda": 0,
+          "actions": 0,
+          "rollCalls": 0,
+          "votes": 0
+        },
+        "calendarBytes": 363818
+      },
+      {
+        "meetingId": "legistar-insite:pima:1381579",
+        "ms": 2191,
+        "documents": 8,
+        "records": {
+          "agenda": 139,
+          "actions": 0,
+          "rollCalls": 0,
+          "votes": 0
+        },
+        "calendarBytes": 575795
+      },
+      {
+        "meetingId": "diligent:tusd1:2026-10-22T1730-bond-oversight",
+        "ms": 2107,
+        "documents": 1,
+        "records": {
+          "agenda": 0,
+          "actions": 0,
+          "rollCalls": 0,
+          "votes": 0
+        },
+        "calendarBytes": 933284
+      }
+    ]
+  },
+  "latestBoundaryDiagnostic": {
+    "buildId": "Za3YbptvLn2xjbsOP81g9",
+    "informationMs": 2128.3,
+    "boundaryMs": 3444.1,
+    "archiveStartMs": 905.622,
+    "headerMs": 1183,
+    "directoryMs": 924,
+    "evidence": ".scratch/rs02/initial-map-startup/waterfall-summary.json",
+    "passed": false
+  },
+  "latestBallotDiagnostic": {
+    "fullMs": 3217,
+    "status": 200,
+    "holdingGaps": false,
+    "profiled": true,
+    "evidence": ".scratch/rs02/ballot-cpu-profile.json",
+    "subsequentChanges": "Default place transport uses shared socket; ZIP-dependent translation pointers join state query. Final unprofiled verification pending."
+  }
+}

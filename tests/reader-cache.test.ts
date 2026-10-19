@@ -16,13 +16,49 @@ import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
 import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
-import { invalidateReaderCache, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
+import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;
 const NOW = new Date("2026-10-18T12:00:00Z");
 const clocks = factClocks(null);
+
+test("purge credentials accept the deployed WTP and runner token names without a network request", async t => {
+  const tokenKeys = ["NETLIFY_API_TOKEN", "NETLIFY_AUTH_TOKEN", "NETLIFY_TOKEN", "WTP_BLOBS_TOKEN", "NETLIFY_BLOBS_TOKEN"];
+  const siteKeys = ["NETLIFY_SITE_ID", "NETLIFY_BLOBS_SITE_ID", "WTP_BLOBS_SITE_ID"];
+  const keys = [...tokenKeys, ...siteKeys];
+  const before = new Map(keys.map(key => [key, process.env[key]]));
+  t.after(() => { for (const [key, value] of before) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } });
+  const calls: { token: string | null; site: string }[] = [];
+  t.mock.method(globalThis, "fetch", async (url: Parameters<typeof fetch>[0], options?: Parameters<typeof fetch>[1]) => {
+    assert.equal(url, "https://api.netlify.com/api/v1/purge");
+    assert.equal(options?.method, "POST");
+    const body = JSON.parse(String(options?.body));
+    assert.deepEqual(body.cache_tags, ["reader-state:AZ"]);
+    calls.push({ token: new Headers(options?.headers).get("Authorization"), site: body.site_id });
+    return new Response(null, { status: 202 });
+  });
+  const clear = () => { for (const key of keys) delete process.env[key]; };
+  for (const tokenKey of tokenKeys) {
+    clear();
+    process.env[tokenKey] = `test-${tokenKey}`;
+    process.env.WTP_BLOBS_SITE_ID = "test-site";
+    assert.deepEqual(await purgeReaderCacheTags(["reader-state:AZ"]), { purged: true });
+    assert.deepEqual(calls.at(-1), { token: `Bearer test-${tokenKey}`, site: "test-site" });
+  }
+  for (const key of tokenKeys) process.env[key] = `test-${key}`;
+  process.env.NETLIFY_SITE_ID = "preferred-site";
+  for (const tokenKey of tokenKeys) {
+    assert.deepEqual(await purgeReaderCacheTags(["reader-state:AZ"]), { purged: true });
+    assert.deepEqual(calls.at(-1), { token: `Bearer test-${tokenKey}`, site: "preferred-site" });
+    delete process.env[tokenKey];
+  }
+  const sent = calls.length;
+  clear();
+  assert.equal((await purgeReaderCacheTags(["reader-state:AZ"])).purged, false);
+  assert.equal(calls.length, sent, "missing credentials do not send a request");
+});
 
 test("reader answers carry state, place and national tags with a strict one-minute edge lifetime", () => {
   const headers = readerCacheHeaders({ states: ["az", "US-AZ", "AZ"], places: [PLACE, `${PLACE}#board`] });

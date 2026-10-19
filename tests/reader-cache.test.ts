@@ -2,8 +2,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { createMemoryRepositories, memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishClaim, type FactDb, type PublishInput } from "../lib/facts/publish.ts";
@@ -11,7 +14,9 @@ import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
 import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
-import { invalidateReaderCache, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags } from "../lib/reader/cache.ts";
+import { campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
+import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
+import { invalidateReaderCache, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
@@ -50,6 +55,52 @@ test("purge refusal and transport failure stay visible without reversing publica
   assert.deepEqual(await invalidateReaderCache({ national: true }, async () => { throw new Error("offline"); }), { purged: false, detail: "offline" });
   assert.equal(messages.length, 2);
   assert.match(String(messages[0]![0]), /after publication/);
+});
+
+test("bulk publications purge each tag once even when a later field fails", async () => {
+  const purges: string[][] = [];
+  const failed = new Error("A later source field failed");
+  await assert.rejects(withBatchedReaderInvalidation(async collect => {
+    await invalidateReaderCache({ states: ["AZ"] }, collect);
+    await invalidateReaderCache({ states: ["AZ", "CA"] }, collect);
+    throw failed;
+  }, async tags => { purges.push([...tags]); return { purged: true }; }), error => error === failed);
+  assert.deepEqual(purges, [["reader-state:AZ", "reader-state:CA"]]);
+});
+
+test("a changed retained publication outcome, including HELD, clears the body's state; unchanged or failed saves do not", async () => {
+  type Item = Pick<WorkItem, "id" | "publicationOutcome"> & {
+    autonomousPlan?: { jurisdiction: string; publication: { contractId: "comment-access"; bodyId: string } };
+  };
+  const workItems = memoryAggregateRepository<Item>("WorkItem");
+  const item: Item = { id: "outcome-test", autonomousPlan: { jurisdiction: "CA", publication: { contractId: "comment-access", bodyId: BODY } } };
+  const initial = (await workItems.put(item.id, item, NOW.toISOString())).persisted;
+  const outcome: NonNullable<WorkItem["publicationOutcome"]> = { at: NOW.toISOString(), workerResultId: "worker:test", status: "PUBLISHED",
+    code: "VERIFIED_RESULT_PUBLISHED", detail: "Verified facts are live", candidateId: null, versionId: null };
+  const purges: string[][] = [];
+  const purge = async (tags: readonly string[]) => {
+    assert.ok((await workItems.mustRead(item.id)).value.publicationOutcome);
+    purges.push([...tags]);
+    return { purged: true };
+  };
+  const first = await saveWorkerPublicationOutcome({ workItems }, initial, outcome, NOW.toISOString(), { purge });
+  const same = await saveWorkerPublicationOutcome({ workItems }, first, { ...outcome }, NOW.toISOString(), { purge });
+  await saveWorkerPublicationOutcome({ workItems }, same, { ...outcome, status: "HELD", code: "SOURCE_CHANGED" }, NOW.toISOString(), { purge });
+  await assert.rejects(saveWorkerPublicationOutcome({ workItems }, initial, outcome, NOW.toISOString(), { purge }));
+  assert.deepEqual(purges, [["reader-state:AZ"], ["reader-state:AZ"]], "the exact body's state takes precedence over another job state");
+});
+
+test("campaign holdings reuse the ballot's canonical state entry without another data read", async () => {
+  await withReaderSelection({ states: ["AZ"], keys: new Set([PLACE]) }, async () => {
+    await primeReaderCanonicalStore([{ recordClass: "CURATED_READER_RECORD", scope: "US-AZ:campaign-finance" }], {
+      async readPromotion() { throw new Error("Unexpected second read"); },
+      async readCandidate() { throw new Error("Unexpected second read"); },
+      async readPromotedEntry(recordClass, scope) { return { kind: "NOT_RECORDED", recordClass, scope }; },
+    });
+    assert.deepEqual(await settleCampaignFinanceReads([PLACE]), []);
+    assert.deepEqual(await settleCampaignFinanceReads(), []);
+    assert.deepEqual(campaignFinanceForTarget("unrecorded-candidate"), []);
+  });
 });
 
 async function seeded() {
@@ -104,8 +155,9 @@ test("a departed roster member and a pulled Box seat clear answers after their l
     text: "Example Council Alice Example Member Bob Example Member", acquiredByAttemptId: "test", canonicalUrl: "https://example.gov/council",
     retrievedAt: NOW.toISOString(), sourceId: "example.gov", methodRouteId: "test" },
   observedAt: NOW.toISOString(), httpStatus: 200, transport: "REACHABLE" as const, partial: false };
-  let removedPurges = 0, pulledPurges = 0;
+  let removedPurges = 0, pulledPurges = 0, totalPurges = 0;
   const purge = async (tags: readonly string[]) => {
+    totalPurges++;
     assert.deepEqual(tags, ["reader-state:AZ"]);
     if ((await db.query("SELECT id FROM fact WHERE held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'")).length) removedPurges++;
     if ((await db.query("SELECT id FROM fact WHERE status='pulled'")).length) pulledPurges++;
@@ -114,10 +166,12 @@ test("a departed roster member and a pulled Box seat clear answers after their l
   const body = { id: BODY, name: "Example Council", state: "AZ", parentId: PLACE };
   await publishRosterFacts(db, { body, capture: snapshot, members: ["Alice Example", "Bob Example"].map(name => ({ recordId: name, fields: { name, office: "Member" } })),
     complete: true, producedBy: "test", purge }, clocks, NOW);
+  assert.equal(totalPurges, 1, "all of the roster's committed fields share one tag purge");
   const removed = await publishRosterFacts(db, { body, capture: snapshot, members: [{ recordId: "Alice", fields: { name: "Alice Example", office: "Member" } }],
     complete: true, producedBy: "test", purge }, clocks, NOW);
   assert.equal(removed.departed, 1);
   assert.equal(removedPurges, 1);
+  assert.equal(totalPurges, 2, "confirmations and departure share one tag purge");
   // A bare Box name lacks the words establishing a council seat and must disappear from the cached roster.
   await db.query(`UPDATE fact SET produced_by='box', quote='Alice Example', value=jsonb_build_object('name', 'Alice Example')
     WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%'`, [BODY]);

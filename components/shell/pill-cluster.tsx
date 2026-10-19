@@ -2,6 +2,7 @@
 
 import { useReaderCopy } from "@/hooks/use-reader-copy";
 import Link from "next/link";
+import { useLinkStatus } from "next/link";
 
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
@@ -56,9 +57,9 @@ export function PillCluster({
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
           href={ballotHref}
-          prefetch={prefetchReady}
+          prefetch={prefetchReady ? null : false}
           className="mw-nav-seg mw-nav-ballot"
-          onClick={onOpenBallot}
+          onClick={pop ? onOpenBallot : undefined}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}
         >
           {/* A marked ballot sheet, not a check in a box: ✓ already means
@@ -78,7 +79,7 @@ export function PillCluster({
             <path d="M8.3 9.9l2.1 2.1 4.2-4.2" />
             <path d="M8.3 16.4h7.4" />
           </svg>
-          <span>Ballot</span>
+          <BallotLabel />
         </Link>
         <button
           type="button"
@@ -137,4 +138,9 @@ export function PillCluster({
       </button>
     </div>
   );
+}
+
+function BallotLabel() {
+  const { pending } = useLinkStatus();
+  return <span aria-live="polite">{pending ? "Opening ballot…" : "Ballot"}</span>;
 }

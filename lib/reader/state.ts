@@ -45,11 +45,20 @@ export interface ReaderStatePackage {
 }
 
 const states = serverReaderValue("state-reads", () => new Map<string, Promise<ReaderStatePackage>>());
+const districtReads = serverReaderValue("district-reads", () => new Map<string, Promise<Slice<GeographySlice>>>());
+
+/** Ballot and its streamed cards share the geography from the state's one query. */
+export function readStateDistricts(value: string): Promise<Slice<GeographySlice>> {
+  const state = requireRegistryState(value.replace(/^US-/i, ""));
+  const pending = readStatePackage(state);
+  void pending.catch(() => {});
+  return districtReads.get(state)!;
+}
 
 async function loadState(state: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = readNationalPresident().catch(() => null);
-  const canonical = await readCanonicalShelf([
+  const canonicalRead = readCanonicalShelf([
     { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
     { recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) },
     { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
@@ -58,11 +67,16 @@ async function loadState(state: string): Promise<ReaderStatePackage> {
     EVERYDAY_ROUTING_POINTER,
     { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
     ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
-  ], readerDatabaseQuery(), stateContainersStatement(state)), options = { store: canonical };
-  const geoVersion = canonical.additionalRows[0]?.version_id;
-  const districts: Slice<GeographySlice> = typeof geoVersion === "string"
-    ? { kind: "HELD", versionId: geoVersion, value: geographyOfRows(canonical.additionalRows, true) }
-    : { kind: "NOT_PUBLISHED" };
+  ], readerDatabaseQuery(), stateContainersStatement(state));
+  const districtsRead = canonicalRead.then((canonical): Slice<GeographySlice> => {
+    const geoVersion = canonical.additionalRows[0]?.version_id;
+    return typeof geoVersion === "string"
+      ? { kind: "HELD", versionId: geoVersion, value: geographyOfRows(canonical.additionalRows, true) }
+      : { kind: "NOT_PUBLISHED" };
+  });
+  districtReads.set(state, districtsRead);
+  void districtsRead.catch(() => {});
+  const canonical = await canonicalRead, options = { store: canonical }, districts = await districtsRead;
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const [runtime, people, federal, official, campaigns, everyday, president, offices] = await Promise.all([
     readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options),
@@ -111,7 +125,9 @@ export function readStatePackage(value: string): Promise<ReaderStatePackage> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   let read = states.get(state);
   if (!read) {
-    read = loadState(state).finally(() => { if (states.get(state) === read) states.delete(state); });
+    read = loadState(state).finally(() => {
+      if (states.get(state) === read) { states.delete(state); districtReads.delete(state); }
+    });
     states.set(state, read);
   }
   return read;

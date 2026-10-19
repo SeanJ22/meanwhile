@@ -65,13 +65,29 @@ export function readerCacheScopeForPublication(scope: string): ReaderCacheScope 
 
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
-  const tags = readerCacheTags(scope);
+  return invalidateReaderCacheTags(readerCacheTags(scope), purge);
+}
+
+async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
   if (!tags.length) return { purged: false, detail: "no reader cache scope" };
   let result: ReaderCachePurgeResult;
   try { result = await purge(tags); }
   catch (error) { result = { purged: false, detail: error instanceof Error ? error.message : String(error) }; }
   if (!result.purged) console.error("Reader cache invalidation failed after publication", { tags, detail: result.detail ?? "purge refused" });
   return result;
+}
+
+/** A bulk publication clears each affected tag once, including facts committed before a later field failed. */
+export async function withBatchedReaderInvalidation<T>(write: (collect: ReaderCachePurger) => Promise<T>, purge?: ReaderCachePurger): Promise<T> {
+  const changed = new Set<string>();
+  try {
+    return await write(async tags => {
+      for (const tag of tags) changed.add(tag);
+      return { purged: true };
+    });
+  } finally {
+    if (changed.size) await invalidateReaderCacheTags([...changed].sort(), purge);
+  }
 }
 
 /** A state's tag covers every cached place answer in that state, including a person's several offices. */

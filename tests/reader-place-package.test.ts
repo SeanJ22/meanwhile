@@ -14,6 +14,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { attemptsByFamily } from "../lib/registry/attempt-families.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -345,4 +346,58 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.equal(attempts.lastGood?.sourceUrl,SOURCE);
     assert.equal(attempts.publishedNow?.versionId,"published-version");
   } finally { await db.pg.close(); }
+});
+
+test("the map and ballot reuse one place read for their request, and a later request reads current data", async () => {
+  const { installFactReader } = await import("../lib/facts/db.ts");
+  let reads = 0, release: (() => void) | undefined;
+  installFactReader(async () => {
+    reads++;
+    if (reads === 1) await new Promise<void>(resolve => { release = resolve; });
+    return [{ registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
+      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }];
+  });
+  try {
+    let first: Awaited<ReturnType<typeof readPlacePackage>> | undefined;
+    await withReaderSelection({ keys: new Set(["85701"]), states: ["AZ"] }, async () => {
+      const map = readPlacePackage({ state: "az", divisionIds: [CITY, COUNTY], bodyIds: [BODY] });
+      const ballot = readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY, CITY], bodyIds: [BODY] });
+      assert.equal(map, ballot);
+      await new Promise(resolve => setImmediate(resolve));
+      assert.equal(reads, 1);
+      release!();
+      const [loaded, second] = await Promise.all([map, ballot]);
+      first = loaded;
+      assert.equal(first, second);
+      assert.equal(await readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY], bodyIds: [BODY] }), first);
+      assert.equal(reads, 1);
+    });
+    const next = await withReaderSelection({ keys: new Set(["85701"]), states: ["AZ"] }, () =>
+      readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY], bodyIds: [BODY] }));
+    assert.notEqual(next, first, "a settled place response cannot outlive its reader request after a data-tag purge");
+    assert.equal(reads, 2);
+  } finally { installFactReader(undefined); }
+});
+
+test("a shared cold place failure reaches both readers without a second query", async () => {
+  const { installFactReader } = await import("../lib/facts/db.ts");
+  const failure = new Error("First place read failed");
+  let reads = 0, rejectRead: ((error: Error) => void) | undefined;
+  installFactReader(async () => {
+    reads++;
+    await new Promise<void>((_resolve, reject) => { rejectRead = reject; });
+    return [];
+  });
+  try {
+    const first = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+    const second = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+    const outcomes = Promise.allSettled([first, second]);
+    await new Promise(resolve => setImmediate(resolve));
+    rejectRead!(failure);
+    for (const result of await outcomes) {
+      assert.equal(result.status, "rejected");
+      if (result.status === "rejected") assert.equal(result.reason, failure);
+    }
+    assert.equal(reads, 1);
+  } finally { installFactReader(undefined); }
 });

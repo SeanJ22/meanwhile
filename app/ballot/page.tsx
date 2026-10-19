@@ -1,3 +1,4 @@
+import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -17,10 +18,11 @@ import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-re
 
 import { contestsForDivisions } from "@/lib/ballot/contests";
 import { ballotPlaceFromParams, ballotPointDivisions, ballotPointStateDivisions } from "@/lib/ballot/reader-place";
-import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
+  ballotAuxiliaryReads,
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
@@ -489,23 +491,40 @@ export default readerRoute("/ballot", async function BallotPage({
   const ballotLoaderFailures: string[] = [];
 
   let askOcdIds: string[] = [];
-  let certainty = await zipCertainty(zip);
   const readerSelection = currentReaderSelection();
+  const startRead = ballotAuxiliaryReads();
+  const pointDivisionsRead = centroid ? place.state
+    ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
+    : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
+  void pointDivisionsRead.catch(() => undefined);
+  const readerData = await readBallotReaderData(place);
+  const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
+  if (centroid && knownState) {
+    startRead("candidate-profiles", () => settleCandidateProfilesRead(knownState));
+    startRead("candidate-publications", () => settleCandidateCorpusRead(knownState));
+    startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
+    startRead("federal-directory", settleFederalDirectoryRead);
+    startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
+    if (knownState === "NH") startRead("nh-members", settleNhSeatHolders);
+  }
+  const zipEntry = readerData ? await readerData.entry() : undefined;
+  let certainty = await zipCertainty(zip, undefined, zipEntry);
   if (centroid) {
     filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
     divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
     try {
-      pointDivisionIds.push(...place.state ? await ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
-        : await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng));
+      pointDivisionIds.push(...await pointDivisionsRead);
     } catch { divisionHoldingUnavailable = true; }
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
     const missingDistrictOffices = new Map<string, string[]>();
+    await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
-      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, { purpose: "election", asOf: phoenixToday(), electionDate: election.date }, POINT_GEOMETRY_PLANS);
+      const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
+      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
       missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
       return ids;
@@ -519,7 +538,7 @@ export default readerRoute("/ballot", async function BallotPage({
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
-          certainty = await zipCertainty(zip, selection);
+          certainty = await zipCertainty(zip, selection, readerData ? await readerData.entry(selection) : undefined);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
           for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
             coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
@@ -532,31 +551,57 @@ export default readerRoute("/ballot", async function BallotPage({
     }
   }
 
+  const officeBlurbsRead = readCuratedContestOfficeBlurbs(matched?.contests ?? []);
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
-  if (centroid) auxiliaryPreloads.set("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
+  const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
+    auxiliaryPreloads.set(family, startRead(family, read));
+  if (centroid) preload("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
-    auxiliaryPreloads.set("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
-    auxiliaryPreloads.set("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
-    auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
+    preload("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
+    preload("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
+    preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
-      auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
+      preload("federal-directory", settleFederalDirectoryRead);
     }
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
-      auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
+      preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      auxiliaryPreloads.set("federal-funding", settleFundingRead);
+      preload("federal-funding", async () => {
+        if (readerData) await primeBallotFundingRead(set!, matched.contests.filter(isFederalContest));
+        return settleFundingRead();
+      });
     }
-    auxiliaryPreloads.set("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
+    preload("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
     if (matched.contests.some((contest) => !isFederalContest(contest)) &&
         Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, set.election.state)) {
       const state = set.election.state as StateCampaignFinanceJurisdiction;
-      auxiliaryPreloads.set(
+      preload(
         "state-money",
-        () => settleStateMoneyRead(state),
+        async () => {
+          if (readerData) await primeBallotStateMoneyRead(state);
+          return settleStateMoneyRead(state);
+        },
       );
     }
   }
+  const candidacyContests =
+    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
+  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
+  const contestResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
+    const read = auxiliaryPreloads.get(family);
+    return read ? [read()] : [];
+  })).then(() => Promise.all(candidacyContests.map(async contest => {
+    const lineup = lineupForContest(set!.election.state, contest.id);
+    const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
+      display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
+      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
+    }));
+    const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
+      incumbentHolderFor).catch(() => null);
+    return [contest.id, result] as const;
+  })));
+
   const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
   const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
     .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
@@ -608,18 +653,7 @@ export default readerRoute("/ballot", async function BallotPage({
       ? electionDatesFor(set.election.state)
       : null;
 
-  const candidacyContests =
-    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const contestResolutions = new Map(await Promise.all(candidacyContests.map(async contest => {
-    const lineup = lineupForContest(set!.election.state, contest.id);
-    const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
-      display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
-      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
-    }));
-    const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
-      incumbentHolderFor).catch(() => null);
-    return [contest.id, result] as const;
-  })));
+  const contestResolutions = new Map(await contestResolutionsRead);
   const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
 
   const measureRecords = set ? measureRecordsForBallot(set) : [];
@@ -772,7 +806,7 @@ export default readerRoute("/ballot", async function BallotPage({
     if (candidate.filing) rows.push(candidate.filing.provenance);
     filingSources.set(candidate.contestId, rows);
   }
-  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
+  const officeBlurbs = await officeBlurbsRead;
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"

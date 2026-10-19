@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { nearestZcta } from "../geo/zcta.ts";
 import { postalArea } from "../geo/postal.ts";
-import { readZipPlaces } from "./national.ts";
+import { readZipPlace } from "./national.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { bodyIdsAtPoint } from "../registry/body-territory.ts";
 import type { ReaderStatePackage } from "./state.ts";
@@ -24,8 +24,7 @@ export async function readerLocation(lat: number, lng: number, zip?: string | nu
   const state = postalArea(zip ?? nearest?.zip ?? "")?.state;
   if (!state) throw new Error("The state's location could not be identified");
   const near = zip ?? (nearest && haversineKm(lat, lng, nearest.lat, nearest.lng) <= 60 ? nearest.zip : null);
-  const places = await readZipPlaces();
-  const entry = near ? places.get(postalArea(near)?.zcta ?? near) : undefined;
+  const entry = near ? await readZipPlace(postalArea(near)?.zcta ?? near) : undefined;
   return { state, zip: near, divisionIds: entry?.ids ?? [], partial: entry?.partial ?? [] };
 }
 
@@ -34,7 +33,7 @@ export function territoryBodies(lat: number, lng: number, territory: BodyTerrito
 }
 
 export async function stateZipLocation(state: ReaderStatePackage, zip: string) {
-  const raw = (await readZipPlaces()).get(postalArea(zip)?.zcta ?? zip) ?? { ids: [], partial: [], samples: 0 };
+  const raw = await readZipPlace(postalArea(zip)?.zcta ?? zip) ?? { ids: [], partial: [], samples: 0 };
   if (zipNeedsAddress(zip)) return { entry: { ...raw, ids: raw.ids.filter(isTownOrCountyDivision) }, divisions: [] };
   const districts = state.districts;
   if (districts.kind !== "HELD") return { entry: raw, divisions: [] };

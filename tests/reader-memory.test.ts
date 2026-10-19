@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readerMemory, readZipPlaces, stateForZip, readNationalPresident, readNationalShelf, readStateZipPlaces } from "../lib/reader/national.ts";
-import { neonConfig } from "@neondatabase/serverless";
+import { Pool } from "@neondatabase/serverless";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
@@ -75,7 +75,7 @@ test("separately loaded server module contexts share the same shelf and pending 
 });
 
 test("a cold President read shares its national source load without waiting for Congress", async () => {
-  const priorUrl = process.env.DATABASE_URL, priorFetch = neonConfig.fetchFunction;
+  const priorUrl = process.env.DATABASE_URL, priorQuery = Pool.prototype.query;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@national-reader.invalid/fixture";
   const at = "2026-10-18T00:00:00.000Z", scope = "US:people:statewide-executive-sources:v1";
   const holder = { id: "white-house:current-president", name: "An Official President", officeTitle: "President of the United States",
@@ -85,21 +85,18 @@ test("a cold President read shares its national source load without waiting for 
   const calls: string[][] = [];
   let releaseCongress: (() => void) | undefined, congressComplete = false;
   const blocked = new Promise<void>(resolve => { releaseCongress = resolve; });
-  neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init?: RequestInit) => {
-    const request = JSON.parse(String(init?.body)) as { queries: { params: unknown[] }[] };
-    const keys = JSON.parse(String(request.queries[0].params[0]).replace(/^\{/, "[").replace(/\}$/, "]")) as string[];
+  Pool.prototype.query = (async (_text: string, params: unknown[]) => {
+    const keys = params[0] as string[];
     calls.push(keys);
     const congress = keys.some(key => key.startsWith("FEDERAL_DIRECTORY:"));
     if (congress) { await blocked; congressComplete = true; }
-    const rows = congress ? [] : [{ key: `STATE_LEGISLATOR:${scope}`, record_class: "STATE_LEGISLATOR", scope, source_id: "statewide-executive-sources",
+    const rows = congress ? [] : [{ row_kind: "promotion", key: `STATE_LEGISLATOR:${scope}`, record_class: "STATE_LEGISLATOR", scope, source_id: "statewide-executive-sources",
       current_version_id: "president-version", last_known_good_version_id: "president-version", promoted_at: at, retrieved_at: at,
       validation_receipt: { contractVersion: 2, decision: "GOOD", candidateId: "president-version", sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR", scope,
         validatedAt: at, checks: VALIDATION_CHECKS.map(check => ({ check, verdict: "PASS", code: "FIXTURE", detail: "Published source fixture" })), excludedFacts: [] },
       normalized_hash: canonicalCivicDataHash(payload), payload, published: true }];
-    const names = [...new Set(rows.flatMap(row => Object.keys(row)))];
-    return Response.json({ results: [{ command: "SELECT", rowCount: rows.length, rowAsArray: true,
-      fields: names.map(name => ({ name, dataTypeID: 114 })), rows: rows.map(row => names.map(name => JSON.stringify(row[name as keyof typeof row]))) }] });
-  };
+    return { rows };
+  }) as unknown as typeof Pool.prototype.query;
   let national: Promise<unknown> | undefined;
   try {
     national = readNationalShelf().catch(error => error);
@@ -112,7 +109,7 @@ test("a cold President read shares its national source load without waiting for 
   } finally {
     releaseCongress!();
     await national;
-    neonConfig.fetchFunction = priorFetch;
+    Pool.prototype.query = priorQuery;
     if (priorUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = priorUrl;
   }
 });

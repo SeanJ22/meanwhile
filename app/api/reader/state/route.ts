@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     const coverage = { ...summary, governments: [], bodies: summary.bodies.filter(body => body.tier !== "local") };
     return Response.json({ state, version: value.version, coverage, zipPlaces, boundaryUrl: value.boundaryUrl, directory: zip ? null : value.federal?.directory ?? null,
       ...(zip ? { zip } : { memberDirectories: stateMemberDirectories(value.people, value.memberOffices) }) }, { headers: {
-      ...readerCacheHeaders({ states: [state], places: ids }),
+      ...readerCacheHeaders({ states: [state], places: zip ? ids : [] }),
       "Netlify-Vary": "query=state|zip",
       "ETag": `"${value.version}:${zip ?? state}"`,
     } });

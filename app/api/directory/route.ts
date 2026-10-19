@@ -52,6 +52,7 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     const model = (await readNationalShelf()).congress;
     const entry = model?.directory.byMember[member.slice(9)];
     found = entry && model ? { source: model.directory.source, entry,
+      state: model.roster.officeholders.find(holder => holder.id === member)?.state,
       committeeJurisdictions: model.directory.committees } : null;
   }
   catch {
@@ -74,6 +75,6 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
         ...(found.committeeJurisdictions[seat.committeeId] ? { jurisdiction: found.committeeJurisdictions[seat.committeeId].jurisdiction, jurisdictionSource: found.committeeJurisdictions[seat.committeeId].jurisdictionSource, url: found.committeeJurisdictions[seat.committeeId].url } : {}),
       })),
     },
-    { headers: { ...readerCacheHeaders({ national: true }), "Netlify-Vary": "query=member|state" } },
+    { headers: { ...readerCacheHeaders({ national: true, states: found.state ? [found.state] : [] }), "Netlify-Vary": "query=member|state" } },
   );
 });

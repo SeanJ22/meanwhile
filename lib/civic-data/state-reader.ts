@@ -8,6 +8,7 @@ import type { PromotedFamilyArtifactValue, StateAuthorityFamily } from "../meeti
 import { civicDataReadNotInitialized, readPromotedCivicData, registerIntegrityCheckedEdgeEntries, type CivicDataReadResult, type PromotedEdgeEntry } from "./read-model.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { readStateReaderPromotion } from "./state-reader-store.ts";
+import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 type StateRead<T> = { readonly result: CivicDataReadResult<T>; readonly source: "EDGE" | "DATABASE" };
@@ -50,6 +51,7 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
   const prior = held.get(key);
   if (prior) return prior.pending as Promise<StateRead<T>>;
   const load = async (): Promise<StateRead<T>> => {
+    const canonical = !query && !edge ? readerCanonicalEntry(recordClass, scope) : undefined;
     let entry: PromotedEdgeEntry | null = null;
     let artifact: PromotedFamilyArtifactValue | null = null;
     try { artifact = await edge?.stateAuthorities?.load(family, state) ?? null; }
@@ -58,6 +60,7 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
     if (entry) return { source: "EDGE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: entry }) };
     refuseDatabaseInEdgeOnlyContext(key);
     try {
+      if (canonical) return { source: "DATABASE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: await canonical }) };
       const batch = query ? null : readerQuery();
       if (!query && !batch) throw new Error("STATE_READER_DATABASE_UNAVAILABLE");
       const read = await readStateReaderPromotion<T>(query ?? (async (text, params) => (await batch!([{ text, params }]))[0]), recordClass, scope);

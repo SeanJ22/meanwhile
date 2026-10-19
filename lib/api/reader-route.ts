@@ -72,8 +72,8 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!) <= 90 && Math.abs(lng!) <= 180) {
     point = [lng!, lat!];
     if (zip) {
-      const { readZipPlaces } = await import("../reader/national.ts");
-      divisions = (await readZipPlaces()).get(zip)?.ids ?? [];
+      const { readZipPlace } = await import("../reader/national.ts");
+      divisions = (await readZipPlace(zip))?.ids ?? [];
     } else {
       const { readerDivisionIdsAt } = await import("../registry/server.ts");
       divisions = await readerDivisionIdsAt(lat!, lng!);

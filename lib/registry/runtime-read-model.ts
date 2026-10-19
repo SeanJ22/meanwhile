@@ -38,7 +38,8 @@ export function withRegistryRuntimeProjection<T>(value: RegistryRuntimeReadModel
   return jobs.run(context, read);
 }
 
-export async function readRegistryRuntimeProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
+/** Publication uses canonical reads; the site can supply its already loaded state answer. */
+export async function readRegistryRuntimeProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: (state: string) => Promise<CivicDataReadResult<RegistryRuntimeReadModel>>): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
   const selected = [...new Set(states.map(requireRegistryState))].sort();
   if (!selected.length) throw new Error("REGISTRY_STATES_NOT_SELECTED");
   const key = contextKey(), existing = current();
@@ -51,10 +52,7 @@ export async function readRegistryRuntimeProjection(states: readonly string[], o
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
   const load = async (): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> => {
   const reads = await Promise.all(selected.map(async state => {
-    if (!options.store && !currentReaderAuthorityEdge()) {
-      const { readStatePackage } = await import("../reader/state.ts");
-      return (await readStatePackage(state)).registryRead;
-    }
+    if (loadState) return loadState(state);
     const read = options.store ? await readStateRegistryRuntimeProjection(state, options)
       : (await readStateAuthorityProjection<RegistryRuntimeReadModel>("registry-runtime", state)).result;
     if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
@@ -79,8 +77,8 @@ export async function readRegistryRuntimeProjection(states: readonly string[], o
   return context.pending;
 }
 
-export async function refreshRegistryRuntimeFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  const result = await readRegistryRuntimeProjection(states, options);
+export async function refreshRegistryRuntimeFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: Parameters<typeof readRegistryRuntimeProjection>[2]): Promise<string | null> {
+  const result = await readRegistryRuntimeProjection(states, options, loadState);
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.metadata.versionId;

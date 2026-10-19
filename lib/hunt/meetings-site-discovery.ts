@@ -1,3 +1,5 @@
+import { siteOrigins } from "./site-origins.ts";
+export { siteOrigins } from "./site-origins.ts";
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
@@ -56,23 +58,6 @@ export interface EndpointCandidate {
   readonly evidence: string;
   /** True when `verifyEndpointBody` can confirm this vendor by content. */
   readonly verifiable: boolean;
-}
-
-export function siteOrigins(ownWebAddress: string | null): readonly string[] {
-  if (ownWebAddress === null) return [];
-  const raw = ownWebAddress.trim();
-  if (raw === "") return [];
-  let url: URL;
-  try {
-    url = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`);
-  } catch {
-    return [];
-  }
-  if (url.protocol !== "http:" && url.protocol !== "https:") return [];
-  const host = url.hostname.toLowerCase().replace(/\.$/, "");
-  if (!host.includes(".") || /^\d+\.\d+\.\d+\.\d+$/.test(host)) return [];
-  const twin = host.startsWith("www.") ? host.slice(4) : `www.${host}`;
-  return [...new Set([`https://${host}`, `https://${twin}`])];
 }
 
 const HREF = /\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'<>]+))/gi;

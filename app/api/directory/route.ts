@@ -3,6 +3,7 @@ import { readNationalShelf } from "@/lib/reader/national";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
+import { federalOfficeRecordsForMember } from "@/lib/officials/member-offices";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 
@@ -49,11 +50,12 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
 
   let found;
   try {
-    const model = (await readNationalShelf()).congress;
-    const entry = model?.directory.byMember[member.slice(9)];
-    found = entry && model ? { source: model.directory.source, entry,
-      state: model.roster.officeholders.find(holder => holder.id === member)?.state,
-      committeeJurisdictions: model.directory.committees } : null;
+    const shelf = await readNationalShelf();
+    const state = shelf.congress.roster.officeholders.find(holder => holder.id === member)?.state;
+    const model = state ? shelf.federalByState.get(state.replace(/^US-/i,"").toUpperCase()) ?? shelf.congress : shelf.congress;
+    const entry = model.directory.byMember[member.slice(9)];
+    found = entry ? { source: model.directory.source, entry, state,
+      offices: federalOfficeRecordsForMember(model,member),committeeJurisdictions: model.directory.committees } : null;
   }
   catch {
     return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },
@@ -69,7 +71,8 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   return Response.json(
     {
       source: found.source,
-      districtOffices: found.entry.districtOffices,
+      districtOffices: found.offices.map(row => row.office),
+      officeDetails: found.offices.map(({officeKind,sourceUrl,sourceOrg,collectedAt,official}) => ({officeKind,sourceUrl,sourceOrg,collectedAt,official})),
       committees: found.entry.committees.map((seat) => ({
         ...seat,
         ...(found.committeeJurisdictions[seat.committeeId] ? { jurisdiction: found.committeeJurisdictions[seat.committeeId].jurisdiction, jurisdictionSource: found.committeeJurisdictions[seat.committeeId].jurisdictionSource, url: found.committeeJurisdictions[seat.committeeId].url } : {}),

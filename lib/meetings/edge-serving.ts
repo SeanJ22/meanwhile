@@ -10,8 +10,6 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { combineStateRegistries } from "../registry/state-composition.ts";
 import type { Query } from "../facts/publish.ts";
 
-export { purgeReaderCacheTags } from "../reader/cache.ts";
-
 export async function readReaderEdgeMeetings(options: ReaderMeetingsOptions = {}): Promise<MeetingsProjectionReadResult> {
   const [selected, settings] = await Promise.all([readPlaceMeetings(options), options.settings ?? readReaderMeetingSettings()]);
   const read = applyServedWindow(selected.read, options.window ?? "SHOWN", options.now, settings);

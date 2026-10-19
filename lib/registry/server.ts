@@ -26,7 +26,8 @@ import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
+import { federalDirectoryReadState, getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+import { refreshFederalDirectoryFromPromoted, refreshRegistryRuntimeFromPromoted } from "../reader/authority-reads.ts";
 import { personIdentityKeys, statePeopleScopeForDivision, statePeopleScopeForId, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 
 import {
@@ -36,7 +37,7 @@ import {
 } from "./coverage.ts";
 import { divisionIdsAt, divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
 import { currentReaderAuthorityEdge, currentCampaignSitesEdge, currentCommentAccessEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";

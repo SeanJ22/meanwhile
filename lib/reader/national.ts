@@ -159,6 +159,7 @@ export const readNationalShelf = serverReaderValue("national", () => readerMemor
   const values = [...federalByState.values()], first = values[0];
   if (!first) throw new Error("FEDERAL_SHELF_NOT_RECORDED");
   const congress: FederalDirectoryReadModel = { ...first,
+    vacancies: values.flatMap(value => value.vacancies ?? []),
     currentMembershipComplete: values.every(value => value.currentMembershipComplete === true),
     roster: { ...first.roster, scope: "us", officeholders: values.flatMap(value => value.roster.officeholders), divisions: values.flatMap(value => value.roster.divisions), unmatched: values.flatMap(value => value.roster.unmatched) },
     directory: { ...first.directory, counts: {}, byMember: Object.assign({}, ...values.map(value => value.directory.byMember)), committees: Object.assign({}, ...values.map(value => value.directory.committees)) },

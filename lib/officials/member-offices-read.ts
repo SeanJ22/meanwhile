@@ -2,10 +2,9 @@ import { currentCuratedReaderRecords, refreshMemberOfficesFromPromoted, settleMe
 import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
-import { createHash } from "node:crypto";
-import { readFederalDirectoryProjection } from "./federal-directory-read-model.ts";
+import { readFederalDirectoryProjection } from "../reader/authority-reads.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { officeRecordsForHolder, officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
+import { federalOfficeRecordsForMember, officeRecordsForHolder, officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
 import { fromMemberOffice, type OfficeLocation } from "./office-locations.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts";
 
@@ -19,16 +18,7 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
     const read=await readFederalDirectoryProjection(places,options);
     if(read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
     if(read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
-    const value=read.value;
-    const holder=value.roster.officeholders.find(row=>row.id === officeholderId);
-    const source=holder?.fieldSources?.districtOffices;
-    return (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office):MemberOfficeRecord=>({
-      id:`member-office:${officeholderId}:${createHash("sha256").update(JSON.stringify(office)).digest("hex").slice(0,20)}`,
-      kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office,
-      sourceUrl:source?.sourceUrl ?? `https://raw.githubusercontent.com/unitedstates/congress-legislators/${value.directory.source.sha}/legislators-district-offices.yaml`,
-      sourceOrg:source?.sourceOrg ?? value.directory.source.sourceOrg,official:false,
-      collectedAt:source?.collectedAt ?? value.directory.source.collectedAt,
-    }));
+    return federalOfficeRecordsForMember(read.value,officeholderId);
   }
   const jurisdiction = statePeopleScopeForId(officeholderId,state);
   const aliases = new Set([officeholderId]);

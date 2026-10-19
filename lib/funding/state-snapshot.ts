@@ -14,6 +14,7 @@ import {
 import { isRenderable, publicStateMoneyRecord } from "./state-money-reader.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord, StateMoneySnapshot } from "./state-money.ts";
+import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
 /**
  * State campaign money is canonical only after a GOOD promotion. The bundled
@@ -41,6 +42,14 @@ let readStates = new Map<StateCampaignFinanceJurisdiction, StateRead>(
     ),
   ]),
 );
+const requestStates = new WeakMap<ReaderSelection, { cache: typeof cache; reads: typeof readStates }>();
+function selectedState() {
+  const selection = currentReaderSelection();
+  if (!selection) return { cache, reads: readStates };
+  let held = requestStates.get(selection);
+  if (!held) { held = { cache: new Map(), reads: new Map() }; requestStates.set(selection, held); }
+  return held;
+}
 
 function validateSnapshot(value: StateMoneySnapshot, state: StateCampaignFinanceJurisdiction, version: string): void {
   if (value.formatVersion !== 1 || !Number.isSafeInteger(value.cycle) || value.cycle < 1900 || !Array.isArray(value.records)) {
@@ -97,13 +106,15 @@ export async function refreshStateMoneyProjectionFromPromoted(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<StateRead> {
   const result = await readStateMoneyProjection(state, options);
-  const nextCache = new Map(cache);
-  const nextStates = new Map(readStates);
+  const held = selectedState();
+  const nextCache = new Map(held.cache);
+  const nextStates = new Map(held.reads);
   nextStates.set(state, result);
   nextCache.delete(state);
   if (result.kind === "PROMOTED") nextCache.set(state, result.value);
-  cache = nextCache;
-  readStates = nextStates;
+  const selection = currentReaderSelection();
+  if (selection) requestStates.set(selection, { cache: nextCache, reads: nextStates });
+  else { cache = nextCache; readStates = nextStates; }
   return result;
 }
 
@@ -154,8 +165,9 @@ export async function readStateMoneyProjections(
     nextStates.set(state, result);
     if (result.kind === "PROMOTED") nextCache.set(state, result.value);
   }
-  cache = nextCache;
-  readStates = nextStates;
+  const selection = currentReaderSelection();
+  if (selection) requestStates.set(selection, { cache: nextCache, reads: nextStates });
+  else { cache = nextCache; readStates = nextStates; }
   return new Map(nextStates);
 }
 
@@ -176,12 +188,16 @@ export async function refreshStateMoneyFromPromoted(
 }
 
 export function stateMoneyReadState(state: StateCampaignFinanceJurisdiction): StateRead {
-  return readStates.get(state)!;
+  return selectedState().reads.get(state) ?? civicDataReadNotInitialized("STATE_CAMPAIGN_FINANCE", STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, "This request's campaign records have not been read.");
 }
 
 /** The canonical scope of every state read so far. */
 export function stateMoneySources(): string[] {
-  return [...cache.keys()].sort().map((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
+  return [...selectedState().cache.keys()].sort().map((state) => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
+}
+
+export function stateMoneySourceRecords(states: readonly StateCampaignFinanceJurisdiction[]): StateMoneyRecord[] {
+  return states.flatMap(state => selectedState().cache.get(state)?.records ?? []);
 }
 
 export interface StateMoneyProofInventory {
@@ -201,12 +217,13 @@ export interface StateMoneyProofInventory {
  * Unlike `stateMoneySources`, this never exposes or seeds tracked fixtures.
  */
 export function stateMoneyProofInventory(): StateMoneyProofInventory {
+  const held = selectedState();
   const targetKeys: string[] = [];
   const readbacks: StateMoneyProofInventory["readbacks"][number][] = [];
   const states = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).sort();
   for (const state of states) {
     const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
-    const result = readStates.get(state);
+    const result = held.reads.get(state);
     if (result?.kind !== "PROMOTED") {
       throw new Error(
         `${state} state campaign-finance Reader proof authority is ${result?.kind ?? "READ_NOT_INITIALIZED"}; ` +
@@ -222,7 +239,7 @@ export function stateMoneyProofInventory(): StateMoneyProofInventory {
     }
     const versionId = result.metadata.versionId;
     if (!versionId) throw new Error(`${state} state campaign-finance Reader proof authority has no promoted version.`);
-    const snapshot = cache.get(state);
+    const snapshot = held.cache.get(state);
     if (!snapshot) throw new Error(`${state} state campaign-finance promoted Reader proof cache is unavailable.`);
     validateSnapshot(snapshot, state, versionId);
     targetKeys.push(...snapshot.records.flatMap((record) => record.targetKeys));
@@ -241,10 +258,10 @@ export function stateMoneyProofInventory(): StateMoneyProofInventory {
 function snapshotForTarget(targetKey: string, hasScopedFiling = false): StateMoneySnapshot | null {
   const state = (/^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() ?? /^state-finance:([A-Z]{2}):/.exec(targetKey)?.[1]) as StateCampaignFinanceJurisdiction | undefined;
   if (!state || !Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)) return null;
-  const snapshot = cache.get(state);
+  const snapshot = selectedState().cache.get(state);
   if (snapshot) return snapshot;
   if (hasScopedFiling) return null;
-  const read = readStates.get(state);
+  const read = selectedState().reads.get(state);
   throw new Error(
     `Canonical state-money holding unavailable for ${state} (${read?.kind ?? "READ_NOT_INITIALIZED"}); ` +
     "call refreshStateMoneyFromPromoted before reading the projection.",

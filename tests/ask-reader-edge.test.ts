@@ -422,11 +422,64 @@ test("the warm call settles only unscoped Ask sources and never preloads every s
   const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
   // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
   assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots"]) {
+  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots", "campaignFinance"]) {
     assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
     named.delete(stateSource);
   }
   assert.deepEqual(sourceNames.sort(), [...named].sort());
+});
+
+test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", async () => {
+  const { factDb } = await import("./helpers/fact-db.ts");
+  const { installFactReader } = await import("../lib/facts/db.ts");
+  const { fileCampaignMoneyFacts } = await import("../lib/funding/state-facts.ts");
+  const { campaignSourceRecord } = await import("../lib/funding/state-source-records.ts");
+  const { campaignFinanceSource } = await import("../lib/funding/state-sources.ts");
+  const facts = await factDb();
+  const state = "ocd-division/country:us/state:wa", place = `${state}/county:king`;
+  const resource = campaignFinanceSource("WA").resources[0]!;
+  const source = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"))[0];
+  const base = campaignSourceRecord("WA", resource, source, { url: resource.url, rawHash: "a".repeat(64),
+    vaultKey: "test", byteLength: 10, retrievedAt: "2026-10-17T00:00:00.000Z", publicationDate: null });
+  const rows = [{ ...base, id: "WA:ask-state" }, { ...base, id: "WA:ask-place", governmentOcdId: place }];
+  const placesRead: string[] = [];
+  try {
+    await fileCampaignMoneyFacts(facts, "WA", rows, "2026-10-17T00:00:00.000Z");
+    installFactReader(async (text, params) => {
+      if (text.includes("FROM entity_place p")) placesRead.push(String(params?.[0]));
+      return facts.query(text, params);
+    });
+    process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {}, {
+      "registry-runtime": stateRegistryArtifacts("edge-test:ask:campaign", ["WA"]),
+    });
+    clearPromotedReadModelCache();
+    const { POST } = await import("../app/api/ask/grounded/route.ts");
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
+      body: JSON.stringify({ question: "What campaign money is reported here?", surface: "MAP", ocdIds: [state, place] }),
+    }));
+    assert.equal(response.status, 200);
+    const payload = await response.json();
+    assert.deepEqual(payload.records.filter((record: { id: string }) => record.id.startsWith("WA:ask-")).map((record: { id: string }) => record.id).sort(), rows.map(row => row.id).sort());
+    assert.ok(payload.trace.preloads.campaignFinance !== undefined, "the applicable campaign preloader survived the merge");
+    assert.ok(placesRead.includes(state));
+    assert.ok(placesRead.includes(place));
+    assert.ok(payload.records.filter((record: { id: string }) => record.id.startsWith("WA:ask-")).every((record: { sourceUrl: string }) => record.sourceUrl === base.filingUrl));
+    const named = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
+      body: JSON.stringify({ question: "What campaign finance records are held for King County?", surface: "MAP", ocdIds: [state] }),
+    }));
+    assert.equal(named.status, 200);
+    const namedPayload = await named.json();
+    assert.equal(namedPayload.mode, "GROUNDED_COMPOSED");
+    assert.equal(namedPayload.trace.interpretation.why, "place-campaign-records");
+    assert.deepEqual(namedPayload.records.map((record: { id: string }) => record.id), ["WA:ask-place"]);
+    assert.match(namedPayload.answer, /Held campaign records include/);
+    assert.equal(namedPayload.trace.preloads.officeholders, undefined);
+  } finally {
+    installFactReader(undefined);
+    await facts.pg.close();
+  }
 });
 
 function warmSourceNames(): string[] {

@@ -1405,6 +1405,17 @@ export const FEDERAL_KEY_VOTE_READER_PAYLOAD = `(SELECT jsonb_set(full_value, '{
     FROM jsonb_each(full_value#>'{positions,positions}') rolls(roll_key, member_positions)), '{}'::jsonb))
   #- '{positions,retiredMappings}' FROM (SELECT reader_payload_value(p.payload) AS full_value) decoded)`;
 
+/** Find the requested source filer, without joining their name to an official
+ * or ballot identity. The normal reader still validates the selected holding. */
+export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
+  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+    FROM reader_payload_members(header->'records') members
+    WHERE EXISTS (SELECT 1 FROM jsonb_path_query(reader_payload_node(item),'$.**') cell(v) WHERE cell.v#>>'{}'=ANY($3::text[]))
+      OR EXISTS (SELECT 1 FROM unnest($3::text[]) wanted(name) WHERE name LIKE 'ask-money-name:%'
+        AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
+          @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
+  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);
   if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
@@ -1426,7 +1437,8 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
   const query = readerQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
-  const payload = recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
+  const money = recordClass === "STATE_CAMPAIGN_FINANCE";
+  const payload = recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD : money ? STATE_MONEY_READER_PAYLOAD
     : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
@@ -1434,7 +1446,7 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
     c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
     JOIN civic_data_candidates c ON c.id=p.current_version_id
     WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
-      ...(recordClass === "FEDERAL_KEY_VOTE" ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+      ...(recordClass === "FEDERAL_KEY_VOTE" || money ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;

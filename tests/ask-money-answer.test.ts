@@ -102,6 +102,8 @@ test("the period is the agency's own, spelled for a reader; New Jersey's report 
   assert.equal(f("72/24 HR, D-1, R-1, RQ-2024, RQ-2025 through 2026-06-22", 14), "in 14 reports filed through June 22nd, 2026");
   assert.equal(f(null), "for the 2026 election cycle");
   assert.equal(f("2026 GENERAL", 3), "for the 2026 GENERAL, across 3 reports");
+  assert.equal(f("2026: D-1, R-1 through 2026-10-06", 2), "in 2 reports filed through October 6th, 2026");
+  assert.equal(f("2025-01-01 through 2026-12-31"), "for January 1st, 2025 through December 31st, 2026");
 });
 
 test("how much: the committee's own figures, period, agency and read date — and it passes the validator", () => {
@@ -188,7 +190,8 @@ test("two committees are stated separately and never added; composition steps as
   const target = [...new Set(nj.flatMap((record) => record.targetKeys))].find((key) => nj.filter((record) => record.targetKeys.includes(key)).length === 2)!;
   const held = heldEvidence(target, "Pat Q. Example");
   const composed = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: held.subject, records: held.records, gaps: held.gaps });
-  assert.match(composed?.answer ?? "", /^One, registered as "[^"]+", reported raising \$[\d,.]+ and spending \$[\d,.]+ in \d+ reports? filed through [^;]+; the other, registered as/);
+  assert.match(composed?.answer ?? "", /^"[^"]+" raised \$[\d,.]+ in \d+ reports? filed through [^;]+; "[^"]+" raised/);
+  assert.doesNotMatch(composed?.answer ?? "", /spent|spending/, "only the requested figures are stated");
   assert.doesNotMatch(composed?.answer ?? "", /total|combined|together raised/i, "never added");
   const ask: MoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
   const ayotte = heldEvidence(AYOTTE, "Kelly Ayotte");

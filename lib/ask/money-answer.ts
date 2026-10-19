@@ -221,8 +221,8 @@ export function periodPhrase(finance: Pick<Held["finance"], "totals" | "election
   const count = finance.totals.reportCount;
   const reports = count ? `${count} report${count === 1 ? "" : "s"}` : null;
   const through = period ? /^(.*?)\s*through (\d{4}-\d{2}-\d{2})$/.exec(period) : null;
-  if (through && /^[A-Z0-9/ ,-]*$/.test(through[1])) return `in ${reports ?? "reports"} filed through ${formatDateLong(through[2]) ?? through[2]}`;
-  const stated = period ? `for the ${spellOutDates(period)}` : `for the ${finance.electionYear} election cycle`;
+  if (through && !/\b\d{4}-\d{2}-\d{2}\b/.test(through[1]) && /^[A-Z0-9/ ,:\-]*$/.test(through[1])) return `in ${reports ?? "reports"} filed through ${formatDateLong(through[2]) ?? through[2]}`;
+  const stated = period ? `for ${/^\d{4}-\d{2}-\d{2} through \d{4}-\d{2}-\d{2}$/.test(period) ? "" : "the "}${spellOutDates(period)}` : `for the ${finance.electionYear} election cycle`;
   return reports ? `${stated}, across ${reports}` : stated;
 }
 
@@ -343,17 +343,20 @@ export function composeMoneyAnswer(input: MoneyAnswerInput): { answer: string; c
   const person = input.subject;
   const filed = held.filter((entry) => entry.finance.filingState === "FILED");
   const shown = filed.length ? filed : held.slice(0, 1);
-  if (input.ask.kind === "HOW_MUCH" && shown.length === 1 && filed.length === 1) {
-    const { finance } = shown[0];
-    const parts = input.ask.measures.flatMap(measure => {
+  if (input.ask.kind === "HOW_MUCH" && filed.length === shown.length) {
+    const measures = input.ask.measures;
+    const clauses = shown.map(({ finance }) => {
+    const parts = measures.flatMap(measure => {
       const amount = finance.totals[MEASURE_WORDS[measure].key];
       if (amount === null) return [];
       return [measure === "CASH" ? `had ${dollars(amount)} cash on hand`
         : `${measure === "RAISED" ? "raised" : "spent"} ${dollars(amount)}`];
     });
-    if (parts.length === input.ask.measures.length) {
-      const answer = `${quoted(finance.registeredName)} ${parts.join(" and ")} ${periodPhrase(finance)}.`;
-      return overLengthBudget(answer) === null ? { answer, citedUrls: [shown[0].record.sourceUrl!] } : null;
+    return parts.length === measures.length ? `${quoted(finance.registeredName)} ${parts.join(" and ")} ${periodPhrase(finance)}` : null;
+    });
+    if (clauses.every(Boolean)) {
+      const answer = `${clauses.join("; ")}.`;
+      return overLengthBudget(answer) === null ? { answer, citedUrls: cited } : null;
     }
   }
   /* The WHO_GAVE lead names the person, so the filing is "The campaign

@@ -1,15 +1,14 @@
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash } from "node:crypto";
-import { spawn } from "node:child_process";
 import { channel } from "node:diagnostics_channel";
 import { createReadStream } from "node:fs";
 import { open, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
 import { createInterface } from "node:readline";
 import { parseFederalMoneyRow } from "./parse.ts";
 import { parseCsv } from "../reference/csv.ts";
 import { federalMoneyPartitionOf } from "./model.ts";
 import { federalCsvRecords } from "./streams.ts";
+import { sortSourceRecords } from "../reference/external-sort.ts";
 import type { FederalMoneyCapture, FederalMoneySource } from "./model.ts";
 const memory = channel("federal-money:memory");
 
@@ -23,12 +22,7 @@ function key(source: FederalMoneySource, state: string, capture: FederalMoneyCap
 }
 async function sortFile(input: string, output: string, signal?: AbortSignal): Promise<void> {
   if (memory.hasSubscribers) memory.publish({ stage: "external-sort", item: input, itemBytes: (await stat(input)).size, liveItems: 1, bufferBytes: 16 * 1024 * 1024 });
-  await new Promise<void>((resolve, reject) => {
-    const child = spawn("sort", ["--stable", "--buffer-size=16M", "--temporary-directory", dirname(input), "--field-separator=\t", "--key=1,1", "--output", output, input], { stdio: ["ignore", "ignore", "pipe"], signal, env: { ...process.env, LC_ALL: "C" } });
-    let error = "";
-    child.stderr.on("data", (value: Buffer) => { if (error.length < 4096) error += value.toString("utf8").slice(0, 4096 - error.length); });
-    child.once("error", reject); child.once("close", code => code === 0 ? resolve() : reject(new Error(`Federal source external sort failed (${code}): ${error}`)));
-  });
+  await sortSourceRecords(input, output, signal);
 }
 export async function sortFederalSourceFile(input: { source: FederalMoneySource; state: string; path: string; metadata: Omit<FederalMoneyCapture, "vaultKey" | "rawHash" | "byteLength">; signal?: AbortSignal }): Promise<string> {
   const output = `${input.path}.ordered`, keyed = `${input.path}.keys`, sorted = `${keyed}.sorted`, checkpoint = `${keyed}.state`;

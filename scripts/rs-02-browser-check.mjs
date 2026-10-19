@@ -124,9 +124,35 @@ async function followReader(page, output, evidence) {
       element.addEventListener('click', () => { window.rs02.action.clicked = performance.now(); }, { once: true });
     }, zip);
     await go.click();
-    await page.waitForFunction(() => window.rs02.action.paintMs, null, { timeout: 20000 });
-    const action = await page.evaluate(() => window.rs02.action);
-    navigation.push(action);
+    let action;
+    try {
+      await page.waitForFunction(() => window.rs02.action.paintMs, null, { timeout: 20000 });
+    } finally {
+      // Retain the failed action's transport evidence before propagating either
+      // its timeout or the unchanged three-second acceptance check below.
+      action = await page.evaluate(() => {
+        const current = window.rs02.action;
+        const relative = ms => ms - current.clicked;
+        const kinds = { '/api/reader/state': 'state', '/api/meetings': 'place', '/api/location/zip': 'location' };
+        const responseParses = window.rs02.responseReads.filter(read => read.zip === current.zip && read.parsedMs >= current.clicked)
+          .map(read => ({ ...read, parsedAfterClickMs: relative(read.parsedMs) }));
+        const requests = performance.getEntriesByType('resource').filter(entry => {
+          const url = new URL(entry.name);
+          return kinds[url.pathname] && url.searchParams.get('zip') === current.zip && entry.startTime >= current.clicked;
+        }).map(entry => {
+          const url = new URL(entry.name);
+          return { url: entry.name, kind: kinds[url.pathname], zip: current.zip,
+            startMs: entry.startTime, startAfterClickMs: relative(entry.startTime),
+            requestStartMs: entry.requestStart, responseStartMs: entry.responseStart, responseEndMs: entry.responseEnd,
+            durationMs: entry.duration, transferBytes: entry.transferSize, encodedBytes: entry.encodedBodySize, decodedBytes: entry.decodedBodySize,
+            serverTiming: responseParses.find(read => read.url === entry.name)?.serverTiming ?? null,
+            serverTimingEntries: (entry.serverTiming ?? []).map(timing => ({ name: timing.name, duration: timing.duration, description: timing.description })),
+          };
+        });
+        return { ...current, requests, responseParses };
+      });
+      navigation.push(action);
+    }
     if (!(action.paintMs < 3000)) throw Error(`Changing ZIP to ${zip} did not finish below three seconds`);
   }
   return { offices, navigation };
@@ -298,7 +324,7 @@ for (const probe of probes) {
     });
     await seedZip(page, probe.zip);
     await page.addInitScript(() => {
-      const evidence = window.rs02 = { reads: [], renders: [], payloads: {}, payloadsByZip: {} };
+      const evidence = window.rs02 = { reads: [], renders: [], payloads: {}, payloadsByZip: {}, responseReads: [] };
       const now = () => performance.now();
       const number = key => {
         const value = document.querySelector(`[data-stat="${key}"] .num`)?.textContent;
@@ -336,6 +362,10 @@ for (const probe of probes) {
       const original = Response.prototype.json;
       Response.prototype.json = async function () {
         const data = await original.call(this), url = this.url;
+        const parsedUrl = new URL(url, location.href);
+        const kind = { '/api/reader/state': 'state', '/api/meetings': 'place', '/api/location/zip': 'location' }[parsedUrl.pathname];
+        if (kind) evidence.responseReads.push({ url, kind, zip: parsedUrl.searchParams.get('zip'), status: this.status,
+          parsedMs: now(), serverTiming: this.headers.get('server-timing') });
         if (url.includes('/api/agenda?')) (evidence.agendaReads ??= []).push({ meetingId: new URL(url).searchParams.get('meetingId'), status: this.status, parsedMs: now(), serverTiming: this.headers.get('server-timing'), payload: data });
         if (url.includes('/api/meetings?') || url.includes('/api/reader/state?')) {
           const kind = url.includes('/api/meetings?') ? 'place' : 'state';

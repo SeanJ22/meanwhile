@@ -3,6 +3,7 @@ import test from "node:test";
 import { resolveReaderZip, lookupReaderZip } from "../lib/reader/zip.ts";
 import { GET } from "../app/api/location/zip/route.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
+import type { ZctaCentroid } from "../lib/geo/zcta-core.ts";
 
 test("typed ZIP lookups validate immediately and share only successful source-resolved places for thirty seconds", async (t) => {
   const requests: string[] = [];
@@ -50,4 +51,58 @@ test("ZIP selection accepts the previous route shape while a deploy changes over
   });
   assert.deepEqual(await resolveReaderZip("89109"), resolveZip("89109"));
   assert.deepEqual(await resolveReaderZip("99999"), { ok: false, reason: "uncovered" });
+});
+
+test("map startup locations share the ZIP success cache and invalid or failed starts remain retryable", async t => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis,"window");
+  const zip = "30303",point:ZctaCentroid = {zip,lat:33.75,lng:-84.39};
+  const replies: (ZctaCentroid|null|Error)[] = [null,{...point,lat:100},new Error("startup offline"),point];
+  let starts = 0;
+  const reader: {location:{pathname:string};__readerStart?:Window["__readerStart"];__startReaderZip:(zip:string)=>Promise<ZctaCentroid|null>} = {
+    location:{pathname:"/"},__startReaderZip:input=>{
+      assert.equal(input,zip);starts++;
+      const reply = replies.shift();
+      if (reply === undefined) throw new Error("Unexpected startup");
+      const location = reply instanceof Error ? Promise.reject(reply) : Promise.resolve(reply);
+      reader.__readerStart = {zip,location,expires:Date.now()+30_000,requests:{},parsed:new WeakMap()};
+      return location;
+    },
+  };
+  Object.defineProperty(globalThis,"window",{configurable:true,value:reader});
+  t.mock.method(globalThis,"fetch",async()=>{throw new Error("A started ZIP must not issue another location request");});
+  try {
+    assert.deepEqual(await resolveReaderZip(zip),{ok:false,reason:"uncovered"});
+    await assert.rejects(resolveReaderZip(zip),/Invalid ZIP/);
+    await assert.rejects(resolveReaderZip(zip),/startup offline/);
+    assert.deepEqual(await resolveReaderZip(zip),{ok:true,centroid:point});
+    assert.deepEqual(await lookupReaderZip(zip),point);
+    assert.equal(starts,4,"uncovered and failed starts are replaced; the verified location is reused");
+  } finally {
+    if(previous)Object.defineProperty(globalThis,"window",previous);else Reflect.deleteProperty(globalThis,"window");
+  }
+});
+
+test("a superseded failed ZIP cannot expire the newer map selection", async () => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis,"window");
+  let rejectEarlier: (error:Error)=>void = ()=>{};
+  const earlier = new Promise<ZctaCentroid|null>((_resolve,reject)=>{rejectEarlier=reject;});
+  const point:ZctaCentroid = {zip:"27182",lat:35,lng:-80};
+  const reader: {location:{pathname:string};__readerStart?:Window["__readerStart"];__startReaderZip:(zip:string)=>Promise<ZctaCentroid|null>} = {
+    location:{pathname:"/"},__startReaderZip:zip=>{
+      const location = zip === "31415" ? earlier : Promise.resolve(point);
+      reader.__readerStart={zip,location,expires:Date.now()+30_000,requests:{},parsed:new WeakMap()};
+      return location;
+    },
+  };
+  Object.defineProperty(globalThis,"window",{configurable:true,value:reader});
+  try {
+    const failed = resolveReaderZip("31415"),failure = assert.rejects(failed,/superseded/);
+    assert.deepEqual(await resolveReaderZip(point.zip),{ok:true,centroid:point});
+    const current = reader.__readerStart;
+    rejectEarlier(new Error("superseded"));await failure;
+    assert.equal(reader.__readerStart,current);
+    assert.ok(current && current.expires>Date.now(),"only the failed starter's own active object may expire");
+  } finally {
+    if(previous)Object.defineProperty(globalThis,"window",previous);else Reflect.deleteProperty(globalThis,"window");
+  }
 });

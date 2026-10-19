@@ -1,4 +1,5 @@
 import { isWellFormedZip, type ZctaCentroid, type ZipResolution } from "../geo/zcta-core.ts";
+import { beginReaderZip, discardReaderZipStart } from "./bootstrap.ts";
 
 export { isWellFormedZip };
 
@@ -21,7 +22,15 @@ export function resolveReaderZip(input: string): Promise<ZipResolution> {
   const zip = input.trim();
   const held = locations.get(zip);
   if (held && held.expires > Date.now()) return held.promise;
+  let started: Promise<ZctaCentroid | null> | null = null;
   const promise = (async (): Promise<ZipResolution> => {
+    started = beginReaderZip(zip);
+    if (started) {
+      const location = await started;
+      if (location === null) return { ok:false,reason:"uncovered" };
+      if (validLocation(location, zip)) return { ok:true,centroid:location };
+      throw new Error("Invalid ZIP location response");
+    }
     const response = await fetch(`/api/location/zip?zip=${zip}`, { headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(`ZIP lookup failed: ${response.status}`);
     const payload = await response.json() as { resolution?: ZipResolution; location?: unknown };
@@ -38,11 +47,12 @@ export function resolveReaderZip(input: string): Promise<ZipResolution> {
   })().then(result => {
     if (locations.get(zip)?.promise === promise) {
       if (result.ok) locations.set(zip, { promise, expires: Date.now() + CACHE_MS });
-      else locations.delete(zip);
+      else { locations.delete(zip); discardReaderZipStart(zip,started); }
     }
     return result;
   }).catch(error => {
     if (locations.get(zip)?.promise === promise) locations.delete(zip);
+    discardReaderZipStart(zip,started);
     throw error;
   });
   locations.set(zip, { promise, expires: Infinity });

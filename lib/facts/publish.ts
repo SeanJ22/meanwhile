@@ -1,5 +1,6 @@
 import { checkFact, type Claim, type FieldKind } from "./check.ts";
 import { decide, type Decision } from "./decide.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -34,9 +35,11 @@ export async function openBlank(query: Query, input: { readonly entityId: string
 }
 
 /** Checks one claim and, when it passes, decides it against the live value and writes it alone. */
-export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, now: Date = new Date()): Promise<PublishOutcome> {
+export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, now: Date = new Date(),
+  options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {
   const verdict = checkFact(c, now, clocks.windowHours);
-  return db.transaction(async (query) => {
+  let changed: ReaderCacheScope | undefined;
+  const outcome = await db.transaction<PublishOutcome>(async (query) => {
     if (!verdict.ok) {
       await openBlank(query, { entityId: c.entity.id, field: c.field, stage: "CHECK", reason: `CHECK_FAILED:${verdict.reason}`,
         detail: c.copy.finalUrl, retryMinutes: clocks.retryMinutes(c.fieldKind) });
@@ -50,6 +53,7 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
     if (decision === "CONFIRM") {
       await query("UPDATE fact SET checked_at = $2 WHERE id = $1", [row!.id, now.toISOString()]);
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
+      changed = await readerCacheScopeForEntity(query, c.entity.id);
       return { decision, factId: Number(row!.id) };
     }
     const live = decision === "PUBLISH";
@@ -63,7 +67,12 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       live ? null : decision === "FLAG_OWNER" ? "OWNER_VALUE_CONTESTED" : "LOSES_TO_CURRENT", c.producedBy, c.costUsd]);
     const factId = Number(inserted!.id);
     if (decision === "FLAG_OWNER") await query("INSERT INTO owner_flag (fact_id, kind) VALUES ($1, 'OWNER_VALUE_CONTESTED')", [factId]);
-    if (live) await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
+    if (live) {
+      await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
+      changed = await readerCacheScopeForEntity(query, c.entity.id);
+    }
     return { decision, factId };
   });
+  if (changed) await invalidateReaderCache(changed, options.purge);
+  return outcome;
 }

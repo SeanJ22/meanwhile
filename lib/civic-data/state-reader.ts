@@ -8,6 +8,7 @@ import type { PromotedFamilyArtifactValue, StateAuthorityFamily } from "../meeti
 import { civicDataReadNotInitialized, readPromotedCivicData, registerIntegrityCheckedEdgeEntries, type CivicDataReadResult, type PromotedEdgeEntry } from "./read-model.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { readStateReaderPromotion } from "./state-reader-store.ts";
+import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 type StateRead<T> = { readonly result: CivicDataReadResult<T>; readonly source: "EDGE" | "DATABASE" };
@@ -19,7 +20,7 @@ const classes: Record<StateAuthorityFamily, RoutineRecordClass> = {
   "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
 };
 
-/** Every pointer one state's family artifact carries; the first is the family's own record. */
+/** Canonical pointers belonging to one state family. */
 export function stateAuthorityPointers(family: StateAuthorityFamily, state: string): readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[] {
   if (family === "registry-runtime") return [{ recordClass: classes[family], scope: stateRegistryRuntimeScope(state) }];
   if (family === "federal-directory") return [{ recordClass: classes[family], scope: federalDirectoryScope(state) },
@@ -42,7 +43,7 @@ export function readStateAuthorityProjection<T>(family: StateAuthorityFamily, st
   return readStateAuthorityEntry<T>(family, state, recordClass, scope, query);
 }
 
-/** Any one pointer a state family's artifact carries, edge first. */
+/** One canonical state pointer, with optional request-injected values. */
 export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, state: string, recordClass: RoutineRecordClass, scope: string, query?: Query): Promise<StateRead<T>> {
   const key = `${recordClass}:${scope}`, edge = currentReaderAuthorityEdge();
   const context = currentReaderSelection() ?? edge, held = context ? requests.get(context) ?? new Map<string, Held>() : new Map<string, Held>();
@@ -50,15 +51,16 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
   const prior = held.get(key);
   if (prior) return prior.pending as Promise<StateRead<T>>;
   const load = async (): Promise<StateRead<T>> => {
+    const canonical = !query && !edge ? readerCanonicalEntry(recordClass, scope) : undefined;
     let entry: PromotedEdgeEntry | null = null;
     let artifact: PromotedFamilyArtifactValue | null = null;
-    if (!edge?.stateAuthorities) reportReaderStateFailure(family, state, null, new Error("STATE_ARTIFACT_REFERENCE_MISSING"));
     try { artifact = await edge?.stateAuthorities?.load(family, state) ?? null; }
     catch (error) { reportReaderStateFailure(family, state, edge?.stateAuthorities?.key?.(family, state) ?? key, error); }
     if (artifact) entry = artifact.entries.find(row => row.kind === "PROMOTED" ? row.projection.key === key : row.recordClass === recordClass && row.scope === scope) ?? null;
     if (entry) return { source: "EDGE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: entry }) };
     refuseDatabaseInEdgeOnlyContext(key);
     try {
+      if (canonical) return { source: "DATABASE", result: await readPromotedCivicData<T>(recordClass, scope, { edge: await canonical }) };
       const batch = query ? null : readerQuery();
       if (!query && !batch) throw new Error("STATE_READER_DATABASE_UNAVAILABLE");
       const read = await readStateReaderPromotion<T>(query ?? (async (text, params) => (await batch!([{ text, params }]))[0]), recordClass, scope);

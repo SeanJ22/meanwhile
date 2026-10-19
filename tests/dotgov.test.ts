@@ -1,7 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { acquireDotGov } from "../scripts/fetch-dotgov.mts";
 import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -13,9 +11,7 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import type { RegistrationReadModel } from "../lib/registration/candidate.ts";
-import { promotedEdgePointers, publishPromotedEdgeFamily } from "../lib/civic-data/promoted-edge-publication.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { authorityPointerKey, READER_MAP_AUTHORITY_FAMILIES, readServedPromotedFamily } from "../lib/meetings/edge-serving.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 const csv = readFileSync("tests/fixtures/dotgov/current-full.csv", "utf8");
 const source = JSON.parse(readFileSync("tests/fixtures/dotgov/retrieval.json", "utf8")) as { sha: string; retrievedAt: string; sourceUrl: string; domains: number };
@@ -90,7 +86,7 @@ test("domain enrichment preserves the government denominator, source website and
   assert.equal(snapshot.domains.length, source.domains, "unmatched rows remain in the complete registry");
 });
 
-test("a full CISA candidate promotes through the typed Reader and reaches geographic government listings from the edge", async t => {
+test("a full CISA candidate promotes through the typed Reader and reaches geographic government listings", async () => {
   const store = new MemoryRoutineDataStore();
   const candidate = dotGovCandidate({ snapshot, rawText: csv, finalUrl: source.sourceUrl, retrievedAt: NOW });
   const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, NOW);
@@ -98,14 +94,8 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   const read = await readDotGovProjection({ store, now: NOW, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.value?.domains.length, source.domains);
-  const directory = mkdtempSync(join(tmpdir(), "dotgov-edge-"));
-  t.after(() => rmSync(directory, { recursive: true, force: true }));
-  const artifactStore = new LocalFileArtifactStore(directory);
-  const published = await publishPromotedEdgeFamily({ store, artifactStore, now: NOW, family: "government-domains", place: null });
-  assert.deepEqual(published, { published: ["government-domains"], skipped: [] });
-  const ref = (await artifactStore.readJsonPointer<Parameters<typeof readServedPromotedFamily>[1]>(authorityPointerKey("government-domains")))!.value;
-  const edge = (await readServedPromotedFamily("government-domains", ref, artifactStore))!.entries[0]!;
-  assert.ok(edge);
+  const edge = provenEdgeEntry({ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE,
+    sourceId: candidate.sourceId, versionId: candidate.id, value: read.value!, retrievedAt: NOW });
   const model = { state: "CA", governments: [city], divisions: [], bodies: [] } as unknown as RegistrationReadModel;
   const listings = await withReaderAuthorityEdge({
     edgeOnly: true,
@@ -115,6 +105,4 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   assert.deepEqual(listings.unavailableStates, []);
   assert.equal(listings.records.length, 1);
   assert.ok(listings.records[0].govDomains?.some(row => row.domain === "29palms.gov"));
-  assert.ok(READER_MAP_AUTHORITY_FAMILIES.includes("government-domains"));
-  assert.deepEqual(promotedEdgePointers()["government-domains"].map(row => row.scope), [DOTGOV_SCOPE]);
 });

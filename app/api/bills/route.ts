@@ -11,4 +11,4 @@ export const GET = readerRoute("/api/bills", async function GET(request:Request)
     const bills=person?billsForPerson(read.bills,person):read.bills;
     return Response.json({...read,bills:bills.sort((a,b)=>(b.statusDate??"").localeCompare(a.statusDate??""))});
   } catch {return Response.json({error:"Bill records are unavailable"},{status:503});}
-}, ["state-legislators","other-reader-data"]);
+});

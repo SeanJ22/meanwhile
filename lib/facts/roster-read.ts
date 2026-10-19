@@ -23,7 +23,11 @@ const day = (at: unknown) => new Date(at as string).toISOString().slice(0, 10);
 export async function readFactRosters(query: Query, bodyIds: readonly string[] | null = null): Promise<{
   readonly rosters: readonly BodyRoster[]; readonly dispositions: readonly RosterReaderDisposition[];
 }> {
-  const rows = await query(ROSTER_FACTS_SQL, [bodyIds]);
+  return factRostersFromRows(await query(ROSTER_FACTS_SQL, [bodyIds]));
+}
+
+/** The public roster composed from already selected membership and person facts. */
+export function factRostersFromRows(rows: readonly Record<string, unknown>[]): { readonly rosters: readonly BodyRoster[]; readonly dispositions: readonly RosterReaderDisposition[] } {
   const byBody = new Map<string, BodyRoster>();
   const dispositions: RosterReaderDisposition[] = [];
   for (const row of rows) {

@@ -1,0 +1,435 @@
+{
+  "checkedAt": "2026-10-18T07:27:48.577Z",
+  "readOnly": true,
+  "accountingWritesDisabled": true,
+  "thresholdMs": 3000,
+  "ready": false,
+  "blockers": [
+    "Indiana cold built-browser load took 5706 ms; every state must be below 3000 ms.",
+    "The production national shelf has no verified current President."
+  ],
+  "handler": {
+    "checkedAt": "2026-10-18T07:18:54.432Z",
+    "source": "after-current-final.json",
+    "role": "readonly",
+    "measurement": "Direct handlers including response parse and coverage merge; module imports, browser network transfer and rendering excluded.",
+    "statesChecked": 50,
+    "requestsChecked": 150,
+    "requestsPassed": 150,
+    "summary": {
+      "cold": {
+        "state": "AZ",
+        "zip": "85701",
+        "usableMs": 2054
+      },
+      "repeat": {
+        "state": "AZ",
+        "zip": "85701",
+        "usableMs": 759
+      },
+      "next-zip": {
+        "state": "IL",
+        "zip": "60001",
+        "usableMs": 568
+      },
+      "coldWithImports": {
+        "state": "IN",
+        "zip": "46992",
+        "usableMs": 3581
+      },
+      "importsIncludedOverThreshold": [
+        {
+          "state": "AZ",
+          "usableMs": 3109
+        },
+        {
+          "state": "ID",
+          "usableMs": 3024
+        },
+        {
+          "state": "IN",
+          "usableMs": 3581
+        }
+      ],
+      "largestStatePackage": {
+        "state": "PA",
+        "stateBytes": 5134334,
+        "stateGzipBytes": 229746
+      }
+    }
+  },
+  "browser": {
+    "source": "browser-commit-final-50.json",
+    "statesChecked": 50,
+    "underThreeSeconds": 49,
+    "allChecksPassed": 49,
+    "worst": {
+      "state": "IN",
+      "zip": "46992",
+      "stateMs": 5706,
+      "allMs": 5706
+    },
+    "failures": [
+      {
+        "state": "IN",
+        "zip": "46992",
+        "allMs": 5706,
+        "errors": [
+          "Cold rendered information exceeded three seconds"
+        ]
+      }
+    ],
+    "freshServerPerState": true,
+    "freshBrowserPerState": true,
+    "serverCpuIds": "0,1",
+    "browserCpuIds": "2,3",
+    "cpuMax": "400000 100000",
+    "readerApiRetries": 0,
+    "cpuThrottledNavigations": 0,
+    "noHttpErrors": true,
+    "previousRuns": [
+      {
+        "source": "browser-cold-next-50.json",
+        "statesChecked": 50,
+        "underThreeSeconds": 44,
+        "allChecksPassed": 19,
+        "worst": {
+          "state": "NH",
+          "zip": "03461",
+          "stateMs": 4142,
+          "allMs": 4142
+        },
+        "slowFailures": [
+          {
+            "state": "ID",
+            "zip": "83537",
+            "allMs": 3513,
+            "errors": [
+              "400 http://localhost:3105/api/directory?member=congress-api%3Aid%3AF000469&state=ID"
+            ]
+          },
+          {
+            "state": "NY",
+            "zip": "12803",
+            "allMs": 3065,
+            "errors": [
+              "400 http://localhost:3105/api/directory?member=congress-api%3Any%3AS001196&state=NY"
+            ]
+          },
+          {
+            "state": "OH",
+            "zip": "44438",
+            "allMs": 3668,
+            "errors": [
+              "400 http://localhost:3105/api/directory?member=congress-api%3Aoh%3AJ000295&state=OH"
+            ]
+          }
+        ],
+        "httpFailureStates": [
+          "FL",
+          "GA",
+          "HI",
+          "ID",
+          "IL",
+          "IN",
+          "IA",
+          "KS",
+          "LA",
+          "ME",
+          "MD",
+          "MA",
+          "MI",
+          "MN",
+          "MS",
+          "MT",
+          "NE",
+          "NM",
+          "NY",
+          "NC",
+          "OH",
+          "OK",
+          "OR",
+          "PA",
+          "RI",
+          "SC",
+          "TN",
+          "TX",
+          "VA",
+          "WA",
+          "WV"
+        ]
+      },
+      {
+        "source": "browser-startup-final-50.json",
+        "statesChecked": 50,
+        "underThreeSeconds": 49,
+        "allChecksPassed": 49,
+        "worst": {
+          "state": "AZ",
+          "zip": "85701",
+          "stateMs": 3160,
+          "allMs": 3198
+        },
+        "failures": [
+          {
+            "state": "AZ",
+            "zip": "85701",
+            "allMs": 3198,
+            "errors": [
+              "Cold rendered information exceeded three seconds"
+            ]
+          }
+        ]
+      },
+      {
+        "source": "browser-prefetch-final-50.json",
+        "statesChecked": 50,
+        "underThreeSeconds": 47,
+        "allChecksPassed": 46,
+        "worst": {
+          "state": "GA",
+          "zip": "30720",
+          "stateMs": 3914,
+          "allMs": 3914
+        },
+        "failures": [
+          {
+            "state": "GA",
+            "zip": "30720",
+            "allMs": 3914,
+            "errors": [
+              "Cold rendered information exceeded three seconds"
+            ]
+          },
+          {
+            "state": "MI",
+            "zip": "48897",
+            "allMs": 1933,
+            "errors": [
+              "503 http://localhost:3105/api/reader/settings"
+            ]
+          },
+          {
+            "state": "NH",
+            "zip": "03461",
+            "allMs": 3260,
+            "errors": [
+              "Cold rendered information exceeded three seconds"
+            ]
+          },
+          {
+            "state": "OH",
+            "zip": "44438",
+            "allMs": 3228,
+            "errors": [
+              "Cold rendered information exceeded three seconds"
+            ]
+          }
+        ]
+      },
+      {
+        "source": "browser-isolated-final-50.json",
+        "statesChecked": 50,
+        "underThreeSeconds": 49,
+        "allChecksPassed": 49,
+        "worst": {
+          "state": "FL",
+          "zip": "33183",
+          "stateMs": 3296,
+          "allMs": 3296
+        },
+        "failures": [
+          {
+            "state": "FL",
+            "zip": "33183",
+            "allMs": 3296,
+            "errors": [
+              "Cold rendered information exceeded three seconds"
+            ]
+          }
+        ]
+      }
+    ],
+    "resourceControl": {
+      "source": "cpu-ga-isolation-analysis.json",
+      "normalMs": [
+        2775,
+        2065,
+        3405
+      ],
+      "isolatedMs": [
+        2657,
+        2157,
+        2531
+      ],
+      "normalFailedNavigationThrottle": {
+        "nr_throttled": 9,
+        "throttled_usec": 186618
+      },
+      "isolatedThrottledNavigations": 0,
+      "interpretation": "Three cold pairs per condition support CPU contention as a contributor, but do not establish that it explains all browser failures. The later full50 misses remain failures."
+    }
+  },
+  "typedZip": {
+    "source": "ui-typed-contacts.json",
+    "zip": "85701",
+    "stateMs": 2988,
+    "allMs": 2988,
+    "contactClicks": [
+      {
+        "name": "Adelita S. Grijalva",
+        "ms": 617
+      },
+      {
+        "name": "Mark Kelly",
+        "ms": 323
+      },
+      {
+        "name": "Ruben Gallego",
+        "ms": 235
+      },
+      {
+        "name": "Adelita S. Grijalva",
+        "ms": 283
+      }
+    ],
+    "errors": []
+  },
+  "national": {
+    "members": 539,
+    "jurisdictions": 56,
+    "zipPlaces": 41831,
+    "president": [],
+    "membersWithoutHeldOffice": [
+      {
+        "id": "congress:G000607",
+        "name": "James Gallagher"
+      },
+      {
+        "id": "congress:W000832",
+        "name": "Aisha Wahab"
+      },
+      {
+        "id": "congress:B001328",
+        "name": "Everton Blair Jr."
+      },
+      {
+        "id": "congress:G000608",
+        "name": "Darline Graham"
+      }
+    ],
+    "errors": [
+      "National shelf must hold the verified current President"
+    ]
+  },
+  "preservation": {
+    "AZ": {
+      "beforeMs": 9252,
+      "preserved": {
+        "meetings": 243,
+        "bodies": 65,
+        "seats": 3,
+        "divisions": 7,
+        "governments": 0,
+        "stateOffices": 2,
+        "officials": 60
+      },
+      "missing": [],
+      "federal": [
+        {
+          "id": "congress:G000606",
+          "name": "Adelita S. Grijalva",
+          "offices": 1
+        },
+        {
+          "id": "congress:K000377",
+          "name": "Mark Kelly",
+          "offices": 2
+        },
+        {
+          "id": "congress:G000574",
+          "name": "Ruben Gallego",
+          "offices": 2
+        }
+      ]
+    },
+    "NJ": {
+      "beforeMs": 6080,
+      "preserved": {
+        "meetings": 22,
+        "bodies": 4,
+        "seats": 3,
+        "divisions": 8,
+        "governments": 0,
+        "stateOffices": 2,
+        "officials": 15
+      },
+      "missing": []
+    },
+    "RI": {
+      "beforeMs": 3643,
+      "preserved": {
+        "meetings": 0,
+        "bodies": 0,
+        "seats": 7,
+        "divisions": 10,
+        "governments": 2,
+        "stateOffices": 3,
+        "officials": 13
+      },
+      "missing": []
+    }
+  },
+  "results": [
+    {"state":"AL","zip":"36003","stateMs":1101,"coldMs":1142,"repeatMs":175,"nextZip":"35004","nextMs":113,"importMs":1062,"coldWithImportsMs":2204,"stateBytes":2210207,"stateGzipBytes":101011,"order":["state","place"],"errors":[],"browserStateMs":1486,"browserAllMs":1486,"browserErrors":[]},
+    {"state":"AK","zip":"99631","stateMs":694,"coldMs":834,"repeatMs":120,"nextZip":"96505","nextMs":122,"importMs":1069,"coldWithImportsMs":1903,"stateBytes":716391,"stateGzipBytes":38473,"order":["state","place"],"errors":[],"browserStateMs":1215,"browserAllMs":1215,"browserErrors":[]},
+    {"state":"AZ","zip":"85701","stateMs":1761,"coldMs":2054,"repeatMs":759,"nextZip":"85001","nextMs":144,"importMs":1055,"coldWithImportsMs":3109,"stateBytes":1371180,"stateGzipBytes":74281,"order":["state","place"],"errors":[],"browserStateMs":2024,"browserAllMs":2271,"browserErrors":[]},
+    {"state":"AR","zip":"72370","stateMs":1052,"coldMs":1085,"repeatMs":196,"nextZip":"71601","nextMs":179,"importMs":814,"coldWithImportsMs":1899,"stateBytes":2344744,"stateGzipBytes":108892,"order":["state","place"],"errors":[],"browserStateMs":2318,"browserAllMs":2318,"browserErrors":[]},
+    {"state":"CA","zip":"93636","stateMs":1502,"coldMs":1561,"repeatMs":172,"nextZip":"90001","nextMs":270,"importMs":1392,"coldWithImportsMs":2953,"stateBytes":4227125,"stateGzipBytes":181288,"order":["state","place"],"errors":[],"browserStateMs":1466,"browserAllMs":1466,"browserErrors":[]},
+    {"state":"CO","zip":"80757","stateMs":983,"coldMs":1031,"repeatMs":159,"nextZip":"80001","nextMs":492,"importMs":1006,"coldWithImportsMs":2037,"stateBytes":1542833,"stateGzipBytes":71738,"order":["state","place"],"errors":[],"browserStateMs":1952,"browserAllMs":1952,"browserErrors":[]},
+    {"state":"CT","zip":"06412","stateMs":825,"coldMs":854,"repeatMs":95,"nextZip":"06001","nextMs":112,"importMs":921,"coldWithImportsMs":1775,"stateBytes":1811334,"stateGzipBytes":88358,"order":["state","place"],"errors":[],"browserStateMs":1433,"browserAllMs":1433,"browserErrors":[]},
+    {"state":"DE","zip":"19934","stateMs":1210,"coldMs":1238,"repeatMs":199,"nextZip":"19701","nextMs":215,"importMs":971,"coldWithImportsMs":2209,"stateBytes":926492,"stateGzipBytes":57410,"order":["state","place"],"errors":[],"browserStateMs":1723,"browserAllMs":1723,"browserErrors":[]},
+    {"state":"FL","zip":"33183","stateMs":1610,"coldMs":1683,"repeatMs":276,"nextZip":"32003","nextMs":117,"importMs":891,"coldWithImportsMs":2574,"stateBytes":3960528,"stateGzipBytes":218528,"order":["state","place"],"errors":[],"browserStateMs":1883,"browserAllMs":1883,"browserErrors":[]},
+    {"state":"GA","zip":"30720","stateMs":1110,"coldMs":1180,"repeatMs":273,"nextZip":"30002","nextMs":278,"importMs":938,"coldWithImportsMs":2118,"stateBytes":3281540,"stateGzipBytes":148914,"order":["state","place"],"errors":[],"browserStateMs":2827,"browserAllMs":2827,"browserErrors":[]},
+    {"state":"HI","zip":"96768","stateMs":698,"coldMs":838,"repeatMs":97,"nextZip":"96701","nextMs":79,"importMs":1045,"coldWithImportsMs":1883,"stateBytes":737123,"stateGzipBytes":39588,"order":["state","place"],"errors":[],"browserStateMs":2017,"browserAllMs":2017,"browserErrors":[]},
+    {"state":"ID","zip":"83537","stateMs":1844,"coldMs":1950,"repeatMs":186,"nextZip":"83120","nextMs":209,"importMs":1074,"coldWithImportsMs":3024,"stateBytes":5087766,"stateGzipBytes":362695,"order":["state","place"],"errors":[],"browserStateMs":2531,"browserAllMs":2531,"browserErrors":[]},
+    {"state":"IL","zip":"61569","stateMs":1577,"coldMs":1635,"repeatMs":266,"nextZip":"60001","nextMs":568,"importMs":848,"coldWithImportsMs":2483,"stateBytes":4302824,"stateGzipBytes":197597,"order":["state","place"],"errors":[],"browserStateMs":2655,"browserAllMs":2655,"browserErrors":[]},
+    {"state":"IN","zip":"46992","stateMs":1480,"coldMs":1519,"repeatMs":153,"nextZip":"46001","nextMs":135,"importMs":2062,"coldWithImportsMs":3581,"stateBytes":2696471,"stateGzipBytes":119577,"order":["state","place"],"errors":[],"browserStateMs":5706,"browserAllMs":5706,"browserErrors":["Cold rendered information exceeded three seconds"]},
+    {"state":"IA","zip":"51047","stateMs":1255,"coldMs":1299,"repeatMs":116,"nextZip":"50001","nextMs":158,"importMs":865,"coldWithImportsMs":2164,"stateBytes":3017517,"stateGzipBytes":130425,"order":["state","place"],"errors":[],"browserStateMs":1804,"browserAllMs":1804,"browserErrors":[]},
+    {"state":"KS","zip":"67038","stateMs":984,"coldMs":1089,"repeatMs":232,"nextZip":"66002","nextMs":197,"importMs":886,"coldWithImportsMs":1975,"stateBytes":2761105,"stateGzipBytes":133098,"order":["state","place"],"errors":[],"browserStateMs":2326,"browserAllMs":2326,"browserErrors":[]},
+    {"state":"KY","zip":"41365","stateMs":1165,"coldMs":1251,"repeatMs":135,"nextZip":"24218","nextMs":162,"importMs":971,"coldWithImportsMs":2222,"stateBytes":2341244,"stateGzipBytes":104959,"order":["state","place"],"errors":[],"browserStateMs":1405,"browserAllMs":1405,"browserErrors":[]},
+    {"state":"LA","zip":"70757","stateMs":751,"coldMs":791,"repeatMs":97,"nextZip":"70001","nextMs":103,"importMs":999,"coldWithImportsMs":1790,"stateBytes":2008118,"stateGzipBytes":89903,"order":["state","place"],"errors":[],"browserStateMs":2086,"browserAllMs":2086,"browserErrors":[]},
+    {"state":"ME","zip":"04493","stateMs":722,"coldMs":749,"repeatMs":110,"nextZip":"03579","nextMs":153,"importMs":836,"coldWithImportsMs":1585,"stateBytes":1938916,"stateGzipBytes":96359,"order":["state","place"],"errors":[],"browserStateMs":1392,"browserAllMs":1392,"browserErrors":[]},
+    {"state":"MD","zip":"21155","stateMs":838,"coldMs":882,"repeatMs":116,"nextZip":"20588","nextMs":82,"importMs":826,"coldWithImportsMs":1708,"stateBytes":2231009,"stateGzipBytes":103013,"order":["state","place"],"errors":[],"browserStateMs":1641,"browserAllMs":1641,"browserErrors":[]},
+    {"state":"MA","zip":"01879","stateMs":1383,"coldMs":1427,"repeatMs":114,"nextZip":"01001","nextMs":178,"importMs":1038,"coldWithImportsMs":2465,"stateBytes":2205825,"stateGzipBytes":112253,"order":["state","place"],"errors":[],"browserStateMs":1563,"browserAllMs":1563,"browserErrors":[]},
+    {"state":"MI","zip":"48897","stateMs":829,"coldMs":872,"repeatMs":190,"nextZip":"48001","nextMs":193,"importMs":1032,"coldWithImportsMs":1904,"stateBytes":3099103,"stateGzipBytes":137851,"order":["state","place"],"errors":[],"browserStateMs":2036,"browserAllMs":2036,"browserErrors":[]},
+    {"state":"MN","zip":"56051","stateMs":935,"coldMs":999,"repeatMs":169,"nextZip":"55001","nextMs":151,"importMs":795,"coldWithImportsMs":1794,"stateBytes":3665002,"stateGzipBytes":169883,"order":["state","place"],"errors":[],"browserStateMs":1849,"browserAllMs":1850,"browserErrors":[]},
+    {"state":"MS","zip":"39145","stateMs":1032,"coldMs":1063,"repeatMs":218,"nextZip":"38601","nextMs":131,"importMs":864,"coldWithImportsMs":1927,"stateBytes":2191371,"stateGzipBytes":95556,"order":["state","place"],"errors":[],"browserStateMs":2686,"browserAllMs":2686,"browserErrors":[]},
+    {"state":"MO","zip":"64470","stateMs":785,"coldMs":844,"repeatMs":223,"nextZip":"63001","nextMs":163,"importMs":938,"coldWithImportsMs":1782,"stateBytes":3410052,"stateGzipBytes":148394,"order":["state","place"],"errors":[],"browserStateMs":1605,"browserAllMs":1605,"browserErrors":[]},
+    {"state":"MT","zip":"59446","stateMs":673,"coldMs":717,"repeatMs":95,"nextZip":"59001","nextMs":105,"importMs":923,"coldWithImportsMs":1640,"stateBytes":1928907,"stateGzipBytes":87796,"order":["state","place"],"errors":[],"browserStateMs":1663,"browserAllMs":1663,"browserErrors":[]},
+    {"state":"NE","zip":"68725","stateMs":911,"coldMs":942,"repeatMs":137,"nextZip":"68001","nextMs":166,"importMs":956,"coldWithImportsMs":1898,"stateBytes":1490338,"stateGzipBytes":70229,"order":["state","place"],"errors":[],"browserStateMs":1303,"browserAllMs":1303,"browserErrors":[]},
+    {"state":"NV","zip":"89148","stateMs":605,"coldMs":713,"repeatMs":89,"nextZip":"88905","nextMs":75,"importMs":818,"coldWithImportsMs":1531,"stateBytes":797790,"stateGzipBytes":41247,"order":["state","place"],"errors":[],"browserStateMs":1278,"browserAllMs":1336,"browserErrors":[]},
+    {"state":"NH","zip":"03461","stateMs":1711,"coldMs":1748,"repeatMs":248,"nextZip":"03031","nextMs":180,"importMs":823,"coldWithImportsMs":2571,"stateBytes":1755478,"stateGzipBytes":92997,"order":["state","place"],"errors":[],"browserStateMs":2387,"browserAllMs":2387,"browserErrors":[]},
+    {"state":"NJ","zip":"07927","stateMs":1243,"coldMs":1308,"repeatMs":389,"nextZip":"07001","nextMs":278,"importMs":1029,"coldWithImportsMs":2337,"stateBytes":1968916,"stateGzipBytes":108381,"order":["state","place"],"errors":[],"browserStateMs":2891,"browserAllMs":2891,"browserErrors":[]},
+    {"state":"NM","zip":"87735","stateMs":782,"coldMs":802,"repeatMs":98,"nextZip":"79837","nextMs":138,"importMs":873,"coldWithImportsMs":1675,"stateBytes":1354474,"stateGzipBytes":67342,"order":["state","place"],"errors":[],"browserStateMs":1480,"browserAllMs":1480,"browserErrors":[]},
+    {"state":"NY","zip":"12803","stateMs":1078,"coldMs":1148,"repeatMs":151,"nextZip":"10001","nextMs":237,"importMs":903,"coldWithImportsMs":2051,"stateBytes":4532159,"stateGzipBytes":204174,"order":["state","place"],"errors":[],"browserStateMs":1953,"browserAllMs":1953,"browserErrors":[]},
+    {"state":"NC","zip":"28124","stateMs":836,"coldMs":900,"repeatMs":221,"nextZip":"27006","nextMs":165,"importMs":951,"coldWithImportsMs":1851,"stateBytes":2972367,"stateGzipBytes":141895,"order":["state","place"],"errors":[],"browserStateMs":1835,"browserAllMs":1835,"browserErrors":[]},
+    {"state":"ND","zip":"58443","stateMs":748,"coldMs":893,"repeatMs":188,"nextZip":"58001","nextMs":149,"importMs":854,"coldWithImportsMs":1747,"stateBytes":2067084,"stateGzipBytes":100721,"order":["state","place"],"errors":[],"browserStateMs":1680,"browserAllMs":1680,"browserErrors":[]},
+    {"state":"OH","zip":"44438","stateMs":1128,"coldMs":1175,"repeatMs":167,"nextZip":"43001","nextMs":178,"importMs":906,"coldWithImportsMs":2081,"stateBytes":3398900,"stateGzipBytes":149984,"order":["state","place"],"errors":[],"browserStateMs":1638,"browserAllMs":1638,"browserErrors":[]},
+    {"state":"OK","zip":"73942","stateMs":688,"coldMs":722,"repeatMs":186,"nextZip":"73001","nextMs":137,"importMs":785,"coldWithImportsMs":1507,"stateBytes":2178993,"stateGzipBytes":97529,"order":["state","place"],"errors":[],"browserStateMs":1593,"browserAllMs":1607,"browserErrors":[]},
+    {"state":"OR","zip":"97414","stateMs":680,"coldMs":850,"repeatMs":96,"nextZip":"89421","nextMs":152,"importMs":824,"coldWithImportsMs":1674,"stateBytes":1351754,"stateGzipBytes":67880,"order":["state","place"],"errors":[],"browserStateMs":1213,"browserAllMs":1213,"browserErrors":[]},
+    {"state":"PA","zip":"17058","stateMs":1344,"coldMs":1415,"repeatMs":235,"nextZip":"15001","nextMs":198,"importMs":834,"coldWithImportsMs":2249,"stateBytes":5134334,"stateGzipBytes":229746,"order":["state","place"],"errors":[],"browserStateMs":2738,"browserAllMs":2738,"browserErrors":[]},
+    {"state":"RI","zip":"02865","stateMs":1069,"coldMs":1099,"repeatMs":82,"nextZip":"02802","nextMs":128,"importMs":894,"coldWithImportsMs":1993,"stateBytes":1036794,"stateGzipBytes":55402,"order":["state","place"],"errors":[],"browserStateMs":1567,"browserAllMs":1567,"browserErrors":[]},
+    {"state":"SC","zip":"29512","stateMs":861,"coldMs":892,"repeatMs":92,"nextZip":"29001","nextMs":145,"importMs":842,"coldWithImportsMs":1734,"stateBytes":2106909,"stateGzipBytes":102812,"order":["state","place"],"errors":[],"browserStateMs":1618,"browserAllMs":1618,"browserErrors":[]},
+    {"state":"SD","zip":"57375","stateMs":679,"coldMs":706,"repeatMs":107,"nextZip":"57001","nextMs":137,"importMs":846,"coldWithImportsMs":1552,"stateBytes":1610162,"stateGzipBytes":75892,"order":["state","place"],"errors":[],"browserStateMs":1342,"browserAllMs":1342,"browserErrors":[]},
+    {"state":"TN","zip":"37810","stateMs":570,"coldMs":613,"repeatMs":104,"nextZip":"37010","nextMs":193,"importMs":812,"coldWithImportsMs":1425,"stateBytes":2265589,"stateGzipBytes":101650,"order":["state","place"],"errors":[],"browserStateMs":1405,"browserAllMs":1405,"browserErrors":[]},
+    {"state":"TX","zip":"77346","stateMs":1207,"coldMs":1270,"repeatMs":160,"nextZip":"73301","nextMs":206,"importMs":798,"coldWithImportsMs":2068,"stateBytes":5033386,"stateGzipBytes":220350,"order":["state","place"],"errors":[],"browserStateMs":1671,"browserAllMs":1671,"browserErrors":[]},
+    {"state":"UT","zip":"84304","stateMs":681,"coldMs":700,"repeatMs":152,"nextZip":"82930","nextMs":82,"importMs":800,"coldWithImportsMs":1500,"stateBytes":1204394,"stateGzipBytes":59795,"order":["state","place"],"errors":[],"browserStateMs":1917,"browserAllMs":1917,"browserErrors":[]},
+    {"state":"VT","zip":"05478","stateMs":802,"coldMs":837,"repeatMs":155,"nextZip":"05001","nextMs":173,"importMs":816,"coldWithImportsMs":1653,"stateBytes":1842492,"stateGzipBytes":87489,"order":["state","place"],"errors":[],"browserStateMs":1508,"browserAllMs":1508,"browserErrors":[]},
+    {"state":"VA","zip":"23418","stateMs":911,"coldMs":946,"repeatMs":134,"nextZip":"20101","nextMs":88,"importMs":776,"coldWithImportsMs":1722,"stateBytes":2643830,"stateGzipBytes":119180,"order":["state","place"],"errors":[],"browserStateMs":1711,"browserAllMs":1711,"browserErrors":[]},
+    {"state":"WA","zip":"98570","stateMs":893,"coldMs":929,"repeatMs":107,"nextZip":"98001","nextMs":113,"importMs":923,"coldWithImportsMs":1852,"stateBytes":2138492,"stateGzipBytes":108668,"order":["state","place"],"errors":[],"browserStateMs":1601,"browserAllMs":1601,"browserErrors":[]},
+    {"state":"WV","zip":"25823","stateMs":658,"coldMs":732,"repeatMs":104,"nextZip":"24701","nextMs":89,"importMs":872,"coldWithImportsMs":1604,"stateBytes":1895327,"stateGzipBytes":81257,"order":["state","place"],"errors":[],"browserStateMs":1928,"browserAllMs":1928,"browserErrors":[]},
+    {"state":"WI","zip":"54161","stateMs":1077,"coldMs":1115,"repeatMs":140,"nextZip":"53001","nextMs":223,"importMs":791,"coldWithImportsMs":1906,"stateBytes":2709250,"stateGzipBytes":126668,"order":["state","place"],"errors":[],"browserStateMs":1667,"browserAllMs":1667,"browserErrors":[]},
+    {"state":"WY","zip":"82601","stateMs":1019,"coldMs":1037,"repeatMs":159,"nextZip":"82001","nextMs":89,"importMs":985,"coldWithImportsMs":2022,"stateBytes":924468,"stateGzipBytes":45903,"order":["state","place"],"errors":[],"browserStateMs":1860,"browserAllMs":1860,"browserErrors":[]}
+  ]
+}

@@ -3,33 +3,24 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 
-import {
-  MEETING_PARTITION_CONTRACTS,
-  LEGACY_MEETINGS_AGGREGATE_SCOPE,
-} from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, LEGACY_MEETINGS_AGGREGATE_SCOPE } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
-import { composeMeetingBody, meetingCompositionOf, type BodyPartitionRead } from "../lib/meetings/body-records.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { getMeetingSource } from "../lib/meetings/registry.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+
 import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../lib/civic-data/types.ts";
+import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
-import {
-  promoteMeetingPartition,
-  promoteMeetingPartitions,
-  reconcileSuccessfulMeetingPartition,
-  selectedMeetingPartitions,
-} from "../scripts/ingest.ts";
-import { publishPass } from "./helpers/meeting-body-fixtures.ts";
-import { bodyPointerOf, coupledContracts, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { promoteMeetingPartition, promoteMeetingPartitions, reconcileSuccessfulMeetingPartition, selectedMeetingPartitions } from "../scripts/ingest.ts";
+
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -331,15 +322,13 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal((await store.readPromotion("MEETING", insite.scope))?.versionId, second[1]!.candidate.id);
   assert.equal(await store.readPromotion("MEETING", LEGACY_MEETINGS_AGGREGATE_SCOPE), null);
 
-  const { read, plan, edge } = await readEveryBody(store, SECOND);
+  const { read, plan } = await readEveryBody(store, SECOND);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(read.value.meetings.some((row) => row.id === "legistar:pima-1"), true);
     assert.equal(read.value.meetings.some((row) => row.id === "legistar-insite:mesa-2"), true);
   }
   assert.deepEqual(plan.stats.failed, [], "the failed check refused nothing already served");
-  assert.equal((await bodyPointerOf(edge, "AZ", legistar.bodyId))?.composition, meetingCompositionOf([{ contractId: legistar.id, versionId: legistarLkg }]),
-    "Pima is composed from its last known good version");
 
   const failedClock = await store.clock(legistar.sourceId, legistar.recordClass, legistar.scope);
   const healthyClock = await store.clock(insite.sourceId, insite.recordClass, insite.scope);
@@ -475,35 +464,6 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
   }
 });
 
-test("a pass that records readbacks and then publishes composes every body once and reads nothing twice", async () => {
-  const store = new CountingMeetingStore();
-  const promoted = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "shared-pima"), meeting(insite, FIRST, "shared-mesa")],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-
-  const repairs = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], SECOND, "f".repeat(40));
-  assert.deepEqual(repairs.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
-  const published = await readEveryBody(store, SECOND);
-  assert.equal(published.status, "PUBLISHED");
-  assert.equal(published.plan.stats.composed, 2, "each body is composed once");
-  assert.equal(published.plan.stats.recordsWritten, 2);
-
-  const reads = store.readPromotionCalls;
-  const again = await publishPass(store, published.edge, new Date(Date.parse(SECOND) + 1).toISOString());
-  assert.equal(again.status, "CURRENT");
-  assert.equal(again.plan.stats.composed, 0, "nothing changed, so nothing is composed");
-  assert.equal(store.readPromotionCalls, reads, "an unchanged pass reads no partition payload");
-  const bodies = Object.keys((await stateIndexOf(store, "AZ"))?.bodies ?? {});
-  assert.deepEqual(new Set((await Promise.all(bodies.map((id) => coupledContracts(store, "AZ", id)))).flat()), new Set([legistar.id, insite.id]),
-    "the published bodies are coupled to the versions that composition read");
-});
-
 test("a semantic refusal holds only the exact source/body partition", async () => {
   const store = new MemoryRoutineDataStore();
   const goodMeeting = meeting(legistar, FIRST, "good");
@@ -528,117 +488,6 @@ test("a semantic refusal holds only the exact source/body partition", async () =
   assert.equal(bad.outcome.candidate.state, "SEMANTIC_INVALID");
   assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, good.candidate.id);
   assert.equal(await store.readPromotion("MEETING", insite.scope), null);
-});
-
-/** A store that answers for one version with a payload (and, when asked, a proof to match) that its source never wrote. */
-class ForgedMeetingStore extends MemoryRoutineDataStore {
-  forged: { readonly versionId: string; readonly payload: (honest: unknown) => unknown; readonly withProof: boolean } | null = null;
-
-  override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
-    const pointer = await super.readPromotion<T>(recordClass, scope);
-    return pointer !== null && this.forged?.versionId === pointer.versionId ? { ...pointer, payload: this.forged.payload(pointer.payload) as T } : pointer;
-  }
-
-  override async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
-    const record = await super.readCandidateProof(candidateId);
-    if (record === null || !this.forged?.withProof || this.forged.versionId !== candidateId) return record;
-    const readModel = this.forged.payload(record.candidate.readModel);
-    return { ...record, candidate: { ...record.candidate, readModel, normalization: { ...record.candidate.normalization, normalizedHash: normalizedHash(readModel) } } } as CandidateVersionRecord;
-  }
-}
-
-async function twoPartitionsPublished(store: MemoryRoutineDataStore, label: string) {
-  const seeded = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, `pima-${label}`), meeting(insite, FIRST, `mesa-${label}`)],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  const published = await readEveryBody(store, FIRST);
-  assert.deepEqual(published.plan.stats.failed, []);
-  return { seeded, published };
-}
-
-test("a corrupt partition is refused for its own body only: the body keeps its previous record and an unrelated body publishes", async () => {
-  const store = new ForgedMeetingStore();
-  const { seeded, published } = await twoPartitionsPublished(store, "first");
-  assert.deepEqual(published.read.kind === "PROMOTED" && published.read.value.meetings.map((row) => row.id).sort(), ["legistar-insite:mesa-first", "legistar:pima-first"]);
-
-  const next = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, SECOND, "pima-corrupt"), meeting(insite, SECOND, "mesa-good")],
-    agendaDocuments: [],
-    reports: [report("legistar", SECOND), report("legistar-insite", SECOND)],
-    generatedAt: SECOND,
-  });
-  assert.notEqual(next[0]!.candidate.id, seeded[0]!.candidate.id);
-  store.forged = {
-    versionId: next[0]!.candidate.id,
-    withProof: true,
-    payload: (honest) => {
-      const payload = structuredClone(honest) as { meetings: Meeting[] };
-      payload.meetings[0] = { ...payload.meetings[0]!, bodyId: insite.bodyId };
-      return payload;
-    },
-  };
-
-  const pass = await publishPass(store, published.edge, SECOND);
-  assert.equal(pass.plan.stats.recordsWritten, 1, "the unrelated body publishes");
-  assert.deepEqual(pass.plan.stats.failed.map((row) => row.bodyId), [legistar.bodyId]);
-  assert.match(pass.plan.stats.failed[0]!.error, /MEETING_PARTITION_ROW_SCOPE_MISMATCH/);
-  const read = await readEveryBody(store, SECOND, { edge: published.edge });
-  assert.equal(read.read.kind, "PROMOTED");
-  assert.deepEqual(read.read.kind === "PROMOTED" && read.read.value.meetings.map((row) => row.id).sort(), ["legistar-insite:mesa-first", "legistar-insite:mesa-good", "legistar:pima-first"],
-    "Pima keeps the record it served; Mesa shows its new sitting beside the one its source stopped listing");
-  assert.equal((await store.readMeetingQueue()).some((row) => row.scope === legistar.scope), true, "the refused partition stays queued for the next pass");
-});
-
-test("a pointer that differs from its validated candidate holds only its own body", async () => {
-  const store = new ForgedMeetingStore();
-  const seeded = await promoteMeetingPartitions({
-    store, partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "pima-proof"), meeting(insite, FIRST, "mesa-proof")],
-    agendaDocuments: [], reports: [report("legistar", FIRST), report("legistar-insite", FIRST)], generatedAt: FIRST,
-  });
-  store.forged = { versionId: seeded[0]!.candidate.id, withProof: false, payload: (honest) => ({ ...(honest as object), generatedAt: SECOND }) };
-  const { read, plan } = await readEveryBody(store, SECOND);
-  assert.deepEqual(read.kind === "PROMOTED" && read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-proof"]);
-  assert.deepEqual(plan.stats.failed.map((row) => row.bodyId), [legistar.bodyId]);
-  assert.match(plan.stats.failed[0]!.error, /pointer payload differs from the validated candidate read model/);
-});
-
-test("two partitions of one body that claim the same sitting id are refused together", () => {
-  const read = (partition: typeof legistar, suffix: string): BodyPartitionRead => {
-    const rows = [{ ...meeting(partition, FIRST, suffix), id: `legistar:${suffix}` }];
-    const value = {
-      formatVersion: 1 as const, generatedAt: FIRST, counts: { fresh: 1, carried: 0, total: 1 },
-      sources: [{ ...report("legistar", FIRST), error: null, fetched: 1, normalized: 1 }], meetings: rows, agendaDocuments: [],
-    };
-    return { partition, held: null, read: { kind: "PROMOTED", value, detail: "", metadata: { recordClass: "MEETING", scope: partition.scope, sourceId: partition.sourceId, version: null,
-      versionId: `v-${partition.id}`, lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: FIRST, promotedAt: FIRST, stale: "CURRENT", staleAt: null } } as never };
-  };
-  const sibling = MEETING_PARTITION_CONTRACTS.find((partition) => partition.bodyId === legistar.bodyId && partition.id !== legistar.id)!;
-  const base = { bodyId: legistar.bodyId, divisions: [legistar.ocdId!], histories: [] };
-  assert.throws(() => composeMeetingBody({ ...base, reads: [read(legistar, "collision"), read(sibling, "collision")] }), /MEETING_PARTITION_ID_COLLISION:legistar:collision/);
-  assert.equal(composeMeetingBody({ ...base, reads: [read(legistar, "one"), read(sibling, "two")] })?.snapshot.meetings.length, 2, "distinct ids are one body's sittings");
-});
-
-test("a source that could not be read is attributed to its body's own divisions through unreachableOcdIds", () => {
-  const carried = { ...meeting(legistar, FIRST, "carried"), carried: { source: "legistar", lastFreshAt: FIRST, reason: "SOURCE_UNAVAILABLE" as const } };
-  const value = {
-    formatVersion: 1 as const, generatedAt: SECOND, counts: { fresh: 0, carried: 1, total: 1 },
-    sources: [{ ...report("legistar", SECOND, false), carriedForward: 1 }], meetings: [carried], agendaDocuments: [],
-  };
-  const read = { kind: "PROMOTED", value, detail: "", metadata: { recordClass: "MEETING", scope: legistar.scope, sourceId: legistar.sourceId, version: null,
-    versionId: "v-failed", lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: SECOND, promotedAt: SECOND, stale: "CURRENT", staleAt: null } } as never;
-  const composed = composeMeetingBody({ bodyId: legistar.bodyId, divisions: [`${legistar.ocdId}#governing`], histories: [], reads: [{ partition: legistar, held: null, read }] });
-  const walled = composed!.snapshot.sources.filter((source) => !source.ok);
-  assert.equal(walled.length, 1);
-  assert.deepEqual(walled[0]!.unreachableOcdIds, [legistar.ocdId], "the route attributes the gap to this body's division, not to every body of the state");
-  assert.equal(composed!.snapshot.meetings[0]!.carried?.reason, "SOURCE_UNAVAILABLE");
 });
 
 test("production membership and scopes are one-to-one and the global disposition is absent", () => {

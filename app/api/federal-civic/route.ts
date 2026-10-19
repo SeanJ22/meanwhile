@@ -10,4 +10,4 @@ export const GET = readerRoute("/api/federal-civic", async function GET(request:
   if (!Number.isSafeInteger(offset) || offset < 0) return Response.json({ error: "Invalid page offset." }, { status: 400 });
   const payload = member ? await readFederalMember(member, { offset, limit: 20 }) : await readFederalRules({ offset, limit: 20 });
   return Response.json(payload, { headers: { "Cache-Control": "private, max-age=30" } });
-}, ["other-reader-data"]);
+});

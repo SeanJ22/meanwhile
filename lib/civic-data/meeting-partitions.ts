@@ -16,6 +16,8 @@ import {
 import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
+import { meetingPartitionId } from "../meetings/body-scope.ts";
+export { meetingPartitionId } from "../meetings/body-scope.ts";
 
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";
 
@@ -44,10 +46,6 @@ export function derivedMeetingFamilyScope(state: DerivedMeetingFamilyState): str
 export function meetingPartitionScope(sourceName: string, bodyId: string): string {
   if (!sourceName || !bodyId) throw new Error("MEETING_PARTITION_IDENTITY_MISSING");
   return `source:${encodeURIComponent(sourceName)}:body:${encodeURIComponent(bodyId)}`;
-}
-
-export function meetingPartitionId(sourceName: string, bodyId: string): string {
-  return `meetings:${sourceName}:${encodeURIComponent(bodyId)}`;
 }
 
 export function meetingPartitionOfId(id: string): { readonly source: string; readonly bodyId: string; readonly scope: string } | null {

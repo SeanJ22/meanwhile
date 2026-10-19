@@ -3,27 +3,13 @@ import { createHash, randomUUID } from "node:crypto";
 import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, sep } from "node:path";
 
-import type { ReaderManifest } from "./edge-artifacts.ts";
 
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
-export const READER_MANIFEST_KEY = "reader/manifest.json";
-
-export interface StoredManifest {
-  readonly manifest: ReaderManifest;
-  /** ETag to pin the next monotonic write to; null when the manifest is absent. */
-  readonly etag: string | null;
-}
 
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
-  readManifest(): Promise<StoredManifest | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
-  /** Compare-and-set against `expectedEtag` (null = expect absent); modified:false when the stored ETag moved. */
-  writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
   readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null>;
   writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }>;
@@ -59,13 +45,6 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
       : getStore(base);
   }
 
-  async readManifest(): Promise<StoredManifest | null> {
-    const store = await this.store("eventual");
-    const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
-    if (!res || res.data == null) return null;
-    return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
-  }
-
   async readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null> {
     const store = await this.store("strong");
     const result = await store.getWithMetadata(key, { type: "json" });
@@ -78,9 +57,6 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     return { modified: result.modified, etag: result.etag ?? null };
   }
 
-  async writeManifest(manifest: ReaderManifest, expectedEtag: string | null) {
-    return this.writeJsonPointer(READER_MANIFEST_KEY, manifest, expectedEtag);
-  }
 
   async readBytes(key: string): Promise<Uint8Array | null> {
     const store = await this.store("eventual");
@@ -120,18 +96,6 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     return createHash("sha256").update(readFileSync(path)).digest("hex").slice(0, 16);
   }
 
-  async readManifest(): Promise<StoredManifest | null> {
-    const path = this.path(READER_MANIFEST_KEY);
-    try {
-      const bytes = readFileSync(path);
-      const manifest = JSON.parse(bytes.toString("utf8")) as ReaderManifest;
-      return { manifest, etag: createHash("sha256").update(bytes).digest("hex").slice(0, 16) };
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-      throw error;
-    }
-  }
-
   async readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null> {
     try {
       const bytes = readFileSync(this.path(key));
@@ -142,9 +106,6 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     }
   }
 
-  async writeManifest(manifest: ReaderManifest, expectedEtag: string | null) {
-    return this.writeJsonPointer(READER_MANIFEST_KEY, manifest, expectedEtag);
-  }
 
   async writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }> {
     const path = this.path(key);

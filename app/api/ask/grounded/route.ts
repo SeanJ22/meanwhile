@@ -2,7 +2,7 @@ import { stateCampaignEvidence, stateCampaignQuestion } from "@/lib/ask/state-ca
 import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerRoute } from "@/lib/api/reader-route";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { readRegistryRuntimeProjection } from "@/lib/reader/authority-reads";
 import { currentStateAuthorityProjection } from "@/lib/civic-data/state-reader";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
@@ -15,10 +15,8 @@ import { governmentListingEntity, governmentListingEvidenceRecords, readerGovern
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { authorityPointerHeld, holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readHeldBodyIds, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
-import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
-import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
-import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
+import { readHeldBodyIds, readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
+import { type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -421,10 +419,7 @@ async function answerWithSettings(request: Request) {
   const namedStateDivisions = namedStates.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
   let ocdIds = namedStates.length ? namedStateDivisions : await ballotPlaceDivisions({ divisions: Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40) : [], zip: ballotZip });
-  const earlyManifest = namedStates.length ? await readReaderManifest().catch(holdReaderAuthorityEdge) : null;
   if (namedStates.length) {
-    const earlyEdge = await ensureReaderAuthorityEdge(earlyManifest, undefined, []).catch(error => holdReaderAuthorityEdge(error, []));
-    if (earlyEdge) enterReaderAuthorityEdge(earlyEdge);
     const registry = await readRegistryRuntimeProjection(namedStates);
     if (registry.kind === "PROMOTED" || registry.kind === "BOOTSTRAP") {
       const words = ` ${question.toLowerCase().replace(/[^a-z0-9]+/g, " ")} `;
@@ -476,9 +471,6 @@ async function answerWithSettings(request: Request) {
   /* A question about a person's campaign money and nothing they did in office reads none of their votes, key votes,
      statements or actions (`moneyOnly` below), whoever the subject turns out to be: no proof is needed to leave them unread. */
   const deferPersonRecords = !topicRoute && !deferShape && asksOnlyMoney(question);
-  const deferUnrelatedEvidence = deferShape || deferPersonRecords;
-  const personRecordFamilies = ["federal-votes", "federal-key-votes", "officeholder-statements", "executive-actions"] as const;
-  const unrelatedFamilies = new Set<AuthorityFamily>(deferShape ? ["pima-finance", ...personRecordFamilies] : personRecordFamilies);
   /* Every read inside the stage is timed under its own name; the preloads run in parallel, so theirs overlap rather than sum. */
   const preloadMs: Record<string, number> = {};
   const timed = <T,>(name: string, read: () => Promise<T>) => async (): Promise<T> => {
@@ -490,24 +482,11 @@ async function answerWithSettings(request: Request) {
     }
   };
   const production = process.env.NODE_ENV === "production";
-  const edgeManifest = await timed("edgeManifest", () => earlyManifest ? Promise.resolve(earlyManifest) : readReaderManifest().catch(holdReaderAuthorityEdge))();
-  // Each database read is observed at once, so a failure while the edge is
-  // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = leanAsk || ballotOnlyHint || (await Promise.all(["US", ...statesOf(ocdIds)].map(place => authorityPointerHeld("meeting-outcomes", place)))).some(Boolean) ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || ballotOnlyHint ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !edgeManifest
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
-  let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
-  {
-    const families: readonly AuthorityFamily[] = officialsAsk?.unresolvedPlace ? [] : ballotOnlyHint ? ["ballot-contests"]
-      : leanAsk ? READER_MAP_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")
-      : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
-      : AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
-    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
-      .catch(error => holdReaderAuthorityEdge(error, families)))();
-    if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  }
   if (fecRaceMoneyQuestion(question)) {
     await timed("funding", settleFundingRead)().catch(() => undefined);
     let direct: ReturnType<typeof fecRaceMoneyAnswer> = null;
@@ -565,13 +544,7 @@ async function answerWithSettings(request: Request) {
         continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
       return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
     }
-    {
-      const families = deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
-        : AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
-      authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
-        .catch(error => holdReaderAuthorityEdge(error, families)))();
-      if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-    }
+
   }
   // Area questions share governing pieces with every ZIP in those divisions.
   // Questions naming a body elsewhere retain their wider subject inventory.
@@ -582,7 +555,6 @@ async function answerWithSettings(request: Request) {
   const needsMeetings = ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
-    manifest: edgeManifest,
     window: "HELD",
     states: statesOf(ocdIds),
     ocdIds,
@@ -596,16 +568,12 @@ async function answerWithSettings(request: Request) {
       ? [() => commentAccessFromDatabase]
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
-  // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
-  const statePointers = new Set((await Promise.all((["federal-directory", "ballot-contests", "candidate-profiles", "candidate-publications"] as const).flatMap(family =>
-    ballotStatesForDivisions(ocdIds).map(async state => await authorityPointerHeld(family, state) ? [family] : [])))).flat());
-  const promotedSource = (family: PromotedAuthorityFamily | "federal-directory" | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "EDGE" | "DATABASE" =>
-    authorityEdge?.promotedFamilies?.has(family) || statePointers.has(family as "ballot-contests") ? "EDGE" : "DATABASE";
+  const promotedSource = (_family: PromotedAuthorityFamily | "federal-directory" | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "DATABASE" => "DATABASE";
   trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
     registry: registrySource,
     federalDirectory: promotedSource("federal-directory"),
-    outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
-    ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
+    outcomes: "DATABASE",
+    ...(production ? { commentAccess: "DATABASE" as const } : {}),
     funding: promotedSource("federal-funding"),
     stateMoney: promotedSource("state-money"),
     azPimaFinance: promotedSource("pima-finance"),
@@ -710,7 +678,7 @@ async function answerWithSettings(request: Request) {
     : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
   const listedGovernments = governmentListings.records.map(governmentListingEntity);
   /* A body named in the reader's state may be guessed from a typo; the state's index says which bodies hold meetings. */
-  const heldBodyIds = needsMeetings ? await readHeldBodyIds({ manifest: edgeManifest, states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
+  const heldBodyIds = needsMeetings ? await readHeldBodyIds({ states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId) || heldBodyIds.has(entry.bodyId));
   const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
@@ -936,12 +904,7 @@ async function answerWithSettings(request: Request) {
     } else {
       // Enter in this async scope, not inside a preload helper: otherwise the
       // AsyncLocalStorage context would not reach the subsequent readers.
-      {
-        const families = AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
-        authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
-          .catch(error => holdReaderAuthorityEdge(error, families)))();
-        if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-      }
+
       trace.preloadSources = { ...trace.preloadSources,
         azPimaFinance: promotedSource("pima-finance"), federalVotes: promotedSource("federal-votes"),
         federalKeyVotes: promotedSource("federal-key-votes"), officeholderStatements: promotedSource("officeholder-statements"),
@@ -1203,7 +1166,7 @@ async function answerWithSettings(request: Request) {
     }
     /* A body named from elsewhere is not in the reader's place read; its own meetings are read by its id. */
     if (needsMeetings && subject?.kind === "BODY" && !meetings.some((meeting) => meeting.bodyId === subject.id)) {
-      const own = await readReaderEdgeMeetings({ manifest: edgeManifest, window: "HELD", bodyIds: [subject.id] }).catch(() => null);
+      const own = await readReaderEdgeMeetings({ window: "HELD", bodyIds: [subject.id] }).catch(() => null);
       if (own?.kind === "PROMOTED" || own?.kind === "BOOTSTRAP") {
         const heldIds = new Set((snapshot?.meetings ?? []).map((meeting) => meeting.id));
         const heldDocuments = new Set((snapshot?.agendaDocuments ?? []).map((document) => document.id));

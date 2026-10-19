@@ -24,6 +24,7 @@ import type { Officeholder, OfficeholderDivision } from "../../lib/officials/typ
 import type { DirectoryFile } from "../../lib/officials/directory.ts";
 import { requiredManualProductionContract, type ManualProductionContractId } from "../../lib/civic-data/manual-contracts.ts";
 import type { OfficialStateLegislatorReadModel } from "../../lib/civic-data/candidate-builders.ts";
+import { trustedNhMembersImportReadModel, expectedNhMembersTerm, type NhMemberReadModel } from "../../lib/civic-data/candidate-builders.ts";
 import { officialStateLegislatorTargetByScope, type OfficialStateVoteScope } from "../../lib/state-rollcalls/authority.ts";
 import { PIMA_LOCAL_FINANCE_CONTRACT, type AzPimaFinanceReadModel, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import type { StateMoneySnapshot } from "../../lib/funding/state-money.ts";
@@ -49,6 +50,7 @@ import { installFactReader } from "../../lib/facts/db.ts";
 import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
 import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
 import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
+import { installCanonicalEntries, activateCanonicalFixture } from "./canonical-reader-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");
@@ -91,6 +93,7 @@ export function installPromotedValue<T>(input: {
 }): Extract<PromotedEdgeEntry<T>, { kind: "PROMOTED" }> {
   const entry = provenEdgeEntry(input);
   promoted.set(`${input.recordClass}:${input.scope}`, entry as PromotedEdgeEntry);
+  installCanonicalEntries([entry]);
   enter();
   return entry;
 }
@@ -266,6 +269,7 @@ export async function installFederalDirectory(value: FederalDirectoryReadModel =
     versionId: `test:federal-directory:${state}`, value: federalDirectoryForState(value, state),
   }) as PromotedEdgeEntry);
   federalDirectory = value;
+  installCanonicalEntries([...promoted.values()]);
   enter();
   served(await readFederalDirectoryProjection(states), "Federal directory");
   return { value, states };
@@ -274,6 +278,7 @@ export async function installFederalDirectory(value: FederalDirectoryReadModel =
 export async function installRegistryAuthority(): Promise<void> {
   await installRegistryRuntime();
   await installFederalDirectory();
+  activateCanonicalFixture("default");
 }
 
 export function syntheticStateLegislators(scope: OfficialStateVoteScope, registry: RegistryRuntimeReadModel = registryTransferImport().projection.payload): OfficialStateLegislatorReadModel {
@@ -322,6 +327,11 @@ export function syntheticStateLegislators(scope: OfficialStateVoteScope, registr
 
 export function installStateLegislators(scope: OfficialStateVoteScope, value: OfficialStateLegislatorReadModel = syntheticStateLegislators(scope)): OfficialStateLegislatorReadModel {
   stateLegislators[scope] = value;
+  if (scope === "US-NH") {
+    const source = JSON.parse(readFileSync(join(ROOT, "data/states/nh/hunt/nh-gencourt-members.json"), "utf8")) as { source: { collectedAt: string }; members: NhMemberReadModel["members"] };
+    installPromotedValue({ recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, versionId: `test:state-legislators:${scope}`,
+      value: trustedNhMembersImportReadModel(source.members, expectedNhMembersTerm(source.source.collectedAt)) });
+  } else installPromotedValue({ recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, versionId: `test:state-legislators:${scope}`, value });
   enter();
   return value;
 }

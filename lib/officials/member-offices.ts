@@ -5,6 +5,7 @@
  */
 import type { DirectoryOffice } from "./directory.ts";
 import type { Officeholder } from "./types.ts";
+import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
 
 export type MemberOfficeKind = "CAPITOL" | "DISTRICT";
 import { createHash } from "node:crypto";
@@ -45,12 +46,28 @@ export function officeRecordsForHolder(holder: Officeholder): readonly MemberOff
     const officeKey = office.id ?? createHash("sha256").update(JSON.stringify([office.name ?? "",office.address ?? "",office.phone ?? "",...(office.email ? [office.email] : [])])).digest("hex").slice(0,20);
     if (seen.has(officeKey)) return [];
     seen.add(officeKey);
-    const officialPhone = kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
+    const federal = holder.level === "FEDERAL";
+    const officialPhone = !federal && kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
     return [{id:`member-office:${holder.id}:${officeKey}`,kind:"MEMBER_OFFICE" as const,officeholderId:holder.id,officeKind:kind,
       office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null},
-      sourceUrl:office.sourceUrl,sourceOrg:OPEN_STATES_ORG,official:false,collectedAt:office.collectedAt,
+      sourceUrl:office.sourceUrl,sourceOrg:federal ? holder.fieldSources?.offices?.sourceOrg ?? holder.provenance.sourceOrg : OPEN_STATES_ORG,
+      official:federal && /^https:\/\/(?:[^/]+\.)?(?:house|senate|congress)\.gov\//.test(office.sourceUrl),collectedAt:office.collectedAt,
       ...(officialPhone ? {fieldSources:{phone:holder.fieldSources?.phone ?? holder.provenance}} : {})}];
   });
+}
+
+/** Native chamber offices and district-directory offices, from an already held state projection. */
+export function federalOfficeRecordsForMember(value: FederalDirectoryReadModel, officeholderId: string): readonly MemberOfficeRecord[] {
+  const holder = value.roster.officeholders.find(row => row.id === officeholderId);
+  const source = holder?.fieldSources?.districtOffices;
+  const district = (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office): MemberOfficeRecord => ({
+    id:`member-office:${officeholderId}:${createHash("sha256").update(JSON.stringify(office)).digest("hex").slice(0,20)}`,
+    kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office,
+    sourceUrl:source?.sourceUrl ?? `https://raw.githubusercontent.com/unitedstates/congress-legislators/${value.directory.source.sha}/legislators-district-offices.yaml`,
+    sourceOrg:source?.sourceOrg ?? value.directory.source.sourceOrg,official:false,
+    collectedAt:source?.collectedAt ?? value.directory.source.collectedAt,
+  }));
+  return [...(holder ? officeRecordsForHolder(holder) : []),...district];
 }
 
 /** A member's offices from the held projection, capitol first. */

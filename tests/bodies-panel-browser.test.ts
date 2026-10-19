@@ -76,7 +76,7 @@ test("Bodies stays compact and opens the correct body with next and last meeting
   const css = (await postcss([tailwindcss()]).process(readFileSync("app/globals.css", "utf8"), { from: "app/globals.css" })).css
     + readFileSync("app/reader.css", "utf8") + (output.outputFiles.find(file => file.path.endsWith(".css"))?.text ?? "");
   const server = createServer((request, response) => {
-    if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
+    if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript; charset=utf-8" }).end(javascript);
     else if (request.url === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
     else if (request.url?.startsWith("/api/")) response.writeHead(503, { "content-type": "application/json" }).end("{}");
     else response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');

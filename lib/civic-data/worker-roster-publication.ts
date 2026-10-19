@@ -1,5 +1,5 @@
 import { stateRegistryRuntimeContractId, stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
 import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
 import { parserFieldSources } from "./field-sources.ts";
@@ -237,7 +237,7 @@ export async function publishOwedRosterFacts(input: {
     }
     // Written even when unchanged: a held roster is read again only for a page newer than this outcome's time.
     const current = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, current, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED" && reading) await recordPublishedPageDoor({ repos: input.repos, page: reading.capture, recordClass: plan.contract.recordClass, bodyId,
       ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: outcome.status === "HELD" ? 0 : 1, now: input.now });
@@ -355,7 +355,7 @@ export async function publishWorkerDirectoryResults(input: {
     const current = await input.repos.workItems.mustRead(id);
     const pages = captures.length ? captures : [heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
     outcome = await withPageDoor(input.repos, outcome, pages[0], plan.contract.recordClass);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, current, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));

@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import test from "node:test";
 import { build } from "esbuild";
+import { basename } from "node:path";
 import { launchGuarded } from "../scripts/browser.mts";
+import { GET as zipLocation } from "../app/api/location/zip/route.ts";
 
 test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and mail destinations have a working address box", async () => {
   const output = await build({ stdin: { contents: `
@@ -12,12 +14,12 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
     import {WelcomeOverlay} from "./components/map/welcome-overlay.tsx";
     import {ZipSwitcher} from "./components/map/zip-switcher.tsx";
     import {PostalZipNotice} from "./components/map/postal-zip-notice.tsx";
-    import {lookupZctaAsync} from "./lib/geo/zcta-table.ts";
+    import {lookupReaderZip} from "./lib/reader/zip.ts";
     function Entry() {
       const [location,setLocation]=useState(null);
       const [address,setAddress]=useState(null);
       const [changing,setChanging]=useState(false);
-      async function pick(zip,lat,lng) { setLocation(await lookupZctaAsync(zip)); setChanging(false); }
+      async function pick(zip,lat,lng) { setLocation(await lookupReaderZip(zip)); setChanging(false); }
       function addressLocated(zip,lat,lng) { setAddress({zip,lat,lng}); pick(zip,lat,lng); }
       return <>
         <WelcomeOverlay open={!location} onResolved={pick} onAddressLocated={addressLocated} onDismiss={null}/>
@@ -28,22 +30,30 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
       </>;
     }
     createRoot(document.getElementById("root")).render(<Entry/>);`, resolveDir: process.cwd(), sourcefile: "zip-entry-fixture.tsx", loader: "tsx" },
-    bundle: true, write: false, platform: "browser", format: "iife", jsx: "automatic",
+    bundle: true, write: false, platform: "browser", format: "esm", splitting: true, outdir: ".scratch/ci/zip-entry-browser", entryNames: "entry", chunkNames: "chunk-[hash]", metafile: true, jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' }, logLevel: "silent" });
-  const js = output.outputFiles[0].text;
+  const scripts = new Map(output.outputFiles.map(file => [`/${basename(file.path)}`, file.text]));
+  const nationalChunks = Object.entries(output.metafile.outputs).filter(([, value]) => Object.keys(value.inputs).some(path => /(?:postal-zips|zcta-centroids)\.json$/.test(path))).map(([path]) => `/${basename(path)}`);
+  assert.ok(nationalChunks.length > 0, "GPS keeps its national tables in lazy chunks");
+  const fetchedScripts: string[] = [], zipRequests: string[] = [];
   const css = readFileSync("app/globals.css", "utf8");
   const census = JSON.parse(readFileSync("tests/fixtures/zip-entry/census-address.json", "utf8"));
   const coordinates = census.result.addressMatches[0].coordinates;
   const requests: Record<string, unknown>[] = [];
   const server = createServer(async (request, response) => {
-    if (request.url === "/entry.js") response.writeHead(200, { "content-type": "application/javascript" }).end(js);
+    if (scripts.has(request.url!)) { fetchedScripts.push(request.url!); response.writeHead(200, { "content-type": "application/javascript" }).end(scripts.get(request.url!)!); }
     else if (request.url === "/entry.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
+    else if (request.url?.startsWith("/api/location/zip?")) {
+      zipRequests.push(request.url);
+      const result = await zipLocation(new Request(new URL(request.url, "http://localhost")));
+      response.writeHead(result.status, { "content-type": "application/json" }).end(await result.text());
+    }
     else if (request.url === "/api/address/resolve") {
       let body = ""; for await (const chunk of request) body += chunk;
       requests.push(JSON.parse(body));
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ok: true,
         resolution: { status: "RESOLVED", levels: [] }, contestIds: [], point: { lat: coordinates.y, lng: coordinates.x } }));
-    } else if (request.url === "/") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><link rel="stylesheet" href="/entry.css"><style>.hidden{display:none}body{margin:0;background:#0f1117;color:white}#root{height:100vh}</style><div id="root"></div><script src="/entry.js"></script>');
+    } else if (request.url === "/") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><link rel="stylesheet" href="/entry.css"><style>.hidden{display:none}body{margin:0;background:#0f1117;color:white}#root{height:100vh}</style><div id="root"></div><script type="module" src="/entry.js"></script>');
     else response.writeHead(200, { "content-type": "application/json" }).end("{}");
   });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
@@ -53,6 +63,7 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
     browser = await launchGuarded({ label: "zip-01-reader-entry", blockWrites: false });
     await mkdir(".scratch/ci", { recursive: true });
     for (const viewport of [{ width: 1000, height: 800 }, { width: 390, height: 844 }]) {
+      const scriptsBefore = fetchedScripts.length;
       const context = await browser.context({ viewport });
       const page = await context.newPage();
       const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
@@ -80,7 +91,9 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
       await page.getByRole("button", { name: "Change ZIP", exact: true }).click();
       await page.getByRole("dialog", { name: "Change zip" }).getByRole("textbox", { name: /^zip code$/i }).fill("00000");
       await page.getByRole("button", { name: "Go", exact: true }).click();
+      await page.getByRole("dialog", { name: "Change zip" }).getByText("We don't have that ZIP's area yet. Enter your street address and we'll find your districts.", { exact: true }).waitFor();
       assert.match(await page.getByRole("dialog", { name: "Change zip" }).innerText(), /We don't have that ZIP's area yet/);
+      assert.deepEqual(fetchedScripts.slice(scriptsBefore).filter(path => nationalChunks.includes(path)), [], "ordinary entry, changes and hidden welcome never download either national geography table");
       await page.getByRole("textbox", { name: "Street address", exact: true }).fill("Pennsylvania Ave NW, Washington, DC");
       await page.getByRole("button", { name: "Show mine", exact: true }).click();
       await page.locator("[data-address-point]").waitFor();
@@ -92,6 +105,7 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
       await page.getByRole("textbox", { name: "Street address", exact: true }).waitFor();
       await page.screenshot({ path: `.scratch/ci/zip-01-unplaced-${viewport.width}.png`, fullPage: true });
       assert.deepEqual(errors, []);
+      assert.ok(zipRequests.length > 0, "entry uses the real server-resident ZIP route");
       await context.close();
     }
   } finally {

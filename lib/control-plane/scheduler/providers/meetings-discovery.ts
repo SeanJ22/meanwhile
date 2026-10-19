@@ -16,7 +16,7 @@ import {
 } from "../../../hunt/meetings-discovery.ts";
 import { requiredJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
 import { NOTHING_MATERIALIZED, promotedRegistries, type MaterializedReading } from "../provider-inputs.ts";
-import { siteOrigins } from "../../../hunt/meetings-site-discovery.ts";
+import { siteOrigins } from "../../../hunt/site-origins.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderYield, RouteDescriptor } from "../registry.ts";
 
 export const MEETINGS_DISCOVERY_PROVIDER_ID = "meetings-discovery";

@@ -1,3 +1,5 @@
+import fsPromises from "node:fs/promises";
+import { syncBuiltinESMExports } from "node:module";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -128,20 +130,35 @@ test("M81: the badge derives from the map's own geometry, never a second source"
   }
 });
 
-test("M81: the API sends the resolved divisions, and null when it failed", () => {
-  const route = readFileSync(
-    join(process.cwd(), "app", "api", "meetings", "route.ts"),
-    "utf8",
-  );
-  assert.ok(route.includes("governingOcdIds"), "the route sends no division set");
-  // The failed-resolution branch must survive. `resolvedDivisions` is null on
-  // failure and the field has to carry that through rather than flattening to
-  // an empty array.
-  assert.match(
-    route,
-    /governingOcdIds\s*=\s*resolvedDivisions\s*\n?\s*\?\s*resolvedDivisions\.map/,
-    "the route flattens a failed resolution into an answer",
-  );
+test("M81: the API sends resolved divisions and refuses an unavailable lookup", async t => {
+  const { installRegistryAuthority } = await import("./helpers/promoted-fixtures.ts");
+  const { GET } = await import("../app/api/meetings/route.ts");
+  const { readZipPlace } = await import("../lib/reader/national.ts");
+  await installRegistryAuthority();
+  const zip = await GET(new Request("https://wtp.test/api/meetings?lat=32.21696&lng=-110.971&zip=85701"));
+  assert.equal(zip.status, 200);
+  assert.deepEqual((await zip.json()).governingOcdIds, (await readZipPlace("85701"))?.ids, "the ZIP response carries the held division set");
+  const pan = await GET(new Request("https://wtp.test/api/meetings?lat=43.32182&lng=-72.03599"));
+  assert.equal(pan.status, 200);
+  const divisions = (await pan.json()).governingOcdIds as string[];
+  assert.ok(divisions.includes(HERE) && divisions.includes(COUNTY));
+  assert.ok(!divisions.includes(ELSEWHERE), "the nearby town does not govern the resolved point");
+
+  const original = fsPromises.readFile;
+  t.mock.method(fsPromises, "readFile", async (...args: Parameters<typeof fsPromises.readFile>) => {
+    if (String(args[0]).endsWith("data/derived/resolver-geometry.json")) {
+      throw new Error("fixture geometry unavailable");
+    }
+    return Reflect.apply(original, fsPromises, args);
+  });
+  syncBuiltinESMExports();
+  try {
+    await assert.rejects(GET(new Request("https://wtp.test/api/meetings?lat=20.82916&lng=-156.29722")),
+      /fixture geometry unavailable/, "an unavailable lookup cannot emit an empty or fallback governing claim");
+  } finally {
+    t.mock.restoreAll();
+    syncBuiltinESMExports();
+  }
 });
 
 /**

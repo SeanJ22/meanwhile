@@ -14,6 +14,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export const NATIONAL_GOVERNMENT_FINANCE_DOOR_KINDS = ["government-finance-census", "government-finance-fac", "government-finance-usaspending"] as const;
@@ -151,6 +152,6 @@ export async function runNationalGovernmentFinancePublication(input: Parameters<
       code: "NATIONAL_GOVERNMENT_FINANCE_HELD", detail: sanitizedErrorDiagnostic(error), recovery: candidateId ? "PUBLISHER" : "WORKER" };
   }
   const latest = await input.repos.workItems.mustRead(input.workItemId);
-  if (!await input.repos.workItems.compareAndSet(input.workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now)) throw new Error("National finance outcome changed during retention.");
+  if (!await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now)) throw new Error("National finance outcome changed during retention.");
   return { workItemId: input.workItemId, outcome };
 }

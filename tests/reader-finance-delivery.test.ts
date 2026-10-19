@@ -5,6 +5,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { neonConfig } from "@neondatabase/serverless";
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, currentOfficialIdentityStatus, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
 import { ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
@@ -274,12 +275,16 @@ test("a missing canonical ballot identity projection cannot become a display-key
   const base = promotedFixtureBundle();
   const edge = { ...base, stateAuthorities: { families: base.stateAuthorities!.families,
     load: async (family: Parameters<NonNullable<typeof base.stateAuthorities>["load"]>[0], state: string) => {
-      if (family === "ballot-contests" && state === "AZ") throw new Error("Planted canonical ballot failure");
+      if (family === "ballot-contests" && state === "AZ") return null;
       return base.stateAuthorities!.load(family, state);
     } } };
-  await withReaderAuthorityEdge(edge, async () => {
-    assert.equal((await readGenericBallotProjection("AZ")).kind, "STORE_UNREACHABLE");
-    assert.throws(() => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
-      /Ballot for AZ is STORE_UNREACHABLE|identity holding unavailable/);
-  });
+  const previous = neonConfig.fetchFunction;
+  neonConfig.fetchFunction = async () => { throw new Error("Planted canonical database failure"); };
+  try {
+    await withReaderAuthorityEdge(edge, async () => {
+      assert.equal((await readGenericBallotProjection("AZ")).kind, "STORE_UNREACHABLE");
+      assert.throws(() => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
+        /Ballot for AZ is STORE_UNREACHABLE|identity holding unavailable/);
+    });
+  } finally { neonConfig.fetchFunction = previous; }
 });

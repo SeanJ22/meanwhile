@@ -163,6 +163,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "RS-01_retire_copies": { phase: "contract", why: "After direct canonical readers deploy, removes obsolete reader copy documents, publication queues and their triggers while retaining source candidates, facts and history." },
+  "RS-01_place_reads": { phase: "expand", why: "Indexes each canonical meeting source calendar by body, so one place query retrieves every source without an adapter list or a publication copy. Existing readers and writers keep working." },
   "0042_rm01_confirmation_times": { phase: "expand", why: "Indexes unchanged-version confirmation times so the reader edge reads only what was confirmed since it last published." },
   "0041_mt02_meeting_body_queue": { phase: "expand", why: "Adds a queue table and triggers that note which meeting partitions changed; no existing table or column is altered." },
   "0040_r1_edge_changes": { phase: "expand", why: "Indexes promotion times so the reader edge reads only what was promoted since it last published." },

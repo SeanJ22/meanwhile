@@ -34,7 +34,7 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
-import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { installManualValue, installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -97,6 +97,24 @@ async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotPro
 const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
 await installBallots(azBallot);
 
+
+import { recordedMeetingsSnapshot, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+
+/** A readable synthetic agenda makes writer checks exercise validation rather than a missing-calendar composition. */
+function installWriterAgendaFixture(): void {
+  const meeting = recordedMeetings85701().find(row => row.id === "legistar:pima:1826");
+  assert.ok(meeting?.agendaUrl, "the writer test holds a Pima meeting and its agenda URL");
+  const readAt = "2026-09-08T21:40:32.432Z";
+  installPromotedValue({ recordClass: "MEETING", scope: `source:legistar:body:${encodeURIComponent(meeting.bodyId!)}`,
+    sourceId: "meetings-public-bodies", versionId: "test:writer-validation-pima-agenda", retrievedAt: readAt,
+    value: { ...recordedMeetingsSnapshot([meeting]), agendaDocuments: [{
+      id: `${meeting.id}@writer-validation-agenda`, meetingId: meeting.id, ocdId: meeting.ocdId,
+      documentUrl: meeting.agendaUrl, contentHash: "a".repeat(64), retrievedAt: readAt,
+      contentType: "text/html", text: "1. Call to order and roll call.\n2. Public hearing on a proposed zoning amendment.\n3. Adjournment of the meeting.",
+      extraction: "html", extractionNote: null, sourceUrl: meeting.agendaUrl,
+      sourceOrg: meeting.provenance.sourceOrg, collectedAt: readAt, verifiedAt: null,
+    }] } });
+}
 
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const MESA_SCHOOLS = "ocd-division/country:us/state:az/school_district:mesa_unified_district#board";
@@ -498,6 +516,7 @@ test("ROUTE: a money question asking WHO gave is written by the fast writer firs
 });
 
 test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {
+  installWriterAgendaFixture();
   try {
     writerAnswers = { [ASK_FAST_WRITER_MODEL]: { answer: "See https://invented.example/agenda for the full list.", citedSources: [1] }, default: PASSING };
     const { payload, calls: made } = await ask("What's on the Pima County Board of Supervisors agenda?", [AZ, PIMA]);
@@ -519,6 +538,7 @@ test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, a
 });
 
 test("ROUTE: when every writer fails validation the answer still fails closed — an invented citation or an invented link", { concurrency: false }, async () => {
+  installWriterAgendaFixture();
   try {
     for (const answer of [
       { answer: "The board lists every item in the records.", citedSources: [42] },

@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 56 MERGED + DEPLOYED; BS-01 BLOCKED ON RS-01 READY
+build_state: RELEASE 57 CANDIDATE RS-02 + BS-01; GATES STARTING
 worker: codex-river
 provider: Codex
 run_id: river-scan-2026-10-19-06-37
 lock: codex-river-2026-10-19T06-37-26-720Z-4a03bcff-2411-4a6c-b8f2-093e15531899
-heartbeat: 2026-10-19T06:37:27Z
+heartbeat: 2026-10-19T06:39:27Z
 
 ## Codex River shift — October 18
 
@@ -21,9 +21,9 @@ RETURNED AQ-01 01f987827b9dd5d4fbb9bd823b6ba18d9900442f: actual fold after SRC-M
 
 The initial SH-01 + SRC-MN combination c9e009037d93 failed preflight: scripts/promote-registry-runtime.mts exceeded the existing 512-file runtime import closure. Either exact lane passed preflight alone. After SH-01 independently failed its stale assertion, it was removed and SRC-MN passed full gates alone; SRC-MN's return was annotated with these changed conditions and cleared for the standalone release. A future SH-01 replacement still needs to resolve that import-graph interaction with current River. The failing pair was never promoted. Its saved branch is river-saved-sh-srcmn-20261018 and logs remain in .scratch/river/release-56-preparation/.
 
-NEW READY ASSESSED, NOT ELIGIBLE YET: BS-01 027144fa187f0710c2c1ca5c673512952ede1316, committed 22:35:12Z. Its status explicitly depends on RS-01 04fe5ae6dc266844b42150bd21139bf286f7215b, merged at b1777e364, and asks River to reconcile shared reader files with RS-01 before folding. It includes 223 files and two RS-01 step-named migrations; it is not a standalone Ballot-only change. BS's 51-ZIP cold Ballot report passes, but the carried docs/rs-01.md explicitly says RS-01 is NOT READY: Indiana cold browser load still 5.71 seconds and current-President publication remains open. Current stream/rs-01 has no READY. Do not land the WIP dependency through BS-01. Wait for RS-01's validated READY, then fold it first and reconcile shared readers, preserving SH hooks and SRC-MN facts. BS-01 has not been folded, migrated, tested or promoted here. Its two-hour age point is 00:35:12Z October 19 (8:35:12 PM Eastern October 18); if still blocked it remains ineligible, and if dependency clears after that age it is immediately due.
+RELEASE 57 CANDIDATE, UNTESTED: RS-02 9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391 is a fresh READY continuing RS-01 04fe5ae6d and including BS-01 027144fa187f0710c2c1ca5c673512952ede1316 plus tested River 6b4ea17. Its final report covers 50 independent cold browser visits, 150 cold/repeat/next-ZIP reads and three fresh agenda clicks against read-only production data; complete visits are under three seconds, with held-data preservation. The earlier Indiana failure is resolved in that replacement. The absent verified President remains an explicit existing acquisition gap, not a dropped held record. BS-01's existing 51-ZIP acceptance is retained and the shared readers are reconciled by RS-02. This validated successor clears BS-01's dependency; its existing two-hour age trigger is already due. No WIP tip was folded.
 
-NEXT NEW RELEASE IS 57. River and local river-next remain the passing source 6b4ea17aff91; main is release-56 merge 16679a9e. Include that main merge in the next new application's tested combination. Do not rerun passing unchanged release-56 gates, CI, merge or observer. Re-scan for RS-01, repaired SH-01/AQ-01/CP-01 and new eligible lanes before the next batch. Other unchanged returns cover meetings 91f23e059, ballot-parity c0dcb5573, overlay-seats 61f6d1449, platform-legistar-members 835fec562, site-reads f42bc19c6, steps-2-6 6da1efc6b and UI-02 e7d321a3659d. New replacement READY commits always need a fresh assessment.
+Folded exact RS-02 first, then BS-01 (already in RS-02 ancestry), using river.mjs. Both folded cleanly; main release-56 merge 16679a9ea0ec479bf0edad680d916b01418d0ad9 is included. Numbered expand migration 0043_rs01_place_reads and contract migration 0044_rs01_retire_copies. Candidate a0ba47a1701482328d2a89da00ea47c9d6053679 is UNTESTED and unpromoted; full gates are starting once on this combination using test --heartbeat and our lock token. Log .scratch/river/release-57-gates.log. Prior release-56 PASS is not evidence on this new candidate. Preserve SH sourced vacancies, Capitol offices, officeDetails/source provenance and exact-state fallback requirements; unchanged SH/AQ/CP returns remain open. No release-57 PR yet.
 
 Release 55 already shipped UI-01 only in PR 764, source ab0c352c, merge 4bdb43a7, deploy 6ad52d22e0e2a0c9b010a0b1, successful observer 39163857692. Do not repeat it. releases/55.json retains the full record.
 

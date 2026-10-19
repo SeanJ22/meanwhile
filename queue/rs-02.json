@@ -1,0 +1,13 @@
+{
+  "lane": "rs-02",
+  "ready_sha": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
+  "ready_at": "2026-10-19T06:09:20Z",
+  "eligible": true,
+  "includes": [
+    "RS-01 04fe5ae6d",
+    "BS-01 027144fa1",
+    "River 6b4ea17"
+  ],
+  "candidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+  "gates": "not yet completed"
+}

@@ -3,9 +3,9 @@
 build_state: RELEASE 57 NOT SHIPPED; RS-02 RETURNED; BS-01 DEPENDENCY BLOCKED
 worker: codex-river
 provider: Codex
-run_id: river-scan-2026-10-19-11-33
-lock: none
-heartbeat: 2026-10-19T11:33:25Z
+run_id: river-scan-2026-10-19-12-38
+lock: codex-river-2026-10-19T12-38-04-659Z-2e380686-324a-4fca-960c-95773e555593
+heartbeat: 2026-10-19T12:38:05Z
 
 ## Codex River shift — October 18
 

@@ -38,12 +38,10 @@ import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/te
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
-import { VotingSitesPanel } from "./voting-sites-panel";
 import { PillCluster, type ReaderPop } from "@/components/shell/pill-cluster";
 import { ReaderCard } from "@/components/shell/reader-card";
 import { ReaderPopup } from "@/components/shell/reader-popup";
 import { SelectionPill } from "@/components/shell/selection-pill";
-import { AskBox } from "@/components/ask/ask-box";
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
@@ -90,10 +88,24 @@ import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus, type VotingSitePin } from "./map-canvas";
-import { MeetingPanel } from "./meeting-panel";
-import { DoorOverlay } from "./door-overlay";
 import type { ModalSubject } from "./popup/entity-modal";
 
+const AskBox = dynamic(
+  () => import("@/components/ask/ask-box").then((m) => m.AskBox),
+  { ssr: false },
+);
+const DoorOverlay = dynamic(
+  () => import("./door-overlay").then((m) => m.DoorOverlay),
+  { ssr: false },
+);
+const MeetingPanel = dynamic(
+  () => import("./meeting-panel").then((m) => m.MeetingPanel),
+  { ssr: false },
+);
+const VotingSitesPanel = dynamic(
+  () => import("./voting-sites-panel").then((m) => m.VotingSitesPanel),
+  { ssr: false },
+);
 const OfficialModal = dynamic(
   () => import("./popup/official-modal").then((m) => m.OfficialModal),
   { ssr: false },

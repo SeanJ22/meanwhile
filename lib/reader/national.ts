@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { setImmediate as yieldToReaders } from "node:timers/promises";
 import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
@@ -78,9 +79,13 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
       }
       put(zip, { ids, partial, samples: shard.zipSamples[zip] ?? 0 }, states);
     }
+    // Build the resident table without blocking HTML and place requests behind the whole country.
+    await yieldToReaders();
   }
   const postal = postalTable();
+  let postalCount = 0;
   for (const zip in postal) {
+    if (++postalCount % 512 === 0) await yieldToReaders();
     const row = postal[zip];
     const base = out.get(row[3] ?? zip);
     if (!base) continue;

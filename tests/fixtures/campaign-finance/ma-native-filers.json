@@ -1,0 +1,26 @@
+[
+  {
+    "cpfId": 95342,
+    "filerNameReverse": "$450 Million.org",
+    "isActive": false,
+    "officeSought": "N/A, N/A",
+    "accountTypeCode": "X",
+    "accountTypeDescription": "Referendum Committees",
+    "isCandidate": false,
+    "firstName": "",
+    "lastName": "",
+    "committeeName": "$450 Million.org"
+  },
+  {
+    "cpfId": 95465,
+    "filerNameReverse": "100 Percent Mass; Jacob Kiryk",
+    "isActive": false,
+    "officeSought": "N/A, N/A",
+    "accountTypeCode": "X",
+    "accountTypeDescription": "Referendum Committees",
+    "isCandidate": false,
+    "firstName": "",
+    "lastName": "",
+    "committeeName": "100 Percent Mass; Jacob Kiryk"
+  }
+]

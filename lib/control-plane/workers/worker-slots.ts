@@ -20,6 +20,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
   "federal-money-refresh.mts": 768,
+  "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,

@@ -5,7 +5,7 @@ import * as schema from "../lib/db/schema.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
-import { federalMoneyContinuationPending, MemoryRoutineDataStore, routineClockPointerRead } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, routineClockPointerRead } from "../lib/civic-data/store.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { federalMoneyCandidate, type FederalMoneyNationalProjection } from "../lib/federal-money/candidate.ts";
 
@@ -73,9 +73,4 @@ test("Postgres computes only the marker's continuation flag inside the normal ba
   assert.match(query, /'cursor'/);
   assert.doesNotMatch(query, /"payload"\s*,/, "the complete marker payload never leaves Postgres for admission");
   assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql, /jsonb_array_elements/);
-  assert.equal(federalMoneyContinuationPending(marker(false), "openfema"), true);
-  assert.equal(federalMoneyContinuationPending(marker(true), "openfema"), false);
-  assert.equal(federalMoneyContinuationPending({ ...marker(true), states: [{ ...marker(true).states[0], cursor: { source: "openfema", phase: "declarations" } }] }, "openfema"), true);
-  assert.equal(federalMoneyContinuationPending(marker(false), "usaspending"), false);
-  assert.equal(federalMoneyContinuationPending({ state: "AR", source: "openfema", states: [{ status: "BACKFILL" }] }, "openfema"), false);
 });

@@ -1,0 +1,22 @@
+[
+  {
+    "Recipient reg num": "18031",
+    "Recipient": "Pryor, Laurie House Committee",
+    "Amount": "500.0000",
+    "Receipt date": "2022-09-11",
+    "Year": "2022",
+    "Contrib type": "Individual",
+    "Receipt type": "Contribution",
+    "In kind?": "No"
+  },
+  {
+    "Recipient reg num": "18135",
+    "Recipient": "Walz, Tim Gov Committee",
+    "Amount": "100.0000",
+    "Receipt date": "2022-10-28",
+    "Year": "2022",
+    "Contrib type": "Individual",
+    "Receipt type": "Contribution",
+    "In kind?": "No"
+  }
+]

@@ -1,5 +1,5 @@
 import { directFundingTargetPlan, FEDERAL_CONTEST } from "../funding/target-authorities.ts";
-import type { StateCampaignFinanceJurisdiction } from "../funding/data-plane.ts";
+import type { BallotState } from "../civic-data/state-scopes.ts";
 import type { ReactionTargetType } from "../signal/reactions.ts";
 
 export interface ReactionAuthorityReaders {
@@ -7,7 +7,7 @@ export interface ReactionAuthorityReaders {
   readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
-  readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
+  readonly refreshStateMoney: (state: BallotState) => Promise<unknown>;
   readonly stateMoneyTargets: (targetId: string) => Set<string>;
   readonly contributorTargets: () => Set<string>;
   readonly refreshVotes: () => Promise<unknown>;

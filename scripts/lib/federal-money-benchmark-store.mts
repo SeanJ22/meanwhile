@@ -5,11 +5,11 @@ import { resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { PostgresRoutineDataStore } from "../../lib/civic-data/store.ts";
-import type { FederalMoneySource } from "../../lib/federal-money/model.ts";
+import type { SourceAuthorityId } from "../../lib/civic-data/source-authority.ts";
 import type { ReadOnlyQuery } from "../../lib/control-plane/admin-view/promoted-slices.ts";
 import { assertRuntimeAuthority } from "../../lib/civic-data/runtime-authority.ts";
 
-export interface BenchmarkStorageBytes {
+interface BenchmarkStorageBytes {
   read: number;
   written: number;
   requests: number;
@@ -27,12 +27,12 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
   readonly query: ReadOnlyQuery;
   private readonly shutdown: () => Promise<void>;
 
-  private constructor(bytes: BenchmarkStorageBytes, query: ReadOnlyQuery, shutdown: () => Promise<void>, source: FederalMoneySource) {
+  private constructor(bytes: BenchmarkStorageBytes, query: ReadOnlyQuery, shutdown: () => Promise<void>, source: SourceAuthorityId) {
     super(); this.bytes = bytes; this.query = query; this.shutdown = shutdown;
     Object.assign(this, { writeAuthority: assertRuntimeAuthority({ capabilities: ["ROUTINE_CONTRACT"], contract: source }) });
   }
 
-  static async open(directory: string, source: FederalMoneySource): Promise<FederalMoneyBenchmarkStore> {
+  static async open(directory: string, source: SourceAuthorityId): Promise<FederalMoneyBenchmarkStore> {
     const original = { fetch: neonConfig.fetchFunction, url: process.env.DATABASE_URL, reporting: process.env.WTP_VITAL_SIGNS_REPORT, mode: process.env.WTP_RUNTIME_MODE, role: process.env.WTP_DB_ROLE, control: process.env.WTP_CONTROL_PLANE_DATABASE_URL };
     const bytes: BenchmarkStorageBytes = { read: 0, written: 0, requests: 0, statements: 0, largestRead: 0, largestWrite: 0, databasePeakRssBytes: 0, databaseElapsedMs: 0, largestLatencyMs: 0 };
     const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory), String(Date.now())], { stdio: ["pipe", "pipe", "pipe"] });

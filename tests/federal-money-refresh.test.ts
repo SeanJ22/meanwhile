@@ -8,7 +8,7 @@ import { refreshFederalMoney } from "../lib/federal-money/refresh.ts";
 import { federalMoneyCandidate, federalMoneyCounts } from "../lib/federal-money/candidate.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { joinFederalMoneyFacts, type FederalMoneyJoinInput } from "../lib/federal-money/join.ts";
-import { federalMoneyProjectionIssue, FEDERAL_MONEY_PARTITION_BYTES, federalMoneyPartitionOf, federalMoneyPartitionScope, federalMoneyLookupKeys, type FederalMoneyProjection, type FederalMoneyCheckpoint, type FederalMoneyPage } from "../lib/federal-money/model.ts";
+import { federalMoneyProjectionIssue, federalMoneyPartitionOf, federalMoneyPartitionScope, federalMoneyLookupKeys, type FederalMoneyProjection, type FederalMoneyCheckpoint, type FederalMoneyPage } from "../lib/federal-money/model.ts";
 import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { readFederalMoneyForPlace } from "../lib/federal-money/reader.ts";
 import { readFederalMoneyPartition, readFederalMoneyCheckpoint } from "../lib/federal-money/verify.ts";
@@ -553,7 +553,7 @@ test("large FAC findings split on bytes before the row limit and preserve an ove
       const unsplit: FederalMoneyProjection = { formatVersion: 2, source: "federal-audit-clearinghouse", state: "AR", partition: federalMoneyPartitionOf(facts[0]),
         records: facts, counts: federalMoneyCounts(facts), lookupKeys: federalMoneyLookupKeys(facts) };
       assert.equal(facts.length, last ? 1 : 8);
-      assert.ok(Buffer.byteLength(JSON.stringify(facts)) > FEDERAL_MONEY_PARTITION_BYTES);
+      assert.ok(Buffer.byteLength(JSON.stringify(facts)) > 4 * 1024 * 1024);
       if (last) assert.equal(federalMoneyProjectionIssue(unsplit, "federal-audit-clearinghouse", "AR"), null);
       else assert.match(federalMoneyProjectionIssue(unsplit, "federal-audit-clearinghouse", "AR") ?? "", /bounded leaf/);
       return { facts, captures: [saved], complete: last, declaredTotal: 9,
@@ -569,7 +569,7 @@ test("large FAC findings split on bytes before the row limit and preserve an ove
   assert.ok(leaves.length > 1);
   for (const projection of leaves) {
     assert.ok(projection.records.length <= 500);
-    assert.ok(projection.records.length === 1 || Buffer.byteLength(JSON.stringify(projection.records)) <= FEDERAL_MONEY_PARTITION_BYTES);
+    assert.ok(projection.records.length === 1 || Buffer.byteLength(JSON.stringify(projection.records)) <= 4 * 1024 * 1024);
     assert.equal(federalMoneyProjectionIssue(projection, "federal-audit-clearinghouse", "AR"), null);
   }
   assert.equal(leaves.flatMap(projection => projection.records).find(row => row.details.reference === "synthetic-8")?.details.findingText?.toString().length, 5 * 1024 * 1024);

@@ -4,7 +4,7 @@ import { readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { FEDERAL_MONEY_INDEX_PAGE_SIZE, readFederalMoneyJson, federalMoneyPlaceKey, type FederalMoneyPlaceIndex, type FederalMoneyPlaceSnapshot } from "../lib/federal-money/edge.ts";
+import { readFederalMoneyJson, federalMoneyPlaceKey, type FederalMoneyPlaceIndex, type FederalMoneyPlaceSnapshot } from "../lib/federal-money/edge.ts";
 import { federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { readFederalMoneyForPlace } from "../lib/federal-money/reader.ts";
@@ -125,7 +125,7 @@ test("a county index stays in bounded pages across splits and a correction remov
     if (key === "putImmutable") return async (bytes: Uint8Array, suffix: "json" | "json.gz") => {
       if (suffix === "json") {
         const value = JSON.parse(Buffer.from(bytes).toString("utf8"));
-        if (value.entries) { assert.ok(value.entries.length <= FEDERAL_MONEY_INDEX_PAGE_SIZE); largestIndex = Math.max(largestIndex, bytes.byteLength); }
+        if (value.entries) { assert.ok(value.entries.length <= 64); largestIndex = Math.max(largestIndex, bytes.byteLength); }
       }
       return target.putImmutable(bytes, suffix);
     };

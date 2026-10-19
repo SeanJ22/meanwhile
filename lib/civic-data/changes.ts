@@ -196,6 +196,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           : [row.chamber, row.seatNo, row.district].filter((part) => typeof part === "string" && part).join(":");
         return { key: `member:${identity || `row-${index}`}`, record };
       });
+    case "CAMPAIGN_FINANCE":
+      return keyed("campaign-finance", array(root.records), ["id"]);
     case "FEDERAL_MONEY":
       return root.state === "US"
         ? keyed("federal-money-state", array(root.states), ["state"])

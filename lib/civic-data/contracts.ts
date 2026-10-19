@@ -12,6 +12,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
 import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
+import { CAMPAIGN_FINANCE_SOURCES, CAMPAIGN_FINANCE_PARSER, campaignFinanceSourceId, campaignFinanceNativeScope } from "../funding/state-sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
@@ -568,6 +569,20 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   } as const)),
+  ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
+    id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
+    recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(source.state), fanOut: true,
+    acquisitionFailureDomain: `routine-source:campaign-finance:${source.state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/state-campaign-finance.mts", "--promote", `--state=${source.state}`] },
+    parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
+    cadence: { description: "Daily conditional checks of the official state's campaign-finance publication", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "Retry acquisition gaps after an hour while preserving accepted source records" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: campaignFinanceSourceId(source.state) },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `campaign-finance:${source.state}`, consumers: ["state and local campaign money", "government and person cards", "Ask", "Admin"] },
+    lkgBehavior: "A failed source or publication retains each government's last accepted records and reports the reason. Empty deltas succeed and create no absence claim.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/campaign-finance/"],
+  })),
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,

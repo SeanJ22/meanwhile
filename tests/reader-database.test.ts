@@ -1,10 +1,34 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Client, Pool, neonConfig } from "@neondatabase/serverless";
-import { readerDatabaseQuery, installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { readerDatabaseQuery, readerHttpQuery, installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import type { Statement } from "../lib/control-plane/admin-view/promoted-slices.ts";
 
 const statement: Statement = { text: "SELECT $1::text AS selected", params: ["this place"] };
+
+test("a small detail uses one read-only HTTP transaction and preserves transport failures", async () => {
+  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction, originalReport = process.env.WTP_VITAL_SIGNS_REPORT;
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@reader-http.invalid/fixture";
+  process.env.WTP_VITAL_SIGNS_REPORT = "1";
+  const calls: { body: unknown; readOnly: string | null }[] = [];
+  const failure = new Error("The detail transport failed");
+  neonConfig.fetchFunction = async (_url, init) => {
+    calls.push({ body: JSON.parse(String(init?.body)), readOnly: new Headers(init?.headers).get("Neon-Batch-Read-Only") });
+    if (calls.length > 1) throw failure;
+    return Response.json({ results: [{ command: "SELECT", rowCount: 1, fields: [{ name: "selected", dataTypeID: 25 }], rows: [["this place"]] }] });
+  };
+  try {
+    const query = readerHttpQuery()!;
+    assert.deepEqual(await query([statement]), [[{ selected: "this place" }]]);
+    assert.deepEqual(calls, [{ body: { queries: [{ query: statement.text, params: [...statement.params] }] }, readOnly: "true" }]);
+    await assert.rejects(query([statement]), /The detail transport failed/);
+    assert.equal(calls.length, 2, "an HTTP failure does not retry through another transport");
+  } finally {
+    neonConfig.fetchFunction = originalFetch;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl;
+    if (originalReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = originalReport;
+  }
+});
 
 test("a bounded reader query uses the shared socket client once and returns it after a complete answer", async () => {
   const originalUrl = process.env.DATABASE_URL, originalConnect = Pool.prototype.connect, originalFetch = neonConfig.fetchFunction;
@@ -91,9 +115,11 @@ test("the shared reader preserves an explicitly installed read-only query and it
   installReaderDatabaseQuery(query);
   try {
     assert.equal(readerDatabaseQuery(1800), query);
+    assert.equal(readerHttpQuery(), query);
     await assert.rejects(readerDatabaseQuery(1800)!([statement]), error => error === failure);
     assert.equal(reads, 1);
     installReaderDatabaseQuery(null);
     assert.equal(readerDatabaseQuery(1800), null);
+    assert.equal(readerHttpQuery(), null);
   } finally { installReaderDatabaseQuery(undefined); }
 });

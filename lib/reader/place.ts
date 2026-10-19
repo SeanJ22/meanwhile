@@ -60,7 +60,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
   UNION SELECT split_part(id,'#',1) FROM unnest($3::text[]) body(id) WHERE $9::boolean AND id LIKE 'ocd-division/%'
   UNION SELECT place_id FROM entity_place WHERE $9::boolean AND entity_id=ANY($3::text[])
 ), registration AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
+  SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
   SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity FROM registration,
     LATERAL jsonb_array_elements(coalesce(payload->'governments','[]'::jsonb)) g
@@ -71,7 +71,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
-    WHERE key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
+    WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
 ), domains AS MATERIALIZED (
   SELECT d,${normalizedGovernmentSql("d->>'organization'")} AS identity,source FROM dotgov,
     LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=$1
@@ -276,7 +276,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
 )
 SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
   coalesce((SELECT jsonb_agg(value ORDER BY text_id) FROM agenda_texts),'[]'::jsonb) AS agenda_texts,
-  (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') AS everyday_routing,
+  (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') AS everyday_routing,
   coalesce((SELECT jsonb_agg(jsonb_build_object(
       'bodyId',w.value#>'{autonomousPlan,publication,bodyId}','contractId',w.value#>'{autonomousPlan,publication,contractId}',
       'at',w.value#>'{publicationOutcome,at}','status',w.value#>'{publicationOutcome,status}','code',w.value#>'{publicationOutcome,code}',
@@ -284,7 +284,7 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
       'acceptedCount',coalesce(jsonb_array_length(w.value#>'{publicationOutcome,acceptedMembers}'),
         jsonb_array_length(w.value#>'{publicationOutcome,acceptedRecordIds}'),jsonb_array_length(w.value#>'{publicationOutcome,bodyIds}')),
       'versionId',w.value#>'{publicationOutcome,versionId}') ORDER BY w.value#>>'{publicationOutcome,at}' DESC,w.id)
-    FROM cp_work_items w WHERE (w.value#>>'{autonomousPlan,publication,bodyId}')=ANY(ARRAY(SELECT id FROM bodies))
+    FROM cp_work_items w WHERE $8::text[] IS NULL AND (w.value#>>'{autonomousPlan,publication,bodyId}')=ANY(ARRAY(SELECT id FROM bodies))
       AND w.value ? 'publicationOutcome'),'[]'::jsonb) AS publication_attempts,
   (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(

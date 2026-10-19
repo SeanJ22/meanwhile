@@ -143,6 +143,9 @@ test("one indexed place read joins local facts and complete calendars from any s
     assert.equal(neighborQueries,1,"the body's places and neighbouring governments resolve in the same query");
     assert.deepEqual(neighbors.bodies.map(body => body.id).sort(),[SPECIAL,COUNTY_BODY].sort());
     const agendaOnly = await readPlacePackage({state:"AZ",divisionIds:[CITY,COUNTY],bodyIds:[BODY],meetingIds:["existing"],includeAgenda:true},db.query);
+    assert.equal(agendaOnly.registrationHeld,false,"agenda mode omits the registration inventory while the full place read above retains it");
+    assert.deepEqual(agendaOnly.governments,[]);
+    assert.deepEqual(agendaOnly.divisions,[]);
     assert.equal(agendaOnly.bodies.find(body => body.id===BODY)?.roster,null,"opening an agenda does not read unrelated membership/person facts");
     assert.deepEqual(agendaOnly.meetings,next.meetings,"sitting facts still overlay every held calendar row");
   } finally { await db.pg.close(); }
@@ -559,6 +562,8 @@ test("one place query preserves source-only bodies, local runtime records and th
     const compact = await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],meetingIds:[meeting.id],includeAgenda:true},async(sql,params) => {
       const rows = await db.query(sql,params);compactWire=JSON.stringify(rows);return rows;
     });
+    assert.equal(compact.everydayRouting,null,"an agenda does not load the global routing projection held by the full place read");
+    assert.deepEqual(compact.publicationAttempts,[],"body acquisition attempts are outside the agenda answer");
     assert.deepEqual(compact.registry?.registry,result.registry?.registry,"agenda identity keeps every selected registry body and division");
     assert.deepEqual(compact.registry?.bodyRosters,[{...roster,members:[]},{...specialRoster,members:[]}],"body-name fallback keeps full roster headers and source receipts");
     assert.deepEqual(compact.registry?.rosterReaderDispositions,[]);

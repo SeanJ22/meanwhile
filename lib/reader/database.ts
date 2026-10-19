@@ -1,4 +1,4 @@
-import { neonConfig, Pool } from "@neondatabase/serverless";
+import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
@@ -43,6 +43,16 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
 /** A caller already holding a read-only connection can supply it; undefined restores the configured socket pool. */
 export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefined): void {
   installed = query;
+}
+
+/** Small opened agenda projections use one stateless read-only HTTP request. */
+export function readerHttpQuery(): ReadOnlyQuery | null {
+  if (installed !== undefined) return installed;
+  const connectionString = process.env.DATABASE_URL?.trim();
+  if (!connectionString) return null;
+  installDatabaseTransferCounter();
+  const sql = neon(connectionString);
+  return statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
 }
 
 /** Reuse the database connection and binary WebSocket transport beside the functions. */

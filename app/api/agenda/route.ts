@@ -7,7 +7,7 @@ import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { readRegistryRuntimeProjection, withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 import { readerCacheHeaders } from "@/lib/reader/cache";
-import { readerDatabaseQuery } from "@/lib/reader/database";
+import { readerHttpQuery } from "@/lib/reader/database";
 import { statementQuery } from "@/lib/facts/db";
 import { readSelectedMeetingOutcomes } from "@/lib/outcomes/store";
 
@@ -28,7 +28,7 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
   const context: { loaded?: ReaderMeetingsContext } = {};
   let read;
   try {
-    const database = readerDatabaseQuery();
+    const database = readerHttpQuery();
     read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, window: "HELD", meetingIds: [meetingId],
       query: database ? statementQuery(database) : undefined,
       onContext: value => { context.loaded = value; } });

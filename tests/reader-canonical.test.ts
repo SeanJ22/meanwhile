@@ -132,6 +132,43 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     await pg.query("UPDATE civic_data_candidates SET acquisition_succeeded=false WHERE id=$1",[translated.projection.versionId]);
     await assert.rejects(readCanonicalShelf([selection],query,stateContainersStatement("AZ",[],"85701")),/POINTER_INVALID/);
     await pg.query("UPDATE civic_data_candidates SET acquisition_succeeded=true WHERE id=$1",[translated.projection.versionId]);
+    const { readCanonicalPackages } = await import("../lib/reader/canonical.ts");
+    const batchedEntries=[{...selection,scope:`${selection.scope}:batch-first`},{...translation,scope:`${translation.scope}:batch-second`},
+      {...selection,scope:`${selection.scope}:batch-corrupt`}];
+    const privatePlan=partitionCivicPayload({privateText:"Only this family holds these words. ".repeat(6000)});
+    assert.ok(privatePlan.parts.length>0);
+    for (const part of privatePlan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
+    for (const [index,pointer] of batchedEntries.entries()) {
+      const value=index === 2 ? {privateText:"Only this family holds these words. ".repeat(6000)} : expected;
+      const publication=provenEdgeEntry({...pointer,sourceId:"official-source",versionId:`batch-version:${index}`,value});
+      await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,$3,'PROMOTED',true,$1,$1,$4,$5,'official-source')`,
+        [publication.projection.versionId,publication.attested.payloadSha256,row.retrieved_at,pointer.recordClass,pointer.scope]);
+      await pg.query(`INSERT INTO civic_data_promotions VALUES($1,$2,$3,'official-source',$4,$4,$5,$6,$7)`,
+        [publication.projection.key,pointer.recordClass,pointer.scope,publication.projection.versionId,row.promoted_at,JSON.stringify(publication.projection.receipt),JSON.stringify(index === 2 ? privatePlan.value : encoded.value)]);
+    }
+    await pg.query("UPDATE civic_data_payload_parts SET payload=$2 WHERE hash=$1",[privatePlan.parts[0].hash,JSON.stringify({$civicPayloadPart:privatePlan.parts[0].hash})]);
+    let batchReads=0;
+    const batch=readCanonicalPackages(batchedEntries.map(pointer=>[pointer]),async statements=>{
+      batchReads++;
+      assert.equal(statements.length,1);
+      assert.deepEqual(statements[0].params[0],batchedEntries.map(pointer=>`${pointer.recordClass}:${pointer.scope}`));
+      const rows=(await pg.query<Record<string,unknown>>(statements[0].text,[...statements[0].params])).rows;
+      const hashes=rows.filter(row=>row.row_kind === "part").map(row=>row.part_hash);
+      assert.equal(new Set(hashes).size,hashes.length,"a part shared by independent families crosses the network only once");
+      for (const part of encoded.parts) assert.ok(hashes.includes(part.hash));
+      return [rows];
+    });
+    const batchResults=await Promise.allSettled(batchedEntries.map(pointer=>batch.readPromotedEntry!(pointer.recordClass,pointer.scope)));
+    for (const result of batchResults.slice(0,2)) {
+      assert.equal(result.status,"fulfilled","unrelated corrupt parts cannot break a valid family");
+      if (result.status === "fulfilled" && result.value.kind === "PROMOTED") assert.deepEqual(result.value.projection.payload,expected);
+    }
+    assert.equal(batchResults[2].status,"rejected");
+    if (batchResults[2].status === "rejected") assert.match(String(batchResults[2].reason),/CIVIC_PAYLOAD_PART_CYCLE/);
+    assert.equal(batchReads,1,"independent decoding and failure checks add no database round trip");
+    const broken=readCanonicalPackages([[selection],[translation]],async()=>{throw new Error("The shared network read failed");});
+    await assert.rejects(broken.readPromotedEntry!(selection.recordClass,selection.scope),/shared network read failed/);
+    await assert.rejects(broken.readPromotedEntry!(translation.recordClass,translation.scope),/shared network read failed/);
     const packedExclusions = [{ ...excluded, record: { biography: "Excluded source evidence. ".repeat(6000) } }];
     const packedReceipt = partitionCivicPayload(packedExclusions);
     assert.ok(!Array.isArray(packedReceipt.value) && packedReceipt.parts.length > 0,"the receipt fixture requires a packed exclusion array");
@@ -158,21 +195,26 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
   } finally { await pg.close(); }
 });
 
-test("independent state packages begin together and retain canonical failures", async () => {
+test("one canonical network read keeps each group's pointer failure independent", async () => {
   const { readCanonicalPackages } = await import("../lib/reader/canonical.ts");
   const other = { recordClass: "FEDERAL_DIRECTORY" as const, scope: "US-NH:bs01-parallel-test" };
   const started: string[] = [], releases: (() => void)[] = [];
+  let reads=0;
   const store = readCanonicalPackages([[entry], [other]], async statements => {
+    reads++;
     const keys = statements[0].params[0] as string[];
     started.push(...keys);
     await new Promise<void>(resolve => releases.push(resolve));
-    if (keys.includes(`${other.recordClass}:${other.scope}`)) throw new Error("Failed state package");
-    return [[structuredClone(row)]];
+    return [[structuredClone(row),{...row,key:`${other.recordClass}:${other.scope}`,scope:other.scope,published:false}]];
   });
   assert.deepEqual(started, [`${entry.recordClass}:${entry.scope}`, `${other.recordClass}:${other.scope}`]);
   releases.forEach(release => release());
   assert.equal((await store.readPromotedEntry!(entry.recordClass, entry.scope)).kind, "PROMOTED");
-  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /Failed state package/);
-  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /Failed state package/);
-  assert.equal(started.length, 2, "failed package reads are not retried in the request");
+  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /POINTER_INVALID/);
+  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /POINTER_INVALID/);
+  assert.equal(reads,1,"the failed family does not retry or add a network read");
+  const changed=readCanonicalPackages([[entry],[other]],async()=>[[structuredClone(row),
+    {...row,key:`${other.recordClass}:${other.scope}`,scope:other.scope,normalized_hash:"f".repeat(64)}]]);
+  assert.equal((await changed.readPromotedEntry!(entry.recordClass,entry.scope)).kind,"PROMOTED");
+  await assert.rejects(changed.readPromotedEntry!(other.recordClass,other.scope),/PAYLOAD_HASH_MISMATCH/);
 });

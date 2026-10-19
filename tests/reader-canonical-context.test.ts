@@ -170,6 +170,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
   const { readBallotReaderData } = await import("../lib/ballot/reader-data.ts");
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   const order: string[] = [];
+  const auxiliaryKeys: string[] = [];
   let release: (()=>void) | undefined;
   const blocked = new Promise<void>(resolve=>{ release=resolve; });
   installReaderDatabaseQuery(async statements=>{
@@ -178,6 +179,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     const family=keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
+    if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
     if (family === "state") return [stateRows("priority-state",[])];
     if (family === "place") return [[{ entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false }]];
@@ -186,11 +188,13 @@ test("the ballot submits state and place reads before its independent auxiliary 
   try {
     const data=await withReaderSelection(selection("AZ"),()=>readBallotReaderData(ballotPlaceFromParams({zip:"85701"})));
     assert.ok(data);
-    assert.deepEqual(order,["state","place","auxiliary","auxiliary","auxiliary","auxiliary"],
+    assert.deepEqual(order,["state","place","auxiliary"],
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
+    for (const prefix of ["BALLOT_CANDIDACY:","CANDIDATE_PROFILE:","CANDIDATE_PUBLICATION:","CURATED_READER_RECORD:US-AZ:candidate-campaign-sites-derived",
+      "CURATED_READER_RECORD:US:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
     release!();
     await Promise.all([data.registryRead,data.districtRead]);
-    assert.equal(order.length,6,"geographic qualification and registry composition add no follow-up lookup");
+    assert.equal(order.length,3,"geographic qualification and registry composition add no follow-up lookup");
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
 });
 
@@ -213,7 +217,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
       assert.ok(data,"a registry-local failure cannot abort ballot initialization");
       await assert.rejects(data.registryRead,error=>error === failure);
       await data.districtRead;
-      assert.equal(auxiliaries,4,"all independent canonical ballot families still load");
+      assert.equal(auxiliaries,1,"the single canonical batch still loads all independent ballot families");
       assert.equal((await readerCanonicalEntry("BALLOT_CANDIDACY",stateAuthorityPointers("ballot-contests","AZ")[0].scope))?.kind,"NOT_RECORDED");
     });
   } finally { installReaderDatabaseQuery(undefined); }

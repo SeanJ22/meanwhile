@@ -6,14 +6,39 @@ import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { serverReaderValue } from "./memory.ts";
+import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
 
-/** Independent parts of a state load concurrently, through the same canonical verification. */
+/** One network read, with each group's decoding and publication failures kept independent. */
 export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerDatabaseQuery()): CivicDataReadStore {
+  const keys = [...new Set(groups.flatMap(group => group.map(entry => `${entry.recordClass}:${entry.scope}`)))];
+  const batch = (async () => {
+    if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+    return query([{ text: SHELF_WITH_PARTS, params: [keys, keys.flatMap(key => cached.get(key)?.projection.versionId ?? [])] }]);
+  })();
+  void batch.catch(() => undefined);
   const stores = new Map<string, Promise<CivicDataReadStore>>();
   for (const group of groups) {
-    const read = readCanonicalShelf(group, query);
+    const selected = new Set(group.map(entry => `${entry.recordClass}:${entry.scope}`));
+    const read = readCanonicalShelf(group, async () => {
+      const [rows] = await batch;
+      const promotions = rows.filter(row => row.row_kind === "promotion" && selected.has(String(row.key)));
+      const parts = new Map(rows.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row]));
+      const needed = new Set<string>();
+      const visit = (value: unknown): void => {
+        if (isCivicPayloadPart(value)) {
+          const hash = value.$civicPayloadPart;
+          if (needed.has(hash)) return;
+          needed.add(hash); visit(parts.get(hash)?.part_payload);
+        } else if (Array.isArray(value)) value.forEach(visit);
+        else if (value && typeof value === "object") Object.values(value).forEach(visit);
+      };
+      for (const row of promotions) { visit(row.payload); visit(row.validation_receipt); }
+      const selectedRows: Row[] = [...promotions];
+      for (const hash of needed) { const part = parts.get(hash); if (part) selectedRows.push(part); }
+      return [structuredClone(selectedRows)];
+    });
     void read.catch(() => undefined);
     for (const entry of group) stores.set(`${entry.recordClass}:${entry.scope}`, read);
   }

@@ -1,6 +1,5 @@
 "use client";
 
-import { MeetingRow } from "@/components/ui/meeting-row";
 import { X } from "lucide-react";
 import { createContext, useContext } from "react";
 
@@ -35,13 +34,11 @@ import { bodyDisplayName } from "@/lib/text/reader-names";
 export function DoorOverlay({
   door,
   coverage,
-  meetings,
   drawnDistricts,
   districtOverlayOn,
   atAddress,
   onShowDistricts,
   onOpenOfficial,
-  onOpenMeeting,
   onOpenBody,
   onClose,
   embedded = false,
@@ -139,8 +136,6 @@ export function DoorOverlay({
         ) : door === "bodies" ? (
           <BodiesDoor
             coverage={coverage}
-            meetings={meetings}
-            onOpenMeeting={onOpenMeeting}
             onOpenBody={onOpenBody}
           />
         ) : (
@@ -153,13 +148,9 @@ export function DoorOverlay({
 
 function BodiesDoor({
   coverage,
-  meetings,
-  onOpenMeeting,
   onOpenBody,
 }: {
   coverage: CoverageSummary;
-  meetings: Meeting[];
-  onOpenMeeting: (meeting: Meeting) => void;
   onOpenBody: (body: CoveredBody) => void;
 }) {
   if (coverage.bodies.length === 0) {
@@ -169,34 +160,29 @@ function BodiesDoor({
       </p>
     );
   }
+  const bodies = [...coverage.bodies].sort(
+    (a, b) => Number(b.bodyClass === "GOVERNING") - Number(a.bodyClass === "GOVERNING"),
+  );
   return (
     <ul className="mt-3 space-y-2">
-      {coverage.bodies.map((body) => {
+      {bodies.map((body) => {
         const label = bodyDisplayName(body);
-        /* Matched by exact `bodyId`, never by name. */
-        const next = meetings.find(
-          (m) => m.status === "SCHEDULED" && m.bodyId !== undefined && m.bodyId === body.bodyId,
-        );
         return (
           <li
             key={body.bodyId}
             className="border-b border-[var(--panel-border)] pb-2 last:border-0"
           >
-            <div className="flex items-baseline justify-between gap-3">
-              {/* The row opens the body's large battlecard. */}
-              <button
-                type="button"
-                onClick={() => onOpenBody(body)}
-                title={`More about ${label}`}
-                className="cursor-pointer text-left t-body leading-snug hover:text-link hover:underline"
-              >
-                {label}
-              </button>
+            <button
+              type="button"
+              onClick={() => onOpenBody(body)}
+              title={`More about ${label}`}
+              className="flex w-full cursor-pointer items-baseline justify-between gap-3 text-left t-body leading-snug hover:text-link"
+            >
+              <span>{label}</span>
               <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
                 {bodyClassShort(body.bodyClass)}
               </span>
-            </div>
-            {next && <MeetingRow meeting={next} compact title="Next meeting" onOpen={onOpenMeeting} /> }
+            </button>
           </li>
         );
       })}

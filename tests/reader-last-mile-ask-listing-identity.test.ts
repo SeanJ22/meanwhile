@@ -20,7 +20,7 @@ import { requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
-import { readSelectedMeetingOutcomes } from "../lib/reader/outcomes.ts";
+import { readSelectedMeetingOutcomes } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { installCanonicalEntries } from "./helpers/canonical-reader-fixtures.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";

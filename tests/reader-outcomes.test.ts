@@ -7,9 +7,8 @@ import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-sli
 import { meetingPartitionId } from "../lib/meetings/body-scope.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import { outcomePartitionScope, setDoorOutcomePointers } from "../lib/outcomes/door-outcome-pointers.ts";
-import { getOutcomeSnapshot, loadedFrom, outcomeEvidenceFor, outcomePointers, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted, resetOutcomeSnapshotCache, sittingsForBody } from "../lib/outcomes/store.ts";
+import { getOutcomeSnapshot, loadedFrom, outcomeEvidenceFor, outcomePointers, outcomeProjectionReadState, readSelectedMeetingOutcomes, readStateMeetingOutcomes, refreshOutcomeSnapshotFromPromoted, resetOutcomeSnapshotCache, sittingsForBody } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
-import { readSelectedMeetingOutcomes, readStateMeetingOutcomes } from "../lib/reader/outcomes.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";

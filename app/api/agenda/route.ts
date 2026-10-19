@@ -10,7 +10,7 @@ import type { RegistryRuntimeReadModel } from "@/lib/registry/runtime-data-plane
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { readerDatabaseQuery } from "@/lib/reader/database";
 import { statementQuery } from "@/lib/facts/db";
-import { readSelectedMeetingOutcomes } from "@/lib/reader/outcomes";
+import { readSelectedMeetingOutcomes } from "@/lib/outcomes/store";
 
 export const runtime = "nodejs";
 

@@ -221,11 +221,16 @@ async function followContent(page, output, evidence) {
     }
     const ms = await paint();
     const rendered = await page.locator(`[data-meeting-card="${id}"]`).innerText();
+    const clickedMs = await page.evaluate(() => window.rs02.contentClick);
     const network = await page.evaluate(id => performance.getEntriesByType('resource').filter(entry => entry.name.includes('/api/agenda?') && new URL(entry.name).searchParams.get('meetingId') === id).map(entry => ({
-      name: entry.name, startMs: entry.startTime, requestStartMs: entry.requestStart, responseStartMs: entry.responseStart,
+      name: entry.name, startMs: entry.startTime, startAfterClickMs: entry.startTime - window.rs02.contentClick,
+      requestStartMs: entry.requestStart, responseStartMs: entry.responseStart,
       responseEndMs: entry.responseEnd, durationMs: entry.duration, transferBytes: entry.transferSize, decodedBytes: entry.decodedBodySize,
     })), id);
-    evidence.meetings.push({ id, title: meeting.title, bodyId: meeting.bodyId, ms, rendered, agenda, network, preservedFields: preservation, normalizedComparisonFields });
+    const matchingReads = network.filter(entry => new URL(entry.name).searchParams.get('bodyId') === (meeting.bodyId ?? ''));
+    if (matchingReads.length !== 1) evidence.failures.push(`Held agenda ${id} must have exactly one matching meeting/body GET`);
+    if (network.some(entry => entry.startMs < clickedMs)) evidence.failures.push(`Held agenda ${id} was requested before its selection click`);
+    evidence.meetings.push({ id, title: meeting.title, bodyId: meeting.bodyId, clickedMs, ms, rendered, agenda, network, preservedFields: preservation, normalizedComparisonFields });
     await page.screenshot({ path: `${output}/AZ-meeting-${evidence.meetings.length}.png`, fullPage: true });
     if (!(ms < 3000)) evidence.failures.push(`Held meeting and agenda ${id} did not finish below three seconds`);
     if (id === ids[0] && arg('body') !== '0') {

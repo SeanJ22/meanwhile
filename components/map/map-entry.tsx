@@ -1985,7 +1985,7 @@ function meetingSubject(
   };
 }
 
-function bodySubject(
+export function bodySubject(
   body: CoveredBody,
   allMeetings: Meeting[] = [],
 ): ModalSubject {

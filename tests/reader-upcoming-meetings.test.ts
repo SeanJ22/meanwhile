@@ -221,8 +221,8 @@ test("every reader surface renders the upcoming sittings with held fields and ma
   // The actual district card lists the upcoming sittings behind its meeting section.
   for (const id of UPCOMING) check(rowIds(html("district")).includes(id), `district card: ${id} is missing from its meetings`);
 
-  // ── The Bodies door: the next sitting is the first upcoming one. ──
-  check(/Next meeting[\s\S]*Mon, September 28th, 2026/.test(text(html("bodies"))), "Bodies door: Tucson Unified's next meeting is not Sep 28");
+  // The Bodies door lists names; meeting details belong to the body card.
+  check(!/data-meeting-row|Next meeting/.test(html("bodies")), "Bodies door expands meeting details");
 
   // ── The missing-location path: listed, with its absent place omitted. ──
   const unrecordedRow = rowMarkup(html("unrecordedList"), UNRECORDED);

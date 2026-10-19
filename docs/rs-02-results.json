@@ -4,11 +4,11 @@
   "ready": true,
   "productionReadOnly": true,
   "baselineCommit": "04fe5ae6d",
-  "riverCommit": "6b4ea17af",
+  "riverCommit": "61ffadc49",
   "ballotCommit": "027144fa1",
   "runtime": {
-    "builtCommit": "b81df3748",
-    "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "builtCommit": "ab3fa8939",
+    "buildId": "54aFrFuXUQI5xbj23Y5Oq",
     "checkerCommit": "b81df3748",
     "lastFullBrowserCommit": "b81df3748",
     "lastFullBrowserBuildId": "yGtbT1yIbYIbSUjQHqWN7",
@@ -20,8 +20,9 @@
       "evidence": ".scratch/rs02/final-shared-socket-browser/metrics.json"
     },
     "buildStatus": "passed",
-    "productionVerification": "PASSED final150, three independent fresh agenda clicks, fifty independent cold browser states and Arizona follow-up. Final protected-file, ancestry and static-trace checks passed.",
-    "currentChange": "Agenda reuses the existing shared read-only WebSocket pool; temporary HTTP helper/API override removed. Selection-click GET, consume-once/abort/error/retry behavior and selected-record context remain."
+    "productionVerification": "Saved b81df3748 production read-only matrices pass: final150, three fresh agendas, fifty cold browser states and Arizona follow-up. These matrices were not rerun for the return import/test repair; exact original commits and build IDs remain below.",
+    "currentChange": "Publication no longer imports site state/place loading. Reader adapters supply the existing state loader; cache invalidation and the site-origin normalizer use small shared modules. Reader state reuse and federal compatibility hooks are covered by the full passing gates.",
+    "latestBuildKind": "standalone"
   },
   "data": {
     "sourceCommit": "b81df3748",
@@ -29,7 +30,7 @@
     "checkedAt": "2026-10-19T05:59:15.963Z",
     "role": "readonly",
     "readOnly": true,
-    "status": "passed_current_build",
+    "status": "passed_recorded_source_build",
     "states": 50,
     "checks": 150,
     "exitStatus": 0,
@@ -777,6 +778,128 @@
       "lost": [],
       "evidence": ".scratch/rs02/static-trace-preservation-final.json"
     },
-    "visualInspection": "Current Michigan boundary view and all three Tucson office cards inspected."
+    "visualInspection": "Current Michigan boundary view and all three Tucson office cards inspected.",
+    "scope": "Recorded b81df3748 production verification; latest return static checks are in riverReturn.staticChecks."
+  },
+  "riverReturn": {
+    "returnedCandidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+    "returnedReady": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
+    "riverCommit": "61ffadc49158429f27681d1670160401c557020a",
+    "mergedCodeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+    "cause": "Shared registry and federal-directory read-models imported reader/state.ts; promotion verification therefore reached the site reader graph. Purge forwarding and discovery helper imports supplied additional graph paths.",
+    "repair": "Only reader/authority-reads.ts supplies the state-package loader to shared read-models. Publication imports cache invalidation directly. Acquisition shares the unchanged pure hunt/site-origins.ts helper.",
+    "executableClosure": {
+      "entry": "scripts/promote-registry-runtime.mts",
+      "beforeFiles": 541,
+      "afterFiles": 491,
+      "limit": 512,
+      "firewallUnchanged": true,
+      "siteStatePlaceGraphReachable": false
+    },
+    "bs01Included": "027144fa187f0710c2c1ca5c673512952ede1316",
+    "sh01": {
+      "separateReadyMerged": false,
+      "preservedHooks": [
+        "sourced vacancies",
+        "exact-state fallback",
+        "native Capitol offices",
+        "district office phones",
+        "officeDetails and source provenance",
+        "resident directory without an extra query"
+      ],
+      "test": "tests/reader-federal-compatibility.test.ts"
+    },
+    "focused": {
+      "tests": 224,
+      "passed": 224,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": ".scratch/rs02/river-return/ed813ce35/rs02-return-focused-corrections-with-doors.log"
+    },
+    "previousCompletedGates": {
+      "codeCommit": "a3674b4a82aba5c2d2fcbdbb943895642576e9dd",
+      "passedGates": 7,
+      "failedGate": "test",
+      "suite": {
+        "registered": 8646,
+        "passed": 8624,
+        "failed": 20,
+        "skipped": 2
+      },
+      "evidence": ".scratch/rs02/river-return/a3674b4a8/rs02-return-gates-final.log",
+      "repair": "Canonical publication/query fixtures and old structural assertions corrected without changing release firewall, closure limit or required reader results. Negative controls still reject missing cache keys, actual function props and file URLs used as filesystem paths."
+    },
+    "gates": {
+      "status": "passed",
+      "codeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+      "tree": "9bd96e52d703fad39186424756471ca10ab3e290",
+      "workingTreeStatus": "",
+      "completedAt": "2026-10-19T18:10:04.111127+00:00",
+      "passed": 8,
+      "total": 8,
+      "suiteFiles": 1151,
+      "suite": {
+        "tests": 8648,
+        "failed": 0,
+        "passed": 8646,
+        "cancelled": 0,
+        "skipped": 2,
+        "todo": 0,
+        "topLevel": 8531,
+        "suites": 39
+      },
+      "bundle": {
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "latestStandaloneBuildId": "54aFrFuXUQI5xbj23Y5Oq",
+      "productionSchema": "passed_read_only",
+      "evidence": ".scratch/rs02/river-return/ab3fa8939/rs02-return-gates-utf8.log",
+      "suiteEvidence": ".scratch/rs02/river-return/ab3fa8939/test-shard-1-of-1.json"
+    },
+    "productionMatrices": {
+      "rerunForReturn": false,
+      "retainedReaderAndAgendaSourceCommit": "b81df3748",
+      "retainedBallotSourceCommit": "f2010cfa1",
+      "scope": "Original production read-only latency and held-data results remain attributed to their exact saved source commits and build IDs."
+    },
+    "deployed": false,
+    "nextOwner": "River: integrate exact READY and deploy; then verify deployed CDN hits and tag purges.",
+    "interruptedMergedGates": {
+      "codeCommit": "ed813ce3566449a1d40c11052ee12734c14982fe",
+      "status": "interrupted_after_required_fixture_correction_was_proven",
+      "completedFiles": 657,
+      "failedFiles": [
+        "tests/bodies-panel-browser.test.ts"
+      ],
+      "cause": "New River Bodies browser fixture served UTF8 script without a charset; Chromium decoded combining-mark regex bytes as Windows1252, throwing SyntaxError before React mounted.",
+      "repair": "Declare charset=utf-8 on the fixture script response. All original assertions are unchanged.",
+      "isolatedCorrectedTest": "passed",
+      "evidence": ".scratch/rs02/river-return/ed813ce35/"
+    },
+    "staticChecks": {
+      "codeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+      "workingTreeClean": true,
+      "protectedContentMatchesRelease56": [
+        "lib/map/districts.ts",
+        "components/map/map-canvas.tsx",
+        "lib/map/state-focus.ts",
+        "public/geo",
+        "netlify.toml",
+        "docs/rulings.md",
+        "lib/civic-data/firewall.ts",
+        "scripts/gates.mjs",
+        "scripts/preflight.mjs",
+        "tests/civic-data-firewall.test.ts"
+      ],
+      "ancestorCommits": {
+        "origin/main": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+        "origin/river": "61ffadc49158429f27681d1670160401c557020a",
+        "04fe5ae6d": "04fe5ae6dc266844b42150bd21139bf286f7215b",
+        "origin/stream/bs-01": "027144fa187f0710c2c1ca5c673512952ede1316"
+      }
+    },
+    "readyCommitScope": "Only the existing RS-02 report and results JSON change after the gated code commit."
   }
 }

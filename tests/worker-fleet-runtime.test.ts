@@ -156,7 +156,7 @@ test("fleet promotion retains exact Validator transitions without artifact or un
     readNarrowed:async(id,projection)=>{
       assert.equal(id,h.item.id);
       assert.deepEqual(projection,{autonomousPlan:["publication"]});
-      return {id,revision:1,updatedAt:START,value:{autonomousPlan:{publication:{contractId:"registry-runtime-bindings"}}}};
+      return {id,revision:1,updatedAt:START,value:{autonomousPlan:{publication:{contractId:"registry-runtime:AZ"}}}};
     }}});
   assert.deepEqual(await log.readAll(),[logs[0][0]]);
 });

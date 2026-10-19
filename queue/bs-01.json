@@ -3,13 +3,12 @@
   "ready_sha": "027144fa187f0710c2c1ca5c673512952ede1316",
   "ready_at": "2026-10-18T22:35:12Z",
   "age_trigger": "2026-10-19T00:35:12Z",
-  "eligible": true,
+  "eligible": false,
   "dependency": {
     "lane": "rs-02",
-    "ready_sha": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
-    "status": "Validated READY successor to RS-01; carries BS-01 and tested River, shared readers reconciled"
+    "returned_sha": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
+    "original_wip": "04fe5ae6dc266844b42150bd21139bf286f7215b",
+    "status": "Validated RS-02 successor failed release import-closure preflight; original RS-01 branch still has no READY"
   },
-  "candidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
-  "gates": "not yet completed",
-  "next": "Run combination gates once; promote and release only after PASS."
+  "next": "Assess new eligible reader READY, preserving reader/Ballot acceptance, SH hooks and current SRC-MN. Already due when dependency clears."
 }

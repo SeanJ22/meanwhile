@@ -1,0 +1,40 @@
+{
+  "release_number_reserved": false,
+  "next_release_number": 57,
+  "candidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+  "tree": "353b8352c244672f61c2d71aa2c7edd0a1ef7d86",
+  "main_included": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+  "lanes": [
+    "rs-02",
+    "bs-01"
+  ],
+  "migrations": [
+    "0043_rs01_place_reads",
+    "0044_rs01_retire_copies"
+  ],
+  "test": {
+    "sha": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+    "tree": "353b8352c244672f61c2d71aa2c7edd0a1ef7d86",
+    "gates": "fail",
+    "exit": 1,
+    "command": "pnpm gates",
+    "started_at": "2026-10-19T06:39:42Z",
+    "finished_at": "2026-10-19T06:40:05Z"
+  },
+  "returned": [
+    {
+      "lane": "rs-02",
+      "ready_sha": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
+      "ready_at": "2026-10-19T06:09:20Z",
+      "eligible": false,
+      "candidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+      "gate": "civic-data-release-firewall-import-closure",
+      "result": "returned",
+      "next": "Repair registered import graph against current River/SRC-MN and send a new READY; do not bypass the check or retry unchanged."
+    }
+  ],
+  "promoted": false,
+  "pr": null,
+  "saved_branch": "river-saved-rs02-bs01-failed-20261019",
+  "logs": ".scratch/river/release-57-preparation/"
+}

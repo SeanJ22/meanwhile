@@ -256,5 +256,15 @@ test("state promotion reads retain later stages and refusals without reading oth
     assert.equal(unchanged.records.length,0);
     const pages=requests.filter(request=>request.text.includes("unnest("));assert.ok(pages.length>1);
     assert.ok(pages.every(request=>request.params.filter(Array.isArray).every(values=>values.length<=200)));
+    const projected: import("../lib/control-plane/repository/types.ts").ChangedRecord<import("../lib/control-plane/promotion/types.ts").PromotionPipelineRecord>[] = [];
+    const paged = await repo.readChangedSince(null, [], { projection: { recordId: true }, page: records => { projected.push(...records); } });
+    assert.equal(paged.records.length, 0);
+    assert.equal(projected.length, 108);
+    assert.ok(projected.every(row => row.record.recordId.startsWith("az") && Object.keys(row.record).length === 1));
+    assert.ok(projected.every(row => row.changedAt !== undefined && row.stampedAt !== undefined));
+    const stamped: string[] = [];
+    await repo.readStampedBetween!(AT, "2026-10-17T00:00:00.000Z", records => { stamped.push(...records.map(row => row.record.recordId)); });
+    assert.equal(stamped.length, 108);
+    assert.ok(stamped.every(id => id.startsWith("az")));
   }finally{await db.close();}
 });

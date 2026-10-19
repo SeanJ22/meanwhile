@@ -73,7 +73,6 @@ import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
-import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane/workers/hunter-lane.ts";
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";

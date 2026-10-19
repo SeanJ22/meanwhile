@@ -575,6 +575,9 @@ export function pgAppendOnlyRepository<T>(
   const pipelineState=options.state && log==="promotion_pipeline"?`log_key IN (SELECT origin.log_key FROM cp_log_promotion_pipeline origin
     WHERE (origin.record->>'stage'='SCOUTED' OR origin.record #>> '{offered,stage}'='SCOUTED')
       AND cp_control_state(coalesce(origin.record->'offered',origin.record))='${options.state}')`:"";
+  const recordState = !options.state ? "" : pipelineState || (["cp_log_artifacts", "cp_log_worker_results", "cp_log_transitions"].includes(table)
+    ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
+    : `cp_control_state(record)='${options.state}'`);
 
   const changedRecord = (r: Record<string, unknown>): ChangedRecord<T> => ({
     key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
@@ -624,10 +627,7 @@ export function pgAppendOnlyRepository<T>(
     for (const keys of batches) {
       const batchHeld = keys === null ? held : keys.flatMap(key => heldByKey.get(key) ?? []);
       await pagedRecords("readChangedSince", at => {
-        const statePredicate = keys !== null ? `log_key=ANY(${at(keys)}::text[])`
-          : ["cp_log_artifacts", "cp_log_worker_results", "cp_log_transitions"].includes(table)
-            ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
-            : `cp_control_state(record)='${options.state}'`;
+        const statePredicate = keys !== null ? `log_key=ANY(${at(keys)}::text[])` : recordState;
         return [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "",
           since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(batchHeld, at, "log_key", "position")];
       }, read.projection ? recordProjectionSql(table, read.projection) : "record",
@@ -822,7 +822,7 @@ export function pgAppendOnlyRepository<T>(
     },
 
     readStampedBetween: (from, until, page) => pagedRecords("readStampedBetween",
-      at => [`recorded_at >= ${at(from)}::timestamptz`, `recorded_at < ${at(until)}::timestamptz`], "record", page),
+      at => [recordState, `recorded_at >= ${at(from)}::timestamptz`, `recorded_at < ${at(until)}::timestamptz`], "record", page),
 
     readAll: () => heldAll(record => record),
     readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),

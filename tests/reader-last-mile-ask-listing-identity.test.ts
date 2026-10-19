@@ -34,7 +34,7 @@ const snapshot = requireMeetingsProjection((await readEveryBody(meetingStore, PU
 assert.ok(promoted.length >= 6, "the Tucson Unified calendar and its listings are held by a partition");
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
-test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async (t) => {
+test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
   assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, pairs.length);
   for (const pair of pairs) {
     const ids = pair.map(meeting => meeting.id);

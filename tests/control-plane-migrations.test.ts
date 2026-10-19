@@ -84,7 +84,8 @@ test("expand copies no production rows; runner jobs backfill one state and retai
   const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text,[...params])).rows;}};
   try {
     const skipped=new Set(CONTROL_READS_EXPAND_DDL);
-    for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl)) await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
+    for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl) || ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_pass_cursors"))
+      await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
     await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");
     const az={...entry("az"),jurisdiction:"ocd-division/country:us/state:az/county:pima"};
     const nh={...entry("nh"),jurisdiction:"ocd-division/country:us/state:nh/county:coos"};

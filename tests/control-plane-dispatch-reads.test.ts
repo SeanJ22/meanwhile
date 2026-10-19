@@ -61,6 +61,10 @@ test("closed occurrences leave hot tables; exact and scoped history and later pu
     const item = await f.repos.workItems.mustRead(opened.workItem.id);
     await f.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, why: "publication attached after scout closed" }, NOW);
     assert.equal((await f.repos.workItems.mustRead(item.id)).revision, item.revision + 1);
+    const projected: unknown[] = [];
+    const changed = await f.repos.workItems.listChangedSince!(null, [], { projection: { subject: true }, page: rows => { projected.push(...rows.map(row => row.value)); } });
+    assert.deepEqual(changed.rows, []);
+    assert.deepEqual(projected, [{ subject: "place" }]);
     assert.equal((await f.repos.dispatchState.readOpen()).occurrences.size, 0);
     await assert.rejects(f.db.query("DELETE FROM cp_work_items_archive"), /delete refused/);
     for (const [table, prefix] of [["work_items", "work"], ["route_tasks", "task"]]) await f.db.exec(`

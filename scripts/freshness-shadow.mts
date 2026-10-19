@@ -2,6 +2,7 @@ import { withReaderRoute, withReaderSelection } from "../lib/db/reader-route.ts"
 import { summarizePlanningRound, mergeStatePlanningPass, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
+import { backfillBox } from "../lib/control-plane/box.ts";
 import { readMaterializedPlanningIds, readPlanningIntents, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
@@ -518,7 +519,7 @@ const planningRevision=await repos.planningControls?.revision(PLANNING_STATE)??0
 if(!dry && !filteredCycle) {
   writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)),{writtenAt:NOW,taskIds:[],plainTaskIds:[]});
   await applyHuntOrders(repos,PLANNING_STATE,NOW);
-
+  await pending.step("box:changed", () => backfillBox(repos, NOW, `box-backfill:${PLANNING_STATE}`));
 }
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;

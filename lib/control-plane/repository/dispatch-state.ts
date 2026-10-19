@@ -68,9 +68,9 @@ export function archivedAggregateRepository<T>(hot: AggregateRepository<T>, arch
     async listWhereNarrowed(path, value, projection) {
       return ordered([...(await hot.listWhereNarrowed(path, value, projection)), ...(await archive.listWhereNarrowed(path, value, projection))]);
     },
-    async listChangedSince(since, held) {
+    async listChangedSince(since, held, options) {
       if (!hot.listChangedSince || !archive.listChangedSince) throw new Error("ARCHIVE_CHANGED_READ_UNAVAILABLE");
-      const current = await hot.listChangedSince(since, held), old = await archive.listChangedSince(since, held);
+      const current = await hot.listChangedSince(since, held, options), old = await archive.listChangedSince(since, held, options);
       return { rows: ordered([...current.rows, ...old.rows]), through: [current.through, old.through].filter((at): at is string => at !== null).sort()[0] ?? null };
     },
   };

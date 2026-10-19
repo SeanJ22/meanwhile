@@ -268,7 +268,7 @@ test("the warm call settles only unscoped Ask sources and never preloads every s
   const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
   // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
   assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots"]) {
+  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots", "campaignFinance"]) {
     assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
     named.delete(stateSource);
   }

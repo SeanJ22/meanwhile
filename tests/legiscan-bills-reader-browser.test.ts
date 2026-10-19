@@ -10,7 +10,9 @@ import { normalizeSession,type Dataset } from "../lib/sources/legiscan/bills.ts"
 test("a legislator card shows sourced bulk bills and one Sources list at the bottom on first use",async()=>{
   const bodies=["HB1","HB2"].map(name=>readFileSync(new URL(`./fixtures/legiscan/bill/${name}.json`,import.meta.url),"utf8"));
   const dataset:Dataset={state_id:2,session_id:122,session_name:"27th Legislature",dataset_date:"2012-12-30",dataset_hash:"fixture"};
-  const bills=normalizeSession(dataset,bodies,"2026-10-12T12:00:00.000Z").bills;
+  const recorded=normalizeSession(dataset,bodies,"2026-10-12T12:00:00.000Z").bills;
+  // Local synthetic tail exercises the reader's other Show all control.
+  const bills=[...recorded,...Array.from({length:19},(_,i)=>({...recorded[0],id:`synthetic:bill:${i}`,title:`Synthetic bill ${i}`}))];
   const output=await build({stdin:{contents:`
     import React from "react";import {createRoot} from "react-dom/client";
     import {PersonCard} from "./components/ui/person-card.tsx";
@@ -35,7 +37,12 @@ test("a legislator card shows sourced bulk bills and one Sources list at the bot
     const start=Date.now();await page.goto(`http://127.0.0.1:${address.port}/`);
     await page.locator('[data-bill-id="legiscan:bill:230084"]').waitFor({state:"visible"});
     assert.ok(Date.now()-start<3000,"first-use bill content must be usable within three seconds");
-    assert.equal(await page.locator("[data-bill-id]").count(),2);
+    assert.equal(await page.locator("[data-bill-id]").count(),20);
+    await page.getByRole("button",{name:"Show all bills",exact:true}).click();
+    await page.locator('[data-bill-id="synthetic:bill:18"]').waitFor({state:"visible"});
+    assert.equal(await page.locator("[data-bill-id]").count(),21);
+    await page.getByRole("button",{name:"Show recent bills",exact:true}).click();
+    assert.equal(await page.locator("[data-bill-id]").count(),20);
     assert.match(await page.locator("[data-legislator-bills]").innerText(),/Engrossed.*2011-04-11/);
     assert.match(await page.locator("[data-legislator-bills]").innerText(),/Sponsors: Carl Gatto/);
     assert.equal(await page.locator('[data-bill-id="legiscan:bill:230084"] a').count(),4);

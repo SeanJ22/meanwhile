@@ -183,7 +183,7 @@ test("all publication siblings and routine script families reserve their measure
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
   const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
-  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts"]) {
+  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts", "campaign-money/state-campaign-finance.mts"]) {
     await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   }
 });

@@ -11,7 +11,8 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublication } from "../lib/funding/campaign-finance.ts";
-import { campaignFinanceScope, readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
+import { readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
+import { campaignFinanceStateScope } from "../lib/funding/state-sources.ts";
 import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { filedOrganizations, stateSmallDonorSentence } from "../lib/funding/state-money-funding.ts";
@@ -56,9 +57,9 @@ test("new-jurisdiction finance doors publish exact candidate filings through Sli
   assert.equal(read.value.records[1].record.totals.expenditures, null);
   assert.equal(read.value.records[0].record.totals.cashOnHand, null);
   assert.deepEqual(read.value.records.map(row => row.reportId), ["R1", "R2"]);
-  const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceScope(division), store);
+  const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceStateScope(division), store);
   assert.ok(edge);
-  const promoted = new Map([[`CURATED_READER_RECORD:${campaignFinanceScope(division)}`, edge]]);
+  const promoted = new Map([[`CURATED_READER_RECORD:${campaignFinanceStateScope(division)}`, edge]]);
   await withReaderAuthorityEdge({ promoted, edgeOnly: true }, async () => {
     assert.deepEqual(campaignFinanceForTarget(target), [], "no unvalidated edge payload renders");
     assert.equal((await settleCampaignFinanceReads()).length, 1);
@@ -67,7 +68,8 @@ test("new-jurisdiction finance doors publish exact candidate filings through Sli
   });
   assert.deepEqual(campaignFinanceForTarget(target), [], "another request cannot inherit this place's filings");
   const absent = await readCampaignFinance("ocd-division/country:us/state:oh/place:birch", { store, now });
-  assert.equal(absent.kind, "NOT_RECORDED");
+  assert.equal(absent.kind, "PROMOTED");
+  if (absent.kind === "PROMOTED") assert.deepEqual(absent.value.records, []);
 });
 
 test("incomplete source, wrong candidate, corrupted bytes and unverified source never replace the last GOOD filings", async () => {
@@ -117,8 +119,8 @@ test("incomplete Money facts publish as documents, preserve known cells and leav
     if (read.kind !== "PROMOTED") continue;
     assert.equal(read.value.records[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
     assert.equal(read.value.records[0].record.totals.receipts, missing === "period" ? 1200 : null);
-    const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceScope(division), store); assert.ok(edge);
-    await withReaderAuthorityEdge({ edgeOnly: true, promoted: new Map([[`CURATED_READER_RECORD:${campaignFinanceScope(division)}`, edge]]) }, async () => {
+    const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceStateScope(division), store); assert.ok(edge);
+    await withReaderAuthorityEdge({ edgeOnly: true, promoted: new Map([[`CURATED_READER_RECORD:${campaignFinanceStateScope(division)}`, edge]]) }, async () => {
       await settleCampaignFinanceReads();
       const [record] = stateMoneyForTarget(target);
       assert.equal(record.committeeId, "C1"); assert.equal(record.filingsUrl, input.responses[0].url);

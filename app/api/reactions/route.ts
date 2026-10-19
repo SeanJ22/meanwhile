@@ -1,3 +1,4 @@
+import { settleCampaignMoneyForState } from "@/lib/funding/holding-answer";
 import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { readerRoute } from "@/lib/api/reader-route";
@@ -34,7 +35,7 @@ import {
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
-import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
+import { stateMoneyForTarget } from "@/lib/funding/state-snapshot";
 
 
 
@@ -54,7 +55,7 @@ const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthori
   },
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
-  refreshStateMoney: (state) => settleStateMoneyRead(state),
+  refreshStateMoney: (state) => settleCampaignMoneyForState(state),
   stateMoneyTargets: (targetId) =>
     stateMoneyForTarget(targetId).some(
       (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",

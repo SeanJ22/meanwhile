@@ -243,6 +243,84 @@ async function followContent(page, output, evidence) {
   if (evidence.failures.length) throw Error(evidence.failures.join('; '));
 }
 
+async function followVenue(page, output, evidence) {
+  await closeReaderCards(page);
+  const selected = await page.evaluate(() => {
+    const meetings = window.rs02.payloads.place.meetings;
+    const pins = [...document.querySelectorAll('.wtp-pin[data-venue-kind="PHYSICAL"]')]
+      .filter(pin => pin.dataset.hidden !== 'true' && pin.getClientRects().length)
+      .map(pin => ({ pin, rect: pin.getBoundingClientRect(), ids: JSON.parse(pin.dataset.meetingIds) }));
+    const candidates = pins.flatMap(({ pin, rect, ids }) => {
+      const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2;
+      if (ids.length < 2 || x <= 0 || y <= 0 || x >= innerWidth || y >= innerHeight || document.elementFromPoint(x, y)?.closest('.wtp-pin') !== pin) return [];
+      if (pins.some(other => other.pin !== pin && Math.hypot(x - other.rect.x - other.rect.width / 2, y - other.rect.y - other.rect.height / 2) < 60)) return [];
+      const first = meetings.find(meeting => meeting.id === ids[0]);
+      if (!first?.location) return [];
+      const physical = meetings.filter(meeting => meeting.location
+        && meeting.location.lat.toFixed(4) === first.location.lat.toFixed(4)
+        && meeting.location.lng.toFixed(4) === first.location.lng.toFixed(4));
+      if (JSON.stringify(physical.map(meeting => meeting.id).sort()) !== JSON.stringify([...ids].sort())) return [];
+      const bodies = new Set(physical.flatMap(meeting => meeting.bodyId ?? []));
+      const placeless = meetings.filter(meeting => meeting.location === null && bodies.has(meeting.bodyId) && !ids.includes(meeting.id));
+      return [{ pin, ids, physical, placeless }];
+    }).sort((a, b) => a.placeless.length - b.placeless.length || b.ids.length - a.ids.length);
+    const choice = candidates[0];
+    if (!choice) return null;
+    choice.pin.dataset.rs02VenueTarget = 'true';
+    return { pinLabel: choice.pin.getAttribute('aria-label'), physicalIds: choice.ids, placelessIds: choice.placeless.map(meeting => meeting.id),
+      expectedMeetings: [...choice.physical, ...choice.placeless].map(meeting => ({ id: meeting.id, bodyId: meeting.bodyId, bodyName: meeting.bodyName,
+        title: meeting.title, startsAt: meeting.startsAt, timeZone: meeting.timeZone, startPrecision: meeting.startPrecision,
+        location: meeting.location, agendaUrl: meeting.agendaUrl ?? meeting.provenance.sourceUrl })) };
+  });
+  if (!selected) throw Error('No isolated visible held physical venue with multiple meetings was available for the docket check');
+  Object.assign(evidence, selected);
+  const pin = page.locator('.wtp-pin[data-rs02-venue-target="true"]');
+  await pin.evaluate(element => element.addEventListener('click', () => { window.rs02.venueClick = performance.now(); }, { capture: true, once: true }));
+  await pin.click();
+  await page.locator('.mw-venue:visible').waitFor();
+  await page.waitForFunction(expected => {
+    const panel = document.querySelector('.mw-venue');
+    if (!panel?.getClientRects().length || Number(panel.querySelector('[data-venue-panel-count]')?.getAttribute('data-venue-panel-count')) !== expected.length) return false;
+    const ids = [...panel.querySelectorAll('[data-meeting-row]')].map(row => row.getAttribute('data-meeting-id')).sort();
+    return JSON.stringify(ids) === JSON.stringify([...expected].sort());
+  }, selected.expectedMeetings.map(meeting => meeting.id));
+  Object.assign(evidence, await page.evaluate(async expected => {
+    await new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)));
+    const ms = performance.now() - window.rs02.venueClick, panel = document.querySelector('.mw-venue');
+    const normalized = value => String(value ?? '').replace(/\s+/g, ' ').trim();
+    const rows = [...panel.querySelectorAll('[data-meeting-row]')];
+    const failures = [], checked = [];
+    for (const meeting of expected) {
+      const row = rows.find(element => element.getAttribute('data-meeting-id') === meeting.id), text = normalized(row.textContent);
+      const date = new Date(meeting.startsAt), zone = { timeZone: meeting.timeZone };
+      const month = new Intl.DateTimeFormat('en-US', { ...zone, month: 'long' }).format(date);
+      const day = new Intl.DateTimeFormat('en-US', { ...zone, day: 'numeric' }).format(date);
+      const year = new Intl.DateTimeFormat('en-US', { ...zone, year: 'numeric' }).format(date);
+      const time = meeting.startPrecision === 'DAY' ? 'Time not posted' : normalized(new Intl.DateTimeFormat('en-US', { ...zone, hour: 'numeric', minute: '2-digit' }).format(date));
+      const agenda = [...row.querySelectorAll('a')].some(link => link.getAttribute('href') === meeting.agendaUrl);
+      if (!normalized(row.querySelector('h3')?.textContent)) failures.push(`${meeting.id}: missing title`);
+      if (meeting.bodyName && !normalized(panel.textContent).includes(normalized(meeting.bodyName))) failures.push(`${meeting.id}: missing body name`);
+      if (!text.includes(`${month} ${day}`) || !text.includes(year) || !text.includes(time)) failures.push(`${meeting.id}: held date or time missing`);
+      for (const value of [meeting.location?.name, meeting.location?.address].filter(Boolean)) {
+        if (!text.includes(normalized(value))) failures.push(`${meeting.id}: held venue field missing`);
+      }
+      if (meeting.agendaUrl && !agenda) failures.push(`${meeting.id}: held agenda or publisher link missing`);
+      checked.push({ id: meeting.id, title: normalized(row.querySelector('h3')?.textContent), date: `${month} ${day}, ${year}`, time, agendaLink: meeting.agendaUrl, text });
+    }
+    return { ms, renderedCount: rows.length, checked, failures, resources: performance.getEntriesByType('resource')
+      .filter(entry => entry.startTime >= window.rs02.venueClick).map(entry => ({ name: entry.name, startAfterClickMs: entry.startTime - window.rs02.venueClick,
+        durationMs: entry.duration, encodedBytes: entry.encodedBodySize, decodedBytes: entry.decodedBodySize })),
+      agendaReadsAfterClick: (window.rs02.agendaReads ?? []).filter(read => read.parsedMs >= window.rs02.venueClick).length };
+  }, selected.expectedMeetings));
+  await page.screenshot({ path: `${output}/AZ-venue-panel.png`, fullPage: true });
+  await page.locator('[data-reader-card^="venue:"]:visible [data-mw="card-close"]').click();
+  await page.locator('.mw-venue:visible').waitFor({ state: 'hidden' });
+  evidence.closed = true;
+  if (evidence.failures.length) throw Error(evidence.failures.join('; '));
+  if (evidence.agendaReadsAfterClick) throw Error('Opening a venue docket unexpectedly read an individual agenda');
+  if (!(evidence.ms < 3000)) throw Error('The full held venue docket did not finish below three seconds');
+}
+
 for (const probe of probes) {
   const tag = `${probe.state}${probe.followUp ? '-followup' : ''}`;
   const errors = [], blocked = [], boundaryRequests = [], bridgeFailures = [], abortedReads = [];
@@ -417,6 +495,10 @@ for (const probe of probes) {
     if (arg('content') && informationAvailable) {
       result.readerContent = { meetings: [], bodies: [] };
       await followContent(page, output, result.readerContent);
+    }
+    if (arg('venue') === '1' && informationAvailable) {
+      result.readerVenue = {};
+      await followVenue(page, output, result.readerVenue);
     }
   } catch (error) { errors.push(safeError(error)); }
   finally {

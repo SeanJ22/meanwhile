@@ -5,10 +5,7 @@ import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-a
 import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { resolvedCandidacyForOfficial, currentOfficialIdentity } from "@/lib/funding/campaign-money";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import {
-  refreshRegistryRuntimeFromPromoted,
-} from "@/lib/registry/runtime-read-model";
+import { refreshFederalDirectoryFromPromoted, refreshRegistryRuntimeFromPromoted } from "@/lib/reader/authority-reads";
 
 export const runtime = "nodejs";
 

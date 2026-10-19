@@ -1,4 +1,3 @@
-import { siteOrigins } from "./site-origins.ts";
 export { siteOrigins } from "./site-origins.ts";
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";

@@ -2,7 +2,7 @@ import { stateCampaignEvidence, stateCampaignQuestion } from "@/lib/ask/state-ca
 import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerRoute } from "@/lib/api/reader-route";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { readRegistryRuntimeProjection } from "@/lib/reader/authority-reads";
 import { currentStateAuthorityProjection } from "@/lib/civic-data/state-reader";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";

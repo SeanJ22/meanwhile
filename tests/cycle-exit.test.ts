@@ -1,11 +1,8 @@
-/**
- * A finished research cycle exits; the drain grace never keeps the process alive itself, names what does, and exits
- * with the cycle's own code once the grace ends.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import * as ts from "typescript";
 
 import {
   CYCLE_DRAIN_GRACE_MS,
@@ -108,5 +105,16 @@ test("the research cycle arms the grace as its last statement, after the stall w
   assert.doesNotMatch(tail, /runBoundedStep|withinWallTime/, "finalization has no cycle wall");
   assert.match(tail, /activeResources: \(\) => process\.getActiveResourcesInfo\(\)/);
   assert.match(tail, /exitCode: \(\) => chosenExitCode\(process\.exitCode\)/);
-  assert.ok(source.trimEnd().endsWith("});"), "nothing may run after the grace is armed");
+  const tree = ts.createSourceFile("freshness-shadow.mts", source, ts.ScriptTarget.ESNext, true);
+  let grace: ts.Node | undefined;
+  const visit = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "exitAfterDrainGrace") grace = node;
+    node.forEachChild(visit);
+  };
+  visit(tree);
+  assert.ok(grace);
+  for (let node: ts.Node = grace; node.parent; node = node.parent) {
+    if (ts.isBlock(node.parent) || ts.isSourceFile(node.parent))
+      assert.equal(node.parent.statements.at(-1), node, "nothing may run after the grace is armed");
+  }
 });

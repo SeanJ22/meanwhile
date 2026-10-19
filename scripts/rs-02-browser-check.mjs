@@ -16,11 +16,12 @@ import { resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { neon } from '@neondatabase/serverless';
 import { launchGuarded, seedZip } from './browser.mts';
+import { PUBLIC_SITE_ORIGIN } from '../lib/ops/origins.ts';
 
 const arg = name => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const output = resolve(arg('out') ?? '.scratch/rs02/browser');
 const appTransport = 'Native Chromium localhost HTTP with Next compression';
-const productionOrigin = 'https://meanwhileusa.com';
+const productionOrigin = PUBLIC_SITE_ORIGIN;
 const proxyAddress = process.env.HTTPS_PROXY ?? process.env.HTTP_PROXY;
 const proxyUrl = proxyAddress ? new URL(proxyAddress) : null;
 const sessionProxy = proxyUrl ? { server: `${proxyUrl.protocol}//${proxyUrl.hostname}:${proxyUrl.port}`,

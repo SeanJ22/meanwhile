@@ -10,7 +10,8 @@ import { summarizeCoverage, type CoverageSummary } from "../lib/registry/coverag
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as stateGET } from "../app/api/reader/state/route.ts";
-import type { DirectoryFile } from "../lib/officials/directory.ts";
+import { GET as directoryGET } from "../app/api/directory/route.ts";
+import { mergeReaderCoverage, stateCoverageForZip, type ReaderStateResponse } from "../lib/reader/client.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryAuthority, installFederalDirectory, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
@@ -116,9 +117,9 @@ test("ZIP-only state and meetings requests independently return the state's offi
   ]);
   assert.equal(stateResponse.status, 200);
   assert.equal(placeResponse.status, 200);
-  const state = await stateResponse.json() as { state: string; coverage: CoverageSummary; zipPlaces: Record<string, { ids: string[] }>;
-    directory: DirectoryFile; boundaryUrl: string };
+  const state = await stateResponse.json() as ReaderStateResponse;
   const place = await placeResponse.json() as { coverage: CoverageSummary; meetings: { bodyId?: string }[]; nearZip: string };
+  assert.equal(state.directory, null, "compact ZIP state responses leave the directory for an office click");
   assert.equal(state.state, "AZ");
   assert.ok(state.coverage.statewideExecutives.some(holder => holder.name === "Katie Hobbs"), "the state request names Arizona's governor");
   assert.equal(state.coverage.senators.length, 2);
@@ -128,31 +129,41 @@ test("ZIP-only state and meetings requests independently return the state's offi
   assert.equal(place.nearZip, "85701");
   assert.ok(place.coverage.bodies.some(body => body.bodyId === "ocd-division/country:us/state:az/place:tucson#governing"), "the place request retains Tucson's council");
   assert.ok(place.meetings.length > 0, "the place request retains held meetings");
-  const house = place.coverage.seats.find(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7")?.representatives;
-  assert.ok(house?.length, "the place request retains Tucson's House member");
-  assert.equal(place.coverage.senators.length, 2);
-  for (const holder of [...house, ...place.coverage.senators]) {
+  const coverage = mergeReaderCoverage(stateCoverageForZip(state, "85701"), place.coverage, place.meetings.length);
+  assert.ok(coverage, "the reader composes its parallel state and place answers");
+  const house = coverage.seats.find(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7")?.representatives;
+  assert.ok(house?.length, "the composed reader answer retains Tucson's House member");
+  assert.equal(coverage.senators.length, 2);
+  for (const holder of [...house, ...coverage.senators]) {
     assert.ok(holder.name.length > 0);
-    assert.ok(state.directory.byMember[holder.id.slice("congress:".length)]?.districtOffices.some(office => office.address && office.phone), `${holder.name}'s office survives the state package`);
+    const response = await directoryGET(new Request(`https://example.test/api/directory?member=${encodeURIComponent(holder.id)}&state=AZ`));
+    assert.equal(response.status, 200, `${holder.name}'s office request succeeds`);
+    const directory = await response.json() as { districtOffices: { address?: string; phone?: string }[] };
+    assert.ok(directory.districtOffices.some(office => office.address && office.phone), `${holder.name}'s held office survives its reader request`);
   }
 });
 
-test("an indexed ZIP request shows its held meetings and officials without a polygon sweep", async () => {
+test("parallel indexed ZIP requests show held meetings and officials without a polygon sweep", async () => {
   const before = sweepsRun();
-  const response = await meetingsGET(
-    new Request("https://example.test/api/meetings?zip=85701&lat=32.21696&lng=-110.971"),
-  );
+  const [stateResponse, response] = await Promise.all([
+    stateGET(new Request("https://example.test/api/reader/state?zip=85701")),
+    meetingsGET(new Request("https://example.test/api/meetings?zip=85701&lat=32.21696&lng=-110.971")),
+  ]);
   const swept = sweepsRun() - before;
 
+  assert.equal(stateResponse.status, 200, "the state request did not succeed");
   assert.equal(response.status, 200, "the probe request did not succeed");
+  const state = await stateResponse.json() as ReaderStateResponse;
   const body = (await response.json()) as { meetings: unknown[]; coverage: CoverageSummary };
   assert.ok(Array.isArray(body.meetings), "no meetings array — the request did not do the work");
-  assert.ok(body.coverage, "no coverage block — the second consumer of the geometry never ran");
+  assert.ok(body.coverage, "no coverage block — the place request did not compose its facts");
+  const coverage = mergeReaderCoverage(stateCoverageForZip(state, "85701"), body.coverage, body.meetings.length);
+  assert.ok(coverage, "the reader composes its parallel state and place answers");
 
   assert.ok(body.meetings.length > 0, "85701 retains its recorded meetings");
   assert.ok(body.coverage.bodies.some(body => body.bodyId === "ocd-division/country:us/state:az/county:pima#governing"), "85701 retains its county board");
-  assert.ok(body.coverage.seats.some(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7" && seat.representatives.length > 0), `85701 retains its House member: ${JSON.stringify(body.coverage.seats.map(seat => ({ id: seat.ocdId, people: seat.representatives.map(holder => holder.name) })))}`);
-  assert.equal(body.coverage.senators.length, 2, "85701 retains both senators");
+  assert.ok(coverage.seats.some(seat => seat.ocdId === "ocd-division/country:us/state:az/cd:7" && seat.representatives.length > 0), `85701 retains its House member: ${JSON.stringify(coverage.seats.map(seat => ({ id: seat.ocdId, people: seat.representatives.map(holder => holder.name) })))}`);
+  assert.equal(coverage.senators.length, 2, "85701 retains both senators");
   assert.equal(swept, 0, "the ZIP-to-places index supplies the held divisions without sweeping the state's polygons");
 });
 

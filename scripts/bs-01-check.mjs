@@ -7,6 +7,7 @@
  */
 import { launchGuarded, runIdFor } from './browser.mts';
 import { syntheticRunHeaders } from '../lib/db/run-marker.ts';
+import { PUBLIC_SITE_ORIGIN } from '../lib/ops/origins.ts';
 import { neon } from '@neondatabase/serverless';
 import { spawn, execFileSync } from 'node:child_process';
 import { once } from 'node:events';
@@ -116,7 +117,7 @@ for (const row of after) {
 }
 
 // The map uses another process. Every Ballot server below has empty state, place and ballot caches.
-const settingsResponse = await fetch('https://meanwhileusa.com/api/reader/settings', { signal: AbortSignal.timeout(15000), headers: runHeaders });
+const settingsResponse = await fetch(`${PUBLIC_SITE_ORIGIN}/api/reader/settings`, { signal: AbortSignal.timeout(15000), headers: runHeaders });
 if (!settingsResponse.ok) throw Error('Public reader settings could not be read');
 const settings = Buffer.from(await settingsResponse.arrayBuffer());
 const map = await start(root, 3221), browser = await launchGuarded({ label: 'bs-01-cold', blockWrites: true, headless: true, args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });

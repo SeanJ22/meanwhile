@@ -1,3 +1,4 @@
+import { readerCacheHeaders } from "../lib/reader/cache.ts";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -17,7 +18,6 @@ import {
 } from "../lib/signal/reactions.ts";
 import {
   contributorRowsForDisplay,
-  fundingForTarget,
   getContributorReactionTargetIds,
   getFundingSnapshot,
   getFundingTargetIds,
@@ -117,26 +117,34 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
   );
 });
 
-test("D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every query parameter", () => {
-  // A response whose body varies by query string must not enter a shared cache, unless it sends `Netlify-Vary: query`, which keys on every query parameter.
+test("D40: no query-keyed API route marks itself publicly cacheable unless the CDN keys on every consumed query parameter", () => {
   const walk = (dir: string): string[] =>
     readdirSync(dir).flatMap((entry) => {
       const full = join(dir, entry);
       return statSync(full).isDirectory() ? walk(full) : /route\.ts$/.test(entry) ? [full] : [];
     });
   const keyedOnEveryParameter: string[] = [];
+  const sharedCacheIsPublic = /\bpublic\b/i.test(readerCacheHeaders({})["Cache-Control"] ?? "");
   for (const file of walk(join(ROOT, "app", "api"))) {
     const source = readFileSync(file, "utf8");
-    if (/searchParams/.test(source) && /cache-control["']?\s*:\s*["'][^"']*public/i.test(source)) {
-      assert.match(
-        source,
-        /"Netlify-Vary":\s*"query"/,
-        `${file} keys its body on a query string AND marks the response public without keying the CDN on the query — a shared cache may serve one target's body to all (D40)`,
-      );
+    const sharedCache = /\breaderCacheHeaders\s*\(/.test(source) && sharedCacheIsPublic;
+    const literalCache = /cache-control["']?\s*:\s*["'][^"']*public/i.test(source);
+    if (/searchParams/.test(source) && (sharedCache || literalCache)) {
+      const vary = source.match(/"Netlify-Vary":\s*"([^"]+)"/)?.[1];
+      assert.ok(vary === "query" || vary?.startsWith("query="), `${file} publicly caches a query response without varying its query`);
+      if (vary !== "query") {
+        const consumed = [...new Set([
+          ...[...source.matchAll(/\.(?:get|getAll|has)\(\s*["']([^"']+)["']/g)].map(match => match[1]),
+          ...[...source.matchAll(/\b(?:matching|numeric|numericInRange)\(\s*\w+\s*,\s*["']([^"']+)["']/g)].map(match => match[1]),
+        ])].sort();
+        assert.ok(consumed.length > 0, `${file} has no identified query parameters`);
+        assert.deepEqual(vary!.slice("query=".length).split("|").sort(), consumed,
+          `${file} must vary on every parameter its response reads, preventing another target's data from being served (D40)`);
+      }
       keyedOnEveryParameter.push(relative(ROOT, file).replaceAll("\\", "/"));
     }
   }
-  assert.deepEqual(keyedOnEveryParameter, ["app/api/meetings/route.ts"], "a new publicly cached query route is a decision to name here");
+  assert.deepEqual(keyedOnEveryParameter.sort(), ["app/api/agenda/route.ts", "app/api/directory/route.ts", "app/api/meetings/route.ts", "app/api/reader/state/route.ts"], "a new publicly cached query route is a decision to name here");
   const block = readFileSync(join(ROOT, "components", "funding", "funding-block.tsx"), "utf8");
   assert.match(block, /\/api\/funding\/\$\{encodeURIComponent\(holder\.id\)\}/, "funding block must fetch the path-keyed route");
 });

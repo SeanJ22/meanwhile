@@ -12,12 +12,15 @@ import { rosterFactReader } from "./roster-fact-reader.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
 import { censusDistrictEdgeSlice, type CensusDistrictEdge } from "../../lib/census-geography/district-edge.ts";
+import { censusWorkDivision } from "../../lib/census-geography/division-id.ts";
+import { translationScope } from "../../lib/translate/records.ts";
 import { primeOutcomeProjection } from "../../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../../lib/outcomes/types.ts";
 import { neonConfig } from "@neondatabase/serverless";
 import { isCensusPlaceholderDivision } from "../../lib/registry/census-placeholders.ts";
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
-import { provenEdgeEntry } from "./promoted-edge-entry.ts";
+import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
+import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
 export interface ReaderValues {
@@ -31,12 +34,25 @@ const fixtures = new Map<string, Fixture>();
 let active = "default";
 const fixture = (key = active) => { let held = fixtures.get(key); if (!held) { held = {store:new MemoryRoutineDataStore()}; fixtures.set(key,held); } return held; };
 
+function censusRows(value: CensusDistrictEdge, state?: unknown): Record<string, unknown>[] {
+  const rows: Record<string, unknown>[] = value.scopes.map(scope => ({ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.plan,
+    version_meta: { applicability: scope.applicability, states: scope.states, retrievalComplete: scope.retrievalComplete,
+      provenance: { sourceUrls: scope.sourceUrls, computedAt: scope.observedAt } } }));
+  value.containers.forEach(({ ref, plan }, index) => {
+    if (typeof state === "string" && state !== ref.stateAbbr && !ref.memberStates?.includes(state)) return;
+    rows.push({ row_kind: "grouping", type: ref.type, version: ref.version, plan, geoid: ref.geoid, ocd_id: ref.ocdId,
+      label: ref.label, state_fips: ref.stateFips, state_abbr: ref.stateAbbr, member_states: ref.memberStates,
+      overlaps: Object.entries(value.codes).flatMap(([zcta5, codes]) => codes.filter(code => code[0] === index).map(code => ({ zcta5, whole: code[1], fraction: code[2] }))) });
+  });
+  return rows;
+}
+
 function canonicalRows(sql: string, params: readonly unknown[]): Record<string, unknown>[] | undefined {
   const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
   const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("p.record_class='MEETING_OUTCOME'");
-  const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[])");
+  const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[]");
   if (!selectedOutcomes && !selectedKeys) return undefined;
-  const keys = Array.isArray(params[0]) ? params[0] : String(params[0]).match(/"((?:[^"\\]|\\.)*)"/g)?.map(key => JSON.parse(key)) ?? [];
+  const keys = Array.isArray(params[0]) ? [...params[0]] : String(params[0]).match(/"((?:[^"\\]|\\.)*)"/g)?.map(key => JSON.parse(key)) ?? [];
   const exactKeys = selectedOutcomes ? params[3] as readonly string[] : [];
   const stateOutcomes = selectedOutcomes && params[2] === null;
   const ids = new Set(selectedOutcomes && !stateOutcomes ? params[2] as readonly string[] : []);
@@ -45,7 +61,26 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
   const bodySelected = (sitting: OutcomeSnapshot["sittings"][number]) => selectors.includes(sitting.bodyId ?? "") || selectors.includes(sitting.meetingId)
     || states.includes(meetingStateOf(sitting.bodyId));
   const stateScoped = (p: PromotedProjection) => keys.some(prefix => p.scope.startsWith(String(prefix).replace(/%$/, ""))) || doorPrefixes.some(prefix => p.scope.startsWith(prefix));
-  return [...held.promotions.values()].filter(p => selectedOutcomes
+  const additional: Record<string, unknown>[] = [];
+  if (selectedKeys && sql.includes("AS local_divisions") && params[2] === "CENSUS_GEOGRAPHY") {
+    const census = fixture().values?.authority?.["census-districts"];
+    const value = census?.value as CensusDistrictEdge | undefined;
+    const state = String(params[5]);
+    const divisionIds = params[6] as readonly string[];
+    const registration = held.promotions.get(`REGISTRATION:US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
+    const types = params[4] as readonly string[];
+    const canonicalKeys = value && typeof params[7] === "string" ? [...new Set((value.codes[params[7]] ?? []).flatMap(([index]) => {
+      const { ref } = value.containers[index];
+      if (!types.includes(ref.type) || ref.stateAbbr !== state && !ref.memberStates?.includes(state)) return [];
+      const id = censusWorkDivision(ref);
+      return id ? [`CURATED_READER_RECORD:${translationScope(id)}`] : [];
+    }))] : [];
+    keys.push(...canonicalKeys);
+    additional.push({ row_kind: "additional", part_payload: [{ version_id: census?.versionId ?? null,
+      geography: value ? censusRows(value, state).filter(row => row.row_kind === "scope" || types.includes(String(row.type))) : [],
+      local_divisions: registration?.divisions.filter(row => divisionIds.includes(row.ocdId)) ?? [], canonical_keys: canonicalKeys }] });
+  }
+  const rows: Record<string, unknown>[] = [...held.promotions.values()].filter(p => selectedOutcomes
     ? p.recordClass === "MEETING_OUTCOME" && (stateScoped(p) || exactKeys.includes(p.key)
       || stateOutcomes && p.scope.startsWith("door:") && (p.payload as OutcomeSnapshot).sittings?.some(bodySelected))
     : keys.includes(p.key)).map(p => {
@@ -63,6 +98,7 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
         temporal: c?.candidate.temporal, confirmation: null, published, ...(selectedOutcomes ? { snapshot_shape_valid: shape,
           selected_by_body: stateOutcomes && shape && snapshot.sittings.some(bodySelected) } : {}) };
     });
+  return structuredClone([...rows, ...additional]);
 }
 
 let patched = false;
@@ -80,15 +116,7 @@ function patchStore() {
         const value = census.value as CensusDistrictEdge;
         if (sql.includes("AS version_id")) rows = [{ version_id: census.versionId }];
         else if (sql.includes("'scope' AS row_kind")) {
-          rows = value.scopes.map(scope => ({ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.plan,
-            version_meta: { applicability: scope.applicability, states: scope.states, retrievalComplete: scope.retrievalComplete,
-              provenance: { sourceUrls: scope.sourceUrls, computedAt: scope.observedAt } } }));
-          value.containers.forEach(({ ref, plan }, index) => {
-            if (typeof params[3] === "string" && params[3] !== ref.stateAbbr && !ref.memberStates?.includes(params[3])) return;
-            rows.push({ row_kind: "grouping", type: ref.type, version: ref.version, plan, geoid: ref.geoid, ocd_id: ref.ocdId,
-              label: ref.label, state_fips: ref.stateFips, state_abbr: ref.stateAbbr, member_states: ref.memberStates,
-              overlaps: Object.entries(value.codes).flatMap(([zcta5, codes]) => codes.filter(code => code[0] === index).map(code => ({ zcta5, whole: code[1], fraction: code[2] }))) });
-          });
+          rows = censusRows(value, params[3]);
         }
       }
       rows = canonicalRows(sql, params) ?? rows;
@@ -136,6 +164,11 @@ export function installReaderValues(input: ReaderValues, key = active): void {
   for (const entry of [...Object.values(input.authority ?? {}),...Object.values(input.stateAuthorities ?? {}).flatMap(states => Object.values(states ?? {}))]) {
     const value = entry?.value as {kind?:string;entries?:PromotedEdgeEntry[]} | undefined;
     if (value?.kind === "PROMOTED_POINTERS") installCanonicalEntries(value.entries ?? [],key);
+  }
+  const everyday = input.authority?.["everyday-routing"];
+  if (everyday) {
+    const value = everyday.value as { projection?: unknown };
+    if (value.projection) installCanonicalEntries([manualEdgeEntry("everyday-routing", value.projection, everyday.versionId)], key);
   }
   const outcomes = input.authority?.["meeting-outcomes"];
   if (outcomes) {
@@ -195,7 +228,8 @@ export function activateCanonicalFixture(key: string): void {
     const meeting_rows = pointers.filter(p => (params[5] || !p.scope.endsWith(":history")) && p.payload.meetings.some(m => m.bodyId && ids.includes(m.bodyId)))
       .map(p => ({scope:p.scope,payload:structuredClone(p.payload),current_version_id:p.versionId,confirmation:p.latestConfirmation ? serializeUnchangedConfirmation(p.latestConfirmation) : null}));
     const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
-    return [{registry,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
+    const everydayRouting = values.find(p => p.recordClass === EVERYDAY_ROUTING_POINTER.recordClass && p.scope === EVERYDAY_ROUTING_POINTER.scope)?.payload ?? null;
+    return [{registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
   };
   installFactReader(readFacts);
   installReaderDatabaseQuery(async statements => Promise.all(statements.map(statement =>

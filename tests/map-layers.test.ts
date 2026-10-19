@@ -19,13 +19,13 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { Venue } from "../lib/meetings/venues.ts";
 
 test("initial style requests boundary tiles without basemap or glyph readiness", () => {
-  const style = withDistricts(FALLBACK_STYLE, ["county", "state-house"]);
+  const style = withDistricts(FALLBACK_STYLE, ["county", "state-house"], "AZ");
   assert.deepEqual(style.sources[NATIONAL_BOUNDARIES_SOURCE], boundarySource());
   assert.deepEqual(style.layers.filter(layer => layer.id.startsWith("district-")).map(layer => layer.id), [
     "district-county-fill", "district-county-line", "district-state-house-fill", "district-state-house-line",
   ]);
   assert.ok(boundarySource(BOUNDARY_ARCHIVE_FALLBACK).url?.includes("/api/boundaries/"));
-  assert.equal(withDistricts(FALLBACK_STYLE, []), FALLBACK_STYLE);
+  assert.equal(withDistricts(FALLBACK_STYLE, [], "AZ"), FALLBACK_STYLE);
 });
 
 test("boundary counts coalesce by rendered frame and ignore basemap work", () => {

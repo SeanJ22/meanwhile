@@ -1,0 +1,22 @@
+[
+  {
+    "source_row_id": "row-4te8~35kc_qmzr",
+    "reg_no": "CC11028",
+    "candidate_name": "Abbett, Richard",
+    "date": "2016-06-16T23:43:05.000",
+    "amount": "100",
+    "office": "Hawaii Council",
+    "election_period": "2014-2016",
+    "contributor_type": "Candidate"
+  },
+  {
+    "source_row_id": "row-ejxn-jabq-8tfj",
+    "reg_no": "CC10529",
+    "candidate_name": "Abercrombie, Neil",
+    "date": "2016-08-29T15:33:49.000",
+    "amount": "1000",
+    "office": "Governor",
+    "election_period": "2014-2018",
+    "contributor_type": "Individual"
+  }
+]

@@ -9,11 +9,11 @@ import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
-/** A publish-now pass starts no new child after this long; children already running finish. */
+/** A publish-now pass ends within this; what it did not finish stays owed to the next minute. */
 export const PUBLISH_NOW_PASS_BUDGET_MS = 10 * 60_000;
 export const PUBLISH_NOW_SINGLETON_PORT = 49_373;
-export function publishNowLane(run: () => Promise<void>): IndependentRuntimeLane {
-  return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, run };
+export function publishNowLane(run: (deadlineMs: number) => Promise<void>): IndependentRuntimeLane {
+  return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, budgetMs: PUBLISH_NOW_PASS_BUDGET_MS, run };
 }
 
 /** An unchanged minute with no source work ends quietly; a copied pointer or failed copy still owes its existing supervisor receipt. */

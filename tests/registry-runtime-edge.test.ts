@@ -4,7 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer, writeAuthorityPointer } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { readRegistryRuntimeProjection, registryRuntimeReadState, getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { withReaderAuthorityEdge, ReaderEdgeOnlyRefusal, settleEdgeFirst } from "../lib/registry/runtime-edge.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -41,7 +42,6 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
 
 
 
-const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const stateAuthorities = (version: string) => ({ "registry-runtime": stateRegistryArtifacts(version, ["AZ"]) });
 function artifacts(t: { after(fn: () => void): void }) {
   const dir = mkdtempSync(join(tmpdir(), "rt-edge-")); t.after(() => rmSync(dir, { recursive: true, force: true }));
@@ -50,13 +50,11 @@ function artifacts(t: { after(fn: () => void): void }) {
 
 test("a member lookup reuses its already-held state without narrowing the other explicitly loaded states", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts("member-context", ["AZ", "NJ"]) } });
-  const manifest = (await store.readManifest())!.manifest;
+  await publishPointers(store, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("member-context", ["AZ", "NJ"]) } });
   const readBytes = store.readBytes.bind(store), keys: string[] = [];
   store.readBytes = async key => { keys.push(key); return readBytes(key); };
-  const edge = await ensureReaderAuthorityEdge(manifest, store, ["registry-runtime"]);
-  await withReaderAuthorityEdge({ ...edge, edgeOnly: true }, async () => {
+  const edge = await ensureReaderAuthorityEdge(null, store, ["registry-runtime"]);
+  await withReaderAuthorityEdge({ ...edge!, edgeOnly: true }, async () => {
     const current = await readRegistryRuntimeProjection(["AZ", "NJ"]);
     const before = [...keys];
     const njRoster = getRegistryRuntimeReadModel().bodyRosters.find(roster => roster.bodyId.includes("/state:nj/"))!;
@@ -74,12 +72,12 @@ test("a member lookup reuses its already-held state without narrowing the other 
 
 test("the runner publishes one state registry losslessly, and its reader stays lazy until that state is requested", async t => {
   const store = artifacts(t);
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") })).status, "PUBLISHED");
-  const manifest = (await store.readManifest())!.manifest, ref = manifest.stateAuthorities!["registry-runtime"]!.AZ;
+  assert.deepEqual(await publishPointers(store, { stateAuthorities: stateAuthorities("rt-v1") }), ["registry-runtime/AZ"]);
+  const ref = (await readServedPointer(store, authorityPointerKey("registry-runtime", "AZ")))!.ref;
   assert.ok(ref.key.endsWith(".json.gz")); assert.equal(ref.version, "rt-v1:AZ"); assert.ok(ref.sha);
-  assert.equal(Object.hasOwn(manifest.authorityArtifacts ?? {}, "registry-runtime"), false);
-  const edge = await ensureReaderAuthorityEdge(manifest, store, ["registry-runtime"]);
-  await withReaderAuthorityEdge({ ...edge, edgeOnly: true }, async () => {
+  assert.equal(await store.readManifest(), null, "a state pointer writes no manifest");
+  const edge = await ensureReaderAuthorityEdge(null, store, ["registry-runtime"]);
+  await withReaderAuthorityEdge({ ...edge!, edgeOnly: true }, async () => {
     assert.throws(getRegistryRuntimeReadModel, /STORE_UNREACHABLE/);
     const read = await readRegistryRuntimeProjection(["AZ"]);
     assert.equal(read.kind, "PROMOTED"); assert.equal(read.metadata.versionId, "rt-v1:AZ");
@@ -89,15 +87,14 @@ test("the runner publishes one state registry losslessly, and its reader stays l
   });
 });
 
-test("the same state version is idempotent and a successor advances only that state's artifact", async t => {
+test("the same state version writes nothing and a successor rewrites only that state's pointer", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("rt-v1", ["AZ", "NH"]) } });
-  const before = (await store.readManifest())!.manifest;
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") })).status, "CURRENT");
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v2") })).status, "PUBLISHED");
-  const after = (await store.readManifest())!.manifest;
-  assert.equal(after.stateAuthorities!["registry-runtime"]!.AZ.version, "rt-v2:AZ");
-  assert.deepEqual(after.stateAuthorities!["registry-runtime"]!.NH, before.stateAuthorities!["registry-runtime"]!.NH);
+  await publishPointers(store, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("rt-v1", ["AZ", "NH"]) } });
+  const nh = await store.readJsonPointer(authorityPointerKey("registry-runtime", "NH"));
+  assert.deepEqual(await publishPointers(store, { stateAuthorities: stateAuthorities("rt-v1") }), []);
+  assert.deepEqual(await publishPointers(store, { stateAuthorities: stateAuthorities("rt-v2") }), ["registry-runtime/AZ"]);
+  assert.equal((await readServedPointer(store, authorityPointerKey("registry-runtime", "AZ")))!.ref.version, "rt-v2:AZ");
+  assert.deepEqual(await store.readJsonPointer(authorityPointerKey("registry-runtime", "NH")), nh);
 });
 
 test("settleEdgeFirst uses an edge value, falls back only when absent, and refuses a database read in an edge-only context", async () => {
@@ -117,21 +114,15 @@ test("a new request starts without another request's registry payload", async ()
   });
 });
 
-test("unchanged state artifacts carry without a read and stale carries cannot replace a winning manifest", async t => {
+test("an unchanged family reads no bytes, and a stale writer never replaces the pointer that won", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") });
-  const served = (await store.readManifest())!.manifest.stateAuthorities!["registry-runtime"]!.AZ;
+  await publishPointers(store, { authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v1" } } });
   let reads = 0; const original = store.readBytes.bind(store);
   t.mock.method(store, "readBytes", async (key: string) => { reads++; return original(key); });
-  const carried = { "registry-runtime": { AZ: { versionId: "rt-v1:AZ", carried: true as const } } };
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: carried })).status, "CURRENT");
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: carried,
-    authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v1" } } })).status, "PUBLISHED");
+  assert.deepEqual(await publishPointers(store, { authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v1" } } }), []);
   assert.equal(reads, 0);
-  const before = (await store.readManifest())!.manifest;
-  assert.deepEqual(before.stateAuthorities!["registry-runtime"]!.AZ, served);
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store,
-    stateAuthorities: { "registry-runtime": { AZ: { versionId: "old", carried: true } } },
-    authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v2" } } })).status, "RACED");
-  assert.deepEqual((await store.readManifest())!.manifest, before);
+  const stale = await readServedPointer(store, authorityPointerKey("campaign-sites"));
+  await publishPointers(store, { authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v2" } } });
+  assert.equal(await writeAuthorityPointer(store, "campaign-sites", undefined, { value: { records: [] }, versionId: "cs-old" }, stale, "2026-10-17T00:00:00.000Z"), false);
+  assert.equal((await readServedPointer(store, authorityPointerKey("campaign-sites")))!.ref.version, "cs-v2");
 });

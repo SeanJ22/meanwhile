@@ -1,5 +1,4 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
-import { createHash } from "node:crypto";
 import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
@@ -18,7 +17,7 @@ import {
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash, canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import {
   occurrenceStampFromInstant,
   reissuesSitting,
@@ -46,41 +45,39 @@ import type {
 
 const SHA256 = /^[a-f0-9]{64}$/;
 
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
-
 /** A conditional check must cite its previously captured 200 bytes. */
 export function notModifiedIssue(candidate: RoutineCandidate): string | null {
   return `HTTP 304 carries no bytes for ${candidate.recordClass}; replay the identified held response with its original status and observation date.`;
 }
 
-function durableCanonicalJson(value: unknown, scoped = false): { readonly canonical: string | null; readonly issue: string | null } {
+/* Anything JSON would drop or rewrite changes when persisted, so it never binds a hash. */
+function durableJsonIssue(value: unknown, path: Set<object> = new Set()): string | null {
+  if (value === undefined || typeof value === "function" || typeof value === "symbol") return "The value changes when persisted through the canonical JSONB representation.";
+  if (typeof value === "bigint") return "The value is not durable JSON: a BigInt is not representable.";
+  if (value === null || typeof value !== "object") return null;
+  if (typeof (value as { toJSON?: unknown }).toJSON === "function") return "The value changes when persisted through the canonical JSONB representation.";
+  if (path.has(value)) return "The value is not durable JSON: it is circular.";
+  path.add(value);
+  const children = Array.isArray(value) ? Array.from({ length: value.length }, (_, index) => index in value ? value[index] : undefined) : Object.values(value);
+  for (const child of children) {
+    const issue = durableJsonIssue(child, path);
+    if (issue) return issue;
+  }
+  path.delete(value);
+  return null;
+}
+
+function durableCanonicalHash(value: unknown, scoped = false): { readonly hash: string | null; readonly issue: string | null } {
   if (scoped) {
-    const canonical = durableStateHash(value);
-    return { canonical, issue: canonical === null ? "The value changes when persisted through the canonical JSONB representation." : null };
+    const hash = durableStateHash(value);
+    return { hash, issue: hash === null ? "The value changes when persisted through the canonical JSONB representation." : null };
   }
-  try {
-    const encoded = JSON.stringify(value);
-    if (encoded === undefined) return { canonical: null, issue: "The value is not representable as durable JSON." };
-    const roundTrip = JSON.parse(encoded) as unknown;
-    const before = canonicalCivicDataJson(value);
-    const after = canonicalCivicDataJson(roundTrip);
-    if (before !== after) {
-      return { canonical: null, issue: "The value changes when persisted through the canonical JSONB representation." };
-    }
-    return { canonical: before, issue: null };
-  } catch (error) {
-    return {
-      canonical: null,
-      issue: `The value is not durable JSON: ${error instanceof Error ? error.message : String(error)}`,
-    };
-  }
+  const issue = durableJsonIssue(value);
+  return issue ? { hash: null, issue } : { hash: canonicalCivicDataHash(value), issue: null };
 }
 
 function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[], scoped = false): string | null {
-  const durable = durableCanonicalJson([...value].sort((left, right) => left.key.localeCompare(right.key)), scoped);
-  return durable.canonical;
+  return durableCanonicalHash([...value].sort((left, right) => left.key.localeCompare(right.key)), scoped).hash;
 }
 
 function result(check: ValidationCheckName, verdict: ValidationCheck["verdict"], code: string, detail: string): ValidationCheck {
@@ -627,9 +624,8 @@ export function validateRoutineCandidate(
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
   const scoped = statePublicationScope(candidate.scope);
-  const digest = (canonical: string) => scoped ? canonical : sha256(canonical);
-  const readModel = durableCanonicalJson(candidate.readModel, scoped);
-  const normalizedPayload = candidate.normalizedPayload === candidate.readModel ? readModel : durableCanonicalJson(candidate.normalizedPayload, scoped);
+  const readModel = durableCanonicalHash(candidate.readModel, scoped);
+  const normalizedPayload = candidate.normalizedPayload === candidate.readModel ? readModel : durableCanonicalHash(candidate.normalizedPayload, scoped);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords, scoped);
   const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords, scoped);
   const authority = candidate.retrieval.derived
@@ -728,9 +724,9 @@ export function validateRoutineCandidate(
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "PARSER_FAILED", candidate.normalization.failureDetail ?? "Normalizer did not produce a candidate."));
   } else if (!candidate.normalization.normalizedHash || !SHA256.test(candidate.normalization.normalizedHash)) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_HASH_INVALID", "Normalized payload does not carry a lowercase SHA-256 hash."));
-  } else if (readModel.issue !== null || readModel.canonical === null) {
+  } else if (readModel.issue !== null || readModel.hash === null) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "READ_MODEL_NOT_DURABLE_JSON", readModel.issue ?? "Reader projection is not durable JSON."));
-  } else if (digest(readModel.canonical) !== candidate.normalization.normalizedHash) {
+  } else if (readModel.hash !== candidate.normalization.normalizedHash) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",
       "FAIL",
@@ -750,13 +746,13 @@ export function validateRoutineCandidate(
   )) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_PAYLOAD_HASH_INVALID", "Normalized evidence does not carry a lowercase SHA-256 hash."));
   } else if (candidate.normalization.normalizedPayloadHash !== undefined && (
-    normalizedPayload.issue !== null || normalizedPayload.canonical === null
+    normalizedPayload.issue !== null || normalizedPayload.hash === null
   )) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_PAYLOAD_NOT_DURABLE_JSON", normalizedPayload.issue ?? "Normalized payload is not durable JSON."));
   } else if (
     candidate.normalization.normalizedPayloadHash !== undefined &&
-    normalizedPayload.canonical !== null &&
-    digest(normalizedPayload.canonical) !== candidate.normalization.normalizedPayloadHash
+    normalizedPayload.hash !== null &&
+    normalizedPayload.hash !== candidate.normalization.normalizedPayloadHash
   ) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",

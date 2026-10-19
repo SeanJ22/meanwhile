@@ -272,15 +272,15 @@ test("candidate websites and measure links are values on the cited official reco
     officialStatement: null, provenance: ballot.contests[0].provenance });
   const input = packageFor(state);
   assert.deepEqual(manualProjectionCandidate(input).semantics.violations, []);
-  await publish(new MemoryRoutineDataStore(), structuredClone(input));
-  ballotOf(state).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
-  assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
-  ballot.candidacies[0].provenance.sourceUrl = ballot.contests[0].provenance.sourceUrl;
-  ballot.measureAnalyses = { generatedAt: now, counts: { measures: 1, fetched: 1, extracted: 1, failed: 0 }, analyses: [{
+  const later = structuredClone(state), analysed = structuredClone(state);
+  await publish(new MemoryRoutineDataStore(), input);
+  ballotOf(later).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
+  assert.ok(manualProjectionCandidate(packageFor(later)).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
+  ballotOf(analysed).measureAnalyses = { generatedAt: now, counts: { measures: 1, fetched: 1, extracted: 1, failed: 0 }, analyses: [{
     contestId: "fixture-measure", measureTitle: "Fixture measure", analysisUrl: "https://analysis.example.gov/measure.pdf",
     sourceOrg: "Election authority", retrievedAt: now, contentHash: "c".repeat(64), text: "Official analysis.",
     extraction: "pdf", extractionNote: null }] };
-  assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
+  assert.ok(manualProjectionCandidate(packageFor(analysed)).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
 });
 
 test("only a newer complete list from the same authority replaces candidates and keeps unrelated contests", async () => {

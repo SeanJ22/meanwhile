@@ -1,14 +1,15 @@
 import { resolve } from "node:path";
 import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
+import { federalDirectoryContractId } from "../officials/federal-directory-data-plane.ts";
 import { stateBallotContractId, type StateBallotFamily } from "./state-scopes.ts";
 import { routineProcessSlots, type WorkerProcessSlots, type WorkerMemoryRelease } from "../control-plane/workers/worker-slots.ts";
-import type { ReaderManifest, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
+import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
-import type { PublishedStateAuthority, PublishStateAuthorities } from "../meetings/edge-serving.ts";
+import { authorityPointerKey, prepareStateAuthorityArtifact, readServedPointer, type PublishedStateAuthority, type ServedPointer } from "../meetings/edge-serving.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";
 import { admittedRuntimeChildEnvironment } from "./runtime-authority.ts";
-import { promotedFamilyVersion, promotedPointerVersion, readPromotedStateEdgeFamilies, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
+import { prepareStateEdgeFamily, promotedFamilyVersion, promotedPointerVersion, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import type { RoutineDataStore } from "./store.ts";
 
 type StateUnit = ReturnType<typeof selectedStateEdgePointers>[number];
@@ -21,12 +22,13 @@ export interface StateArtifactChildren {
   readonly slots?: WorkerProcessSlots;
 }
 
-function contractId(unit: Pick<StateUnit, "family" | "state">) {
-  if (unit.family === "registry-runtime") return stateRegistryRuntimeContractId(unit.state);
-  return stateBallotContractId((unit.family === "candidate-publications" ? "candidate-corpus" : unit.family) as StateBallotFamily, unit.state);
+export function stateAuthorityContractId(family: StateAuthorityFamily, state: string) {
+  if (family === "registry-runtime") return stateRegistryRuntimeContractId(state);
+  if (family === "federal-directory") return federalDirectoryContractId(state);
+  return stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
 }
 
-function childEnvironment(env: Readonly<Record<string, string | undefined>>): NodeJS.ProcessEnv {
+export function childEnvironment(env: Readonly<Record<string, string | undefined>>): NodeJS.ProcessEnv {
   const mode = env.NODE_ENV;
   return { ...env, NODE_ENV: mode === "production" || mode === "test" ? mode : "development" };
 }
@@ -43,11 +45,9 @@ export async function prepareStateArtifactChild(store: RoutineDataStore, artifac
   const unit = selectedStateEdgePointers(null).find(row => row.state === state && row.family === family);
   if (!unit) throw new Error("STATE_ARTIFACT_UNIT_INVALID");
   if ((await identityVersion(store, unit)).version !== expectedVersion) throw new Error("STATE_ARTIFACT_POINTER_MOVED");
-  const result = await readPromotedStateEdgeFamilies({ store, servedManifest: null, selected: [unit], artifactStore: artifacts,
-    now, readServedFamily: async () => null });
-  const entry = result.stateAuthorities[family]?.[state];
-  if (result.skipped.length || !entry || !("artifact" in entry) || entry.versionId !== expectedVersion ||
-    (await identityVersion(store, unit)).version !== expectedVersion) throw new Error(`STATE_ARTIFACT_NOT_CURRENT:${result.skipped.join(" | ")}`);
+  const { entry, skipped } = await prepareStateEdgeFamily({ store, now, unit, artifactStore: artifacts });
+  if (skipped.length || entry.versionId !== expectedVersion ||
+    (await identityVersion(store, unit)).version !== expectedVersion) throw new Error(`STATE_ARTIFACT_NOT_CURRENT:${skipped.join(" | ")}`);
   return entry;
 }
 
@@ -66,34 +66,44 @@ function childResult(output: string, unit: StateUnit, version: string): Publishe
   return { versionId: row.versionId, artifact: row.artifact };
 }
 
+/** Each state family whose promoted version moved past its pointer is rebuilt; its pointer is written the moment that state settles. */
 export async function dispatchStateArtifacts(input: {
   readonly store: StateStore;
   readonly currentStore: StateStore;
-  readonly servedManifest: Pick<ReaderManifest, "stateAuthorities"> | null;
+  readonly artifactStore: ReaderArtifactStore;
   readonly selected: readonly StateUnit[];
   readonly now: string;
   readonly env: Readonly<Record<string, string | undefined>>;
   readonly children?: StateArtifactChildren;
-}): Promise<{ stateAuthorities: PublishStateAuthorities; skipped: string[] }> {
-  const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, PublishedStateAuthority>>> = {};
-  const skipped: string[] = [];
-  const changed: { unit: StateUnit; version: string; prior: string | null }[] = [];
-  for (const unit of input.selected) {
+}): Promise<{ published: string[]; skipped: string[] }> {
+  const published: string[] = [], skipped: string[] = [];
+  const changed: { unit: StateUnit; version: string; served: ServedPointer | null }[] = [];
+  const publish = async (unit: StateUnit, version: string, served: ServedPointer | null, entry: PublishedStateAuthority) => {
+    if ((await identityVersion(input.currentStore, unit)).version !== version) throw new Error("STATE_ARTIFACT_POINTER_MOVED");
+    const written = await input.artifactStore.writeJsonPointer(authorityPointerKey(unit.family, unit.state), entry.artifact, served?.etag ?? null);
+    if (!written.modified) throw new Error("STATE_ARTIFACT_POINTER_RACED");
+    published.push(`${unit.state}:${unit.family}`);
+  };
+  for (let at = 0; at < input.selected.length; at += 16) await Promise.all(input.selected.slice(at, at + 16).map(async unit => {
     try {
-      const current = await identityVersion(input.store, unit);
-      const prior = input.servedManifest?.stateAuthorities?.[unit.family]?.[unit.state]?.version ?? null;
-      if (current.version !== prior && (current.present || prior !== null)) changed.push({ unit, version: current.version, prior });
+      const [current, served] = await Promise.all([identityVersion(input.store, unit), readServedPointer(input.artifactStore, authorityPointerKey(unit.family, unit.state))]);
+      if (current.version === served?.ref.version) return;
+      // A state with nothing promoted answers absent from its pointer list alone; only a promoted state needs a child of its own.
+      if (current.present) changed.push({ unit, version: current.version, served });
+      else await publish(unit, current.version, served, await prepareStateAuthorityArtifact(unit.family, unit.state, { versionId: current.version,
+        value: { kind: "PROMOTED_POINTERS", entries: unit.pointers.map(({ recordClass, scope }) => ({ kind: "NOT_RECORDED", recordClass, scope })) } },
+      input.artifactStore, input.now));
     } catch (error) { skipped.push(`${unit.state}:${unit.family} ${sanitizedErrorDiagnostic(error)}`); }
-  }
+  }));
   const releases = new Map<string, WorkerMemoryRelease>();
   const cwd = input.env.WTP_RUNTIME_AUTHORITY_REPO ?? process.cwd();
   const env = childEnvironment(input.env);
   const commands = changed.map(({ unit, version }) => ({
-    id: `${contractId(unit)}:reader-artifact`, executable: process.execPath,
+    id: `${stateAuthorityContractId(unit.family, unit.state)}:reader-artifact`, executable: process.execPath,
     args: ["--experimental-strip-types", resolve(cwd, "scripts/publish-state-authority.mts"), `--state=${unit.state}`,
       `--family=${unit.family}`, `--version=${version}`, `--observed-at=${input.now}`],
     env: admittedRuntimeChildEnvironment({ parentEnv: env,
-      capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: contractId(unit), parentPid: process.pid }),
+      capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: stateAuthorityContractId(unit.family, unit.state), parentPid: process.pid }),
   }));
   try { await runBoundedChildPass(commands, {
     cwd, env, maxBufferBytes: 64 * 1024, discardOutputAfterSettlement: true,
@@ -103,16 +113,14 @@ export async function dispatchStateArtifacts(input: {
       (command as { onStarted?: (pid: number) => void }).onStarted = pid => release.observe?.(pid);
     },
     onSettled: async (run, index) => {
-      const { unit, version, prior } = changed[index];
+      const { unit, version, served } = changed[index];
       try {
         if (run.status !== 0 || run.termination !== "EXITED") throw new Error(run.errorMessage ?? (run.stderr.trim() || "STATE_ARTIFACT_CHILD_FAILED"));
-        const entry = childResult(run.stdout, unit, version);
-        if ((await identityVersion(input.currentStore, unit)).version !== version) throw new Error("STATE_ARTIFACT_POINTER_MOVED");
-        (stateAuthorities[unit.family] ??= {})[unit.state] = { ...entry, expectedPreviousVersion: prior };
+        await publish(unit, version, served, childResult(run.stdout, unit, version));
       } catch (error) { skipped.push(`${unit.state}:${unit.family} ${sanitizedErrorDiagnostic(error)}`); }
       finally { releases.get(run.id)?.(); releases.delete(run.id); }
     },
   }, input.children?.launch); }
   finally { for (const release of releases.values()) release(); releases.clear(); }
-  return { stateAuthorities, skipped };
+  return { published, skipped };
 }

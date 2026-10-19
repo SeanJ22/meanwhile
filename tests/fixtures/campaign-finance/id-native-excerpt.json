@@ -1,0 +1,36 @@
+[
+  {
+    "id": "116005",
+    "date": "2024-01-12 12:00:00",
+    "amount": "500",
+    "from_entity_type": "Individual",
+    "to_pk_id": "3006",
+    "to_display_name": "Christina Stanley",
+    "to_entity_type": "Candidate",
+    "to_office_name": "City Council",
+    "to_reg_district": "WASHINGTON",
+    "elec_year": "2023",
+    "report_id": "84476",
+    "report_code": "C-2",
+    "report_name": "First $500",
+    "report_status": "original",
+    "report_submit_date": "2024-01-12 11:31:30"
+  },
+  {
+    "id": "112699",
+    "date": "2023-12-31 12:00:00",
+    "amount": "1.24",
+    "from_entity_type": "Individual",
+    "to_pk_id": "1005",
+    "to_display_name": "Blair Dance",
+    "to_entity_type": "Candidate",
+    "to_office_name": "County Commissioner",
+    "to_reg_district": "FREMONT",
+    "elec_year": "2024",
+    "report_id": "75232",
+    "report_code": "C-2",
+    "report_name": "2023 Annual",
+    "report_status": "original",
+    "report_submit_date": "2024-01-01 21:07:06"
+  }
+]

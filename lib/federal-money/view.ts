@@ -25,7 +25,7 @@ export function federalMoneyStateDivision(state: string | null | undefined): str
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === state.toUpperCase());
   return jurisdiction ? `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}` : null;
 }
-export interface FederalMoneyRow {
+interface FederalMoneyRow {
   readonly fact: FederalMoneyFact;
   readonly label: string;
   readonly relationship: "RECIPIENT" | "GEOGRAPHY" | "BOTH";
@@ -56,7 +56,7 @@ export function federalMoneyDetails(fact: FederalMoneyFact): { label: string; va
   return Object.entries(fact.details).flatMap(([key, value]) => value === null || value === "" || ["table", "placeCode"].includes(key) ? [] : [{ label: words(key), value: typeof value === "boolean" ? value ? "Yes" : "No" : typeof value === "string" && /^\d{4}-\d{2}-\d{2}T/.test(value) ? value.slice(0, 10) : String(value) }]);
 }
 
-export function federalMoneyText(fact: FederalMoneyFact, relationship: FederalMoneyRow["relationship"]): string {
+function federalMoneyText(fact: FederalMoneyFact, relationship: FederalMoneyRow["relationship"]): string {
   const parts = [`${KIND_LABELS[fact.kind]}: ${fact.title}`];
   if (["GRANT", "CONTRACT", "LOAN"].includes(fact.kind)) {
     parts.push(relationship === "GEOGRAPHY" ? "Reaching this place" : relationship === "BOTH" ? "Received by this government and reaching this place" : "Received by this government");

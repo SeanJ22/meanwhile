@@ -36,7 +36,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -159,7 +158,7 @@ test("a place reads one full state ballot and its own candidate families before 
   installManualValue("candidate-corpus:AZ", { documents: [] });
   const bundle = promotedFixtureBundle(), selected: string[] = [];
   const families = await withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
-    states: bundle.stateAuthorities!.states,
+    families: bundle.stateAuthorities!.families,
     load: async (family, state) => { selected.push(`${family}:${state}`); return bundle.stateAuthorities!.load(family, state); },
   } }, () => readHeldPlaceFamilies([county], { now: at }));
   assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);

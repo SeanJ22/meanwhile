@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
-import { COLD_CHECK_MINUTES, STANDING_CHECK_MINUTES, overdueDoors } from "@/lib/doors/overdue.ts";
+import { STANDING_CHECK_MINUTES, coldCheckMinutes, overdueDoors } from "@/lib/doors/overdue.ts";
 import { MIN_OBSERVED_CHECK_MINUTES, checkEveryWithObserved, doorRateRow, observeChange, observedChangeMinutesByDoor, recordDoorChange } from "@/lib/doors/observed-rate.ts";
 import { recordDoorOutcome } from "@/lib/doors/outcome.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
@@ -87,7 +87,7 @@ test("an observed door is overdue by the check it produces, and Admin's row says
   assert.equal(late.length, 1);
   assert.equal(late[0]!.checkEveryMinutes, 180);
   assert.equal(late[0]!.overdueByMinutes, 60);
-  assert.deepEqual(doorRateRow(succeeded, COLD_CHECK_MINUTES), { doorId: door.doorId, observedChangeMinutes: 180, changesSeen: 3, lastChangedAt: at(0), checkEveryMinutes: 180, basis: "OBSERVED" });
+  assert.deepEqual(doorRateRow(succeeded, coldCheckMinutes()), { doorId: door.doorId, observedChangeMinutes: 180, changesSeen: 3, lastChangedAt: at(0), checkEveryMinutes: 180, basis: "OBSERVED" });
   assert.equal(doorRateRow(plain, STANDING_CHECK_MINUTES).basis, "POLICY");
   assert.equal(observedChangeMinutesByDoor([succeeded, plain]).get(door.doorId), 180);
   assert.equal(observedChangeMinutesByDoor([{ ...succeeded, checkEveryMinutes: 600 }]).size, 0, "a door with a hand setting is not sped up");

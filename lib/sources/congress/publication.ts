@@ -88,7 +88,8 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
   }
   const projection: FederalProjection = { formatVersion: 1, source: input.source, records: [...facts.values()].sort((a, b) => a.id.localeCompare(b.id)),
     ...(input.cursor !== undefined ? { cursor: input.cursor } : held?.cursor ? { cursor: held.cursor } : {}),
-    ...(input.counts ? { counts: input.counts } : held?.counts ? { counts: held.counts } : {}) };
+    // The refresh keeps adding to its running total, so the projection holds this moment's copy.
+    ...(input.counts ? { counts: structuredClone(input.counts) } : held?.counts ? { counts: held.counts } : {}) };
   const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
   const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
   const fresh = await Promise.all(input.captures.map(capture => holdFederalCapture(input.vault, capture)));

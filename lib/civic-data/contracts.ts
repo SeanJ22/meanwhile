@@ -12,6 +12,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
 import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
+import { CAMPAIGN_FINANCE_SOURCES, CAMPAIGN_FINANCE_PARSER, campaignFinanceSourceId, campaignFinanceNativeScope } from "../funding/state-sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
@@ -39,14 +40,34 @@ export interface SittingWindowSchedule {
   readonly follows?: readonly { readonly meetingSource: string; readonly bodyId: string }[];
 }
 
-export const MEETING_SITTING_WINDOW = {
-  kind: "SITTING_WINDOW",
-  windowMs: 7 * DAY,
-  hotEveryMs: HOUR,
-  baseEveryMs: 12 * HOUR,
-} as const satisfies SittingWindowSchedule;
+/** The meeting check clock before Admin sets one. */
+export const MEETING_CLOCK_DEFAULTS = { windowMs: 7 * DAY, hotEveryMs: HOUR, baseEveryMs: 12 * HOUR } as const;
+export type MeetingClock = { readonly windowMs: number; readonly hotEveryMs: number; readonly baseEveryMs: number };
+let meetingClock: MeetingClock = MEETING_CLOCK_DEFAULTS;
+
+/** Installs the clock Admin's settings state; every meeting schedule reads it where it is used. */
+export function installMeetingClock(clock: MeetingClock): void {
+  meetingClock = { windowMs: clock.windowMs, hotEveryMs: clock.hotEveryMs, baseEveryMs: clock.baseEveryMs };
+}
+
+export const currentMeetingClock = (): MeetingClock => meetingClock;
+
+/** The sitting-window schedule whose intervals are always the installed clock's. */
+export function meetingSittingWindow(follows?: SittingWindowSchedule["follows"]): SittingWindowSchedule {
+  return {
+    kind: "SITTING_WINDOW",
+    get windowMs() { return meetingClock.windowMs; },
+    get hotEveryMs() { return meetingClock.hotEveryMs; },
+    get baseEveryMs() { return meetingClock.baseEveryMs; },
+    ...(follows ? { follows } : {}),
+  };
+}
+
+export const MEETING_SITTING_WINDOW = meetingSittingWindow();
 
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+/** A routine pass ends within this; a source read it could not finish stays due for the next pass. */
+export const ROUTINE_PASS_BUDGET_MS = 30 * 60_000;
 
 export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   id: "plain-english-translations",
@@ -388,13 +409,10 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [
-        { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-        { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-      ],
-    },
+    schedule: meetingSittingWindow([
+      { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+      { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+    ]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, or votes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "pima-legistar-outcomes" },
     validationContract: CHECKS,
@@ -422,10 +440,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
-    },
+    schedule: meetingSittingWindow([{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }]),
     retry: { afterMs: HOUR, description: "one hour after a failed calendar or minutes read" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "mesa-legistar-minutes-outcomes" },
     validationContract: CHECKS,
@@ -554,6 +569,20 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   } as const)),
+  ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
+    id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
+    recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(source.state), fanOut: true,
+    acquisitionFailureDomain: `routine-source:campaign-finance:${source.state}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/state-campaign-finance.mts", "--promote", `--state=${source.state}`] },
+    parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
+    cadence: { description: "Daily conditional checks of the official state's campaign-finance publication", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "Retry acquisition gaps after an hour while preserving accepted source records" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: campaignFinanceSourceId(source.state) },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `campaign-finance:${source.state}`, consumers: ["state and local campaign money", "government and person cards", "Ask", "Admin"] },
+    lkgBehavior: "A failed source or publication retains each government's last accepted records and reports the reason. Empty deltas succeed and create no absence claim.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/campaign-finance/"],
+  })),
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,

@@ -823,6 +823,7 @@ export const civicDataCandidateEvents = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_candidate_events_sequence_idx").on(table.candidateId, table.sequence),
+    index("civic_data_candidate_events_confirmed_at_idx").on(table.at).where(sql`left(${table.detail}, 26) = 'UNCHANGED_CONFIRMATION_V1 '`),
     check("civic_data_candidate_events_positive_sequence", sql`${table.sequence} > 0`),
     check(
       "civic_data_candidate_events_state_known",
@@ -852,6 +853,7 @@ export const civicDataPromotions = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
+    index("civic_data_promotions_promoted_at_idx").on(table.promotedAt),
     index("civic_data_promotions_federal_lookup_idx").using("gin", sql`(${table.payload}->'lookupKeys') jsonb_path_ops`)
       .where(sql`${table.payload} ? 'lookupKeys'`),
     check(
@@ -932,6 +934,12 @@ export const civicDataReaderProjections = pgTable(
   ],
 );
 
+
+/** Meeting partitions whose pointer moved or whose version was confirmed; a database trigger fills it. */
+export const meetingPublicationQueue = pgTable("meeting_publication_queue", {
+  scope: text("scope").primaryKey(),
+  queuedAt: timestamp("queued_at", { withTimezone: true, mode: "string" }).notNull().default(sql`clock_timestamp()`),
+});
 
 /** Raw click history lives in Blobs; these are retry keys and coarse aggregates. */
 export const readerEventBatches = pgTable("reader_event_batches", {

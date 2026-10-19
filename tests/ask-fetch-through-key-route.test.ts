@@ -3,7 +3,8 @@ import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
 import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import { installAbsent, installFederalVotes, installPimaLocalFinance, installPromotedValue, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 await installRegistryAuthority();
 await installFederalVotes();
 await installPimaOutcomes();
@@ -14,7 +15,7 @@ for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-cont
 
 for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
 await installPimaLocalFinance();
-installMeetings([]);
+await publishRecordedEdge([]);
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";

@@ -6,7 +6,7 @@ import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partition
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import type { VenueEntry } from "../lib/meetings/venue-cache.ts";
-import { readMeetingsProjection, snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import {
@@ -14,6 +14,7 @@ import {
   promoteMeetingPartition,
   reconcileSuccessfulMeetingPartition,
 } from "../scripts/ingest.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 
 const PARTITION = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.meetingSource === "official-page-events" &&
@@ -184,7 +185,9 @@ test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, an
     assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
-  const read = await readMeetingsProjection({ store, bypassCache: true, now: NEXT_READ });
+  const edge = freshEdge();
+  await publishPass(store, edge, NEXT_READ);
+  const read = await readPlace(edge, store, [PARTITION.ocdId!], NEXT_READ);
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;

@@ -341,7 +341,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
   const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
   assert.ok(edge);
-  await withReaderAuthorityEdge({stateAuthorities:{states:{"registry-runtime":new Set(["AZ"])},load:async(family,state)=>{assert.equal(state,"AZ");
+  await withReaderAuthorityEdge({stateAuthorities:{families:new Set(["registry-runtime","ballot-contests","candidate-profiles","candidate-publications","candidate-campaign-sites-derived"] as const),load:async(family,state)=>{assert.equal(state,"AZ");
     if(family==="registry-runtime")return{kind:"PROMOTED_POINTERS",entries:[manualEdgeEntry("registry-runtime:AZ",{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},f.prior.versionId)]};
     const recordClass=family==="ballot-contests"?"BALLOT_CANDIDACY":family==="candidate-profiles"?"CANDIDATE_PROFILE":family==="candidate-publications"?"CANDIDATE_PUBLICATION":"CURATED_READER_RECORD";
     return{kind:"PROMOTED_POINTERS",entries:[absentEdgeEntry(recordClass,stateBallotScope(family==="candidate-publications"?"candidate-corpus":family as StateBallotFamily,state))]};}},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {

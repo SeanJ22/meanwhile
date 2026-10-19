@@ -15,6 +15,7 @@ import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, DEAREST_ACTIVE_RATES, rateFor, ratesForPrompt } from "./model-cost.ts";
+import { addExact, exactSum, exactValue, mergeExact, subtractExact, type ExactSum } from "./exact-sum.ts";
 /* Re-exported so a cost reader keys on the one constant. */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
 
@@ -416,29 +417,54 @@ function keyOf(entry: CostEntry, dimension: RollupDimension): string {
   }
 }
 
+/** A `MeasuredTotal` kept as it is folded, so totals can be carried between reads and merged. */
+export interface MeasuredSum {
+  readonly sum: ExactSum;
+  measured: number;
+  unmeasured: number;
+}
+
+export const measuredSum = (): MeasuredSum => ({ sum: exactSum(), measured: 0, unmeasured: 0 });
+
+export function addMeasured(into: MeasuredSum, value: number | null | undefined): void {
+  if (value === null || value === undefined || Number.isNaN(value)) into.unmeasured += 1;
+  else {
+    addExact(into.sum, value);
+    into.measured += 1;
+  }
+}
+
+export function subtractMeasured(from: MeasuredSum, value: number | null | undefined): void {
+  if (value === null || value === undefined || Number.isNaN(value)) from.unmeasured -= 1;
+  else {
+    subtractExact(from.sum, value);
+    from.measured -= 1;
+  }
+}
+
+export function mergeMeasured(into: MeasuredSum, from: MeasuredSum): void {
+  mergeExact(into.sum, from.sum);
+  into.measured += from.measured;
+  into.unmeasured += from.unmeasured;
+}
+
+export function measuredTotal(from: MeasuredSum): MeasuredTotal {
+  return {
+    total: from.measured === 0 ? null : exactValue(from.sum),
+    measured: from.measured,
+    unmeasured: from.unmeasured,
+    complete: from.unmeasured === 0 && from.measured > 0,
+  };
+}
+
 /** Sum one metric across entries, keeping the measured/unmeasured split. */
 export function sumMetric(
   entries: readonly CostEntry[],
   metric: CostMetric,
 ): MeasuredTotal {
-  let total = 0;
-  let measured = 0;
-  let unmeasured = 0;
-  for (const entry of entries) {
-    const value = entry.cost[metric];
-    if (value === null || value === undefined || Number.isNaN(value)) {
-      unmeasured += 1;
-      continue;
-    }
-    total += value;
-    measured += 1;
-  }
-  return {
-    total: measured === 0 ? null : total,
-    measured,
-    unmeasured,
-    complete: unmeasured === 0 && measured > 0,
-  };
+  const total = measuredSum();
+  for (const entry of entries) addMeasured(total, entry.cost[metric]);
+  return measuredTotal(total);
 }
 
 /** Roll entries up along one dimension. Buckets are sorted by key so reports are stable. */
@@ -635,16 +661,6 @@ export function utcMonthWindow(nowIso: string, monthsBack = 0): LedgerWindow {
     label: UTC_MONTH_LABEL.format(new Date(start)),
     complete: !open,
   };
-}
-
-/** The ledger rows recorded inside a window, both bounds inclusive. An unparseable `recordedAt` is dropped. */
-export function entriesInWindow(entries: readonly CostEntry[], window: Pick<LedgerWindow, "since" | "until">): readonly CostEntry[] {
-  const since = Date.parse(window.since);
-  const until = Date.parse(window.until);
-  return entries.filter((e) => {
-    const at = Date.parse(e.recordedAt);
-    return Number.isFinite(at) && at >= since && at <= until;
-  });
 }
 
 /** ----------------------------------------------------------------- report */

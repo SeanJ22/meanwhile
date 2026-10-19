@@ -1,3 +1,4 @@
+import { filterStateAbbr, stateFilter } from "./state-focus.ts";
 import { mapPresentationHeld } from "./flight-presentation.ts";
 import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification, LayerSpecification, VectorSourceSpecification } from "maplibre-gl";
 
@@ -6,17 +7,6 @@ import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
 
-/**
- * District overlays: boundaries and identifiers only (a shape, an OCD-ID and
- * a label). Geometry is one national PMTiles archive; only visible tiles are
- * fetched.
- */
-
-/**
- * The properties the map reads, out of what `pnpm districts:fetch` writes:
- * the exact contract between the build script and the map. Other written
- * properties (`lsad`, `classfp`, `geoid`) are not read and not typed.
- */
 export interface DistrictFeature {
   type: "Feature";
   properties: {
@@ -42,30 +32,16 @@ export interface DistrictCollection {
 interface LayerSpec {
   /** Census layers represented by this boundary kind, independent of state coverage. */
   censusLayers: readonly string[];
-  /**
-   * Draw only features whose FUNCSTAT says a government sits there. The
-   * municipal type merges place and county-subdivision layers, where Census
-   * marks fill-in rows `F` (fictitious); filtering dedupes them and keeps
-   * statistical county subdivisions off the map. Features without the
-   * property always pass.
-   */
+
   governingOnly?: boolean;
   label: string;
-  /**
-   * Dash pattern, in multiples of the line width (any even-length array).
-   * Hue is the tier signal; the pattern separates overlapping types within a
-   * tier, long dashes for the widest containing shape down to a fine dot for
-   * the most nested.
-   */
+
   dash: number[];
   /** Stroke weight relative to the base ramp: the containing shape is heaviest. */
   weight: number;
   /** Zoom at which this type's labels appear; nested types come in later than their containers. */
   labelMinZoom: number;
-  /**
-   * Layers with no data yet. The control still renders and the layer is still
-   * defined — an empty slot you can see beats a missing one you cannot.
-   */
+
   empty?: boolean;
 }
 
@@ -111,14 +87,7 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     labelMinZoom: 8,
     governingOnly: true,
   },
-  /*
-   * The three school types read apart, since they overlap the same ground:
-   * - unified covers everything: heaviest of the three, label first;
-   * - elementary is a fine dot, the most nested shape;
-   * - secondary is a long-short dash, least like the other two, since a
-   *   regional secondary district overlaps elementary districts.
-   * All three stay the lightest weights on the Local tier and held to high zoom.
-   */
+
   "school-unified": {
     censusLayers: ["unsd"],
     label: "School (unified)",
@@ -166,7 +135,10 @@ export function preserveDistrictStyle(previous: StyleSpecification | undefined, 
     if (m && m[1] in DISTRICT_LAYERS) types.add(m[1] as DistrictType);
   }
   const boundaries = [...types]
-    .flatMap(districtStyleLayers)
+    .flatMap(type => {
+      const layer = previous.layers.find(value => value.id === lineLayerId(type));
+      return districtStyleLayers(type, filterStateAbbr(layer && "filter" in layer ? layer.filter : undefined));
+    })
     .filter(layer => layer.type !== "symbol" || next.glyphs);
   const layers = next.layers.filter(layer => !layer.id.startsWith("district-"));
   const labels = layers.findIndex(layer => layer.type === "symbol");
@@ -181,12 +153,12 @@ export function boundarySource(archive = BOUNDARY_ARCHIVE_URL): VectorSourceSpec
 }
 
 /** Start fetching visible boundaries as soon as MapLibre constructs its style. */
-export function withDistricts(style: StyleSpecification, types: readonly DistrictType[]): StyleSpecification {
+export function withDistricts(style: StyleSpecification, types: readonly DistrictType[], state: string | null): StyleSpecification {
   if (!types.length) return style;
   return {
     ...style,
     sources: { ...style.sources, [NATIONAL_BOUNDARIES_SOURCE]: boundarySource() },
-    layers: [...style.layers, ...types.flatMap(districtStyleLayers).filter(layer => layer.type !== "symbol" || style.glyphs)],
+    layers: [...style.layers, ...types.flatMap(type => districtStyleLayers(type, state)).filter(layer => layer.type !== "symbol" || style.glyphs)],
   };
 }
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
@@ -198,11 +170,6 @@ export const allFillLayerIds = () => DISTRICT_TYPES.map(fillLayerId);
 
 const LABEL_FONT = ["Noto Sans Regular"];
 
-/**
- * Read a design token off the document. MapLibre paint properties cannot take
- * a `var()`; a theme change swaps the basemap style, which re-adds these
- * layers and re-reads the tokens.
- */
 function token(name: string, fallback: string): string {
   if (typeof window === "undefined") return fallback;
   const value = getComputedStyle(document.documentElement)
@@ -213,11 +180,6 @@ function token(name: string, fallback: string): string {
 
 /* ------------------------------------------------------------- loading --- */
 
-/**
- * Mirrors `GOVERNING_FUNCSTAT` in `lib/registry/derive.ts`: A/B/C/G govern,
- * F/N/S/I do not. A literal here because the map bundle must not import
- * registry code; a test asserts the two agree.
- */
 export const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 
 export function keepFeature(
@@ -234,10 +196,6 @@ export function keepFeature(
 
 /* ------------------------------------------------------------ rendering --- */
 
-/**
- * The first symbol layer in the current style, so district and other custom
- * layers land under the basemap place labels.
- */
 export function firstSymbolLayerId(map: MapLibreMap): string | undefined {
   for (const layer of map.getStyle()?.layers ?? []) {
     if (layer.type === "symbol" && !layer.id.startsWith("district-")) {
@@ -256,12 +214,14 @@ export function districtLayersPresent(map: MapLibreMap) {
   return DISTRICT_TYPES.some((type) => districtLayerPresent(map, type));
 }
 
-function districtStyleLayers(type: DistrictType): LayerSpecification[] {
+function districtStyleLayers(type: DistrictType, state: string | null): LayerSpecification[] {
   const spec = DISTRICT_LAYERS[type];
   const source = sourceId(type);
-  const filter: FilterSpecification = spec.governingOnly
+  const boundaryFilter: FilterSpecification = spec.governingOnly
     ? ["all", ["==", ["get", "boundaryType"], type], ["in", ["coalesce", ["get", "funcstat"], "A"], ["literal", [...GOVERNING_FUNCSTAT]]]]
     : ["==", ["get", "boundaryType"], type];
+
+  const filter = ["all", boundaryFilter, stateFilter(state)] as FilterSpecification;
 
   // Hue says tier; dash pattern and weight distinguish jurisdiction types.
   const accent = token(TIER_ACCENT_VAR[DISTRICT_TYPE_TIER[type]], "#5f7a8a");
@@ -356,13 +316,23 @@ function districtStyleLayers(type: DistrictType): LayerSpecification[] {
     }];
 }
 
-export function addDistrictLayer(map: MapLibreMap, type: DistrictType): void {
+export function addDistrictLayer(map: MapLibreMap, type: DistrictType, state: string | null): void {
   if (!map.getSource(NATIONAL_BOUNDARIES_SOURCE)) map.addSource(NATIONAL_BOUNDARIES_SOURCE, boundarySource());
   const before = firstSymbolLayerId(map);
   // Repair partially attached layers without duplicating the surviving ones.
-  for (const layer of districtStyleLayers(type)) {
+  for (const layer of districtStyleLayers(type, state)) {
     if (layer.type === "symbol" && !map.getStyle()?.glyphs) continue;
     if (!map.getLayer(layer.id)) map.addLayer(layer, before);
+  }
+}
+
+export function setDistrictState(map: MapLibreMap, state: string | null): void {
+  for (const type of DISTRICT_TYPES) {
+    for (const layer of districtStyleLayers(type, state)) {
+      if (map.getLayer(layer.id) && "filter" in layer && JSON.stringify(map.getFilter(layer.id)) !== JSON.stringify(layer.filter)) {
+        map.setFilter(layer.id, layer.filter);
+      }
+    }
   }
 }
 
@@ -381,12 +351,6 @@ export function removeDistrictLayers(map: MapLibreMap): void {
 
 let selected: { type: DistrictType; ocdId: string } | null = null;
 
-/**
- * Mark one district selected.
- *
- * Via feature-state, never by mutating the source — the whole point of
- * `promoteId` above.
- */
 export function setSelectedDistrict(
   map: MapLibreMap,
   type: DistrictType | null,
@@ -411,11 +375,6 @@ export function setSelectedDistrict(
 
 let narrowedApplied: { type: DistrictType; ocdId: string }[] = [];
 
-/**
- * Shade the reader's narrowed divisions (the street they typed). Feature-state
- * like selection, quieter, and additive. Entries whose layer is not loaded yet
- * are skipped; the caller re-applies on the map's load signals.
- */
 export function setNarrowedDistricts(
   map: MapLibreMap,
   entries: { type: DistrictType; ocdId: string }[],
@@ -454,15 +413,6 @@ export interface DrawnDistrict {
   label: string;
 }
 
-/**
- * Every district currently drawn, deduplicated by ocdId: the one denominator
- * behind both the Districts stat card and the list it opens.
- */
-/**
- * Does the reader see districts right now? One predicate for every surface
- * that describes the district layer. The drawn set is evidence and the switch
- * is intent: where they disagree, what is painted wins.
- */
 export function districtsAreVisible(
   drawnCount: number | null,
   switchOn: boolean,
@@ -471,10 +421,6 @@ export function districtsAreVisible(
   return switchOn;
 }
 
-/**
- * The reader turned the layer off and nothing is drawn: the only state in
- * which "switched off" is true.
- */
 export function districtsSwitchedOffAndEmpty(
   drawnCount: number | null,
   switchOn: boolean,
@@ -519,11 +465,6 @@ export function drawnDistrictsOn(
   return drawn;
 }
 
-/**
- * Every district containing a click. A point returns a set, not one district:
- * a point sits in several layers at once, and can be in two features of the
- * same layer (an elementary and a regional high school district).
- */
 export function districtsAt(
   map: MapLibreMap,
   point: { x: number; y: number },
@@ -568,11 +509,6 @@ export function districtsAt(
   return hits;
 }
 
-/**
- * The bounds of one selected district, of any type, so the camera can center
- * it. Read from rendered features (what the reader sees). A district not on
- * screen returns `null` and the camera stays put.
- */
 export function boundsOfDistrict(
   map: MapLibreMap,
   type: DistrictType,
@@ -627,12 +563,6 @@ export function boundsOfDistrict(
   ];
 }
 
-/**
- * The whole district's box, from the source's full geometry rather than what
- * is rendered, so a boundary mostly off screen still fits. Null when the
- * source is not loaded or holds no such feature; callers fall back to the
- * rendered box.
- */
 export async function fullBoundsOfDistrict(
   map: MapLibreMap,
   type: DistrictType,

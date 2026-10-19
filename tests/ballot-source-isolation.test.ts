@@ -85,7 +85,6 @@ function nhBallot(races: readonly TestRace[]): BallotSet {
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -200,7 +199,7 @@ function failedBallotEdge(states: readonly string[]): ReaderAuthorityEdgeBundle 
   const base = promotedFixtureBundle();
   return { ...base, edgeOnly: true as const,
     promoted: new Map([...base.promoted!].filter(([key]) => !states.some(state => key === `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`))),
-    stateAuthorities: { states: { "ballot-contests": new Set(states.map(state => state.toUpperCase())) },
+    stateAuthorities: { families: new Set(["ballot-contests"] as const),
       load: async (family: StateAuthorityFamily, state: string) => { if (family === "ballot-contests" && states.includes(state)) throw new Error("PLANTED_STATE_BALLOT_FAILURE"); return base.stateAuthorities!.load(family, state); } } };
 }
 

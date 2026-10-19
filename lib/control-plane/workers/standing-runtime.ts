@@ -89,10 +89,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         autonomousPlan:{...plan,contract:{...plan.contract,methodVersion:knowledge.version}}},now())).value;
     }
     const history=await readLineageHistory(input.repos,item.id);
-    const artifacts=new Map(history.artifacts.map(artifact=>[artifact.artifactId,artifact]));
     for (const result of history.scouts) await indexScoutFindings(input.repos.boxFindings,result,now());
     for (const record of history.workerResults) if (record.result.role === "DETECTIVE") {
-      await indexDetectiveFindings(input.repos.boxFindings,{...record,result:record.result},artifacts,now());
+      await indexDetectiveFindings(input.repos.boxFindings,{...record,result:record.result},input.repos.artifacts,now());
     }
     if (history.scouts.some(result=>result.outcome === "NEEDS_ADAPTER" && result.refusal === null)) {
       await workAdapterQueue({repos:input.repos,results:history.scouts,now:now(),

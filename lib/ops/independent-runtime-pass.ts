@@ -35,8 +35,12 @@ export async function runIndependentRuntimePass(
   return Promise.all(running);
 }
 
-export interface IndependentRuntimeLane extends IndependentRuntimeOperation {
+export interface IndependentRuntimeLane {
+  readonly id: string;
   readonly everyMs: number;
+  /** A run ends by its start plus this; whatever it has not finished stays owed to the next tick. */
+  readonly budgetMs: number;
+  readonly run: (deadlineMs: number) => Promise<void>;
 }
 
 /**
@@ -60,6 +64,9 @@ export class IndependentRuntimeLaneScheduler {
       if (!Number.isSafeInteger(lane.everyMs) || lane.everyMs <= 0) {
         throw new Error(`INDEPENDENT_RUNTIME_LANE_INTERVAL_INVALID:${lane.id}:${lane.everyMs}`);
       }
+      if (!Number.isSafeInteger(lane.budgetMs) || lane.budgetMs <= 0) {
+        throw new Error(`INDEPENDENT_RUNTIME_LANE_BUDGET_INVALID:${lane.id}:${lane.budgetMs}`);
+      }
     }
     this.#lanes = lanes;
     this.#onOutcome = onOutcome;
@@ -74,7 +81,7 @@ export class IndependentRuntimeLaneScheduler {
       if (!force && nowMs - lastStarted < lane.everyMs) continue;
       this.#lastStarted.set(lane.id, nowMs);
       launched.push(lane.id);
-      const running = settleOperation(lane);
+      const running = settleOperation({ id: lane.id, run: () => lane.run(nowMs + lane.budgetMs) });
       this.#inFlight.set(lane.id, running);
       void running.then((outcome) => {
         this.#inFlight.delete(lane.id);
@@ -88,7 +95,22 @@ export class IndependentRuntimeLaneScheduler {
     return [...this.#inFlight.keys()];
   }
 
+  /** Every run ends by its own deadline, so this waits at most the longest budget. */
   async waitForIdle(): Promise<void> {
     while (this.#inFlight.size > 0) await Promise.all([...this.#inFlight.values()]);
   }
+}
+
+/** Where a standing child learns the deadline its lane gave it. */
+const PASS_DEADLINE_ENV = "WTP_PASS_DEADLINE_AT";
+
+/** A standing child's environment with its lane deadline. */
+export function withPassDeadline(env: NodeJS.ProcessEnv, deadlineMs: number): NodeJS.ProcessEnv {
+  return { ...env, [PASS_DEADLINE_ENV]: new Date(deadlineMs).toISOString() };
+}
+
+/** The deadline a standing child was given; none when run by hand. */
+export function passDeadlineFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): number {
+  const at = Date.parse(env[PASS_DEADLINE_ENV] ?? "");
+  return Number.isFinite(at) ? at : Number.POSITIVE_INFINITY;
 }

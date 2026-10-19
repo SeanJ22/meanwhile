@@ -11,13 +11,13 @@ test("Ask can answer an explicitly named unmapped official without calling them 
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   const { allSeatHolders } = await import("../lib/registry/server.ts");
   resetGroundedState();
-  // A held official of another state: named by the reader, never one of an Arizona reader's representatives.
+  // A held official of another state, named with that state: never one of an Arizona reader's representatives.
   const holder = (await allSeatHolders()).find((seat) => seat.state === "NJ" && seat.officeTitle === "U.S. Senator");
   assert.ok(holder, "the held registry names a New Jersey senator");
   const id = holder.id;
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-last-mile-all-officials" },
-    body: JSON.stringify({ question: `How can I contact ${holder.name}?`, surface: "MAP", ocdIds: ["ocd-division/country:us/state:az"], today: "2026-09-04" }),
+    body: JSON.stringify({ question: `How can I contact ${holder.name} of New Jersey?`, surface: "MAP", ocdIds: ["ocd-division/country:us/state:az"], today: "2026-09-04" }),
   }));
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;

@@ -14,21 +14,14 @@ const ZERO_DROPS: NormalizeDropCounts = {
 };
 
 export interface SnapshotSourceOptions {
-  /** Injectable for tests; production defaults to the canonical data plane. */
-  load?: () => MeetingsSnapshot | null | Promise<MeetingsSnapshot | null>;
+  /** The meetings a read of the viewed place returned. */
+  load: () => MeetingsSnapshot | null | Promise<MeetingsSnapshot | null>;
 }
 
 export function makeSnapshotSource(
-  options: SnapshotSourceOptions = {},
+  options: SnapshotSourceOptions,
 ): ReportingMeetingSource<Meeting> {
-  // Imported inside fetch(): this module is on the client-reachable graph, and
-  // a static `node:fs` import here breaks the client build.
-  const load =
-    options.load ??
-    (async () => {
-      const reader = await import("../../meetings/snapshot.ts");
-      return reader.requireMeetingsProjection(await reader.readMeetingsProjection());
-    });
+  const { load } = options;
 
   const normalize = (raw: Meeting[], now: Date = new Date()): Meeting[] =>
     raw.map((meeting) => {

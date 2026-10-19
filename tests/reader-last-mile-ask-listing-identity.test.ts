@@ -10,29 +10,31 @@ import { meetingListingKnowledgeFor, minutesSummaryEvidenceFor, noticeSummaryEvi
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+import type { Meeting } from "../lib/sources/types.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { ambiguousListingPairs, dateOnlyListings, installMeetings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
-import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
-import { clearPreparedMeetingsProjectionCache } from "../lib/meetings/prepared-snapshot.ts";
-import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
 const { meetings: listed, pairs } = ambiguousListingPairs(3);
-const installed = recordedMeetingsSnapshot([...listed, ...dateOnlyListings(3)]);
-installMeetings(installed.meetings, installed.agendaDocuments);
-const snapshot = requireMeetingsProjection(await readMeetingsProjection());
+// A copied listing cannot cite its original's attribution rows: a promoted snapshot's rows each cite only themselves.
+const ownRows = (rows: readonly Meeting[]) => rows.map(({ actingBodies: _acting, ...row }) => row as Meeting);
+const installed = recordedMeetingsSnapshot(ownRows([...listed, ...dateOnlyListings(3)]));
+// Each recorded sitting is promoted through the partition that owns it, then published as its body's record on the edge the routes read.
+const PUBLISHED_AT = "2026-09-25T12:00:00.000Z";
+const { store: meetingStore, edge, promoted } = await publishRecordedEdge(installed.meetings, installed.agendaDocuments, PUBLISHED_AT);
+// What a reader is served from those published bodies (each row stamped with its door).
+const snapshot = requireMeetingsProjection((await readEveryBody(meetingStore, PUBLISHED_AT, { edge })).read);
+assert.ok(promoted.length >= 6, "the Tucson Unified calendar and its listings are held by a partition");
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
 test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async (t) => {
-  const prepared = new MemoryRoutineDataStore();
-  clearPreparedMeetingsProjectionCache();
-  t.after(clearPreparedMeetingsProjectionCache);
-  t.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjection", prepared.readPreparedReaderProjection.bind(prepared));
-  t.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjectionCoupling", prepared.readPreparedReaderProjectionCoupling.bind(prepared));
   assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, pairs.length);
   for (const pair of pairs) {
     const ids = pair.map(meeting => meeting.id);
@@ -70,7 +72,7 @@ test("each date with two equal calendar listings retains both, with an unresolve
     assert.equal(payload.trace.retrieval.recordCount, payload.records.length);
     assert.deepEqual(payload.meetings.map(meeting => meeting.id).sort(), ids.sort());
     for (const id of ids) {
-      const answer = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: id }) }));
+      const answer = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: id, bodyId: held[0].bodyId }) }));
       const agenda = await answer.json();
       assert.equal(answer.status, 200);
       assert.equal(agenda.meetingId, id);
@@ -78,7 +80,7 @@ test("each date with two equal calendar listings retains both, with an unresolve
       const documents = snapshot.agendaDocuments?.filter(document => document.meetingId === id) ?? [];
       assert.equal(agenda.documentsHeld, documents.length, "Equal listing fields never copy a sibling's attachment");
       if (!documents.length) { assert.deepEqual(agenda.items, []); assert.equal(agenda.documentUrl, null); }
-      const readerResponse = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(id)}`));
+      const readerResponse = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(id)}&bodyId=${encodeURIComponent(held[0].bodyId!)}`));
       const reader = await readerResponse.json();
       assert.equal(readerResponse.status, 200);
       assert.equal(reader.meetingId, id);

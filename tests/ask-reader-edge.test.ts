@@ -5,8 +5,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+
+type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { planEveryState } from "./helpers/meeting-body-fixtures.ts";
+import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -25,7 +31,7 @@ import {
   provenEdgeEntry,
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
-import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance } from "./helpers/promoted-fixtures.ts";
+import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
@@ -105,7 +111,7 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
   "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], EDGE.funding),
   "state-money": family(stateMoneyEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
   "pima-finance": family([provenEdgeEntry({ recordClass: "LOCAL_CAMPAIGN_FINANCE", scope: PIMA_LOCAL_FINANCE_CONTRACT.scope, sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId, versionId: "edge-test:ask:pima-finance", value: syntheticPimaLocalFinance() })], "edge-test:ask:pima-finance"),
-  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: syntheticFederalRollCalls(federal) })], EDGE.federalVotes),
+  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: syntheticFederalRollCalls(federal).window })], EDGE.federalVotes),
   "federal-key-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: federalVotes.sourceId, versionId: "edge-test:ask:key-votes", value: syntheticFederalKeyVotes(federal) })], "edge-test:ask:key-votes"),
   "officeholder-statements": family([manual("officeholder-statements", syntheticOfficeholderStatements(), "edge-test:ask:statements")], "edge-test:ask:statements"),
   "executive-actions": family([provenEdgeEntry({
@@ -117,7 +123,7 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
   })], "edge-test:ask:actions"),
 };
 
-const STATE_PROMOTED: PublishStateAuthorities = {
+const STATE_PROMOTED: StateValues = {
   "ballot-contests": { AZ: family([manual("ballot-contests:AZ", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "edge-test:ask:ballots")], "edge-test:ask:ballots") },
   "candidate-profiles": { AZ: family([manual("candidate-profiles:AZ", syntheticCandidateProfiles(), "edge-test:ask:profiles")], "edge-test:ask:profiles") },
   "candidate-publications": { AZ: family([manual("candidate-corpus:AZ", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus") },
@@ -126,29 +132,30 @@ const STATE_PROMOTED: PublishStateAuthorities = {
 };
 
 /** `overrides` replaces some proven-pointer families with values published under other versions. */
-async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: PublishStateAuthorities = {}): Promise<string> {
+async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: StateValues = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const snapshot = recordedMeetingsSnapshot();
-  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
-  const authority: PublishAuthority = {
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting indexes");
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
-    "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const result = await publishReaderEdgeArtifacts(snapshot, {
-    sourceThrough: snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    promotedThrough: snapshot.generatedAt,
-  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
-    registrations: {},
+  const store = new LocalFileArtifactStore(dir);
+  const meetings = new MemoryRoutineDataStore();
+  await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
+  const plan = await planEveryState({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.deepEqual(plan.stats.failed, []);
+  const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
+  await publishPointers(store, { authority,
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), "federal-directory": stateFederalDirectoryArtifacts("edge-test:ask:federal", federal), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
       generatedAt: "2026-09-25T00:00:00.000Z",
       roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
-    } } },
+    } }, "US-NH": { versionId: "none", value: null } },
+    registrations: { az: { versionId: "none", value: null }, nh: { versionId: "none", value: null } },
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   return dir;
@@ -266,9 +273,8 @@ test("a named New Hampshire official question from an Arizona ZIP opens only New
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const scopedKeys = new Map(Object.entries(manifest.stateAuthorities ?? {}).flatMap(([family, states]) =>
-    Object.entries(states ?? {}).map(([state, ref]) => [ref.key, `${family}:${state}`] as const)));
+  const scopedKeys = new Map((await Promise.all(STATE_AUTHORITY_FAMILIES.flatMap(family => ["AZ", "NH"].map(async state =>
+    [(await readServedPointer(store, authorityPointerKey(family, state)))?.ref.key, `${family}:${state}`] as const)))).filter(([key]) => key));
   const opened: string[] = [];
   const original = LocalFileArtifactStore.prototype.readBytes;
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
@@ -287,7 +293,7 @@ test("a named New Hampshire official question from an Arizona ZIP opens only New
     const payload = await response.json();
     const governor = registryFixtureForState("NH").statewideExecutives.find(row => row.holder.id.endsWith("/governor"))!;
     assert.ok(payload.answer.includes(governor.holder.name), JSON.stringify(payload).slice(0, 2000));
-    assert.deepEqual([...new Set(opened)].sort(), ["registry-runtime:NH"]);
+    assert.deepEqual([...new Set(opened)].sort(), ["federal-directory:NH", "registry-runtime:NH"]);
     assert.deepEqual(databaseReads, []);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = original;
@@ -319,18 +325,13 @@ test("a named place absent from its state registry gives a specific holding with
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const registryKey = manifest.stateAuthorities!["registry-runtime"]!.IL!.key;
+  const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "IL")))!.ref.key;
   const opened: string[] = [];
   const originalBytes = LocalFileArtifactStore.prototype.readBytes;
-  const originalArtifact = LocalFileArtifactStore.prototype.readArtifact;
   const originalFetch = globalThis.fetch;
   const requests: string[] = [];
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
     opened.push(key); return originalBytes.call(this, key);
-  };
-  LocalFileArtifactStore.prototype.readArtifact = async function (key) {
-    opened.push(key); return originalArtifact.call(this, key);
   };
   globalThis.fetch = (async (input, init) => {
     requests.push(String(input)); return originalFetch(input, init);
@@ -356,7 +357,6 @@ test("a named place absent from its state registry gives a specific holding with
     assert.deepEqual(databaseReads, []);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = originalBytes;
-    LocalFileArtifactStore.prototype.readArtifact = originalArtifact;
     globalThis.fetch = originalFetch;
   }
 });
@@ -366,7 +366,7 @@ test("a marked warm call loads the Ask's code and every Ask source from the edge
   const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };
   process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
     "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: WARM.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], WARM.funding),
-    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal) })], WARM.federalVotes),
+    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal).window })], WARM.federalVotes),
   });
   clearPromotedReadModelCache();
   databaseReads.length = 0;
@@ -419,7 +419,7 @@ test("the warm call settles only unscoped Ask sources and never preloads every s
   const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
   // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
   assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "candidateCorpus", "candidateProfiles", "ballots"]) {
+  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots", "campaignFinance"]) {
     assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
     named.delete(stateSource);
   }

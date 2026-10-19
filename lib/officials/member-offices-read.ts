@@ -1,6 +1,7 @@
 import { currentCuratedReaderRecords, refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { currentFederalDirectoryEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import { createHash } from "node:crypto";
 import { readFederalDirectoryProjection } from "./federal-directory-read-model.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
@@ -13,14 +14,12 @@ export { refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../ci
 /** Core people publication makes its offices immediately available; one request loads one state. */
 export async function readMemberOffices(officeholderId: string, state?: string, options: PromotedCivicDataReadOptions = {}): Promise<readonly MemberOfficeRecord[]> {
   if(/^congress:[A-Z]\d{6}$/.test(officeholderId)) {
-    let value=options.store ? undefined : currentFederalDirectoryEdge()?.value;
-    if(!value) {
-      refuseDatabaseInEdgeOnlyContext("The federal member offices");
-      const read=await readFederalDirectoryProjection(options);
-      if(read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
-      if(read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
-      value=read.value;
-    }
+    const places=state ? [state.replace(/^US-/i,"")] : selectedRegistryStates();
+    if(!places.length) return [];
+    const read=await readFederalDirectoryProjection(places,options);
+    if(read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+    if(read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
+    const value=read.value;
     const holder=value.roster.officeholders.find(row=>row.id === officeholderId);
     const source=holder?.fieldSources?.districtOffices;
     return (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office):MemberOfficeRecord=>({
@@ -36,15 +35,13 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
   let knownPerson = false;
   if (jurisdiction) {
     const edge = options.store ? null : currentStateLegislatorsEdge();
-    const served = edge?.jurisdictions.has(jurisdiction) ? await edge.load(jurisdiction) : null;
-    let roster = served?.value.roster;
-    if (!roster && !edge) {
+    const served = edge ? await edge.load(jurisdiction) : null;
+    let roster = served?.value?.roster;
+    if (!served) {
       refuseDatabaseInEdgeOnlyContext(`The ${jurisdiction} member offices`);
       const read = await readStatePeopleProjection(jurisdiction,options);
       if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
       if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") roster = read.value.roster;
-    } else if (!roster && edge?.jurisdictions.has(jurisdiction)) {
-      throw new Error(`The ${jurisdiction} member-office artifact could not be loaded.`);
     }
     const matches = roster?.officeholders.filter(holder => personIdentityKeys(holder).has(officeholderId)) ?? [];
     if (matches.length === 1) {

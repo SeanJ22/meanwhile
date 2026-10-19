@@ -138,23 +138,17 @@ export interface RoutinePromotionRow {
   readonly validationReceipt: unknown;
 }
 
-export interface RoutinePreparedProjectionRow {
-  readonly key: string;
-  readonly recordClass: string;
+export interface RoutineMeetingQueueRow {
   readonly scope: string;
-  readonly sequence: number;
-  readonly composedFrom: unknown;
-  readonly generatedAt: string;
-  readonly composedAt: string;
-  readonly promotedThrough: string | null;
+  readonly queuedAt: string;
 }
 
 export interface RoutineObservabilityRows {
   readonly candidates: readonly RoutineCandidateRow[];
   readonly events: readonly RoutineCandidateEventRow[];
   readonly promotions: readonly RoutinePromotionRow[];
-    /** Read in the same MVCC snapshot as the promotions; undefined means not yet read, never a zero lag. */
-  readonly preparedProjections?: readonly RoutinePreparedProjectionRow[];
+    /** Read in the same MVCC snapshot as the promotions; undefined means not yet read, never a zero wait. */
+  readonly meetingQueue?: readonly RoutineMeetingQueueRow[];
 }
 
 export interface ExactChangedRecord {
@@ -307,25 +301,15 @@ export interface RoutineContractMember {
   readonly freshness: FreshnessState;
 }
 
-export interface PreparedSnapshotLagMember {
-  readonly contractId: string;
+export interface MeetingPublicationWaiting {
   readonly scope: string;
-  readonly promotedVersionId: string;
-  /** null when the partition is absent from the serving copy entirely. */
-  readonly servedVersionId: string | null;
+  readonly queuedAt: string;
 }
 
-export interface PreparedSnapshotObservation {
-  readonly recordClass: string;
-  readonly scope: string;
-  readonly present: boolean;
-  readonly sequence: Observation<number>;
-  readonly generatedAt: Observation<string>;
-  readonly composedAt: Observation<string>;
-  readonly promotedThrough: Observation<string>;
-  readonly composedPartitions: Observation<number>;
-  readonly promotedPartitions: Observation<number>;
-  readonly lag: DrilldownCount<PreparedSnapshotLagMember>;
+/** Meeting partitions whose newest version or check has not yet reached the readers' per-body records. */
+export interface MeetingPublicationObservation {
+  readonly waiting: DrilldownCount<MeetingPublicationWaiting> | Observation<number>;
+  readonly oldestQueuedAt: Observation<string>;
   readonly detail: string;
 }
 
@@ -357,7 +341,7 @@ export interface RoutineObservabilityView {
     readonly latestOutcomeNotRecorded: DrilldownCount<RoutineContractMember>;
     readonly latestOutcomeUnknown: DrilldownCount<RoutineContractMember>;
   };
-  readonly preparedMeetingSnapshot: PreparedSnapshotObservation;
+  readonly meetingPublication: MeetingPublicationObservation;
 }
 
 export type RoutineObservabilityRead =
@@ -2198,111 +2182,21 @@ function contractMember(row: RoutineContractObservation): RoutineContractMember 
   };
 }
 
-// Mirrors MEETINGS_RECORD_CLASS / MEETINGS_PREPARED_SCOPE in lib/meetings/prepared-snapshot.ts, inlined so the
-// admin projector never imports the composing reader.
-const PREPARED_MEETING_RECORD_CLASS = "MEETING";
-const PREPARED_MEETING_SCOPE = "composed-reader-snapshot";
-
-function preparedCoupling(value: unknown): Map<string, string> | null {
-  if (!Array.isArray(value)) return null;
-  const out = new Map<string, string>();
-  for (const entry of value) {
-    const row = object(entry);
-    if (!row || typeof row.contractId !== "string" || typeof row.versionId !== "string") return null;
-    out.set(row.contractId, row.versionId);
+function projectMeetingPublication(rows: RoutineObservabilityRows, nowMs: number): MeetingPublicationObservation {
+  if (rows.meetingQueue === undefined) {
+    const detail = "The meeting publication queue was not read in this MVCC snapshot.";
+    return { waiting: notRecorded(detail), oldestQueuedAt: notRecorded(detail), detail };
   }
-  return out;
-}
-
-function projectPreparedMeetingSnapshot(
-  rows: RoutineObservabilityRows,
-  nowMs: number,
-): PreparedSnapshotObservation {
-  const base = { recordClass: PREPARED_MEETING_RECORD_CLASS, scope: PREPARED_MEETING_SCOPE } as const;
-  const promotedByScope = new Map<string, string>();
-  for (const promotion of rows.promotions) {
-    if (
-      promotion.recordClass === PREPARED_MEETING_RECORD_CLASS &&
-      MEETING_PARTITION_CONTRACTS.some((contract) => contract.scope === promotion.scope)
-    ) {
-      promotedByScope.set(promotion.scope, promotion.currentVersionId);
-    }
-  }
-  const promotedPartitions = measured(promotedByScope.size);
-
-  if (rows.preparedProjections === undefined) {
-    const detail = "The prepared reader-serving snapshot was not read in this MVCC snapshot.";
-    return {
-      ...base, present: false,
-      sequence: notRecorded(detail), generatedAt: notRecorded(detail), composedAt: notRecorded(detail),
-      promotedThrough: notRecorded(detail), composedPartitions: notRecorded(detail), promotedPartitions,
-      lag: { kind: "NOT_RECORDED", detail, members: [] }, detail,
-    };
-  }
-  const matches = rows.preparedProjections.filter(
-    (row) => row.recordClass === PREPARED_MEETING_RECORD_CLASS && row.scope === PREPARED_MEETING_SCOPE,
-  );
-  if (matches.length === 0) {
-    const detail = "No prepared reader snapshot exists yet (initial rollout). Until the standing runner publishes one, the reader composes the partitions on demand.";
-    return {
-      ...base, present: false,
-      sequence: notRecorded(detail), generatedAt: notRecorded(detail), composedAt: notRecorded(detail),
-      promotedThrough: notRecorded(detail), composedPartitions: notRecorded(detail), promotedPartitions,
-      lag: { kind: "NOT_RECORDED", detail, members: [] }, detail,
-    };
-  }
-  if (matches.length > 1) {
-    const detail = `The prepared reader snapshot query returned ${matches.length} rows for one scope; uniqueness is not proven.`;
-    return {
-      ...base, present: true,
-      sequence: unknown(detail), generatedAt: unknown(detail), composedAt: unknown(detail),
-      promotedThrough: unknown(detail), composedPartitions: unknown(detail), promotedPartitions,
-      lag: { kind: "UNKNOWN", detail, members: [] }, detail,
-    };
-  }
-  const row = matches[0]!;
-  const coupling = preparedCoupling(row.composedFrom);
-  const generatedAt = iso(row.generatedAt);
-  const composedAt = iso(row.composedAt);
-  const promotedThrough = iso(row.promotedThrough);
-  const sequenceOk = Number.isInteger(row.sequence) && row.sequence > 0;
-  if (coupling === null || generatedAt === null || composedAt === null || !sequenceOk) {
-    const detail = `The prepared reader snapshot row is unreadable (${coupling === null ? "coupling" : !sequenceOk ? "sequence" : "timestamp"}).`;
-    return {
-      ...base, present: true,
-      sequence: sequenceOk ? measured(row.sequence) : unknown(detail),
-      generatedAt: generatedAt ? measured(generatedAt) : unknown(detail),
-      composedAt: composedAt ? measured(composedAt) : unknown(detail),
-      promotedThrough: promotedThrough ? measured(promotedThrough) : notRecorded("The serving copy records no promoted-through instant."),
-      composedPartitions: coupling ? measured(coupling.size) : unknown(detail),
-      promotedPartitions,
-      lag: { kind: "UNKNOWN", detail, members: [] }, detail,
-    };
-  }
-  const lagMembers: PreparedSnapshotLagMember[] = [];
-  for (const contract of MEETING_PARTITION_CONTRACTS) {
-    const promotedVersionId = promotedByScope.get(contract.scope);
-    if (promotedVersionId === undefined) continue;
-    const servedVersionId = coupling.get(contract.id) ?? null;
-    if (servedVersionId !== promotedVersionId) {
-      lagMembers.push({ contractId: contract.id, scope: contract.scope, promotedVersionId, servedVersionId });
-    }
-  }
-  const ageMs = nowMs - Date.parse(generatedAt);
-  const ageText = Number.isFinite(ageMs) ? `${Math.max(0, Math.round(ageMs / 60_000))} min old` : "age unknown";
-  const detail = lagMembers.length === 0
-    ? `Current: all ${promotedByScope.size} promoted meeting partitions are reflected in serving sequence ${row.sequence} (${ageText}).`
-    : `${lagMembers.length} promoted meeting partition(s) have advanced past serving sequence ${row.sequence} (${ageText}); the reader serves the last valid snapshot until the runner republishes.`;
+  const waiting = rows.meetingQueue.map((row) => ({ scope: row.scope, queuedAt: iso(row.queuedAt) ?? row.queuedAt }))
+    .sort((a, b) => (a.queuedAt < b.queuedAt ? -1 : a.queuedAt > b.queuedAt ? 1 : 0));
+  const oldest = waiting[0]?.queuedAt ?? null;
+  const ageMs = oldest === null ? 0 : nowMs - Date.parse(oldest);
   return {
-    ...base, present: true,
-    sequence: measured(row.sequence),
-    generatedAt: measured(generatedAt),
-    composedAt: measured(composedAt),
-    promotedThrough: promotedThrough ? measured(promotedThrough) : notRecorded("The serving copy records no promoted-through instant."),
-    composedPartitions: measured(coupling.size),
-    promotedPartitions,
-    lag: exactCount(lagMembers),
-    detail,
+    waiting: exactCount(waiting),
+    oldestQueuedAt: oldest === null ? notRecorded("Nothing is waiting.") : measured(oldest),
+    detail: waiting.length === 0
+      ? "Every promoted meeting version and check has reached the readers' records."
+      : `${waiting.length} meeting partition(s) are waiting to reach the readers' records; the oldest has waited ${Number.isFinite(ageMs) ? Math.max(0, Math.round(ageMs / 60_000)) : "an unknown number of"} min.`,
   };
 }
 
@@ -2348,7 +2242,7 @@ function projectRoutineDataObservabilityUncached(
       latestOutcomeNotRecorded: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "NOT_RECORDED" ? [members[index]] : [])),
       latestOutcomeUnknown: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "UNKNOWN" ? [members[index]] : [])),
     },
-    preparedMeetingSnapshot: projectPreparedMeetingSnapshot(rows, nowMs),
+    meetingPublication: projectMeetingPublication(rows, nowMs),
   };
 }
 

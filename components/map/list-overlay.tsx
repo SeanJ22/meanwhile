@@ -178,6 +178,16 @@ export function ListOverlay({
   const center = ui.nearMe ?? location;
   const listingCount = readerMeetingCount(sorted, listingIdentity);
 
+  const showMore = () => {
+    const nextLimit = limit + PAGE;
+    // Newly added meetings must be readable even when their groups were closed.
+    const addedGroups = new Set(sorted.slice(limit, nextLimit).map(meeting => groupKeyFor(meeting, ui.listGroupBy)));
+    for (const key of addedGroups) {
+      if (key && !ui.expandedGroups.includes(key)) dispatch({ type: "list/toggleGroup", key });
+    }
+    setLimit(nextLimit);
+  };
+
   return (
     <div
       className={embedded ? "al-overlay mw-embedded" : "al-overlay"}
@@ -355,7 +365,7 @@ export function ListOverlay({
           <button
             type="button"
             className="al-more"
-            onClick={() => setLimit((n) => n + PAGE)}
+            onClick={showMore}
           >
             Show {Math.min(hidden, PAGE)} more ({hidden} hidden)
           </button>

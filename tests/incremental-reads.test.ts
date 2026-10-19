@@ -287,7 +287,7 @@ test("Postgres: compareAndSet stamps changed_at; list() asks only for rows chang
     if (text.startsWith("UPDATE")) return [{ id: "a", revision: 2, updated_at: NOW }];
     if (text.includes("FROM cp_work_items") && !text.includes("id >") && !text.includes("changed_at >=")) return rows;
     if (text.includes("log_key, record_id, position") && !text.includes("(log_key, position) >")) {
-      return Array.from({ length: 100 }, (_, i) => ({ log_key: "k", record_id: `r${i}`, position: i, record: { i } }));
+      return Array.from({ length: 100 }, (_, i) => ({ log_key: "k", record_id: `r${i}`, position: i, record: { i }, changed_at: NOW, recorded_at: NOW }));
     }
     return [];
   } };
@@ -321,7 +321,7 @@ test("Postgres: compareAndSet stamps changed_at; list() asks only for rows chang
   const logRepo = pgAppendOnlyRepository<unknown>(sql, "artifacts", { copies: processCopies(dir) });
   const records = await logRepo.readChangedSince!("2026-10-06T11:58:00.000Z");
   assert.equal(records.records.length, 100);
-  assert.deepEqual(records.records[5], { key: "k", recordId: "r5", position: 5, record: { i: 5 } });
+  assert.deepEqual(records.records[5], { key: "k", recordId: "r5", position: 5, record: { i: 5 }, changedAt: NOW, stampedAt: NOW });
   assert.match(seen[1]!.text, /FROM cp_log_artifacts\s+WHERE changed_at >= \$1::timestamptz\s+ORDER BY log_key ASC, position ASC/);
   assert.match(seen[2]!.text, /WHERE changed_at >= \$1::timestamptz AND \(log_key, position\) > \(\$2, \$3\)/);
   assert.deepEqual(seen[2]!.params, ["2026-10-06T11:58:00.000Z", "k", 99]);

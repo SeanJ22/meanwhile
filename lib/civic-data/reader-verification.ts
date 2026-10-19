@@ -1,5 +1,7 @@
 import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
+import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
+import { federalMemberOfScope } from "../votes/data-plane.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -67,8 +69,10 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) return "lib/funding/campaign-finance-reader.ts#readCampaignFinancePublication";
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
+  if (federalDirectoryStateOf(contract.id)) return "lib/officials/federal-directory-read-model.ts#readStateFederalDirectory";
   if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
@@ -90,7 +94,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
@@ -125,7 +128,7 @@ function verifierIdFor(contract: ReaderContract): string {
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
       if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
-        ? "lib/meetings/snapshot.ts#readMeetingsProjection"
+        ? "lib/meetings/snapshot.ts#readMeetingPartitionProjection"
         : `unavailable:${contract.id}`;
   }
 }
@@ -137,6 +140,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) {
+      const { readCampaignFinancePublication } = await import("../funding/campaign-finance-reader.ts");
+      const state = contract.id.slice(3, 5);
+      return verifyExactVersion(verifierId, await readCampaignFinancePublication(state, options.scope ?? contract.scope,
+        { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} source-native campaign finance`);
+    }
     const state = parseStateBallotContractId(contract.id);
     if (state) {
       const scope = stateBallotScope(state.family, state.state);
@@ -187,6 +196,11 @@ export async function verifyRoutineReaderProjection(
         ? await (await import("../sources/plural/votes.ts")).readPluralVotesProjection(state, {store: options.store, now: options.now, bypassCache: true})
         : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
+    }
+    const directoryState = federalDirectoryStateOf(contract.id);
+    if (directoryState) {
+      const { readStateFederalDirectory } = await import("../officials/federal-directory-read-model.ts");
+      return verifyExactVersion(verifierId, await readStateFederalDirectory(directoryState, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${directoryState} federal-directory`);
     }
     const registryState = stateFromRegistryRuntimeContractId(contract.id);
     if (registryState) {
@@ -296,13 +310,12 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "congress-bulk-roster": {
-        const { readFederalDirectoryProjection } = await import("../officials/federal-directory-read-model.ts");
-        return verifyExactVersion(verifierId, await readFederalDirectoryProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-directory");
-      }
       case "congress-rollcalls": {
-        const { readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
-        return verifyExactVersion(verifierId, await readFederalRollCallsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-roll-call");
+        const { readFederalMemberVotes, readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
+        const member = federalMemberOfScope(options.scope ?? contract.scope), read = { store: options.store, now: options.now, bypassCache: true };
+        return member
+          ? verifyExactVersion(verifierId, await readFederalMemberVotes(member, read), options.expectedVersionId, "federal member positions")
+          : verifyExactVersion(verifierId, await readFederalRollCallsProjection(read), options.expectedVersionId, "federal-roll-call");
       }
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
@@ -326,9 +339,9 @@ export async function verifyRoutineReaderProjection(
       }
       case "campaign-finance": {
         const { readCampaignFinance } = await import("../funding/campaign-finance-reader.ts");
-        const prefix = "US:campaign-finance:";
-        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Campaign-finance readback requires its exact jurisdiction.");
-        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        const { isCampaignFinanceStateScope } = await import("../funding/state-sources.ts");
+        if (!options.scope || !isCampaignFinanceStateScope(options.scope)) return fail(verifierId, "Campaign-finance readback requires its exact state.");
+        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "government-budgets": {
         const { readGovernmentBudgets } = await import("./government-budgets.ts");
@@ -424,15 +437,14 @@ export async function verifyRoutineReaderProjection(
           return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} registration`);
         }
         if (contract.recordClass === "MEETING") {
-          const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-          const result = await readMeetingsProjection({ store: options.store, now: options.now, bypassCache: true });
-          const partition = result.kind === "PROMOTED"
-            ? result.partitions.find((item) => item.contractId === contract.id)
-            : undefined;
-          if (result.kind !== "PROMOTED" || partition?.kind !== "PROMOTED" || partition.versionId !== options.expectedVersionId) {
-            return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${result.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`);
+          const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
+          const { meetingPartitionContract } = await import("./meeting-partitions.ts");
+          const partition = meetingPartitionContract(contract.id);
+          const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store: options.store, now: options.now, bypassCache: true });
+          if (read?.kind !== "PROMOTED" || read.metadata.versionId !== options.expectedVersionId) {
+            return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${read?.kind ?? "an unregistered partition"}:${read?.metadata.versionId ?? "none"}.`);
           }
-          return pass(verifierId, `The typed meetings Reader composed partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
+          return pass(verifierId, `The typed meetings Reader read partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
         }
         if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
                     // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
@@ -725,8 +737,6 @@ export async function repairRoutineReaderProjectionReadback(
 export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
-type MeetingsAggregateRead = Awaited<ReturnType<typeof import("../meetings/snapshot.ts")["readMeetingsProjection"]>>;
-
 export type MeetingReaderReadbackRepairResult =
   | {
       readonly contractId: string;
@@ -746,10 +756,7 @@ export async function repairMeetingReaderProjectionReadbacks(
   contracts: readonly RoutineSourceContract[],
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
-  options: {
-    readonly aggregate?: () => Promise<MeetingsAggregateRead>;
-    readonly attestor?: ReaderVerifierClosureAttestor;
-  } = {},
+  options: { readonly attestor?: ReaderVerifierClosureAttestor } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
   const ids = contracts.map(({ id }) => id);
   const scopes = contracts.map(({ scope }) => scope);
@@ -883,69 +890,26 @@ export async function repairMeetingReaderProjectionReadbacks(
   }
 
   if (pendingRecords.length > 0) {
-    let aggregate: MeetingsAggregateRead | null = null;
-    let aggregateError: string | null = null;
-    try {
-      if (options.aggregate) {
-        aggregate = await options.aggregate();
-      } else {
-        const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-        aggregate = await readMeetingsProjection({ store, now, bypassCache: true });
-      }
-    } catch (error) {
-      aggregateError = sanitizedErrorDiagnostic(error);
-    }
-
-    if (aggregateError !== null || aggregate === null) {
-      for (const { contract } of pendingRecords) {
-        results.set(contract.id, {
-          contractId: contract.id,
-          ok: false,
-          value: null,
-          error: aggregateError ?? "MEETING_READER_AGGREGATE_RESULT_MISSING",
-        });
-      }
-    } else {
-      const evidenceWrites = await runBoundedWorkPool(
-        pendingRecords,
-        MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
-        async ({ contract, promotion }) => {
-          const partition = aggregate.kind === "PROMOTED"
-            ? aggregate.partitions.find(({ contractId }) => contractId === contract.id)
-            : undefined;
-          const verification = aggregate.kind === "PROMOTED" &&
-              partition?.kind === "PROMOTED" &&
-              partition.versionId === promotion.versionId
-            ? pass(
-                verifierIdFor(contract),
-                `The typed meetings Reader composed partition ${contract.id} at canonical version ${promotion.versionId}.`,
-              )
-            : fail(
-                verifierIdFor(contract),
-                `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ` +
-                  `${aggregate.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`,
-              );
-          return appendReaderProjectionReadback(
-            store,
-            contract,
-            promotion,
-            now,
-            normalizedVerifierCodeSha,
-            verification,
-          );
-        },
-      );
-      for (const write of evidenceWrites) {
-        const { contract } = pendingRecords[write.index]!;
-        results.set(contract.id, write.ok
-          ? {
-              contractId: contract.id,
-              ok: true,
-              value: { kind: "RECORDED", receipt: write.value },
-              error: null,
-            }
-          : { contractId: contract.id, ok: false, value: null, error: write.error });
-      }
+    const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
+    const { meetingPartitionContract } = await import("./meeting-partitions.ts");
+    const evidenceWrites = await runBoundedWorkPool(
+      pendingRecords,
+      MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
+      async ({ contract, promotion }) => {
+        const partition = meetingPartitionContract(contract.id);
+        const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store, now, bypassCache: true });
+        const verification = read?.kind === "PROMOTED" && read.metadata.versionId === promotion.versionId
+          ? pass(verifierIdFor(contract), `The typed meetings Reader read partition ${contract.id} at canonical version ${promotion.versionId}.`)
+          : fail(verifierIdFor(contract),
+            `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ${read?.kind ?? "an unregistered partition"}:${read?.metadata.versionId ?? "none"}.`);
+        return appendReaderProjectionReadback(store, contract, promotion, now, normalizedVerifierCodeSha, verification);
+      },
+    );
+    for (const write of evidenceWrites) {
+      const { contract } = pendingRecords[write.index]!;
+      results.set(contract.id, write.ok
+        ? { contractId: contract.id, ok: true, value: { kind: "RECORDED", receipt: write.value }, error: null }
+        : { contractId: contract.id, ok: false, value: null, error: write.error });
     }
   }
 

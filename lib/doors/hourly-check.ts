@@ -9,7 +9,7 @@
 
 import { doorPartitionIds } from "./mission-refresh.ts";
 import { firstLook, probeUrlFor, recordProbe, type ProbeFetch, type ProbeResult } from "./probe.ts";
-import { HOT_CHECK_MINUTES } from "./overdue.ts";
+import { hotCheckMinutes } from "./overdue.ts";
 import type { DoorRecord, DoorRepository } from "./registry.ts";
 
 /** A look is made this long before the hour is up, so the check lands on the hour rather than after it. */
@@ -19,7 +19,7 @@ const MINUTE_MS = 60_000;
 
 /** The minutes between looks for a hot door: its own setting where it is faster than the hour, else the hour. */
 function lookEveryMinutes(door: DoorRecord): number {
-  return door.checkEveryMinutes !== null && door.checkEveryMinutes < HOT_CHECK_MINUTES ? door.checkEveryMinutes : HOT_CHECK_MINUTES;
+  return door.checkEveryMinutes !== null && door.checkEveryMinutes < hotCheckMinutes() ? door.checkEveryMinutes : hotCheckMinutes();
 }
 
 export interface ProbePlan {

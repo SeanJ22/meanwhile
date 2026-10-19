@@ -163,7 +163,7 @@ function RecentVotesInner({
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1`,
+        const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1${holder.state ? `&state=${encodeURIComponent(holder.state)}` : ""}`,
           { signal: controller.signal });
         if (!response.ok) throw new Error(String(response.status));
         const page = await response.json() as { historicalVotes: MemberRollCall[];
@@ -178,13 +178,13 @@ function RecentVotesInner({
       }
     })();
     return () => controller.abort();
-  }, [holder.id, recentLoaded]);
+  }, [holder.id, holder.state, recentLoaded]);
 
   const loadMoreHistory = async () => {
     if (!historyCursor || !historyAnchor || historyLoadingMore) return;
     setHistoryLoadingMore(true);
     try {
-      const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1&cursor=${encodeURIComponent(historyCursor)}&anchor=${encodeURIComponent(historyAnchor)}`);
+      const response = await fetch(`/api/votes?member=${encodeURIComponent(holder.id)}&history=1&cursor=${encodeURIComponent(historyCursor)}&anchor=${encodeURIComponent(historyAnchor)}${holder.state ? `&state=${encodeURIComponent(holder.state)}` : ""}`);
       if (!response.ok) throw new Error(String(response.status));
       const page = await response.json() as { historicalVotes: MemberRollCall[];
         historyStatus: "COMPLETE" | "MORE" | "UNAVAILABLE";

@@ -29,12 +29,14 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import { BOOKKEEPING_KINDS, FIELD_MANUAL_ROLES, OUTCOME_RANK, coveringPlaces, methodEvidencePlaces, projectFieldManual, queryState, readMethodEvidence, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL, MANUAL_LEARNED_ROUTES_SQL } from "./field-manual-sql.ts";
 import { sourceOriginKeys,type FieldManualSourceHint } from "../field-manual-sources.ts";
 import { createFixMapRepository, type FixMapRepository } from "../../method/fix-map.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
 import { seedFieldManualNotes } from "../field-manual-notes.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
@@ -116,12 +118,15 @@ import {
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
+  type ChangedReadOptions,
+  type ChangedRecord,
   type ChangedRecords,
   type ChangedRows,
   type ControlPlaneRepositories,
   type FieldManualRepository,
   type DispositionCommit,
   type HeldSlots,
+  type PassCursor,
   type LockManager,
   type Persisted,
   type PutOutcome,
@@ -314,10 +319,10 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  async function listChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>> {
-
+  async function listChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}): Promise<ChangedRows<T>> {
     const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
+    const selected = read.projection ? recordProjectionSql(table, read.projection, "value") : "value";
     const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {
@@ -328,24 +333,44 @@ export function pgAggregateRepository<T>(
       const rows = (await run(
         "listChangedSince",
         "PAGE",
-        `SELECT id, revision, updated_at, value FROM ${table}
+        `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
          ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
          ORDER BY id ASC
          LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
         params,
       )) as Record<string, unknown>[];
-      for (const row of rows) {
-        out.push({
-          id: String(row.id),
-          revision: Number(row.revision),
-          updatedAt: new Date(row.updated_at as string).toISOString(),
-          value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-        });
-      }
+      const page = rows.map(row => persistedRow<T>(row));
+      if (read.page) await read.page(page);
+      else out.push(...page);
       if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
       afterId = String(rows[rows.length - 1].id);
     }
     return { rows: out, through };
+  }
+
+  function persistedRow<O>(row: Record<string, unknown>): Persisted<O> {
+    return {
+      id: String(row.id),
+      revision: Number(row.revision),
+      updatedAt: new Date(row.updated_at as string).toISOString(),
+      value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
+    };
+  }
+
+  /* Primary-key batches of one page each, so no response nears the driver cap. */
+  async function readManyAs<O>(ids: readonly string[], selected: string, caller: string): Promise<Persisted<O>[]> {
+    const unique = [...new Set(ids)].sort();
+    const out: Persisted<O>[] = [];
+    for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
+      const rows = (await run(
+        caller,
+        "PAGE",
+        `SELECT id, revision, updated_at, ${selected} AS value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
+        [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
+      )) as Record<string, unknown>[];
+      out.push(...rows.map(row => persistedRow<O>(row)));
+    }
+    return out;
   }
 
   const copies = options.copies ?? null;
@@ -485,25 +510,31 @@ export function pgAggregateRepository<T>(
       };
     },
 
-    async readMany(ids) {
+    readMany: ids => readManyAs<T>(ids, "value", "readMany"),
+    readManyNarrowed: (ids, projection) => readManyAs<unknown>(ids,
+      Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "readManyNarrowed"),
 
-      const unique = [...new Set(ids)].sort();
-      const out: Persisted<T>[] = [];
-      for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
+    async listWhereIn(path, values, projection) {
+      /* Keyset-paged like `list()`; an expression index on the path serves `= ANY`. */
+      const jsonPath = jsonPathLiteral(table, path);
+      const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
+      const wanted = [...new Set(values)];
+      const out: Persisted<unknown>[] = [];
+      if (wanted.length === 0) return out;
+      let afterId: string | null = null;
+      for (;;) {
         const rows = (await run(
-          "readMany",
+          "listWhereIn",
           "PAGE",
-          `SELECT id, revision, updated_at, value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
-          [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
+          `SELECT id, revision, updated_at, ${narrowed} AS value FROM ${table}
+           WHERE value #>> '${jsonPath}' = ANY($1::text[])${scopeFilter}${afterId === null ? "" : " AND id > $2"}
+           ORDER BY id ASC
+           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+          afterId === null ? [wanted] : [wanted, afterId],
         )) as Record<string, unknown>[];
-        for (const row of rows) {
-          out.push({
-            id: String(row.id),
-            revision: Number(row.revision),
-            updatedAt: new Date(row.updated_at as string).toISOString(),
-            value: parseValue<T>(row.value, `${where} id ${String(row.id)}`),
-          });
-        }
+        out.push(...rows.map(row => persistedRow<unknown>(row)));
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
+        afterId = String(rows[rows.length - 1].id);
       }
       return out;
     },
@@ -526,7 +557,9 @@ function pgArchivedAggregateRepository<T>(sql: Sql, entity: string, table: strin
     pgAggregateRepository<T>(sql, entity, `${table}_archive`, options));
   const history = pgAggregateRepository<T>(sql, entity, `${table}_history`, options);
   return { ...archive, read: history.read, mustRead: history.mustRead,
-    readNarrowed: history.readNarrowed, readMany: history.readMany };
+    readNarrowed: history.readNarrowed, readMany: history.readMany,
+    readManyNarrowed: history.readManyNarrowed, listWhereIn: history.listWhereIn,
+    listChangedSince: history.listChangedSince };
 }
 
 export function pgAppendOnlyRepository<T>(
@@ -543,46 +576,62 @@ export function pgAppendOnlyRepository<T>(
     WHERE (origin.record->>'stage'='SCOUTED' OR origin.record #>> '{offered,stage}'='SCOUTED')
       AND cp_control_state(coalesce(origin.record->'offered',origin.record))='${options.state}')`:"";
 
-  async function readChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>> {
+  const changedRecord = (r: Record<string, unknown>): ChangedRecord<T> => ({
+    key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+    record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`),
+    changedAt: new Date(r.changed_at as string).toISOString(), stampedAt: new Date(r.recorded_at as string).toISOString(),
+  });
 
+  /* Keyset-paged by (log_key, position) under `filters`, each page handed to `page` as it arrives. */
+  async function pagedRecords(caller: string, filters: (at: (value: unknown) => string) => readonly string[], selected: string,
+    page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void): Promise<void> {
+    let cursor: { readonly key: string; readonly position: number } | null = null;
+    for (;;) {
+      const params: unknown[] = [];
+      const at = (value: unknown) => `$${params.push(value)}`;
+      const where = [...filters(at), cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
+      const rows = (await run(
+        caller,
+        "PAGE",
+        `SELECT log_key, record_id, position, ${selected} AS record, changed_at, recorded_at FROM ${table}
+         ${where.length === 0 ? "" : `WHERE ${where.join(" AND ")}`}
+         ORDER BY log_key ASC, position ASC
+         LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+        params,
+      )) as Record<string, unknown>[];
+      await page(rows.map(changedRecord));
+      if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+      const last = rows[rows.length - 1];
+      cursor = { key: String(last.log_key), position: Number(last.position) };
+    }
+  }
+
+  async function readChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}): Promise<ChangedRecords<T>> {
+    /* `readAll()` narrowed to records the database stamped at or after `since`, less the held ones; `through` is the database clock before the first page. */
     const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
-    const out: { key: string; recordId: string; position: number; record: T }[] = [];
-    const stateKeys=pipelineState ? ((await run("readChangedSince:stateKeys","PAGE",
-      `SELECT DISTINCT log_key FROM ${table} WHERE ${pipelineState} ORDER BY log_key`)) as Record<string,unknown>[]).map(row=>String(row.log_key)) : null;
-    const batches=stateKeys===null?[null]:Array.from({length:Math.ceil(stateKeys.length/APPEND_ONLY_LOG_READ_PAGE)},(_,index)=>stateKeys.slice(index*APPEND_ONLY_LOG_READ_PAGE,(index+1)*APPEND_ONLY_LOG_READ_PAGE));
-    const heldByKey=new Map<string,HeldSlots>();
-    if(stateKeys!==null)for(const slot of held??[]) {
-      const slots=heldByKey.get(slot[0])??[];heldByKey.set(slot[0],[...slots,slot]);
+    const out: ChangedRecord<T>[] = [];
+    const stateKeys = pipelineState ? ((await run("readChangedSince:stateKeys", "PAGE",
+      `SELECT DISTINCT log_key FROM ${table} WHERE ${pipelineState} ORDER BY log_key`)) as Record<string, unknown>[]).map(row => String(row.log_key)) : null;
+    const batches = stateKeys === null ? [null] : Array.from({ length: Math.ceil(stateKeys.length / APPEND_ONLY_LOG_READ_PAGE) },
+      (_, index) => stateKeys.slice(index * APPEND_ONLY_LOG_READ_PAGE, (index + 1) * APPEND_ONLY_LOG_READ_PAGE));
+    const heldByKey = new Map<string, (readonly [string, number])[]>();
+    if (stateKeys !== null) for (const slot of held ?? []) {
+      const slots = heldByKey.get(slot[0]) ?? [];
+      slots.push(slot);
+      heldByKey.set(slot[0], slots);
     }
-    for(const keys of batches) {
-      const batchHeld=keys===null?held:keys.flatMap(key=>heldByKey.get(key)??[]);
-      let cursor: { readonly key: string; readonly position: number } | null = null;
-      for (;;) {
-        const params: unknown[] = [];
-        const at = (value: unknown) => `$${params.push(value)}`;
-        const statePredicate=keys!==null ? `log_key=ANY(${at(keys)}::text[])` : (table==="cp_log_artifacts" || table==="cp_log_worker_results" || table==="cp_log_transitions"
-          ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
-          : `cp_control_state(record)='${options.state}'`);
-        const filters = [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "", since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(batchHeld, at, "log_key", "position"),
-          cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
-        const rows = (await run(
-          "readChangedSince",
-          "PAGE",
-          `SELECT log_key, record_id, position, record FROM ${table}
-           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-           ORDER BY log_key ASC, position ASC
-           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-          params,
-        )) as Record<string, unknown>[];
-        for (const r of rows) {
-          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
-            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
-        }
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        const last = rows[rows.length - 1];
-        cursor = { key: String(last.log_key), position: Number(last.position) };
-      }
+    for (const keys of batches) {
+      const batchHeld = keys === null ? held : keys.flatMap(key => heldByKey.get(key) ?? []);
+      await pagedRecords("readChangedSince", at => {
+        const statePredicate = keys !== null ? `log_key=ANY(${at(keys)}::text[])`
+          : ["cp_log_artifacts", "cp_log_worker_results", "cp_log_transitions"].includes(table)
+            ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
+            : `cp_control_state(record)='${options.state}'`;
+        return [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "",
+          since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(batchHeld, at, "log_key", "position")];
+      }, read.projection ? recordProjectionSql(table, read.projection) : "record",
+      async records => { if (read.page) await read.page(records); else out.push(...records); });
     }
     return { records: out, through };
   }
@@ -771,6 +820,9 @@ export function pgAppendOnlyRepository<T>(
       }
       return out;
     },
+
+    readStampedBetween: (from, until, page) => pagedRecords("readStampedBetween",
+      at => [`recorded_at >= ${at(from)}::timestamptz`, `recorded_at < ${at(until)}::timestamptz`], "record", page),
 
     readAll: () => heldAll(record => record),
     readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),
@@ -1597,6 +1649,10 @@ export async function createPgRepositories(
       "cp_owner_snapshots",
       bounded,
     ),
+    ownerSnapshotTotals: pgAggregateRepository<OwnerSnapshotTotals>(sql, "OwnerSnapshotTotals", "cp_owner_snapshots", bounded),
+    ownerSnapshotStates: pgAggregateRepository<OwnerSnapshotState>(sql, "OwnerSnapshotState", "cp_owner_snapshots", bounded),
+    ownerSnapshotStateTotals: pgAggregateRepository<StateTotals>(sql, "StateTotals", "cp_owner_snapshots", bounded),
+    ownerSnapshotInboxes: pgAggregateRepository<SpilledInbox>(sql, "SpilledInbox", "cp_owner_snapshots", bounded),
     fieldManual: pgFieldManualRepository(sql,bounded,()=>repositories.fixMap),
     fixMap: createFixMapRepository(async (text, params) =>
       (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
@@ -1629,6 +1685,7 @@ export async function createPgRepositories(
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgBoxRepository(sql, bounded),
+    passCursors: pgAggregateRepository<PassCursor>(sql, "PassCursor", "cp_pass_cursors", bounded),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
     promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline", bounded),

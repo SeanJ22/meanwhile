@@ -15,7 +15,6 @@ export interface RecordIndex {
   readonly kind: "READER_RECORDS";
   readonly base: unknown;
   readonly records: readonly RecordRef[];
-  readonly parties?: Readonly<Record<string, string | null>>;
 }
 
 function tagsOf(value: unknown): Set<string> {
@@ -37,6 +36,12 @@ function tagsOf(value: unknown): Set<string> {
 
 // Large collections become immutable records. The index contains identifiers and shape, never their payloads.
 export async function publishAuthorityRecords(value: unknown, store: ReaderArtifactStore, previous?: RecordIndex): Promise<RecordIndex> {
+  const writer = authorityRecordWriter(store, previous);
+  return writer.index(await writer.add(value, []));
+}
+
+/** Writes each value's collections as records as it arrives and returns the value reduced to its index shape, so a family is never held whole. */
+export function authorityRecordWriter(store: ReaderArtifactStore, previous?: RecordIndex) {
   const records: RecordRef[] = [];
   const held = new Map(previous?.records.map(ref => [ref.sha, ref.key]));
   const record = async (row: unknown, path: readonly (string | number)[], extra: readonly string[] = []) => {
@@ -73,11 +78,10 @@ export async function publishAuthorityRecords(value: unknown, store: ReaderArtif
     }
     return row;
   };
-  const base = await walk(value, []);
-  const directory = value as { directory?: unknown; roster?: { officeholders: { id: string; partyLabel: string | null }[] } } | null;
-  const parties = directory?.directory && directory.roster?.officeholders
-    ? Object.fromEntries(directory.roster.officeholders.map(holder => [holder.id, holder.partyLabel])) : undefined;
-  return { kind: "READER_RECORDS", base, records, ...(parties ? { parties } : {}) };
+  return {
+    add: (value: unknown, path: readonly (string | number)[]) => walk(value, path),
+    index: (base: unknown): RecordIndex => ({ kind: "READER_RECORDS", base, records }),
+  };
 }
 
 const values = new Map<string, Promise<unknown>>();
@@ -119,7 +123,6 @@ export async function readAuthorityRecords(index: RecordIndex, store: ReaderArti
   }
   const out = structuredClone(index.base) as Record<string | number, unknown>;
   if (selection?.governmentWindow) out.governmentCount = index.records.filter(ref => ref.path[0] === "governments").length;
-  if (selection && index.parties) out.partyLabels = index.parties;
   const loaded = await Promise.all([...wanted].map(async ref => {
     let read = values.get(ref.key);
     if (!read) {

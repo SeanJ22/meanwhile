@@ -1,0 +1,40 @@
+[
+  {
+    "transactionID": 202901,
+    "transactionVersionID": 1,
+    "filerRegistrationGuid": "78f14494-4247-4010-a442-b8b3aa073b67",
+    "filerName": "3M COMPANY VT PAC",
+    "transactionAmount": 500.0,
+    "transactionDate": "11/11/2017",
+    "transactionTypeDescription": "Expenditure",
+    "reportName": "03/15/2018 - GENERAL",
+    "transactionSubTypeDescription": "Monetary Expenditure",
+    "filerTypeCode": "PAC",
+    "timedReport": "",
+    "filerReportGuid": "5f0a8d3a-5436-4de9-99c6-88bf60784539",
+    "officeType": null,
+    "electionCycle": "2018  General",
+    "candidateFirstName": null,
+    "candidateLastName": null,
+    "candidateMiddleName": null
+  },
+  {
+    "transactionID": 202900,
+    "transactionVersionID": 1,
+    "filerRegistrationGuid": "78f14494-4247-4010-a442-b8b3aa073b67",
+    "filerName": "3M COMPANY VT PAC",
+    "transactionAmount": 750.0,
+    "transactionDate": "11/11/2017",
+    "transactionTypeDescription": "Expenditure",
+    "reportName": "03/15/2018 - GENERAL",
+    "transactionSubTypeDescription": "Monetary Expenditure",
+    "filerTypeCode": "PAC",
+    "timedReport": "",
+    "filerReportGuid": "5f0a8d3a-5436-4de9-99c6-88bf60784539",
+    "officeType": null,
+    "electionCycle": "2018  General",
+    "candidateFirstName": null,
+    "candidateLastName": null,
+    "candidateMiddleName": null
+  }
+]

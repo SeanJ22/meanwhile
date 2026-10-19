@@ -595,58 +595,6 @@ function exactObjectKeys(value: Record<string, unknown>, expected: readonly stri
   return canonicallyEqual(Object.keys(value).sort(), [...expected].sort());
 }
 
-function exactCivicRecordMemberMap(value: unknown): Map<string, string> | null {
-  if (!Array.isArray(value)) return null;
-  const members = new Map<string, string>();
-  for (const member of value) {
-    const row = jsonObject(member);
-    if (
-      row === null ||
-      !exactObjectKeys(row, ["key", "record"]) ||
-      !nonempty(row.key) ||
-      members.has(row.key)
-    ) return null;
-    try {
-      members.set(row.key, canonicalCivicDataJson(row));
-    } catch {
-      return null;
-    }
-  }
-  return members;
-}
-
-function exactCivicRecordMembership(left: unknown, right: unknown): boolean {
-  const leftMembers = exactCivicRecordMemberMap(left);
-  const rightMembers = exactCivicRecordMemberMap(right);
-  if (
-    leftMembers === null ||
-    rightMembers === null ||
-    leftMembers.size !== rightMembers.size
-  ) return false;
-  return [...leftMembers].every(([key, member]) => rightMembers.get(key) === member);
-}
-
-/** Accepts the one `/2` predecessor whose member array order changed under JSONB; any other member difference is refused. */
-function legacyCongressCivicRecordOrderOnly(
-  contractId: string,
-  predecessor: CandidateVersionRecord,
-  derived: unknown,
-): boolean {
-  const prior = predecessor.candidate;
-  return (
-    contractId === "congress-bulk-roster" &&
-    prior.sourceId === "congress-directory-project" &&
-    prior.recordClass === "FEDERAL_DIRECTORY" &&
-    prior.scope === "US:current-congress-directory" &&
-    prior.normalization.parserVersion === "congress-directory/2" &&
-    prior.normalization.normalizedPayloadHash === undefined &&
-    prior.normalization.normalizedHash === durableSha256(prior.readModel) &&
-    prior.civicRecords !== undefined &&
-    !canonicallyEqual(prior.civicRecords, derived) &&
-    exactCivicRecordMembership(prior.civicRecords, derived)
-  );
-}
-
 const LEGACY_NH_MEMBER_KEYS = [
   "chamber",
   "familyName",
@@ -1085,12 +1033,7 @@ export function trustedLkgReattestationEvidenceIssue(
   );
   if (
     predecessor.candidate.civicRecords !== undefined &&
-    !canonicallyEqual(predecessor.candidate.civicRecords, predecessorDerivedRecords) &&
-    !legacyCongressCivicRecordOrderOnly(
-      evidence.contractId,
-      predecessor,
-      predecessorDerivedRecords,
-    )
+    !canonicallyEqual(predecessor.candidate.civicRecords, predecessorDerivedRecords)
   ) return "the predecessor carries civic members which conflict with its exact Reader projection";
   const copyIssue = nhV2ToV3
     ? nhMembersV2ToV3CopyIssue(candidate, predecessor)

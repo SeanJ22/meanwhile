@@ -340,12 +340,25 @@ async function changeInput() {
   console.log(JSON.stringify({ state, changedContest: contest.id, changedCandidate: candidate.id }));
 }
 
+/** Every state family's pointer, by family and state. */
+async function stateRefs(store: import("../lib/meetings/edge-store.ts").ReaderArtifactStore) {
+  const { REGISTRY_STATES } = await import("../lib/civic-data/state-scopes.ts");
+  const { STATE_AUTHORITY_FAMILIES } = await import("../lib/meetings/edge-artifacts.ts");
+  const { authorityPointerKey } = await import("../lib/meetings/edge-serving.ts");
+  const refs: Record<string, Record<string, { key: string; version: string; sha: string }>> = {};
+  for (const family of STATE_AUTHORITY_FAMILIES) for (const state of REGISTRY_STATES) {
+    const held = await store.readJsonPointer<{ key: string; version: string; sha: string }>(authorityPointerKey(family, state));
+    if (held) (refs[family] ??= {})[state] = held.value;
+  }
+  return refs;
+}
+
 async function isolationSnapshot() {
   const { ballotInputHash, ballotInputStamp } = await import("../lib/civic-data/ballot-input.ts");
   const { ballotPublicationDue } = await import("../lib/civic-data/ballot-publication.ts");
   const { REGISTRY_STATES, requireBallotState } = await import("../lib/civic-data/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
-  const authority = (await new LocalFileArtifactStore(edgeDirectory).readManifest())!.manifest.stateAuthorities!;
+  const authority = await stateRefs(new LocalFileArtifactStore(edgeDirectory));
   assert.equal(Object.keys(authority["ballot-contests"]!).length, REGISTRY_STATES.length);
   const hashes: Record<string, string> = {};
   for (const state of REGISTRY_STATES) hashes[state] = await ballotInputHash(directory, state);
@@ -465,11 +478,6 @@ async function worker() {
       artifactTransfer.reads.push({ key, bytes: bytes?.byteLength ?? 0 });
       return bytes;
     },
-    async readArtifact(key) {
-      const artifact = await heldArtifactStore.readArtifact(key);
-      artifactTransfer.reads.push({ key, bytes: artifact ? size(artifact) : 0 });
-      return artifact;
-    },
     async putImmutable(bytes, suffix) {
       const key = await heldArtifactStore.putImmutable(bytes, suffix);
       artifactTransfer.writes.push({ key, bytes: bytes.byteLength });
@@ -477,8 +485,8 @@ async function worker() {
     },
   };
   const authorityFamily = family === "candidate-corpus" ? "candidate-publications" : family;
-  const beforeManifest = (await heldArtifactStore.readManifest())?.manifest;
-  const allowedArtifactKeys = new Set([beforeManifest?.stateAuthorities?.[authorityFamily as "ballot-contests"]?.[state]?.key]);
+  const beforeRefs = await stateRefs(heldArtifactStore);
+  const allowedArtifactKeys = new Set([beforeRefs[authorityFamily]?.[state]?.key]);
   const recordClassFor = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
     "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
     "registry-runtime": "REGISTRY_RUNTIME_BINDING" } as const;
@@ -580,13 +588,16 @@ async function worker() {
     assert.ok(!process.exitCode, "The actual state artifact CLI must succeed.");
     result = { entry: "scripts/publish-state-authority.mts" };
   } else if (phase === "artifact" || phase === "artifact-all" || phase === "unchanged") {
-    const { publishSupervisorReaderEdge } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { readerEdgePieces } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { dispatchStateArtifacts } = await import("../lib/civic-data/state-artifact-dispatch.ts");
     const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
     const children: unknown[] = [];
     const { selectedStateEdgePointers } = await import("../lib/civic-data/promoted-edge-publication.ts");
     const selected = phase === "artifact" ? [{ recordClass, scope }] : selectedStateEdgePointers(null).flatMap(unit => unit.pointers);
-    const published = await stage("edge:metadata-coordinator", () => publishSupervisorReaderEdge(new PostgresRoutineDataStore(), now,
-      selected, { artifactStore, stateArtifactChildren: { launch: async command => {
+    const pieces = new Set(readerEdgePieces(selected).map(piece => `${piece.family}/${piece.place}`));
+    const store = new PostgresRoutineDataStore();
+    const published = await stage("edge:metadata-coordinator", () => dispatchStateArtifacts({ store, currentStore: store, artifactStore, now, env: process.env,
+      selected: selectedStateEdgePointers(null).filter(unit => pieces.has(`${unit.family}/${unit.state}`)), children: { launch: async command => {
         assert.notEqual(phase, "unchanged", "An unchanged national poll must launch no artifact child.");
         const version = command.args.find(value => value.startsWith("--version="))!;
         const authority = command.args.find(value => value.startsWith("--family="))!.slice("--family=".length);
@@ -600,16 +611,16 @@ async function worker() {
         children.push({ ...JSON.parse(line.slice("SCALE_RESULT=".length)), stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes });
         return { id: command.id, status: 0, signal: null, stdout: measured.output, stderr: "", termination: "EXITED", errorMessage: null };
       } } }));
-    assert.ok(published.ok, JSON.stringify(published));
+    assert.deepEqual(published.skipped, [], JSON.stringify(published));
     if (phase === "unchanged") {
       assert.equal(artifactTransfer.writes.length, 0);
       assert.equal(artifactTransfer.reads.length, 0);
       assert.equal(artifactTransfer.manifestWrites, 0);
     }
-    const after = (await heldArtifactStore.readManifest())!.manifest.stateAuthorities!;
+    const after = await stateRefs(heldArtifactStore);
     const changed: string[] = [], concurrentChanges: string[] = [];
     for (const [kind, states] of Object.entries(after)) for (const [key, ref] of Object.entries(states)) {
-      if (JSON.stringify(beforeManifest?.stateAuthorities?.[kind as keyof typeof after]?.[key]) === JSON.stringify(ref)) continue;
+      if (JSON.stringify(beforeRefs[kind]?.[key]) === JSON.stringify(ref)) continue;
       if (key !== state && phase !== "artifact-all") {
         assert.equal(arg("concurrent-coverage"), "1", "Only the selected state's artifacts may change in an isolated run.");
         concurrentChanges.push(`${kind}:${key}`);
@@ -625,8 +636,7 @@ async function worker() {
     const { ensureReaderAuthorityEdge } = await import("../lib/meetings/edge-serving.ts");
     const { withReaderAuthorityEdge, readPromotedEdgeFirst } = await import("../lib/registry/runtime-edge.ts");
     const { readerBallotSourcesForDivisions } = await import("../lib/ballot/reader-sources.ts");
-    const manifest = (await artifactStore.readManifest())!.manifest;
-    const bundle = await ensureReaderAuthorityEdge(manifest, artifactStore, [authorityFamily as "ballot-contests"]);
+    const bundle = (await ensureReaderAuthorityEdge(null, artifactStore, [authorityFamily as "ballot-contests"]))!;
     if (family === "ballot-contests" && phase === "read") {
       const sources = await withReaderAuthorityEdge(bundle, () => readerBallotSourcesForDivisions(ids));
       const ballots = await Promise.all(sources.map(async row => row.source.normalize(await row.source.fetch())));

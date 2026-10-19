@@ -11,7 +11,7 @@ import {
 } from "../lib/ballot/could-govern.ts";
 import { needsPill, zipCertainty } from "../lib/geo/zip-certainty.ts";
 import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge, censusDistrictEdgeSlice } from "../lib/census-geography/district-edge.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
@@ -25,7 +25,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
-const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { value: districtEdge, versionId: districtEdge.versionId } }, read);
+const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
 const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
 
 test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {

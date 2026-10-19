@@ -3,7 +3,8 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
 import { installAbsent, installFederalVotes, installPimaLocalFinance, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../lib/outcomes/data-plane.ts";
@@ -21,7 +22,7 @@ installAbsent(statements.recordClass,statements.scope);
 
 for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
 await installPimaLocalFinance();
-installMeetings([]);
+await publishRecordedEdge([]);
 const funding = requiredRoutineContract("fec-funding");
 installAbsent(funding.recordClass, funding.scope);
 installAbsent(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope);

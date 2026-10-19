@@ -11,11 +11,13 @@ import {
   statesOf,
   voteEvidenceFor,
 } from "../lib/ask/votes.ts";
+import { readFederalMemberVotes } from "../lib/votes/snapshot.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-/* The held federal directory and twenty synthetic roll calls per chamber, each with every member's position. */
+/* The held federal directory and twenty synthetic roll calls per chamber, each member's positions in their own record. */
 await installRegistryAuthority();
 await installFederalVotes();
+const memberVotes = async (id: string) => (await readFederalMemberVotes(id)).value;
 
 const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -31,8 +33,8 @@ test("historical Ask totals retain the recent chamber denominator under an expli
   assert.equal("rollCallsHeldForTheirChamber" in totals, false);
 });
 
-test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its own source", () => {
-  const ev = voteEvidenceFor("Juan Ciscomani", { withinStates: statesOf(READER) });
+test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its own source", async () => {
+  const ev = voteEvidenceFor("Juan Ciscomani", { withinStates: statesOf(READER), memberVotes: await memberVotes("congress:C001133") });
 
   assert.equal(ev.identity.kind, "JOINED");
   assert.equal(
@@ -77,8 +79,8 @@ test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its ow
   );
 });
 
-test("(a) a candidate for one office shows the votes of the office he HOLDS, named as such", () => {
-  const ev = voteEvidenceFor("Andy Biggs", { withinStates: ["AZ"] });
+test("(a) a candidate for one office shows the votes of the office he HOLDS, named as such", async () => {
+  const ev = voteEvidenceFor("Andy Biggs", { withinStates: ["AZ"], memberVotes: await memberVotes("congress:B001302") });
   assert.equal(ev.identity.kind, "JOINED");
   assert.equal(ev.denominators.rollCallVotesRecorded, 20);
   for (const record of ev.records) {
@@ -87,7 +89,7 @@ test("(a) a candidate for one office shows the votes of the office he HOLDS, nam
   }
 });
 
-test("(c) a federal name form fails closed, and the cost is recorded", () => {
+test("(c) a federal name form fails closed, and the cost is recorded", async () => {
   const BLOCKED: [string, string, number][] = [
     ["Adelita Grijalva", "Adelita S. Grijalva", 20],
   ];
@@ -98,7 +100,9 @@ test("(c) a federal name form fails closed, and the cost is recorded", () => {
     assert.equal(filed.records.length, 0, asFiled);
     assert.equal(filed.gaps[0].whose, "OURS", asFiled);
 
-    const rostered = voteEvidenceFor(asRostered, { withinStates: ["AZ"] });
+    const seat = resolveVoteIdentity(asRostered, { withinStates: ["AZ"] });
+    assert.equal(seat.kind, "JOINED", asRostered);
+    const rostered = voteEvidenceFor(asRostered, { withinStates: ["AZ"], memberVotes: await memberVotes(seat.kind === "JOINED" ? seat.seat.officeholderId : "") });
     assert.equal(rostered.identity.kind, "JOINED", asRostered);
     assert.equal(
       rostered.denominators.rollCallVotesRecorded,

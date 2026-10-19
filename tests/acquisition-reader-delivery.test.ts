@@ -25,7 +25,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -41,7 +40,7 @@ test("a cold state person reaches division, direct identity and Ask without fede
     officeholders: [{ ...sample, id: PERSON, personId: "plural:11111111-1111-1111-1111-111111111111", name: "Morgan Example", state: "OH", photo: null }],
     divisions: [{ officeholderId: PERSON, ocdId: DIVISION, bodyId: null }], unmatched: [] } };
   const loaded: string[] = [];
-  await withReaderAuthorityEdge({ edgeOnly: true, stateLegislators: { jurisdictions: new Set(["US-OH", "US-CA"]), load: async scope => {
+  await withReaderAuthorityEdge({ edgeOnly: true, stateLegislators: { load: async scope => {
     loaded.push(scope); assert.equal(scope, "US-OH"); return { value, versionId: "oh-one-person" };
   } } }, async () => {
     assert.equal((await seatHolderById(PERSON))?.name, "Morgan Example");
@@ -63,7 +62,7 @@ const listing: RegistrationGovernmentListing = {
 test("unpaired government evidence reaches state inventory and named Ask without asserting address service or a board", async () => {
   const value = { state: "OH", governments: [listing], divisions: [], bodies: [] } as unknown as RegistrationReadModel;
   const loaded: string[] = [];
-  await withReaderAuthorityEdge({ edgeOnly: true, registrations: { states: new Set(["oh"]), load: async state => {
+  await withReaderAuthorityEdge({ edgeOnly: true, registrations: { load: async state => {
     loaded.push(state); return { value, versionId: "oh-listings" };
   } } }, async () => {
     const page = await governmentListingsForState("OH", 0, 1);

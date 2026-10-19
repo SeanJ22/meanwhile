@@ -50,10 +50,12 @@ export async function acquireStateVotes(input: SharedOptions & {
   const now = input.now?.() ?? new Date().toISOString();
   const shared = { store: input.store, locks: input.locks, fetchImpl: input.fetchImpl, now: input.now,
     sourceId: PLURAL_VOTES_SOURCE, parserVersion: PLURAL_VOTES_PARSER, checkAfterMs: DAY, signal: input.signal };
-  const results: PluralBillResult[] = [], held: { key: string; detail: string }[] = [], acquisitions: PluralBillEvidence[] = [];
+  // Each bill goes to onBill once; only its outcome count stays, so a run never holds every body.
+  const held: { key: string; detail: string }[] = [], acquisitions: PluralBillEvidence[] = [];
   const completedBulkSessions = new Set<string>(), resolvedBulkUrls = new Set<string>();
+  let bills = 0;
   const publish = async (result: PluralBillResult) => {
-    results.push(result); acquisitions.push(result.evidence); held.push(...result.held);
+    bills++; held.push(...result.held);
     await input.onBill?.(result);
   };
   const readBulk = async (session: string, url: string) => {
@@ -89,15 +91,15 @@ export async function acquireStateVotes(input: SharedOptions & {
     const recentThrough = ordered[Math.min(1, ordered.length - 1)]!.updated;
     const recent = ordered.filter(row => row.updated >= recentThrough);
     for (const row of recent) await readBulk(row.session, row.url);
-    if (recent.every(row => completedBulkSessions.has(row.session)) || !apiKey && results.length) {
-      return { results, held: held.filter(row => row.key !== PLURAL_SESSION_CATALOG), acquisitions };
+    if (recent.every(row => completedBulkSessions.has(row.session)) || !apiKey && bills) {
+      return { bills, held: held.filter(row => row.key !== PLURAL_SESSION_CATALOG), acquisitions };
     }
   }
   if (!apiKey) throw new Error("PLURAL_PUBLIC_SESSION_LINKS_UNAVAILABLE_AND_API_KEY_UNAVAILABLE");
   const apiShared = { ...shared, headers: { "X-API-KEY": apiKey }, allowedHosts: ["v3.openstates.org"] };
   const metadata = await acquireKnownRelease({ ...apiShared, releaseId: `${state}:sessions`, url: pluralJurisdictionUrl(state),
     maxBytes: 4 * 1024 * 1024, validate: bytes => { recentSessions(bytes, state, now); } });
-  acquisitions.push(evidence(metadata));
+  acquisitions.push(evidence(metadata, ""));
   for (const session of recentSessions(metadata.bytes, state, now)) {
     if (completedBulkSessions.has(session.identifier)) continue;
     if (session.bulkUrl && await readBulk(session.identifier, session.bulkUrl)) continue;
@@ -108,7 +110,7 @@ export async function acquireStateVotes(input: SharedOptions & {
       url.searchParams.set("sort", "updated_desc"); url.searchParams.set("per_page", "100"); url.searchParams.set("page", String(page));
       const listing = await acquireKnownRelease({ ...apiShared, releaseId: `${state}:${session.identifier}:bills:${page}`, url: url.href, maxBytes: 8 * 1024 * 1024,
         validate: bytes => { const root = object(JSON.parse(decode(bytes))); if (!Array.isArray(root.results) || !Number.isSafeInteger(object(root.pagination).max_page) || Number(object(root.pagination).max_page) < 0) throw new Error("PLURAL_BILL_LIST_INVALID"); } });
-      acquisitions.push(evidence(listing));
+      acquisitions.push(evidence(listing, ""));
       const root = object(JSON.parse(decode(listing.bytes))), bills = root.results as unknown[];
       for (const raw of bills) {
         const bill = object(raw);
@@ -127,5 +129,5 @@ export async function acquireStateVotes(input: SharedOptions & {
     if (session.bulkUrl) resolvedBulkUrls.add(session.bulkUrl);
   }
   // An alternate route's success resolves its outage; malformed facts remain held.
-  return { results, acquisitions, held: held.filter(row => row.key !== PLURAL_SESSION_CATALOG && !resolvedBulkUrls.has(row.key)) };
+  return { bills, acquisitions, held: held.filter(row => row.key !== PLURAL_SESSION_CATALOG && !resolvedBulkUrls.has(row.key)) };
 }

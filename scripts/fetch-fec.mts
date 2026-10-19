@@ -8,7 +8,8 @@ import { fecBulkUrls, fecBulkText, parseFecBulk } from "../lib/funding/fec-bulk.
 import { collectFecCandidate, collectFecCommittee, collectFecSmallDonorLines, projectFecDiscovery } from "../lib/funding/fec-collector.ts";
 import { fecCycle, parseFecPage, type FecReadPage } from "../lib/funding/fec-api.ts";
 import type { FundingSnapshot, SecondHopCommittee } from "../lib/funding/types.ts";
-import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import { FEDERAL_DIRECTORY_STATES, federalDirectoryScope, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -31,7 +32,11 @@ const cycle = fecCycle(new Date(), process.argv.find(arg => arg.startsWith("--cy
 const key = process.env.FEC_API_KEY;
 const current = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
 const prior = current?.payload ?? JSON.parse(readFileSync(join(ROOT, "data/fec/fec-2026.json"), "utf8")) as FundingSnapshot;
-const roster = await store.readPromotion<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE);
+// FEC registrations are national, so every place's members are joined by their exact FEC IDs.
+const places = (await Promise.all(FEDERAL_DIRECTORY_STATES.map(state => store.readPromotion<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))))
+  .flatMap(row => row ? [row.payload.roster] : []);
+const roster: OfficeholderSet | null = places.length ? { ...places[0], officeholders: places.flatMap(row => row.officeholders), divisions: places.flatMap(row => row.divisions),
+  unmatched: places.flatMap(row => row.unmatched) } : null;
 const gaps: { code: string; detail: string }[] = [];
 if (!roster) gaps.push({ code: "CONGRESS_SOURCE_NOT_HELD", detail: "FEC registrations remain separate candidate records until the directory supplies their exact FEC IDs." });
 const domain = openSourceAcquisitionDomain({ sourceLabel: "FEC national registrations and filings", timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS });
@@ -108,7 +113,7 @@ let published = false;
 try {
   const discovery = await discoverFecCandidates({ cycle, read, observedAt: () => observation, bulk,
     onApiFailure: detail => gaps.push({ code: "FEC_API_BULK_FALLBACK", detail }) });
-  const candidates = new Map(projectFecDiscovery(discovery, cycle, roster?.payload.roster, prior.candidates).map(row => [row.fecCandidateId, row]));
+  const candidates = new Map(projectFecDiscovery(discovery, cycle, roster ?? undefined, prior.candidates).map(row => [row.fecCandidateId, row]));
   const secondHop = new Map<string, SecondHopCommittee>((prior.secondHop ?? []).filter(row => (row.cycle ?? prior.cycle) === cycle).map(row => [row.committeeId, row]));
   const countsByState: Record<string, number> = {};
   for (const row of candidates.values()) countsByState[row.state] = (countsByState[row.state] ?? 0) + 1;
@@ -122,7 +127,7 @@ try {
       secondHop: [...secondHop.values()], refreshAttempts: attempts,
       coverage: { discoveryRoute: discovery.route, countsByState },
       matchReport: { rosterMatched: new Set(rows.flatMap(row => row.targetKeys.filter(key => key.startsWith("congress:")))).size,
-        rosterTotal: roster?.payload.roster.officeholders.length ?? 0,
+        rosterTotal: roster?.officeholders.length ?? 0,
         ballotMatched: rows.filter(row => row.targetKeys.some(key => key.startsWith("ballot-"))).length,
         ballotTotal: rows.filter(row => row.targetKeys.some(key => key.startsWith("ballot-"))).length } };
     const candidate = fecFundingCandidate({ snapshot, rawBodies: [], rawHashes, finalUrl, retrievedAt: originalRetrievedAt, sourceCheck, excludedFacts: gaps });
@@ -158,7 +163,7 @@ try {
     await publish();
     await enrich(work, async id => {
       const row = candidates.get(id)!;
-      const targets = fecRegistrationTargets(discovery.registrations.find(registration => registration.candidateId === id)!, roster?.payload.roster);
+      const targets = fecRegistrationTargets(discovery.registrations.find(registration => registration.candidateId === id)!, roster ?? undefined);
       const totals = { candidate_id: id, cycle, receipts: row.totals.receipts, disbursements: row.totals.disbursements,
         last_cash_on_hand_end_period: row.totals.cashOnHand, coverage_end_date: row.totals.coverageEndDate,
         individual_itemized_contributions: row.totals.individualItemized, individual_unitemized_contributions: row.totals.individualUnitemized };

@@ -7,7 +7,6 @@ import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
 
 export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly ScoutResult[]> {
-  if (!repos.scoutResults.keysWhere) throw new Error("SCOUT_SCOPED_READ_UNAVAILABLE");
   const keys = new Set<string>();
   for (const subject of new Set(subjectIds)) for (const key of await repos.scoutResults.keysWhere(["subjectId"], subject)) keys.add(key);
   const out: ScoutResult[] = [];
@@ -17,7 +16,6 @@ export async function readScoutResultsForSubjects(repos: ControlPlaneRepositorie
 
 export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
   readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] }> {
-  if (!repos.artifacts.keysWhere) throw new Error("ARTIFACT_SCOPED_READ_UNAVAILABLE");
   const byId = new Map<string, WorkItem>();
   const owner = input.workItemId === undefined ? null : await repos.workItems.read(input.workItemId);
   if (owner) byId.set(owner.id, owner.value);
@@ -36,7 +34,6 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
 type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkItemId?: string } };
 
 export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
-  if (!repos.artifacts.keysWhere || !repos.scoutResults.keysWhere) throw new Error("STANDING_LINEAGE_SCOPED_READ_UNAVAILABLE");
   const items = new Map<string, WorkItem>();
   const readItem = async (id: string) => {
     if (!items.has(id)) { const row = await repos.workItems.read(id); if (row) items.set(id, row.value); }

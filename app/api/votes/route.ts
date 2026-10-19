@@ -1,12 +1,10 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import type { VotesSnapshot } from "@/lib/votes/types";
-import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
-import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
+import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
+import type { FederalRollCallWindow } from "@/lib/votes/data-plane";
 import { pickedKeyVotesFor } from "@/lib/votes/key-vote-picks";
 import { readKeyVotePicks } from "@/lib/votes/key-vote-picks-read";
 import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
-import { partyByOfficeholderId } from "@/lib/registry/server";
 import {
   getStateVotesSnapshot,
   OFFICIAL_STATE_VOTE_SCOPES,
@@ -30,13 +28,10 @@ const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 const RETIRED_TEST_STATE_ID = /^plural:[0-9a-f-]{36}$/i;
 
 export interface FederalVoteSupportingReaders {
-  readonly parties: () => Promise<ReadonlyMap<string, string | null>>;
   readonly keyVotes: (member: string) => Promise<MemberKeyVotes>;
 }
 
 export interface FederalVoteSupportingHoldings {
-  readonly parties: ReadonlyMap<string, string | null>;
-  readonly partyBreakdownHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
   readonly curated: MemberKeyVotes;
   readonly keyVotesHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
 }
@@ -132,19 +127,11 @@ function researchFixtureScopeForMember(member: string): OfficialStateVoteScope |
 
 export async function settleFederalVoteSupportingHoldings(
   member: string,
-  readers: FederalVoteSupportingReaders = {
-    parties: partyByOfficeholderId,
-    keyVotes: keyVotesForMember,
-  },
+  readers: FederalVoteSupportingReaders = { keyVotes: keyVotesForMember },
 ): Promise<FederalVoteSupportingHoldings> {
-  const [partyResult, keyVoteResult] = await Promise.allSettled([
-    Promise.resolve().then(() => readers.parties()),
-    Promise.resolve().then(() => readers.keyVotes(member)),
-  ]);
+  const [keyVoteResult] = await Promise.allSettled([Promise.resolve().then(() => readers.keyVotes(member))]);
 
   return {
-    parties: partyResult.status === "fulfilled" ? partyResult.value : new Map(),
-    partyBreakdownHoldingStatus: partyResult.status === "fulfilled" ? "HELD" : "HOLDING_UNAVAILABLE",
     curated: keyVoteResult.status === "fulfilled"
       ? keyVoteResult.value
       : { member, chamber: null, rows: [], positionsReadAt: null },
@@ -252,12 +239,15 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
     return stateVotes(member, holding.holding, holding.unavailableScopes);
   }
 
-  let snap: VotesSnapshot;
+  let window: FederalRollCallWindow;
   let federalRead: Awaited<ReturnType<typeof readFederalRollCallsProjection>>;
+  let own: Awaited<ReturnType<typeof readFederalMemberVotes>>;
   try {
     federalRead = await readFederalRollCallsProjection();
     if (federalRead.kind !== "PROMOTED" && federalRead.kind !== "BOOTSTRAP") throw new Error(federalRead.detail);
-    snap = getVotesSnapshot();
+    window = getVotesSnapshot();
+    own = await readFederalMemberVotes(member);
+    if (own.kind === "STORE_UNREACHABLE") throw new Error(own.detail);
   } catch {
     return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
   }
@@ -280,41 +270,36 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
       historyIssue: page.issue, currentVersionId: federalRead.projection.versionId });
   }
 
-  const positions = new Map(
-    snap.positions
-      .filter((p) => p.officeholderId === member)
-      .map((p) => [p.voteId, p.position]),
-  );
-
+  const record = own.kind === "PROMOTED" || own.kind === "BOOTSTRAP" ? own.value : null;
+  const positions = new Map((record?.positions ?? []).map((p) => [p.voteId, p.position]));
   const supporting = await settleFederalVoteSupportingHoldings(member);
 
   // A member sits in one chamber, so their votes share a chamber and the
   // roll number orders them newest-first.
-  const votes = snap.votes
+  const votes = (record?.votes ?? [])
     .filter((v) => positions.has(v.id))
     .sort((a, b) => b.rollNumber - a.rollNumber)
     .map((v) => ({
       ...v,
       position: positions.get(v.id),
-      partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, supporting.parties),
+      partyBreakdown: federalRead.value.partyBreakdowns[v.id] ?? null,
       billSummary: summaryForBill(v.billUrl),
       billSummaryPending: summaryPendingForBill(v.billUrl),
     }));
 
-
-  const { chamber, rows: keyVotes } = supporting.curated;
+  const { chamber, rows: keyVoteRows } = supporting.curated;
 
   return Response.json({
     member,
     holdingStatus: "HELD",
     count: votes.length,
-    generatedAt: snap.generatedAt,
+    generatedAt: window.generatedAt,
     votes,
-    partyBreakdownHoldingStatus: supporting.partyBreakdownHoldingStatus,
+    partyBreakdownHoldingStatus: "HELD",
     chamber,
-    keyVotes,
+    keyVotes: keyVoteRows,
     keyVotesHoldingStatus: supporting.keyVotesHoldingStatus,
-    keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
-    pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes, snap.positions, member),
+    keyVotesCriteria: keyVoteRows.length > 0 ? KEY_VOTES_CRITERIA : null,
+    pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, record?.votes ?? [], record?.positions ?? [], member),
   });
 }, ["registry-runtime","federal-directory","state-legislators","state-votes","federal-votes","federal-key-votes"]);

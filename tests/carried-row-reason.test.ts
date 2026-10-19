@@ -9,14 +9,13 @@ import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partition
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
-import { mergeScopeArtifacts, partitionSnapshotByScope, readerScopeApplies } from "../lib/meetings/edge-artifacts.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
-import { searchMeetings } from "../lib/meetings/query.ts";
+import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/registry.ts";
-import { readMeetingsProjection, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 
 const ROOT = process.cwd();
 
@@ -229,7 +228,7 @@ test("a calendar that answered is never called unreachable, and its answer is ne
   assert.match(clause, /^our latest check\b/, "the clause is about our check, whose it is");
 });
 
-test("the reason survives its writer, the Reader composition, the edge artifacts, the wire and the route's search", async (t) => {
+test("the reason survives its writer, the body's record, the edge, the wire and the route's search", async (t) => {
   assert.ok(ROCKAWAY, "the Rockaway Township council partition is registered");
   const store = new MemoryRoutineDataStore();
 
@@ -261,40 +260,39 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
     assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
-  const read = await readMeetingsProjection({ store, bypassCache: true, now: NO_LONGER_HELD });
+  const edge = freshEdge();
+  await publishPass(store, edge, NO_LONGER_HELD);
+  const read = await readPlace(edge, store, [ROCKAWAY.ocdId!], NO_LONGER_HELD);
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
-  const composed = (read as { value: MeetingsSnapshot }).value;
-  assert.deepEqual(composed.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
+  if (read.kind !== "PROMOTED") return;
+  const served = JSON.parse(JSON.stringify(read.value)) as typeof read.value;
+  assert.deepEqual(served.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
   assert.equal(
-    composed.meetings.find((row) => row.id === "civicplus:rockaway_township:archive:2026-09-22")?.carried,
+    served.meetings.find((row) => row.id === "civicplus:rockaway_township:archive:2026-09-22")?.carried,
     undefined,
     "the archive listing was read fresh by the same check",
   );
 
-  const published = JSON.parse(JSON.stringify(partitionSnapshotByScope(composed, NO_LONGER_HELD))) as ReturnType<typeof partitionSnapshotByScope>;
-  const merged = mergeScopeArtifacts(
-    published.filter((artifact) => readerScopeApplies(artifact, { states: ["nj"], ocdIds: [ROCKAWAY.ocdId!] })),
-    { generatedAt: composed.generatedAt, sources: composed.sources },
-  );
-  assert.deepEqual(merged.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
-
+  const divisions = new Set([ROCKAWAY.ocdId!]);
   const result = await searchMeetings(
     MUNICIPAL_BUILDING.lat,
     MUNICIPAL_BUILDING.lng,
     25,
     new Date(NO_LONGER_HELD),
-    new Set([ROCKAWAY.ocdId!]),
-    snapshotSourceFor(merged),
+    divisions,
+    snapshotSourceFor(served),
+    undefined,
+    meetingBodyIds([{ id: ROCKAWAY.bodyId, ocdId: ROCKAWAY.ocdId, alsoServesOcdIds: [] }], divisions),
   );
   const wire = JSON.parse(JSON.stringify(result)) as { meetings: Meeting[] };
-  const served = wire.meetings.find((row) => row.id === "civicplus:rockaway_township:1824");
-  assert.deepEqual(served?.carried, expected);
+  const listed = wire.meetings.find((row) => row.id === "civicplus:rockaway_township:1824");
+  assert.deepEqual(listed?.carried, expected);
   assert.ok(
     wire.meetings.some((row) => row.id === "civicplus:rockaway_township:archive:2026-09-22" && !row.carried),
     "the fresh archive listing of the same sitting is served beside it",
   );
-  assert.equal(carriedRowClause(served?.carried), "our latest check of this calendar didn't find this listing");
+  assert.equal(carriedRowClause(listed?.carried), "our latest check of this calendar didn't find this listing");
 });
 
 test("the venue card renders the decided clause for every reason, and never calls an answering calendar unreachable", () => {

@@ -3,6 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { RoutineCadencePolicy } from "./contracts.ts";
 import election from "../../data/reference/voting-election.json" with { type: "json" };
 import { REGISTRY_STATES, parseStateBallotContractId, stateBallotContractId } from "./state-scopes.ts";
+import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId } from "../officials/federal-directory-data-plane.ts";
 
 const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;
@@ -28,7 +29,7 @@ export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
   "member-offices", "prl", "prl-archives",
-  "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",
+  ...FEDERAL_DIRECTORY_STATES.map(federalDirectoryContractId), "congress-rollcalls", "federal-key-votes",
 ] as const satisfies readonly ManualProductionContractId[];
 
 export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_REFRESH_CONTRACT_IDS.map(id => {

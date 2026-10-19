@@ -26,6 +26,7 @@ import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
 import { DEFAULT_RADIUS_KM } from "@/lib/meetings/constants";
 import { carryPins } from "@/lib/map/carry-pins";
+import { stateAbbrFromOcdId } from "@/lib/map/state-focus";
 import { captureEvent } from "@/lib/events/client";
 import { useActiveScroll } from "@/hooks/use-active-scroll";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
@@ -115,11 +116,6 @@ const TutorialOverlay = dynamic(
   { ssr: false },
 );
 
-/**
- * The entry screen. Asks /api/meetings and hands the answer to the shell.
- * Shared UI state lives in lib/state, so every surface reads the same view.
- */
-
 interface TaggedResult extends MeetingSearchResult {
   zip: string;
   /** Which view request produced this answer; stale answers are dropped. */
@@ -130,10 +126,6 @@ interface TaggedResult extends MeetingSearchResult {
   snapshot?: SnapshotStatus | null;
 }
 
-/**
- * What the map is looking at: a typed zip or a settled viewport. The fetch
- * serves whichever is newest.
- */
 interface ViewTarget {
   key: string;
   kind: "zip" | "settled";
@@ -167,10 +159,6 @@ function MapEntryInner() {
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
 
-  /*
-   * The map's first-idle / motion-degrade signal. Drives visual chrome only;
-   * the meetings fetch answers to `view`, never to the camera.
-   */
   const [mapPresentationReady, setMapPresentationReady] = useState(false);
   const onMapPresentationReady = useCallback((ready: boolean) => {
     setMapPresentationReady(ready);
@@ -205,10 +193,6 @@ function MapEntryInner() {
   /** The one small popup on screen, if any. */
   const [pop, setPop] = useState<ReaderPop>(null);
 
-  /*
-   * Compact glance cards may coexist; the large tier is a stack. Declared
-   * before the handlers that clear them.
-   */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
 
   type LargeSurface =
@@ -364,11 +348,9 @@ function MapEntryInner() {
     setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
   }, [search]);
 
-  /* Declared before both readers below. */
-  const focusState = useStateFocus();
+  const focusState = useStateFocus(view);
+  const { contains } = focusState;
 
-  /* Driven off `location` so a session-restored zip raises its state too. Idempotent. */
-  const { activateAt } = focusState;
   // Once per ZIP, with how the reader reached it; the server stamps home vs browsing.
   const viewedZip = location?.zip ?? null;
   useEffect(() => {
@@ -377,10 +359,6 @@ function MapEntryInner() {
     }
   }, [viewedZip]);
   useActiveScroll("MAP");
-  useEffect(() => {
-    // Depends on `activateAt` alone; see hooks/use-state-focus.ts.
-    if (location) activateAt(location.lat, location.lng);
-  }, [location, activateAt]);
 
   const camera = useMemo<CameraTarget | null>(
     () =>
@@ -396,27 +374,19 @@ function MapEntryInner() {
     result: TaggedResult;
     /* The zip the held answer belongs to. */
     forZip: string | null;
+    stateOcdId: string | null;
   } | null>(null);
   if (current && held?.result !== current) {
-    setHeld({ result: current, forZip: location?.zip ?? null });
+    setHeld({ result: current, forZip: location?.zip ?? null, stateOcdId: focusState.activeOcdId });
   }
-  /* The held answer carries only while it describes the zip on screen. */
-  const shown = carryPins({
-    current,
-    held,
-    locationZip: location?.zip ?? null,
-  });
-  const refreshing = current === null && shown !== null;
-
-  /*
-   * The pins hold their last answer through a refresh, only while it belongs
-   * to the zip still shown; a new zip drops them.
-   */
   const pinned = carryPins({
     current,
     held,
+    stateOcdId: focusState.activeOcdId,
     locationZip: location?.zip ?? null,
   });
+  const shown = pinned;
+  const refreshing = current === null && shown !== null;
 
   // Everything downstream reads this one filtered list.
   const meetings = useMemo<Meeting[]>(
@@ -438,15 +408,19 @@ function MapEntryInner() {
   /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
   const officePins = useOfficePins(pinned?.coverage ?? null, { bounds: mapBounds, venues });
-  const officeSites = useMemo(() => groupOfficePins(officePins.pins), [officePins.pins]);
+  const officeSites = useMemo(() => groupOfficePins(officePins.pins.filter(pin =>
+    contains(pin.lat, pin.lng),
+  )), [officePins.pins, contains]);
   const officeOwnerById = useMemo(
     () => new Map(officeOwners(pinned?.coverage ?? null).map((owner) => [owner.holder.id, owner])),
     [pinned?.coverage],
   );
 
   const allVenues = useMemo<Venue[]>(
-    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations) : []),
-    [pinned, officeLocations],
+    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations).filter(venue =>
+      venue.lat !== null && venue.lng !== null && contains(venue.lat, venue.lng),
+    ) : []),
+    [pinned, officeLocations, contains],
   );
   const visibleVenueKeys = useMemo(
     () => new Set(venues.map((v) => v.key)),
@@ -594,21 +568,16 @@ function MapEntryInner() {
     });
   }, [ui.tiers]);
 
-  /*
-   * The reader panned and stopped. Guards: no context yet, an open popup or
-   * selection, or a move too small to matter. The camera is never touched.
-   */
   const onViewportSettle = useCallback(
     (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
-      // The crossing detector runs on every settle, before the re-query guard.
-      focusState.noteCentre(center.lat, center.lng);
+      const crossing = focusState.stateAt(center.lat, center.lng) !== focusState.activeOcdId;
       if (!location || welcomeRequested) return;
-      if (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId) return;
+      if (!crossing && (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId)) return;
 
       const radiusKm = requestRadiusKm(center.viewportRadiusKm);
       // A materially larger radius is its own reason to re-ask.
       if (
-        !shouldRequery(
+        !crossing && !shouldRequery(
           view
             ? {
                 lat: view.lat,
@@ -622,12 +591,28 @@ function MapEntryInner() {
       ) {
         return;
       }
-      // Panning never expands the notice.
+      if (crossing) {
+        setResult(null);
+        setHeld(null);
+        dispatch({ type: "select/venue", key: null });
+        dispatch({ type: "select/district", ocdId: null, districtType: null });
+        dispatch({ type: "district/pick", pick: null });
+        dispatch({ type: "scope/jurisdiction", ocdId: null });
+        dispatch({ type: "radius/clear" });
+        dispatch({ type: "nearMe/toggle", enabled: false });
+        dispatch({ type: "search/clear" });
+        dispatch({ type: "list/open", open: false });
+        setPopupMeeting(null);
+        setLarge(null);
+        setPop(null);
+        setLastHits([]);
+        setDrawnDistricts([]);
+      }
       setSettled({
         forZip: location.zip,
         target: {
           // The radius is part of the key: same centre, different zoom is a different question.
-          key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}@${radiusKm}`,
+          key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}@${radiusKm}:${focusState.stateAt(center.lat, center.lng) ?? ""}`,
           kind: "settled",
           zip: null,
           lat: center.lat,
@@ -644,6 +629,8 @@ function MapEntryInner() {
       ui.selectedDistrictOcdId,
       view,
       focusState,
+      dispatch,
+      setLarge,
     ],
   );
 
@@ -669,10 +656,6 @@ function MapEntryInner() {
     }
   }
 
-  /*
-   * Filter changes collapse the who-governs card, caught here with
-   * adjust-during-render on `ui.filters` identity.
-   */
   const [seenFilters, setSeenFilters] = useState(ui.filters);
   const [seenTiers, setSeenTiers] = useState(ui.tiers);
   if (seenFilters !== ui.filters || seenTiers !== ui.tiers) {
@@ -687,19 +670,11 @@ function MapEntryInner() {
     [lastHits, ui.selectedDistrictOcdId],
   );
 
-  /**
-   * Start all point lookups while the picker is open, including the state.
-   * The selected division's own roster stays separate from the spot's seats.
-   */
   const districtRepresentations = useDivisionsRepresentation(
     current?.coverage ?? null,
     lastHits.flatMap(hit => [hit.ocdId, ...spotDivisionsFor(hit, lastHits).map(division => division.ocdId)]),
   );
 
-  /**
-   * The body that held this sitting, matched on the body it names, never on
-   * shared geography. Null when the named body is not in coverage.
-   */
   const bodyForMeeting = useCallback(
     (meeting: Meeting): CoveredBody | null => {
       const bodies = current?.coverage?.bodies;
@@ -738,7 +713,9 @@ function MapEntryInner() {
       venues,
       officePins: officePins.pins.length,
       result: answer,
-      location,
+      location: answer && /^\d{5}$/.test(answer.zip)
+        ? { zip: answer.zip, lat: answer.center.lat, lng: answer.center.lng }
+        : view?.kind === "zip" ? location : null,
       drawnDistricts,
       dropped: 0,
       searchFailed: failure !== null,
@@ -863,12 +840,8 @@ function MapEntryInner() {
     [ui.selectedDistrictOcdId, ui.selectedDistrictType],
   );
 
-  /*
-   * The reader's narrowed divisions shade on the map, read for the zip the
-   * who-governs card speaks. Division type comes from the OCD id's segment.
-   */
   const noticeZip =
-    result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
+    shown && /^\d{5}$/.test(shown.zip) ? shown.zip : view?.kind === "zip" ? (location?.zip ?? "") : "";
   const narrowing = useNarrowing(noticeZip);
 
   const narrowedDistricts = useMemo(
@@ -922,10 +895,6 @@ function MapEntryInner() {
     [location],
   );
 
-  /*
-   * A map click lands in a set of districts: one hit selects, several open the
-   * picker. Nothing is inferred from the stored zip.
-   */
   const onDistrictClick = useCallback(
     (hits: DistrictHit[], at: { x: number; y: number }) => {
       // Remember the whole set: the picker may select any of them.
@@ -1021,8 +990,8 @@ function MapEntryInner() {
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
       : (shown.nearZip ?? null)
-    : (location?.zip ?? null);
-  const clusterCoverage = shown?.coverage ?? result?.coverage ?? null;
+    : view?.kind === "zip" ? (location?.zip ?? null) : null;
+  const clusterCoverage = shown?.coverage ?? null;
   const clusterOcdIds = useMemo(
     () =>
       clusterCoverage
@@ -1038,7 +1007,6 @@ function MapEntryInner() {
     [clusterCoverage],
   );
 
-  /* ── The large card: which view, and its label ── */
   type CardView =
     | { kind: "large"; surface: LargeSurface }
     | { kind: "venue"; venue: Venue }
@@ -1280,7 +1248,6 @@ function MapEntryInner() {
     setSidebarState("closed");
   }, []);
 
-  /* ── The map's selection pill (district boundary or venue focus) ── */
   const selectedDistrictHit = districtPopup;
   const pillVenue = !cardView || parked ? selectedVenue : null;
   const pillDistrict =
@@ -1348,6 +1315,8 @@ function MapEntryInner() {
     <PillCluster
       placement={sidebarUp ? "sidebar" : "map"}
       zip={clusterZip}
+      state={stateAbbrFromOcdId(focusState.activeOcdId)}
+      point={view?.kind === "settled" ? view : null}
       pop={pop}
       governsOpen={cardView?.kind === "governs"}
       onOpenPop={openPopup}
@@ -1577,11 +1546,12 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          {districtsRestored && (result !== null || failure !== null || (restored && !location)) && <MapCanvas
+          {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
+            here={location && contains(location.lat, location.lng) ? location : null}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
             frameAllVenues={
@@ -1614,17 +1584,16 @@ function MapEntryInner() {
               openOffice(office);
             }}
             onBoundsChange={onMapBounds}
-            votingSites={votingPins}
-            votingAddressPoint={votingAddressPoint}
+            votingSites={votingPins.filter(pin => contains(pin.lat, pin.lng))}
+            votingAddressPoint={votingAddressPoint && contains(votingAddressPoint.lat, votingAddressPoint.lng) ? votingAddressPoint : null}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />}
+          {focusState.failed && <div className="state-crossing" role="status">We couldn&apos;t load state boundaries. Reload to try again.</div>}
           {focusState.crossing && (
             <StateCrossingPrompt
-              fromName={focusState.crossing.fromName}
               toName={focusState.crossing.toName}
-              onSee={focusState.acceptCrossing}
-              onStay={focusState.dismissCrossing}
+              onDismiss={focusState.dismissCrossing}
             />
           )}
           {/* The map-click disambiguation stays anchored to the click. */}
@@ -1677,7 +1646,7 @@ function MapEntryInner() {
           )}
           {location && !shown && !failure && (
             <p className="mw-loading-note" role="status">
-              Loading meetings near {location.zip}…
+              Loading meetings {view?.kind === "zip" ? `near ${location.zip}` : `in ${focusState.stateName ?? "this area"}`}…
             </p>
           )}
           {refreshing && !failure && (
@@ -1964,6 +1933,7 @@ function meetingSubject(
     /* The whole observation, not just the link. */
     agenda: {
       meetingId: meeting.id,
+      bodyId: meeting.bodyId ?? "",
       agendaUrl: meeting.agendaUrl,
       agendaSlotObservedEmpty: meeting.agendaSlotObservedEmpty,
       provenance: meeting.provenance,
@@ -1985,23 +1955,13 @@ function meetingSubject(
   };
 }
 
-/**
- * A governing body's large battlecard. The name is the body's own or the
- * division's Census label; the site is the sourced homepage or nothing.
- */
 function bodySubject(
   body: CoveredBody,
   allMeetings: Meeting[] = [],
 ): ModalSubject {
-  /*
-   * `membersOfBody` resolves an explicit composition or returns nobody; there
-   * is no division fallback (lib/registry/body-membership.ts).
-   */
+
   const roster = [...projectedBodyRoster(body).members];
-  /*
-   * This body's sittings by `bodyId`, not the division's. A meeting with no
-   * `bodyId` appears on no card.
-   */
+
   const meetings = allMeetings
     .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
@@ -2132,10 +2092,6 @@ function placeSubject(
   const mine = bodies.filter((b) => b.ocdId === ocdId);
   const divisionType = mine[0]?.divisionType ?? typeFromOcdId(ocdId);
 
-  /*
-   * Never guessed: the row's tier, else a held body's tier in this place, else
-   * null (a named gap in the Tier row). The header accent still paints.
-   */
   const tier: Tier | null = rowTier ?? mine[0]?.tier ?? null;
 
   return {
@@ -2146,10 +2102,7 @@ function placeSubject(
     title: label,
     subtitle: divisionTypeLabel(divisionType),
     tier: tier ?? "local",
-    /*
-     * Null: a place and a district can share an OCD-ID, and carrying it would
-     * let the district re-derive turn this into a district card.
-     */
+
     divisionOcdId: null,
     facts: [],
     placeCard: {
@@ -2182,10 +2135,6 @@ function placeSubject(
   };
 }
 
-/**
- * The division kind an OCD-ID's last segment names, when no held body supplies
- * one. Unknown segments fall back to "District".
- */
 function typeFromOcdId(ocdId: string): string {
   return (ocdId.split("/").pop() ?? "").split(":")[0];
 }

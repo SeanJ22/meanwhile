@@ -14,6 +14,7 @@ import type { RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { StandingPortraitOptions } from "../lib/photos/portrait-work.ts";
 import heldProfiles from "./fixtures/plural/held-native-profile-leads.json" with {type:"json"};
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -85,6 +86,20 @@ test("a state portrait failure advances durable attempt metadata without withhol
     assert.equal(read.value.roster.officeholders.length,1);assert.equal(read.value.roster.officeholders[0].photo,null);
     assert.equal(read.value.roster.officeholders[0].provenance.collectedAt,SOURCE_DATE);
   }
+});
+test("a state's portrait run writes one candidate and reads its sources once, whatever its size",async()=>{
+  const {store}=await seed(25),images=await imageStore();
+  const before=(store as unknown as {candidates:Map<string,CandidateVersionRecord>}).candidates.size;
+  let sourceReads=0;const readPromotion=store.readPromotion.bind(store);
+  store.readPromotion=(async(recordClass,scope)=>{if(recordClass === "STATE_LEGISLATOR")sourceReads++;return readPromotion(recordClass,scope);}) as typeof store.readPromotion;
+  const result=await refreshStatePortraits({state:"az",store,now:START},{now:()=>VERIFIED,storePortrait:images.store,acquire:async options=>profile(options)});
+  assert.ok(result?.outcome.promoted);
+  const written=[...(store as unknown as {candidates:Map<string,CandidateVersionRecord>}).candidates.values()].slice(before);
+  assert.deepEqual(written.map(row=>row.candidate.sourceId),["people-portraits"],"25 finished people are one publication");
+  const sourceContracts=sourceReads;
+  sourceReads=0;
+  await refreshStatePortraits({state:"az",store,now:START},{now:()=>VERIFIED,acquire:async()=>{throw Error("not due");}});
+  assert.equal(sourceReads,sourceContracts,"the state's source promotions are read once per run, not once per person");
 });
 test("state portrait work finishes every known profile",async()=>{
   const {store}=await seed(25),images=await imageStore();let requests=0;

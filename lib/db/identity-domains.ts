@@ -584,6 +584,13 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
+  meeting_publication_queue: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("scope", "queued_at"),
+    },
+  },
+
 };
 
 /** Value spaces that identify a person and exist independently of us. */

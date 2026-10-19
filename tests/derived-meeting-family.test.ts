@@ -32,20 +32,29 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { deriveWiringDecisions } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { installFactReader } from "../lib/facts/db.ts";
-import { readMeetingsProjection, reconcileCounts } from "../lib/meetings/snapshot.ts";
-import { preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
+import { meetingBodyRowScope, type MeetingBodyRow } from "../lib/meetings/body-records.ts";
+import { reconcileCounts } from "../lib/meetings/snapshot.ts";
+import type { ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
+import { coupledContracts, readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { publishPass } from "./helpers/meeting-body-fixtures.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
 const OCD = "ocd-division/country:us/state:az/place:testville";
 const HOST = "www.testville.example.gov";
 const ROUTE = `https://${HOST}/common/modules/iCalendar/iCalendar.aspx?catID=49&feed=calendar`;
 const BODY_PAGE = `https://${HOST}/Calendar.aspx?EID=2823`;
+const bodyPageOf = (name: string) => name === BODY_NAME ? BODY_PAGE : `${BODY_PAGE}&body=${encodeURIComponent(name)}`;
 const BODY_NAME = "Housing Commission";
 const BODY_ID = subBodyId(OCD, BODY_NAME);
+const OTHER_NAME = "Tourism Commission";
+const OTHER_OCD = "ocd-division/country:us/state:az/county:testville_county";
+const OTHER_ID = subBodyId(OTHER_OCD, OTHER_NAME);
+const ocdOf = (name: string) => name === OTHER_NAME ? OTHER_OCD : OCD;
+const pageFor = (name: string) => `<html><body><h1>${name}</h1><p>The ${name} serves as an advisory board to City Council.</p></body></html>`;
 
 function ics(events: readonly { uid: string; summary: string; start: string }[]): string {
   return [
@@ -58,7 +67,6 @@ const FEED = ics([
   { uid: "h1", summary: "Housing Commission", start: "20261008T160000" },
   { uid: "t1", summary: "Tourism Commission Meeting", start: "20261009T160000" },
 ]);
-const PAGE = `<html><body><h1>Housing Commission</h1><p>The Housing Commission serves as an advisory board to City Council.</p></body></html>`;
 
 const T_WALK = "2026-09-24T19:00:00.000Z";
 const T_CROSSWALK = "2026-09-24T19:30:00.000Z";
@@ -76,22 +84,23 @@ function rejectMeetingFactReads(t: TestContext): string[] {
   return reads;
 }
 
-function crosswalkRow(): MeetingBodyCrosswalkRow {
+function crosswalkRow(name = BODY_NAME): MeetingBodyCrosswalkRow {
+  const bodyId = subBodyId(ocdOf(name), name);
   return {
-    id: `${BODY_ID}|ICAL`,
+    id: `${bodyId}|ICAL`,
     jurisdictionId: "az:city:city-of-testville",
-    ocdId: OCD,
-    bodyId: BODY_ID,
+    ocdId: ocdOf(name),
+    bodyId,
     bodyRole: "SUB_BODY",
-    bodyName: BODY_NAME,
+    bodyName: name,
     kind: "ICAL",
     route: ROUTE,
     officialHost: HOST,
-    filter: { titleMatch: BODY_NAME },
+    filter: { titleMatch: name },
     publishingOrg: "City of Testville",
     timeZone: "America/Phoenix",
     evidence: {
-      bodyPage: { url: BODY_PAGE, sha256: sha256(PAGE), quote: "The Housing Commission serves as an advisory board to City Council." },
+      bodyPage: { url: bodyPageOf(name), sha256: sha256(pageFor(name)), quote: `The ${name} serves as an advisory board to City Council.` },
       calendar: { url: ROUTE, sha256: sha256(FEED), selected: 1, total: 2 },
       readAt: "2026-09-24T19:10:00.000Z",
     },
@@ -102,8 +111,9 @@ function crosswalkRow(): MeetingBodyCrosswalkRow {
   };
 }
 
-async function promoteCrosswalk(store: MemoryRoutineDataStore): Promise<DerivedInputRef> {
-  const row = crosswalkRow();
+async function promoteCrosswalk(store: MemoryRoutineDataStore, names: readonly string[] = [BODY_NAME]): Promise<DerivedInputRef> {
+  const rows = names.map((name) => crosswalkRow(name));
+  const [row] = rows;
   const source = (url: string, rawHash: string) => ({
     requestedUrl: url, finalUrl: url, publisher: "City of Testville", sourceClass: "OFFICIAL_PUBLISHER" as const,
     retrievedAt: row.evidence.readAt, httpStatus: 200, rawHash, reviewedEvidence: "The page names the commission; the feed's events carry its name.",
@@ -112,8 +122,8 @@ async function promoteCrosswalk(store: MemoryRoutineDataStore): Promise<DerivedI
     contractId: "meeting-body-crosswalk",
     version: T_CROSSWALK,
     sourceThrough: T_CROSSWALK,
-    sourceReceipt: { contractVersion: 1, reviewedAt: T_CROSSWALK, reviewedBy: row.reviewedBy, sources: [source(ROUTE, sha256(FEED)), source(BODY_PAGE, sha256(PAGE))] },
-    payload: { kind: "meeting-body-crosswalk", records: [row] as unknown as CuratedReaderProjection["records"] },
+    sourceReceipt: { contractVersion: 1, reviewedAt: T_CROSSWALK, reviewedBy: row.reviewedBy, sources: [source(ROUTE, sha256(FEED)), ...names.map((name) => source(bodyPageOf(name), sha256(pageFor(name))))] },
+    payload: { kind: "meeting-body-crosswalk", records: rows as unknown as CuratedReaderProjection["records"] },
   }), T_CROSSWALK);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
   const read = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now: T_CROSSWALK });
@@ -149,21 +159,21 @@ async function walk(feed: string, feedStatus = 200) {
   });
 }
 
-async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200, options: { readonly confirmUnchanged?: boolean } = {}) {
+async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200, options: { readonly confirmUnchanged?: boolean } = {}, names: readonly string[] = [BODY_NAME]) {
   const attempt = await walk(feed, feedStatus);
   const previousRead = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   const previous = previousRead.kind === "PROMOTED" ? derivedWiringEntries(previousRead.value) : [];
   const vaulted = (artifactId: string) => ({ kind: "VAULTED_EVIDENCE" as const, artifactId, contentHash: `sha256-${sha256(feed)}`, tier: "RAW" as const, retrievedAt: T_WALK });
   const decisions = deriveWiringDecisions({
-    crosswalk: { input: crosswalkInput, versionId: "xw", rows: [crosswalkRow()] },
+    crosswalk: { input: crosswalkInput, versionId: "xw", rows: names.map((name) => crosswalkRow(name)) },
     /* The door checks every promoted input against the store; the crosswalk's own version stands in for registration here. */
     registration: () => ({ input: crosswalkInput }),
     attempts: [{ attempt, recordId: "1", recordedAt: attempt.finishedAt }],
     handWired: () => false,
     vaulted,
-    vaultedBytes: (hex) => (hex === sha256(PAGE) ? { ...vaulted("ar-body-page"), contentHash: `sha256-${hex}` } : null),
+    vaultedBytes: (hex) => (names.some((name) => hex === sha256(pageFor(name))) ? { ...vaulted("ar-body-page"), contentHash: `sha256-${hex}` } : null),
     verify: (row, binding, evidence) => {
-      const meetings = readFeed(feed, now);
+      const meetings = readFeed(feed, now, row.bodyName);
       const own = meetings.filter((m) => m.bodyId === row.bodyId);
       return own.length === 0
         ? { changed: "the reviewed filter selects none of the feed's events" }
@@ -179,12 +189,20 @@ async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: Deriv
   return { decisions, plan, candidate, outcome: await processRegisteredRoutineCandidate(store, "meeting-source-wiring", candidate, now, undefined, options) };
 }
 
-function readFeed(feed: string, now: string): Meeting[] {
+async function readBodySnapshot(store: MemoryRoutineDataStore, edge: ReaderArtifactStore, bodyId: string, now: string) {
+  const read = await readBody(edge, store, now, bodyId, "HELD");
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("body not served");
+  return read.value;
+}
+
+function readFeed(feed: string, now: string, name = BODY_NAME): Meeting[] {
+  const bodyId = subBodyId(ocdOf(name), name);
   const wiring = bodySourceWiringFor({
-    bodyId: BODY_ID, ocdId: OCD, bodyName: BODY_NAME, kind: "ICAL", route: ROUTE, officialHost: HOST, jurisdictionId: "az:city:city-of-testville",
+    bodyId, ocdId: ocdOf(name), bodyName: name, kind: "ICAL", route: ROUTE, officialHost: HOST, jurisdictionId: "az:city:city-of-testville",
     state: "US-AZ", publishingOrg: "City of Testville", timeZone: "America/Phoenix",
-    config: { slug: "derived-az-place-testville-body-housing-commission", bodyName: BODY_NAME, feedUrl: ROUTE, titleMatch: BODY_NAME },
-    crosswalkRowId: `${BODY_ID}|ICAL`, reviewedAt: "2026-09-24T19:20:00.000Z", verifiedAt: "2026-09-24T19:10:00.000Z",
+    config: { slug: `derived-az-place-testville-body-${name.toLowerCase().replace(/ /g, "-")}`, bodyName: name, feedUrl: ROUTE, titleMatch: name },
+    crosswalkRowId: `${bodyId}|ICAL`, reviewedAt: "2026-09-24T19:20:00.000Z", verifiedAt: "2026-09-24T19:10:00.000Z",
   });
   return makeIcalSource([wiring]).normalizeWithDrops([{ wiring, ics: feed, collectedAt: now, sourceUrl: ROUTE }], new Date(now)).meetings;
 }
@@ -202,7 +220,7 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
     return {
       member,
       acquisitions: [{ requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash: sha256(feed!), byteCount: feed!.length }],
-      ok: true, error: null, freshMeetings: readFeed(feed!, now).filter((m) => m.bodyId === member.row.bodyId), freshAgendaDocuments: [], retrievedAt: now,
+      ok: true, error: null, freshMeetings: readFeed(feed!, now, member.row.bodyName).filter((m) => m.bodyId === member.row.bodyId), freshAgendaDocuments: [], retrievedAt: now,
     };
   }).map(read => alter ? alter(read) : read);
   const build = buildDerivedFamily({
@@ -258,7 +276,7 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
   assert.equal(derivedFamilyCandidate(requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), next).semantics.violations.length, 0);
 });
 
-test("a promoted family's internal fresh duplicates reconcile in composition and publish the prepared snapshot", async (t) => {
+test("a promoted family's internal fresh duplicates reconcile in the body's record", async (t) => {
   const store = new MemoryRoutineDataStore();
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
@@ -268,15 +286,17 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
   assert.equal(family.build.snapshot.counts.duplicatesCollapsed, 3);
   const factReads = rejectMeetingFactReads(t);
-  const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY });
+  const { read, plan } = await readEveryBody(store, T_FAMILY);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
-  assert.deepEqual(read.value.counts, { fresh: 1, carried: 0, total: 1, duplicatesCollapsed: 3 });
-  assert.equal(read.value.sources.reduce((sum, source) => sum + source.normalized, 0), 4);
+  assert.deepEqual(plan.stats.failed, []);
+  assert.equal(read.value.counts.fresh, 1);
+  assert.equal(read.value.counts.total, 1);
+  assert.equal(read.value.counts.carried, 0);
   assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
   assert.doesNotThrow(() => reconcileCounts(read.value));
-  assert.equal((await preparePublishedMeetingSnapshot(store, T_FAMILY)).status, "PUBLISHED");
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
+  assert.equal(plan.stats.recordsWritten, 1, "the family's one body is published as one record");
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
@@ -317,7 +337,7 @@ test("an unverified row stays open while its verified sibling publishes and its 
   assert.ok(next.build.snapshot.meetings.some(row => row.id === "ical:new"));
   assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:foreign"));
   const factReads = rejectMeetingFactReads(t);
-  const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
+  const { read: reader } = await readEveryBody(store, T_SECOND);
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind === "PROMOTED") assert.ok(reader.value.meetings.some(row => row.id === "ical:new"));
@@ -338,12 +358,12 @@ test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes 
   assert.equal(family.build.snapshot.meetings[0]?.bodyId, BODY_ID);
 
   const factReads = rejectMeetingFactReads(t);
-  const reader = await readMeetingsProjection({ store, now: T_FAMILY, bypassCache: true });
+  const { read: reader } = await readEveryBody(store, T_FAMILY);
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
-  assert.ok(reader.value.meetings.some((m) => m.bodyId === BODY_ID && m.title === "Housing Commission"), "the reader composes the family's sitting");
-  assert.equal(reader.partitions.find((p) => p.contractId === derivedMeetingFamilyId("US-AZ"))?.kind, "PROMOTED");
+  assert.ok(reader.value.meetings.some((m) => m.bodyId === BODY_ID && m.title === "Housing Commission"), "the reader serves the family's sitting");
+  assert.deepEqual(await coupledContracts(store, "AZ", BODY_ID), [derivedMeetingFamilyId("US-AZ")], "the body is composed from the state's family partition");
 
   /* Maintained without another code release: the next pass reads the feed again and publishes what changed. */
   const next = ics([
@@ -390,7 +410,7 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   assert.equal(held.build.snapshot.derivedMembers?.[0]?.outcome, "HELD");
   assert.match(held.build.snapshot.derivedMembers?.[0]?.detail ?? "", /suspended for review \(ROUTE_GONE\)/);
   const factReads = rejectMeetingFactReads(t);
-  const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
+  const { read: reader } = await readEveryBody(store, T_SECOND);
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.ok(reader.kind === "PROMOTED" && reader.value.meetings.some((m) => m.bodyId === BODY_ID), "the verified sitting is still what the reader sees");
 });
@@ -437,4 +457,70 @@ test("R23: an unchanged derived pass is receipted on the pointed version, not re
   const changed = await promoteFamily(store, "2026-09-24T23:30:00.000Z", next, HOST, { confirmUnchanged: true });
   assert.equal(changed.outcome.confirmed, undefined);
   assert.equal(changed.outcome.candidate.state, "PROMOTED", changed.outcome.candidate.failureDetail ?? "");
+});
+
+test("a receipt on the family's partition re-checks its bodies without opening the partition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const names = [BODY_NAME, OTHER_NAME];
+  const crosswalk = await promoteCrosswalk(store, names);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING, 200, {}, names);
+  await promoteFamily(store, T_FAMILY, FEED);
+  const first = await readEveryBody(store, T_FAMILY);
+  assert.deepEqual(first.plan.stats.failed, []);
+
+  const again = await promoteFamily(store, T_SECOND, FEED, HOST, { confirmUnchanged: true });
+  assert.ok(again.outcome.confirmed, "the same feed is a receipt on the same version");
+  const family = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
+  const opened: string[] = [];
+  const many = store.readPromotions.bind(store);
+  const one = store.readPromotion.bind(store);
+  store.readPromotions = (async (recordClass: Parameters<typeof many>[0], scopes: readonly string[]) => { opened.push(...scopes); return many(recordClass, scopes); }) as typeof many;
+  store.readPromotion = (async (recordClass: Parameters<typeof one>[0], scope: string) => { opened.push(scope); return one(recordClass, scope); }) as typeof one;
+  const pass = await publishPass(store, first.edge, T_SECOND);
+  store.readPromotions = many;
+  store.readPromotion = one;
+  assert.equal(pass.plan.stats.composed, 0, "the same version: nothing is recomposed");
+  assert.equal(pass.plan.stats.checkedOnly, 2, "each body's check moves");
+  assert.equal(opened.includes(family.scope), false, "the partition's rows are not opened for a receipt");
+});
+
+test("a family's one partition publishes as one record per body; a held member is attributed to its own body only", async () => {
+  const store = new MemoryRoutineDataStore();
+  const names = [BODY_NAME, OTHER_NAME];
+  const crosswalk = await promoteCrosswalk(store, names);
+  const wiring = await deriveWiring(store, crosswalk, FEED, T_WIRING, 200, {}, names);
+  assert.equal(wiring.outcome.candidate.state, "PROMOTED", wiring.outcome.candidate.failureDetail ?? "");
+  const family = await promoteFamily(store, T_FAMILY, FEED);
+  assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
+  assert.deepEqual(family.build.snapshot.meetings.map((m) => m.bodyId).sort(), [BODY_ID, OTHER_ID].sort());
+
+  const first = await readEveryBody(store, T_FAMILY);
+  assert.deepEqual(first.plan.stats.failed, []);
+  assert.equal(first.plan.stats.recordsWritten, 2, "one record for each body the partition holds");
+  const index = (await stateIndexOf(store, "AZ"))!;
+  assert.deepEqual(Object.keys(index.bodies).sort(), [BODY_ID, OTHER_ID].sort());
+  assert.deepEqual(index.places, { [OTHER_OCD]: [OTHER_ID], [OCD]: [BODY_ID] }, "each body is listed under the division its own sittings name, not the family's first");
+  for (const bodyId of [BODY_ID, OTHER_ID]) {
+    assert.deepEqual(await coupledContracts(store, "AZ", bodyId), [derivedMeetingFamilyId("US-AZ")]);
+    const row = (await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", bodyId)))!.payload as MeetingBodyRow;
+    assert.deepEqual(row.snapshot.meetings.map((m) => m.bodyId), [bodyId], "a body's row holds only its own sittings");
+  }
+  assert.equal(first.read.kind === "PROMOTED" && first.read.value.meetings.length, 2);
+
+  /* The Tourism Commission's feed read fails: that body is held on its last sitting and walled; Housing is untouched. */
+  const next = await promoteFamily(store, T_SECOND, FEED, HOST, {}, (read) => read.member.row.bodyId === OTHER_ID
+    ? { ...read, ok: false, error: "the calendar did not answer", freshMeetings: [], acquisitions: [] }
+    : read);
+  assert.ok(next.outcome.promoted, next.outcome.candidate.failureDetail ?? "");
+  assert.equal(next.build.snapshot.derivedMembers?.find((m) => m.bodyId === OTHER_ID)?.outcome, "HELD");
+  const second = await readEveryBody(store, T_SECOND, { edge: first.edge });
+  assert.deepEqual(second.plan.stats.failed, []);
+  assert.equal(second.plan.stats.composed, 2, "the family changed, so both its bodies are looked at");
+  const housing = await readBodySnapshot(store, second.edge, BODY_ID, T_SECOND);
+  const tourism = await readBodySnapshot(store, second.edge, OTHER_ID, T_SECOND);
+  assert.deepEqual(housing.sources.filter((source) => !source.ok), [], "the body whose member answered shows no wall");
+  const walled = tourism.sources.filter((source) => !source.ok);
+  assert.equal(walled.length, 1);
+  assert.deepEqual(walled[0]!.unreachableOcdIds, [OTHER_OCD], "the failed member is attributed to the body's own division");
+  assert.ok(tourism.meetings.every((m) => m.carried !== undefined), "its last verified sitting is carried, not re-read as fresh");
 });

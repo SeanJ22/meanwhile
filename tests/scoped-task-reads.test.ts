@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { keysWhere, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
@@ -28,7 +28,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -96,11 +95,7 @@ test("CH-26: scoped reads return what the whole-table reads returned, after the 
   const all = await repos.scoutResults.readAll();
   const scoped = await readScoutResultsForSubjects(repos, ["s:1"]);
   assert.deepEqual(scoped.filter(row => row.subjectId === "s:1"), all.filter(row => row.subjectId === "s:1"));
-  assert.deepEqual(await keysWhere(repos.scoutResults, ["subjectId"], "s:1"), ["a", "c"]);
-  const { keysWhere: _drop, ...withoutFilter } = repos.scoutResults;
-  const plain = { ...repos, scoutResults: withoutFilter as typeof repos.scoutResults };
-  assert.equal(await keysWhere(plain.scoutResults, ["subjectId"], "s:1"), null, "a store without the filtered read says so");
-  await assert.rejects(readScoutResultsForSubjects(plain,["s:1"]), /SCOUT_SCOPED_READ_UNAVAILABLE/);
+  assert.deepEqual(await repos.scoutResults.keysWhere(["subjectId"], "s:1"), ["a", "c"]);
 });
 
 test("CH-26: an audit's scoped rows are every row its whole-table reads would have used", async () => {
@@ -114,7 +109,7 @@ test("CH-26: an audit's scoped rows are every row its whole-table reads would ha
     ["stranger", capture("authority", "stranger")], ["stranger-2", capture("unrelated", "stranger-2")], ["held:1", capture("replayed", "sibling")]] as const) {
     await repos.artifacts.append(key, `${key}:${record.artifactId}`, record, at);
   }
-  const scoped = (await readAuditHistory(repos, { workItemId: "owner", subjectId: "s:1", requiredArtifactIds: ["primary", "authority"] }))!;
+  const scoped = await readAuditHistory(repos, { workItemId: "owner", subjectId: "s:1", requiredArtifactIds: ["primary", "authority"] });
   const allItems = (await repos.workItems.list()).map(row => row.value);
   const allArtifacts = await repos.artifacts.readAll();
   const subjectIds = new Set(allItems.filter(row => row.subject === "s:1").map(row => row.id));
@@ -126,8 +121,6 @@ test("CH-26: an audit's scoped rows are every row its whole-table reads would ha
     "the first capture of a required ID is the same capture");
   assert.ok(scoped.artifacts.some(row => row.artifactId === "inherited"), "a capture the owner's plan inherits");
   assert.ok(!scoped.artifacts.some(row => row.artifactId === "unrelated"), "nothing else");
-  const { keysWhere: _drop, ...withoutFilter } = repos.artifacts;
-  await assert.rejects(readAuditHistory({ ...repos, artifacts: withoutFilter as typeof repos.artifacts }, { subjectId: "s:1", requiredArtifactIds: [] }), /ARTIFACT_SCOPED_READ_UNAVAILABLE/);
 });
 
 test("CH-26: a task's lineage, read through the lineage index, is the lineage the whole store gives", async () => {
@@ -147,7 +140,7 @@ test("CH-26: a task's lineage, read through the lineage index, is the lineage th
   for (const row of [occurrence("round-1", "obligation-a", first.id, "2026-09-03T18:01:00.000Z"), occurrence("round-2", "obligation-a", second.id, "2026-09-03T19:01:00.000Z"),
     occurrence("round-x", "obligation-b", stranger.id, "2026-09-03T18:30:00.000Z")]) await h.repos.occurrences.put(row.id, row, dueAt);
 
-  const history = (await readLineageHistory(h.repos, child.id))!;
+  const history = await readLineageHistory(h.repos, child.id);
   assert.deepEqual(new Set(history.workItems.map(item => item.id)), new Set([first.id, second.id, child.id]), "the lineage and its repair family, nothing else");
   assert.deepEqual(history.occurrences.map(row => row.id), ["round-1", "round-2"]);
   const whole = selectStandingLineages({ occurrences: (await h.repos.occurrences.list()).map(row => row.value),

@@ -4,7 +4,10 @@ import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 import { memoryWebsitePacing } from "@/lib/control-plane/website-pacing.ts";
+import { MemoryRoutineDataStore } from "@/lib/civic-data/store.ts";
 import { collectOutboundLinks, readEdgeForSweep, recordSweep, summarizeSweep, sweepLinks, type SweepFetch } from "@/lib/doors/link-sweep.ts";
+
+import { ACQUIRED_URL, HOUR, PIMA, T1, at, freshEdge, publishPass, readPartition } from "./helpers/meeting-body-fixtures.ts";
 
 const edge = {
   sources: [{ sourceUrl: "https://records.example.gov/calendar.ics" }],
@@ -14,8 +17,8 @@ const edge = {
   ],
 };
 
-test("links are collected once, https only, with the surface their key names", () => {
-  const links = collectOutboundLinks([edge, edge]);
+test("links are collected once, https only, with the surface their key names", async () => {
+  const links = await collectOutboundLinks([edge, edge]);
   const by = Object.fromEntries(links.map((l) => [l.url, l.surface]));
   assert.equal(by["https://records.example.gov/calendar.ics"], "sources");
   assert.equal(by["https://www.example.gov/"], "official sites");
@@ -95,7 +98,7 @@ test("a server that refuses HEAD gets one GET before the link is judged", async 
 
 test("the sweep is kept beside door health, one record per surface, zero where nothing was found", async () => {
   const repos = createMemoryRepositories();
-  const results = await sweepLinks(collectOutboundLinks([edge]), { ...quiet(), fetchFn: async (u) => ({ status: u.endsWith(".pdf") ? 404 : 200 }) });
+  const results = await sweepLinks(await collectOutboundLinks([edge]), { ...quiet(), fetchFn: async (u) => ({ status: u.endsWith(".pdf") ? 404 : 200 }) });
   const summaries = await recordSweep(repos.doors, results, "2026-10-04T12:00:00.000Z");
   assert.equal(summaries.find((s) => s.surface === "agenda PDFs")!.dead, 1);
   const doors = (await listDoors(repos.doors)).doors.filter((d) => d.kind === "link-sweep");
@@ -109,12 +112,12 @@ test("the sweep is kept beside door health, one record per surface, zero where n
   assert.equal(summarizeSweep(results).reduce((n, s) => n + s.links, 0), results.length);
 });
 
-test("the edge is read from the manifest and every scope it lists", async () => {
-  const store = {
-    readManifest: async () => ({ etag: null, manifest: { sources: [{ url: "https://m.example.gov/a" }], scopes: [{ key: "k1" }, { key: "gone" }] } as never }),
-    readArtifact: async (key: string) => key === "k1" ? ({ meetings: [{ agendaUrl: "https://m.example.gov/b.pdf" }] } as never) : null,
-  };
-  const links = collectOutboundLinks(await readEdgeForSweep(store));
-  assert.deepEqual(links.map((l) => l.url), ["https://m.example.gov/a", "https://m.example.gov/b.pdf"]);
-  assert.deepEqual(await readEdgeForSweep({ readManifest: async () => null, readArtifact: async () => null }), []);
+test("the edge is read from the manifest, each state's index and each body's record", async () => {
+  const published = freshEdge();
+  assert.deepEqual(await collectOutboundLinks(readEdgeForSweep(published)), [], "nothing published, nothing to sweep");
+  const store = new MemoryRoutineDataStore();
+  await readPartition(store, PIMA, T1, ["a"]);
+  await publishPass(store, published, at(T1, HOUR));
+  const links = await collectOutboundLinks(readEdgeForSweep(published));
+  assert.deepEqual(links.map((l) => l.url), [ACQUIRED_URL]);
 });

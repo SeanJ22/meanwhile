@@ -25,13 +25,14 @@ import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
 import { sourceProjectionEvidence, type ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
+  federalDirectoryForState,
+  federalDirectoryScope,
   FEDERAL_DIRECTORY_SOURCE_ID,
   failedFederalDirectoryCandidate,
   federalDirectoryCandidate,
   type FederalDirectoryAcquisition,
 } from "../lib/officials/federal-directory-data-plane.ts";
-import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import {
   readRegistryRuntimePrior,
   acceptedRegistryPrior,
@@ -209,7 +210,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     assert.equal(queries.length, 1, "the state payload, encoded parts and scalar proof arrive in one keyed read");
     assert.ok(queries[0].includes(pointer.key));
     const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("OH"), sourceId: candidate.sourceId, versionId: read.metadata.versionId!, value: read.value });
-    const stateAuthorities = { states: { "registry-runtime": new Set(["OH"]) }, load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
+    const stateAuthorities = { families: new Set(["registry-runtime"] as const), load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
     await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities }, async () => {
       const held = await readerOfficeholders(districts);
       assert.ok(held.loaderFailures > 0, "the missing state authority stays a reported gap");
@@ -228,7 +229,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
       term: "2025-2026", generatedAt: T0, roster: { scope: "OH", generatedAt: T0, officeholders: people,
         divisions: districts.map((ocdId, index) => ({ ocdId, officeholderId: people[index].id, bodyId: null })), unmatched: [] } };
     const stateReads: string[] = [];
-    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities, stateLegislators: { jurisdictions: new Set(["US-OH"]), load: async scope => {
+    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities, stateLegislators: { load: async scope => {
       stateReads.push(scope);
       assert.equal(scope, "US-OH");
       return { value: statePeople, versionId: "test:oh-native-people" };
@@ -248,37 +249,40 @@ test("Ask reads native state people beside a partitioned registry without revivi
   }
 });
 
-test("federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
+test("a place's federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
   const store = new MemoryRoutineDataStore();
-  const projection = await federalSeed();
-  const good = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
-  const promoted = await processRegisteredManualCandidate(store, "congress-bulk-roster", good, T0);
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!, scope = federalDirectoryScope(state);
+  const projection = federalDirectoryForState(national, state), contract = `congress-bulk-roster:${state}` as "congress-bulk-roster:AZ";
+  const good = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
+  const promoted = await processRegisteredManualCandidate(store, contract, good, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
   assert.deepEqual((await store.events(good.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
-  const read = await readFederalDirectoryProjection({ store, bypassCache: true, now: T0 });
+  const read = await readStateFederalDirectory(state, { store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
   const alteredProjection = structuredClone(projection);
   alteredProjection.roster.officeholders[0]!.name = `${alteredProjection.roster.officeholders[0]!.name} Altered`;
-  const altered = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
+  const altered = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
   assert.notEqual(altered.id, good.id, "the federal candidate identity binds the exact normalized projection");
+  const elsewhere = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: national });
+  assert.ok(national.roster.officeholders.some((holder) => holder.state !== state) ? elsewhere.semantics.violations.includes("OFFICEHOLDER_OUTSIDE_PLACE") : true);
 
   const oneFile = federalAcquisitions(projection.sourceSha, "duplicate")[0]!;
-  const incomplete = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
-  const incompleteOutcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", incomplete, T1);
+  const incomplete = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
+  const incompleteOutcome = await processRegisteredManualCandidate(store, contract, incomplete, T1);
   assert.equal(incompleteOutcome.candidate.state, "SOURCE_BLOCKED");
-  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", scope))?.versionId, good.id);
 
-  const failed = failedFederalDirectoryCandidate(T1, "directory source unavailable");
-  const refused = await processRegisteredManualCandidate(store, "congress-bulk-roster", failed, T1);
+  const failed = failedFederalDirectoryCandidate(state, T1, "directory source unavailable");
+  const refused = await processRegisteredManualCandidate(store, contract, failed, T1);
   assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
-  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", scope))?.versionId, good.id);
 });
 
 test("federal civic member ordering is independent of source-map insertion order", async () => {
-  const projection = await federalSeed();
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!, projection = federalDirectoryForState(national, state);
   const reordered = structuredClone(projection);
   reordered.directory.byMember = Object.fromEntries(
     Object.entries(reordered.directory.byMember).reverse(),
@@ -287,8 +291,9 @@ test("federal civic member ordering is independent of source-map insertion order
     Object.entries(reordered.directory.committees).reverse(),
   );
   const acquisitions = federalAcquisitions(projection.sourceSha, "stable-order");
-  const original = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
+  const original = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
   const roundTripped = await federalDirectoryCandidate({
+    state,
     vault: new MemoryEvidenceStore(),
     acquisitions,
     retrievedAt: T0,
@@ -726,10 +731,10 @@ test("the recorded state remains readable until its correction promotes", async 
 });
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {
-  const projection = await federalSeed();
-  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!;
+  const candidate = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(national.sourceSha, "proof"), retrievedAt: T0, projection: federalDirectoryForState(national, state) });
   const mismatched = { ...candidate, id: `${candidate.id}-bad-proof`, sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", "US:wrong-scope") };
-  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster", mismatched, T0);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), `congress-bulk-roster:${state}` as "congress-bulk-roster:AZ", mismatched, T0);
   assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");
   assert.equal(outcome.promoted, null);
 
@@ -739,7 +744,7 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readFederalDirectoryProjection({ store: brokenStore, bypassCache: true }),
+    readStateFederalDirectory(state, { store: brokenStore, bypassCache: true }),
     readRegistryRuntimeProjection(["AZ"], { store: brokenStore, bypassCache: true }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["STORE_UNREACHABLE", "STORE_UNREACHABLE"]);
@@ -747,7 +752,7 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
 });
 
 test("manual contracts have no clock and retired tracked writers cannot be invoked", () => {
-  const ids = new Set(["congress-bulk-roster", "registry-runtime:AZ"]);
+  const ids = new Set(["congress-bulk-roster:AZ", "registry-runtime:AZ"]);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
   assert.equal(contracts.length, 2);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY" && !("cadence" in contract)));

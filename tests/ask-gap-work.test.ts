@@ -14,7 +14,6 @@ import {
   askGapCarriers,
   askGapsProvider,
   type AskGapHoldings,
-  type AskGapMeeting,
   type CarrierClock,
 } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { askGapCarrierTasks, carrierClocks, readAskGapHoldings } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
@@ -37,7 +36,7 @@ import {
 import { auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { unitOf } from "./helpers/ask-gap-unit.ts";
+import { heldReading, unitOf, type AskGapMeeting } from "./helpers/ask-gap-unit.ts";
 
 const NOW_ISO = "2026-09-24T12:00:00.000Z";
 const NOW = Date.parse(NOW_ISO);
@@ -146,16 +145,8 @@ function clockOf(contractId: string): CarrierClock {
   return read("2026-09-24T11:30:00.000Z", "2026-09-24T12:30:00.000Z");
 }
 
-function holdings(over: Partial<AskGapHoldings> = {}): AskGapHoldings {
-  return {
-    source: "the fixture holdings",
-    meetings,
-    documents,
-    sittings: [pimaSitting(false)],
-    outcomesUnreadable: null,
-    clockOf,
-    ...over,
-  };
+function holdings(over: { sittings?: PersistedSittingOutcomes[]; outcomesUnreadable?: string | null } = {}): AskGapHoldings {
+  return heldReading({ meetings, documents, sittings: [pimaSitting(false)], now: NOW, clockOf, ...over });
 }
 
 /** The registry without Mesa's minutes reader, for the adapter-owed path. */
@@ -326,8 +317,7 @@ test("gap gone: when a read holds the decision, the provider stops emitting it a
 });
 
 test("Ask and the provider agree: on every body of the fixture, the codes Ask holds are exactly the obligations the runner emits", () => {
-  const held = holdings();
-  const pass = enumerate(held);
+  const pass = enumerate(holdings());
   const bodies = [...new Set(meetings.flatMap((m) => (m.bodyId ? [m.bodyId] : [])))].sort();
   let compared = 0;
   for (const bodyId of bodies) {
@@ -336,7 +326,7 @@ test("Ask and the provider agree: on every body of the fixture, the codes Ask ho
     const timeline = buildTopicTimeline({
       topic: DATA_CENTER, bodyId, bodyName: "Board",
       meetings: bodyMeetings, documents: documents.filter((d) => ids.has(d.meetingId)),
-      sittings: held.sittings.filter((s) => s.bodyId === bodyId), now: NOW,
+      sittings: [pimaSitting(false)].filter((s) => s.bodyId === bodyId), now: NOW,
     });
     const askCodes = [...new Set(timeline.heldGaps.map((g: HeldAskGap) => g.code))].sort();
     const runnerCodes = pass.units.filter((u) => u.obligation.subjectId === bodyId).map((u) => u.obligation.routeId).sort();
@@ -360,23 +350,42 @@ test("the runner's reading: the sitting window decides the cadence a carrying re
   const failed = carrierClocks([{ task, ok: false, error: "statement timeout" }], NOW).get(MESA_PARTITION);
   assert.deepEqual(failed, { kind: "UNREAD", why: "statement timeout" });
 
-  const unreachable = await readAskGapHoldings({
-    now: NOW_ISO,
-    readMeetings: async () => ({ kind: "STORE_UNREACHABLE", value: null, metadata: {} as never, code: "STORE_READ_FAILED", detail: "connect timeout" } as never),
+  const outcomes = async () => ({ sittings: [pimaSitting(false)], unreadable: null });
+  const bodyOf = (bodyId: string, snapshot: { meetings: AskGapMeeting[]; agendaDocuments: AgendaDocumentLike[] } | null) =>
+    ({ bodyId, load: async () => (snapshot === null ? null : { snapshot: snapshot as never }) });
+  const held = (bodyId: string) => ({
+    meetings: meetings.filter((m) => m.bodyId === bodyId),
+    agendaDocuments: documents.filter((d) => meetings.some((m) => m.bodyId === bodyId && m.id === d.meetingId)),
   });
-  assert.deepEqual(unreachable, { unreadable: "the meetings projection is STORE_UNREACHABLE: connect timeout" });
-  const hung = await readAskGapHoldings({ now: NOW_ISO, boundMs: 20, readMeetings: () => new Promise(() => {}) });
+
+  const unreadableBody = await readAskGapHoldings({
+    now: NOW_ISO,
+    readOutcomes: outcomes,
+    readBodies: async function* () { yield bodyOf(PIMA, held(PIMA)); yield bodyOf(MESA, null); },
+  });
+  assert.deepEqual(unreadableBody, { unreadable: `the meetings of ${MESA} could not be read, so no gap is decided on this cycle` }, "one body that cannot be read decides nothing, never a shorter list");
+  const threw = await readAskGapHoldings({
+    now: NOW_ISO,
+    readOutcomes: outcomes,
+    readBodies: async function* () { yield bodyOf(PIMA, held(PIMA)); throw new Error("connect timeout"); },
+  });
+  assert.deepEqual(threw, { unreadable: "the meetings projection read threw (connect timeout)" });
+  const hung = await readAskGapHoldings({ now: NOW_ISO, boundMs: 20, readOutcomes: outcomes, readBodies: () => ({ [Symbol.asyncIterator]: () => ({ next: () => new Promise<never>(() => {}) }) }) });
   assert.deepEqual(hung, { unreadable: "the held reading did not finish within 0 s, so no gap is decided on it this cycle" }, "a hung read is named; it never holds the registry to the wall");
 
   const reading = await readAskGapHoldings({
     now: NOW_ISO,
-    readMeetings: async () => ({ kind: "PROMOTED", value: { meetings, agendaDocuments: documents }, metadata: {}, partitions: [], detail: "fixture" } as never),
-    readOutcomes: async () => ({ sittings: [pimaSitting(false)], unreadable: null }),
+    toldNoMeetings: new Set([PIMA, "ocd-division/country:us/state:az/place:marana#governing"]),
+    readBodies: async function* () { yield bodyOf(PIMA, held(PIMA)); yield bodyOf(MESA, held(MESA)); },
+    readOutcomes: outcomes,
     readClock: async () => undefined,
   });
   assert.ok(!("unreadable" in reading));
   if ("unreadable" in reading) return;
-  assert.equal(reading.meetings.length, meetings.length);
+  assert.deepEqual(reading.bodies, holdings().bodies, "each body's gaps are decided as it streams past, the same as the fixture's whole-state decision");
+  assert.equal(reading.meetingCountOf(PIMA), 2, "a body readers were told we hold no meeting of keeps its count");
+  assert.equal(reading.meetingCountOf(MESA), 0, "a body nobody was told about is not counted");
+  assert.equal(reading.meetingCountOf("ocd-division/country:us/state:az/place:marana#governing"), 0);
   assert.equal(reading.clockOf("no-such-contract").kind, "UNREAD");
   assert.equal(reading.clockOf(MESA_PARTITION).kind, "READ");
 });

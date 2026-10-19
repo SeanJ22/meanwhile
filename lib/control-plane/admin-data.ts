@@ -10,6 +10,7 @@ import type { RouteTask } from "./route-task.ts";
 import type { WorkItem } from "./work-item.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "./scheduler/research-policy.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "./gateway/admin-config.ts";
+import { installMeetingClockFrom } from "../meetings/settings.ts";
 import {
   assertAggregateOnly,
   type CacheObservationRecord,
@@ -233,7 +234,9 @@ export async function readFleetSafety(repos: ControlPlaneRepositories): Promise<
 }
 
 export async function readAdminConfig(repos: ControlPlaneRepositories,state?:string): Promise<ReadOutcome<AdminConfig>> {
-  return readAggregate(repos, "the owner operational policy", () => repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:state?{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}:true}));
+  const read = await readAggregate(repos, "the owner operational policy", () => repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:state?{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}:true}));
+  if (read.kind === "HELD") installMeetingClockFrom(read.value);
+  return read;
 }
 
 export async function readDecisions(

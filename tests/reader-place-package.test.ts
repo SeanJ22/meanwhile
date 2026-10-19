@@ -214,7 +214,7 @@ test("one indexed place read joins local facts and complete calendars from any s
   const db = await factDb();
   try {
     await canonicalTables(db);
-    await db.pg.exec(readFileSync(new URL("../lib/db/migrations/RS-01_place_reads.sql",import.meta.url),"utf8"));
+    await db.pg.exec(readFileSync(new URL("../lib/db/migrations/0043_rs01_place_reads.sql",import.meta.url),"utf8"));
     const entity = (id: string, kind: string, name: string, parent: string | null = null, state = "AZ") => db.query(
       "INSERT INTO entity(id,kind,name,parent_id,state) VALUES($1,$2,$3,$4,$5)",[id,kind,name,parent,state]);
     await entity(STATE,"place","Arizona");

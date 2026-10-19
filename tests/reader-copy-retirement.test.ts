@@ -33,7 +33,7 @@ test("RS-01 contract retires copies and queues while preserving source evidence 
       INSERT INTO civic_data_candidate_events(id) VALUES ('validation-evidence');
       INSERT INTO pass_cursor VALUES ('reader-edge','old'),('state-facts:AZ','old'),('publish-now:workers','keep');
       INSERT INTO entity VALUES ('local-body','AZ');`);
-    const sql = await readFile(new URL("../lib/db/migrations/RS-01_retire_copies.sql", import.meta.url), "utf8");
+    const sql = await readFile(new URL("../lib/db/migrations/0044_rs01_retire_copies.sql", import.meta.url), "utf8");
     await db.exec(`BEGIN;\n${sql}\nCOMMIT;`);
     assert.deepEqual((await db.query("SELECT scope FROM civic_data_promotions ORDER BY scope")).rows,
       [{scope:"source:ical:body:canonical"},{scope:"source:ical:body:canonical:history"}]);

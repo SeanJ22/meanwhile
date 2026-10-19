@@ -15,8 +15,11 @@ import { factDb } from "./helpers/fact-db.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { attemptsByFamily } from "../lib/registry/attempt-families.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
-import { readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
+import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
+import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
+import { activeWiring, installMeetingDoors } from "../lib/registry/source-wiring.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -233,8 +236,9 @@ test("held history reads retain verified old calendar rows and agenda text from 
   } finally { await db.pg.close(); }
 });
 
-test("an opened agenda keeps neighbour identities and merge contributions while leaving other document text in the store", async () => {
+test("an opened agenda keeps exact documents and neighbour URL ownership without loading unopened source metadata", async t => {
   const db = await factDb();
+  const previousDoors = activeWiring();
   try {
     await canonicalTables(db);
     const meeting = {id:"onbase:target",mergedMeetingIds:["alias:target"],bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
@@ -242,25 +246,37 @@ test("an opened agenda keeps neighbour identities and merge contributions while 
       jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
     const peer = {...meeting,id:"ical:target",mergedMeetingIds:[],videoUrl:"https://example.gov/video"};
     const neighbor = {...meeting,id:"onbase:neighbor",mergedMeetingIds:[],startsAt:"2026-10-25T17:00:00-07:00"};
+    const neighborPeer = {...neighbor,id:"ical:neighbor",videoUrl:"https://example.gov/neighbor-video"};
     const foreign = {...meeting,id:"onbase:county",mergedMeetingIds:[],bodyId:COUNTY_BODY,ocdId:COUNTY,bodyName:"Supervisors"};
+    const future = {...neighbor,id:"onbase:future",startsAt:"2028-10-25T17:00:00-07:00"};
+    const noticeUrl = "https://example.gov/county-notice";
+    installMeetingDoors([{bodyId:COUNTY_BODY,ocdId:COUNTY,agendaSourceType:"ICAL",jurisdiction:"Pima County",publishingOrg:"Pima County",
+      timeZone:"America/Phoenix",config:{},noticeUrl,verifiedAt:AT}]);
     const document = {id:"target-doc",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,contentHash:"a".repeat(64),retrievedAt:AT,
       contentType:"text/html",text:"Public hearing. 1. Approve the budget.",extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
-    const documents = [document,{...document,id:"peer-doc",meetingId:peer.id,documentUrl:"https://example.gov/sitting-agenda",contentHash:"b".repeat(64)},
-      {...document,id:"neighbor-doc",meetingId:neighbor.id,text:"NEIGHBOUR TEXT ".repeat(6000)},
-      {...document,id:"foreign-doc",meetingId:foreign.id,ocdId:COUNTY,text:"FOREIGN TEXT ".repeat(6000)}];
+    const documents = [document,{...document,id:"peer-doc",meetingId:peer.id,contentHash:"b".repeat(64)},
+      {...document,id:"wrong-notice",documentUrl:noticeUrl},
+      {...document,id:"neighbor-doc",meetingId:neighbor.id,text:"NEIGHBOUR TEXT",extractionNote:"NEIGHBOUR SOURCE METADATA ".repeat(3000)},
+      {...document,id:"neighbor-peer-doc",meetingId:neighborPeer.id,text:"NEIGHBOUR TEXT"},
+      {...document,id:"foreign-doc",meetingId:foreign.id,ocdId:COUNTY,text:"FOREIGN TEXT",extractionNote:"FOREIGN SOURCE METADATA ".repeat(3000)},
+      {...document,id:"future-doc",meetingId:future.id}];
     const scope = derivedMeetingFamilyScope("US-AZ");
-    const encoded = partitionCivicPayload({formatVersion:1,generatedAt:AT,meetings:[meeting,peer,neighbor,foreign],agendaDocuments:documents,
-      sources:[],counts:{fresh:4,carried:0,total:4}});
+    const encoded = partitionCivicPayload({formatVersion:1,generatedAt:AT,meetings:[meeting,peer,neighbor,neighborPeer,foreign,future],agendaDocuments:documents,
+      sources:[],counts:{fresh:6,carried:0,total:6}});
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'agenda-version')",
       [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
     const input = {state:"AZ",divisionIds:[CITY,COUNTY],bodyIds:[BODY,COUNTY_BODY],includeAgenda:true};
-    const full = await readPlacePackage(input,db.query);
+    let fullBytes = 0,compactBytes = 0;
+    const full = await readPlacePackage(input,async(sql,params) => {const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
     let calls = 0;
     const selected = await readPlacePackage({...input,meetingIds:["alias:target"]},async(sql,params) => {
       calls++;const rows = await db.query(sql,params);const wire = JSON.stringify(rows);
+      compactBytes=Buffer.byteLength(wire);
       assert.equal(wire.includes("NEIGHBOUR TEXT"),false);
       assert.equal(wire.includes("FOREIGN TEXT"),false);
+      assert.equal(wire.includes("NEIGHBOUR SOURCE METADATA"),false);
+      assert.equal(wire.includes("FOREIGN SOURCE METADATA"),false);
       return rows;
     });
     assert.equal(calls,1);
@@ -268,12 +284,36 @@ test("an opened agenda keeps neighbour identities and merge contributions while 
     const target = selected.meetings.find(row => row.id===meeting.id || row.mergedMeetingIds?.includes("alias:target"))!;
     const own = selected.snapshot.agendaDocuments.filter(row => row.meetingId===target.id);
     assert.deepEqual(own,full.snapshot.agendaDocuments.filter(row => row.meetingId===target.id),"the alias and every source contributing to the sitting retain their full documents");
-    assert.deepEqual(selected.snapshot.agendaDocuments.map(({meetingId,documentUrl})=>({meetingId,documentUrl})),
-      full.snapshot.agendaDocuments.map(({meetingId,documentUrl})=>({meetingId,documentUrl})),"neighbouring document ownership and shared URLs are unchanged");
-    assert.deepEqual(readerAgendaDocuments(own,{documentsAcrossCorpus:selected.snapshot.agendaDocuments,meetingsAcrossCorpus:selected.meetings}),
+    const selectedContext = {documentsAcrossCorpus:[...selected.snapshot.agendaDocuments,...selected.agendaDocumentLinks],meetingsAcrossCorpus:selected.meetings};
+    const fullContext = {documentsAcrossCorpus:full.snapshot.agendaDocuments,meetingsAcrossCorpus:full.meetings};
+    const links = (rows: readonly {meetingId:string;documentUrl:string}[]) => rows.map(({meetingId,documentUrl})=>({meetingId,documentUrl}))
+      .sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
+    assert.deepEqual(links(selectedContext.documentsAcrossCorpus),links(full.snapshot.agendaDocuments),"neighbouring document ownership and shared URLs are unchanged");
+    const reading = readerAgendaDocuments(own,selectedContext);
+    assert.deepEqual(reading,
       readerAgendaDocuments(own,{documentsAcrossCorpus:full.snapshot.agendaDocuments,meetingsAcrossCorpus:full.meetings}),
       "shared portals and other governments' documents receive the same reading with compact context");
-  } finally { await db.pg.close(); }
+    assert.equal(reading.anotherBodysPagesSetAside,1,"another government's notice remains excluded from the opened sitting");
+    const publication = (context: typeof selectedContext | typeof fullContext) => classifyAgendaPublication({meetingId:target.id,bodyName:target.bodyName,
+      documentsForMeeting:own,discoveredDocumentUrl:target.agendaUrl,...context,now:Date.parse(AT)});
+    assert.deepEqual(publication(selectedContext),publication(fullContext));
+    assert.equal(publication(selectedContext).documentSharedAcrossGovernments,true);
+    const openedNeighbor = await readPlacePackage({...input,meetingIds:[neighbor.id]},db.query);
+    const neighborId = openedNeighbor.meetings.find(row=>row.id===neighbor.id || row.mergedMeetingIds?.includes(neighbor.id))!.id;
+    assert.equal(selected.agendaDocumentLinks.filter(link=>link.meetingId===neighborId).length,2,"neighbour links use the same merged sitting ID as their full documents");
+    const neighborDocuments = openedNeighbor.snapshot.agendaDocuments.filter(doc=>doc.meetingId===neighborId);
+    assert.equal(neighborDocuments.length,2);
+    assert.deepEqual(neighborDocuments,full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===neighborId),
+      "opening a previously unselected neighbour retrieves every original source field and text");
+    const edge: {context?:ReaderMeetingsContext} = {};
+    const edgeRead = await readReaderEdgeMeetings({...input,ocdIds:input.divisionIds,meetingIds:["alias:target"],query:db.query,
+      window:"HELD",now:AT,settings:meetingSettingsFromValues(),onContext:context=>{edge.context=context;}});
+    assert.equal(edgeRead.kind,"PROMOTED");
+    assert.deepEqual(edge.context?.agendaDocumentLinks,selected.agendaDocumentLinks.filter(link=>link.meetingId!==future.id),
+      "the callback applies the same shown-ahead window to neighbour links as to full documents");
+    assert.ok(compactBytes<fullBytes*0.25,`unopened metadata transfer ${compactBytes}B must remain below a quarter of ${fullBytes}B`);
+    t.diagnostic(`Agenda metadata fixture: ${fullBytes} bytes before, ${compactBytes} bytes after.`);
+  } finally { installMeetingDoors(previousDoors); await db.pg.close(); }
 });
 
 test("archive recovery keeps every document revision and neighbour identity across large prior calendar versions", async () => {
@@ -315,7 +355,8 @@ test("archive recovery keeps every document revision and neighbour identity acro
     const compact = await readPlacePackage({...input,meetingIds:[old.id]},db.query);
     assert.deepEqual(compact.meetings,full.meetings);
     assert.deepEqual(compact.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id),full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id));
-    assert.deepEqual(compact.snapshot.agendaDocuments.find(doc=>doc.id===neighborDocument.id),{...neighborDocument,text:null},"neighbour ownership and shared URLs remain available without loading their text");
+    assert.equal(compact.snapshot.agendaDocuments.some(doc=>doc.id===neighborDocument.id),false);
+    assert.deepEqual(compact.agendaDocumentLinks,[{meetingId:neighbor.id,documentUrl:neighborDocument.documentUrl}],"archived neighbours retain URL ownership without their document metadata");
   } finally { await db.pg.close(); }
 });
 

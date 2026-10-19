@@ -35,15 +35,16 @@ const normalizedGovernmentSql = (value: string) => {
   return `btrim(regexp_replace(replace(regexp_replace(${flat},'^(.+?),\\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\\s+OF$','\\2 OF \\1'),',',''),'\\s+',' ','g'))`;
 };
 
-// Neighbouring document URLs remain available to distinguish shared portals and other governments' pages.
-const agendaDocumentSql = (row: string) => `CASE WHEN $8::text[] IS NULL THEN ${row}.item
-  WHEN reader_payload_node(${row}.item)->>'meetingId' IN (SELECT id FROM agenda_full_ids) THEN
-    CASE WHEN reader_payload_node(${row}.item)->'text' ? '$civicPayloadPart' THEN ${row}.item
+const agendaDocumentSql = (row: string) => `CASE WHEN $8::text[] IS NULL OR reader_payload_node(${row}.item)->'text' ? '$civicPayloadPart' THEN ${row}.item
     WHEN jsonb_typeof(reader_payload_value(reader_payload_node(${row}.item)->'text'))='string' THEN
       (reader_payload_node(${row}.item)-'text') || jsonb_build_object('text',jsonb_build_object('$readerAgendaText',(
         SELECT text_id FROM agenda_texts WHERE value=reader_payload_value(reader_payload_node(${row}.item)->'text') LIMIT 1)))
-    ELSE ${row}.item END
-  ELSE (reader_payload_node(${row}.item)-'text') || jsonb_build_object('text',NULL) END`;
+    ELSE ${row}.item END`;
+const fullAgendaDocumentSql = (row: string) => `($8::text[] IS NULL OR reader_payload_node(${row}.item)->>'meetingId' IN (SELECT id FROM agenda_full_ids))`;
+// For unopened sittings, only URL ownership participates in the agenda reading.
+const agendaDocumentLinkSql = (row: string) => `jsonb_build_object(
+  'meetingId',reader_payload_value(reader_payload_node(${row}.item)->'meetingId'),
+  'documentUrl',reader_payload_value(reader_payload_node(${row}.item)->'documentUrl'))`;
 
 /** The place indexes lead to bodies; live facts and canonical source calendars are read together. */
 export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED (
@@ -183,13 +184,19 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
       'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM family_meetings m WHERE m.scope=p.scope),'[]'::jsonb),
       'agendaDocuments',coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
         FROM reader_payload_members(p.header->'agendaDocuments') d
-        WHERE $7::boolean AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb))
+        WHERE $7::boolean AND ${fullAgendaDocumentSql("d")} AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb))
+      || CASE WHEN $8::text[] IS NOT NULL THEN jsonb_build_object('agendaDocumentLinks',coalesce((
+        SELECT jsonb_agg(${agendaDocumentLinkSql("d")} ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'agendaDocuments') d
+        WHERE $7::boolean AND NOT ${fullAgendaDocumentSql("d")} AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb)) ELSE '{}'::jsonb END
       || CASE WHEN p.header ? 'derivedMembers' THEN jsonb_build_object('derivedMembers',coalesce((
         SELECT jsonb_agg(d.item ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'derivedMembers') d
         WHERE reader_payload_node(d.item)->>'bodyId' IN (SELECT id FROM bodies)),'[]'::jsonb)) ELSE '{}'::jsonb END
     ELSE (p.header-'agendaDocuments') || jsonb_build_object('agendaDocuments',CASE WHEN $7::boolean THEN
       coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
-        FROM reader_payload_members(p.header->'agendaDocuments') d),'[]'::jsonb) ELSE '[]'::jsonb END)
+        FROM reader_payload_members(p.header->'agendaDocuments') d WHERE ${fullAgendaDocumentSql("d")}), '[]'::jsonb) ELSE '[]'::jsonb END)
+      || CASE WHEN $8::text[] IS NOT NULL THEN jsonb_build_object('agendaDocumentLinks',coalesce((
+        SELECT jsonb_agg(${agendaDocumentLinkSql("d")} ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'agendaDocuments') d
+        WHERE $7::boolean AND NOT ${fullAgendaDocumentSql("d")}),'[]'::jsonb)) ELSE '{}'::jsonb END
     END AS payload,p.current_version_id,p.confirmation FROM meeting_partitions p
 ), archived_versions AS MATERIALIZED (
   SELECT c.id,c.scope,c.retrieved_at
@@ -218,7 +225,9 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     WHERE $7::boolean AND reader_payload_node(d.item)->>'meetingId' IN (SELECT reader_payload_node(item)->>'id' FROM archived_meetings)
     ORDER BY reader_payload_node(d.item)->>'id',v.retrieved_at DESC
 ), archived_documents AS MATERIALIZED (
-  SELECT ${agendaDocumentSql("d")} AS item FROM archived_document_records d
+  SELECT ${agendaDocumentSql("d")} AS item FROM archived_document_records d WHERE ${fullAgendaDocumentSql("d")}
+), archived_document_links AS MATERIALIZED (
+  SELECT ${agendaDocumentLinkSql("d")} AS item FROM archived_document_records d WHERE NOT ${fullAgendaDocumentSql("d")}
 ), agenda_meeting_headers AS MATERIALIZED (
   SELECT header.value FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
@@ -303,9 +312,11 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
   coalesce((SELECT jsonb_agg(to_jsonb(m)) FROM meeting_rows m),'[]'::jsonb) AS meeting_rows,
   coalesce((SELECT jsonb_agg(item) FROM archived_meetings),'[]'::jsonb) AS archived_meetings,
   coalesce((SELECT jsonb_agg(item) FROM archived_documents),'[]'::jsonb) AS archived_documents,
+  coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links,
   coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts`;
 
 type Row = Record<string, unknown>;
+export type AgendaDocumentLink = Pick<MeetingsSnapshot["agendaDocuments"][number], "meetingId" | "documentUrl">;
 export interface PlacePackage {
   readonly registry: RegistryRuntimeReadModel | null;
   readonly everydayRouting: EverydayRoutingProjection | null;
@@ -316,6 +327,8 @@ export interface PlacePackage {
   readonly registrationHeld: boolean;
   readonly meetings: readonly Meeting[];
   readonly snapshot: MeetingsSnapshot;
+  /** URL ownership for unopened agendas, used only within this request's publication reading. */
+  readonly agendaDocumentLinks: readonly AgendaDocumentLink[];
   readonly bodySnapshots: Readonly<Record<string, MeetingsSnapshot>>;
 }
 
@@ -365,7 +378,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
   const decoded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string, unknown>) as {
-    rows:{scope: string; payload: MeetingsSnapshot; current_version_id: string; confirmation: string | null}[];
+    rows:{scope: string; payload: MeetingsSnapshot & {agendaDocumentLinks?: AgendaDocumentLink[]}; current_version_id: string; confirmation: string | null}[];
     archived:Meeting[];documents:MeetingsSnapshot["agendaDocuments"];
   };
   const rows = decoded.rows;
@@ -382,12 +395,14 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   if (!input.includeAgenda) for (const r of rows) r.payload.agendaDocuments = [];
   const selected = new Set(entities.map(e => String(e.id))), scopes = new Set(rows.map(r => r.scope));
   const byBody = new Map<string, MeetingsSnapshot[]>();
+  const agendaDocumentLinks: AgendaDocumentLink[] = [];
   const snapshots = rows.flatMap(r => {
     const retired = RETIRED_MEETING_ROUTES.find(route => r.scope === `source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}`);
     if (retired && (retired.successorAlreadyWired || scopes.has(`source:${encodeURIComponent(retired.replacedBy)}:body:${encodeURIComponent(retired.bodyId)}`))) return [];
     const family = r.scope.startsWith("source:derived:family:");
     const owned = r.payload.meetings.filter(m => (m.bodyId && selected.has(m.bodyId)) || (!m.bodyId && m.ocdId && divisionIds.includes(m.ocdId)));
     const ids = new Set(owned.map(m => m.id));
+    agendaDocumentLinks.push(...r.payload.agendaDocumentLinks?.filter(link => ids.has(link.meetingId)) ?? []);
     const confirmation = r.confirmation ? parseUnchangedConfirmation(r.confirmation) : null;
     const checked = confirmationCheckedAt(confirmation,r.current_version_id,meetingVersionReadsASource(r.payload.sources));
     const scope = /^source:([^:]+):body:(.+?)(?::history)?$/.exec(r.scope);
@@ -408,6 +423,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const archived = decoded.archived.filter(m => !liveIds.has(m.id));
   if (archived.length) {
     const ids = new Set(archived.map(m => m.id));
+    agendaDocumentLinks.push(...((row.archived_document_links ?? []) as AgendaDocumentLink[]).filter(link => ids.has(link.meetingId)));
     const snapshot: MeetingsSnapshot = {formatVersion:1,generatedAt:archived.map(m => m.provenance.collectedAt).sort().at(-1)!,
       meetings:archived,agendaDocuments:decoded.documents.filter(d => ids.has(d.meetingId)),sources:[],counts:snapshotCounts(archived,0)};
     snapshots.push(snapshot);
@@ -457,7 +473,9 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
-    bodies,meetings: overlaid,snapshot,bodySnapshots,governments:row.governments as RegistrationGovernmentListing[],
+    bodies,meetings: overlaid,snapshot,bodySnapshots,
+    agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
+    governments:row.governments as RegistrationGovernmentListing[],
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };
 }
 

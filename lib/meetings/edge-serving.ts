@@ -1,6 +1,6 @@
 import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { factReader } from "../facts/db.ts";
-import { readPlacePackage } from "../reader/place.ts";
+import { readPlacePackage, type AgendaDocumentLink } from "../reader/place.ts";
 import { divisionOf, meetingStateOf } from "./body-scope.ts";
 import { MEETINGS_RECORD_CLASS, MEETINGS_SCOPE, MEETINGS_SOURCE_ID, snapshotCounts,
   type MeetingsProjectionReadResult, type MeetingsSnapshot } from "./snapshot.ts";
@@ -13,8 +13,19 @@ import type { Query } from "../facts/publish.ts";
 export { purgeReaderCacheTags } from "../reader/cache.ts";
 
 export async function readReaderEdgeMeetings(options: ReaderMeetingsOptions = {}): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readPlaceMeetings(options), options.settings ?? readReaderMeetingSettings()]);
-  return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
+  const [selected, settings] = await Promise.all([readPlaceMeetings(options), options.settings ?? readReaderMeetingSettings()]);
+  const read = applyServedWindow(selected.read, options.window ?? "SHOWN", options.now, settings);
+  if (selected.context && (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP")) {
+    const ids = new Set(read.value.meetings.map(meeting => meeting.id));
+    options.onContext?.({...selected.context,agendaDocumentLinks:selected.context.agendaDocumentLinks.filter(link => ids.has(link.meetingId))});
+  }
+  return read;
+}
+
+export interface ReaderMeetingsContext {
+  readonly registry: RegistryRuntimeReadModel | null;
+  readonly states: readonly string[];
+  readonly agendaDocumentLinks: readonly AgendaDocumentLink[];
 }
 
 /** `SHOWN`: the configured shown window. `HELD`: every kept past meeting plus the shown window ahead. */
@@ -71,7 +82,7 @@ type ReaderMeetingsOptions = {
     readonly includeAgenda?: boolean;
     /** Keep neighboring identities, but load agenda text only for the opened sitting and its merge candidates. */
     readonly meetingIds?: readonly string[];
-    readonly onRegistry?: (registry: RegistryRuntimeReadModel, states: readonly string[]) => void;
+    readonly onContext?: (context: ReaderMeetingsContext) => void;
     readonly query?: Query;
     readonly now?: string;
     readonly window?: ReaderMeetingsWindow;
@@ -129,10 +140,10 @@ export async function readHeldBodyIds(options: { readonly states: readonly strin
   return new Set(rows.map(row => String(row.id)));
 }
 
-async function readPlaceMeetings(options: ReaderMeetingsOptions): Promise<MeetingsProjectionReadResult> {
+async function readPlaceMeetings(options: ReaderMeetingsOptions): Promise<{read: MeetingsProjectionReadResult; context?: ReaderMeetingsContext}> {
   const divisions = [...new Set((options.ocdIds ?? []).map(divisionOf))];
   const bodyIds = [...new Set(options.bodyIds ?? [])];
-  if (!divisions.length && !bodyIds.length) return NOT_A_PLACE;
+  if (!divisions.length && !bodyIds.length) return {read:NOT_A_PLACE};
   const states = [...new Set([...(options.states ?? []).map(state => state.toUpperCase()),
     ...divisions.map(meetingStateOf), ...bodyIds.map(meetingStateOf)])];
   try {
@@ -140,16 +151,18 @@ async function readPlaceMeetings(options: ReaderMeetingsOptions): Promise<Meetin
       neighbors: options.neighbors, meetingIds: options.meetingIds,
       includeHistory: options.window === "HELD", includeAgenda: options.includeAgenda !== false }, options.query)));
     const registries = packages.flatMap(held => held.registry ? [held.registry] : []);
-    if (registries.length && registries.length === packages.length) options.onRegistry?.(combineStateRegistries(registries), states);
+    const context: ReaderMeetingsContext = {states,
+      registry:registries.length && registries.length === packages.length ? combineStateRegistries(registries) : null,
+      agendaDocumentLinks:packages.flatMap(held => held.agendaDocumentLinks)};
     const snapshots = packages.map(held => held.snapshot);
     const meetings = snapshots.flatMap(snapshot => snapshot.meetings);
     const value: MeetingsSnapshot = { formatVersion: 1,
       generatedAt: snapshots.map(snapshot => snapshot.generatedAt).sort().at(-1) ?? options.now ?? new Date().toISOString(),
       meetings, sources: snapshots.flatMap(snapshot => snapshot.sources), counts: snapshotCounts(meetings, 0),
       agendaDocuments: options.includeAgenda === false ? [] : snapshots.flatMap(snapshot => snapshot.agendaDocuments) };
-    return { kind: "PROMOTED", value, metadata: { ...NOT_A_PLACE.metadata, sourceId: MEETINGS_SOURCE_ID, stale: "CURRENT" },
-      detail: `Read current facts and source calendars for ${states.join(", ")}.` };
+    return {read:{ kind: "PROMOTED", value, metadata: { ...NOT_A_PLACE.metadata, sourceId: MEETINGS_SOURCE_ID, stale: "CURRENT" },
+      detail: `Read current facts and source calendars for ${states.join(", ")}.` },context};
   } catch (error) {
-    return meetingsUnreachable(error instanceof Error ? error.message : String(error));
+    return {read:meetingsUnreachable(error instanceof Error ? error.message : String(error))};
   }
 }

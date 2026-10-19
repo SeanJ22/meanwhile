@@ -1,12 +1,11 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
+import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "@/lib/meetings/edge-serving";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { readRegistryRuntimeProjection, withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
-import type { RegistryRuntimeReadModel } from "@/lib/registry/runtime-data-plane";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { readerDatabaseQuery } from "@/lib/reader/database";
 import { statementQuery } from "@/lib/facts/db";
@@ -26,13 +25,13 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
   }
 
   // The selected registry travels with the calendar query; its source aliases identify the outcomes.
-  const context: { registry?: { value: RegistryRuntimeReadModel; states: readonly string[] } } = {};
+  const context: { loaded?: ReaderMeetingsContext } = {};
   let read;
   try {
     const database = readerDatabaseQuery();
     read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, window: "HELD", meetingIds: [meetingId],
       query: database ? statementQuery(database) : undefined,
-      onRegistry: (value, states) => { context.registry = { value, states }; } });
+      onContext: value => { context.loaded = value; } });
   } catch (error) {
     return Response.json(
       {
@@ -55,8 +54,9 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
       { status: 503 },
     );
   }
-  const registry = context.registry;
+  const registry = context.loaded?.registry ? {value:context.loaded.registry,states:context.loaded.states} : undefined;
   const snapshot = read.value;
+  const documentsAcrossCorpus = [...snapshot.agendaDocuments,...context.loaded?.agendaDocumentLinks ?? []];
   const meeting = snapshot.meetings.find((row) => row.id === meetingId || row.mergedMeetingIds?.includes(meetingId));
   const supporting = () => settleAgendaSupportingHoldings(meetingId, meeting?.bodyId ?? null, {
     outcomes: async () => {
@@ -77,13 +77,13 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
     meetingId, bodyName,
     documentsForMeeting: heldDocuments,
     meetingsAcrossCorpus: snapshot.meetings,
-    documentsAcrossCorpus: snapshot.agendaDocuments ?? [], discoveredDocumentUrl: meeting?.agendaUrl,
+    documentsAcrossCorpus, discoveredDocumentUrl: meeting?.agendaUrl,
     observations: [...publisherAgendaObservationsFor(meetingId), ...(observation ? [observation] : [])],
     now: Date.now(),
   }) : null;
 
   const shown = readerAgendaDocuments(heldDocuments, {
-    documentsAcrossCorpus: snapshot.agendaDocuments ?? [],
+    documentsAcrossCorpus,
     meetingsAcrossCorpus: snapshot.meetings,
   });
   const documents = shown.documents

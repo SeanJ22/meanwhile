@@ -77,7 +77,7 @@ async function stopServer(server) {
 
 async function closeReaderCards(page) {
   for (let depth = 0; depth < 8; depth++) {
-    const close = page.locator('[data-reader-card]:visible').getByRole('button', { name: 'Close', exact: true });
+    const close = page.locator('[data-reader-card]:visible [data-mw="card-close"]');
     if (!(await close.count())) return;
     await close.click();
   }

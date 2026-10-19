@@ -4,8 +4,8 @@ build_state: CODEX SHIFT ENDED; RELEASE 56 SHIPPED; RELEASE 57 NOT SHIPPED
 worker: codex-river
 provider: Codex
 run_id: river-final-handoff-20261019
-lock: codex-river-final-handoff-0031e85e-232a-47ca-9782-a99d237d3bf2
-heartbeat: 2026-10-19T14:42:28Z
+lock: none
+heartbeat: 2026-10-19T14:42:30Z
 
 ## Codex River shift — October 18
 

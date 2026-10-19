@@ -166,6 +166,59 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   } finally { installReaderDatabaseQuery(undefined); }
 });
 
+test("the ballot submits state and place reads before its independent auxiliary canonical groups", async () => {
+  const { readBallotReaderData } = await import("../lib/ballot/reader-data.ts");
+  const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
+  const order: string[] = [];
+  let release: (()=>void) | undefined;
+  const blocked = new Promise<void>(resolve=>{ release=resolve; });
+  installReaderDatabaseQuery(async statements=>{
+    assert.equal(statements.length,1);
+    const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
+    const family=keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
+    order.push(family);
+    await blocked;
+    if (family === "state") return [stateRows("priority-state",[])];
+    if (family === "place") return [[{ entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false }]];
+    return [[]];
+  });
+  try {
+    const data=await withReaderSelection(selection("AZ"),()=>readBallotReaderData(ballotPlaceFromParams({zip:"85701"})));
+    assert.ok(data);
+    assert.deepEqual(order,["state","place","auxiliary","auxiliary","auxiliary","auxiliary"],
+      "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
+    release!();
+    await Promise.all([data.registryRead,data.districtRead]);
+    assert.equal(order.length,6,"geographic qualification and registry composition add no follow-up lookup");
+  } finally { release?.(); installReaderDatabaseQuery(undefined); }
+});
+
+test("an unavailable local territory file leaves the ballot's canonical families available", async () => {
+  const { readBallotReaderData } = await import("../lib/ballot/reader-data.ts");
+  const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
+  const failure=new Error("The local territory file is unavailable");
+  let auxiliaries=0;
+  installReaderDatabaseQuery(async statements=>{
+    const keys=statements[0].params[0] as string[];
+    assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
+    if (keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[])];
+    if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
+    auxiliaries++;
+    return [[]];
+  });
+  try {
+    await withReaderSelection(selection("AZ"),async()=>{
+      const data=await readBallotReaderData(ballotPlaceFromParams({zip:"85701"}),async()=>{ throw failure; });
+      assert.ok(data,"a registry-local failure cannot abort ballot initialization");
+      await assert.rejects(data.registryRead,error=>error === failure);
+      await data.districtRead;
+      assert.equal(auxiliaries,4,"all independent canonical ballot families still load");
+      assert.equal((await readerCanonicalEntry("BALLOT_CANDIDACY",stateAuthorityPointers("ballot-contests","AZ")[0].scope))?.kind,"NOT_RECORDED");
+    });
+  } finally { installReaderDatabaseQuery(undefined); }
+});
+
 test("the selected funding slice survives later official aliases without another data read", async () => {
   const { neonConfig } = await import("@neondatabase/serverless");
   const { primeReaderProjection } = await import("../lib/civic-data/read-model.ts");

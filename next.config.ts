@@ -51,6 +51,7 @@ const nextConfig: NextConfig = {
     "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
     "/api/{ask/grounded,warm}": ["./public/geo/cd119.geojson", "./public/geo/county-us.geojson"],
     "/{ballot,about-area}": staticGeographyTrace,
+    "/about-area/compare": ["./data/derived/resolver-geometry.json"],
     "/api/meetings": [
       ...staticGeographyTrace,
       ...stateOfficeTrace,

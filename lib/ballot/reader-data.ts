@@ -24,7 +24,7 @@ import type { BallotPlace } from "./reader-place.ts";
 import type { BallotSet, Contest } from "./types.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
-export async function readBallotReaderData(place: BallotPlace) {
+export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
   const selection = currentReaderSelection();
   if (!place.centroid || !selection || currentReaderAuthorityEdge()) return null;
   const states = place.state ? [place.state.code] : place.zip && stateForZip(place.zip)
@@ -33,7 +33,18 @@ export async function readBallotReaderData(place: BallotPlace) {
   const point = place.centroid;
   const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
   const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip), districts: readStateDistricts(state) }));
-  const rawEntry = place.zip ? await readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : null;
+  const [rawEntry, territories] = await Promise.all([
+    place.zip ? readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : Promise.resolve(null),
+    Promise.allSettled(states.map(readTerritory)),
+  ]);
+  const places = packages.map(async ({ state, read }, index) => {
+    const territory = territories[index];
+    if (territory.status === "rejected") throw territory.reason;
+    const local = readPlacePackage({ state, divisionIds: rawEntry?.ids ?? selection.divisions ?? [],
+      bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
+    const [held, facts] = await Promise.all([read, local]);
+    return withStateRegistryFacts(held.registry, facts.bodies);
+  });
   const divisions = [...new Set([...rawEntry?.ids ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [
@@ -75,12 +86,6 @@ export async function readBallotReaderData(place: BallotPlace) {
     if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
   });
   const canonicalRead = Promise.all([baseRead, districtRead]).then(() => undefined);
-  const places = packages.map(async ({ state, read }) => {
-    const local = readPlacePackage({ state, divisionIds: rawEntry?.ids ?? selection.divisions ?? [],
-      bodyIds: territoryBodies(point.lat, point.lng, await readerTerritory(state)) });
-    const [held, facts] = await Promise.all([read, local]);
-    return withStateRegistryFacts(held.registry, facts.bodies);
-  });
   const registryRead = Promise.all(places).then(values => {
     const value = values.length === 1 ? values[0] : combineStateRegistries(values);
     withRegistryRuntimeProjection(value, states, () => undefined);

@@ -35,8 +35,10 @@ test("a government source reads despite advisory robots and passes saved evidenc
   // A later job must publish from the earlier job's saved bytes without
   // relabeling the source's owner or check time, or refetching the page.
   const originalRecords=await repos.artifacts.read(job.workItemId);
+  const earlierFindings=await repos.boxFindings.list();
   repos=createMemoryRepositories();
   for(const record of originalRecords)await repos.artifacts.append(record.workItemId,record.artifactId,record,record.recordedAt);
+  for(const row of earlierFindings)await repos.boxFindings.put(row.id,{...row.value,origins:row.value.origins.map(origin=>({...origin,workItemId:'wi-older-consumer',resultId:'aaa-old-consumer'}))},now);
   const laterAttempt=beginAttempt({routeTaskId:'rt-reuse',workItemId:'wi-reuse',worker:{role:'ACQUIRER',provider:'test',version:'1',instance:'test'},lease:claim('rt-reuse','test',now,60000,null),now,methodVersion:0,policyVersion:'test'});
   await repos.attempts.put(laterAttempt.id,laterAttempt,now);
   readHeldPage=async url=>{
@@ -54,7 +56,10 @@ test("a government source reads despite advisory robots and passes saved evidenc
   const references=await repos.artifacts.read('wi-reuse');
   assert.equal(references.length,2);
   for(const record of references)assert.deepEqual(record,originalRecords.find(original=>original.artifactId===record.artifactId));
-  for(const row of await repos.boxFindings.list())assert.ok(row.value.origins.every(origin=>origin.workItemId==='wi-reuse'));
+  const repaired=await repos.artifacts.read('wi-older-consumer');
+  assert.equal(repaired.length,1);
+  assert.deepEqual(repaired[0],references.find(record=>record.canonicalUrl==='https://example.gov/council'));
+  for(const row of await repos.boxFindings.list())assert.ok(row.value.origins.some(origin=>origin.workItemId==='wi-reuse'));
   const published=await publishBoxFindings({repos,facts,vault,fetch:async()=>{throw new Error('must reuse saved evidence')},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now,limit:100,purge:async()=>({purged:true})});
   const members=await facts.query("SELECT value->>'name' AS name FROM fact WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%' ORDER BY name",[body]);
   const contacts=await facts.query("SELECT e.name,f.value FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.field='email' AND f.status='live' ORDER BY e.name");

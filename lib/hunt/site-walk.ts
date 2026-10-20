@@ -71,7 +71,8 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
     if(!page){await input.saveFrontier([next,...queue.values()],read);break;}
     if(!read.length && next.url===scope.website){scope.website=page.url;own=new URL(page.url).hostname.toLowerCase().replace(/^www\./,'');}
     read.push({url:page.url,checkedAt:page.observedAt});
-    const pageScope=next.bodyId ? {...scope,bodyId:next.bodyId,bodyName:next.bodyName,bodyContext:true} : scope;
+    const continuedBody=next.bodyName && scope.bodyId?.endsWith('#governing') && isGoverningBodyName(next.bodyName,scope.name,scope.govClass)?scope.bodyId:next.bodyId;
+    const pageScope=continuedBody ? {...scope,bodyId:continuedBody,bodyName:next.bodyName,bodyContext:true} : scope;
     const pageFindings=siteFindings(pageScope,page);
     const sourceBodies=pageFindings.filter(f=>f.field==='GOV-02');
     const sourceBody=sourceBodies.length===1?sourceBodies[0]:null;

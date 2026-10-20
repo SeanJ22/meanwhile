@@ -1,6 +1,6 @@
 import type {PrepareHuntBody} from './body-target-runtime.ts';
 import {sourceMeetings} from './source-meetings.ts';
-import {retainHuntPage} from './capture-reference.ts';
+import {retainHuntPage,retainHuntFinding} from './capture-reference.ts';
 import {discoverGovernmentSite} from './government-site.ts';
 import {planPlaceHunt} from './place-plan.ts';
 import {walkPlaceBlanks} from './site-walk.ts';
@@ -17,7 +17,7 @@ import {heldCaptureReader} from '../civic-data/worker-publication-context.ts';
 import {readPlaceArtifacts} from '../control-plane/repository/pg-store.ts';
 import {join} from 'node:path';
 import {readerQuery} from '../civic-data/promoted-reader-query.ts';
-import type {ControlPlaneRepositories} from '../control-plane/repository/types.ts';
+import type {ControlPlaneRepositories,ArtifactRecord} from '../control-plane/repository/types.ts';
 import type {Query} from '../facts/publish.ts';
 import type {RunWork,WorkOutcome} from '../control-plane/scheduler/dispatch.ts';
 import type {OpenOne,VaultPut} from '../control-plane/scheduler/route-executor.ts';
@@ -43,6 +43,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   const payload=prior?.value.payload as {website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}|undefined;
   if(payload?.website)scope.website=payload.website;
   let checked=0,findings=0;
+  const retained=new Map<string,ArtifactRecord>();
   const readHeld=heldCaptureReader(new DurableEvidenceStore(join(input.root??process.cwd(),...VAULT_DIR)));
   const held=async(url:string)=>{
     const at=input.now(),cutoff=new Date(Date.parse(at)-job.obligation.cadenceHours*3600000).toISOString();
@@ -80,7 +81,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
     // precede local requests. They are independent of the original job or ZIP.
     readHeld:readBank,national:async()=>({subjects:[],held:[]}),
     read:readPage,
-    report:async finding=>{job.assertLeaseHealthy?.();await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,finding:{...finding,index:findings++,subjectHint:scope.name}},input.now());await input.prepareBody?.(finding,{workItemId:job.workItemId,attemptId:job.attemptId});},
+    report:async finding=>{job.assertLeaseHealthy?.();const at=input.now();const row=await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,finding:{...finding,index:findings++,subjectHint:scope.name}},at);await retainHuntFinding(input.repos,row,job.workItemId,finding.artifactIds,at,retained);await input.prepareBody?.(finding,{workItemId:job.workItemId,attemptId:job.attemptId});},
     frontier:payload?.frontier,
     saveFrontier:async(frontier,read)=>{const at=input.now();const written=await writeFieldManual(input.repos,[newFieldManualEntry('place-hunt',reference.jurisdictionId,{role:'SHARED',kind:'SOURCE_PAGE',title:reference.name,url:scope.website,states:[scope.state.toLowerCase()],ocdIds:[governmentId],outcome:findings?'YIELDED':'REFERENCE',summary:`${checked} source page(s) read, ${findings} finding(s); ${frontier.length} published link(s) remain`,observedAt:at,payload:{website:scope.website,frontier,read}})],at);if(written.error)throw new Error(written.error);}});
    if(!report.read && report.failures?.length)return {ranAs:'DETERMINISTIC',kind:'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},detail:`${scope.name}: no source page was readable; ${report.failures.length} source failure(s) remain open.`};

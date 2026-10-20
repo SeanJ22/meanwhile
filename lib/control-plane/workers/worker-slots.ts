@@ -269,7 +269,7 @@ function peakCodeIdentity(): string {
 export function workerMemoryPeakKey(entry: string): string | null {
   const script = entry.split(/[\\/]/).at(-1)!;
   const table = createHash("sha256").update(JSON.stringify([WORKER_ENTRY_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, RUNNER_PARENT_PEAK_MIB, FRESHNESS_PARENT_PEAK_MIB])).digest("hex").slice(0, 16);
-  const role = freshnessEntryRole(entry);
+  const role = freshnessEntryRole(entry) ?? (entry.startsWith("national-place:") ? "national-place" : null);
   return /[.](?:mts|ts|mjs|js)$/.test(script) ? `${peakCodeIdentity()}:${table}:${script}${role === null ? "" : `:${role}`}` : null;
 }
 /** The measured peak, 5% over and rounded up to a whole MiB. */

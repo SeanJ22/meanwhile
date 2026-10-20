@@ -318,6 +318,23 @@ test("small runs cannot lower any script's known peak or admit an extra money jo
   release();
 });
 
+test("a national place promoter's peak does not block an ordinary state promotion", async () => {
+  const mib = 1048576;
+  const host = workerMemoryHost({ processes: () => [] });
+  const national = "national-place:85701/promote-registry-runtime.mts";
+  const otherNational = "national-place:10007/promote-registry-runtime.mts";
+  const state = "registry-runtime:AZ/promote-registry-runtime.mts";
+  const otherState = "registry-runtime:NY/promote-registry-runtime.mts";
+  assert.equal(workerMemoryPeakKey(national), workerMemoryPeakKey(otherNational));
+  assert.equal(workerMemoryPeakKey(state), workerMemoryPeakKey(otherState));
+  host.transact(value => { value.peaks = { [workerMemoryPeakKey(national)!]: [3e9] }; }, false);
+  const slots = routineProcessSlots({ host, availableBytes: () => (768 + 512) * mib });
+  const release = await slots.acquire(state, Date.now() + 100);
+  host.transact(value => assert.equal(value.reservations[0]!.peak, 512 * mib), false);
+  release();
+  await assert.rejects(slots.acquire(otherNational, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+});
+
 test("runtime parents and publication-prefixed commands retain the actual executable's peak", async () => {
   const mib = 1048576;
   const entries = [

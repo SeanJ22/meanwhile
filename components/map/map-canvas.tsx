@@ -789,10 +789,10 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.setPadding(
-      insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 },
-      { instant: true },
-    );
+    const padding = insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 };
+    const current = map.getPadding();
+    if ((["top","bottom","left","right"] as const).every(side=>(current[side]??0)===padding[side])) return;
+    map.setPadding(padding, { instant: true });
   }, [leftInset, insets]);
 
   const cameraMapRef = useRef<MapLibreMap | null>(null);

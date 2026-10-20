@@ -19,6 +19,9 @@
 [data-raster="software"] .mw-reader .sidebar {
   transition-duration: var(--dur-instant);
 }
+[data-raster="software"] .mw-reader .mw-card[data-enter="rise"] {
+  animation-duration: var(--dur-instant);
+}
 .mw-reader {
   background: var(--ground);
   color: var(--text);

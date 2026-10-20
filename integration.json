@@ -3329,5 +3329,41 @@
     "tested_sha": "a24a073807bc8991a2cd579eb1a9065d07f57939",
     "gates": "pass",
     "at": "2026-10-20T07:44:15Z"
+  },
+  {
+    "lane": "aq-01",
+    "steps": [
+      "AQ-01"
+    ],
+    "ready_sha": "a5902541c77c212a47c81572a233bae7618ed918",
+    "merge_sha": "7bc52dac544cfe57663ed65e4f0c6b3aced602ff",
+    "river_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "tested_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "gates": "pass",
+    "at": "2026-10-20T10:16:06Z"
+  },
+  {
+    "lane": "ui-04",
+    "steps": [
+      "UI-04"
+    ],
+    "ready_sha": "34548bc40565a23f5c0126f9be13e2e43a7c1c8a",
+    "merge_sha": "7454bc5dd7c2325cfde917393866d85bc6c6a5b9",
+    "river_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "tested_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "gates": "pass",
+    "at": "2026-10-20T10:16:06Z"
+  },
+  {
+    "lane": "vt-01",
+    "steps": [
+      "VT-01"
+    ],
+    "ready_sha": "263aa1050e822e7624a9886655682b9494d4ab14",
+    "merge_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "river_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "tested_sha": "026804b0e9034df7b40566c20fbc2d85a43da17e",
+    "gates": "pass",
+    "at": "2026-10-20T10:16:06Z"
   }
 ]

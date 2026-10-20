@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -16,9 +16,14 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
-import { auditReasoningContext } from "../lib/control-plane/workers/model-audit.ts";
+import { AUDIT_CONTEXT_MAX_BYTES, auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
-import type { GeneralizedCivicExtractionContract, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
+import type { GeneralizedCivicExtractionContract, IndependentAuditContext, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
+import { dispatchWorkerTask, enqueueWorkerTask } from "../lib/control-plane/workers/runtime.ts";
+import { readCompletedWorkerResult } from "../lib/control-plane/repository/worker-completion.ts";
+import { fingerprint } from "../lib/control-plane/ids.ts";
+import { encodeVerifiedReplay } from "../lib/sources/verified-replay.ts";
+import { playbookRows } from "./helpers/playbooks.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import {
   installOperationalReferenceBundle,
@@ -115,13 +120,13 @@ function plan(value: GeneralizedCivicExtractionContract): AutonomousWorkPlan {
     seedUrls: [], sources: [], acquisition: [], auditScope: "CAPTURED_ARTIFACT" };
 }
 
-async function harness(t: TestContext) {
+async function harness(t: TestContext, subject = SUBJECT) {
   const vaultRoot = await mkdtemp(path.join(tmpdir(), "worker-generalized-standing-"));
   assert.equal(path.dirname(path.resolve(vaultRoot)), path.resolve(tmpdir()));
   t.after(() => rm(vaultRoot, { recursive: true, force: true }));
   const store = new DurableEvidenceStore(vaultRoot); const repos = createMemoryRepositories();
   let ordinal = 0; const now = () => new Date(Date.parse(START) + ++ordinal * 1000).toISOString();
-  const item = createWorkItem({ project: "freshness", subject: SUBJECT, obligation: "Generalized standing source controls", why: "Recorded control; no live source calls.", now: now() });
+  const item = createWorkItem({ project: "freshness", subject, obligation: "Generalized standing source controls", why: "Recorded control; no live source calls.", now: now() });
   await registerWorkItem(repos, item, now());
   async function hold(text: string, canonicalUrl: string, owner = item): Promise<ArtifactRecord> {
     const at = now(); const task = createRouteTask({ workItemId: owner.id, routeId: "held-source", routeLabel: "Recorded control", target: canonicalUrl, inherited: false, now: at });
@@ -146,8 +151,107 @@ async function harness(t: TestContext) {
     return (await repos.workItems.compareAndSet(owner.id, held.revision, { ...held.value, autonomousPlan: plan(value) }, now())).value;
   }
   const runtime = standingFleetRuntime({ root: ROOT, method: METHOD, vaultRoot, repos, now });
+  t.after(() => runtime.close());
   return { repos, item, hold, setPlan, runtime, now };
 }
+
+async function largeOfficialTitle(t: TestContext) {
+  const subject = "ocd-division/country:us/state:az/county:pima", url = "https://www.pima.gov/board-of-supervisors";
+  const h = await harness(t, subject);
+  const title = "<title>Board of Supervisors | Pima County, AZ</title>";
+  const body = (revision: string) => {
+    const prefix = title + '<script type="application/json">{"revision":"' + revision + '","padding":"';
+    const suffix = '"}</script><p>Full immutable challenger witness outside the title projection.</p>';
+    return prefix + "x".repeat(1_527_913 - Buffer.byteLength(prefix + suffix)) + suffix;
+  };
+  const observationOwner = createWorkItem({ project: "freshness", subject, obligation: "Saved official publisher observation", why: "Recorded distinct source observation", now: h.now() });
+  await registerWorkItem(h.repos, observationOwner, h.now());
+  const observation = await h.hold(body("old"), url, observationOwner), primary = await h.hold(body("new"), url);
+  assert.notEqual(primary.contentHash, observation.contentHash);
+  const value: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: "OFFICIAL_BOARD_DIRECTORY", subjectId: subject,
+    jurisdiction: { country: "US", state: "AZ", canonicalId: subject }, identity: { namespace: `${subject}:official-title`, keyFields: ["bodyName"] },
+    sourceScope: { sourceId: "www.pima.gov", routeIds: ["held-source"], publisher: "Pima County government", canonicalUrls: [url], observationArtifactIds: [observation.artifactId] },
+    methodVersion: METHOD.version, requiredFields: ["bodyName"], completenessScope: "Only the body name explicitly written in the captured official title; no complete membership claim.",
+    expectedSourceDate: null, extraction: { format: "TEXT_BLOCKS", recordStart: "<title>", recordEnd: " | Pima County, AZ</title>", fields: { bodyName: { source: "<title>", type: "STRING" } } },
+    verification: { required: false, authorities: [] } };
+  await h.setPlan(h.item, value);
+  return { ...h, primary, observation, value };
+}
+
+test("large distinct official captures retain verified replay references and ground challenges against the full original body", async t => {
+  const h = await largeOfficialTitle(t);
+  const context = await h.runtime.independentContext({ workItemId: h.item.id, artifactId: h.primary.artifactId, contract: h.value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version });
+  assert.deepEqual(new Set(context.evidence.map(e => e.artifactId)), new Set([h.primary.artifactId, h.observation.artifactId]));
+  assert.ok(context.evidence.every(e => typeof Object.getOwnPropertyDescriptor(e, "text")?.get === "function"));
+  const serialized = JSON.stringify(context);
+  assert.doesNotMatch(serialized, /x{1024}/, "raw source bodies are not embedded in the serialized context");
+  for (const evidence of context.evidence) {
+    const reference = JSON.parse(JSON.stringify(evidence));
+    assert.equal(Object.hasOwn(reference, "text"), false);
+    assert.equal(reference.__sourceReplay.text.ref.sha256, evidence.contentHash.replace(/^sha256-/, ""));
+    assert.equal(reference.__sourceReplay.text.ref.byteLength, 1_527_913);
+  }
+  t.diagnostic(JSON.stringify({ retainedBytes: Buffer.byteLength(serialized), routeMetadataBytes: Buffer.byteLength(JSON.stringify(context.routes)),
+    evidenceReferenceBytes: Buffer.byteLength(JSON.stringify(context.evidence)), rawSourceBytes: 3_055_826 }));
+  const reasoning = auditReasoningContext(context);
+  assert.ok(Buffer.byteLength(reasoning) <= AUDIT_CONTEXT_MAX_BYTES);
+  assert.match(reasoning, /Board of Supervisors/);
+  assert.doesNotMatch(reasoning, /Full immutable challenger witness/);
+  for (const row of playbookRows) await h.repos.fieldManual.put(row.id, row, h.now());
+  const challenge = { code: "EXACT_HELD_WITNESS", detail: "Exercise full-source grounding outside the model field projection", artifactId: h.primary.artifactId,
+    quote: "Full immutable challenger witness outside the title projection." };
+  const reasoner = modelAuditReasoner(h.repos, async request => ({ model: request.model, stop_reason: "tool_use", usage: {},
+    content: [{ type: "tool_use", id: "recorded-response", name: "record_audit", input: { verdict: "BROKE", challenges: [challenge] } }] }), h.now, { ceilingUsd: 10 });
+  const review = await reasoner.review(context, "recorded-auditor-no-provider");
+  assert.equal(review.review.validationError, null);
+  assert.deepEqual(review.review.challenges, [challenge]);
+  const wire = encodeVerifiedReplay(context.evidence[0]) as unknown as { __sourceReplay: { text: { ref: { path: string } } } };
+  writeFileSync(wire.__sourceReplay.text.ref.path, "changed capture");
+  assert.throws(() => context.evidence[0].text, /SOURCE_REPLAY_INTEGRITY_MISMATCH/);
+  await assert.rejects(reasoner.review(context, "recorded-tampered-no-provider"), /SOURCE_REPLAY_INTEGRITY_MISMATCH/);
+  await h.runtime.close();
+  assert.throws(() => context.evidence[1].text, /ENOENT/, "preflight-only contexts are released by the normal runtime close");
+});
+
+test("native isolated audit completes over large captures and releases replay files after success and execution failure", async t => {
+  const h = await largeOfficialTitle(t);
+  const run = async (role: "PARSER" | "VALIDATOR" | "ADVERSARIAL_AUDITOR", producerResultId?: string, validatorResultId?: string) => {
+    const task = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: h.primary.artifactId, role, contract: h.value, now: h.now(), producerResultId, validatorResultId });
+    const outcome = await dispatchWorkerTask({ ...h.runtime, requireModelAudit: false }, task);
+    assert.equal(outcome.outcome, "WORKED", outcome.detail);
+    return (await readCompletedWorkerResult(h.repos, `wr-${fingerprint([outcome.attemptId!])}`)).record;
+  };
+  const parser = await run("PARSER"), validator = await run("VALIDATOR", parser.id);
+  assert.equal(parser.result.verdict, "EXTRACTED");
+  assert.equal(validator.result.verdict, "PASS");
+  let heldContext: IndependentAuditContext | undefined;
+  const runtime = { ...h.runtime, requireModelAudit: false, independentContext: async (...args: Parameters<typeof h.runtime.independentContext>) => {
+    heldContext = await h.runtime.independentContext(...args); return heldContext;
+  } };
+  const auditTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: h.primary.artifactId, role: "ADVERSARIAL_AUDITOR", contract: h.value,
+    producerResultId: parser.id, validatorResultId: validator.id, now: h.now() });
+  const audited = await dispatchWorkerTask(runtime, auditTask);
+  assert.equal(audited.outcome, "WORKED", audited.detail);
+  const result = (await readCompletedWorkerResult(h.repos, `wr-${fingerprint([audited.attemptId!])}`)).record;
+  assert.equal(result.result.verdict, "SURVIVED");
+  assert.deepEqual(new Set(result.inputArtifactIds), new Set([h.primary.artifactId, h.observation.artifactId]));
+  assert.ok(heldContext);
+  assert.throws(() => heldContext!.evidence[0].text, /ENOENT/, "successful tasks release their replay files before returning the committed result");
+  const badTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: h.primary.artifactId, role: "ADVERSARIAL_AUDITOR", contract: h.value,
+    now: h.now(), purpose: "DIAGNOSTIC_REPLAY", replayLabel: "recorded-missing-producer" });
+  const failed = await dispatchWorkerTask(runtime, badTask);
+  assert.equal(failed.outcome, "FAILED");
+  assert.match(failed.detail, /WORKER_PRODUCER_REFERENCE_MISSING/);
+  assert.throws(() => heldContext!.evidence[0].text, /ENOENT/, "a native failure after independent context creation also releases the files");
+  const providerFailure = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: h.primary.artifactId, role: "ADVERSARIAL_AUDITOR", contract: h.value,
+    producerResultId: parser.id, validatorResultId: validator.id, now: h.now(), purpose: "DIAGNOSTIC_REPLAY", replayLabel: "recorded-provider-failure" });
+  for (const row of playbookRows) await h.repos.fieldManual.put(row.id, row, h.now());
+  const failedReview = await dispatchWorkerTask({ ...runtime, modelAuditSample: async () => true,
+    auditReasoner: modelAuditReasoner(h.repos, async () => { throw new Error("recorded transport failure; no provider invoked"); }, h.now, { ceilingUsd: 10 }) }, providerFailure);
+  assert.equal(failedReview.outcome, "FAILED");
+  assert.match(failedReview.detail, /AUDIT_PROVIDER_FAILURE/);
+  assert.throws(() => heldContext!.evidence[0].text, /ENOENT/, "reasoner failures release the files before reading the producer");
+});
 
 test("generalized standing independently retains two subject publisher hosts and explicit authority while excluding other subjects", async t => {
   const h = await harness(t);

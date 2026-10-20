@@ -35,6 +35,7 @@ import type { HuntSearch, SearchBudget } from "../../hunt/search.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { forEachAggregate, forEachLatestScout } from "./streamed-history.ts";
 import { refreshDoorsForPass } from "../../doors/install.ts";
+import { jurisdictionMatchesSubject } from "../../hunt/jurisdiction-identity.ts";
 
 /** One runtime over the same stores and bounded worker infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -76,7 +77,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     if (!state) return null;
     let registry;
     try { registry = requiredJurisdictionRegistry(state); } catch { return null; }
-    const found = registry.jurisdictions.filter(row=>row.id===subjectId);
+    const found = registry.jurisdictions.filter(row=>jurisdictionMatchesSubject(row, subjectId));
     if (found.length !== 1) return null;
     const address = found[0]!.ownWebAddress;
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
@@ -105,7 +106,10 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
     return lineage?.rootWorkItemId??null;
   };
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: () => { releaseState(); taskState = null; return knowledge.close(); },
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: async () => {
+    releaseState(); taskState = null;
+    try { await heldRuntime.close(); } finally { await knowledge.close(); }
+  },
     beginTask:async (task)=>{
       releaseState(); lineages = []; sharedOriginByRoot.clear(); taskState = null;
       const item = await input.repos.workItems.read(task.workItemId);

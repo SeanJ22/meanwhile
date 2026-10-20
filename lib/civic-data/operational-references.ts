@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import type { JurisdictionRegistry } from "../hunt/jurisdiction-universe.ts";
+import { jurisdictionMatchesSubject } from "../hunt/jurisdiction-identity.ts";
 import {
   JURISDICTION_REFERENCE_HTTP_SOURCES,
   type JurisdictionReferenceAcquisitionFailure,
@@ -197,7 +198,7 @@ export function installOperationalReferenceState(registry: JurisdictionRegistry,
 export function installOperationalReferenceSubjects(registry: JurisdictionRegistry, reviewedStates: readonly string[], subjectIds: readonly string[]): void {
   const state = registry.stateCode.toLowerCase(), subjects = new Set(subjectIds);
   const issues = registryIssues({ [state]: registry }, [state]).filter(issue => issue !== `${state}:ZERO_JURISDICTIONS`);
-  if (!subjects.size || registry.jurisdictions.some(row => !subjects.has(row.id))) issues.push(`${state}:SUBJECT_SCOPE_MISMATCH`);
+  if (!subjects.size || registry.jurisdictions.some(row => !subjectIds.some(id => jurisdictionMatchesSubject(row, id)))) issues.push(`${state}:SUBJECT_SCOPE_MISMATCH`);
   if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_SUBJECTS_INVALID:${issues.join(",")}`);
   installState(registry, reviewedStates);
 }

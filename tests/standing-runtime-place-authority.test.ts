@@ -31,7 +31,7 @@ function registry(state: string): JurisdictionRegistry {
     counts: { COUNTY: 2 }, enumerationSources: [{ id: "enumeration", describe: "Recorded counties", path: "https://census.gov/units", rowsRead: 2 }],
     sourceCatalog: Object.fromEntries(["own", "unrelated"].map(name => [name, { recordClass: "OFFICEHOLDERS", authority: name, authorityBasis: "Government publisher", scope: "THIS_JURISDICTION",
       routeId: "held-source", url: `https://${name}-${state}.example.gov/records`, state: "ADAPTED", owed: null, citation: "Recorded source" }])),
-    jurisdictions: ["own", "unrelated"].map(name => ({ id: `${state}:county:${name}`, stateCode: state.toUpperCase(), name, govClass: "COUNTY", countyName: name,
+    jurisdictions: ["own", "unrelated"].map(name => ({ id: state === "az" && name === "own" ? "az:county:county-of-pima" : `${state}:county:${name}`, stateCode: state.toUpperCase(), name, govClass: "COUNTY", countyName: state === "az" && name === "own" ? "PIMA" : name,
       enumeratedFrom: "enumeration", ownWebAddress: `https://${name}-${state}.example.gov/`, sourceIds: [name] })) };
 }
 
@@ -77,8 +77,8 @@ test("native tasks hydrate exact place authority and release it within and acros
   const now = () => new Date(Date.parse(AT) + ++ordinal * 1000).toISOString();
   const runtime = await autonomousStandingRuntime({ root, vaultRoot: root, repos, now });
   t.after(() => runtime.close?.());
-  async function held(state: string, subjectId = `${state}:county:own`) {
-    const canonicalUrl = `https://own-${state}.example.gov/records`, item = createWorkItem({ project: "freshness", subject: subjectId, obligation: "Own-place records", why: "Recorded acquisition", now: now() });
+  async function held(state: string, subjectId = `${state}:county:own`, canonicalUrl = `https://own-${state}.example.gov/records`) {
+    const item = createWorkItem({ project: "freshness", subject: subjectId, obligation: `Own-place records ${canonicalUrl}`, why: "Recorded acquisition", now: now() });
     const contract: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: "DOCUMENT_INDEX", subjectId,
       jurisdiction: { country: "us", state, canonicalId: subjectId }, identity: { namespace: "publisher-page", keyFields: ["url"] },
       sourceScope: { sourceId: new URL(canonicalUrl).hostname, publisher: "Own-place government", canonicalUrls: [canonicalUrl], observationArtifactIds: [], routeIds: ["held-source"] },
@@ -97,13 +97,20 @@ test("native tasks hydrate exact place authority and release it within and acros
       byteLength: artifact.byteLength, contentType: artifact.contentType, canonicalUrl, partial: false, recordedAt: at }, at);
     return { task, context: () => runtime.independentContext({ workItemId: item.id, artifactId: artifact.id, contract, auditScope: "CAPTURED_ARTIFACT", methodVersion: 56 }), artifact, text };
   }
-  const az = await held("az");
+  const az = await held("az", "az:county:county-of-pima");
   await assert.rejects(az.context(), /OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:az/);
   await runtime.beginTask!(az.task);
   assert.deepEqual(installedOperationalReferenceStateCodes(), ["az"]);
-  assert.deepEqual(requiredOperationalJurisdictionRegistry("az").jurisdictions.map(row => row.id), ["az:county:own"]);
+  assert.deepEqual(requiredOperationalJurisdictionRegistry("az").jurisdictions.map(row => row.id), ["az:county:county-of-pima"]);
   assert.deepEqual(Object.keys(requiredOperationalJurisdictionRegistry("az").sourceCatalog), ["own"]);
   assert.deepEqual((await az.context()).evidence.map(row => row.text), [az.text]);
+  const pimaOcd = "ocd-division/country:us/state:az/county:pima", ocd = await held("az", pimaOcd);
+  await runtime.beginTask!(ocd.task);
+  assert.deepEqual(requiredOperationalJurisdictionRegistry("az").jurisdictions.map(row => row.id), ["az:county:county-of-pima"], "the county's original reviewed ID and evidence survive its canonical OCD task identity");
+  assert.equal((await ocd.context()).subjectId, pimaOcd, "audit ownership remains the original task's OCD subject");
+  assert.deepEqual((await ocd.context()).evidence.map(row => row.text), [ocd.text]);
+  const foreignPublisher = await held("az", pimaOcd, "https://foreign.example.gov/records");
+  await assert.rejects(foreignPublisher.context(), /AUDIT_FIRST_PARTY_PUBLISHER_BINDING_MISSING/, "a valid county alias never admits a different publisher");
   const curated = await held("az", bodyId);
   await runtime.beginTask!(curated.task);
   assert.equal(requiredOperationalJurisdictionRegistry("az").jurisdictions.length, 0, "same-state task change releases the prior county");
@@ -113,7 +120,7 @@ test("native tasks hydrate exact place authority and release it within and acros
   assert.deepEqual(installedOperationalReferenceStateCodes(), ["nh"]);
   assert.throws(() => requiredOperationalJurisdictionRegistry("az"), /OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:az/);
   assert.deepEqual((await nh.context()).evidence.map(row => row.text), [nh.text]);
-  assert.equal(subjectQueries, 3); assert.equal(bodyQueries, 2);
+  assert.equal(subjectQueries, 5); assert.equal(bodyQueries, 2);
   await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{scope}',to_jsonb('another-scope'::text)) WHERE id='reviewed-national'");
   await assert.rejects(runtime.beginTask!(az.task), /OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:az/, "an invalid canonical publication cannot become an empty task registry");
   assert.deepEqual(installedOperationalReferenceStateCodes(), [], "a failed refresh leaves no prior-place authority installed");

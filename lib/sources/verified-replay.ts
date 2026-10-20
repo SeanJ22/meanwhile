@@ -89,7 +89,7 @@ export function replayBytesAs<T extends object>(source: object, from: string, me
 
 /** Advanced Node IPC does not call toJSON. Encode the same replay identities
  * explicitly without evaluating a body getter, preserving shared metadata. */
-export function encodeVerifiedReplay<T>(value: T): T {
+export function encodeVerifiedReplay<T>(value: T, observe?: (encoded: object, entries: ReadonlyMap<string, ReplayProperty>) => void): T {
   const seen = new WeakMap<object, unknown>();
   const visit = (input: unknown): unknown => {
     if (input === null || typeof input !== "object" || input instanceof Date || input instanceof ArrayBuffer || ArrayBuffer.isView(input)) return input;
@@ -97,7 +97,7 @@ export function encodeVerifiedReplay<T>(value: T): T {
     if (Array.isArray(input)) { const result: unknown[] = []; seen.set(input, result); for (const item of input) result.push(visit(item)); return result; }
     const result: Record<string, unknown> = {}, replay = properties.get(input); seen.set(input, result);
     for (const key of Object.keys(input)) if (!replay?.has(key)) result[key] = visit((input as Record<string, unknown>)[key]);
-    if (replay) result.__sourceReplay = Object.fromEntries(replay);
+    if (replay) { result.__sourceReplay = Object.fromEntries(replay); observe?.(result, replay); }
     return result;
   };
   return visit(value) as T;

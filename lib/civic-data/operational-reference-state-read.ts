@@ -1,5 +1,7 @@
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import type { Jurisdiction, JurisdictionRegistry, JurisdictionSource } from "../hunt/jurisdiction-universe.ts";
+import { countySubject, jurisdictionMatchesSubject } from "../hunt/jurisdiction-identity.ts";
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPublishedArraySlice, type PublishedArraySlice } from "./published-array-slice.ts";
 import { AZ_JURISDICTION_REFERENCE_SCOPE, JURISDICTION_REFERENCE_SCOPE, JURISDICTION_REFERENCE_VERSION,
   OPERATIONAL_REFERENCE_RECORD_CLASS } from "./operational-references.ts";
@@ -54,7 +56,8 @@ export async function readOperationalReferenceSubjects(state: string, subjectIds
   const failures: string[] = [];
   for (const scope of candidates) {
     try {
-      const slice = <T>(path: readonly string[], extra: { objectRecord?: boolean; keepKeys?: readonly string[]; statePath?: readonly string[]; statePattern?: string } = {}) =>
+      const slice = <T>(path: readonly string[], extra: { objectRecord?: boolean; keepKeys?: readonly string[]; statePath?: readonly string[]; statePattern?: string;
+        selectors?: readonly { path: readonly string[]; pattern: string; required?: boolean }[] } = {}) =>
         readPublishedArraySlice<T>({ recordClass: OPERATIONAL_REFERENCE_RECORD_CLASS, scope, path, statePath: [], statePattern: ".*", ...extra, query });
       const header = await slice<Pick<JurisdictionRegistry, "formatVersion" | "stateCode" | "generatedBy" | "generatedOn">>(["registries", key],
         { objectRecord: true, keepKeys: ["formatVersion", "stateCode", "generatedBy", "generatedOn"], statePath: ["stateCode"], statePattern: `^${key.toUpperCase()}$|^${key}$` });
@@ -65,7 +68,20 @@ export async function readOperationalReferenceSubjects(state: string, subjectIds
           throw new Error("OPERATIONAL_REFERENCE_POINTER_CHANGED");
         return read.records;
       };
-      const jurisdictions = checked(await slice<Jurisdiction>(["registries", key, "jurisdictions"], { statePath: ["id"], statePattern: exactIds(ids) }));
+      const selected = new Map(checked(await slice<Jurisdiction>(["registries", key, "jurisdictions"], { selectors:
+        ["id", "ocdId", "bodyId"].map(field => ({ path: [field], pattern: exactIds(ids) })) })).map(row => [row.id, row]));
+      for (const id of ids) {
+        const county = countySubject(key, id), own = jurisdictionFromOcdId(id);
+        const selectors = county ? [{ path: ["countyName"], pattern: `(?i)^${county.split("_").join("[^[:alnum:]]+")}$` },
+          { path: ["govClass"], pattern: "^COUNTY$", required: true }]
+          : own?.slug === key && id === `ocd-division/country:us/${own.prefix}:${key}` ? [{ path: ["govClass"], pattern: "^STATE$" }] : null;
+        if (!selectors) continue;
+        for (const row of checked(await slice<Jurisdiction>(["registries", key, "jurisdictions"], { selectors }))) {
+          if (!jurisdictionMatchesSubject(row, id)) throw new Error("OPERATIONAL_REFERENCE_SUBJECT_IDENTITY_MISMATCH");
+          selected.set(row.id, row);
+        }
+      }
+      const jurisdictions = [...selected.values()];
       const sourceCatalog: Record<string, JurisdictionSource> = {};
       for (const id of new Set(jurisdictions.flatMap(row => row.sourceIds))) {
         const source = checked(await slice<JurisdictionSource>(["registries", key, "sourceCatalog", id], { objectRecord: true }));

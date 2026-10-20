@@ -246,6 +246,12 @@ environment.WTP_RH01_REMOTE_DATABASE_PROCESS = JSON.stringify({ pid: facts.pid, 
 const productionControlHost = new URL(environment.WTP_CONTROL_PLANE_DATABASE_URL!).hostname;
 for (const name of Object.keys(environment)) if (environment[name]?.includes(productionControlHost)) delete environment[name];
 environment.WTP_CONTROL_PLANE_DATABASE_URL = "postgresql://wtp_cp_release_readonly:local-only@127.0.0.1:1/rh01";
+async function stopLocalDatabase(): Promise<void> {
+  if (facts.exitCode !== null || facts.signalCode !== null) return;
+  const ended = once(facts, "close"); facts.kill("SIGTERM");
+  const force = setTimeout(() => { facts.kill("SIGKILL"); }, 5000); force.unref();
+  try { await ended; } finally { clearTimeout(force); }
+}
 if (activePima) {
   const preparation = spawn(process.execPath, ["--experimental-strip-types", "--import", join(harnessRoot, "scripts/register-test-loader.mjs"),
     join(harnessRoot, "scripts/rh01-active-overlay-prepare.mts"), `--phase=${phase}`,
@@ -262,7 +268,13 @@ if (activePima) {
   activePreparation = status === 0 ? { status: "SUCCEEDED", code: 0 } : { status: "FAILED", code: typeof status === "number" ? status : null,
     detail: detail.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted database connection]") };
   await writeFile(join(directory, "active-preparation-result.json"), JSON.stringify(activePreparation, null, 2));
-  if (status !== 0) process.stderr.write("RH01_ACTIVE_PREPARATION_FAILED: native preparation remains incomplete; all exact inventory offers still proceed under native controls\n");
+  if (status !== 0) {
+    await stopLocalDatabase();
+    const reads = await physicalRunReads(environment.WTP_RH01_PRODUCTION_READ_LEDGER!, environment.WTP_RH01_RUN_ID!, 0);
+    await writeFile(join(directory, "setup-failure.json"), JSON.stringify({ activePreparation, workloadStarted: false,
+      readerResponseBytes: reads.reader, controlResponseBytes: reads.control, productionWrites: 0 }, null, 2));
+    throw Error("RH01_ACTIVE_PREPARATION_FAILED: no workload was launched after the native read-only preflight failed");
+  }
 }
 if (exerciseNationalPlaces) {
   const commands = join(directory, "national-preparation-commands.json");
@@ -279,11 +291,7 @@ if (exerciseNationalPlaces) {
     detail: detail.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted database connection]") };
   await writeFile(join(directory, "national-preparation-result.json"), JSON.stringify(nationalPreparation, null, 2));
   if (status !== 0) {
-    if (facts.exitCode === null && facts.signalCode === null) {
-      const ended = once(facts, "close"); facts.kill("SIGTERM");
-      const force = setTimeout(() => { facts.kill("SIGKILL"); }, 5000); force.unref();
-      try { await ended; } finally { clearTimeout(force); }
-    }
+    await stopLocalDatabase();
     throw Error("RH01_NATIONAL_PREPARATION_FAILED: no workload was launched; the exact native due request remains unproved");
   }
 }
@@ -568,8 +576,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, Math.min(30000, observationMs - (Date.now() - startedAt))));
 } finally {
   clearInterval(interval);
-  const closed = new Promise<void>(accept => facts.once("close", () => accept()));
-  facts.kill("SIGTERM"); await closed;
+  await stopLocalDatabase();
 }
 const elapsedMs = Date.now() - startedAt;
 refreshObserved();

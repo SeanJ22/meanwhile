@@ -4,7 +4,7 @@ import { ZERO_COST, type AttemptCost, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability, type CapabilityGrant } from "../capability.ts";
 import { contentHash, fingerprint } from "../ids.ts";
 import type { ParserInput } from "../evidence/parser-boundary.ts";
-import { evidenceProjection } from "./evidence-projection.ts";
+import { evidenceProjection, releaseAuditContextEvidence, workerEvidenceMetadata } from "./evidence-projection.ts";
 export { evidenceProjection } from "./evidence-projection.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
@@ -145,7 +145,10 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
         model = await runtime.auditReasoner.review(independent, attemptId, spec.auditEscalation);
       }
     }
-    const evidence = evidenceProjection(await runtime.readEvidence(spec.artifactId));
+    const evidence = role === "ADVERSARIAL_AUDITOR"
+      ? independent?.evidence.find(held => held.artifactId === spec.artifactId)
+      : evidenceProjection(await runtime.readEvidence(spec.artifactId));
+    if (!evidence) throw new Error("WORKER_EXACT_ARTIFACT_BINDING_REFUSED");
     if (evidence.artifactId !== spec.artifactId) throw new Error("WORKER_EXACT_ARTIFACT_BINDING_REFUSED");
     const inputs: string[] = [];
     let input: FleetInput = { attemptId, worker, evidence, contract: spec.contract };
@@ -217,9 +220,9 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       semanticHash: contentHash(canonicalJson(result.role === "PARSER" ? normalizedParserResult(result) : result)), result,
       implementationHash: contentHash(await bundleProcedure(role)),
       ...(independent ? { auditContext: { ...independent,
-        evidence: independent.evidence.map(({ text: _text, ...metadata }) => metadata),
-        surfaceEvidence: (independent.surfaceEvidence ?? []).map(({ text: _text, ...metadata }) => metadata),
-        authorityEvidence: (independent.authorityEvidence ?? []).map(({ text: _text, ...metadata }) => metadata) } } : {}),
+        evidence: independent.evidence.map(workerEvidenceMetadata),
+        surfaceEvidence: (independent.surfaceEvidence ?? []).map(workerEvidenceMetadata),
+        authorityEvidence: (independent.authorityEvidence ?? []).map(workerEvidenceMetadata) } } : {}),
       ...(model ? { modelReview: model.review } : {}),
       ...(parsed ? { modelParse: parsed.review } : {}),
     };
@@ -236,7 +239,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
           usd: partial ? partial.usd : model?.usd ?? parsed?.usd ?? null,
           requestCount: partial ? partial.byModel.reduce((sum, share) => sum + share.requestCount, 0) : modelRequested && !denied ? 1 : 0,
           ...(partial?.metering ?? model?.metering ?? parsed?.metering ?? {}) } };
-    }
+    } finally { releaseAuditContextEvidence(independent); }
   } };
 }
 

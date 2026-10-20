@@ -40,6 +40,8 @@ let controlQueue: Promise<unknown> = Promise.resolve();
 let readerQueue: Promise<unknown> = Promise.resolve();
 let spendHolds: ReadonlySpendHoldOverlay | null = null;
 let actionHistoryReady = false;
+const phaseSchema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
+const { CONSOLE_INPUT_SQL } = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "scripts/pilot-runtime-publish.mts")).href);
 const seededControl = new Set<string>();
 const seededSites = new Set<string>();
 const controlTables = new Map<string, readonly string[]>();
@@ -66,8 +68,11 @@ async function ensureControlTable(table: string): Promise<readonly string[]> {
   } else if (table === "cp_log_heads") {
     keys = ["log_table", "log_key"];
     await db.exec("CREATE TABLE IF NOT EXISTS cp_log_heads (log_table text NOT NULL,log_key text NOT NULL,next_position bigint NOT NULL,PRIMARY KEY(log_table,log_key))");
+  } else if (table === "cp_vital_signs") {
+    keys = ["hour"];
+    await db.exec(phaseSchema.VITAL_SIGNS_TABLE_DDL);
   } else throw Error(`RH01_UNSUPPORTED_CONTROL_TABLE:${table}`);
-  if (table !== "cp_log_heads") await db.exec(`CREATE TRIGGER ${table}_changed_at BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION rh01_touch_changed_at()`);
+  if (table !== "cp_log_heads" && table !== "cp_vital_signs") await db.exec(`CREATE TRIGGER ${table}_changed_at BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION rh01_touch_changed_at()`);
   controlTables.set(table, keys); return keys;
 }
 async function controlRemoteRead(text: string, params: readonly unknown[], signal?: AbortSignal): Promise<Record<string, unknown>[]> {
@@ -79,6 +84,7 @@ async function controlRemoteRead(text: string, params: readonly unknown[], signa
   remoteControlBytes += Buffer.byteLength(JSON.stringify(rows)); return rows;
 }
 function ordinaryControlRead(text: string): boolean {
+  if (text === CONSOLE_INPUT_SQL) return true;
   const structure = text.replace(/'(?:''|[^'])*'/g, "''").replace(/--[^\n]*|\/\*[\s\S]*?\*\//g, " ");
   return /^\s*(?:SELECT|WITH)\b/i.test(structure) &&
     !/\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|CREATE|ALTER|DROP|TRUNCATE|cp_spend_holds|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(structure);
@@ -88,15 +94,19 @@ async function snapshotControlRead(text: string, params: readonly unknown[]): Pr
   const db = await controlDatabase(), shadows: SqlShadow[] = [];
   for (const [table, keys] of controlTables) if (new RegExp(`\\b(?:FROM|JOIN)\\s+(?:public[.])?"?${table}"?\\b`, "i").test(text))
     shadows.push({ table, keys, rows: (await db.query(`SELECT * FROM ${table}`)).rows as Record<string, unknown>[] });
+  if (text === CONSOLE_INPUT_SQL && spendHolds) shadows.push(await spendHolds.shadow());
   return shadowRead(text, params, shadows);
 }
 async function executeControlSql(text: string, params: readonly unknown[]): Promise<Record<string, unknown>[]> {
   const db = await controlDatabase();
+  if (text === CONSOLE_INPUT_SQL) {
+    const query = await snapshotControlRead(text, params);
+    return controlRemoteRead(query.text, query.params);
+  }
   if (/\bINSERT\s+INTO\s+cp_admin_action_history_projection\b/i.test(text)) {
     await ensureControlTable("cp_log_heads"); await ensureControlTable("cp_log_admin_receipts");
     if (!actionHistoryReady) {
-      const schema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
-      for (const ddl of schema.BOOTSTRAP_DDL as readonly string[]) if (ddl.includes("cp_admin_action_history")) await db.exec(ddl);
+      for (const ddl of phaseSchema.BOOTSTRAP_DDL as readonly string[]) if (ddl.includes("cp_admin_action_history")) await db.exec(ddl);
       controlTables.set("cp_admin_action_history_projection", ["gateway_receipt_id"]);
       controlTables.set("cp_admin_action_history_scope_ref", ["gateway_receipt_id", "scope_key"]);
       controlTables.set("cp_admin_action_history_readiness", ["singleton"]);
@@ -114,8 +124,7 @@ async function executeControlSql(text: string, params: readonly unknown[]): Prom
   }
   if (/\b(?:cp_spend_holds|cp_admit_spend_hold)\b/.test(text)) {
     if (!spendHolds) {
-      const schema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
-      spendHolds = new ReadonlySpendHoldOverlay(db, controlRemoteRead, schema);
+      spendHolds = new ReadonlySpendHoldOverlay(db, controlRemoteRead, phaseSchema);
     }
     return spendHolds.execute(text, params);
   }

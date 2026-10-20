@@ -1,6 +1,6 @@
 /** Execute the phase's real spend-hold SQL locally; hydrate only the rows its operation needs. */
 import type { PGlite } from "@electric-sql/pglite";
-import { projectedRead } from "./rh01-sql.mts";
+import { projectedRead, type SqlShadow } from "./rh01-sql.mts";
 
 type Rows = Record<string, unknown>[];
 type Remote = (text: string, params: readonly unknown[]) => Promise<Rows>;
@@ -26,6 +26,12 @@ export class ReadonlySpendHoldOverlay {
       WHERE NOT EXISTS(SELECT 1 FROM rh01_touched_holds t WHERE t.hold_id=r.hold_id)
       ON CONFLICT(hold_id) DO UPDATE SET ${columns.map(column => `"${column}"=EXCLUDED."${column}"`).join(",")}`,
     [JSON.stringify(row)]);
+  }
+  async shadow(): Promise<SqlShadow> {
+    await this.ready();
+    return { table: "cp_spend_holds", keys: ["hold_id"],
+      rows: (await this.db.query("SELECT * FROM cp_spend_holds")).rows as Rows,
+      deletedKeys: (await this.db.query("SELECT t.hold_id FROM rh01_touched_holds t WHERE NOT EXISTS(SELECT 1 FROM cp_spend_holds h WHERE h.hold_id=t.hold_id)")).rows as Rows };
   }
   async execute(text: string, params: readonly unknown[]): Promise<Rows> {
     await this.ready();

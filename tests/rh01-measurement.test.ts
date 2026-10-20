@@ -54,6 +54,8 @@ test("read-only SQL shadows preserve mixed production/local joins, filters, keys
     assert.deepEqual((await db.query(query.text, query.params)).rows, [{ id: "c", parent: "A" }]);
     const count = shadowRead("SELECT count(*)::integer AS n FROM entity WHERE state=$1", ["CA"], shadows);
     assert.deepEqual((await db.query(count.text, count.params)).rows, [{ n: 2 }]);
+    const removed = shadowRead("SELECT id FROM entity WHERE state=$1 ORDER BY id", ["CA"], [{ ...shadows[0], deletedKeys: [{ id: "a" }] }]);
+    assert.deepEqual((await db.query(removed.text, removed.params)).rows, [{ id: "c" }]);
     assert.throws(() => shadowRead("WITH x AS (DELETE FROM entity RETURNING *) SELECT * FROM x", [], shadows), /REQUIRES_READ/);
     assert.throws(() => shadowRead("SELECT * FROM entity", [], [{ table: "entity;DELETE", keys: ["id"], rows: [{}] }]), /IDENTITY_INVALID/);
   } finally { await db.close(); }
@@ -512,6 +514,8 @@ test("local spend holds execute native SQL, preserve production, and retain rele
     await measured.release("prior", at);
     assert.equal((await measured.liveFor(["send:pima"], at)).prior, undefined);
     assert.equal((await measured.admit(input("after-release", 0.8), at)).admit, true);
+    const count = shadowRead("SELECT count(*)::integer AS n FROM cp_spend_holds", [], [await overlay.shadow()]);
+    assert.deepEqual((await production.query(count.text, count.params)).rows, [{ n: 3 }]);
     assert.deepEqual(Object.keys(await native.liveFor(["send:pima"], at)), ["prior"]);
   } finally { await local.close(); await production.close(); }
 });
@@ -635,6 +639,10 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
       globalThis.fetch=async(url,init)=>{
         if(!String(url).startsWith('https://api.'))throw Error('ZERO_NETWORK_FIXTURE_ONLY');
         const body=JSON.parse(init.body);let rows=[],fields=[];
+        if(/AS signature$/.test(body.query)){rows=[['0123456789abcdef0123456789abcdef']];fields=[{name:'signature',dataTypeID:25}];}
+        if(/SELECT facts_live FROM cp_vital_signs WHERE hour=/.test(body.query)){
+          const local=JSON.parse(body.params.at(-1));rows=[[Number(local[0].facts_live)]];fields=[{name:'facts_live',dataTypeID:23}];
+        }
         if(/SELECT value FROM cp_work_items WHERE id=/.test(body.query)){
           const local=JSON.parse(body.params.at(-1));rows=[[JSON.stringify(local.find(row=>row.id==='snapshot').value)]];
           fields=[{name:'value',dataTypeID:3802}];writeFileSync(${JSON.stringify(marker)},'started');
@@ -666,6 +674,12 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
     };
     const at = "2026-10-20T10:00:00.000Z";
     await query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)", ["snapshot", at, JSON.stringify({ n: 1 })]);
+    const [{ CONSOLE_INPUT_SQL }, { VITAL_SIGNS_UPSERT }] = await Promise.all([
+      import("../scripts/pilot-runtime-publish.mts"), import("../lib/control-plane/vital-signs.ts"),
+    ]);
+    assert.deepEqual(await query(CONSOLE_INPUT_SQL, []), [{ signature: "0123456789abcdef0123456789abcdef" }]);
+    await query(VITAL_SIGNS_UPSERT, [at, 7, null, null, 0, 0, 0, 12, "{}", 0, 0, 0, 0, 0, null, at]);
+    assert.deepEqual(await query("SELECT facts_live FROM cp_vital_signs WHERE hour=$1", [at]), [{ facts_live: 7 }]);
     let finished = false;
     const slow = query("SELECT value FROM cp_work_items WHERE id=$1", ["snapshot"]).finally(() => { finished = true; });
     const waitFor = async (file: string) => {

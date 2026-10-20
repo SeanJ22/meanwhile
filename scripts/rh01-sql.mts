@@ -52,6 +52,8 @@ export interface SqlShadow {
   readonly table: string;
   readonly keys: readonly string[];
   readonly rows: readonly Record<string, unknown>[];
+  /** Locally released/deleted identities must also hide their production predecessors. */
+  readonly deletedKeys?: readonly Record<string, unknown>[];
 }
 
 /** PostgreSQL evaluates the original read over committed local rows plus every untouched production row.
@@ -63,13 +65,15 @@ export function shadowRead(text: string, params: readonly unknown[], shadows: re
     throw Error("RH01_SQL_SHADOW_REQUIRES_READ");
   const values = [...params], ctes: string[] = [];
   for (const shadow of shadows) {
-    if (!shadow.rows.length) continue;
+    if (!shadow.rows.length && !shadow.deletedKeys?.length) continue;
     if (!/^[a-z_][a-z_0-9]*$/.test(shadow.table) || !shadow.keys.length || shadow.keys.some(key => !/^[a-z_][a-z_0-9]*$/.test(key)))
       throw Error("RH01_SQL_SHADOW_IDENTITY_INVALID");
     if (new RegExp(`\\b${shadow.table}\\s+AS\\s*\\(`, "i").test(text)) throw Error("RH01_SQL_SHADOW_NAME_COLLISION");
     const table = `"${shadow.table}"`, local = `"rh01_local_${shadow.table}"`, at = `$${values.push(JSON.stringify(shadow.rows))}`;
+    const deleted = `"rh01_deleted_${shadow.table}"`;
+    if (shadow.deletedKeys?.length) ctes.push(`${deleted} AS (SELECT * FROM jsonb_populate_recordset(NULL::public.${table},$${values.push(JSON.stringify(shadow.deletedKeys))}::jsonb))`);
     ctes.push(`${local} AS (SELECT * FROM jsonb_populate_recordset(NULL::public.${table},${at}::jsonb))`,
-      `${table} AS (SELECT p.* FROM public.${table} p WHERE NOT EXISTS (SELECT 1 FROM ${local} l WHERE ${shadow.keys.map(key => `p."${key}" IS NOT DISTINCT FROM l."${key}"`).join(" AND ")}) UNION ALL SELECT * FROM ${local})`);
+      `${table} AS (SELECT p.* FROM public.${table} p WHERE NOT EXISTS (SELECT 1 FROM ${local} l WHERE ${shadow.keys.map(key => `p."${key}" IS NOT DISTINCT FROM l."${key}"`).join(" AND ")})${shadow.deletedKeys?.length ? ` AND NOT EXISTS (SELECT 1 FROM ${deleted} d WHERE ${shadow.keys.map(key => `p."${key}" IS NOT DISTINCT FROM d."${key}"`).join(" AND ")})` : ""} UNION ALL SELECT * FROM ${local})`);
   }
   if (!ctes.length) return { text: text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, ""), params: values };
   let original = text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");

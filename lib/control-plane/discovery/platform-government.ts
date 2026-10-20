@@ -30,9 +30,12 @@ export function reviewPlatformAttempt(input: {
     ...[...attempt.found, ...attempt.leads].filter(find => find.vendor === "civicplus-agendacenter").map(find => new URL(find.url).hostname),
     ...attempt.platformCensus?.matches.filter(match => match.platform === "civicplus" && match.basis === "SERVED_BY").map(match => new URL(match.url).hostname) ?? [],
   ]);
-  const platformFind = (find: { url: string; vendor: string }) => !/\/AgendaCenter\/(?:ViewFile|PreviousVersions)(?:\/|$)/i.test(new URL(find.url).pathname)
-    && (platformHostedUrl(find.url) || find.vendor === "ical" && (civicPlusHosts.has(new URL(find.url).hostname)
-      || /\/common\/modules\/iCalendar\/iCalendar\.aspx$/i.test(new URL(find.url).pathname)));
+  const platformFind = (find: { url: string; vendor: string }) => {
+    const url = new URL(find.url);
+    return !/\/AgendaCenter\/(?:ViewFile|PreviousVersions)(?:\/|$)/i.test(url.pathname)
+      && (platformHostedUrl(find.url) || find.vendor === "ical" && (civicPlusHosts.has(url.hostname)
+        || /\/common\/modules\/iCalendar\/iCalendar\.aspx$/i.test(url.pathname)));
+  };
   const platformAttempt = { ...attempt, found: attempt.found.filter(platformFind), leads: attempt.leads.filter(platformFind) };
   platformAttempt.outcome = platformAttempt.found.length ? "FOUND" : attempt.outcome === "FOUND" ? "NOTHING_DETECTED" : attempt.outcome;
   const review = reviewDiscoveryWalk({ walk: { attempt: platformAttempt, recordId: attempt.attemptId, recordedAt: attempt.finishedAt },
@@ -138,6 +141,8 @@ export async function readPlatformGovernment(input: {
   const { attempt: platformAttempt, review, doors } = reviewPlatformAttempt({ attempt, registered: input.registered, held, reviewer: input.reviewer, now: runtime.now() });
   if (!input.readonly) {
     await input.repos.discoveryAttempts.append(input.need.jurisdictionId, attempt.attemptId, platformAttempt, attempt.finishedAt);
+    // A deadline between writes must never mark the government checked before its verified doors exist.
+    await openPlatformMeetingDoors(input.repos.doors, review.accepted.map(({ row }) => row), attempt.finishedAt);
     const entries = [...discoveryFieldManualEntries(platformAttempt), newFieldManualEntry("platform-government", input.need.jurisdictionId, {
       role: "SHARED", kind: "PLATFORM_CENSUS_CHECK", title: input.need.name, states: [input.need.stateCode.toLowerCase()],
       platforms: [...new Set(platformAttempt.platformCensus?.matches.map(match => match.platform) ?? [])], recordClasses: ["meetings"],
@@ -152,7 +157,6 @@ export async function readPlatformGovernment(input: {
     })];
     const saved = await writeFieldManual(input.repos, entries, attempt.finishedAt);
     if (saved.error) throw new Error(saved.error);
-    await openPlatformMeetingDoors(input.repos.doors, review.accepted.map(({ row }) => row), attempt.finishedAt);
   }
   return { attempt: platformAttempt, review, doors, held };
 }

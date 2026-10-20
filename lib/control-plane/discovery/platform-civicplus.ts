@@ -11,9 +11,11 @@ export async function readCivicPlusGovernment(input: {
 }) {
   const reading = await platformCalendarReading({ ...input, platform: "civicplus" });
   const { home, via, get, found, leads, steps } = reading;
+  const homeUrl = new URL(home.url);
   const routes = meetingEndpointCandidates(home.body, home.url, input.runtime.now(), input.runtime.fingerprints)
-    .filter(candidate => candidate.vendor === "civicplus-agendacenter" && !/\/AgendaCenter\/(?:ViewFile|PreviousVersions)(?:\/|$)/i.test(new URL(candidate.url).pathname));
-  if (/\/AgendaCenter(?:\/|$)/i.test(new URL(home.url).pathname)) routes.unshift({ vendor: "civicplus-agendacenter", url: home.url,
+    .filter(candidate => { const url = new URL(candidate.url); return candidate.vendor === "civicplus-agendacenter"
+      && !/\/AgendaCenter\/(?:ViewFile|PreviousVersions)(?:\/|$)/i.test(url.pathname); });
+  if (/\/AgendaCenter(?:\/|$)/i.test(homeUrl.pathname)) routes.unshift({ vendor: "civicplus-agendacenter", url: home.url,
     basis: "SERVED_BY", evidence: home.url, verifiable: true });
   const seen = new Set<string>();
   for (const route of routes) {
@@ -26,7 +28,7 @@ export async function readCivicPlusGovernment(input: {
     if (verified.verdict === "YIELDED") found.push(find); else leads.push(find);
   }
   const index = await get(new URL(CIVICPLUS_CALENDAR_INDEX_PATH, home.url).href, "endpoint");
-  if (index && new URL(index.url).origin === new URL(home.url).origin) {
+  if (index && new URL(index.url).origin === homeUrl.origin) {
     leads.push({ vendor: "civicplus-icalendar", url: index.url, basis: "SERVED_BY", evidence: home.url,
       detail: "The platform's native calendar category index.", via });
     const feeds = [...civicPlusCategoryFeeds(index.body, index.url)].sort((a, b) => Number("unmatched" in categoryBodyOf(a.name, input.need.jurisdictionId)) - Number("unmatched" in categoryBodyOf(b.name, input.need.jurisdictionId)));

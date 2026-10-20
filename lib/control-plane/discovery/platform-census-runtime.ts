@@ -25,22 +25,31 @@ import { platformRegistrationNeed } from "./platform-registration.ts";
 import { knownRecipes, RECIPE_KIND } from "../../hunt/meetings-recipes.ts";
 import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hints.ts";
 import { platformFetch } from "../../doors/platform-http.ts";
+import { platformCensusWatchdog } from "./platform-census-watchdog.ts";
 
 /** The runner child admits one government or one directory page per worker and retains only their inventory cursors. */
 export async function runNationalPlatformCensus() {
   const root = process.env.WTP_PROJECT_ROOT ?? process.cwd();
   const connection = controlPlaneUrlFromEnv(), readerConnection = process.env.DATABASE_URL;
   if (!connection || !readerConnection) throw new Error("The platform inventory databases are unavailable");
-  const singleton = await acquireProcessSingleton("platform-census", 49_375);
+  // Leave a minute before the parent's no-progress wall, including a blocked database await.
+  const deadline = Math.min(passDeadlineFromEnv(), Date.now() + CENSUS_LANE_BUDGET_MS - 60_000);
+  const progress = platformCensusWatchdog(deadline);
+  let singleton: Awaited<ReturnType<typeof acquireProcessSingleton>> | undefined;
   try {
-  const now = () => new Date().toISOString(), deadline = Math.min(passDeadlineFromEnv(), Date.now() + CENSUS_LANE_BUDGET_MS);
+  singleton = await acquireProcessSingleton("platform-census", 49_375);
+  const now = () => new Date().toISOString();
   const remaining = () => Math.max(0, deadline - Date.now());
   let stopped = false;
   process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
   const ended = () => stopped || remaining() <= 0;
   const repos = await createPgRepositories(connection), control = neon(connection), reader = neon(readerConnection);
-  const controlQuery = (sql: string, parameters: readonly unknown[]) => control.query(sql, [...parameters]);
-  const query = (sql: string, parameters: readonly unknown[]) => reader.query(sql, [...parameters]);
+  const controlQuery = async (sql: string, parameters: readonly unknown[]) => {
+    const rows = await control.query(sql, [...parameters]); progress.note("control read"); return rows;
+  };
+  const query = async (sql: string, parameters: readonly unknown[]) => {
+    const rows = await reader.query(sql, [...parameters]); progress.note("registration read"); return rows;
+  };
   const vault = cycleVault(join(root, ...VAULT_DIR)), pace = platformRequestPacer();
   const sizeReaders = new Map<PlatformRegistrationPage, ReturnType<typeof websiteSizeFromHoldings>>();
   const fleet = new FleetSafetyController({ now: now(), spend: EMPTY_SPEND, modelHold: "Plain-code national platform census", websitePacing: repos.websitePacing,
@@ -53,6 +62,7 @@ export async function runNationalPlatformCensus() {
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census", (url, init) => platformFetch(url, {
         ...init, method: input.method ?? "GET", body: input.body, redirect: "manual", signal: AbortSignal.timeout(Math.min(input.timeoutMs, remaining())),
       }), { followRedirects: false })(input);
+      progress.note("public page");
       return { status: got.status, body: new TextDecoder().decode(got.bytes), bytes: got.bytes.byteLength, contentType: got.contentType,
         location: got.location ?? null, transportError: got.transportError };
     },
@@ -126,9 +136,10 @@ export async function runNationalPlatformCensus() {
       },
       finishedGovernment: page => { sizeReaders.delete(page); },
       onGovernment: result => {
+        progress.note("government");
         console.log(`PLATFORM_GOVERNMENT ${JSON.stringify(result)}`);
       },
     });
     console.log(`PLATFORM_CENSUS ${JSON.stringify(report)}`);
-  } finally { await singleton.release(); }
+  } finally { try { await singleton?.release(); } finally { progress.close(); } }
 }

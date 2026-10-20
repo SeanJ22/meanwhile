@@ -56,6 +56,24 @@ test("production read-only measurement uses identical verification without writi
   assert.equal((await repos.fieldManual.list()).length, 0);
 });
 
+test("the plain-code census never calls an inherited paid search seam", async () => {
+  let paidCalls = 0;
+  const result = await readPlatformGovernment({ need, registered, repos: createMemoryRepositories(), readonly: true,
+    reviewer: "auto-crosswalk-reviewer@0123456789ab", runtime: { ...runtime(),
+      open: recordedDiscoveryOpen({ [home]: { status: 200, body: "<h1>Amphitheater Unified School District</h1>" } }),
+      search: async () => { paidCalls++; throw new Error("Paid search belongs to Admin's scoped work"); } } });
+  assert.ok(result.attempt);
+  assert.equal(paidCalls, 0);
+});
+
+test("a government is not marked checked before its verified doors have been saved", async () => {
+  const repos = createMemoryRepositories();
+  repos.doors.put = async () => { throw new Error("door write interrupted"); };
+  await assert.rejects(readPlatformGovernment({ need, registered, runtime: runtime(), repos,
+    reviewer: "auto-crosswalk-reviewer@0123456789ab" }), /door write interrupted/);
+  assert.equal((await repos.fieldManual.list()).length, 0, "an interrupted door write leaves the standing check due");
+});
+
 test("a named custom-domain Legistar portal reaches its directory client's native API even when the government homepage has no calendar link", async () => {
   const repos = createMemoryRepositories();
   const division = "ocd-division/country:us/state:or/place:example";

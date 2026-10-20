@@ -25,6 +25,7 @@ import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-r
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { GET as meetingApi } from "../app/api/meetings/route.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 const arg = (key: string) => process.argv.find(value => value.startsWith(`--${key}=`))?.slice(key.length + 3);
 const publicFetch = globalThis.fetch;
@@ -107,7 +108,7 @@ const finishGovernment = async () => {
       await pg.query(`INSERT INTO civic_data_promotions VALUES($1,'REGISTRY_RUNTIME_BINDING',$2,$3,now(),'retained-reader-baseline')
         ON CONFLICT(key) DO UPDATE SET payload=excluded.payload`,
       [`REGISTRY_RUNTIME_BINDING:US-${state}:reader-registry-runtime`, `US-${state}:reader-registry-runtime`, JSON.stringify(baseline.registry)]);
-      const started = performance.now(), response = await meetingApi(new Request(`https://meanwhileusa.com/api/meetings?zip=${zip.zip}`));
+      const started = performance.now(), response = await meetingApi(new Request(`${PUBLIC_SITE_ORIGIN}/api/meetings?zip=${zip.zip}`));
       const body = await response.json(), ms = performance.now() - started;
       if (response.status !== 200 || !body.meetings?.length || ms >= 3000 || body.meetings.some((meeting: { ocdId: string }) => !zip.governingOcdIds.includes(meeting.ocdId)))
         throw new Error(`The actual meeting API did not serve this ZIP's own meetings under three seconds: ${response.status}, ${ms}ms`);

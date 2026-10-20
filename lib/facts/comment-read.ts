@@ -16,8 +16,13 @@ const KEYS: Readonly<Record<string, CommentField>> = { [COMMENT_PERIOD]: "commen
 
 /** Each body's comment rules as readers see them, composed from live facts; a body is listed once it is known to take comment or not. */
 export async function readFactCommentAccess(query: Query, bodyIds: readonly string[] | null = null): Promise<readonly CommentAccess[]> {
+  return factCommentAccessFromRows(await query(COMMENT_SQL, [bodyIds]));
+}
+
+/** Comment rules from already selected live facts. */
+export function factCommentAccessFromRows(rows: readonly Record<string, unknown>[]): readonly CommentAccess[] {
   const byBody = new Map<string, CommentAccess>();
-  for (const row of await query(COMMENT_SQL, [bodyIds])) {
+  for (const row of rows) {
     const bodyId = String(row.entity_id), field = KEYS[String(row.field)];
     if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();

@@ -1,11 +1,12 @@
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
-import { readerQuery } from "./promoted-reader-query.ts";
+import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 
 import type {
   CandidateEvent,
@@ -27,14 +28,8 @@ import {
 export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
-import {
-  PostgresRoutineDataStore,
-  projectionKey,
-  readPointerMoveEvents,
-  type CandidateVersionReadback,
-  type PublishedCandidateMetadata,
-  type RoutineDataStore,
-} from "./store.ts";
+import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
+import { projectionKey } from "./projection-key.ts";
 
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -117,7 +112,10 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">>;
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">> & {
+  /** Already published canonical database rows, read together for the reader shelf. */
+  readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
+};
 
 type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
@@ -491,8 +489,15 @@ export async function readPromotedCivicData<T>(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<T>> {
   const now = options.now ?? new Date().toISOString();
+  if (options.store?.readPromotedEntry) return readPromotedFromEdge<T>(recordClass, scope, await options.store.readPromotedEntry(recordClass, scope), now, options.maxAgeMs);
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
+  const canonical = !injected && !currentReaderAuthorityEdge() && !options.bypassCache && !isStateAuthorityScope(scope)
+    ? readerCanonicalEntry(recordClass, scope) : undefined;
+  if (canonical) {
+    try { return readPromotedFromEdge<T>(recordClass, scope, await canonical, now, options.maxAgeMs); }
+    catch (error) { return storeReadFailedResult<T>(recordClass, scope, null, error); }
+  }
   if (!injected && isStateAuthorityScope(scope)) {
     const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
       import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
@@ -580,7 +585,7 @@ async function loadPromotedCivicData<T>(
   const cacheable = !injected && !stateAuthority;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
-    const store = options.store ?? new PostgresRoutineDataStore();
+    const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
     const known = options.bypassCache ? undefined : provenPointersOf(options.store, scope).get(key);
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
@@ -708,7 +713,7 @@ export async function readPromotedCivicDataBatch<T>(
     }));
   }
 
-  const store = options.store ?? new PostgresRoutineDataStore();
+  const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
   if (!hasBatchReadDoor(store)) {
     return Promise.all(scopes.map((scope) => readPromotedCivicData<T>(recordClass, scope, options)));
   }
@@ -995,9 +1000,11 @@ export async function readPromotedCivicDataPredecessors<T>(
     if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
+    const { PostgresRoutineDataStore, readPointerMoveEvents } = await import("./store.ts");
     const store = options.store ?? new PostgresRoutineDataStore();
     let chain: readonly CandidateEvent[] | null = null;
     const eventsById = new Map<string, CandidateEvent[]>();
+
     const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
     const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
     const seen = new Set<string>();
@@ -1415,6 +1422,21 @@ export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header -
         AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
           @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
   FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+/** Keep a place's complete selected slice when later card reads add aliases to its selection. */
+export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<PromotedEdgeEntry> {
+  const selection = currentReaderSelection();
+  if (!selection) throw new Error("READER_SELECTION_REQUIRED");
+  let held = readerProjectionReads.get(selection);
+  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  const pointer = `${recordClass}:${scope}`;
+  const existing = held.get(pointer);
+  if (existing) return existing;
+  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set([...selection.keys, ...keys]) });
+  held.set(pointer, read);
+  void read.catch(() => undefined);
+  return read;
+}
+
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);
@@ -1434,7 +1456,7 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
 async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  const query = readerQuery(1800);
+  const query = readerDatabaseQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
   const money = recordClass === "STATE_CAMPAIGN_FINANCE";

@@ -43,7 +43,7 @@ test("no topic: the most recent recorded votes, newest first, and how many we ho
   const records = [1, 2, 3, 4, 5].map((n) => rollCall(n, `Measure ${n} (H R ${n})`));
   const composed = composePersonVotes({ name: "Juan Ciscomani", topic: null, records });
   assert.equal(composed?.answer,
-    "Juan Ciscomani's latest votes: YES on Measure 5 (H R 5) (2026-09-15; Passed 300–100); YES on Measure 4 (H R 4) (2026-09-14; Passed 300–100); and YES on Measure 3 (H R 3) (2026-09-13; Passed 300–100).");
+    "Juan Ciscomani's most recent recorded votes: YES on Measure 5 (H R 5) (2026-09-15; Passed 300–100); YES on Measure 4 (H R 4) (2026-09-14; Passed 300–100); and YES on Measure 3 (H R 3) (2026-09-13; Passed 300–100). We hold 5 recorded votes for Juan Ciscomani; the rest are listed below.");
   assert.deepEqual(composed?.citedUrls, ["https://clerk.example/5", "https://clerk.example/4", "https://clerk.example/3"]);
   const pack: EvidencePack = { question: "How has Juan Ciscomani voted?", intent: "PERSON_RECORD", temporal: { kind: "NONE" }, subject: { kind: "PERSON", id: "p", name: "Juan Ciscomani" }, records, gaps: [], denominators: {}, today: "2026-09-29" };
   assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack).kind, "PASSED", "the same validator a model answer faces");

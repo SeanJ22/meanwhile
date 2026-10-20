@@ -1,6 +1,4 @@
 import { withReaderSelection } from "@/lib/db/reader-route";
-import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { AnswerForm } from "@/components/questionnaire/answer-form";
 import { findInvitation, findToken } from "@/lib/db/questionnaire";
 import { displayFor, invitationBallotState } from "@/lib/questionnaire/candidacy-display";
@@ -108,8 +106,7 @@ export default async function QuestionnairePage({
 
   const state = invitationBallotState(invitation.contestId);
   const display = state ? await withReaderSelection({ states: [state], keys: new Set([`state:${state}`]) }, async () => {
-    const edge = await ensureReaderAuthorityEdge(null, undefined, ["ballot-contests"]);
-    return withReaderAuthorityEdge(edge, () => displayFor(state, verdict.candidacyId));
+    return displayFor(state, verdict.candidacyId);
   }) : null;
 
   return (

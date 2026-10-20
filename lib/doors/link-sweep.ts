@@ -1,5 +1,5 @@
 /**
- * A plain-code sweep of the outbound links in the published reader edge:
+ * A plain-code sweep of the outbound links in current reader data:
  * sources, official sites, join links and agenda PDFs. A known small publisher
  * gets at most its hourly request limit, counted with every other reader of
  * that website; others are read at full speed.
@@ -11,10 +11,7 @@ import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts
 import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision.ts";
 import { upsertSystemDoor } from "./link-sweep-store.ts";
 import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
-import { gunzipSync } from "node:zlib";
-import { decodeMeetingBlob, meetingBodyPointerKey, type MeetingBodyPointer, type MeetingBodyRecord, type MeetingStateIndex } from "../meetings/body-records.ts";
-import { sha256OfJson } from "../meetings/edge-artifacts.ts";
-import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { readMeetingBodies } from "../meetings/edge-serving.ts";
 import type { DoorRepository } from "./registry.ts";
 
 export const LINK_SURFACES = ["sources", "official sites", "join links", "agenda PDFs", "other links"] as const;
@@ -25,7 +22,7 @@ export interface OutboundLink {
   readonly surface: LinkSurface;
 }
 
-/** A key name tells which surface a link is on; the edge's JSON is walked, not parsed by a fixed schema. */
+/** A key name tells which surface a link is on; the reader's data is walked, not parsed by a fixed schema. */
 function surfaceOf(path: readonly string[], url: string): LinkSurface {
   const key = (path.at(-1) ?? "").toLowerCase();
   if (/join|zoom|webex|teams|livestream|video|stream/.test(key) || /(zoom\.us|webex\.com|teams\.microsoft\.com|meet\.google\.com)/i.test(url)) return "join links";
@@ -35,7 +32,7 @@ function surfaceOf(path: readonly string[], url: string): LinkSurface {
   return "other links";
 }
 
-/** Every distinct https link in the published edge's JSON, tagged with the surface its key names. */
+/** Every distinct https link in current reader data, tagged with the surface its key names. */
 export async function collectOutboundLinks(artifacts: AsyncIterable<unknown> | Iterable<unknown>, limit = 200_000): Promise<OutboundLink[]> {
   const found = new Map<string, LinkSurface>();
   const visit = (value: unknown, path: string[], depth: number): void => {
@@ -195,26 +192,11 @@ export async function recordSweep(repo: DoorRepository, results: readonly LinkRe
   return summaries;
 }
 
-/** What the sweep reads of the published edge: the manifest itself, then each state's body records and agenda text, one body at a time. */
-export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readBytes" | "readJsonPointer">): AsyncGenerator<unknown> {
-  const stored = await store.readManifest();
-  if (stored === null) return;
-  const { meetingStates, ...rest } = stored.manifest;
-  yield rest;
-  const read = async <T>(key: string): Promise<T | null> => {
-    const bytes = await store.readBytes(key);
-    return bytes === null ? null : decodeMeetingBlob<T>(bytes, key);
-  };
-  for (const [state, ref] of Object.entries(meetingStates ?? {})) {
-    const bytes = await store.readBytes(ref.key);
-    const index = bytes === null ? null : (JSON.parse(gunzipSync(bytes).toString("utf8")) as { value: MeetingStateIndex }).value;
-    if (index === null || sha256OfJson(index) !== ref.sha) continue;
-    for (const bodyId of index.bodies) {
-      const pointer = (await store.readJsonPointer<MeetingBodyPointer>(meetingBodyPointerKey(state, bodyId)))?.value;
-      const record = pointer ? await read<MeetingBodyRecord>(pointer.record) : null;
-      if (record === null) continue;
-      yield record;
-      if (record.agenda) { const agenda = await read<unknown>(record.agenda); if (agenda !== null) yield agenda; }
-    }
+/** Current source calendars and agenda text, read one state and body at a time. */
+export async function* readReaderForSweep(): AsyncGenerator<unknown> {
+  for await (const body of readMeetingBodies({ window: "HELD" })) {
+    const held = await body.load();
+    if (held === null) throw new Error(`MEETING_BODY_UNREADABLE:${body.state}:${body.bodyId}`);
+    yield held.snapshot;
   }
 }

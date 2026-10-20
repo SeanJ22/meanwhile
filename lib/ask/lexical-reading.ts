@@ -215,14 +215,15 @@ export function bodyNameFromQuestion(question: string, inventory: readonly Binda
 /** A district calendar may also carry its committees. An explicitly requested
  * school board uses the publisher's board sittings when those are identified. */
 export function requestedSchoolBoardSittings<T extends { bodyId?: string | null; title?: string | null }>(
-  question: string, bodyId: string | undefined, meetings: readonly T[],
+  question: string, bodyId: string | undefined, meetings: readonly T[], options: { requireBoardTitle?: boolean } = {},
 ): T[] {
   const words = normalizeName(question);
   if (!bodyId?.includes("/school_district:") || !/\b(?:school board|governing board|board of education|board of trustees)\b/.test(words) ||
     /\bcommittee\b/.test(words)) return [...meetings];
   const isBoard = (meeting: T) => /\b(?:(?:governing|school) board|board of (?:education|trustees))\b/i.test(meeting.title ?? "") &&
     !/\b(?:committee|advisory)\b/i.test(meeting.title ?? "");
-  if (!meetings.some(meeting => meeting.bodyId === bodyId && isBoard(meeting))) return [...meetings];
+  if (!meetings.some(meeting => meeting.bodyId === bodyId && isBoard(meeting)))
+    return options.requireBoardTitle ? meetings.filter(meeting => meeting.bodyId !== bodyId) : [...meetings];
   return meetings.filter(meeting => meeting.bodyId !== bodyId || isBoard(meeting));
 }
 

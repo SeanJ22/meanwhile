@@ -1,0 +1,905 @@
+{
+  "step": "RS-02",
+  "status": "ready_for_river",
+  "ready": true,
+  "productionReadOnly": true,
+  "baselineCommit": "04fe5ae6d",
+  "riverCommit": "61ffadc49",
+  "ballotCommit": "027144fa1",
+  "runtime": {
+    "builtCommit": "ab3fa8939",
+    "buildId": "54aFrFuXUQI5xbj23Y5Oq",
+    "checkerCommit": "b81df3748",
+    "lastFullBrowserCommit": "b81df3748",
+    "lastFullBrowserBuildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "latestFullBrowser": {
+      "sourceCommit": "b81df3748",
+      "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+      "checkedAt": "2026-10-19T06:02:41.689Z",
+      "status": "passed",
+      "evidence": ".scratch/rs02/final-shared-socket-browser/metrics.json"
+    },
+    "buildStatus": "passed",
+    "productionVerification": "Saved b81df3748 production read-only matrices pass: final150, three fresh agendas, fifty cold browser states and Arizona follow-up. These matrices were not rerun for the return import/test repair; exact original commits and build IDs remain below.",
+    "currentChange": "Publication no longer imports site state/place loading. Reader adapters supply the existing state loader; cache invalidation and the site-origin normalizer use small shared modules. Reader state reuse and federal compatibility hooks are covered by the full passing gates.",
+    "latestBuildKind": "standalone"
+  },
+  "data": {
+    "sourceCommit": "b81df3748",
+    "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "checkedAt": "2026-10-19T05:59:15.963Z",
+    "role": "readonly",
+    "readOnly": true,
+    "status": "passed_recorded_source_build",
+    "states": 50,
+    "checks": 150,
+    "exitStatus": 0,
+    "statesWithErrors": 0,
+    "statesWithMissingHeldData": 0,
+    "statesWithMissingLiveData": 0,
+    "rs01BaselinesCompared": 50,
+    "successfulPublicBaselinesCompared": 6,
+    "slowestCold": {
+      "state": "AR",
+      "zip": "72370",
+      "ms": 1891
+    },
+    "slowestColdIncludingImports": {
+      "state": "AR",
+      "zip": "72370",
+      "ms": 2453
+    },
+    "slowestRepeat": {
+      "state": "AZ",
+      "zip": "85701",
+      "ms": 596
+    },
+    "slowestNextZip": {
+      "state": "IL",
+      "zip": "60002",
+      "ms": 440
+    },
+    "evidence": ".scratch/rs02/final-shared-socket-reader-all50.json",
+    "previousRun": {
+      "sourceCommit": "f57e46575",
+      "checkedAt": "2026-10-19T04:28:13.550Z",
+      "slowestCold": {
+        "state": "ID",
+        "zip": "83537",
+        "ms": 1750
+      },
+      "slowestColdIncludingImports": {
+        "state": "ID",
+        "zip": "83537",
+        "ms": 2287
+      },
+      "slowestRepeat": {
+        "state": "KS",
+        "zip": "67038",
+        "ms": 569
+      },
+      "slowestNextZip": {
+        "state": "KS",
+        "zip": "66002",
+        "ms": 694
+      },
+      "evidence": ".scratch/rs02/final-f57-reader-all50.json",
+      "scope": "Earlier RS-02 run, not a before/after comparison baseline."
+    },
+    "comparison": {
+      "rs01MaximumColdMs": 1936,
+      "currentMaximumColdMs": 1891,
+      "scope": "Comparable direct cold state/place reads; earlier RS-02 f57 timing is not the before baseline."
+    }
+  },
+  "browser": {
+    "sourceCommit": "b81df3748",
+    "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "checkedAt": "2026-10-19T06:02:41.689Z",
+    "status": "PASSED",
+    "exitStatus": 0,
+    "independentFreshServerAndBrowser": true,
+    "coldStates": 50,
+    "informationUnder3s": 50,
+    "completeUnder3s": 50,
+    "failures": 0,
+    "retries": 0,
+    "followUpState": "AZ",
+    "followUpPassed": true,
+    "slowestInformation": {
+      "state": "AR",
+      "zip": "72370",
+      "ms": 1750.7
+    },
+    "slowestBoundary": {
+      "state": "MI",
+      "zip": "48897",
+      "ms": 2213.5
+    },
+    "slowestComplete": {
+      "state": "MI",
+      "zip": "48897",
+      "ms": 2213.5
+    },
+    "maxAcrossAdditionalFreshAgendaColdVisitsMs": 2710.6,
+    "maximumScopeNote": "2213.5 ms is the final fifty-state matrix maximum; 2710.6 ms is the maximum across all saved cold b81 visits including three fresh agenda visits.",
+    "comparisonStates": [
+      {
+        "state": "CA",
+        "zip": "93636",
+        "informationMs": 1350,
+        "boundaryMs": 1855.2,
+        "usableMs": 1855.2
+      },
+      {
+        "state": "IN",
+        "zip": "46992",
+        "informationMs": 1432.9,
+        "boundaryMs": 1986.5,
+        "usableMs": 1986.5
+      },
+      {
+        "state": "TX",
+        "zip": "77346",
+        "informationMs": 1323,
+        "boundaryMs": 2041.4,
+        "usableMs": 2041.4
+      }
+    ],
+    "appTransport": "Native Chromium localhost HTTP with Next compression",
+    "boundaryTransport": "Native Chromium primary archive through managed session proxy",
+    "archiveOrigins": [
+      "tiles.meanwhilemaps.com"
+    ],
+    "archiveChanged": false,
+    "providerRequests": 0,
+    "basemapComparison": "Unavailable in this environment; excluded from visual comparison.",
+    "evidence": ".scratch/rs02/final-shared-socket-browser/metrics.json",
+    "rawEvidence": ".scratch/rs02/final-shared-socket-browser/summary.json",
+    "previousCompletedFullSweep": {
+      "status": "failed_complete_under_3s",
+      "sourceCommit": "c522b326b",
+      "buildId": "Qbf8MH6q6hBW8gTXxEgHp",
+      "freshServerAndBrowserPerState": true,
+      "states": 50,
+      "informationUnder3s": 50,
+      "completeUnder3s": 48,
+      "slowestInformation": {
+        "state": "TX",
+        "zip": "77346",
+        "informationMs": 2281.6
+      },
+      "slowestComplete": {
+        "state": "CO",
+        "zip": "80757",
+        "usableMs": 3117.6
+      },
+      "failures": [
+        {
+          "state": "AL",
+          "zip": "36003",
+          "informationMs": 2157.1,
+          "boundaryMs": 3079.3,
+          "reason": "Cold district lines did not finish below three seconds"
+        },
+        {
+          "state": "CO",
+          "zip": "80757",
+          "informationMs": 1721.6,
+          "boundaryMs": 3117.6,
+          "reason": "Cold district lines did not finish below three seconds"
+        }
+      ],
+      "transport": "Chromium native HTTP/2 through managed session proxy",
+      "basemapComparison": "Unavailable in this environment; excluded from visual comparison.",
+      "evidence": ".scratch/rs02/final-zip-pipeline-metrics.json"
+    }
+  },
+  "clicks": {
+    "sourceCommit": "b81df3748",
+    "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "status": "PASSED",
+    "zip": "85701",
+    "coldInformationMs": 1659,
+    "coldBoundaryMs": 2017.5,
+    "shown": {
+      "meetings": 242,
+      "bodies": 65,
+      "officials": 60,
+      "districts": 31
+    },
+    "offices": [
+      {
+        "member": "Adelita",
+        "count": 1,
+        "ms": 876.6,
+        "addressesAndPhonesPresent": true
+      },
+      {
+        "member": "Mark Kelly",
+        "count": 2,
+        "ms": 122.9,
+        "addressesAndPhonesPresent": true
+      },
+      {
+        "member": "Ruben Gallego",
+        "count": 2,
+        "ms": 118.5,
+        "addressesAndPhonesPresent": true
+      },
+      {
+        "member": "Adelita",
+        "count": 1,
+        "ms": 91.4,
+        "addressesAndPhonesPresent": true
+      }
+    ],
+    "zipNavigation": [
+      {
+        "zip": "85701",
+        "paintMs": 53.6
+      },
+      {
+        "zip": "85003",
+        "paintMs": 675.4
+      },
+      {
+        "zip": "85701",
+        "paintMs": 706.4
+      }
+    ],
+    "errors": [],
+    "providerRequestsSpent": 0,
+    "evidence": ".scratch/rs02/final-shared-socket-browser/AZ-followup.json"
+  },
+  "agenda": {
+    "sourceCommit": "f57e46575",
+    "allPass": true,
+    "allNineFieldsPreserved": true,
+    "onlyClockNormalization": "A present valid publication.recheckDueAt may vary.",
+    "beforeSlowestSource": "Onbase; saved first final sweep retained as a failure.",
+    "coldFirstClicks": [
+      {
+        "meetingId": "diligent:tusd1:2026-10-22T1730-bond-oversight",
+        "ms": 1853.2
+      },
+      {
+        "meetingId": "legistar-insite:pima:1381579",
+        "ms": 2759.4
+      },
+      {
+        "meetingId": "onbase:tucson:1961",
+        "ms": 2601.4
+      }
+    ],
+    "sameVisitSequenceMs": [
+      1563.4,
+      1995.6,
+      1634.6
+    ],
+    "bodyClickMs": 131.3,
+    "pima": {
+      "shownDocumentVersions": 8,
+      "heldDocumentRows": 16,
+      "agendaRecords": 139
+    },
+    "evidence": ".scratch/rs02/final-neighbor-suite/agenda-summary.json",
+    "beforeSlowestApproxMs": 5540,
+    "status": "Current three independent fresh first clicks PASSED; prior HTTP failures retained.",
+    "latest": {
+      "sourceCommit": "b81df3748",
+      "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+      "checkerCommit": "b81df3748",
+      "productionReadOnly": true,
+      "independentFreshServerAndBrowser": true,
+      "status": "passed_three_fresh_first_clicks",
+      "allThreePassed": true,
+      "allNineOriginalFieldsPreserved": true,
+      "savedFailingMaximumMs": 5543.7,
+      "currentMaximumMs": 2691.7,
+      "sameNineFieldSemantics": true,
+      "maxColdInformationMs": 2710.6,
+      "maxColdBoundaryMs": 2492.9,
+      "allColdInformationAndBoundariesPassed": true,
+      "checks": [
+        {
+          "source": "onbase",
+          "meetingId": "onbase:tucson:1961",
+          "uiMs": 1994.5,
+          "apiMs": 1946,
+          "getStartAfterClickMs": 2.2,
+          "matchingGetCount": 1,
+          "preClickMatchingGets": 0,
+          "allNineFieldsPreserved": true,
+          "providerRequests": 0,
+          "errors": [],
+          "evidence": ".scratch/rs02/final-shared-socket-agendas/onbase/AZ.json"
+        },
+        {
+          "source": "pima",
+          "meetingId": "legistar-insite:pima:1381579",
+          "uiMs": 2691.7,
+          "apiMs": 2572,
+          "getStartAfterClickMs": 1.7,
+          "matchingGetCount": 1,
+          "preClickMatchingGets": 0,
+          "allNineFieldsPreserved": true,
+          "providerRequests": 0,
+          "errors": [],
+          "evidence": ".scratch/rs02/final-shared-socket-agendas/pima/AZ.json"
+        },
+        {
+          "source": "tusd",
+          "meetingId": "diligent:tusd1:2026-10-22T1730-bond-oversight",
+          "uiMs": 2410.3,
+          "apiMs": 2364.9,
+          "getStartAfterClickMs": 2.3,
+          "matchingGetCount": 1,
+          "preClickMatchingGets": 0,
+          "allNineFieldsPreserved": true,
+          "providerRequests": 0,
+          "errors": [],
+          "evidence": ".scratch/rs02/final-shared-socket-agendas/tusd/AZ.json"
+        }
+      ],
+      "evidence": ".scratch/rs02/final-shared-socket-agendas/summary.json",
+      "limitation": "Passing current independent first clicks does not erase prior failures or establish immunity to arbitrary network delays."
+    },
+    "currentRuntimeVerification": "PASSED three independent fresh first clicks, with exactly one GET after selection, no pre-click match, all nine original public fields and no provider requests.",
+    "previousRuntime": {
+      "sourceCommit": "988d31bbf",
+      "checkerCommit": "422db46c9",
+      "buildId": "SId4llhw-XjevCsAu1-aR",
+      "checkedAt": "2026-10-19T05:20:43.958Z",
+      "appTransport": "Native Chromium localhost HTTP with Next compression",
+      "calendarDatabaseTransport": "Stateless read-only HTTP for the compact projection; supporting outcomes remain on WebSocket.",
+      "meetingId": "onbase:tucson:1961",
+      "clickMs": 3310.1,
+      "apiMs": 2870.2,
+      "status": "failed_under_3s",
+      "coldInformationMs": 2327.7,
+      "coldBoundaryMs": 2316.2,
+      "coldVisitPassed": true,
+      "preservedFields": [
+        "documents",
+        "documentCount",
+        "documentAccounting",
+        "holdingStatus",
+        "supportingHoldingStatus",
+        "unavailableAuthorities",
+        "records",
+        "publication",
+        "listingIdentity"
+      ],
+      "normalizedComparisonFields": [
+        "publication.recheckDueAt"
+      ],
+      "errors": [
+        "Error: Held meeting and agenda onbase:tucson:1961 did not finish below three seconds"
+      ],
+      "afterFailureNotRun": [
+        "Pima first click",
+        "TUSD first click",
+        "150-read matrix",
+        "complete 50-state browser sweep"
+      ],
+      "retryPerformed": false,
+      "evidence": ".scratch/rs02/final-http-agendas/onbase/AZ.json"
+    },
+    "priorHttpFailure": {
+      "sourceCommit": "ed29b4c83",
+      "checkerCommit": "fec9fe62b",
+      "buildId": "_1yOQrCtFe4ltlNsoVV_k",
+      "runId": "rs-02-cold-AZ@2026-10-19T05:47:07.348Z",
+      "appTransport": "Native Chromium localhost HTTP with Next compression",
+      "calendarDatabaseTransport": "Compact stateless read-only HTTP; supporting outcomes use WebSocket.",
+      "meetingId": "onbase:tucson:1961",
+      "clickMs": 4223.5,
+      "apiMs": 4176.9,
+      "getStartAfterActualClickMs": 6.3,
+      "matchingGetCount": 1,
+      "preClickMatchingGets": 0,
+      "status": "failed_under_3s",
+      "coldInformationMs": 2182.4,
+      "coldBoundaryMs": 2621.3,
+      "coldVisitPassed": true,
+      "preservedFields": [
+        "documents",
+        "documentCount",
+        "documentAccounting",
+        "holdingStatus",
+        "supportingHoldingStatus",
+        "unavailableAuthorities",
+        "records",
+        "publication",
+        "listingIdentity"
+      ],
+      "normalizedComparisonFields": [
+        "publication.recheckDueAt"
+      ],
+      "errors": [
+        "Error: Held meeting and agenda onbase:tucson:1961 did not finish below three seconds"
+      ],
+      "afterFailureNotRun": [
+        "Pima first click",
+        "TUSD first click",
+        "150-read matrix",
+        "complete 50-state browser sweep"
+      ],
+      "retryPerformed": false,
+      "evidence": ".scratch/rs02/final-intent-context-agendas/onbase/AZ.json"
+    }
+  },
+  "ballot": {
+    "sourceCommit": "f2010cfa16f29ec60d8f6c37e473adebcab6fa4a",
+    "buildId": "Dk_NMJ1Kygm3W8hKKR0MF",
+    "places": 51,
+    "failures": 0,
+    "allHeldIdentitiesCandidatesAndFundingPreserved": true,
+    "slowestBefore": {
+      "state": "MA",
+      "ms": 5226.6
+    },
+    "slowestAfterHttp": {
+      "state": "NH",
+      "ms": 2938.1
+    },
+    "slowestActualClick": {
+      "state": "NH",
+      "ms": 2938.3
+    },
+    "afterHoldingGaps": false,
+    "evidence": ".scratch/rs02/final-serving-suite/ballot/summary.json"
+  },
+  "outcomes": {
+    "checkedAt": "2026-10-19T04:16:50.135Z",
+    "sourceCount": 2,
+    "sittings": 57,
+    "agenda": 1811,
+    "actions": 826,
+    "rollCalls": 492,
+    "missing": [],
+    "evidence": ".scratch/rs02/outcomes-production.json"
+  },
+  "national": {
+    "members": 539,
+    "jurisdictions": 56,
+    "zipPlaces": 41831,
+    "presidentStatus": "NOT_RECORDED",
+    "membersWithoutHeldOffice": 4,
+    "existingGap": "No verified current President record is published; four congressional records have no held district office."
+  },
+  "boundaries": {
+    "threeMapFilesExactlyMatch": "origin/main@16679a9ea",
+    "liveUrl": "https://tiles.meanwhilemaps.com/us-2025.pmtiles",
+    "fallbackUrl": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+    "stateOutlines": "/geo/state-outlines.geojson",
+    "archiveBytes": 225944259,
+    "sampleRangesIdentical": true,
+    "wholeStateBoundaryGeoJsonReads": false,
+    "xs02CrossingPromptRetained": true
+  },
+  "transport": {
+    "sourceCommit": "04fe5ae6d",
+    "httpUncompressed": true,
+    "webSocketRowsMatch": true,
+    "california": {
+      "httpMs": 1122,
+      "webSocketQueryMs": 417,
+      "webSocketConnectMs": 556,
+      "httpBytes": 2541627
+    },
+    "canonicalDatabaseExecutionMs": [
+      14.37,
+      21.518
+    ],
+    "districtDatabaseExecutionMs": [
+      48.063,
+      66.6
+    ],
+    "olderReportedTimings": "Indiana 3.97 s, California 6.47 s, Texas 5.92 s; 4.13 s HTTP and 80\u2013177 ms DB were not reproduced.",
+    "evidence": [
+      ".scratch/rs02/rs01-transport.json",
+      ".scratch/rs02/rs01-geography-transport.json"
+    ],
+    "currentAgendaCalendar": "Built b81df3748 reuses the existing shared read-only WebSocket pool; temporary HTTP helper/API override removed. Three independent fresh production first clicks passed.",
+    "orderedProjectionComparison": {
+      "sourceCommit": "6a0f94894",
+      "order": [
+        "pooler",
+        "direct",
+        "http"
+      ],
+      "queryMs": {
+        "pooler": 1906.7,
+        "direct": 996.2,
+        "http": 1370.0
+      },
+      "canonicalRowsEqual": true,
+      "canonicalHashesEqual": true,
+      "canonicalRowBytes": 138851,
+      "limitation": "One ordered sample on separate connections; not causal proof of a protocol or pooler effect, nor proof which transport is fastest.",
+      "evidence": ".scratch/rs02/pooler-direct-comparison.json"
+    },
+    "currentRuntimeAccounting": {
+      "sourceCommit": "ed29b4c83",
+      "httpBytes": 141512,
+      "olderOnbaseSocketBytes": 367589,
+      "limitation": "Different saved runs; not an exact same-SQL transport comparison.",
+      "evidence": ".scratch/rs02/final-intent-context-agendas/onbase"
+    },
+    "currentAgendaExplain": {
+      "sourceCommit": "ed29b4c83",
+      "databaseRole": "readonly",
+      "readOnly": "on",
+      "planningMs": 6.1,
+      "executionMs": 397.408,
+      "wallOnConnectedSocketMs": 919.8,
+      "jit": false,
+      "temporaryBlocksRead": 5,
+      "temporaryBlocksWritten": 22,
+      "separateDiagnosticRequest": true,
+      "limitation": "Cannot assign the failed HTTP request time to database execution, transport or supporting reads.",
+      "evidence": ".scratch/rs02/current-agenda-explain.json"
+    },
+    "separateCurrentAgendaProfile": {
+      "sourceCommit": "ed29b4c83",
+      "diagnosticOnly": true,
+      "role": "readonly",
+      "readOnly": "on",
+      "apiMs": 1297.47,
+      "status": 200,
+      "calendarHttpMs": 1067.97,
+      "calendarDecodedRowBytes": 122759,
+      "calendarWireBytes": 141512,
+      "httpHeadersMs": 1061.16,
+      "httpBodyCompleteMs": 1067.13,
+      "supportingSocketMs": 210.32,
+      "supportingSocketBytes": 13694,
+      "limitation": "Separate faster diagnostic; not a reproduction or repair of the 4176.9-ms failed API request.",
+      "evidence": ".scratch/rs02/current-agenda-profile.json",
+      "historyScope": "Prior ed29 HTTP runtime; not a profile of current b81 shared-socket serving."
+    },
+    "alternatingSameSqlComparison": {
+      "sourceCommit": "ed29b4c83",
+      "diagnosticOnly": true,
+      "role": "readonly",
+      "readOnly": "on",
+      "order": "HSSHHSSH",
+      "initialSocketIdentityWarmup": true,
+      "sameEndpoint": true,
+      "sameSql": true,
+      "allDecodedRowsExact": true,
+      "allRowHashesExact": true,
+      "decodedRowBytes": 122759,
+      "httpMs": [
+        874.1,
+        789.4,
+        958.01,
+        634.02
+      ],
+      "connectedWebSocketMs": [
+        519.28,
+        435.3,
+        476.69,
+        446.37
+      ],
+      "scope": "Identity warmup matches the local server existing pool; supports the shared-socket choice now built in b81df3748, without reproducing the failed API wait or proving a journey repair.",
+      "evidence": ".scratch/rs02/current-agenda-transports.json"
+    }
+  },
+  "stateJsonBytes": {
+    "IN": {
+      "before": 2696471,
+      "after": 70049
+    },
+    "CA": {
+      "before": 4227125,
+      "after": 84998
+    },
+    "AZ": {
+      "before": 1371180,
+      "after": 36928,
+      "gzipAfter": 4980,
+      "placeAfter": 567626
+    }
+  },
+  "cache": {
+    "seconds": 60,
+    "durable": true,
+    "taggedPostCommitInvalidationTests": "passed",
+    "productionCredentialAliases": "existing WTP_BLOBS and Netlify runner names",
+    "liveBranchHitAndPurgeVerification": "not performed; branch is not deployed and production testing is read-only",
+    "currentTokenPurgeAuthorization": "unverified; env tooling masks secrets"
+  },
+  "deployment": "Not deployed. No production publication or purge performed; River owns integration and deployment after READY.",
+  "retainedEarlierFailures": {
+    "boundaryCases": [
+      {
+        "sourceCommit": "54a15124e",
+        "state": "AL",
+        "boundaryMs": 3443.8,
+        "evidence": ".scratch/rs02/final-startup-browser/failure-comparison.json"
+      },
+      {
+        "sourceCommit": "54a15124e",
+        "state": "AZ",
+        "boundaryMs": 3054.4,
+        "evidence": ".scratch/rs02/final-lazy-summary.json"
+      },
+      {
+        "sourceCommit": "6a0f94894",
+        "state": "AZ",
+        "boundaryMs": 3531.4,
+        "evidence": ".scratch/rs02/final-url-agendas/summary.json"
+      },
+      {
+        "sourceCommit": "988d31bbf",
+        "state": "AZ",
+        "boundaryMs": 3059.2,
+        "evidence": ".scratch/rs02/final-venue-panel/AZ.json"
+      }
+    ],
+    "otherSavedBoundaryMissesApproxMs": [
+      3017,
+      3070,
+      3140,
+      3260,
+      3310,
+      3440
+    ],
+    "interruptedFlorida": "Harness/browser interruption; not a runtime timing result.",
+    "agendaFirstSweepApproxMs": [
+      3610,
+      5540
+    ],
+    "laterTusd": {
+      "sourceCommit": "6a0f94894",
+      "clickMs": 3610.7,
+      "apiMs": 3188.1,
+      "allNineFieldsPreserved": true,
+      "evidence": ".scratch/rs02/final-url-agendas/summary.json"
+    },
+    "ballotDiagnosticsApproxMs": [
+      3230,
+      4020
+    ],
+    "note": "Later passing visits do not erase earlier cold failures."
+  },
+  "remaining": [
+    "Root creation and push of the READY commit on stream/rs-02; neither is claimed complete."
+  ],
+  "build": {
+    "sourceCommit": "b81df3748",
+    "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+    "compilationTypeScriptPrerendering": "passed",
+    "readerTraceRequirements": 16,
+    "readerTraceFailures": 0,
+    "largestApplicationTraceFiles": 429,
+    "unchangedApplicationTraceCeiling": 430,
+    "frameworkTraceFiles": 981,
+    "frameworkTraceCeiling": 1050,
+    "initialJavaScriptBytes": 1899672,
+    "initialJavaScriptGzipBytes": 550703,
+    "initialJavaScriptChunks": 15,
+    "traceManifests": 108,
+    "tracedRepositoryFiles": 1124,
+    "tracedTests": 0,
+    "credentialShapes": 0
+  },
+  "venue": {
+    "sourceCommit": "988d31bbf",
+    "buildId": "SId4llhw-XjevCsAu1-aR",
+    "checkerCommit": "fec9fe62b",
+    "zip": "85701",
+    "heldMeetings": 12,
+    "openedMs": 563.7,
+    "fieldsIntact": [
+      "date",
+      "time",
+      "location",
+      "URLs"
+    ],
+    "closed": true,
+    "agendaReads": 0,
+    "providerReads": 0,
+    "coldInformationMs": 2131,
+    "coldInformationPassed": true,
+    "coldBoundaryMs": 3059.2,
+    "coldBoundaryPassed": false,
+    "status": "venue interaction passed; separate cold boundary missed",
+    "evidence": ".scratch/rs02/final-venue-panel/AZ.json"
+  },
+  "sourceChecks": {
+    "sourceCommit": "ed29b4c83",
+    "placeTests": 14,
+    "supportingServerSuites": 7,
+    "intentBehaviorTests": 10,
+    "readerClient": "passed",
+    "bootstrapBrowser": "passed",
+    "modifiedFileLint": "passed",
+    "normalFixtureBytes": {
+      "before": 97350,
+      "after": 5304,
+      "unknownFieldsRetained": true,
+      "unopenedFactQuotesOmitted": true
+    },
+    "unownedFamilyTextFallbackRegression": "passed",
+    "environmentNote": "A local browser unit listen EPERM was resolved with network permission; not a product failure.",
+    "productionStatus": "See retained ed29 HTTP failure and current b81 production matrix; source tests alone do not establish journey deadlines.",
+    "evidence": [
+      "ed29b4c83",
+      "tests/reader-place-package.test.ts"
+    ]
+  },
+  "currentTransportChecks": {
+    "sourceCommit": "b81df3748",
+    "sharedSocketSuite": "passed",
+    "realRoutePlaceSuite": "passed",
+    "modifiedFileLint": "passed",
+    "productionJourneys": "PASSED final150, three fresh agendas, cold50 browser and Arizona follow-up."
+  },
+  "reportedZipComparison": {
+    "baselineStatus": "User-reported RS-01 timings were not reproduced; not a controlled before/after comparison.",
+    "reportedBeforeMs": {
+      "IN": 3970,
+      "CA": 6470,
+      "TX": 5920
+    },
+    "measuredCurrentCompleteMs": {
+      "IN": 1986.5,
+      "CA": 1855.2,
+      "TX": 2041.4
+    },
+    "evidence": ".scratch/rs02/final-shared-socket-browser/metrics.json"
+  },
+  "postDeploymentVerification": "Actual branch CDN hits, tag purges and current live token purge authorization await River deployment; these were not attempted during read-only verification.",
+  "finalStaticChecks": {
+    "status": "passed",
+    "protectedContentMatchesOriginMain": [
+      "lib/map/districts.ts",
+      "components/map/map-canvas.tsx",
+      "lib/map/state-focus.ts",
+      "public/geo",
+      "netlify.toml",
+      "docs/rulings.md"
+    ],
+    "fetchedReferencesUnchanged": {
+      "main": "16679a9ea",
+      "river": "6b4ea17af",
+      "rs01": "04fe5ae6d",
+      "bs01": "027144fa1"
+    },
+    "requiredAncestries": 3,
+    "allRequiredAncestriesPass": true,
+    "tracePreservation": {
+      "buildId": "yGtbT1yIbYIbSUjQHqWN7",
+      "manifests": 105,
+      "lost": [],
+      "evidence": ".scratch/rs02/static-trace-preservation-final.json"
+    },
+    "visualInspection": "Current Michigan boundary view and all three Tucson office cards inspected.",
+    "scope": "Recorded b81df3748 production verification; latest return static checks are in riverReturn.staticChecks."
+  },
+  "riverReturn": {
+    "returnedCandidate": "a0ba47a1701482328d2a89da00ea47c9d6053679",
+    "returnedReady": "9a7cd4dca64cb43f771a7eab3f17b7d85f5c6391",
+    "riverCommit": "61ffadc49158429f27681d1670160401c557020a",
+    "mergedCodeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+    "cause": "Shared registry and federal-directory read-models imported reader/state.ts; promotion verification therefore reached the site reader graph. Purge forwarding and discovery helper imports supplied additional graph paths.",
+    "repair": "Only reader/authority-reads.ts supplies the state-package loader to shared read-models. Publication imports cache invalidation directly. Acquisition shares the unchanged pure hunt/site-origins.ts helper.",
+    "executableClosure": {
+      "entry": "scripts/promote-registry-runtime.mts",
+      "beforeFiles": 541,
+      "afterFiles": 491,
+      "limit": 512,
+      "firewallUnchanged": true,
+      "siteStatePlaceGraphReachable": false
+    },
+    "bs01Included": "027144fa187f0710c2c1ca5c673512952ede1316",
+    "sh01": {
+      "separateReadyMerged": false,
+      "preservedHooks": [
+        "sourced vacancies",
+        "exact-state fallback",
+        "native Capitol offices",
+        "district office phones",
+        "officeDetails and source provenance",
+        "resident directory without an extra query"
+      ],
+      "test": "tests/reader-federal-compatibility.test.ts"
+    },
+    "focused": {
+      "tests": 224,
+      "passed": 224,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": ".scratch/rs02/river-return/ed813ce35/rs02-return-focused-corrections-with-doors.log"
+    },
+    "previousCompletedGates": {
+      "codeCommit": "a3674b4a82aba5c2d2fcbdbb943895642576e9dd",
+      "passedGates": 7,
+      "failedGate": "test",
+      "suite": {
+        "registered": 8646,
+        "passed": 8624,
+        "failed": 20,
+        "skipped": 2
+      },
+      "evidence": ".scratch/rs02/river-return/a3674b4a8/rs02-return-gates-final.log",
+      "repair": "Canonical publication/query fixtures and old structural assertions corrected without changing release firewall, closure limit or required reader results. Negative controls still reject missing cache keys, actual function props and file URLs used as filesystem paths."
+    },
+    "gates": {
+      "status": "passed",
+      "codeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+      "tree": "9bd96e52d703fad39186424756471ca10ab3e290",
+      "workingTreeStatus": "",
+      "completedAt": "2026-10-19T18:10:04.111127+00:00",
+      "passed": 8,
+      "total": 8,
+      "suiteFiles": 1151,
+      "suite": {
+        "tests": 8648,
+        "failed": 0,
+        "passed": 8646,
+        "cancelled": 0,
+        "skipped": 2,
+        "todo": 0,
+        "topLevel": 8531,
+        "suites": 39
+      },
+      "bundle": {
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "latestStandaloneBuildId": "54aFrFuXUQI5xbj23Y5Oq",
+      "productionSchema": "passed_read_only",
+      "evidence": ".scratch/rs02/river-return/ab3fa8939/rs02-return-gates-utf8.log",
+      "suiteEvidence": ".scratch/rs02/river-return/ab3fa8939/test-shard-1-of-1.json"
+    },
+    "productionMatrices": {
+      "rerunForReturn": false,
+      "retainedReaderAndAgendaSourceCommit": "b81df3748",
+      "retainedBallotSourceCommit": "f2010cfa1",
+      "scope": "Original production read-only latency and held-data results remain attributed to their exact saved source commits and build IDs."
+    },
+    "deployed": false,
+    "nextOwner": "River: integrate exact READY and deploy; then verify deployed CDN hits and tag purges.",
+    "interruptedMergedGates": {
+      "codeCommit": "ed813ce3566449a1d40c11052ee12734c14982fe",
+      "status": "interrupted_after_required_fixture_correction_was_proven",
+      "completedFiles": 657,
+      "failedFiles": [
+        "tests/bodies-panel-browser.test.ts"
+      ],
+      "cause": "New River Bodies browser fixture served UTF8 script without a charset; Chromium decoded combining-mark regex bytes as Windows1252, throwing SyntaxError before React mounted.",
+      "repair": "Declare charset=utf-8 on the fixture script response. All original assertions are unchanged.",
+      "isolatedCorrectedTest": "passed",
+      "evidence": ".scratch/rs02/river-return/ed813ce35/"
+    },
+    "staticChecks": {
+      "codeCommit": "ab3fa8939b31485e6da5021c908c1d9fbf7b3a3f",
+      "workingTreeClean": true,
+      "protectedContentMatchesRelease56": [
+        "lib/map/districts.ts",
+        "components/map/map-canvas.tsx",
+        "lib/map/state-focus.ts",
+        "public/geo",
+        "netlify.toml",
+        "docs/rulings.md",
+        "lib/civic-data/firewall.ts",
+        "scripts/gates.mjs",
+        "scripts/preflight.mjs",
+        "tests/civic-data-firewall.test.ts"
+      ],
+      "ancestorCommits": {
+        "origin/main": "16679a9ea0ec479bf0edad680d916b01418d0ad9",
+        "origin/river": "61ffadc49158429f27681d1670160401c557020a",
+        "04fe5ae6d": "04fe5ae6dc266844b42150bd21139bf286f7215b",
+        "origin/stream/bs-01": "027144fa187f0710c2c1ca5c673512952ede1316"
+      }
+    },
+    "readyCommitScope": "Only the existing RS-02 report and results JSON change after the gated code commit."
+  }
+}

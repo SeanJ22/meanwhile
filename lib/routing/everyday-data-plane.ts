@@ -21,6 +21,7 @@ import {
 
 export const EVERYDAY_ROUTING_CONTRACT_ID = "everyday-routing" as const;
 const CONTRACT = requiredManualProductionContract(EVERYDAY_ROUTING_CONTRACT_ID);
+export const EVERYDAY_ROUTING_POINTER = { recordClass: CONTRACT.recordClass, scope: CONTRACT.scope };
 
 export interface EverydayRoutingImportInput {
   readonly version: string;

@@ -237,7 +237,7 @@ export interface AgendaPublicationInput {
    */
   readonly discoveredDocumentUrl?: string | null;
   /** The whole corpus, used to detect a URL held for two sittings: an index page by construction. */
-  readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
+  readonly documentsAcrossCorpus: readonly Pick<AgendaDocumentLike, "meetingId" | "documentUrl">[];
   /** Publisher readings. Filtered to this meeting here, not by the caller. */
   readonly observations?: readonly PublisherAgendaObservation[];
   /** Route attempts. Filtered to this meeting here, not by the caller. */
@@ -344,7 +344,7 @@ export function agendaDocumentRepresentation(
 
 /** Corpus context shared by the publication reading and the reader document projection. */
 export interface AgendaCorpusContext {
-  readonly documentsAcrossCorpus: readonly AgendaDocumentLike[];
+  readonly documentsAcrossCorpus: readonly Pick<AgendaDocumentLike, "meetingId" | "documentUrl">[];
   /** `bodyId`, when the caller has it, lets a notice page be matched to its own body. */
   readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null; bodyId?: string | null }[];
 }

@@ -29,7 +29,7 @@ export function composeGovernmentFinanceAnswer(input:{subject:EvidenceSubject|nu
     return (!period || typeof fiscal === "string" && new RegExp(`\\b(?:FY\\s*)?${period}\\b`, "i").test(fiscal)) && (fact.kind === "GOVERNMENT_FINANCE" ? fact.category === wanted : wanted === "BUDGET");
   });
   const latest = !period && wanted === "AUDIT" ? new Set(governmentMoneyView(held.map(row=>row.governmentFinance!),input.subject.id,held[0]?.governmentFinance?.ocdId ?? "").records.map(row=>row.id)) : null;
-  if (!held.length) return { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true };
+  if (!held.length) return null;
   const selected:EvidenceRecord[]=[];let answer="";
   for(const row of held){
     if (latest && !latest.has(row.governmentFinance!.id)) continue;

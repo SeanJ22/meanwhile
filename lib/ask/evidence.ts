@@ -216,6 +216,8 @@ export interface EvidencePack {
   denominators: Record<string, number>;
   /** `YYYY-MM-DD`, supplied. This module is not a clock. */
   today: string;
+  /** The exact instant used to select past and future records. */
+  asOf?: string;
 }
 
 /** Every source URL the pack actually contains — the allow-list for the answer. */

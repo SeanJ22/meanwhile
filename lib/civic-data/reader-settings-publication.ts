@@ -3,7 +3,7 @@ import { rolePlaybook, readRolePlaybookRow } from "../control-plane/playbooks.ts
 import { getStore } from "@netlify/blobs";
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { readerSettings, type SettingValue } from "../control-plane/settings.ts";
-import { purgeReaderCacheTags } from "../meetings/edge-serving.ts";
+import { purgeReaderCacheTags } from "../reader/cache.ts";
 import { READER_ARTIFACT_STORE_NAME } from "../meetings/edge-store.ts";
 
 export const READER_SETTINGS_TAG = "reader-settings";

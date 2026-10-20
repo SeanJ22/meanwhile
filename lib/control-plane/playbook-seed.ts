@@ -111,7 +111,7 @@ async function refreshUnchangedDetective(repos: FieldManualRepos, now: string): 
 async function refreshUnchangedAsk(repos: FieldManualRepos, now: string): Promise<void> {
   const previous: Record<string, readonly string[]> = {
     ASK_READER: ["9802b4f085aa77199e4e0d41735ccf1b3e5412484d264877a26097cfc6598f0f"],
-    ASK_WRITER: ["f35f2275e91d59d09884ac363d38bdc30a3fac113dcccfd72c239b0cfacc91ac", "b7a4a54af7c6f891dde081a9f5d02adadde2d5664a8271e594e3176dfd040833"],
+    ASK_WRITER: ["13d71cb206fdba16ba20b3afe2a070fda55a46b05b5c4f151854bf6c2410c529", "f35f2275e91d59d09884ac363d38bdc30a3fac113dcccfd72c239b0cfacc91ac", "b7a4a54af7c6f891dde081a9f5d02adadde2d5664a8271e594e3176dfd040833"],
     ASK_FALLBACK: ["bb1a9aa311e2c0c10f0fd143aa4341ec077b3a943dd1fe5a671ea5de08035ee7", "51123beb43ed925452255dcd961349d831cf7194e6c60551561b0d3b7b528eb3"],
   };
   for (const role of ["ASK_READER", "ASK_WRITER", "ASK_FALLBACK"] as const) {

@@ -7,7 +7,7 @@ import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { readRegistryRuntimeProjection } from "@/lib/reader/authority-reads";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 
 
@@ -162,4 +162,4 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     { error: "this route answers one meeting's agenda; pass meetingId" },
     { status: 400 },
   );
-}, ["registry-runtime"]);
+});

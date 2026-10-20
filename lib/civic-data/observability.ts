@@ -138,17 +138,10 @@ export interface RoutinePromotionRow {
   readonly validationReceipt: unknown;
 }
 
-export interface RoutineMeetingQueueRow {
-  readonly scope: string;
-  readonly queuedAt: string;
-}
-
 export interface RoutineObservabilityRows {
   readonly candidates: readonly RoutineCandidateRow[];
   readonly events: readonly RoutineCandidateEventRow[];
   readonly promotions: readonly RoutinePromotionRow[];
-    /** Read in the same MVCC snapshot as the promotions; undefined means not yet read, never a zero wait. */
-  readonly meetingQueue?: readonly RoutineMeetingQueueRow[];
 }
 
 export interface ExactChangedRecord {
@@ -301,18 +294,6 @@ export interface RoutineContractMember {
   readonly freshness: FreshnessState;
 }
 
-export interface MeetingPublicationWaiting {
-  readonly scope: string;
-  readonly queuedAt: string;
-}
-
-/** Meeting partitions whose newest version or check has not yet reached the readers' per-body records. */
-export interface MeetingPublicationObservation {
-  readonly waiting: DrilldownCount<MeetingPublicationWaiting> | Observation<number>;
-  readonly oldestQueuedAt: Observation<string>;
-  readonly detail: string;
-}
-
 export interface RoutineObservabilityView {
   readonly asOf: string;
   readonly source: "civic_data_candidates+civic_data_candidate_events+civic_data_promotions";
@@ -341,7 +322,6 @@ export interface RoutineObservabilityView {
     readonly latestOutcomeNotRecorded: DrilldownCount<RoutineContractMember>;
     readonly latestOutcomeUnknown: DrilldownCount<RoutineContractMember>;
   };
-  readonly meetingPublication: MeetingPublicationObservation;
 }
 
 export type RoutineObservabilityRead =
@@ -2182,24 +2162,6 @@ function contractMember(row: RoutineContractObservation): RoutineContractMember 
   };
 }
 
-function projectMeetingPublication(rows: RoutineObservabilityRows, nowMs: number): MeetingPublicationObservation {
-  if (rows.meetingQueue === undefined) {
-    const detail = "The meeting publication queue was not read in this MVCC snapshot.";
-    return { waiting: notRecorded(detail), oldestQueuedAt: notRecorded(detail), detail };
-  }
-  const waiting = rows.meetingQueue.map((row) => ({ scope: row.scope, queuedAt: iso(row.queuedAt) ?? row.queuedAt }))
-    .sort((a, b) => (a.queuedAt < b.queuedAt ? -1 : a.queuedAt > b.queuedAt ? 1 : 0));
-  const oldest = waiting[0]?.queuedAt ?? null;
-  const ageMs = oldest === null ? 0 : nowMs - Date.parse(oldest);
-  return {
-    waiting: exactCount(waiting),
-    oldestQueuedAt: oldest === null ? notRecorded("Nothing is waiting.") : measured(oldest),
-    detail: waiting.length === 0
-      ? "Every promoted meeting version and check has reached the readers' records."
-      : `${waiting.length} meeting partition(s) are waiting to reach the readers' records; the oldest has waited ${Number.isFinite(ageMs) ? Math.max(0, Math.round(ageMs / 60_000)) : "an unknown number of"} min.`,
-  };
-}
-
 function projectRoutineDataObservabilityUncached(
   rows: RoutineObservabilityRows,
   now: string,
@@ -2242,7 +2204,6 @@ function projectRoutineDataObservabilityUncached(
       latestOutcomeNotRecorded: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "NOT_RECORDED" ? [members[index]] : [])),
       latestOutcomeUnknown: exactCount(projected.flatMap((row, index) => row.latestCanonicalOutcome.kind === "UNKNOWN" ? [members[index]] : [])),
     },
-    meetingPublication: projectMeetingPublication(rows, nowMs),
   };
 }
 

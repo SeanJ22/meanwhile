@@ -8,7 +8,7 @@ export interface PeopleSourceReadModel extends Omit<OfficialStateLegislatorReadM
   readonly jurisdiction: "US" | `US-${string}`;
 }
 export function peopleJurisdiction(state: string): PeopleSourceReadModel["jurisdiction"] {
-  return state === "US" ? "US" : `US-${state.replace(/^US-/i, "").toUpperCase()}`;
+  return state.toUpperCase() === "US" ? "US" : `US-${state.replace(/^US-/i, "").toUpperCase()}`;
 }
 export async function readPeopleSourceProjection(jurisdiction: PeopleSourceReadModel["jurisdiction"], sourceId: string, options: PromotedCivicDataReadOptions = {}) {
   if (!isPeopleSource(sourceId)) throw Error("PEOPLE_SOURCE_UNREGISTERED");

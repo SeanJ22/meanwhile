@@ -2,7 +2,6 @@ import type { Division } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { createHash } from "node:crypto";
-import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
@@ -12,7 +11,7 @@ import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm"
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
-import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
+import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
 import {
   type CandidateEvent,
@@ -59,10 +58,9 @@ import {
 } from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
-
-export function projectionKey(recordClass: RoutineRecordClass, scope: string): string {
-  return `${recordClass}:${scope}`;
-}
+import { projectionKey } from "./projection-key.ts";
+import { invalidateReaderCache, readerCacheScopeForPublication, type ReaderCachePurger } from "../reader/cache.ts";
+export { projectionKey } from "./projection-key.ts";
 
 export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
@@ -88,46 +86,6 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
 export interface CandidateVersionReadback {
   readonly candidateId: string;
   readonly record: CandidateVersionRecord;
-}
-
-export interface PreparedProjectionCoupling {
-  readonly contractId: string;
-  readonly versionId: string;
-}
-
-/** A serving copy derived from the partitions in `composedFrom`, never authoritative civic truth. */
-export interface PreparedReaderProjectionRow {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly sequence: number;
-  readonly payload: unknown;
-  readonly composedFrom: readonly PreparedProjectionCoupling[];
-  readonly factSha256: string;
-  readonly generatedAt: string;
-  readonly composedAt: string;
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
-}
-
-export type PreparedReaderProjectionCoupling = Pick<PreparedReaderProjectionRow, "recordClass" | "scope" | "sequence" | "composedFrom" | "generatedAt">;
-
-export interface PreparedReaderProjectionInput {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly payload: unknown;
-  readonly composedFrom: readonly PreparedProjectionCoupling[];
-  readonly factSha256: string;
-  readonly generatedAt: string;
-  readonly composedAt: string;
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
-}
-
-export interface MeetingQueueRow {
-  readonly scope: string;
-  readonly queuedAt: string;
 }
 
 export interface CandidateTransitionOptions {
@@ -172,17 +130,6 @@ export interface RoutineDataStore {
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
-  /** Meeting partitions whose pointer moved or whose version was confirmed since their bodies were last published. */
-  readonly readMeetingQueue?: () => Promise<readonly MeetingQueueRow[]>;
-  /** Clears a queued scope only if it has not been queued again since it was read. */
-  readonly settleMeetingQueue?: (rows: readonly MeetingQueueRow[]) => Promise<void>;
-  readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
-  readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
-    /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
-  readonly writePreparedReaderProjection: (
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string, options?: CandidateTransitionOptions) => Promise<PromotedProjection>;
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
@@ -784,22 +731,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
-  private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
-  private readonly meetingQueue = new Map<string, string>();
-  private queueTick = 0;
-
-  private queueMeetingScope(recordClass: string, scope: string): void {
-    if (recordClass === "MEETING") this.meetingQueue.set(scope, `${String(++this.queueTick).padStart(12, "0")}`);
-  }
-
-  async readMeetingQueue(): Promise<readonly MeetingQueueRow[]> {
-    return [...this.meetingQueue].map(([scope, queuedAt]) => ({ scope, queuedAt }));
-  }
-
-  async settleMeetingQueue(rows: readonly MeetingQueueRow[]): Promise<void> {
-    for (const row of rows) if (this.meetingQueue.get(row.scope) === row.queuedAt) this.meetingQueue.delete(row.scope);
-  }
-
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
     return pointer?.receipt.decision === "GOOD" ? registryDivisionMatches(pointer.payload, state, labels) : [];
@@ -956,46 +887,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     });
   }
 
-  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
-    return row ? structuredClone(row) : null;
-  }
-
-  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
-    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
-    return row
-      ? structuredClone({ recordClass: row.recordClass, scope: row.scope, sequence: row.sequence, composedFrom: row.composedFrom, generatedAt: row.generatedAt })
-      : null;
-  }
-
-  async writePreparedReaderProjection(
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
-    const key = projectionKey(input.recordClass, input.scope);
-    const current = this.preparedProjections.get(key);
-    // Monotonic CAS: only advance when the row is still at the sequence the
-    // caller read; otherwise a newer pass already published — don't regress it.
-    if ((current?.sequence ?? null) !== expectedSequence) {
-      return { published: false, sequence: current?.sequence ?? 0 };
-    }
-    const sequence = (expectedSequence ?? 0) + 1;
-    this.preparedProjections.set(key, structuredClone({
-      recordClass: input.recordClass,
-      scope: input.scope,
-      sequence,
-      payload: input.payload,
-      composedFrom: input.composedFrom,
-      factSha256: input.factSha256,
-      generatedAt: input.generatedAt,
-      composedAt: input.composedAt,
-      sourceThrough: input.sourceThrough,
-      retrievedAt: input.retrievedAt,
-      promotedThrough: input.promotedThrough,
-    }));
-    return { published: true, sequence };
-  }
-
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     return candidateIds.flatMap((candidateId) => {
       const row = this.candidates.get(candidateId);
@@ -1077,7 +968,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       });
     }
     this.history.set(input.pointerVersionId, history);
-    this.queueMeetingScope(input.recordClass, input.scope);
     return { kind: "CONFIRMED", versionId: input.pointerVersionId, at };
   }
 
@@ -1113,7 +1003,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${previous?.versionId ?? "bootstrap/no-version"} to ${candidateId}.`,
     );
     this.promotions.set(key, projection);
-    this.queueMeetingScope(record.candidate.recordClass, record.candidate.scope);
     history.push(event);
     this.history.set(candidateId, history);
     this.candidates.set(candidateId, {
@@ -1610,36 +1499,6 @@ export function readerEvidenceRowToRecord(
   };
 }
 
-export function preparedProjectionCouplingRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
-  return db
-    .select({
-      recordClass: civicDataReaderProjections.recordClass,
-      scope: civicDataReaderProjections.scope,
-      sequence: civicDataReaderProjections.sequence,
-      composedFrom: civicDataReaderProjections.composedFrom,
-      generatedAt: civicDataReaderProjections.generatedAt,
-    })
-    .from(civicDataReaderProjections)
-    .where(and(eq(civicDataReaderProjections.recordClass, recordClass), eq(civicDataReaderProjections.scope, scope)))
-    .limit(1);
-}
-
-function preparedRowToProjection(row: typeof civicDataReaderProjections.$inferSelect): PreparedReaderProjectionRow {
-  return {
-    recordClass: row.recordClass as RoutineRecordClass,
-    scope: row.scope,
-    sequence: row.sequence,
-    payload: row.payload,
-    composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
-    factSha256: row.factSha256,
-    generatedAt: row.generatedAt,
-    composedAt: canonicalPostgresRoutineTimestamp(row.composedAt, "readerProjection.composedAt"),
-    sourceThrough: row.sourceThrough,
-    retrievedAt: row.retrievedAt,
-    promotedThrough: row.promotedThrough,
-  };
-}
-
 type PostgresCandidateEventRow = Pick<
   typeof civicDataCandidateEvents.$inferSelect,
   "candidateId" | "sequence" | "state" | "at" | "detail"
@@ -1722,6 +1581,8 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 }
 
 export class PostgresRoutineDataStore implements RoutineDataStore {
+  private readonly cacheOptions: { readonly purge?: ReaderCachePurger };
+  constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
@@ -2130,87 +1991,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresPromotedPointerIdentity);
   }
 
-  async readMeetingQueue(): Promise<readonly MeetingQueueRow[]> {
-    const result = await this.db.execute(sql`SELECT scope, queued_at::text AS queued_at FROM meeting_publication_queue ORDER BY queued_at`);
-    return (result.rows as { scope: string; queued_at: string }[]).map((row) => ({ scope: row.scope, queuedAt: row.queued_at }));
-  }
-
-  async settleMeetingQueue(rows: readonly MeetingQueueRow[]): Promise<void> {
-    if (rows.length === 0) return;
-    this.assertMutationAuthority();
-    await this.db.execute(sql`DELETE FROM meeting_publication_queue q USING unnest(${rows.map((row) => row.scope)}::text[], ${rows.map((row) => row.queuedAt)}::text[]) AS done(scope, at)
-      WHERE q.scope = done.scope AND q.queued_at::text = done.at`);
-  }
-
-  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const selected = currentReaderSelection();
-    const columns = { ...getTableColumns(civicDataReaderProjections), ...(selected ? {
-      payload: sql<unknown>`reader_place_payload(${civicDataReaderProjections.payload}, ${sql.param([...selected.keys])}::text[], ${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb)`,
-    } : {}) };
-    const [row] = await this.db.select(columns).from(civicDataReaderProjections).where(and(
-      eq(civicDataReaderProjections.recordClass, recordClass),
-      eq(civicDataReaderProjections.scope, scope),
-    )).limit(1);
-    return row ? preparedRowToProjection(row) : null;
-  }
-
-  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
-    const [row] = await preparedProjectionCouplingRead(this.db, recordClass, scope);
-    return row
-      ? {
-          recordClass: row.recordClass as RoutineRecordClass,
-          scope: row.scope,
-          sequence: row.sequence,
-          composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
-          generatedAt: row.generatedAt,
-        }
-      : null;
-  }
-
-  async writePreparedReaderProjection(
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
-    this.assertMutationAuthority();
-    const key = projectionKey(input.recordClass, input.scope);
-    const body = {
-      key,
-      recordClass: input.recordClass,
-      scope: input.scope,
-      payload: input.payload,
-      composedFrom: input.composedFrom,
-      factSha256: input.factSha256,
-      generatedAt: input.generatedAt,
-      composedAt: input.composedAt,
-      sourceThrough: input.sourceThrough,
-      retrievedAt: input.retrievedAt,
-      promotedThrough: input.promotedThrough,
-    };
-    if (expectedSequence === null) {
-      const inserted = await this.db.insert(civicDataReaderProjections)
-        .values({ ...body, sequence: 1 })
-        .onConflictDoNothing()
-        .returning({ sequence: civicDataReaderProjections.sequence });
-      if (inserted.length > 0) return { published: true, sequence: 1 };
-    } else {
-      // Monotonic CAS: advance only if the row is still at the read sequence.
-      const nextSequence = expectedSequence + 1;
-      const updated = await this.db.update(civicDataReaderProjections)
-        .set({ ...body, sequence: nextSequence })
-        .where(and(
-          eq(civicDataReaderProjections.key, key),
-          eq(civicDataReaderProjections.sequence, expectedSequence),
-        ))
-        .returning({ sequence: civicDataReaderProjections.sequence });
-      if (updated.length > 0) return { published: true, sequence: nextSequence };
-    }
-    const [cur] = await this.db.select({ sequence: civicDataReaderProjections.sequence })
-      .from(civicDataReaderProjections)
-      .where(eq(civicDataReaderProjections.key, key))
-      .limit(1);
-    return { published: false, sequence: cur?.sequence ?? 0 };
-  }
-
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
@@ -2365,7 +2145,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw error;
     }
-    if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
+    if (eventRows[0]) {
+      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
+      return { kind: "CONFIRMED", versionId: id, at };
+    }
     const [pointerRows, candidateRows] = await this.db.batch([
       this.db.select({
         sourceId: civicDataPromotions.sourceId,
@@ -2393,6 +2176,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
@@ -2502,6 +2286,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
+    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope), this.cacheOptions.purge);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,

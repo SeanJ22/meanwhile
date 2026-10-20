@@ -114,8 +114,10 @@ export function composePersonVotes(input: {
   const billName = bill && (billLabels[bill[1].replace(/\s/g, "")] ?? bill[1].toUpperCase());
   const items = shown.map((record) => `${record.rollCall.position} on ${billName && matching.length === 1 ? `${billName} ${bill![2]}` : record.rollCall.what}${input.topic && matching.length === 1 ? "" : ` (${record.rollCall.when}; ${record.rollCall.result})`}`);
   const list = items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join("; ")}; and ${items.at(-1)}`;
-  const lead = !input.topic ? `${input.name}'s latest votes: ` : `${input.name} voted `;
+  const lead = !input.topic ? `${input.name}'s most recent recorded votes: ` : `${input.name} voted `;
   const sentences = [`${lead}${list}`];
+  const more = matching.length - shown.length;
+  if (more > 0) sentences.push(`We hold ${matching.length} ${!input.topic ? "recorded votes" : "matching recorded votes"} for ${input.name}; the rest are listed below`);
   return { answer: `${sentences.join(". ")}.`, citedUrls: [...new Set(shown.map((record) => record.sourceUrl!))] };
 }
 
@@ -131,7 +133,9 @@ export function composeLocalMemberVotes(input: {
   if (shown.length === 0) return null;
   const items = shown.map((vote) => `${vote.position} on ${vote.subject} (${formatDateLong(vote.date)}${vote.result ? `; ${vote.result}` : ""})`);
   const list = items.length <= 2 ? items.join(" and ") : `${items.slice(0, -1).join("; ")}; and ${items.at(-1)}`;
-  const lead = terms.length === 0 ? `${input.name}'s latest votes: ` : `${input.name} voted `;
+  const lead = terms.length === 0 ? `${input.name}'s most recent recorded votes: ` : `${input.name}'s recorded votes that match the question, newest first: `;
   const sentences = [`${lead}${list}`];
+  const more = matching.length - shown.length;
+  if (more > 0) sentences.push(`We hold ${matching.length} ${terms.length === 0 ? "recorded votes" : "matching recorded votes"} for ${input.name}; the rest are listed below`);
   return { answer: `${sentences.join(". ")}.`, citedUrls: [...new Set(shown.map((vote) => vote.sourceUrl))] };
 }

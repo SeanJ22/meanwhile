@@ -1,6 +1,6 @@
 import { getStore } from "@netlify/blobs";
 import { READER_ARTIFACT_STORE_NAME } from "../meetings/edge-store.ts";
-import { purgeReaderCacheTags } from "../meetings/edge-serving.ts";
+import { purgeReaderCacheTags } from "../reader/cache.ts";
 import { projectLinkHealth, readLinkHealth, type ReaderLinkHealth } from "../design/link-health.ts";
 
 export const READER_LINK_HEALTH_TAG = "reader-link-health";

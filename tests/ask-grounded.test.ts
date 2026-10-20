@@ -574,3 +574,18 @@ test("ASK04: a COUNTY division alone must resolve the state's governor", () => {
   assert.deepEqual(brokenFilter, [], "the old filter kept nothing, which is why it emptied");
   assert.equal(statewideExecutivesFor(brokenFilter).length, 0);
 });
+
+
+test("ASK02: a meeting earlier this evening stays past across UTC midnight", () => {
+  const occurredAt = "2026-10-19T18:00:00-07:00";
+  const common = { today: "2026-10-20", asOf: "2026-10-20T04:00:00.000Z",
+    records: [{ ...pack().records[0], occurredAt }] };
+  assert.equal(validateAnswer("Vail met on October 19 at 6:00 PM.", [],
+    pack({ ...common, temporal: { kind: "LAST" } })).kind, "PASSED");
+  const next = validateAnswer("Vail meets on October 19 at 6:00 PM.", [],
+    pack({ ...common, temporal: { kind: "NEXT" } }));
+  assert.ok(next.kind === "FAILED" && next.failed.includes("future-question-answered-with-past-records"));
+  const future = validateAnswer("Vail met on October 20 at 6:00 PM.", [],
+    pack({ ...common, temporal: { kind: "LAST" }, records: [{ ...common.records[0], occurredAt: "2026-10-20T18:00:00-07:00" }] }));
+  assert.ok(future.kind === "FAILED" && future.failed.includes("past-question-answered-with-future-records"));
+});

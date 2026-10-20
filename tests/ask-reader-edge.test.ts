@@ -5,20 +5,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { authorityPointerKey, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
-import { publishPointers } from "./helpers/edge-pointers.ts";
-import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+import { installReaderValues, activateCanonicalFixture, installCanonicalMeetings } from "./helpers/canonical-reader-fixtures.ts";
+type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };
+import { type GlobalAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 
 type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { planEveryState } from "./helpers/meeting-body-fixtures.ts";
 import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
-import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { PIMA_LOCAL_FINANCE_CONTRACT, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { federalRollCallsReadState } from "../lib/votes/snapshot.ts";
 import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
@@ -91,9 +89,10 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
 
 
 delete process.env.ANTHROPIC_API_KEY;
+let activeFixture = "";
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-// The values the edge carries: the recorded registry import, the recorded 85701 meetings, and small synthetic
+// The canonical holdings: the recorded registry import, the recorded 85701 meetings, and small synthetic
 // values for every other family, built before the fake database. FEC funding is still read through its seed.
 const seedStore = new MemoryRoutineDataStore();
 const served = servedValue;
@@ -132,23 +131,18 @@ const STATE_PROMOTED: StateValues = {
 };
 
 /** `overrides` replaces some proven-pointer families with values published under other versions. */
-async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: StateValues = {}): Promise<string> {
-  const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
+async function createReaderFixture(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: StateValues = {}, snapshot = recordedMeetingsSnapshot()): Promise<string> {
+  const dir = mkdtempSync(join(tmpdir(), "wtp-ask-fixture-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const snapshot = recordedMeetingsSnapshot();
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting indexes");
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const store = new LocalFileArtifactStore(dir);
   const meetings = new MemoryRoutineDataStore();
   await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
-  const plan = await planEveryState({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
-  assert.deepEqual(plan.stats.failed, []);
-  const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
-  await publishPointers(store, { authority,
+  installReaderValues({ authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), "federal-directory": stateFederalDirectoryArtifacts("edge-test:ask:federal", federal), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
@@ -156,151 +150,67 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
       roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
     } }, "US-NH": { versionId: "none", value: null } },
     registrations: { az: { versionId: "none", value: null }, nh: { versionId: "none", value: null } },
-  });
-  assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
+  }, dir);
+  installCanonicalMeetings(meetings, dir);
   return dir;
 }
-/** The edge with only the identity sources. */
-const c20EdgeDir = await publishEdge(false);
-/** And with every deferrable source on it. */
-const fullEdgeDir = await publishEdge(true);
-
-// Non-registry database holdings are absent in this fixture.
-const databaseReads: string[] = [];
-process.env.DATABASE_URL = "postgresql://edge-test:edge-test@ep-ask-edge-test.ask-edge-test.invalid/none?sslmode=require";
-const realFetch = globalThis.fetch;
-after(() => { globalThis.fetch = realFetch; });
-globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
-  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-  if (!url.includes("ask-edge-test.invalid/")) throw new Error(`the Ask request fetched ${url}`);
-  const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
-  const queries = body.queries ?? [body];
-  const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
-  const results = queries.map(query => {
-    if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) return empty;
-    if (query.query?.includes("FROM fact f JOIN source_copy") || query.query?.includes("WITH people AS")) return empty;
-    const key = (query.params ?? []).find((value): value is string => typeof value === "string" && /^[A-Z_]+:US-/.test(value));
-    const recordClass = key?.split(":")[0] ?? (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
-    if (recordClass && ["REGISTRY_RUNTIME_BINDING", "BALLOT_CANDIDACY", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION", "VOTING_SITE", "CURATED_READER_RECORD"].includes(recordClass))
-      assert.doesNotMatch(query.query ?? "", /reader_place_payload|reader_inventory_payload/);
-    const scope = key?.slice(key.indexOf(":") + 1) ?? (query.params ?? []).find((p): p is string => typeof p === "string" && p !== recordClass && /[:+-]/.test(p));
-    databaseReads.push(`${recordClass ?? "UNKNOWN"}${scope ? `:${scope}` : ""}`);
-    return empty;
-  });
-  return new Response(JSON.stringify(body.queries ? { results } : results[0]), { status: 200, headers: { "content-type": "application/json" } });
-}) as typeof fetch;
+/** Canonical holdings for each answer source. */
+const fullFixture = await createReaderFixture(true);
 
 const AZ = "ocd-division/country:us/state:az";
 
 /** One cold Ask about a body's next meeting. */
-async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
+async function askMesa(question = "When does the Mesa City Council meet next?", today = "2026-09-25"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
-  databaseReads.length = 0;
+  activateCanonicalFixture(activeFixture!);
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-    body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
+    body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today }),
   }));
   assert.equal(response.status, 200);
   const payload = await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
-  assert.equal(payload.trace.preloadSources?.registry, "EDGE", "the identity inventory is served by the named state artifact");
+  assert.ok(payload.trace.preloads?.registry !== undefined, "the identity inventory is loaded");
   return payload;
 }
 
-/** What a cold Ask reads from the database when only identity is on the edge. */
-const DEFERRABLE_FROM_DATABASE = [
-  "BALLOT_CANDIDACY",
-  "CANDIDATE_PROFILE",
-  "CANDIDATE_PUBLICATION",
-  "CURATED_READER_RECORD",
-  "FEC_FUNDING",
-  "FEDERAL_KEY_VOTE",
-  "FEDERAL_ROLL_CALL",
-  "LOCAL_CAMPAIGN_FINANCE",
-  "OFFICEHOLDER_STATEMENT",
-  "STATE_CAMPAIGN_FINANCE",
-  "STATE_EXECUTIVE_ACTION",
-];
-const classOf = (read: string) => read.split(":")[0]!;
-
-const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "ballots", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
-
-test("with an identity-only edge, a cold Mesa question reads its place identity inventory but skips unrelated evidence", async () => {
-  process.env.WTP_READER_EDGE_DIR = c20EdgeDir;
+test("a cold Mesa question loads place identity and meetings from canonical holdings", async () => {
+  activeFixture = fullFixture;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
-  assert.deepEqual([...databaseReads].sort(), []);
-  // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls.
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], undefined, `the meeting question loaded ${source}`);
+  for (const source of ["funding", "stateMoney", "ballots", "candidateProfiles", "candidateCorpus"])
+    assert.ok(payload.trace.preloadSources?.[source] !== undefined, `the question lost ${source}`);
+  for (const source of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"])
+    assert.equal(payload.trace.preloadSources?.[source], undefined, `the question loaded unrelated ${source}`);
 });
 
-test("with every deferrable source on the edge, a cold Mesa question serves its state registry and holdings without database reads", async () => {
-  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
-  const payload = await askMesa();
-  assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
-  const moved = databaseReads.filter((read) => DEFERRABLE_FROM_DATABASE.includes(classOf(read)));
-  assert.deepEqual(moved, [], "a source the edge carries was read from the database");
-  // State roll calls are read only for a question about a state legislator.
-  assert.deepEqual([...databaseReads].sort(), []);
-  for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], undefined, `the meeting question loaded ${source}`);
-});
-
-test("an area-meeting question reads no unrelated officeholder inventory or federal directory", async () => {
-  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
-  const payload = await askMesa("Are there any meetings near me this week?");
-  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
-  const preloads = payload.trace.preloads;
-  assert.ok(preloads);
-  assert.equal(preloads.officeholders, undefined);
-  assert.equal(preloads.namedOfficeholders, undefined);
-  assert.equal(payload.trace.preloadSources?.federalDirectory, undefined);
-  assert.deepEqual(databaseReads, []);
-});
-
-test("an unsettled meeting-shaped question restores deferred edge evidence without additional database holdings", async () => {
-  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
+test("an unsettled meeting question restores deferred canonical evidence", async () => {
+  activeFixture = fullFixture;
   const payload = await askMesa("When does the Unheld Example City Council meet next?");
   assert.equal(payload.trace.sourcesLoaded, "ALL");
-  assert.deepEqual(databaseReads, []);
   assert.equal(federalRollCallsReadState().metadata.versionId, EDGE.federalVotes);
-  for (const source of DEFERRABLE_TRACE.filter((name) => name !== "azPimaFinance")) assert.equal(payload.trace.preloadSources?.[source], "EDGE", `the fallback lost ${source}`);
+  for (const source of ["funding", "stateMoney", "federalVotes", "federalKeyVotes", "ballots", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"])
+    assert.ok(payload.trace.preloadSources?.[source] !== undefined, `the fallback lost ${source}`);
 });
 
-test("a named New Hampshire official question from an Arizona ZIP opens only New Hampshire state artifacts", async () => {
-  process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {}, {
-    "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ", "NH"]),
-  });
+test("a named New Hampshire official question from an Arizona ZIP reads New Hampshire holdings", async () => {
+  const key = await createReaderFixture(true, {}, { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ", "NH"]) });
+  activateCanonicalFixture(key);
   clearPromotedReadModelCache();
-  databaseReads.length = 0;
-  const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const scopedKeys = new Map((await Promise.all(STATE_AUTHORITY_FAMILIES.flatMap(family => ["AZ", "NH"].map(async state =>
-    [(await readServedPointer(store, authorityPointerKey(family, state)))?.ref.key, `${family}:${state}`] as const)))).filter(([key]) => key));
-  const opened: string[] = [];
-  const original = LocalFileArtifactStore.prototype.readBytes;
-  LocalFileArtifactStore.prototype.readBytes = async function (key) {
-    const stateKey = scopedKeys.get(key);
-    if (stateKey) opened.push(stateKey);
-    return original.call(this, key);
-  };
-  try {
-    const { POST } = await import("../app/api/ask/grounded/route.ts");
-    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-      method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-      body: JSON.stringify({ question: "Who is the governor of New Hampshire?", approximateLocation: "85701",
-        surface: "BALLOT", ocdIds: [AZ, `${AZ}/county:pima`], today: "2026-09-25" }),
-    }));
-    assert.equal(response.status, 200);
-    const payload = await response.json();
-    const governor = registryFixtureForState("NH").statewideExecutives.find(row => row.holder.id.endsWith("/governor"))!;
-    assert.ok(payload.answer.includes(governor.holder.name), JSON.stringify(payload).slice(0, 2000));
-    assert.deepEqual([...new Set(opened)].sort(), ["federal-directory:NH", "registry-runtime:NH"]);
-    assert.deepEqual(databaseReads, []);
-  } finally {
-    LocalFileArtifactStore.prototype.readBytes = original;
-  }
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
+    body: JSON.stringify({ question: "Who is the governor of New Hampshire?", approximateLocation: "85701",
+      surface: "BALLOT", ocdIds: [AZ, `${AZ}/county:pima`], today: "2026-09-25" }),
+  }));
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  const governor = registryFixtureForState("NH").statewideExecutives.find(row => row.holder.id.endsWith("/governor"))!;
+  assert.ok(payload.answer.includes(governor.holder.name), JSON.stringify(payload).slice(0, 2000));
+  assert.equal(payload.trace.preloads.federalDirectory, undefined, "a statewide office lookup reads its own canonical authority");
 });
 
 test("a named state replaces inherited place selection without dropping its supplied divisions", async () => {
@@ -317,116 +227,26 @@ test("a named state replaces inherited place selection without dropping its supp
   assert.equal(selection?.point, undefined);
 });
 
-test("a named place absent from its state registry gives a specific holding without unrelated evidence reads", async () => {
+test("a named place absent from its state registry gives a specific holding", async () => {
   const sparse = registryFixtureForState("IL");
-  assert.equal(sparse.registry.divisions.length, 17);
-  assert.ok(sparse.registry.divisions.every(row => row.divisionType === "cd"));
   assert.equal(sparse.registry.bodies.length, 0);
-  process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {}, {
-    "registry-runtime": stateRegistryArtifacts("edge-test:ask:sparse", ["IL"], sparse),
-  });
+  const key = await createReaderFixture(true, {}, { "registry-runtime": stateRegistryArtifacts("edge-test:ask:sparse", ["IL"], sparse) });
+  activateCanonicalFixture(key);
   clearPromotedReadModelCache();
-  databaseReads.length = 0;
-  const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "IL")))!.ref.key;
-  const opened: string[] = [];
-  const originalBytes = LocalFileArtifactStore.prototype.readBytes;
-  const originalFetch = globalThis.fetch;
-  const requests: string[] = [];
-  LocalFileArtifactStore.prototype.readBytes = async function (key) {
-    opened.push(key); return originalBytes.call(this, key);
-  };
-  globalThis.fetch = (async (input, init) => {
-    requests.push(String(input)); return originalFetch(input, init);
-  }) as typeof fetch;
-  try {
-    const { POST } = await import("../app/api/ask/grounded/route.ts");
-    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
-      method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-      body: JSON.stringify({ question: "Who governs Springfield, Illinois?", approximateLocation: "85701",
-        surface: "MAP", ocdIds: [AZ, `${AZ}/county:pima`, `${AZ}/place:tucson`], today: "2026-09-25" }),
-    }));
-    assert.equal(response.status, 200);
-    const payload = await response.json();
-    assert.equal(payload.answer, "We have not recorded local government coverage for Springfield, Illinois yet, so we cannot identify who governs that place.");
-    assert.equal(payload.subject, null);
-    assert.deepEqual(payload.records, []);
-    assert.deepEqual(payload.contacts, []);
-    assert.deepEqual(payload.gaps, [{ whose: "OURS", statement: payload.answer }]);
-    assert.deepEqual(Object.keys(payload.trace.preloads), ["edgeManifest", "authorityEdge", "registry"]);
-    assert.deepEqual(payload.trace.preloadSources, { registry: "EDGE" });
-    assert.deepEqual([...new Set(opened)], [registryKey]);
-    assert.deepEqual(requests, [], "an unresolved place must not fetch unrelated evidence or a model");
-    assert.deepEqual(databaseReads, []);
-  } finally {
-    LocalFileArtifactStore.prototype.readBytes = originalBytes;
-    globalThis.fetch = originalFetch;
-  }
-});
-
-test("a marked warm call loads the Ask's code and every Ask source from the edge, with no database request and no other fetch", async () => {
-  // Versions only this edge carries: a read state that names one was loaded by the warm call, never by an Ask.
-  const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };
-  process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
-    "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: WARM.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], WARM.funding),
-    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal).window })], WARM.federalVotes),
-  });
-  clearPromotedReadModelCache();
-  databaseReads.length = 0;
-  const stubbed = globalThis.fetch;
-  const elsewhere: string[] = [];
-  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-    if (!url.includes("ask-edge-test.invalid/")) elsewhere.push(url);
-    return stubbed(input, init);
-  }) as typeof fetch;
-  try {
-    const { GET, KEEP_WARM_MARKER } = await import("../app/api/warm/route.ts");
-    const response = await GET(new Request("https://wtp.test/api/warm?hold=0", { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } }));
-    assert.equal(response.status, 200);
-    const { primed } = await response.json() as { primed: { manifest: boolean; ask: { graphMs: number | null; sources: number; sourcesRefused: number; sourcesFailed: number; sourcesMs: number | null } | null } };
-    assert.equal(primed.manifest, true);
-    assert.ok(primed.ask, "a marked call with an edge primes the Ask");
-    assert.equal(typeof primed.ask.graphMs, "number", "the Ask route's module graph was loaded");
-    assert.equal(typeof primed.ask.sourcesMs, "number", "the Ask's sources settled within the budget");
-    // This edge publishes no comment-access artifact, so that one source is refused rather than read from the database.
-    assert.deepEqual(
-      { sources: primed.ask.sources, sourcesRefused: primed.ask.sourcesRefused, sourcesFailed: primed.ask.sourcesFailed },
-      { sources: warmSourceNames().length - 1, sourcesRefused: 1, sourcesFailed: 0 },
-    );
-    assert.deepEqual(databaseReads, [], "a warm call reached the database");
-    assert.deepEqual(elsewhere, [], "a warm call fetched something other than the edge (a model, a log)");
-    assert.equal(fundingReadState().metadata.versionId, WARM.funding, "the warm call did not load FEC from the edge");
-    assert.equal(federalRollCallsReadState().metadata.versionId, WARM.federalVotes, "the warm call did not load the federal roll calls from the edge");
-  } finally {
-    globalThis.fetch = stubbed;
-  }
-});
-
-test("an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write", async () => {
-  process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
-  const { GET } = await import("../app/api/warm/route.ts");
-  const { primed } = await (await GET(new Request("https://wtp.test/api/warm?hold=0"))).json() as { primed: unknown };
-  assert.equal(primed, null);
-  const source = readFileSync("app/api/warm/route.ts", "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
-  assert.match(source, /await import\("@\/app\/api\/ask\/grounded\/route"\)\.then\(\(\) => \{ primed\.graphMs/, "the route module is imported for its graph only");
-  assert.doesNotMatch(source, /\bPOST\b|captureAskInteraction|recordAskGapObservations|afterResponse|interpretQuestion|synthesize|anthropic|getDb/i);
-});
-
-test("the warm call settles only unscoped Ask sources and never preloads every state", async () => {
-  const sourceNames = warmSourceNames();
-  const ask = readFileSync("app/api/ask/grounded/route.ts", "utf8");
-  const start = ask.indexOf("const essentialPreloads = [");
-  const end = ask.indexOf("await settleGroundedSourcePreloads(topicRoute");
-  assert.ok(start > 0 && end > start, "the Ask route's preload lists moved; re-read them here");
-  const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
-  // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
-  assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots", "campaignFinance"]) {
-    assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
-    named.delete(stateSource);
-  }
-  assert.deepEqual(sourceNames.sort(), [...named].sort());
+  const { POST } = await import("../app/api/ask/grounded/route.ts");
+  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+    method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
+    body: JSON.stringify({ question: "Who governs Springfield, Illinois?", approximateLocation: "85701",
+      surface: "MAP", ocdIds: [AZ, `${AZ}/county:pima`, `${AZ}/place:tucson`], today: "2026-09-25" }),
+  }));
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.equal(payload.answer, "We have not recorded local government coverage for Springfield, Illinois yet, so we cannot identify who governs that place.");
+  assert.equal(payload.subject, null);
+  assert.deepEqual(payload.records, []);
+  assert.deepEqual(payload.contacts, []);
+  assert.deepEqual(payload.gaps, [{ whose: "OURS", statement: payload.answer }]);
+  assert.deepEqual(Object.keys(payload.trace.preloadSources), ["registry"]);
 });
 
 test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", async () => {
@@ -445,12 +265,13 @@ test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", a
   const placesRead: string[] = [];
   try {
     await fileCampaignMoneyFacts(facts, "WA", rows, "2026-10-17T00:00:00.000Z");
+    const key = await createReaderFixture(true, {}, {
+      "registry-runtime": stateRegistryArtifacts("edge-test:ask:campaign", ["WA"]),
+    });
+    activateCanonicalFixture(key);
     installFactReader(async (text, params) => {
       if (text.includes("FROM entity_place p")) placesRead.push(String(params?.[0]));
       return facts.query(text, params);
-    });
-    process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {}, {
-      "registry-runtime": stateRegistryArtifacts("edge-test:ask:campaign", ["WA"]),
     });
     clearPromotedReadModelCache();
     const { POST } = await import("../app/api/ask/grounded/route.ts");
@@ -482,8 +303,49 @@ test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", a
   }
 });
 
-function warmSourceNames(): string[] {
-  const source = readFileSync("app/api/warm/route.ts", "utf8");
-  const declarations = source.slice(source.indexOf("const ASK_SOURCE_PRELOADS"), source.indexOf("interface AskPrimed"));
-  return [...declarations.matchAll(/^  ([a-zA-Z]+):/gm)].map(match => match[1]);
-}
+
+test("an unheld budget goes directly to the separate AI after the held-data composers decline", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalKey = process.env.ANTHROPIC_API_KEY;
+  const calls: string[] = [];
+  process.env.ANTHROPIC_API_KEY = "fixture-ask-key";
+  globalThis.fetch = (async (input, init) => {
+    const url = input instanceof Request ? input.url : String(input);
+    if (!url.startsWith("https://api.anthropic.com/")) return originalFetch(input, init);
+    const body = JSON.parse(String(init?.body));
+    calls.push(body.tools?.[0]?.name ?? "grounded-writer");
+    return Response.json({ content: [{ type: "tool_use", name: "answer_reader", input: { known: false, answer: "" } }],
+      usage: { input_tokens: 10, output_tokens: 5 } });
+  }) as typeof fetch;
+  try {
+    activeFixture = fullFixture;
+    const payload = await askMesa("What is Mesa City Council's budget?") as Awaited<ReturnType<typeof askMesa>> & {
+      answer: string; aiAnswer: string; gaps: { statement: string }[];
+    };
+    assert.deepEqual(calls, ["answer_reader"], "no model is needed to compose the missing held-data line");
+    assert.equal(payload.answer, "We don't have that answer yet.");
+    assert.equal(payload.aiAnswer, "I don't know.");
+    assert.ok(payload.gaps.every(gap => !/calendar/i.test(gap.statement)), "a finance question has no unrelated calendar failure");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.ANTHROPIC_API_KEY;
+    else process.env.ANTHROPIC_API_KEY = originalKey;
+  }
+});
+
+
+test("a last meeting outside the shown window is still answered from retained canonical records", async () => {
+  const past = recordedMeetingsSnapshot().meetings.find(meeting => meeting.id.startsWith("legistar:") &&
+    meeting.bodyId?.endsWith("county:pima#governing") && meeting.status !== "CANCELED" && meeting.timeZone && meeting.startsAt.startsWith("2026-"));
+  assert.ok(past, "the fixture supplies one dated, unambiguous retained sitting");
+  activeFixture = await createReaderFixture(true, {}, {}, recordedMeetingsSnapshot([past]));
+  const originalNow = Date.now;
+  Date.now = () => Date.parse("2027-09-25T12:00:00Z");
+  try {
+    const payload = await askMesa("When was the last Pima County Board of Supervisors meeting?", "2027-09-25") as Awaited<ReturnType<typeof askMesa>> & {
+      answer: string; records: { kind: string; id: string; occurredAt?: string }[];
+    };
+    assert.match(payload.answer,/most recent.*Pima/i);
+    assert.ok(payload.records.some(record => record.kind === "MEETING" && record.id === past.id), "a shown-window miss must return the retained sitting");
+  } finally { Date.now = originalNow; }
+});

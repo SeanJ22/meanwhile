@@ -128,3 +128,34 @@ test("coverage reports preserve unknown sources and refuse a one-day claim befor
   assert.throws(()=>comparePeopleCoverage(before,{...before,observedAt:"2026-10-12T23:59:59Z"}),/ONE_DAY_OBSERVATION_NOT_YET_HELD/);
   assert.equal(comparePeopleCoverage(before,{...before,observedAt:"2026-10-13T00:00:00Z"}).elapsedMs,86400000);
 });
+
+test("multiple identity bridges preserve original person order and later aliases after positions move", () => {
+  const native = (id: string, name: string, keys: string[], changes: Partial<Officeholder> = {}) => person(id, { name, nativeIds: { votesmart: keys }, ...changes });
+  const a = native("a", "First Person", ["1"]), b = native("b", "Second Person", ["2"]), c = native("c", "Third Person", ["3"]);
+  const d = native("d", "Fourth Person", ["4"]), e = native("e", "Fifth Person", ["5"]);
+  const merged = mergePeopleSets([
+    set(a, b, c, d, e),
+    set(native("bridge-ce", "Bridge Third Fifth", ["3", "5"])),
+    set(native("bridge-ad", "Bridge First Fourth", ["1", "4"])),
+    set(native("last-e", "Fifth Person", ["5"], { phone: "202-555-0505" }), native("last-d", "Fourth Person", ["4"], { phone: "202-555-0404" })),
+    set(person("name-b", { name: "Second Person" })),
+  ])!;
+  assert.deepEqual(merged.officeholders.map(holder => holder.id), ["a", "b", "c"]);
+  assert.equal(merged.officeholders[0].phone, "202-555-0404");
+  assert.equal(merged.officeholders[2].phone, "202-555-0505");
+  for (const alias of ["d", "bridge-ad", "last-d"]) assert.ok(personIdentityKeys(merged.officeholders[0]).has(alias));
+  for (const alias of ["e", "bridge-ce", "last-e"]) assert.ok(personIdentityKeys(merged.officeholders[2]).has(alias));
+  assert.ok(personIdentityKeys(merged.officeholders[1]).has("name-b"));
+  assert.ok(merged.disagreements?.some(disagreement => disagreement.personId === "a"));
+});
+
+test("source-name ambiguity still blocks a name-only join after an identity bridge combines the namesakes", () => {
+  const a = person("namesake-a", { nativeIds: { votesmart: ["1"] } });
+  const b = person("namesake-b", { nativeIds: { votesmart: ["2"] } });
+  const third = person("unrelated", { name: "Other Person" });
+  const bridge = person("bridge", { nativeIds: { votesmart: ["1", "2"] } });
+  const merged = mergePeopleSets([set(a, b, third), set(bridge), set(person("name-only"))])!;
+  assert.deepEqual(merged.officeholders.map(holder => holder.id), ["namesake-a", "unrelated", "name-only"]);
+  assert.ok(personIdentityKeys(merged.officeholders[0]).has("namesake-b"));
+  assert.ok(!personIdentityKeys(merged.officeholders[0]).has("name-only"));
+});

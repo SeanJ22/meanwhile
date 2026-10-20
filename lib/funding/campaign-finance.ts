@@ -1,4 +1,5 @@
 import { readCampaignFinance } from "./campaign-finance-reader.ts";
+import { saveWorkerPublicationOutcome } from "../civic-data/publication-flow.ts";
 import { financeDoorDetailSource } from "./finance-detail-source.ts";
 import { campaignFinanceRecordIssue, campaignFinanceRecordKind, type CampaignFinanceRecord } from "./campaign-finance-reader.ts";
 import type { BallotSet } from "../ballot/types.ts";
@@ -120,8 +121,7 @@ export async function runFinanceDoorPublication(input: Parameters<typeof campaig
       code: "CAMPAIGN_FINANCE_PUBLICATION_HELD", detail, recovery: candidateId ? "PUBLISHER" : "WORKER" };
   }
   const latest = await input.repos.workItems.mustRead(input.workItemId);
-  const saved = await input.repos.workItems.compareAndSet(input.workItemId, latest.revision,
-    { ...latest.value, publicationOutcome: outcome }, input.now);
+  const saved = await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
   if (!saved) throw new Error("The finance work-item outcome changed while its publication was being retained.");
   return { workItemId: input.workItemId, outcome };
 }

@@ -214,10 +214,7 @@ async function readRowsFromCanonicalTables(
     }).from(civicDataPromotions);
   const candidates = await db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate);
   const events = await db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent);
-    // Read in the same snapshot as the promotions, so what waits is compared with what was promoted at one instant.
-  const meetingQueue = (await db.execute(sql`SELECT scope, queued_at::text AS queued_at FROM meeting_publication_queue`)).rows
-    .map((row) => ({ scope: String(row.scope), queuedAt: String(row.queued_at) }));
-  return { candidates, events, promotions, meetingQueue };
+  return { candidates, events, promotions };
   }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
   } catch (error) {
     if (statementTimeoutMs !== null && isStatementTimeout(error)) throw new RoutineObservabilityReadTimedOut(statementTimeoutMs, error);

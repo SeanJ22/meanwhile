@@ -252,7 +252,7 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   }
 
   const [chosen] = input.sittings;
-  if (!chosen) return roles.has("NO_SITTING") ? missing("requested meeting date") : null;
+  if (!chosen) return !input.records.length && roles.has("NO_SITTING") ? missing("requested meeting date") : null;
   if (chosen.status === "CANCELED" || !zoneOf(chosen).known) return null;
   const record = input.records.find(row => row.kind === "MEETING" && row.id === chosen.id);
   if (!record || record.meetingListingIdentity) return null;

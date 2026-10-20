@@ -45,7 +45,7 @@ const idsOf = (read: Awaited<ReturnType<typeof readReaderEdgeMeetings>>) =>
   read.kind === "PROMOTED" ? read.value.meetings.map(({ id }) => id.split(":").at(-1)!) : [];
 
 const readPima = (held: Awaited<ReturnType<typeof heldEdge>>, options: { readonly window?: "SHOWN" | "HELD"; readonly settings?: ReturnType<typeof meetingSettingsFromValues> } = {}) =>
-  readReaderEdgeMeetings({ store: held.edge, dataStore: held.store, ocdIds: [PIMA.ocdId!], now: NOW, settings: meetingSettingsFromValues(), ...options });
+  readReaderEdgeMeetings({ ocdIds: [PIMA.ocdId!], now: NOW, settings: meetingSettingsFromValues(), ...options });
 
 test("SHOWN is 90 days each way; HELD keeps all kept history", async () => {
   const held = await heldEdge();

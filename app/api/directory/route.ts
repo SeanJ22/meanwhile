@@ -1,9 +1,9 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { directoryFor } from "@/lib/officials/directory";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import { selectedRegistryStates } from "@/lib/registry/runtime-read-model";
+import { readNationalShelf } from "@/lib/reader/national";
+import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
+import { federalOfficeRecordsForMember } from "@/lib/officials/member-offices";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 
@@ -48,12 +48,14 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     }, { headers: { "Cache-Control": "private, no-store" } });
   }
 
-  const places = selectedRegistryStates();
-  if (!places.length) return refuse("a member of Congress is read from their place's record; add state=<postal code> (e.g. state=AZ)");
   let found;
   try {
-    await refreshFederalDirectoryFromPromoted(places);
-    found = directoryFor(member);
+    const shelf = await readNationalShelf();
+    const state = shelf.congress.roster.officeholders.find(holder => holder.id === member)?.state;
+    const model = state ? shelf.federalByState.get(state.replace(/^US-/i,"").toUpperCase()) ?? shelf.congress : shelf.congress;
+    const entry = model.directory.byMember[member.slice(9)];
+    found = entry ? { source: model.directory.source, entry, state,
+      offices: federalOfficeRecordsForMember(model,member),committeeJurisdictions: model.directory.committees } : null;
   }
   catch {
     return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },
@@ -69,12 +71,13 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   return Response.json(
     {
       source: found.source,
-      districtOffices: found.entry.districtOffices,
+      districtOffices: found.offices.map(row => row.office),
+      officeDetails: found.offices.map(({officeKind,sourceUrl,sourceOrg,collectedAt,official}) => ({officeKind,sourceUrl,sourceOrg,collectedAt,official})),
       committees: found.entry.committees.map((seat) => ({
         ...seat,
-        ...found.committeeJurisdictions[seat.committeeId],
+        ...(found.committeeJurisdictions[seat.committeeId] ? { jurisdiction: found.committeeJurisdictions[seat.committeeId].jurisdiction, jurisdictionSource: found.committeeJurisdictions[seat.committeeId].jurisdictionSource, url: found.committeeJurisdictions[seat.committeeId].url } : {}),
       })),
     },
-    { headers: { "Cache-Control": "private, no-store" } },
+    { headers: { ...readerCacheHeaders({ national: true, states: found.state ? [found.state] : [] }), "Netlify-Vary": "query=member|state" } },
   );
-}, ["federal-directory","member-offices","state-legislators"]);
+});

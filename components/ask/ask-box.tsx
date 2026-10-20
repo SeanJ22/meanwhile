@@ -1025,11 +1025,14 @@ function AnswerBodies({
     if (seen.has(id)) continue;
     seen.add(id);
     /* Matches a registry body id or a division whose governing body the payload carries. */
-    const body =
+    const matched =
       coverage.bodies.find((b) => b.bodyId === id) ??
       coverage.bodies.find(
         (b) => b.ocdId === id && (b.bodyId === `${id}#governing` || b.bodyId === `${id}#board`),
       );
+    const body = matched && grounded.subject?.kind === "BODY" && matched.bodyId === subjectId
+      ? { ...matched, name: grounded.subject.name }
+      : matched;
     if (body) rows.push(body);
   }
 

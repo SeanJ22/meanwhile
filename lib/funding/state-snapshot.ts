@@ -1,4 +1,4 @@
-import { campaignFinanceForTarget, settleCampaignFinanceReads } from "./campaign-finance-reader.ts";
+import { campaignFinanceForTarget } from "./campaign-finance-reader.ts";
 
 import {
   civicDataReadNotInitialized,
@@ -130,22 +130,6 @@ export function settleStateMoneyRead(state: StateCampaignFinanceJurisdiction): P
     (options) => refreshStateMoneyProjectionFromPromoted(state, options),
     `The ${state} campaign money`,
   );
-}
-
-/**
- * Every state's money, edge first, each state its own read and failure domain
- * (Ask's preload). Settles like `refreshStateMoneyFromPromoted`: the promoted
- * versions, joined, or null.
- */
-export async function settleStateMoneyReads(): Promise<string | null> {
-  const states = Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[];
-  const [reads, general] = await Promise.all([
-    Promise.allSettled(states.map((state) => settleStateMoneyRead(state))), settleCampaignFinanceReads(),
-  ]);
-  const versions = reads
-    .flatMap((read) => read.status === "fulfilled" && read.value.kind === "PROMOTED" ? [read.value.metadata.versionId] : [])
-    .filter((version): version is string => version !== null);
-  return [...versions, ...general].length ? [...versions, ...general].join(",") : null;
 }
 
 /** Read all independent state pointers; one unavailable state cannot erase another. */

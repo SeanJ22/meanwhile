@@ -14,8 +14,6 @@ import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 
 import { telHref } from "../lib/officials/phone-numbers.ts";
 
-import { currentReaderAuthorityEdge, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
@@ -60,21 +58,19 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   const context = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "withBallotReader")!;
   assert.ok(fn && context, "exercise the production funding section and its place context");
   const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
-  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", "withReaderSelection", "CardGapContribution", compile(`${context.getText()}; ${fn.getText()}; return CandidateFunding;`));
+  const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderSelection", "CardGapContribution", compile(`${context.getText()}; ${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
   const divisions = ["ocd-division/country:us/state:az/cd:1"];
   const readerSelection = { states: ["AZ"], keys: new Set(divisions), divisions };
-  const readerEdge = {};
-  const props = { targetKey: "congress:test", context: null, available: true, readerEdge, readerSelection, divisions };
+  const props = { targetKey: "congress:test", context: null, available: true, readerSelection, divisions };
   const assertContext = () => {
-    assert.equal(currentReaderAuthorityEdge(), readerEdge);
     assert.equal(currentReaderSelection(), readerSelection);
   };
   const component = make(React, () => { assertContext(); return { kind: "none" }; }, async (...args: unknown[]) => {
     assertContext();
     assert.deepEqual(args, [props.targetKey, undefined, undefined, divisions], "funding settles only the card's divisions");
     return envelope;
-  }, unexpected, unexpected, unexpected, withReaderAuthorityEdge, withReaderSelection, CardGapContribution);
+  }, unexpected, unexpected, unexpected, withReaderSelection, CardGapContribution);
   assert.equal(await component(props), null, "held empty answers do not render a funding field or a freshness placeholder");
   envelope.dataMetadata.stale = "UNKNOWN";
   assert.equal(await component(props), null);

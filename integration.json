@@ -3305,5 +3305,17 @@
     "tested_sha": "93ff0f4b64fcbab3e02972a5952b76c313d878b8",
     "gates": "pass",
     "at": "2026-10-20T04:38:16Z"
+  },
+  {
+    "lane": "src-money",
+    "steps": [
+      "SRC-MN"
+    ],
+    "ready_sha": "834e1c850478a45c1f7e3db0abb97e8e1e0731f5",
+    "merge_sha": "1b4033336de6f95c4389bc6abb3f3b64d5f4e9ee",
+    "river_sha": "5307d8b75678fc416f8e062cc9c65839d6d23da8",
+    "tested_sha": "5307d8b75678fc416f8e062cc9c65839d6d23da8",
+    "gates": "pass",
+    "at": "2026-10-20T05:02:46Z"
   }
 ]

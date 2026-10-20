@@ -46,8 +46,8 @@ export function FeedbackForm({
         <p className="text-[0.9375rem] font-medium text-paper">Got it — thank you.</p>
         <p className="mt-1.5 text-[0.875rem] leading-relaxed text-paper-dim">
           {sentWithReply
-            ? "It is stored and the author reads it. Because you left an address, a reply is possible — though this is one person reading, so it may take a while."
-            : "It is stored and the author reads it. You left no address, so there is no way for us to write back."}
+            ? "The author will read your message and can reply by email."
+            : "The author will read your message."}
         </p>
         <button
           type="button"
@@ -128,12 +128,6 @@ export function FeedbackForm({
           onChange={(event) => setReplyTo(event.target.value)}
           className="mt-2 w-full rounded border border-[var(--panel-border)] bg-[var(--panel)] p-3 text-[0.9375rem] leading-relaxed text-paper outline-none focus:border-[var(--link)]"
         />
-        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-          Only used to reply to you, and stored with your message and nothing
-          else. Anything that looks like contact details in the message itself
-          is still removed before it is stored — this field is the exception,
-          because you chose to put it here.
-        </p>
         {replyMalformed && (
           <p
             data-feedback-reply-error

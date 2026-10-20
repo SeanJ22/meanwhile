@@ -123,7 +123,7 @@ export function ZipSwitcher({
 
       {others.length > 0 && (
         <>
-          <p className="zip-switcher-label">{embedded ? "Recent" : "Recent on this device"}</p>
+          <p className="zip-switcher-label">Recent</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
               /* Recents mix origins and nothing recorded which. */
@@ -133,11 +133,6 @@ export function ZipSwitcher({
             ))}
           </div>
         </>
-      )}
-      {embedded && (
-        <p className="mw-pop-note">
-          A ZIP is orientation, not your exact districts or ballot.
-        </p>
       )}
     </div>
   );

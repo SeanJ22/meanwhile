@@ -47,50 +47,6 @@ export default async function FeedbackPage({
           </p>
         )}
 
-        <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
-          <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
-            What happens to this
-          </h2>
-          <div className="mt-2.5 space-y-3 text-[0.875rem] leading-relaxed text-paper-dim">
-            <p>
-              It is stored on its own, read by the person who built this, and
-              it enters nothing that is aggregated or licensed. It is not part
-              of the data this product licenses to anyone, and there is no
-              query that could put it there.
-            </p>
-            <p>
-              We store the message and the time, the card and ZIP being
-              reported when supplied, plus your email address if you choose
-              to leave one. We do not store your name, your postal address,
-              or a link to anything else you have done on the site.
-            </p>
-            <p>
-              Before it is stored, the message is stripped of anything shaped
-              like a phone number, an email address, or a street address —
-              mechanically, without anyone reading it first. So{" "}
-              <strong className="font-semibold text-paper">
-                we can only write back if you fill in the optional email box
-              </strong>
-              ; an address left in the message itself is removed with
-              everything else. Leaving the box blank is fine and sends
-              normally — it just means this is one-way.
-            </p>
-            <p>
-              If you are pictured on this site and want your photograph
-              removed, say so here and it comes down. You do not have to give
-              a reason.
-            </p>
-            <p>
-              <Link
-                href="/transparency"
-                className="underline decoration-dotted underline-offset-2 hover:text-signal"
-              >
-                What this site collects
-              </Link>
-            </p>
-          </div>
-        </section>
-
         <p className="mt-10 text-[0.8125rem]">
           <Link
             href="/"

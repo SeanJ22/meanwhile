@@ -237,7 +237,7 @@ export function ListOverlay({
         )}
       </div>
 
-      <div className="al-overlay-controls">
+      {sorted.length > 1 && <div className="al-overlay-controls">
         <select
           className="scope-select"
           aria-label="Sort by"
@@ -270,7 +270,7 @@ export function ListOverlay({
             </option>
           ))}
         </select>
-      </div>
+      </div>}
 
       <div className="al-overlay-body">
         {/* In the scrolling body: in the pinned header a long notice can take the whole height cap. */}
@@ -278,9 +278,7 @@ export function ListOverlay({
         {result?.localPending && <p className="al-empty">Loading meetings…</p>}
         {!result?.localPending && sorted.length === 0 && (
           <p className="al-empty">
-            Nothing matches the current filters.
-            <br />
-            Clearing a filter or turning a tier back on will bring meetings back.
+            No meetings match these filters.
             {/* Never a silent empty on the Concluded filter. */}
             {gapNote && (
               <>

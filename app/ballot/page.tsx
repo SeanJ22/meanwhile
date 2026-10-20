@@ -58,8 +58,6 @@ import {
 import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
-import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
-import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { StateMoneySection } from "@/components/funding/state-money-section";
 import { stateMoneyForCard } from "@/lib/funding/nominee-money";
@@ -142,7 +140,6 @@ import { CandidateContact, CandidateContactSources } from "@/components/ballot/c
 import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
-import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { readerContestScope } from "@/lib/ballot/reader-scope";
 import {
   settleFederalDirectoryRead,
@@ -156,26 +153,8 @@ import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 import { readerPartyLabel } from "@/lib/text/reader-names";
-import {
-  IncumbencyFootnote,
-  IncumbencyMarker,
-} from "@/components/ballot/incumbency-note";
 
 export const runtime = "nodejs";
-
-const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
-  "candidate-profiles": "candidate profiles",
-  "candidate-publications": "what candidates say in their own words",
-  "federal-funding": "federal campaign money",
-  "state-money": "state campaign money",
-  "campaign-finance": "campaign money filings",
-  "federal-directory": "federal officeholders",
-  "registry-runtime": "the officials and districts that go with this ZIP",
-  "nh-members": "New Hampshire legislators",
-  "ballot-navigation": "registration and polling-place links",
-};
-
-const EXTENDED_MECHANICS_CHARS = 180;
 
 function nomineeProvenance(nominee: LineupNominee, contest: Contest, state: string): Provenance {
   const canvass = getGeneralLineup(state)?.canvass;
@@ -724,52 +703,6 @@ export default readerRoute("/ballot", async function BallotPage({
       .map((c) => jurisdictionKeyForContestId(c.id))
       .find((key): key is string => key !== null) ?? null;
 
-  const FOOTNOTE_MARKERS = ["*", "†", "‡", "§", "‖", "¶"];
-
-  const MARKER_START = 1;
-  type SourceCite =
-    | { kind: "canvass"; url: string; issuedBy: string; readAt: string }
-    | { kind: "filing"; url: string | null; org: string; collectedAt: string };
-  const contestSourceKey = (cite: SourceCite): string =>
-    cite.kind === "canvass"
-      ? `canvass|${cite.url}|${cite.issuedBy}|${cite.readAt}`
-      : `filing|${cite.url ?? ""}|${cite.org}|${cite.collectedAt}`;
-  const contestCites = new Map<string, { cite: SourceCite; count: number }>();
-  for (const contest of candidacyContests) {
-    const lineup = lineupForContest(set!.election.state, contest.id);
-    const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
-    const cite: SourceCite =
-      lineup && canvass
-        ? {
-            kind: "canvass",
-            url: canvass.url,
-            issuedBy: canvass.issuedBy,
-            readAt: canvass.readAt,
-          }
-        : {
-            kind: "filing",
-            url: contest.provenance.sourceUrl ?? null,
-            org: contest.provenance.sourceOrg,
-            collectedAt: contest.provenance.collectedAt,
-          };
-    const key = contestSourceKey(cite);
-    const entry = contestCites.get(key);
-    if (entry) entry.count += 1;
-    else contestCites.set(key, { cite, count: 1 });
-  }
-  const sharedSources: { key: string; marker: string; cite: SourceCite }[] = [];
-  for (const [key, { cite, count }] of contestCites) {
-    if (count > 1) {
-      sharedSources.push({
-        key,
-        marker:
-          FOOTNOTE_MARKERS[MARKER_START + sharedSources.length] ??
-          `${MARKER_START + sharedSources.length + 1}`,
-        cite,
-      });
-    }
-  }
-
   const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
     const lineup = lineupForContest(set!.election.state, contest.id);
     const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
@@ -779,20 +712,6 @@ export default readerRoute("/ballot", async function BallotPage({
     });
     return [contest.id, scope.currentNote] as const;
   }));
-  const scopeNotes = sharedNotesFor(
-    (matched?.contests ?? []).map((contest) => ({ id: contest.id, scopeNote: readerScopeNotes.get(contest.id) ?? null })),
-    MARKER_START + sharedSources.length,
-  );
-
-  const contestSourceRef = (
-    key: string,
-  ): { shared: boolean; marker: string | null; anchor: string | null } => {
-    const index = sharedSources.findIndex((s) => s.key === key);
-    return index === -1
-      ? { shared: false, marker: null, anchor: null }
-      : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
-  };
-
   const earlierFilings = new Map<string, Candidacy[]>();
   for (const candidate of set?.filingCandidacies ?? []) {
     const rows = earlierFilings.get(candidate.contestId) ?? [];
@@ -834,34 +753,25 @@ export default readerRoute("/ballot", async function BallotPage({
         What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
       </h1>
 
-      <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
-        A zip code is orientation, not your exact ballot — zip areas cross
-        town and district lines. Everything below is presented as filed with
-        election authorities, with the filing linked on every item.{" "}
-        <span className="font-medium">We never suggest how to vote.</span>
-      </p>
-
       {zip && (
         <div className="ballot-top-pills">
-          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
-            Moving here? Know the basics →
-          </Link>
-          <BallotAskPill
-            zip={zip}
-            ocdIds={askOcdIds}
-            activeSubjects={askSubjects}
-          />
+          <div className="ballot-address-action">
+            {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
+            <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
+          </div>
+          <div className="ballot-actions">
+            <WhereToVote />
+            <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">About this area</Link>
+            <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+          </div>
         </div>
       )}
 
-      <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
 
       {electionOffices.length > 0 && (
-        <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
-          <h2 className="text-lg font-semibold">Your election offices</h2>
+        <Card title="Your election offices" className="my-6 lg:max-w-3xl" attrs={{ "data-ballot-election-offices": "" }} sources={electionOffices.map(office => ({ what: "Election office contacts", provenance: { sourceUrl: office.url, sourceOrg: office.text, collectedAt: "", verifiedAt: null } }))}>
           {electionOffices.map((office) => (
             <p key={`${office.divisionId}:${office.phone}`}>
               {office.text}
@@ -871,13 +781,10 @@ export default readerRoute("/ballot", async function BallotPage({
                   <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a>
                 </>
               )}
-              <span className="text-paper-dim">
-                {" · as listed on "}
-                <a href={office.url}>{new URL(office.url).hostname.replace(/^www\./, "")}</a>
-              </span>
+
             </p>
           ))}
-        </section>
+        </Card>
       )}
       {[...new Set(askOcdIds.flatMap(id => ocdStateCode(id)?.toUpperCase() ?? []))]
         .filter(state => !(dates && set?.election.state === state)).map(state => {
@@ -888,23 +795,6 @@ export default readerRoute("/ballot", async function BallotPage({
             {registration && <p><a href={registration.url}>{registration.label}</a></p>}
           </section>;
         })}
-      {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
-        <section
-          className="mt-4 rounded-[8px] border border-line bg-panel p-4 t-body leading-relaxed text-voice lg:max-w-3xl"
-          data-ballot-canonical-holding-gaps
-        >
-          <p>
-            The ballot below is complete as filed. A few extras that go with it could not be loaded just now, and each is marked as not loaded where it would appear:
-          </p>
-          <ul className="mt-2 list-disc pl-5">
-            {divisionHoldingUnavailable && <li>the officials and districts that go with this ZIP</li>}
-            {auxiliaryFailures.map((family) => (
-              <li key={family}>{AUXILIARY_READER_LABEL[family]}</li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       {dates &&
         set &&
         (() => {
@@ -1013,14 +903,6 @@ export default readerRoute("/ballot", async function BallotPage({
           );
         })()}
 
-      {set && matched && (
-        <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
-          The contests below are recorded for areas that may overlap this ZIP. Check your address with your election office for the exact ballot.
-          {measureContests.length > 0 &&
-            " Propositions are voted on at the same time."}
-        </p>
-      )}
-
       {!centroid && !zip && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">
           Open this page with a zip, e.g.{" "}
@@ -1059,10 +941,7 @@ export default readerRoute("/ballot", async function BallotPage({
       />
 
       {dates && (
-        <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5 lg:max-w-2xl">
-          <h2 className="t-structure text-paper-dim">
-            Dates that decide whether you can vote
-          </h2>
+        <Card title="Voting dates" className="mt-6 lg:max-w-2xl" sources={[{ what: "Election dates", provenance: { sourceUrl: dates.sourceUrl, sourceOrg: dates.sourceOrg, collectedAt: dates.collectedAt, verifiedAt: null } }]}>
           <ul className="mt-2.5 space-y-1.5">
             {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
 
@@ -1094,60 +973,14 @@ export default readerRoute("/ballot", async function BallotPage({
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-[0.6875rem] text-muted">
-            From the{" "}
-            <a
-              href={dates.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="underline decoration-dotted"
-            >
-              {dates.sourceOrg} official timeline
-            </a>
-            , read {formatDateMDY(dates.collectedAt)}.
-          </p>
-        </section>
-      )}
 
-      {set && matched && certainty && (
-        <JurisdictionNote
-          electionDate={set?.election.date ?? null}
-
-          unplaceable={
-            candidacyContests.filter(
-              (contest) => certainty.certaintyOf(contest.ocdId) === "UNKNOWN",
-            ).length
-          }
-          jurisdictions={[
-            ...new Set(
-              candidacyContests
-                .filter((contest) => certainty.certaintyOf(contest.ocdId) === "AMBIGUOUS")
-
-                .map((contest) => jurisdictionNameFromOcdId(contest.ocdId))
-                .filter((name): name is string => name !== null),
-            ),
-          ]}
-
-          zip={zip ?? ""}
-        />
+        </Card>
       )}
 
       {set && matched && (
       <div className="ballot-office-list">
       {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(set!.election.state, contest.id);
-          const nomineeSourceOrgs = lineup
-            ? [...new Set(lineup.nominees.map(nominee => nomineeProvenance(nominee, contest, set!.election.state).sourceOrg))].join(" and ")
-            : null;
-          const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
-          const sourceRef =
-            lineup && canvass
-              ? contestSourceRef(
-                  `canvass|${canvass.url}|${canvass.issuedBy}|${canvass.readAt}`,
-                )
-              : contestSourceRef(
-                  `filing|${contest.provenance.sourceUrl ?? ""}|${contest.provenance.sourceOrg}|${contest.provenance.collectedAt}`,
-                );
           return (
             <Card
               key={contest.id}
@@ -1159,7 +992,7 @@ export default readerRoute("/ballot", async function BallotPage({
                 ...(contestIndex > 0 && tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId) ? { "data-office-tier-start": "true" } : {}),
                 ...(certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? { "data-could-govern": "true" } : {}),
               }}
-              sources={[{ what: "Candidates and voting instructions", provenance: contest.provenance },
+              sources={[{ what: readerScopeNotes.get(contest.id) ?? "Candidates and voting instructions", provenance: contest.provenance },
                 ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
                 ...(lineup && set.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
                 ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
@@ -1176,20 +1009,6 @@ export default readerRoute("/ballot", async function BallotPage({
                     <JurisdictionMark />
                   )}
 
-                  {(lineup || candidatesOf(set, contest).length > 0) && (
-                    <IncumbencyMarker />
-                  )}
-                  {sourceRef.shared && (
-                    <sup>
-                      <a
-                        href={`#${sourceRef.anchor}`}
-                        title="Source, cited once at the foot of this page"
-                        className="ml-0.5 font-mono text-[0.6875rem] text-muted no-underline hover:text-link"
-                      >
-                        {sourceRef.marker}
-                      </a>
-                    </sup>
-                  )}
                 </h2>
                 {(contest.voteFor !== null || contest.termYears) && <p className="t-eyebrow text-muted">
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
@@ -1210,43 +1029,6 @@ export default readerRoute("/ballot", async function BallotPage({
                   </p>
                 ) : null;
               })()}
-
-              {!sourceRef.shared && (
-                <FilingNote
-                  summary={
-                    lineup
-                      ? `General-election candidates per ${nomineeSourceOrgs}`
-                      : `Candidates as filed with ${contest.provenance.sourceOrg}`
-                  }
-                >
-                  {lineup && !canvass ? <>Official records for these candidates appear in Sources.</> : lineup && canvass ? (
-                    <>
-                      Primary nominees per the{" "}
-                      <a
-                        href={canvass.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        certified primary canvass
-                      </a>{" "}
-                      ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
-                    </>
-                  ) : (
-                    <>
-                      <a
-                        href={contest.provenance.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {contest.provenance.sourceOrg} filing
-                      </a>{" "}
-                      · read {formatDateMDY(contest.provenance.collectedAt)}
-                    </>
-                  )}
-                </FilingNote>
-              )}
 
               <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
 
@@ -1324,7 +1106,6 @@ export default readerRoute("/ballot", async function BallotPage({
                     </li>
                   ))}
                 </ul>
-                <IncumbencyFootnote />
                 {!isFederalContest(contest) && (
                   <StateFundingNote note={STATE_FUNDING_NOTE} />
                 )}
@@ -1340,31 +1121,6 @@ export default readerRoute("/ballot", async function BallotPage({
               ) : (
                 <>
 
-                  {readerScopeNotes.get(contest.id) &&
-                    (scopeNotes.isShared(contest.id) ? (
-                      <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
-                        <a
-                          href="#scope-notes"
-                          className="underline decoration-dotted underline-offset-2 hover:text-link"
-                        >
-                          {scopeNotes.markerFor(contest.id)} see note
-                        </a>
-                      </p>
-                    ) : (readerScopeNotes.get(contest.id)?.length ?? 0) > EXTENDED_MECHANICS_CHARS ? (
-
-                      <details className="mt-1.5" data-scope-note-collapsed>
-                        <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
-                          More info
-                        </summary>
-                        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                          {readerScopeNotes.get(contest.id)}
-                        </p>
-                      </details>
-                    ) : (
-                      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                        {readerScopeNotes.get(contest.id)}
-                      </p>
-                    ))}
                   <ul className="ballot-candidate-grid mt-3.5">
                     {candidatesOf(set, contest).map((cand) => (
                       <li
@@ -1452,8 +1208,7 @@ export default readerRoute("/ballot", async function BallotPage({
                       </li>
                     ))}
                   </ul>
-                  <IncumbencyFootnote />
-                  {!isFederalContest(contest) && (
+                    {!isFederalContest(contest) && (
                     <StateFundingNote note={STATE_FUNDING_NOTE} />
                   )}
 
@@ -1469,7 +1224,6 @@ export default readerRoute("/ballot", async function BallotPage({
               {(earlierFilings.get(contest.id)?.length ?? 0) > 0 && (
                 <details className="mt-5 border-t border-subtle pt-3" data-earlier-filings={contest.id}>
                   <summary className="cursor-pointer t-heading text-paper-dim">Earlier filings ({earlierFilings.get(contest.id)!.length})</summary>
-                  <p className="mt-2 t-detail text-muted">These people appeared in earlier official filings. They are not listed on the current general-election ballot for this contest.</p>
                   <ul className="ballot-candidate-grid mt-3.5">
                     {earlierFilings.get(contest.id)!.map(candidate => {
                       const provenance = candidate.filing?.provenance ?? candidate.provenance;
@@ -1486,7 +1240,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
                             authorityAvailability={authorityAvailability} readerSelection={readerSelection} />}
                         />
-                        <p className="mt-1 t-detail text-muted"><a href={provenance.sourceUrl ?? undefined} className="text-link underline" target="_blank" rel="noreferrer">{provenance.sourceOrg}</a> · read {formatDateMDY(provenance.collectedAt)}</p>
+
                       </li>;
                     })}
                   </ul>
@@ -1497,54 +1251,6 @@ export default readerRoute("/ballot", async function BallotPage({
         })}
       </div>
       )}
-
-      {sharedSources.length > 0 && (
-        <section className="mt-5 border-t border-[var(--panel-border)] pt-3 lg:max-w-2xl">
-          {sharedSources.map((s, i) => (
-            <p
-              key={s.key}
-              id={`source-note-${i}`}
-              className="mt-1 text-[0.6875rem] leading-relaxed text-muted first:mt-0"
-            >
-              <span className="font-mono">{s.marker}</span>{" "}
-              {s.cite.kind === "canvass" ? (
-                <>
-                  Primary nominees per the{" "}
-                  <a
-                    href={s.cite.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-link"
-                  >
-                    certified primary canvass
-                  </a>{" "}
-                  ({s.cite.issuedBy}) · read {formatDateMDY(s.cite.readAt)}
-                </>
-              ) : (
-                <>
-                  <a
-                    href={s.cite.url ?? undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-link"
-                  >
-                    {s.cite.org} filing
-                  </a>{" "}
-                  · read {formatDateMDY(s.cite.collectedAt)}
-                </>
-              )}
-            </p>
-          ))}
-        </section>
-      )}
-
-      {set &&
-        matched &&
-        candidacyContests.some((c) => lineupForContest(set!.election.state, c.id)) && (
-          <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted lg:max-w-2xl">
-            {getGeneralLineup(set!.election.state)?.note}
-          </p>
-        )}
 
       {(
         [
@@ -1570,7 +1276,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
             const measure = measureFor(contest.id);
             return (
-              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (
@@ -1631,10 +1337,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-[0.6875rem] text-muted">
-                      Each part is written from the official analysis below, and
-                      says what it would do — never whether it is a good idea.
-                    </p>
+
                   </details>
                 )}
 
@@ -1674,7 +1377,7 @@ export default readerRoute("/ballot", async function BallotPage({
                 {analysis?.text ? (
                   <details className="mt-2.5">
                     <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
-                      Official analysis — {analysis.sourceOrg}
+                      Official analysis
                     </summary>
                     <p className="t-record mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
                       {analysis.text}
@@ -1682,29 +1385,11 @@ export default readerRoute("/ballot", async function BallotPage({
                   </details>
                 ) : (
                   analysis?.extractionNote && (
-                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      We retrieved this measure&apos;s official analysis but
-                      couldn&apos;t extract its text — read it at the link
-                      below.
-                    </p>
+                    <CardGapContribution id={`measure-analysis-text:${contest.id}`} label="analysis text" />
                   )
                 )}
 
-                {readerScopeNotes.get(contest.id) &&
-                  (scopeNotes.isShared(contest.id) ? (
-                    <p className="mt-2 font-mono text-[0.6875rem] text-muted">
-                      <a
-                        href="#scope-notes"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {scopeNotes.markerFor(contest.id)} see note
-                      </a>
-                    </p>
-                  ) : (
-                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      {readerScopeNotes.get(contest.id)}
-                    </p>
-                  ))}
+                {!measure?.questionText && <CardGapContribution id={`measure-wording:${contest.id}`} label="final ballot wording" />}
 
                 <PickControl
                   contestId={contest.id}
@@ -1763,50 +1448,13 @@ export default readerRoute("/ballot", async function BallotPage({
         <>
 
           {groupAbsences(matched.absences).map((absence) => (
-            <section
-              key={absence.key}
-              className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4 lg:max-w-2xl"
-              data-absence-count={absence.members.length}
-              data-absence-ocd-ids={absence.members.map((record) => record.ocdId).join(" ")}
-            >
+            <Card key={absence.key} title="Ballot records" titleVisible={false} className="mt-5 lg:max-w-2xl" sources={[{ what: "Ballot record search", provenance: absence.provenance }]} attrs={{ "data-absence-count": String(absence.members.length), "data-absence-ocd-ids": absence.members.map(record => record.ocdId).join(" ") }}>
               <p className="t-body leading-relaxed text-paper-dim">
                 {absence.statement}
               </p>
-              <p className="mt-2 text-[0.6875rem] text-muted">
-                <a
-                  href={absence.provenance.sourceUrl ?? undefined}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted underline-offset-2 hover:text-link"
-                >
-                  {absence.provenance.sourceOrg}
-                </a>{" "}
-                · read {formatDateMDY(absence.provenance.collectedAt)}
-              </p>
-            </section>
+            </Card>
           ))}
 
-          {scopeNotes.notes.length > 0 && (
-            <div
-              id="scope-notes"
-              className="mt-6 border-t border-[var(--panel-border)] pt-4 lg:max-w-2xl"
-            >
-              {scopeNotes.notes.map((note) => (
-                <p
-                  key={note.marker}
-                  className="mt-1.5 text-[0.75rem] leading-relaxed text-muted first:mt-0"
-                >
-                  <span aria-hidden="true" className="mr-1 font-mono text-paper-dim">
-                    {note.marker}
-                  </span>
-                  {note.text}{" "}
-                  <span className="text-paper-dim">
-                    (applies to {note.count} contests on this page)
-                  </span>
-                </p>
-              ))}
-            </div>
-          )}
 
         </>
       )}
@@ -1823,7 +1471,7 @@ export default readerRoute("/ballot", async function BallotPage({
           href="/transparency"
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
-          How we handle data
+          What this site collects
         </Link>
       </p>
     </main>

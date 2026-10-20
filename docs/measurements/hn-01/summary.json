@@ -19,9 +19,9 @@
   "peak_initial_source_worker_rss_bytes": 621502464,
   "metered_production_transfer": {
     "reader": {
-      "requests": 855,
-      "requestBytes": 757126,
-      "responseBytes": 3447835
+      "requests": 860,
+      "requestBytes": 761133,
+      "responseBytes": 3476594
     },
     "control-plane": {
       "requests": 13,
@@ -29,8 +29,8 @@
       "responseBytes": 8839
     }
   },
-  "metered_response_bytes": 3456674,
-  "reader_egress_estimate_usd": 0.0003447835,
+  "metered_response_bytes": 3485433,
+  "reader_egress_estimate_usd": 0.00034765940000000003,
   "reader_facts_per_hour_baseline": 0.2916666666666667,
   "production_observed_at": "2026-10-20T12:29:41.449Z",
   "validation_worker_seconds": 170.315,
@@ -47,7 +47,7 @@
   "actual_production_facts_added": 0,
   "blanks_addressed": 422,
   "all_production_wire_bytes_known": false,
-  "metered_request_bytes": 761029,
+  "metered_request_bytes": 765036,
   "checked_source_commit": "77ac3f6e1",
   "real_route_process": {
     "at": "2026-10-20T12:52:27.228819+00:00",
@@ -85,5 +85,47 @@
     "validationWorkerSeconds": 122.615,
     "additionalFactsPerActiveWorkerHour": 293.53852844182984
   },
-  "all_civic_http_requests_including_diagnostic": 5728
+  "all_civic_http_requests_including_diagnostic": 5732,
+  "entrypoint_recheck": {
+    "state": "CO",
+    "checkedGitHead": "d315063a9",
+    "workerProcesses": 1,
+    "requests": 4,
+    "findings": 8,
+    "result": "WORKED",
+    "telemetry": [
+      {
+        "hour": "2026-10-20T13:00:00.000Z",
+        "requests": 5,
+        "bytes": {
+          "reader": 28759,
+          "control-plane": 0
+        },
+        "sent": {
+          "reader": {
+            "requests": 5,
+            "bytes": 4007
+          },
+          "control-plane": {
+            "requests": 0,
+            "bytes": 0
+          }
+        },
+        "byCaller": {
+          "reader: query \u2190 unknown": 28759
+        },
+        "processes": [
+          "route-worker#97229"
+        ],
+        "pid": 97229,
+        "startedMs": 1792504103596,
+        "peakRssBytes": 172064768
+      }
+    ],
+    "vaultOutsideDeployTree": true
+  },
+  "metric_definitions": {
+    "reader_officials": "Published roster entries, including a person once per body when they serve on more than one body.",
+    "database_bytes": "Metered application response bodies from the existing TX counter; the initial baseline response size is unknown."
+  }
 }

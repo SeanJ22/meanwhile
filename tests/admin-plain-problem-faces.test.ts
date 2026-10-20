@@ -19,7 +19,7 @@ test("unknown descriptions become a single durable team repair per cause, not a 
   const repos=createMemoryRepositories(); const r=row("BRAND_NEW_FAILURE");
   await recordUndescribedCauses(repos,[r,r],"2026-10-05T00:00:00Z");
   await recordUndescribedCauses(repos,[r],"2026-10-05T00:01:00Z");
-  const fixes=(await repos.adminConfig.mustRead("current")).value.fixList!;
+  const fixes=(await repos.adminConfig.mustRead("current", { fixList: true })).value.fixList!;
   assert.equal(fixes.length,1); assert.equal(fixes[0].state,"OPEN"); assert.equal(fixes[0].dispatch,undefined);
   assert.equal(hasTechnicalText(fixes[0].says),false); assert.ok(fixes[0].technical?.includes("BRAND_NEW_FAILURE"));
 });

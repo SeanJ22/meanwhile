@@ -24,15 +24,15 @@ import type { CoveredBody } from "../lib/registry/coverage.ts";
 
 const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
 
-
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
+const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
 
 test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c, "07866 is inside this repo's committed geometry");
   assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "AMBIGUOUS");
   assert.equal(
@@ -45,7 +45,7 @@ test("3.2: sampled county and school overlap cannot establish whole-ZIP certaint
 });
 
 test("3.2: at 07866 the two Rockaways and Denville each govern PART — pill", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   for (const id of [
     "ocd-division/country:us/state:nj/county:morris/place:rockaway_borough",
@@ -69,7 +69,7 @@ test("3.7: a qualified whole-area district needs no pill while sampled local div
 });
 
 test("3.8: a sample with no observed crossing still leaves local boundaries uncertain", async () => {
-  const c = await zipCertainty("85701");
+  const c = await sampledZipCertainty("85701");
   assert.ok(c);
   assert.ok(c.partial.length > 0, "a finite sample cannot certify every address in 85701");
   assert.ok(c.partial.every(id => needsPill(c.certaintyOf(id))));
@@ -77,7 +77,7 @@ test("3.8: a sample with no observed crossing still leaves local boundaries unce
 });
 
 test("3.2: an UNMEASURED division gets the pill, never a certainty it never earned", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   assert.equal(
     c.certaintyOf("ocd-division/country:us/state:nj/place:not_a_real_division"),
@@ -91,9 +91,9 @@ test("3.2: an UNMEASURED division gets the pill, never a certainty it never earn
 });
 
 test("3.2: a zip outside our committed geometry resolves to null, not to certainty", async () => {
-  assert.equal(await zipCertainty("99999"), null);
-  assert.equal(await zipCertainty("abc"), null);
-  assert.equal(await zipCertainty(null), null);
+  assert.equal(await sampledZipCertainty("99999"), null);
+  assert.equal(await sampledZipCertainty("abc"), null);
+  assert.equal(await sampledZipCertainty(null), null);
 });
 
 test("3.8: the index states how many zips cross, and it is a real fraction", async () => {
@@ -162,8 +162,7 @@ test("the pill attaches to a BODY, never to a candidate", () => {
 
 test("the pill never gates — the page renders every contest regardless", () => {
   const page = codeOf("app", "ballot", "page.tsx");
-  // `needsPill` may only decide a marker. If it ever decided a filter, a contest would vanish because of where a
-  // reader might live.
+
   assert.doesNotMatch(
     page,
     /\.filter\([^)]*needsPill/,
@@ -178,8 +177,7 @@ test("the pill never gates — the page renders every contest regardless", () =>
 
 test("the session store keeps the OUTCOME, never the address", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
-  // The shape is the guarantee. A field for a house number or a coordinate
-  // would make this a location record, which is the one thing it must not be.
+
   assert.doesNotMatch(
     mod,
     /\b(houseNumber|house_number|lat\??:|lng\??:|latitude|longitude)\b/,
@@ -227,7 +225,7 @@ test("an address scope stays inside its ZIP and selected election date", async (
 });
 
 test("the narrowing surface reads the session before it prompts", () => {
-  /* There is one address form across surfaces, and the session read lives in it. */
+
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
   assert.match(narrowing, /sessionAddressFor\(zip,\s*selection\)/, "it reads the session for this ZIP and selection");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
@@ -239,19 +237,19 @@ test("the narrowing surface reads the session before it prompts", () => {
 });
 
 test("3.3: a statewide office is CERTAIN — every reader at this zip votes in it", async () => {
-  const nj = await zipCertainty("07866");
+  const nj = await sampledZipCertainty("07866");
   assert.ok(nj);
   assert.equal(nj.certaintyOf("ocd-division/country:us/state:nj"), "CERTAIN");
   assert.equal(nj.certaintyOf("ocd-division/country:us"), "CERTAIN");
 
-  const nh = await zipCertainty("03255");
+  const nh = await sampledZipCertainty("03255");
   assert.ok(nh);
   assert.equal(nh.certaintyOf("ocd-division/country:us/state:nh"), "CERTAIN");
 });
 
 test("3.3: a congressional district is NOT statewide and keeps the pill", async () => {
 
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   assert.notEqual(
     c.certaintyOf("ocd-division/country:us/state:nj/cd:11"),
@@ -262,9 +260,9 @@ test("3.3: a congressional district is NOT statewide and keeps the pill", async 
 });
 
 test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
-  // A county sits under `state:nj/` and must never be swept up as statewide.
+
   assert.equal(
     c.certaintyOf("ocd-division/country:us/state:nj/county:morris/place:rockaway_borough"),
     "AMBIGUOUS",

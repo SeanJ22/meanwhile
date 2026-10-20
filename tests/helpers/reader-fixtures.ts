@@ -1,4 +1,3 @@
-
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -13,8 +12,6 @@ import type { Meeting } from "../../lib/sources/types.ts";
 import type { CandidateCardData } from "../../lib/ballot/candidate-cards.ts";
 import type { CandidateLinks } from "../../lib/ballot/candidate-sites.ts";
 import type { CandidateProfilesProjection } from "../../lib/civic-data/manual-projections.ts";
-
-
 
 import { installAbsent, installPromotedValue } from "./promoted-fixtures.ts";
 
@@ -82,6 +79,16 @@ export function recordedMeetingsSnapshot(meetings: readonly Meeting[] = recorded
   };
 }
 
+function withListingId(meeting: Meeting, id: string): Meeting {
+  return {
+    ...meeting,
+    id,
+    ...(meeting.actingBodies ? {
+      actingBodies: meeting.actingBodies.map(row => row.meetingId === meeting.id ? { ...row, meetingId: id } : row),
+    } : {}),
+  };
+}
+
 export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): { meetings: Meeting[]; pairs: [Meeting, Meeting][] } {
   const body = "ocd-division/country:us/state:az/school_district:tucson_unified_district#board";
   const day = (row: Meeting) => row.startsAt.slice(0, 10);
@@ -91,8 +98,7 @@ export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = 
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt)).slice(0, count);
   if (lone.length < count) throw new Error(`only ${lone.length} recorded sittings stand alone on their day`);
   const pairs = lone.map((row): [Meeting, Meeting] => [row, {
-    ...row,
-    id: `${row.id}-second-listing`,
+    ...withListingId(row, `${row.id}-second-listing`),
     provenance: { ...row.provenance, sourceUrl: `${row.provenance.sourceUrl}#second-listing` },
   }]);
   return { meetings: [...meetings, ...pairs.map(([, sibling]) => sibling)], pairs };
@@ -100,7 +106,7 @@ export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = 
 
 export function dateOnlyListings(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): Meeting[] {
   return meetings.filter((row) => row.bodyId?.endsWith("county:pima#governing") && row.id.startsWith("legistar:")).slice(0, count)
-    .map((row) => ({ ...row, id: `${row.id}-date-only`, startsAt: row.startsAt.slice(0, 10), startPrecision: "DAY" as const }));
+    .map((row) => ({ ...withListingId(row, `${row.id}-date-only`), startsAt: row.startsAt.slice(0, 10), startPrecision: "DAY" as const }));
 }
 
 export function syntheticExecutiveActions(officeholderName: string): ExecutiveActionStore {

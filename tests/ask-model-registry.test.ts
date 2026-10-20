@@ -70,7 +70,10 @@ function capture(reply: unknown, servedModel = "claude-served-by-api") {
   const fetchImpl = (async (_url: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
     bodies.push(body);
-    return new Response(JSON.stringify({ model: servedModel, content: [{ type: "text", text: JSON.stringify(reply) }], usage: { input_tokens: 1, output_tokens: 1 } }), { status: 200 });
+    const content = Array.isArray(body.tools) && body.tools.some(tool => tool.name === "answer_reader")
+      ? [{ type: "tool_use", name: "answer_reader", input: { known: true, answer: reply } }]
+      : [{ type: "text", text: JSON.stringify(reply) }];
+    return new Response(JSON.stringify({ model: servedModel, content, usage: { input_tokens: 1, output_tokens: 1 } }), { status: 200 });
   }) as typeof fetch;
   return { bodies, fetchImpl };
 }
@@ -194,7 +197,12 @@ function assertAccepted(body: Record<string, unknown>, model: string, want: "ADA
   if (!caps.adaptiveThinking && want === "ADAPTIVE") assert.equal(thinking, undefined, `${where}: ${model} takes no thinking field`);
   assert.equal(effort !== undefined, caps.effort, `${where}: effort ${effort === undefined ? "missing" : "sent"} on ${model}`);
   assert.ok(!JSON.stringify(body).includes("budget_tokens"), `${where}: no budget_tokens`);
-  for (const forbidden of ["temperature", "top_p", "top_k", "tool_choice"]) assert.ok(!(forbidden in body), `${where}: ${forbidden}`);
+  for (const forbidden of ["temperature", "top_p", "top_k"]) assert.ok(!(forbidden in body), `${where}: ${forbidden}`);
+  if (body.tool_choice) {
+    assert.ok(where.startsWith("unsourced/"), `${where}: unexpected tool choice`);
+    const choice = body.tool_choice as { type: string };
+    assert.equal(choice.type, thinking?.type === "disabled" ? "tool" : "auto", `${where}: a thinking model cannot be forced to choose a tool`);
+  }
   if (caps.alwaysThinks) assert.ok(Number(body.max_tokens) >= ALWAYS_THINKS_MIN_MAX_TOKENS, `${where}: no room for ${model}'s thinking`);
 }
 
@@ -213,7 +221,7 @@ test("the reading rung sends each registry model only what it accepts, and recor
 test("both writing rungs send each registry model only what it accepts, and the ladder records the served model", async () => {
   for (const { id } of ACTIVE_MODELS) {
     for (const effort of ["low", "medium"] as const) {
-      assertAccepted(synthesisRequestBody(pack(), { model: id, cached: true, effort }), id, "ADAPTIVE", `writer/${id}/${effort}`);
+      assertAccepted(synthesisRequestBody(pack(), { model: id, cached: true, effort }), id, id === MODELS.haiku.model ? "OFF" : "ADAPTIVE", `writer/${id}/${effort}`);
     }
     const { fetchImpl } = capture({ answer: "The council next meets on September 15, 2026.", citedSources: [1] }, `${id}-served`);
     const rung: SynthesisRung = { model: id, effort: capsOf(id).effort ? "low" : null, role: "FAST", timeoutMs: 5000 };
@@ -243,9 +251,10 @@ test("the topic classifier sends each registry model only what it accepts (no di
 test("the unsourced fallback sends each registry model only what it accepts", async () => {
   for (const { id } of ACTIVE_MODELS) {
     const { bodies, fetchImpl } = capture("It rains when warm moist air cools.", `${id}-served`);
-    await withEnv({ "ask.fallbackModel": id, "ask.escalationWriterModel": undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
+    const outcome = await withEnv({ "ask.fallbackModel": id, "ask.escalationWriterModel": undefined, ANTHROPIC_API_KEY: "sk-test" }, () =>
       askUnsourced("why is it raining", { fetchImpl }));
     if (bodies.length === 0) continue; /* the ripcord is pulled in this environment: nothing is sent at all */
     assertAccepted(bodies[0], id, "OFF", `unsourced/${id}`);
+    assert.equal(outcome.kind, "UNSOURCED");
   }
 });

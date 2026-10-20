@@ -1,15 +1,6 @@
-/**
- * A Send's budget and an area's budget are HARD caps.
- *
- * Every case runs the real holds on the one shared budget ledger
- * (`BudgetRepository.mutate`, in memory) with fake model transports that
- * count what they were asked to send: a job that would exceed is refused
- * before any request; a follow-up (escalation, pre-warm, a request past the
- * hold) that would exceed is refused before it is sent; N jobs racing for a
- * budget that fits N−1 admit exactly N−1; a failed job keeps its hold, a
- * retry re-reserves, and a crash's hold counts until its window ends; a
- * missing or unreadable budget refuses; and nothing changes with no budget.
- */
+import { assignmentHistoryOf } from "./helpers/spend.ts";
+import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -183,7 +174,7 @@ test("a missing Send record or an unreadable budget refuses; with no Send budget
     now: NOW,
     specs: assignmentBudgetsOf({ scopes: [], intents }),
     membership,
-    charges: [],
+    history: assignmentHistoryOf([], NOW, assignmentBudgetsOf({ scopes: [], intents }), membership),
     worstCaseUsd: WORST,
     intentsReadable: true,
     malformed,
@@ -322,7 +313,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
     return { id: "msg-unpriced", model: asked.model, role: "assistant", content: [{ type: "text", text: "done" }],
       stop_reason: "end_turn", usage: { input_tokens: 100 } } as unknown as ModelResponse;
   };
-  const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
+  const controller = new FleetSafetyController({ now: NOW, spend: aggregatePricedSpend([], new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), NOW), rollingCeilingUsd: 100, clock: () => Date.parse(NOW) });
   const afterResponse = autonomous(spend, scope, { subjectId: PIMA, state: "AZ" },
     controller.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(afterResponse(request()), (error: unknown) =>
@@ -333,7 +324,7 @@ test("a provider response with incomplete usage keeps the durable autonomous are
   assert.equal(held[0].settled, null, "unknown-cost provider processing cannot release its durable area hold");
 
   const { repos: preRepos, spend: preSpend } = holds();
-  const preController = new FleetSafetyController({ now: NOW, charges: [], modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
+  const preController = new FleetSafetyController({ now: NOW, spend: aggregatePricedSpend([], new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), NOW), modelHold: "owner held this lane", clock: () => Date.parse(NOW) });
   const beforeRequest = autonomous(preSpend, scope, { subjectId: PIMA, state: "AZ" },
     preController.guardedModelTransport("anthropic", PIMA, incomplete), (error) => error instanceof FleetPreSendRefusal);
   await assert.rejects(beforeRequest(request()), FleetPreSendRefusal);

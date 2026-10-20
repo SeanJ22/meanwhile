@@ -4,6 +4,7 @@ import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
+import type { FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -15,7 +16,6 @@ import { endOwnedProcessTree } from "../../../scripts/pilot-runtime-child.mts";
 export { workerProcessSlots, type WorkerProcessSlots } from "./worker-slots.ts";
 const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 
-/** Transient tools on this host; leases, costs and publications keep their existing stores. A manual read takes only the asking job's rows. */
 export async function startWorkerToolsHost(input: { repos: FieldManualRepos; browse: BrowseFn }) {
   const token = randomUUID();
   const server = createServer(async (request, response) => {
@@ -27,6 +27,11 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
       const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
+        : message.kind === "manualSources" ? await (()=>{
+          const {scope,url}=message.body as {scope:FieldManualSourceScope;url:string};
+          return input.repos.fieldManual.sourceHints(scope,url);
+        })()
+        : message.kind === "manualRoutes" ? await input.repos.fieldManual.learnedRoutes(message.body as string[])
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));
@@ -68,17 +73,16 @@ export interface LeaseWorkerConfig {
   readonly modelEnabled: boolean;
   readonly searchEnabled: boolean;
   readonly ceilingUsd: number;
-  /** Admin's requests in flight at once to one website; absent, the default. */
+
   readonly hostConcurrency?: number;
   readonly fundedSubjects: readonly string[];
-  /** How long the pool lets this worker process live; set by the pool, not the caller. */
+
   readonly wallMs?: number;
-  /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
+
   readonly nationalPlaces?: readonly NationalPlaceTask[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
 }
 
-/** A read or process failure leaves the existing task owed; it is never a claimed success. */
 export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId, beforeClaim = false): DispatchResult {
   return { obligationId, routeTaskId: taskId, executor: null, executorChosen: null,
     decisionDisagreement: null, executorMismatch: false, claimed: false, outcome: beforeClaim ? "NOT_CLAIMED" : "FAILED",
@@ -87,36 +91,32 @@ export function workerDispatchFailure(taskId: string, error: unknown, obligation
     detail: `Worker task deferred: ${error instanceof Error ? error.message : String(error)}; work remains owed` };
 }
 
-/** A worker the standing lane ended alone: what it held, what it was waiting on, when it last moved. */
 export interface StuckWorker {
   readonly pid: number;
-  /** The task it was working, or null when it was starting up or between tasks. */
+
   readonly taskId: string | null;
-  /** In words: the lane's reply it was waiting for, or its own work. */
+
   readonly waitingOn: string;
   readonly startedAt: string;
   readonly lastMovedAt: string;
   readonly quietMs: number;
-  /** Tasks it finished before it stopped moving. */
+
   readonly tasksDone: number;
 }
 
-/** The standing hunter lane's pool: each worker has its own progress clock, and a worker quiet for `quietMs` is ended alone with its state recorded. New queued tasks join the running pool. */
 export interface StandingPoolOptions {
-  /** Tasks queued since the pool started; each new id joins the pool. Polled about once a second. */
+
   readonly moreTasks?: () => readonly string[];
   readonly quietMs: number;
-  /** A worker older than this takes no further task: it finishes the one it holds and a fresh worker takes its place. */
+
   readonly retireAfterMs?: number;
   readonly onStuck?: (worker: StuckWorker) => void;
-  /** Any message either way: the lane's own progress signal. */
+
   readonly onMoved?: () => void;
 }
 
-/** Standing workers that fail this many times in a row before their first task close the pool's admission. */
 export const STANDING_STARTUP_FAILURES = 3;
 
-/** Only memory admission happens before a child can claim a lease or send a request. */
 class WorkerAdmissionRefusal extends Error {
   constructor(cause: unknown) { super(cause instanceof Error ? cause.message : String(cause), { cause }); }
 }
@@ -154,7 +154,6 @@ export async function runNationalPlaceWorkerProcesses(input: {
   return reports;
 }
 
-/** IPC carries transient provider requests; work, leases and costs stay in the existing repositories. */
 export async function runLeaseWorkerProcesses(input: {
   readonly entry: string;
   readonly deadlineMs?: number;
@@ -164,12 +163,12 @@ export async function runLeaseWorkerProcesses(input: {
   readonly capacity: () => number;
   readonly transportFor: (jurisdiction: AutonomousJurisdiction, taskId: string) => ModelTransport;
   readonly searchFor?: (subjectId: string) => ScoutToolContext["search"];
-  /** The paid-search budget the Exa agent lane takes a slot from in this process. */
+
   readonly searchBudget?: SearchBudget;
   readonly onStarted?: (pid: number) => void;
-  /** A worker process ended: how, in a few words (its exit, or why it was ended). */
+
   readonly onExited?: (pid: number, why: string) => void;
-  /** Read current place priority before the next existing lease is claimed. */
+
   readonly orderPending?: (ids: readonly string[]) => Promise<readonly string[]>;
   readonly onDispatched?: (result: DispatchResult) => void | Promise<void>;
   readonly route?: { readonly tool: (name: string, args: readonly unknown[]) => Promise<unknown> };
@@ -178,7 +177,7 @@ export async function runLeaseWorkerProcesses(input: {
     readonly publishElection: ElectionPublisher;
     readonly onResult: (report: NationalPlaceReport) => void | Promise<void>;
   };
-  /** The standing lane's per-job clocks and live queue; the round's waves leave it unset. */
+
   readonly standing?: StandingPoolOptions;
 }): Promise<DispatchResult[]> {
   const timeoutMs = input.childTimeoutMs ?? 10 * 60_000;
@@ -187,7 +186,7 @@ export async function runLeaseWorkerProcesses(input: {
   if (standing !== null && (!Number.isSafeInteger(standing.quietMs) || standing.quietMs <= 0)) throw new Error("WORKER_QUIET_LIMIT_INVALID");
   const results: DispatchResult[] = [];
   const pending = new Set(input.config.taskIds);
-  /* Standing: every id this pool has held, so a finished task never rejoins; and the task each live worker is on. */
+
   const seen = new Set(input.config.taskIds);
   const inFlight = new Map<string, number>();
   const assigned = new Set<string>();
@@ -201,11 +200,11 @@ export async function runLeaseWorkerProcesses(input: {
     const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs)
       .catch(error => { throw new WorkerAdmissionRefusal(error); });
     try {
-    // Acquiring host memory can wait until a sibling has drained this wave.
+
     if (!pending.size) return;
     const ready = [...pending].filter(id => !assigned.has(id));
     const ordered = input.config.nationalPlaces && input.orderPending ? await input.orderPending(ready) : ready;
-    // Memory admission can queue several launches. Re-check after the asynchronous ranking read.
+
     const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
     if (!pending.size || (input.config.nationalPlaces && nextId === undefined)) return;
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
@@ -238,7 +237,7 @@ export async function runLeaseWorkerProcesses(input: {
     };
     const remainingWorkMs = () => Math.min(timeoutMs - (Date.now() - startedAt - batchWaitedMs), (input.deadlineMs ?? Infinity) - Date.now() + batchWaitedMs);
     armKill(remainingWorkMs());
-    /* Standing: this worker's own clock. Any message either way renews it; quiet past the limit ends this worker alone. */
+
     let lastMovedAt = startedAt;
     let current: string | null = null;
     let tasksDone = 0;
@@ -267,8 +266,7 @@ export async function runLeaseWorkerProcesses(input: {
     };
     const reply = (payload: { id: string; body?: unknown; error?: unknown }): void => {
       asked.delete(payload.id);
-      /* An answer that cannot reach a worker already exiting (EPIPE) is not the worker's failure: its exit, after the
-         results it sent, decides what it finished. Without the callback the send error ended it and dropped those results. */
+
       if (child.connected) { child.send(payload, () => {}); moved(); }
     };
     const offset = (launched - 1) % ids.length;
@@ -294,7 +292,7 @@ export async function runLeaseWorkerProcesses(input: {
         return;
       }
       if (message.kind === "finished") {
-        /* A retired standing worker tried none of its remaining ids; they stay for a fresh worker. */
+
         if (!retired) for (const id of message.body as string[]) if (!inFlight.has(id)) pending.delete(id);
         return;
       }
@@ -386,7 +384,7 @@ export async function runLeaseWorkerProcesses(input: {
     child.once("exit", code => {
       clearTimeout(killTimer);
       clearTimeout(quietTimer);
-      /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
+
       if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
 
       if (standing !== null && current !== null && (terminationError || code !== 0)) {
@@ -402,7 +400,7 @@ export async function runLeaseWorkerProcesses(input: {
         if (terminationError) reject(terminationError);
         else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
       };
-      // Do not release the memory reservation while tree termination is still in flight.
+
       if (terminating) void terminating.then(finish, reject); else finish();
     });
     }); } finally { release?.(); }
@@ -410,7 +408,7 @@ export async function runLeaseWorkerProcesses(input: {
   const joinQueued = (): void => {
     for (const id of standing?.moreTasks?.() ?? []) if (!seen.has(id)) { seen.add(id); pending.add(id); }
   };
-  /* Standing: another worker while tasks wait that no idle worker can take. A worker waiting on memory counts as idle. */
+
   const standingWants = (capacity: number): boolean => {
     const waiting = [...pending].filter(id => !inFlight.has(id)).length;
     return active.size < capacity && waiting > active.size - inFlight.size;
@@ -419,15 +417,14 @@ export async function runLeaseWorkerProcesses(input: {
   while (pending.size) {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
-    // Every child drains the shared task list. A finished child needs no replacement;
-    // siblings may still own the remaining leases when their result is in transit.
+
     while (!admissionClosed && (input.config.nationalPlaces
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
       : standing !== null ? standingWants(capacity) : launched < capacity)) {
       launched++;
       const ids = [...pending];
       const worker = launch().catch(error => {
-        /* Standing: a memory wait that ran out keeps the work queued for the next admission; a closed lane closes admission. */
+
         const memoryWait = standing !== null && error instanceof WorkerAdmissionRefusal && /WORKER_MEMORY_DEADLINE/.test(error.message);
         if (error instanceof WorkerAdmissionRefusal && !memoryWait) admissionClosed = true;
         if (standing !== null && startupFailures >= STANDING_STARTUP_FAILURES) admissionClosed = true;

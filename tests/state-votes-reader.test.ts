@@ -1,3 +1,4 @@
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -11,8 +12,8 @@ import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
 import type { CardSource } from "../lib/officials/card-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { normalize, rowsToPeople } from "../lib/sources/plural/index.ts";
-import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { mergePluralVotes, pluralVotesScope, PLURAL_VOTES_SOURCE, type PluralVoteFact } from "../lib/sources/plural/votes.ts";
+
+import { pluralVotesScope, PLURAL_VOTES_SOURCE, type PluralVoteFact } from "../lib/sources/plural/votes.ts";
 import { legiscanVotesScope } from "../lib/sources/legiscan/votes.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../lib/state-rollcalls/reader-votes.ts";
 import { officialStateVotesRenderToReader, stateVoteStateForMember } from "../lib/state-rollcalls/reader-vote-visibility.ts";
@@ -27,21 +28,12 @@ import { readerText } from "./helpers/reader-markup.ts";
 import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
-
-
-
-
-
-
-
-
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
-
 
 interface Sample {
   state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string;
@@ -108,7 +100,7 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
     const parsed = await parsePluralBulkSession(sample.state, sample.session, bytes, {
       requestedUrl: sample.sourceUrl, finalUrl: sample.sourceUrl, body: "", sha256: sample.fixtureArchiveSha256, retrievedAt: manifest.capturedAt,
     });
-    const projection = mergePluralVotes(sample.state, null, parsed.votes);
+    const projection = { formatVersion: 1 as const, state: sample.state.toUpperCase(), rollCalls: parsed.votes };
     assert.equal(projection.rollCalls.length, 1, `${sample.state}: ${JSON.stringify(parsed.held)}`);
     assert.ok(sample.personSource);
     const people = rowsToPeople(readFileSync(new URL(sample.personSource.fixture, fixtureRoot), "utf8"), sample.state.toLowerCase());

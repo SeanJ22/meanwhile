@@ -113,7 +113,7 @@ export function validateAnswer(
 
   checked.push("temporal-consistency");
   const dated = pack.records.filter((r) => r.occurredAt).map((r) => Date.parse(r.occurredAt!));
-  const now = Date.parse(pack.today);
+  const now = Date.parse(pack.asOf ?? pack.today);
   if (dated.length > 0 && Number.isFinite(now)) {
     if (pack.temporal.kind === "LAST" && dated.every((d) => d > now)) {
       failed.push("past-question-answered-with-future-records");

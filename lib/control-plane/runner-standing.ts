@@ -12,7 +12,6 @@ export interface RunnerCycle {
 
 export type CycleHeartbeat = RunnerHeartbeat & { readonly cycle: RunnerCycle };
 
-/** Old runners have no cycle metadata; malformed readings never imply a live child. */
 export function runnerCycleOf(value: unknown): RunnerCycle | null {
   if (!value || typeof value !== "object") return null;
   const cycle = value as Partial<RunnerCycle>;
@@ -28,14 +27,13 @@ export function runnerCycleOf(value: unknown): RunnerCycle | null {
     lastError: cycle.lastError?.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s]+/gi, "[redacted URL]") ?? null };
 }
 
-/** A live process beat does not invent a finished round or any source delivery. */
 export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;
   readonly finishedAt?: string; readonly exitCode?: number | null; readonly signal?: string | null;
   readonly lastError?: string | null;
-  /** The host's memory at this beat; a beat that could not read it keeps the last reading, which carries its own time. */
+
   readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
-  /** Neon bytes by caller; a beat without a reading keeps the last one, which names its hour. */
+
   readonly neonBytes?: RunnerHeartbeat["neonBytes"];
 }): CycleHeartbeat {
   return {
@@ -47,6 +45,7 @@ export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
     lastCycleFinishedAt: input.finishedAt ?? previous?.lastCycleFinishedAt ?? null,
     lastCycleOk: input.finishedAt ? input.exitCode === 0 : previous?.lastCycleOk ?? null,
     nextCycleDueAt: input.finishedAt ? previous?.nextCycleDueAt ?? null : null,
+    nextCycleReason:input.finishedAt?previous?.nextCycleReason??null:null,
     testedSha: input.testedSha, host: input.host, pause: null,
     cycle: { startedAt: input.startedAt, finishedAt: input.finishedAt ?? null,
       exitCode: input.exitCode ?? null, signal: input.signal ?? null, lastError: input.lastError ?? null },
@@ -66,7 +65,7 @@ export interface RunnerStanding {
     readonly since: string;
     readonly note: string | null;
     readonly by: string;
-    /** The runner wrote an acknowledgement (HONORED record or a pause-carrying beat). */
+
     readonly acknowledged: boolean;
   } | null;
   readonly control: "PAUSE_RUNNER" | "RESUME_RUNNER";

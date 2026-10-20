@@ -1,9 +1,4 @@
-/**
- * Turns each attempt that used a reusable method into fix-map rows. An attempt that could not tell writes nothing. A
- * failed write is counted and returned, never thrown into the attempt it describes.
- */
-
-import { applyFixResult, latestWorking, methodWorksOf, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
+import { applyFixResult, latestWorking, methodWorksOf, methodStatistics, type FixMapRepository, type FixMapRow } from "./fix-map.ts";
 
 export const ATTEMPT_KINDS = ["SCOUT", "DETECTIVE", "ROUTE_RUN", "ACQUIRER_VERDICT", "AUDIT"] as const;
 export type AttemptKind = (typeof ATTEMPT_KINDS)[number];
@@ -74,7 +69,11 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
   return {
     rows: () => [...rows.values()],
     forPlace: async (placeId) => [...rows.values()].filter((r) => r.placeId === placeId).sort((a, b) => (a.methodId < b.methodId ? -1 : 1)),
-    forMethod: async (methodId) => [...rows.values()].filter((r) => r.methodId === methodId).sort((a, b) => (a.placeId < b.placeId ? -1 : 1)),
+    forPlaces: async (methodId, placeIds) => [...new Set(placeIds)].sort().flatMap(placeId => {
+      const row = rows.get(key({ methodId, placeId }));
+      return row ? [row] : [];
+    }),
+    statistics: async (methodId, recentSince, before) => methodStatistics([...rows.values()].filter(row => row.methodId === methodId), recentSince, before),
     worksFor: async (methodIds) => methodWorksOf([...rows.values()], methodIds),
     workingMethods: async (limit = 200) => latestWorking([...rows.values()], limit),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },

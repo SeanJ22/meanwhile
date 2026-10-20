@@ -603,7 +603,7 @@ export function AskBox({
         </p>
       )}
 
-      {asked && digest && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && (
+      {asked && digest && !grounded?.answer && !grounded?.aiAnswer && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && (
         <DigestAnswer
           digest={digest}
           coverage={coverage}
@@ -612,7 +612,7 @@ export function AskBox({
         />
       )}
 
-      {asked && asked.destination && !grounded?.confirmation && !grounded?.clarification && (
+      {asked && asked.destination && !grounded?.answer && !grounded?.aiAnswer && !grounded?.confirmation && !grounded?.clarification && (
         <div
           data-ask-destination={asked.destination.destination.id}
           className="mt-3 rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
@@ -710,7 +710,7 @@ export function AskBox({
             </p>
           )}
 
-          {grounded.mode === "UNRESOLVED" && (
+          {grounded.mode === "UNRESOLVED" && !grounded.answer && (
             <p
               data-ask-grounded-state="UNRESOLVED"
               className="t-body leading-relaxed text-voice"
@@ -732,11 +732,15 @@ export function AskBox({
             </p>
           )}
 
-          {grounded.answer && !grounded.agendaLead && (
+          {grounded.answer && (
             <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
           )}
+          {grounded.aiAnswer && <div className="mt-2 t-body leading-relaxed" data-ask-ai-answer>
+            <p className="t-caption text-muted">AI answer</p>
+            <p>{grounded.aiAnswer}</p>
+          </div>}
 
           {/* Keyed on record body ids, never on names in the prose. */}
           <AnswerBodies
@@ -768,9 +772,9 @@ export function AskBox({
           {[...new Map((grounded.records ?? []).flatMap(record => record.fecProfile ? [[record.fecProfile.candidateId, record.fecProfile] as const] : [])).values()].map(profile => (
             <p key={profile.candidateId} className="mt-2 t-detail"><a href={`/candidates/${profile.candidateId}`} className="text-link underline underline-offset-2">{profile.name} · Profile and campaign money</a></p>
           ))}
-          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={grounded.agendaLead} prose={grounded.agendaLead ? grounded.answer : null} />
+          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={!grounded.answer && grounded.agendaLead} />
 
-          {gapsNotInAnswer(grounded.answer, grounded.gaps ?? []).map((g) => (
+          {(!grounded.answer ? gapsNotInAnswer(grounded.answer, grounded.gaps ?? []) : []).map((g) => (
             <p
               key={g.statement}
               data-ask-gap={g.whose}
@@ -1021,11 +1025,14 @@ function AnswerBodies({
     if (seen.has(id)) continue;
     seen.add(id);
     /* Matches a registry body id or a division whose governing body the payload carries. */
-    const body =
+    const matched =
       coverage.bodies.find((b) => b.bodyId === id) ??
       coverage.bodies.find(
         (b) => b.ocdId === id && (b.bodyId === `${id}#governing` || b.bodyId === `${id}#board`),
       );
+    const body = matched && grounded.subject?.kind === "BODY" && matched.bodyId === subjectId
+      ? { ...matched, name: grounded.subject.name }
+      : matched;
     if (body) rows.push(body);
   }
 

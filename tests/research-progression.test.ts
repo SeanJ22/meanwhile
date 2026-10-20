@@ -16,7 +16,7 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
     const run = await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
     assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const result=projectResearchProgression({...window,activities});
   assert.equal(result.scope.obligations,1);
   assert.equal(result.milestones.discovered.newlyReached,1);
@@ -40,7 +40,7 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
 
 test("uncommitted output and later evidence never manufacture earlier-window progress",async()=>{
   const h=await autonomousHarness(); await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:window.through}))[0];
+  const activity=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through}))[0];
   const record=activity.facts.workers[0];
   const broken=projectAutonomousActivity({...activity.facts,attempts:activity.facts.attempts.map(a=>a.id===record.attemptId?{...a,outcome:null,endedAt:null}:a)},{observedAt:window.through});
   const refused=projectResearchProgression({...window,activities:broken});
@@ -57,7 +57,7 @@ test("uncommitted output and later evidence never manufacture earlier-window pro
 test("a real worker wall remains a reusable bottleneck with its obligation and history retained",async()=>{
   const h=await autonomousHarness({response:{transportError:"timeout"}});
   await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const report=projectResearchProgression({...window,activities});
   assert.equal(report.milestones.acquired.newlyReached,0);
   const wall=report.bottlenecks.find(b=>b.code==="SOURCE_CURRENTLY_WALLED");
@@ -71,7 +71,7 @@ test("a real worker wall remains a reusable bottleneck with its obligation and h
 
 test("reopening is interval-scoped, and promoted or reader-visible counts are never invented",async()=>{
   const h=await autonomousHarness();
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const at="2026-09-03T18:30:00.000Z";
   const changed=activities.map(a=>({...a,workItem:{...a.workItem,transitions:[...a.workItem.transitions,{from:"VERIFIED_COMPLETE" as const,to:"REOPENED" as const,at,by:"method-reopening",why:"New applicable method; prior proof preserved"}]}}));
   const report=projectResearchProgression({...window,activities:changed});

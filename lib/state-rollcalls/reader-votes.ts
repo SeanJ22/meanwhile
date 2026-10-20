@@ -1,6 +1,8 @@
 import { readStateMemberVoteSnapshot } from "./member-votes.ts";
-import { readPluralVotesForPerson, pluralVotesScope, type PluralVoteFact } from "../sources/plural/votes.ts";
-import { readLegiscanVotesForPerson, legiscanVotesScope } from "../sources/legiscan/votes.ts";
+import { pluralVotesScope, type PluralVoteFact } from "../sources/plural/votes.ts";
+import { readPluralVotesForPerson } from "../sources/plural/vote-reader.ts";
+import { legiscanVotesScope } from "../sources/legiscan/votes.ts";
+import { readLegiscanVotesForPerson } from "../sources/legiscan/vote-reader.ts";
 import { OFFICIAL_STATE_VOTE_SCOPES, readOfficialStateVotesProjection } from "../sources/legiscan/snapshot.ts";
 import { LEGISCAN_ATTRIBUTION, stateRollPublisher, type StateVotesSnapshot } from "../sources/legiscan/types.ts";
 import { officialStateRollCallTargetByState, type OfficialStateVoteScope } from "./authority.ts";

@@ -110,6 +110,39 @@ test("a partial source update retains the older amount's filing and capture in S
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
+test("a failed daily source check stays due for the next hour and keeps verified totals",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-daily-retry-"));
+  let now=at,unavailable=false;
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>unavailable?new Response("Unavailable",{status:404}):Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:1792454400}:[{...raw,contributions_amount:"100"}])};
+  try{
+    await publishPerson(db,person);await refreshCampaignMoneyState(options);
+    now="2026-10-21T12:00:00.000Z";unavailable=true;
+    await refreshCampaignMoneyState(options);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1);
+    const held=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records[0];
+    assert.equal(held.totals.find(total=>total.label==="Contributions")?.amount,100);
+    unavailable=false;now="2026-10-21T13:00:00.000Z";await refreshCampaignMoneyState(options);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T14:00:00.000Z")).length,0);
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
+test("a held source document without a filing period cannot become cycle totals",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-held-period-"));
+  const held={dataClass:"STATE_COMMITTEE",jurisdiction:"WA",filingState:"FILED",committeeId:"committee",registeredName:"Filed committee",agency:"Washington Public Disclosure Commission",
+    candidateNameAsFiled:person.name,officeSought:person.office,electionYear:2026,targetKeys:[person.id],filingsUrl:capture.url,checkedAt:at.slice(0,10),
+    provenance:{sourceUrl:capture.url,collectedAt:at,verifiedAt:at},match:{allThreeAgree:true},totals:{receipts:100,expenditures:0,cashOnHand:null,coveringPeriod:null as string|null}};
+  const save=async(kind:string)=>{await db.query("DELETE FROM civic_data_promotions WHERE scope='US-WA:campaign-finance'");await db.query("INSERT INTO civic_data_promotions VALUES('CURATED_READER_RECORD','US-WA:campaign-finance','held-period',$1)",[JSON.stringify({records:[{kind,ocdId:person.division,record:held}]})]);};
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>at,fetch:async()=>new Response("Unavailable",{status:404})};
+  try{
+    await publishPerson(db,person);await save("CAMPAIGN_FINANCE_DOCUMENT");await refreshCampaignMoneyState(options);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,0);
+    held.totals.coveringPeriod="2026 election cycle";await save("CAMPAIGN_FINANCE_FILING");await refreshCampaignMoneyState(options);
+    const records=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records;
+    assert.equal(records[0]?.totals.find(total=>total.label==="Receipts")?.amount,100);
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
 test("two ID-less filed committees remain distinct and a named committee never owns another person's money",async()=>{
   const db=await campaignDb();
   try {

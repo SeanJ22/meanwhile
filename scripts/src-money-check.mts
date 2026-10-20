@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {AsyncLocalStorage} from "node:async_hooks";
 import {spawnSync} from "node:child_process";
 import {randomBytes} from "node:crypto";
 import {readFile,writeFile} from "node:fs/promises";
@@ -39,17 +40,21 @@ assert.notEqual(new URL(test).hostname.replace("-pooler",""),new URL(production)
 process.env.SRC_MN_TEST_DATABASE_URL=test;
 process.env.DATABASE_URL=production;process.env.WTP_DB_ROLE="production";process.env.WTP_VITAL_SIGNS_REPORT="1";
 const reportPath=process.env.SRC_MN_CHECK_REPORT??"/tmp/src-mn-ready2-publisher-results.json",schemaPath="/tmp/src-mn-ready2-publisher-schema.json";
-let productionResponseBytes=0,testResponseBytes=0,testRequestBytes=0;
+let productionResponseBytes=0;
+const databaseScope=new AsyncLocalStorage<"reader"|"control">();
+const traffic={reader:{read:0,sent:0},control:{read:0,sent:0}};
 neonConfig.fetchFunction=async(input:RequestInfo|URL,init?:RequestInit)=>{
   const response=await fetch(input,init);if(!response.body)return response;
   return new Response(response.body.pipeThrough(new TransformStream({transform(bytes,controller){productionResponseBytes+=bytes.byteLength;controller.enqueue(bytes);}})),{status:response.status,statusText:response.statusText,headers:response.headers});
 };
 class MeasuredSocket extends WebSocket{
+  readonly database:"reader"|"control";
   constructor(url:string|URL,protocols?:string|string[]){
     super(url,protocols);
-    this.addEventListener("message",event=>{const value=event.data;testResponseBytes+=typeof value==="string"?Buffer.byteLength(value):value.byteLength??value.size??0;});
+    this.database=databaseScope.getStore()??"reader";
+    this.addEventListener("message",event=>{const value=event.data;traffic[this.database].read+=typeof value==="string"?Buffer.byteLength(value):value.byteLength??value.size??0;});
   }
-  override send(value:Parameters<WebSocket["send"]>[0]){testRequestBytes+=typeof value==="string"?Buffer.byteLength(value):value instanceof Blob?value.size:value.byteLength;super.send(value);}
+  override send(value:Parameters<WebSocket["send"]>[0]){traffic[this.database].sent+=typeof value==="string"?Buffer.byteLength(value):value instanceof Blob?value.size:value.byteLength;super.send(value);}
 }
 neonConfig.webSocketConstructor=MeasuredSocket;
 const selectedPeople=process.env.SRC_MN_CHECK_PERSON_IDS?.split(",");
@@ -63,7 +68,7 @@ assert.match(schema,/^src_mn_ready2_[a-f0-9]{12}$/);
 const url=new URL(test);url.searchParams.set("options",`-c search_path=${schema}`);url.searchParams.set("application_name",schema);
 const pool=new Pool({connectionString:url.href,max:1,connectionTimeoutMillis:15000});
 pool.on("error",()=>console.warn("An idle private test connection closed; the pool will replace it."));
-const query:Query=async(text,params=[])=>{const result=await pool.query(text,[...params]);return result.rows;};
+const query:Query=(text,params=[])=>databaseScope.run("reader",async()=>{const result=await pool.query(text,[...params]);return result.rows;});
 const [identity]=await query("SELECT current_setting('neon.branch_id',true) AS branch,current_user");
 assert.ok(identity.branch && identity.branch!==role.branch);assert.notEqual(identity.current_user,"readonly");
 if(!state){
@@ -83,16 +88,25 @@ if(!state){
       const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:{...process.env,SRC_MN_AUDIT_SCHEMA:schema}});
       if(child.status!==0)throw new Error(`${source.state}: ${child.stderr.slice(-2000)}`);
       rows.push(JSON.parse(child.stdout.trim().split("\n").at(-1)!));
-      await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),schema,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:testResponseBytes,controllerTestRequestBytes:testRequestBytes,rows},null,2));
+      await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),schema,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:traffic.reader.read,controllerTestRequestBytes:traffic.reader.sent,rows},null,2));
       console.log(JSON.stringify(rows.at(-1)));
     }
   }finally{await pool.end();}
 }else{
+  const controlUrl=new URL(test),controlSchema=`${schema}_control`;
+  controlUrl.searchParams.set("options",`-c search_path=${controlSchema}`);controlUrl.searchParams.set("application_name",controlSchema);
+  const controlPool=new Pool({connectionString:controlUrl.href,max:1,connectionTimeoutMillis:15000});
+  controlPool.on("error",()=>console.warn("An idle private control connection closed; the pool will replace it."));
+  const controlQuery:Query=(text,params=[])=>databaseScope.run("control",async()=>{const result=await controlPool.query(text,[...params]);return result.rows;});
+  const [controlIdentity]=await controlQuery("SELECT current_setting('neon.branch_id',true) AS branch,current_user");
+  assert.equal(controlIdentity.branch,identity.branch);assert.notEqual(controlIdentity.current_user,"readonly");
+  await controlQuery(`CREATE SCHEMA IF NOT EXISTS ${controlSchema}`);
+  assert.equal((await controlQuery("SELECT current_schema() AS name"))[0].name,controlSchema);
   const [{pgAggregateRepository},{BOOTSTRAP_DDL}]=await Promise.all([
     import("../lib/control-plane/repository/pg-store.ts"),import("../lib/control-plane/repository/pg-schema.ts"),
   ]);
-  for(const statement of BOOTSTRAP_DDL)if(/^CREATE TABLE IF NOT EXISTS cp_doors\s*\(/.test(statement))await query(statement);
-  const doors=pgAggregateRepository<import("../lib/doors/registry.ts").DoorRecord>({query},"Door","cp_doors");
+  for(const statement of BOOTSTRAP_DDL)if(/^CREATE TABLE IF NOT EXISTS cp_doors\s*\(/.test(statement))await controlQuery(statement);
+  const doors=pgAggregateRepository<import("../lib/doors/registry.ts").DoorRecord>({query:controlQuery},"Door","cp_doors");
   const started=performance.now(),people=await readCampaignMoneyPeople(productionQuery,state);
   const size=async()=>Number((await query("SELECT coalesce(sum(pg_total_relation_size(c.oid)),0) AS bytes FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname=$1 AND c.relkind IN ('r','m')",[schema]))[0].bytes);
   try{
@@ -125,7 +139,10 @@ if(!state){
       assert.ok(apiMs<3000 && readerMs<3000 && (personApiMs??0)<3000,`${state} money reads exceeded three seconds`);
     }
     const [counts]=await query("SELECT count(*) FILTER(WHERE field LIKE 'campaign-money:%') AS rows,count(*) FILTER(WHERE field LIKE 'campaign-cycle:%') AS cycles FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.state=$1 AND f.status='live'",[state]);
-    console.log(JSON.stringify({...result.report.records[0],privateRawRows:Number(counts.rows),privateCycleSummaries:Number(counts.cycles),productionBytesRead:productionResponseBytes,productionBytesWritten:0,testRequestBytes,testResponseBytes,testDatabaseGrowthBytes:(await size())-before,readerMs,apiMs,personApiMs,bulkDownloads,
+    const after=await size();
+    assert.ok(traffic.control.read>0 && traffic.reader.read>0,"Both private database connections must be measured");
+    console.log(JSON.stringify({...result.report.records[0],privateRawRows:Number(counts.rows),privateCycleSummaries:Number(counts.cycles),productionBytesRead:productionResponseBytes,productionBytesWritten:0,testRequestBytes:traffic.reader.sent+traffic.control.sent,testResponseBytes:traffic.reader.read+traffic.control.read,
+      readerResponseBytes:productionResponseBytes+traffic.reader.read,readerRequestBytes:traffic.reader.sent,controlResponseBytes:traffic.control.read,controlRequestBytes:traffic.control.sent,testDatabaseGrowthBytes:after-before,readerMs,apiMs,personApiMs,bulkDownloads,
       readerDescription:read.records.length?`${read.records[0].person.name}: ${read.records[0].cycle} cycle totals and ${read.records[0].donors?.length??0} named contributors on this page`:'We\'re working on getting this info',elapsedMs:performance.now()-started,peakRssBytes:process.resourceUsage().maxRSS*1024}));
-  }finally{installFactReader(undefined);await pool.end();}
+  }finally{installFactReader(undefined);await controlPool.end();await pool.end();}
 }

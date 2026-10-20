@@ -134,10 +134,11 @@ async function importHeldCampaignMoney(options:StateRefreshOptions,people:readon
     for(let offset=0;;offset+=500){
       const records=await options.query(`WITH held AS MATERIALIZED (
         SELECT p.scope,p.current_version_id,r.ordinal_index,CASE WHEN p.record_class='CURATED_READER_RECORD' THEN reader_payload_node(r.item)->'record' ELSE r.item END AS money,
-          CASE WHEN p.record_class='CURATED_READER_RECORD' THEN reader_payload_node(r.item)->>'ocdId' END AS ocd_id
+          CASE WHEN p.record_class='CURATED_READER_RECORD' THEN reader_payload_node(r.item)->>'ocdId' END AS ocd_id,
+          CASE WHEN p.record_class='CURATED_READER_RECORD' THEN reader_payload_node(r.item)->>'kind' END AS record_kind
         FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'records') r
         WHERE p.record_class='STATE_CAMPAIGN_FINANCE' AND p.scope LIKE $1||':%' OR p.record_class='CURATED_READER_RECORD' AND p.scope=$1
-      ) SELECT h.current_version_id,reader_payload_value(h.money) AS record,w.id AS person_id,h.ocd_id
+      ) SELECT h.current_version_id,reader_payload_value(h.money) AS record,w.id AS person_id,h.ocd_id,h.record_kind
         FROM held h,jsonb_to_recordset($2::jsonb) w(id text,name text,aliases jsonb)
         WHERE lower(trim(regexp_replace(CASE WHEN reader_payload_node(h.money)->>'candidateNameAsFiled' LIKE '%,%' THEN split_part(reader_payload_node(h.money)->>'candidateNameAsFiled',',',2)||' '||split_part(reader_payload_node(h.money)->>'candidateNameAsFiled',',',1) ELSE reader_payload_node(h.money)->>'candidateNameAsFiled' END,'[^a-zA-Z0-9]+',' ','g')))=w.name
           OR EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(h.money)->'targetKeys') k WHERE w.aliases ? (k.item#>>'{}'))
@@ -145,7 +146,7 @@ async function importHeldCampaignMoney(options:StateRefreshOptions,people:readon
       for(const held of records){
         const person=byId.get(String(held.person_id))!;
       const record=held.record as StateMoneyRecord;
-      if(record.jurisdiction!==options.state || held.ocd_id && held.ocd_id!==person.division || record.filingState!=="FILED" || !record.committeeId || !record.registeredName || !record.filingsUrl || !record.provenance.verifiedAt ||
+      if(record.dataClass!=="STATE_COMMITTEE" || held.record_kind && held.record_kind!=="CAMPAIGN_FINANCE_FILING" || typeof record.totals.coveringPeriod!=="string" || !record.totals.coveringPeriod.trim() || record.jurisdiction!==options.state || held.ocd_id && held.ocd_id!==person.division || record.filingState!=="FILED" || !record.committeeId || !record.registeredName || !record.filingsUrl || !record.provenance.verifiedAt ||
         !record.match.allThreeAgree || campaignName(record.candidateNameAsFiled)!==campaignName(person.name) || campaignOffice(record.officeSought??"")!==campaignOffice(person.office) || record.electionYear<2020)continue;
       if(person.division!==campaignStateOcd(options.state) && !record.targetKeys.some(key=>key===person.id || person.aliases?.includes(key)) && record.detailSource?.ocdId!==person.division)continue;
       const dates=record.totals.coveringPeriod?.match(/\b(?:19|20)\d{2}\b/g)?.map(Number)??[record.electionYear];
@@ -248,7 +249,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     const batch=due.slice(start,start+500),held=await facts.query("SELECT DISTINCT f.entity_id FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live' AND f.value#>>'{person,name}'=e.name",[batch.map(person=>person.id)]);
     const withMoney=new Set(held.map(row=>String(row.entity_id)));found+=withMoney.size;
     await facts.query(`INSERT INTO pass_cursor(name,position) SELECT name,position FROM unnest($1::text[],$2::text[]) checks(name,position)
-      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`,[batch.map(person=>campaignPersonKey(state,person)),batch.map(person=>JSON.stringify({checkedAt:sourceCheckedAt??clock(),found:withMoney.has(person.id)}))]);
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`,[batch.map(person=>campaignPersonKey(state,person)),batch.map(person=>JSON.stringify({checkedAt:sourceCheckedAt??clock(),found:!failed && withMoney.has(person.id)}))]);
     const missing=batch.filter(person=>failed || !withMoney.has(person.id)),matched=batch.filter(person=>!failed && withMoney.has(person.id));
     if(matched.length)await facts.query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) p(id,field) WHERE b.entity_id=p.id AND b.field=p.field`,[matched.map(person=>person.id),matched.map(person=>`campaign-money:${person.seat}`)]);
     if(missing.length)await facts.query(`INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at,attempts)

@@ -24,6 +24,13 @@ import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl }
 const RAN_AS = "DETERMINISTIC" as const;
 const NO_SEND_COST={...ZERO_COST,usd:0,requestCount:0,bytesFetched:0,durationMs:0};
 
+/** Descriptors with no public HTTP request run in the dispatching process. */
+export function routeCanSend(route:RouteDescriptor|null):boolean{
+ if(!route || !['HTTP_GET','HTTP_POST'].includes(route.open.kind))return false;
+ try{assertPublicUrl((route.open as {url:string}).url);return true;}catch{return false;}
+}
+
+
 /** The seam a test replaces. Nothing else in this module touches the network. */
 export type OpenOne = (input: {
   readonly url: string;
@@ -222,7 +229,7 @@ export function routeExecutor(input: {
       };
     }
 
-    if(route.placeHunt)return {ranAs:RAN_AS,kind:'ABORTED',cost:NO_SEND_COST,detail:'Government source reads require the standing route worker and its repositories; this place stays owed'};
+    if((route as NonNullable<typeof route> & {placeHunt:import("../../hunt/own-site-runtime.ts").HuntSourceScope}).placeHunt)return {ranAs:RAN_AS,kind:'ABORTED',cost:NO_SEND_COST,detail:'Government source reads require the standing route worker and its repositories; this place stays owed'};
 
     /* A route we hold no client for commits REQUIRES_NEW_ADAPTER: debt accrues and the next-due stands. */
     if (route.open.kind === "NOT_MACHINE_EXECUTABLE") {

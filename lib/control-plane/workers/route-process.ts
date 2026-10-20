@@ -1,7 +1,6 @@
-import {routeCanSend} from './route-can-send.ts';
 import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import type { RouteDescriptor } from "../scheduler/registry.ts";
-import { routeExecutor, type OpenOne, type VaultPut } from "../scheduler/route-executor.ts";
+import { routeCanSend, routeExecutor, type OpenOne, type VaultPut } from "../scheduler/route-executor.ts";
 import { runLeaseWorkerProcesses, type WorkerProcessSlots } from "./process-pool.ts";
 
 /** The child owns the canonical lease and route computation; shared tools keep website and spend accounting. */

@@ -1,3 +1,4 @@
+import {liveHuntBodyPreparer} from '../../hunt/body-target-runtime.ts';
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { dispatchOne } from "../scheduler/dispatch.ts";
@@ -28,8 +29,8 @@ const broker = workerBroker<LeaseWorkerConfig>(async config => {
   const executor = { lane: "DETERMINISTIC" as const,
     workerFor: ({ holder }: { holder: string }) => ({ role: "ACQUIRER" as const, provider: "we-the-people",
       version: `route-executor/1.0 (${route?.routeId ?? "unrouted"})`, instance: holder }),
-    run: route?.placeHunt
-      ? placeSourceExecutor({repos,root:config.root,scope:route.placeHunt,now:clock,open:tools.openOne,vault:tools.vault,spaceOut:tools.spaceOut})
+    run: (route as typeof route & {placeHunt?:import("../../hunt/own-site-runtime.ts").HuntSourceScope})?.placeHunt
+      ? placeSourceExecutor({repos,root:config.root,...(config.postgres?{prepareBody:liveHuntBodyPreparer({repos,root:config.root,now:clock})}:{}),scope:(route as NonNullable<typeof route> & {placeHunt:import("../../hunt/own-site-runtime.ts").HuntSourceScope}).placeHunt,now:clock,open:tools.openOne,vault:tools.vault,spaceOut:tools.spaceOut})
       : routeExecutor({root:config.root,routeFor:()=>route,now:clock,...tools}) };
   const result = await dispatchOne(repos, { ...input, holder: `${input.holder}:worker:${process.pid}`,
     clock, maturity: () => input.maturity, executor });

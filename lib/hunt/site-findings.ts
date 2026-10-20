@@ -1,3 +1,4 @@
+import {isGoverningBodyName} from './finding-subject.ts';
 import {subBodyId} from '../civic-data/meeting-body-crosswalk.ts';
 import { cellText, decodeEntities, extractRoster, looksLikeNameCell } from './roster-page.ts';
 import {officeIdentity} from '../officials/office-identity.ts';
@@ -117,10 +118,11 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
     }
     return [...out.values(),...findings];
   }
+  const personPage=!!topHeading && !isBodyName(cleanHeading(topHeading[1])) && looksLikeNameCell(cleanHeading(topHeading[1]));
   const documentPage=/\/(?:news(?:_detail)?|press|archives?|meetings?|minutes|agendas?|calendar)(?:\/|[_.?]|$)|CivicAlerts\.aspx|AgendaCenter|Calendar\.aspx|DocumentCenter/i.test(page.url);
-  const bodyNames=documentPage?[]:[...main.matchAll(/<h[1-2]\b[^>]*>([\s\S]*?)<\/h[1-2]\s*>/gi)].map(match=>cleanHeading(match[1]))
+  const bodyNames=documentPage || personPage?[]:[...main.matchAll(/<h[1-2]\b[^>]*>([\s\S]*?)<\/h[1-2]\s*>/gi)].map(match=>cleanHeading(match[1]))
     .filter(name=>isBodyName(name));
-  const sameBody=(name:string)=>scope.bodyName && normalizeText(name).toLowerCase()===normalizeText(scope.bodyName).toLowerCase() ||
+  const sameBody=(name:string)=>((scope.bodyId?.endsWith('#governing') || scope.bodyName && isGoverningBodyName(scope.bodyName,scope.name,scope.govClass)) && isGoverningBodyName(name,scope.name,scope.govClass)) || scope.bodyName && normalizeText(name).toLowerCase()===normalizeText(scope.bodyName).toLowerCase() ||
     (scope.bodyId?.endsWith('#governing') && /\b(council|board of (?:supervisors|commissioners|trustees)|selectboard|selectmen|town board|county commission|county assembly)\b/i.test(name)) ||
     (scope.bodyId?.endsWith('#board') && /\b(school board|board of education|governing board|board of trustees)\b/i.test(name));
   const namedBodies=[...new Set(bodyNames)];

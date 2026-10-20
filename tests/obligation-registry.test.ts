@@ -1,3 +1,4 @@
+import type {HuntSourceScope} from '../lib/hunt/own-site-runtime.ts';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
@@ -99,7 +100,7 @@ test("the standing research registry is not a parallel tracked-meetings authorit
   for (const unit of discovery.units) {
     assert.equal(unit.route.open.kind, "HTTP_GET", "the free hunter reads the government's recorded site");
     assert.equal(unit.route.executorClass, "DETERMINISTIC");
-    assert.equal(unit.route.placeHunt?.knownOwnSite, true);
+    assert.equal((unit.route as typeof unit.route & {placeHunt?:HuntSourceScope}).placeHunt?.knownOwnSite, true);
     assert.ok(unit.obligation.id.startsWith("freshness:meetings-discovery:"), "discovery owns its own namespace, never the retired meetings clocks'");
   }
 

@@ -361,7 +361,7 @@ export async function runLeaseWorkerProcesses(input: {
             }
           };
           try {
-            body = await input.transportFor(message.jurisdiction, message.taskId)({ ...request, onBatchWait, onProviderProgress:moved } as ModelRequest);
+            body = await input.transportFor(message.jurisdiction, message.taskId)({ ...request, onBatchWait });
           } finally {
             onBatchWait(false);
           }
@@ -372,9 +372,7 @@ export async function runLeaseWorkerProcesses(input: {
           body = await search(message.body as Parameters<NonNullable<ScoutToolContext["search"]>>[0]);
         } else if (message.kind === "search-take" || message.kind === "search-done") {
           if (!input.searchBudget) throw new Error("PAID_SEARCH_DISABLED");
-          const request=typeof message.body==='string'?{host:message.body}:message.body as {host:string;lifetimeMs?:number};
-          const budget=input.searchBudget as SearchBudget & {take:(host:string,lifetimeMs?:number,holder?:string)=>Promise<string|null>;done:(host:string,holder?:string)=>Promise<void>};
-          body = message.kind === "search-take" ? await budget.take(request.host,request.lifetimeMs,message.taskId) : await budget.done(request.host,message.taskId);
+          body = message.kind === "search-take" ? await input.searchBudget.take(String(message.body)) : await input.searchBudget.done(String(message.body));
         } else throw new Error("WORKER_IPC_OPERATION_UNKNOWN");
         reply({ id: message.id, body });
       } catch (error) {

@@ -1,3 +1,4 @@
+import {isGoverningBodyName} from './finding-subject.ts';
 import {siteFindings,blankLinks,type SiteScope,type SitePage,type SiteFinding} from './site-findings.ts';
 import {planPlaceHunt,type PlaceCapture} from './place-plan.ts';
 import type {ControlPlaneRepositories} from '../control-plane/repository/types.ts';
@@ -34,7 +35,7 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
   const plan=input.plan??await planPlaceHunt({repos:input.repos,now:input.now(),divisions:[{id:scope.governmentId,label:scope.name}],
     readHeld:input.readHeld,acquireNational:blanks=>input.national(blanks)});
   scope.bodies=[...new Map(plan.items.filter(item=>item.subject.kind==='body').map(item=>[item.subject.id,{id:item.subject.id,name:item.subject.label}])).values()];
-  const primary=scope.bodies.filter(body=>/#(?:governing|board)$/.test(body.id));
+  const primary=scope.bodies.filter(body=>/#(?:governing|board)$/.test(body.id) || isGoverningBodyName(body.name,scope.name,scope.govClass));
   if(primary.length===1){scope.bodyId=primary[0].id;scope.bodyName=primary[0].name;}
   scope.members=[...new Map([...scope.members??[],...plan.items.flatMap(item=>item.checklistId==='OFF-04'?item.held.flatMap(field=>{const v=field.value as {name?:string;office?:string;bodyId?:string};return v?.name && v.office && v.bodyId ? [{id:field.subjectId,name:v.name,office:v.office,bodyId:v.bodyId}]:[];}):[])].map(m=>[m.id,m])).values()];
   const blanks=openBlanksOf(plan.items).all.filter(blank=>{

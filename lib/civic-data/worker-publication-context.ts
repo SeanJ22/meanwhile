@@ -7,7 +7,7 @@ import { publicationVaultReaders } from "./publication-vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { artifactId as deriveArtifactId, type Artifact } from "../control-plane/evidence/artifact.ts";
+import type { Artifact } from "../control-plane/evidence/artifact.ts";
 import { datePath, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
@@ -54,15 +54,12 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
       const object = await store.get(key);
       const m = object?.meta.custom;
       if (!object || !m || object.meta.contentHash !== record.contentHash) return null;
-      if (m.tier !== record.tier || m.workItemId!==record.workItemId || record.partial || deriveArtifactId(record.tier,record.contentHash)!==record.artifactId) return null;
-      const observation=record as ArtifactRecord & {httpStatus?:number|null;retrievalUrl?:string;permission?:Artifact["permission"];transport?:Artifact["transport"]};
-      const explicit=observation.httpStatus!==undefined && observation.retrievalUrl!==undefined;
-      if(!explicit && m.canonicalUrl!==record.canonicalUrl)return null;
+      if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
       const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
-        contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: explicit ? observation.retrievalUrl! : m.retrievalUrl ?? record.canonicalUrl,
-        retrievedAt: explicit ? record.recordedAt : m.retrievedAt ?? record.recordedAt, httpStatus: explicit ? observation.httpStatus! : Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
-        methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: explicit ? record.attemptId : m.attemptId,
-        permission: observation.permission ?? m.permission as Artifact["permission"], transport: observation.transport ?? m.transport as Artifact["transport"],
+        contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
+        retrievedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
+        methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
+        permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
         retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
         ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
       try {

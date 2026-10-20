@@ -25,8 +25,8 @@ export function durableResearchTools(input: ResearchRuntimeTools, binding: {
     const {key,written} = await putArtifact(input.store, binding.project, artifact, bytes);
     await recordArtifactMetadata(input.repos, {artifactId:artifact.id,attemptId:artifact.attemptId,workItemId:artifact.workItemId,
       routeTaskId:binding.routeTaskId,tier:artifact.tier,contentHash:artifact.contentHash,byteLength:artifact.byteLength,
-      contentType:artifact.contentType,canonicalUrl:artifact.canonicalUrl,httpStatus:artifact.httpStatus,retrievalUrl:artifact.retrievalUrl,permission:artifact.permission,transport:artifact.transport,partial:artifact.httpStatus === 206 || artifact.extraction?.complete === false,recordedAt:artifact.retrievedAt},input.now());
-    return {stored:true,where:key,why:written?"Vaulted and durably attributed before interpretation":"Identical bytes retained with this source observation"};
+      contentType:artifact.contentType,canonicalUrl:artifact.canonicalUrl,partial:artifact.httpStatus === 206 || artifact.extraction?.complete === false,recordedAt:artifact.retrievedAt},input.now());
+    return {stored:true,where:key,why:written?"Vaulted and durably attributed before interpretation":"Identical evidence retained; first observation attribution preserved"};
   };
   return {vault:async (artifact:Artifact,body:string) => putBytes(artifact,Buffer.from(body,"utf8")),vaultBytes:putBytes,
     spaceOut:input.spaceOut,...(input.browse?{browse:input.browse}:{}),

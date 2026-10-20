@@ -1,6 +1,3 @@
-import {exaAgentEnabled} from '../../hunt/exa-admission.ts';
-import {huntDirections} from '../../hunt/directions.ts';
-import {isExaModelRequest,exaAgentTransport} from "../../hunt/exa-transport.ts";
 /** The paid-work guards in one place, so the round and the standing lane build the same guards from the same objects: Send and area budgets, the Fleet ceiling and provider circuits, provider rate limits, and paid worker capacity. Nothing here changes a limit or reads a setting. */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -41,7 +38,6 @@ export interface PaidWorkGuardDeps {
   readonly beforeObligation?: (obligationId: string) => Promise<void>;
   /** The provider transport for one request at a time, and the background batch transport. */
   readonly messages: ModelTransport;
-  readonly exaResearch?:ModelTransport;
   readonly batch: ReturnType<typeof backgroundBatchTransport>;
   /** Whether the paid model lane is open at all (`modelLaneClosure` found nothing closing it). */
   readonly modelLaneEnabled: boolean;
@@ -157,23 +153,11 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       meetingStartsAt: [...(priority.meetingStartsAt ?? []), ...(extra?.meetingStartsAt ?? [])],
       electionAt: [...(priority.electionAt ?? []), ...(extra?.electionAt ?? [])],
       readerImpactAt: extra?.readerImpactAt };
-    const exa=isExaModelRequest(request);
-    if(isExaModelRequest(request)){
-      try{
-        if(!deps.exaResearch && !process.env.EXA_API_KEY?.trim())throw new SendBudgetRefusal("EXA_AGENT_UNCONFIGURED","The Exa API key is not configured in the guarded provider process");
-        if(!await exaAgentEnabled(repos))throw new SendBudgetRefusal("EXA_AGENT_DISABLED","Exa research is turned off in Admin");
-        if(request.exaResearch.packet.governmentId!==jurisdiction.subjectId)throw new SendBudgetRefusal("HUNT_PLACE_MISMATCH","the Exa packet names another place");
-        const item=(await repos.workItems.mustRead(task.workItemId)).value;
-        const standing=owner?await repos.obligations.read(owner.value.obligationId):null;
-        const directions=await huntDirections(repos,item.autonomousPlan?.ownerInstructions??[],standing?.value.assignments??[]);
-        request={...request,exaResearch:{...request.exaResearch,packet:{...request.exaResearch.packet,directions}}} as typeof request;
-      }catch(error){if(error instanceof SendBudgetRefusal)throw error;throw new SendBudgetRefusal("EXA_INSTRUCTIONS_UNREADABLE",`this hunt's Admin directions could not be read: ${error instanceof Error?error.message:String(error)}`);}
-    }
-    const eligible = !exa && routing.lane !== null && batchEligibleForJob(jobType, effectivePriority);
-    const batching = !exa && routing.lane !== null && batchEnabledForJob(routing.lane, jobType, deps.batchEnv ?? process.env, effectivePriority);
+    const eligible = routing.lane !== null && batchEligibleForJob(jobType, effectivePriority);
+    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, jobType, deps.batchEnv ?? process.env, effectivePriority);
     const journal = attemptBatchJournal(repos, taskId, deps.now);
     // A request already sent to the batch service is collected, never sent twice, whatever its job now says.
-    if (!exa && routing.lane !== null && await journal.read(batchRequestHash(request))) {
+    if (routing.lane !== null && await journal.read(batchRequestHash(request))) {
       // Recovery reads an already submitted request, so it neither reserves
       // nor spends a second request allowance. Settle its original hold.
       const response = await deps.batch.withJournal(journal)(request);
@@ -185,16 +169,10 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
     await deps.beforeObligation?.(owner?.value.obligationId ?? task.id);
     const found = budgetLinesFor(owner?.value.obligationId ?? task.id, jurisdiction.subjectId);
     if ("code" in found) throw new SendBudgetRefusal(found.code, found.why);
-    if (exa || task.routeId === "hunter:packet") {
-      const standing = owner ? await repos.obligations.read(owner.value.obligationId) : null;
-      const focused = (standing?.value.assignments ?? []).some(assignment => assignment.ref && assignment.assignmentKey);
-      if (!focused && found.lines.sends.length === 0 && found.lines.areas.length === 0)
-        throw new SendBudgetRefusal("HUNT_NOT_FOCUSED", "Paid hunters are waiting for an Admin order for this place; free source reads continue");
-    }
     const job = new JobSpend(spendHolds, requestJobId, owner?.value.obligationId ?? task.id, found.lines);
     openJobs.add(job);
     const transport = budgetGuardedTransport({ job: () => job,
-      transport: exa ? fleetSafety.guardedModelTransport("exa",jurisdiction.subjectId,deps.exaResearch??exaAgentTransport(process.env.EXA_API_KEY)) : batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
+      transport: batching ? fleetSafety.guardedModelTransport("anthropic", jurisdiction.subjectId,
         deps.batch.withJournal(journal)) : guardedMessagesFor(jurisdiction.subjectId),
       worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd });
     let response;

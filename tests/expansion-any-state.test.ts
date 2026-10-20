@@ -1,3 +1,4 @@
+import type {HuntSourceScope} from '../lib/hunt/own-site-runtime.ts';
 import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
 
 import assert from "node:assert/strict";
@@ -516,6 +517,6 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
     .routeFor(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`);
   assert.equal(route?.citation, `PR's promoted registration ${versionId}`);
   assert.equal(route?.open.kind, "HTTP_GET", "the recorded government directory can be read while its own site remains blank");
-  assert.equal(route?.placeHunt?.knownOwnSite, false);
+  assert.equal((route as typeof route & {placeHunt?:HuntSourceScope})?.placeHunt?.knownOwnSite, false);
   clearRegistrationJurisdictionRegistries();
 });

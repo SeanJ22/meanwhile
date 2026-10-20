@@ -464,8 +464,8 @@ test("creating work opens no paid lane: the owner's PAUSE stands and nothing but
 
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
-  assert.match(says, /run on the plain-code lane as they come due, at no model cost/);
-  assert.match(says, /the free discovery walk remains available/);
+  assert.match(says, /need a model and wait: paused by owner intent pause-1/);
+  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
   assert.doesNotMatch(says, /no per-assignment budget/);
   assert.match(says, /without waiting for free routes to fail/);
 });
@@ -600,7 +600,7 @@ test("a meetings route with a known address is carried by what the partition wir
   assert.equal(jurisdictionRequirements(REGISTRIES.az, REGISTRIES.az.jurisdictions.find((x) => x.id === "az:city:city-of-tucson")!).some((r) => r.source.recordClass === "MEETINGS"), false, "a DISCOVERY_OWED meetings source is discovery, not a route here");
 });
 
-test("an owner's meetings discovery keeps its materialized identity and reads the site or official directory", () => {
+test("explicit paid meetings discovery keeps the materialized needs in the registry derivation's shape", () => {
   const empty = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
   assert.match(empty.emptyReason ?? "", /no registered government website/);
@@ -617,11 +617,10 @@ test("an owner's meetings discovery keeps its materialized identity and reads th
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "a need whose basis moved, and another provider's id, are not emitted");
   for (const u of pass.units) {
     assert.equal(u.obligation.recordClass, "meetings-discovery");
-    assert.equal(u.route.open.kind, "HTTP_GET");
-    assert.equal(u.route.executorClass, "DETERMINISTIC");
+    assert.equal(u.route.open.kind, "NOT_MACHINE_EXECUTABLE");
   }
   const ownUnit = pass.units.find((u) => u.obligation.subjectId === own.jurisdictionId)!;
-  assert.equal(ownUnit.route.open.kind === "HTTP_GET" ? ownUnit.route.open.url : null, own.ownWebAddress);
+  assert.equal(ownUnit.route.open.kind === "NOT_MACHINE_EXECUTABLE" ? ownUnit.route.open.target : null, own.ownWebAddress);
   assert.equal(ownUnit.route.routeId, "own-site-meetings");
   assert.equal(pass.units.find((u) => u.obligation.subjectId === noSite.jurisdictionId)!.route.routeId, "find-own-site");
 });

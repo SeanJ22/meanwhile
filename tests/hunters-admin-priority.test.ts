@@ -1,9 +1,9 @@
+import {readFileSync} from 'node:fs';
 import type {JurisdictionRegistry} from "../lib/hunt/jurisdiction-universe.ts";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {meetingsDiscoveryProvider} from '../lib/control-plane/scheduler/providers/meetings-discovery.ts';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {submit} from '../lib/control-plane/gateway/gateway.ts';
 import {readIntents,RESEARCH_INTENT_LOG_KEY} from '../lib/control-plane/scheduler/research-policy.ts';

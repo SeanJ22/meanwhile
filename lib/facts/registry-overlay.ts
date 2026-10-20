@@ -8,10 +8,7 @@ import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
 const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM fact f
-  WHERE f.status = 'live' AND f.field IN ('name', 'body_type', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone') AND f.entity_id = ANY($1::text[])
-  UNION ALL SELECT b.id,'homepage',g.value,g.checked_at,s.url FROM entity b JOIN fact g ON g.entity_id=b.parent_id AND g.field='homepage' AND g.status='live'
-    LEFT JOIN source_copy s ON s.id=g.source_copy_id WHERE b.id=ANY($1::text[])
-      AND NOT EXISTS(SELECT 1 FROM fact own WHERE own.entity_id=b.id AND own.field='homepage' AND own.status='live')`;
+  WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone') AND f.entity_id = ANY($1::text[])`;
 
 /** One body's live facts as readers see them: its own fields, its members, its comment rules and its sittings. */
 export interface BodyFacts {
@@ -36,7 +33,6 @@ export function bodyFieldsFromRows(rows: readonly Record<string, unknown>[]): Re
     const at = new Date(row.checked_at as string).toISOString();
     const source = { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at };
     if (row.field === "name") Object.assign(held, { name: String(row.value), bodyOrigin: "SOURCED", provenance: source });
-    else if(row.field==="body_type")Object.assign(held,{bodyClass:String(row.value),fieldSources:{...held.fieldSources,bodyClass:source}});
     else if (row.field === "office_address" || row.field === "office_phone" || row.field === "homepage") {
       const key = row.field === "office_address" ? "officeAddress" : row.field === "office_phone" ? "officePhone" : "homepageUrl";
       Object.assign(held, { [key]: String(row.value), fieldSources: { ...held.fieldSources, [key]: source } });

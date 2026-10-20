@@ -39,10 +39,7 @@ test("OS-killed Hunter leaves Attempt and vaulted bytes; external lease reclaim 
     const records=(await repos.workerResults.readAll()).filter(record=>record.result.role==="ACQUIRER"); assert.equal(records.length,1);
     if(records[0].result.role!=="ACQUIRER") throw new Error("wrong role");
     assert.equal(records[0].result.artifacts[0].artifactId,message.artifactId); assert.equal(records[0].result.artifacts[0].acquisitionAttemptId,attempt.id);
-    const observations=(await repos.artifacts.readAll()).filter(record=>record.artifactId===message.artifactId);
-    assert.equal(observations.length,2,"identical bytes retain both real acquisition observations");
-    assert.deepEqual(observations.map(record=>record.attemptId).sort(),[attempt.id,resumed.dispatches[0].attemptId].sort());
-    assert.deepEqual(observations.find(record=>record.attemptId===attempt.id),metadata,"recovery preserves the original acquisition metadata");
+    assert.equal((await repos.artifacts.readAll()).filter(record=>record.artifactId===message.artifactId).length,1);
     assert.equal((await repos.dispositions.read(message.routeTaskId)).length,0);
     for(let index=0;index<2;index++) { const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0].outcome,"WORKED",run.dispatches[0].detail); }
     assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"STAGED");

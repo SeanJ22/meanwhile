@@ -1,6 +1,3 @@
-import {ConcurrentModification} from "../control-plane/repository/types.ts";
-import {extractRoster} from '../hunt/roster-page.ts';
-import {ensureSourceBody,bodyTypeWord,publishGovernmentWebsite} from './source-body.ts';
 import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -21,14 +18,14 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome,
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
-import { type ReaderCachePurger } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 
 /** How far back the Box is read for findings to publish. */
 const HUNTER_FINDING_DAYS = 30;
 
 interface Finding {
   readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
-  readonly exactQuote: string; readonly sourceUrl: string; readonly recordClass: string | null; readonly shownMemberId?: string;
+  readonly exactQuote: string; readonly sourceUrl: string; readonly recordClass: string | null;
 }
 
 interface BoxPublicationReport {
@@ -43,13 +40,13 @@ interface BoxPublicationReport {
   readonly failuresByReason: Readonly<Record<string, number>>;
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
   /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
-  readonly seats: { readonly flagged: number };
+  readonly seats: { readonly pulled: number; readonly flagged: number };
 }
 
-const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl", member_photo:"photoUrl" } as const;
+const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
 
 type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { election: string }>;
-const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" && slot.slot==="member_photo" ? "portrait" : slot.class === "rosters" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
+const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
   : slot.class === "schedules" || slot.class === "sittings" && slot.slot === "video_url" ? "meeting"
   : slot.class === "meeting routes" || slot.class === "sittings" ? "agenda" : slot.class === "comment rules" ? "comment_rule" : "contact";
 
@@ -118,23 +115,27 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
     .map(row => ({ factId: Number(row.id), bodyId: String(row.entity_id), name: String(row.name), words: String(row.words), producedBy: String(row.produced_by) }));
 }
 
-/** Auditors flag a seat that needs review while keeping its last verified facts live. */
-async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number }> {
+/** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
+async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-seats") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
   const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
   const members = bodies.length ? await liveMembers(query, bodies) : [];
-  let flagged = 0;
+  let pulled = 0, flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
     const seat = seatIn(member.words, member.bodyId);
-    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+    if (!seat) {
+      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
+      await invalidateReaderCache(await readerCacheScopeForEntity(query, member.bodyId), purge);
+      pulled++;
+    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
   await writePassCursor(query, "box-seats", String(newest));
-  return { flagged };
+  return { pulled, flagged };
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
@@ -151,7 +152,7 @@ export async function publishBoxFindings(input: {
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now), since = new Date(now.getTime() - HUNTER_FINDING_DAYS * 86_400_000).toISOString();
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
@@ -178,26 +179,36 @@ export async function publishBoxFindings(input: {
     }
   };
 
-  const releaseWaiting=async(reason:string,subjects:readonly string[])=>{
-    for(;;){
-      const pending=await repos.boxFindings.waitingFor(reason,Math.max(1,Math.min(input.limit,300)),subjects);
-      if(!pending.length)return;
-      for(const waiting of pending){
-        const held=await repos.boxFindings.mustRead(waiting.id);
-        if(held.value.state!=='waiting' || held.value.waitingFor?.reason!==reason)continue;
-        try{await repos.boxFindings.compareAndSet(waiting.id,held.revision,{...held.value,waitingFor:undefined},input.now);}
-        catch(error){if(!(error instanceof ConcurrentModification))throw error;}
-      }
+  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string }[] = [];
+  const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
+  for (const row of rows) {
+    report.looked++;
+    if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
+    const raw = findingFact(row);
+    if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
+    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote);
+    if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
+    if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
+    const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
+    if ("election" in slot) {
+      const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));
+      if (divisionId) elections.push({ finding, kind: slot.election, divisionId });
+      else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
+      continue;
     }
-  };
-  const seatWaiting=(name:string)=>'PERSON_SEAT_NOT_PUBLISHED:'+nameKey(name);
+    const target = await targetOf(facts.query, row.subjectId);
+    if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
+    if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
+    ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
+  }
+
   const captures = new Map<string, Promise<{ capture: WorkerPublicationCapture } | { error: string }>>();
   const readHeld = heldCaptureReader(input.vault);
   // The cited saved page proves the finding while it is inside the field's clock; otherwise code reads the address once more.
   const captureFor = (finding: Finding, kind: FieldKind) => {
     const key = `${finding.origin.artifactIds[0] ?? ""}|${finding.sourceUrl}|${kind}`;
     if (!captures.has(key)) captures.set(key, (async () => {
-      const records = (await repos.artifacts.readWhere(finding.origin.sourceWorkItemId??finding.origin.workItemId,["canonicalUrl"],finding.sourceUrl)).filter(record => finding.origin.artifactIds.includes(record.artifactId) && record.canonicalUrl===finding.sourceUrl && (!finding.origin.sourceAttemptId || record.attemptId===finding.origin.sourceAttemptId));
+      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId));
       for (const record of records) {
         const held = await readHeld(record);
         if (held && (now.getTime() - Date.parse(held.observedAt)) / 3_600_000 <= clocks.windowHours(kind)) return { capture: held };
@@ -211,66 +222,13 @@ export async function publishBoxFindings(input: {
     await settle(finding.row, { blank: `SOURCE_BLOCKED:${error}` }, route);
   };
 
-
-  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string }[] = [];
-  const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
-  const newBodies=new Map<string,Target["body"]|null>();
-  const bodyKey=(row:BoxFinding)=>`${row.subjectId.split('#')[0]}|${row.sourceUrl}`;
-  for (const row of [...rows].sort((a,b)=>(findingFact(b)?.field==='government.website'?2:Number(['GOV-01','GOV-02'].includes(findingFact(b)?.field??'')))-(findingFact(a)?.field==='government.website'?2:Number(['GOV-01','GOV-02'].includes(findingFact(a)?.field??''))))) {
-    report.looked++;
-    if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
-    const raw = findingFact(row);
-    if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
-    if(raw.field==='government.website'){
-      const finding:Finding={row,origin:raw.origin,field:raw.field,value:raw.value,exactQuote:row.exactQuote,sourceUrl:row.sourceUrl,recordClass:raw.recordClass};
-      const read=await captureFor(finding,'contact');
-      if('error' in read)await blocked(row.subjectId,'homepage',finding,'contact',read.error,'government sites');
-      else await settle(row,await publishGovernmentWebsite({facts,subjectId:row.subjectId,value:String(raw.value),quote:row.exactQuote,capture:read.capture,clocks,now,purge:input.purge}),'government sites');
-      continue;
-    }
-    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote);
-    if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
-    if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
-    const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass, ...(raw.shownMemberId ? {shownMemberId:raw.shownMemberId}: {}) };
-    if ("election" in slot) {
-      const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));
-      if (divisionId) elections.push({ finding, kind: slot.election, divisionId });
-      else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
-      continue;
-    }
-    let target = await targetOf(facts.query, row.subjectId);
-    if(!target && row.subjectId.includes('#inventory:')){
-      const held=await facts.query(`SELECT b.id,b.name,b.state,b.parent_id FROM entity b JOIN fact f ON f.entity_id=b.id AND f.field='name' AND f.status='live'
-        JOIN source_copy s ON s.id=f.source_copy_id WHERE b.kind='body' AND b.parent_id=$1 AND s.url=$2 ORDER BY b.id LIMIT 2`,[row.subjectId.split('#')[0],row.sourceUrl]);
-      if(held.length===1){const body=bodyRow(held[0])!;target={body,holder:null,entityId:body.id};}
-    }
-    if (!target && slot.class==='body links' && slot.slot==='name') {
-      const read=await captureFor(finding,'officeholder');
-      if(!('error' in read)){
-        const body=await ensureSourceBody({facts,subjectId:row.subjectId,name:String(raw.value),quote:row.exactQuote,capture:read.capture,clocks,now});
-        if(body){
-          target={body,holder:null,entityId:body.id};newBodies.set(bodyKey(row),newBodies.has(bodyKey(row))?null:body);
-
-        }
-      }
-    }
-    const discovered=newBodies.get(bodyKey(row));
-    if(!target && discovered)target={body:discovered,holder:null,entityId:discovered.id};
-    if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
-    if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
-    ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
-  }
-
-
   const groups = new Map<string, typeof ready>();
   for (const entry of ready) {
-    const member=entry.slot.class==="rosters" || entry.slot.class==="contacts";
-    const key = `${entry.entityId}|${entry.finding.sourceUrl}|${entry.finding.origin.artifactIds[0]??""}|${member?"member":kindOf(entry.slot)}`;
+    const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
     groups.set(key, [...groups.get(key) ?? [], entry]);
   }
   for (const group of groups.values()) {
-    const { body, entityId } = group[0]!;
-    const kind=group.map(entry=>kindOf(entry.slot)).sort((a,b)=>clocks.windowHours(a)-clocks.windowHours(b))[0]!;
+    const { body, entityId } = group[0]!, kind = kindOf(group[0]!.slot);
     const read = await captureFor(group[0]!.finding, kind);
     if ("error" in read) {
       for (const { finding, slot } of group) await blocked(entityId, slot.slot, finding, kind, read.error, slot.class);
@@ -279,7 +237,7 @@ export async function publishBoxFindings(input: {
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
     if (people.length) {
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
-      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated,...extractRoster(read.capture.evidence.canonicalUrl,read.capture.evidence.text).members.map(member=>member.name)];
+      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
       const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
@@ -295,25 +253,13 @@ export async function publishBoxFindings(input: {
         members.set(recordId, member);
         sourceFieldOf.set(finding.row, { recordId, field });
       }
-      for(const [recordId,member] of members){
-        const knownSeat=seated.some(name=>nameKey(name)===nameKey(String(member.fields.name)));
-        members.set(recordId,{...member,publishMembership:!knownSeat || people.some(entry=>sourceFieldOf.get(entry.finding.row)?.recordId===recordId && ['member_name','member_office'].includes(entry.slot.slot))});
-      }
       const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
         !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
       const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
-        complete: false, producedBy: "box", purge: input.purge,
-        shownMemberIds: new Map(people.flatMap(({finding})=>finding.shownMemberId ? [[nameKey(String(members.get(sourceFieldOf.get(finding.row)?.recordId??'')?.fields.name??'')),finding.shownMemberId] as const]:[])) }, clocks, now);
-      const subjects=[...new Set([body.id,body.id+'#calendar',...people.flatMap(entry=>[entry.finding.row.subjectId,entry.finding.row.subjectId.split('#')[0]+'#inventory:bodies'])])];
-      for(const [recordId,fields] of tally.outcomes){
-        const seat=fields.get('name');
-        if(members.get(recordId)!.publishMembership!==false && seat && !('blank' in seat) && seat.decision==='PUBLISH')await releaseWaiting(seatWaiting(String(members.get(recordId)!.fields.name)),subjects);
-      }
+        complete: false, producedBy: "box", purge: input.purge }, clocks, now);
       for (const { finding, slot } of people) {
         const at = sourceFieldOf.get(finding.row);
-        if(!at)continue;
-        if(unseated.has(at.recordId))await hold(finding.row,slot.class,seatWaiting(String(members.get(at.recordId)!.fields.name)));
-        else await settle(finding.row,tally.outcomes.get(at.recordId)?.get(at.field)??{blank:'NOT_CLAIMED'},slot.class);
+        if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
       }
     }
     const own = group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts");
@@ -333,10 +279,6 @@ export async function publishBoxFindings(input: {
         continue;
       }
       const outcome = slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
-      if(slot.class==='body links' && slot.slot==='name' && !("blank" in outcome)){
-        const type=bodyTypeWord(value);if(type)await claim("body_type",type,type,finding.exactQuote);
-        await releaseWaiting('SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE',[finding.row.subjectId,body.id,body.id+'#calendar',finding.row.subjectId.split('#')[0]]);
-      }
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);
       await settle(finding.row, outcome, slot.class);

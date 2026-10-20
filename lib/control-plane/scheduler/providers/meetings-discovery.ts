@@ -13,7 +13,6 @@ import type {HuntSourceScope} from '../../../hunt/own-site-runtime.ts';
 import type { JurisdictionRegistry } from "../../../hunt/jurisdiction-universe.ts";
 import {
   meetingsDiscoveryNeeds,
-  OWN_SITE_MEETINGS_SOURCE,
   type DiscoveryAddressSource,
   type MeetingsDiscoveryBasis,
   type MeetingsDiscoveryNeed,

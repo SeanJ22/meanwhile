@@ -204,13 +204,12 @@ test("a departed roster member and a pulled Box seat clear answers after their l
   assert.equal(removed.departed, 1);
   assert.equal(removedPurges, 1);
   assert.equal(totalPurges, 2, "confirmations and departure share one tag purge");
-  // An auditor flags missing seat evidence while preserving the last published roster.
+  // A bare Box name lacks the words establishing a council seat and must disappear from the cached roster.
   await db.query(`UPDATE fact SET produced_by='box', quote='Alice Example', value=jsonb_build_object('name', 'Alice Example')
     WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%'`, [BODY]);
   await db.query("DELETE FROM fact WHERE field LIKE 'office:%'");
   const report = await publishBoxFindings({ repos: createMemoryRepositories(), facts: db, vault: new MemoryEvidenceStore(),
     fetch: async () => { throw new Error("unexpected fetch"); }, store: new MemoryRoutineDataStore(), clocks, now: NOW.toISOString(), limit: 10, purge });
-  assert.equal(report.seats.flagged, 1);
-  assert.equal(pulledPurges, 0);
-  assert.equal((await db.query("SELECT id FROM fact WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%'",[BODY])).length,1);
+  assert.equal(report.seats.pulled, 1);
+  assert.equal(pulledPurges, 1);
 });

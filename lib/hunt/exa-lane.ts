@@ -1,6 +1,5 @@
-import {FleetPreSendRefusal} from '../control-plane/fleet-safety.ts';
-import {SendBudgetRefusal} from '../control-plane/expansion/spend-holds.ts';
-import {exaModelRequest,exaRunOf} from "./exa-transport.ts";
+import {huntFindingSubject} from './finding-subject.ts';
+import {prepareLiveExaBody} from './body-target-runtime.ts';
 /** Exa's facts go into the Box through the hunter's own report path,
  * so each cited page is saved and each fact is checked the same way. */
 import type { DeclaredExecutor, WorkOutcome } from "../control-plane/scheduler/dispatch.ts";
@@ -10,12 +9,11 @@ import { RESEARCH_BOUNDS } from "../control-plane/scheduler/research-policy.ts";
 import type { AttemptCost } from "../control-plane/attempt.ts";
 import { EXA_AGENT_EFFORT, EXA_AGENT_HOST, runExaAgent } from "./exa-agent.ts";
 import type { HuntPacket } from "./packet.ts";
-import type { FetchLike, SearchBudget } from "./search.ts";
+import {EXA_AGENT_WALL_MS,type FetchLike,type SearchBudget} from "./search.ts";
 import { dispositionForHunt } from "../control-plane/scheduler/scout-executor.ts";
 
 export const EXA_AGENT_ROUTE_ID = "hunter:exa-agent";
 const EXA_AGENT_MODEL = `exa-agent-${EXA_AGENT_EFFORT}`;
-const EXA_AGENT_WALL_MS = 15 * 60_000;
 
 const cost = (usd: number | null, durationMs: number, requests: number, bytes: number): AttemptCost => ({
   inputTokens: null, outputTokens: null, usd, durationMs, bytesFetched: bytes, requestCount: requests,
@@ -28,12 +26,13 @@ export function exaAgentExecutor(deps: {
   readonly instructions: () => Promise<string>;
   readonly packetNow: () => Promise<HuntPacket | null>;
   /** The paid-search budget admits each run; a refused, unread or absent budget sends nothing. */
-  readonly budget: (SearchBudget & {research?:(request:Parameters<typeof exaModelRequest>[0])=>Promise<import("./exa-agent.ts").ExaAgentRun>}) | undefined;
+  readonly budget: SearchBudget | undefined;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
   readonly toolsFor: (job: { readonly attemptId: string; readonly workItemId: string; readonly routeTaskId: string }, packet: HuntPacket) =>
     Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "openBytes" | "reportFinding">;
   readonly onResult: (result: ScoutResult, packet: HuntPacket) => Promise<void>;
   readonly fetchImpl?: FetchLike;
+  readonly prepareBody?:import('./body-target-runtime.ts').PrepareHuntBody;
   /** When the worker process will be ended; the run is cancelled before then if that comes first. */
   readonly endsAt?: number;
   readonly progress?: () => void;
@@ -52,7 +51,7 @@ export function exaAgentExecutor(deps: {
       }
       const { key, budget } = deps;
       let refused: string | null;
-      try { refused = !key ? "EXA_API_KEY is not set" : !budget?.research ? "no guarded paid-research transport reaches this worker" : await (budget as SearchBudget & {take:(host:string,lifetimeMs:number)=>Promise<string|null>}).take(EXA_AGENT_HOST,EXA_AGENT_WALL_MS+60_000); }
+      try { refused = !key ? "EXA_API_KEY is not set" : !budget ? "no paid-search budget reaches this worker" : await budget.take(EXA_AGENT_HOST); }
       catch (error) { refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`; }
       if (refused !== null || !key || !budget) {
         return { kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", failureOutcome: "DENIED_BY_POLICY", endedAt: deps.now(), artifacts: [],
@@ -60,24 +59,27 @@ export function exaAgentExecutor(deps: {
       }
       let run: Awaited<ReturnType<typeof runExaAgent>>;
       try {
-        run = await budget.research!({ packet, instructions: await deps.instructions(),
+        run = await runExaAgent({ packet, key, instructions: await deps.instructions(),
           deadlineMs: Math.min(Date.now() + EXA_AGENT_WALL_MS, deps.endsAt ?? Number.POSITIVE_INFINITY),
-        });
-      } catch(error) {
-        if(error instanceof SendBudgetRefusal || error instanceof FleetPreSendRefusal)return {kind:'ABORTED',ranAs:'BOUNDED_MODEL_WORKER',failureOutcome:'DENIED_BY_POLICY',endedAt:deps.now(),artifacts:[],cost:cost(0,Date.now()-started,0,0),detail:`DENIED_BY_POLICY: Exa agent not sent, ${error.message}`};
-        throw error;
+          ...(deps.progress ? { onPoll: deps.progress } : {}), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
       } finally {
         await budget.done(EXA_AGENT_HOST).catch(() => undefined);
       }
+      const bound=deps.toolsFor({attemptId,workItemId,routeTaskId},packet);
+      const reporter=bound.reportFinding;
+      const subjects=reporter?new Set(reporter.subjects):null;
       const toolkit = deps.toolkitFor({ obligation: row, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder,
         bound: RESEARCH_BOUNDS.perDispatch, now: deps.now, handed: { artifactIds: [] },
-        ...deps.toolsFor({ attemptId, workItemId, routeTaskId }, packet) });
+        ...bound,...(reporter?{reportFinding:{...reporter,subjects:subjects!,write:async finding=>{const normalized=huntFindingSubject(finding,packet.label);const written=await reporter.write(normalized);subjects!.add(normalized.subjectId);return written;}}}:{}) });
       const artifacts = [];
-      for (const finding of run.findings) {
+      for (const finding of [...run.findings].sort((a,b)=>Number(['GOV-01','GOV-02','body.name'].includes(b.field))-Number(['GOV-01','GOV-02','body.name'].includes(a.field)))) {
+        const before=toolkit.reported.length;
         const call = await toolkit.call("report_finding", finding);
         artifacts.push(...call.artifacts);
+        const reported=toolkit.reported.at(-1);
+        if(reported && toolkit.reported.length>before)await (deps.prepareBody??prepareLiveExaBody)({...huntFindingSubject(reported,packet.label),value:String(reported.value)},{workItemId,attemptId});
       }
-      const findings = toolkit.reported.map(f => ({ subjectId: f.subjectId, field: f.field, value: f.value, exactQuote: f.exactQuote,
+      const findings = toolkit.reported.map(f=>huntFindingSubject(f,packet.label)).map(f => ({ subjectId: f.subjectId, field: f.field, value: f.value, exactQuote: f.exactQuote,
         sourceUrl: f.sourceUrl, summary: `${f.field} = ${String(f.value)}`, artifactIds: f.artifactIds, kind: "RECORD" as const }));
       const elapsedMs = Date.now() - started;
       const result: ScoutResult = {

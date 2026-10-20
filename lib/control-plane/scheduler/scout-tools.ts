@@ -1,5 +1,3 @@
-import {extractLinks,LINK_CAP} from '../../hunt/page-links.ts';
-export {extractLinks,LINK_CAP,type DerivedLink} from '../../hunt/page-links.ts';
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /** The hunter's research tools. robots.txt is read and recorded, never a refusal;
@@ -94,6 +92,7 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
 
 /** Page text the model is shown: compact by default, the passages that match `look_for` when given. */
 export const TEXT_CAP_CHARS = 5_000;
+export const LINK_CAP = 40;
 export const REQUEST_LIST_CAP = 40;
 const SOURCE_API_CHARS = 8_000;
 const READ_PASSAGE_CHARS = 4_000;
@@ -250,6 +249,37 @@ export function htmlTitle(html: string): string | null {
   return title === "" ? null : title;
 }
 
+export interface DerivedLink {
+  readonly url: string;
+  readonly text: string;
+}
+
+/** Absolute http(s) links, deduplicated, same-host first, capped. */
+export function extractLinks(html: string, base: URL, cap: number = LINK_CAP): DerivedLink[] {
+  const seen = new Set<string>();
+  const same: DerivedLink[] = [];
+  const other: DerivedLink[] = [];
+  const re = /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a\s*>/gi;
+  for (const m of html.matchAll(re)) {
+    const href = decodeEntities(m[1] ?? m[2] ?? m[3] ?? "").trim();
+    if (href === "" || href.startsWith("#") || /^(javascript|mailto|tel|data):/i.test(href)) continue;
+    let resolved: URL;
+    try {
+      resolved = new URL(href, base);
+    } catch {
+      continue;
+    }
+    if (resolved.protocol !== "http:" && resolved.protocol !== "https:") continue;
+    resolved.hash = "";
+    const key = resolved.toString();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const text = visibleText(m[4] ?? "").replace(/\s+/g, " ").trim().slice(0, 100);
+    (resolved.host.toLowerCase() === base.host.toLowerCase() ? same : other).push({ url: key, text });
+  }
+  return [...same, ...other].slice(0, cap);
+}
+
 function capText(text: string, cap: number = TEXT_CAP_CHARS): { readonly text: string; readonly note: string } {
   if (text.length <= cap) return { text, note: `${text.length} chars` };
   return { text: text.slice(0, cap), note: `${cap} of ${text.length} chars shown; the vaulted artifact holds the rest` };
@@ -373,8 +403,7 @@ function focusedText(text: string, lookFor: string | null, cap: number = TEXT_CA
 }
 
 function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
-  const record={
-    httpStatus:artifact.httpStatus,retrievalUrl:artifact.retrievalUrl,permission:artifact.permission,transport:artifact.transport,
+  return {
     artifactId: artifact.id,
     tier: artifact.tier,
     contentHash: artifact.contentHash,
@@ -384,7 +413,6 @@ function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
     partial: artifact.extraction?.complete === false,
     recordedAt,
   };
-  return record;
 }
 
 /** The envelope carries `retrieved <stamp>` and the permission verdict; the machine still derives provenance from the artifact. */
@@ -428,8 +456,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const vaulted = new Set<string>();
   /** Pages this job saved, by artifact id: what read_held and report_finding reuse without fetching again. */
   const savedPages = new Map<string, SavedPage>();
-  const savedByUrl = new Map<string,SavedPage>();
-  const rememberPage=(page:SavedPage)=>{savedPages.set(page.artifactId,page);savedByUrl.set(page.canonicalUrl,page);savedByUrl.set(page.retrievalUrl,page);};
   let requestCount = 0;
   let bytesFetched = 0;
   let toolCalls = 0;
@@ -551,7 +577,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const held=saved.artifact;
     if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
       held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation')) {
-      rememberPage({artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
+      savedPages.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
         retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId});
     }
     return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
@@ -1109,7 +1135,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         if (held.artifactId !== raw.artifactId || contentHash(held.text) !== held.contentHash) return refusal("the saved copy did not match its fingerprint.");
         page = { artifactId: held.artifactId, contentHash: held.contentHash, text: held.text, canonicalUrl: held.canonicalUrl,
           retrievalUrl: held.provenance?.retrievalUrl ?? held.canonicalUrl, retrievedAt: held.retrievedAt, methodRouteId: held.methodRouteId };
-        rememberPage(page);
+        savedPages.set(page.artifactId, page);
       } catch (error) { return refusal(`the saved page could not be read: ${error instanceof Error ? error.message : String(error)}`); }
     }
     const text = page.text;
@@ -1174,19 +1200,18 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   /** Facts put into the Box this job, and the page code saved for each cited URL. */
   const reported: ReportedFinding[] = [];
   const reportedKeys = new Map<string, string>();
-  const savedForReport = new Map<string, { readonly artifactId: string | null; readonly why: string;readonly canonicalUrl?:string;readonly sourceCheckedAt?:string }>();
+  const savedForReport = new Map<string, { readonly artifactId: string | null; readonly why: string }>();
 
   /** The cited page, from this job's saved pages or fetched once by code, with any capture the fetch made. The model never re-fetches it. */
-  async function citedPage(sourceUrl: string): Promise<{ readonly artifactId: string | null; readonly why: string;readonly canonicalUrl?:string;readonly sourceCheckedAt?:string; readonly fetched: ScoutToolCallResult | null }> {
-    for (const page of new Set(savedByUrl.values())) {
-      if (sameUrl(page.canonicalUrl, sourceUrl) || sameUrl(page.retrievalUrl, sourceUrl)) return { artifactId: page.artifactId, why: "saved",canonicalUrl:page.canonicalUrl,sourceCheckedAt:page.retrievedAt, fetched: null };
+  async function citedPage(sourceUrl: string): Promise<{ readonly artifactId: string | null; readonly why: string; readonly fetched: ScoutToolCallResult | null }> {
+    for (const page of savedPages.values()) {
+      if (sameUrl(page.canonicalUrl, sourceUrl) || sameUrl(page.retrievalUrl, sourceUrl)) return { artifactId: page.artifactId, why: "saved", fetched: null };
     }
     const prior = savedForReport.get(sourceUrl);
     if (prior) return { ...prior, fetched: null };
     const fetched = await fetchPublic({ url: sourceUrl, lookFor: null });
     const page = fetched.ok ? fetched.artifacts.find(artifact => savedPages.has(artifact.artifactId)) : undefined;
-    const heldPage=page?savedPages.get(page.artifactId):undefined;
-    const saved = page ? { artifactId: page.artifactId, why: "saved",canonicalUrl:heldPage?.canonicalUrl,sourceCheckedAt:heldPage?.retrievedAt } : { artifactId: null, why: fetched.step?.observed ?? fetched.forModel.slice(0, 200) };
+    const saved = page ? { artifactId: page.artifactId, why: "saved" } : { artifactId: null, why: fetched.step?.observed ?? fetched.forModel.slice(0, 200) };
     savedForReport.set(sourceUrl, saved);
     return { ...saved, fetched };
   }
@@ -1204,11 +1229,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     if (!report.subjects.has(subjectId)) return refusal(`${JSON.stringify(subjectId)} is not a subject in this brief; use the id in [brackets].`);
     const url = publicUrl(sourceUrl);
     if (typeof url === "string") return refusal(url);
-    const page = await citedPage(url.toString());
-    const key = JSON.stringify([subjectId, field, String(value),page.canonicalUrl??sourceUrl,sentence]);
+    const key = JSON.stringify([subjectId, field, String(value), sourceUrl]);
     const already = reportedKeys.get(key);
     if (already) return { ok: true, step: null, artifacts: [], provenance: [], requestCount: 0, bytesFetched: 0, forModel: `ALREADY IN THE BOX (${already}).` };
-    const finding: ReportedFinding & {sourceCheckedAt?:string} = { subjectId, field, value, exactQuote: sentence, sourceUrl: page.canonicalUrl??url.toString(),sourceCheckedAt:page.sourceCheckedAt,
+    const page = await citedPage(url.toString());
+    const finding: ReportedFinding = { subjectId, field, value, exactQuote: sentence, sourceUrl: url.toString(),
       artifactIds: page.artifactId ? [page.artifactId] : [], subjectHint: null, index: reported.length };
     try {
       const written = await report.write(finding);

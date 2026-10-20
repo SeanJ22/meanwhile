@@ -1,5 +1,6 @@
+import {huntFindingSubject} from './finding-subject.ts';
+import {liveHuntBodyPreparer} from './body-target-runtime.ts';
 import {huntDirections} from './directions.ts';
-import {readPlaceArtifacts} from '../control-plane/repository/pg-store.ts';
 import { indexReportedFinding } from "../control-plane/box.ts";
 import { readSetting } from "../control-plane/settings.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
@@ -143,8 +144,8 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
   const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
+  const prepareBody=liveHuntBodyPreparer({repos:input.repos,root:input.root,now:input.now});
   let packet: HuntPacket | null = null;
-  const sourceOrigins=new Map<string,Promise<Awaited<ReturnType<typeof readPlaceArtifacts>>>>();
   return hunterExecutor({
     role,
     playbookFor: hunterRole => readRolePlaybook(input.repos, hunterRole),
@@ -162,6 +163,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       const tried = role === "DETECTIVE" ? triedSteps({ steps: last?.rungs ?? [], unfilled: last?.unfilled ?? [], shutDoors: doors }) : [];
       const bound = durableResearchTools(input.tools, { project: item.project, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id, subjectId: governmentId });
       const reportPacket = packet;
+      const subjects=new Set(reportableSubjects(reportPacket));
       return {
         brief: huntBrief(reportPacket, { role, tried, notes }) + (readerQuestion ?
           `\n\nREADER'S UNANSWERED QUESTION: ${readerQuestion.text}\nAnswer this question first, using what we hold above and then public sources. Report each missing fact with its actual field name and exact supporting sentence. Never treat the question or an AI answer as evidence.` : ""),
@@ -179,21 +181,20 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
               governmentId, assignmentKeys, recordedAt: input.now() }), input.now());
           },
           reportFinding: {
-            subjects: reportableSubjects(reportPacket),
-            write: async finding => {
-              const at=input.now(),key=JSON.stringify([finding.sourceUrl,...finding.artifactIds]);
-              if(!sourceOrigins.has(key))sourceOrigins.set(key,readPlaceArtifacts(input.repos,finding.sourceUrl,new Date(Date.parse(at)-30*86400000).toISOString(),at));
-              const source=(await sourceOrigins.get(key)!).filter(record=>finding.artifactIds.includes(record.artifactId)).sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt))[0];
-              return {boxId:(await indexReportedFinding(input.repos.boxFindings,{workItemId:item.id,attemptId:job.attemptId,
-                sourceCheckedAt:source?.recordedAt??(finding as typeof finding & {sourceCheckedAt?:string}).sourceCheckedAt,
-                sourceWorkItemId:source?.workItemId,sourceAttemptId:source?.attemptId,
-                obligationId:huntPacketObligationId(governmentId),missionPart:null,finding},at)).id};
+            subjects,
+            write: async raw => {
+              const finding=huntFindingSubject(raw,reportPacket.label);
+              const box=await indexReportedFinding(input.repos.boxFindings,{workItemId:item.id,attemptId:job.attemptId,obligationId:huntPacketObligationId(governmentId),missionPart:null,finding},input.now());
+              await prepareBody?.({...finding,value:String(finding.value)},{workItemId:item.id,attemptId:job.attemptId});
+              subjects.add(finding.subjectId);
+              return {boxId:box.id};
             },
           },
         },
       };
     },
-    onResult: async result => {
+    onResult: async raw => {
+      const result={...raw,findings:raw.findings.map(f=>huntFindingSubject(f,packet?.label))};
       const given = packet;
       const recorded: ScoutResult = given === null ? result : { ...result, obligationId: huntPacketObligationId(governmentId),
         blankFingerprint: blankFingerprint(given), blankDigests: given.blanks.map(blankDigest) };

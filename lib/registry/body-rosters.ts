@@ -20,7 +20,6 @@ export interface RosterMember {
   sourceRecordId?: string;
   nativeIds?: Readonly<Record<string, readonly string[]>>;
   officeId?: string;
-  photoUrl?:string|null;
   name: string;
   /** The published role — "Mayor", "Ward 3 Council Member", "Chair". */
   officeTitle: string;
@@ -171,7 +170,7 @@ export interface RosterHolder {
 /**
  * The roster as `SeatHolder`-shaped rows, so the popup family renders local
  * members with the same machinery as federal and state ones. A member with no
- * verified portrait renders initials.
+ * photo renders initials; body-page portraits of unknown license are not used.
  */
 export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
   const roster = rosterForBody(bodyId);
@@ -199,7 +198,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactScope: member.contactScope,
     fieldSources: member.fieldSources,
     contactFormUrl: null,
-    photoUrl: member.photoUrl ?? photos[member.id] ?? null,
+    photoUrl: photos[member.id] ?? null,
     campaignUrl: null,
     termStart: member.termStart ?? null,
     termEnd: member.termEnd ?? null,

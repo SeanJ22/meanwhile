@@ -6,6 +6,11 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { Attempt } from "../lib/control-plane/attempt.ts";
 import { AppendOnlyViolation, type ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 
+/**
+ * A re-observation of one artifact (same content, new Attempt) is idempotent, not a history
+ * rewrite; a genuine content divergence under one content-derived id is still refused.
+ */
+
 const NOW_A = "2026-09-02T00:00:00.000Z";
 const NOW_B = "2026-09-02T01:00:00.000Z";
 
@@ -31,7 +36,7 @@ function artifact(over: Partial<ArtifactRecord>): ArtifactRecord {
   };
 }
 
-test("a second observation retains its time and Attempt while preserving the original", async () => {
+test("SEEDED: a content-identical artifact re-observed by a SECOND Attempt is idempotent, not a rewrite", async () => {
   const repos = createMemoryRepositories();
   await repos.attempts.put("at-A", attemptRow("at-A"), NOW_A);
   await repos.attempts.put("at-B", attemptRow("at-B"), NOW_B);
@@ -39,14 +44,13 @@ test("a second observation retains its time and Attempt while preserving the ori
   const first = await recordArtifactMetadata(repos, artifact({ attemptId: "at-A", recordedAt: NOW_A }), NOW_A);
   assert.equal(first.appended, true, "the first observation is appended");
 
-  // One immutable content id can have more than one actual observation.
+  // Same content, new Attempt, new recordedAt.
   const second = await recordArtifactMetadata(repos, artifact({ attemptId: "at-B", recordedAt: NOW_B }), NOW_B);
-  assert.equal(second.appended,true);
-  assert.equal(second.record.attemptId,"at-B");
+  assert.equal(second.appended, false, "the re-observation is an idempotent no-op, not a throw");
+  assert.equal(second.record.attemptId, "at-A", "the FIRST observer's attribution stands, unrewritten");
 
   const held = await repos.artifacts.read("wi-1");
-  assert.equal(held.length,2);
-  assert.deepEqual(held.map(row=>[row.attemptId,row.recordedAt]),[["at-A",NOW_A],["at-B",NOW_B]]);
+  assert.equal(held.length, 1, "exactly one artifact record — no duplicate and no rewrite");
 });
 
 test("a DIFFERENT-content collision under one content-derived id is STILL refused", async () => {
@@ -68,7 +72,7 @@ test("a DIFFERENT-content collision under one content-derived id is STILL refuse
   );
 });
 
-test("retrying the same observation is idempotent", async () => {
+test("a byte-identical retry under the SAME Attempt is idempotent (the pre-fix behaviour, unchanged)", async () => {
   const repos = createMemoryRepositories();
   await repos.attempts.put("at-A", attemptRow("at-A"), NOW_A);
   const once = await recordArtifactMetadata(repos, artifact({ attemptId: "at-A" }), NOW_A);

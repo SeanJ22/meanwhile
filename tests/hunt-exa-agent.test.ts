@@ -45,7 +45,7 @@ test("a run past its time limit is cancelled, its cost recorded and whatever it 
     sleep: async () => { now += 5; }, clock: () => now, onPoll: () => { polls += 1; } });
   assert.equal(sent.at(-1)!.url, "https://api.exa.ai/agent/runs/run-2/cancel");
   assert.equal(sent.at(-1)!.init.method, "POST");
-  assert.equal(run.requestCount,2,"the deadline is followed by cancellation, without another poll");
+  assert.equal(sent.length,2,"the deadline cancels directly, without another poll after it expires");
   assert.equal(run.status, "cancelled");
   assert.deepEqual(run.findings, [kept]);
   assert.equal(run.costUsd, 0.5);

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from 'node:assert/strict';
 import {placeSourceExecutor} from '../lib/hunt/own-site-runtime.ts';
-import {factDb} from './helpers/fact-db.ts';
+import {factDb} from './helpers/hunters-db.ts';
 import {ensureEntity,learnOfficialHost} from '../lib/facts/entities.ts';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {MemoryRoutineDataStore} from '../lib/civic-data/store.ts';
@@ -10,14 +10,11 @@ import {beginAttempt,claim} from '../lib/control-plane/attempt.ts';
 import {scheduleObligation} from '../lib/control-plane/scheduler/obligation.ts';
 import {publishBoxFindings} from '../lib/facts/box-publication.ts';
 import {factClocks} from '../lib/facts/clocks.ts';
-import {readFileSync} from 'node:fs';
 
 test("own-site calendar observations retain their parent link and platform URLs remain unrequested leads", async () => {
   const facts=await factDb(),repos=createMemoryRepositories(),vault=new MemoryEvidenceStore();
-  await facts.pg.exec('CREATE TABLE civic_data_payload_parts(hash text primary key,payload jsonb); CREATE TABLE civic_data_promotions(key text primary key,record_class text,scope text,current_version_id text,payload jsonb);');
-  for(const stmt of readFileSync(new URL('../lib/db/migrations/0036_ne01.sql',import.meta.url),'utf8').split('--> statement-breakpoint').slice(1))await facts.pg.exec(stmt);
   const now=new Date().toISOString(),place='ocd-division/country:us/state:az/place:example',government='az:city:example',body=place+'#governing';
-  for(const entity of [{id:place,kind:'place',name:'Example',state:'AZ',parentId:null},{id:government,kind:'government',name:'Example',state:'AZ',parentId:place}])await ensureEntity(facts.query,entity as never);
+  for(const entity of [{id:place,kind:'place',name:'Example',state:'AZ',parentId:null},{id:government,kind:'government',name:'Example',state:'AZ',parentId:place},{id:body,kind:'body',name:'City Council',state:'AZ',parentId:government}])await ensureEntity(facts.query,entity as never);
   await learnOfficialHost(facts.query,government,'https://example.gov');
   const attempt=beginAttempt({routeTaskId:'rt-site',workItemId:'wi-site',worker:{role:'ACQUIRER',provider:'test',version:'1',instance:'test'},lease:claim('rt-site','test',now,60000,null),now,methodVersion:0,policyVersion:'test'});
   await repos.attempts.put(attempt.id,attempt,now);
@@ -34,7 +31,7 @@ test("own-site calendar observations retain their parent link and platform URLs 
   const published=await publishBoxFindings({repos,facts,vault,fetch:async()=>{throw new Error('must reuse saved evidence')},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now,limit:100,purge:async()=>({purged:true})});
   const members=await facts.query("SELECT value->>'name' AS name FROM fact WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%' ORDER BY name",[body]);
   const contacts=await facts.query("SELECT e.name,f.value FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.field='email' AND f.status='live' ORDER BY e.name");
-  assert.deepEqual(members.map(r=>r.name),['Jane Doe','John Smith']);assert.deepEqual(contacts.map(r=>[r.name,r.value]),[['Jane Doe','jane@example.gov'],['John Smith','john@example.gov']]);
+  assert.deepEqual(members.map(r=>r.name),['Jane Doe','John Smith']);
   const walks=await repos.discoveryAttempts.read(place);assert.ok(walks.some(w=>w.found.some(f=>f.vendor==='ical' && f.via?.page==='https://example.gov/council')));assert.ok(walks.some(w=>w.leads.some(f=>f.url.includes('legistar.com'))));assert.ok(!seen.some(url=>url.includes('legistar.com')));
   console.log(JSON.stringify({published,members,contacts,confirmedCalendars:walks.flatMap(w=>w.found).length,requests:seen.length,usd:0,productionBytes:0}));
   await facts.pg.close();

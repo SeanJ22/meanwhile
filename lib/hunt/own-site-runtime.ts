@@ -1,4 +1,6 @@
+import type {PrepareHuntBody} from './body-target-runtime.ts';
 import {sourceMeetings} from './source-meetings.ts';
+import {retainHuntPage} from './capture-reference.ts';
 import {discoverGovernmentSite} from './government-site.ts';
 import {planPlaceHunt} from './place-plan.ts';
 import {walkPlaceBlanks} from './site-walk.ts';
@@ -22,7 +24,7 @@ import type {OpenOne,VaultPut} from '../control-plane/scheduler/route-executor.t
 import type {SiteScope} from './site-findings.ts';
 
 export interface HuntSourceScope {jurisdictionId:string;governmentId:string|null;bodyId:string|null;name:string;state:string;website:string;knownOwnSite?:boolean;directorySeeds?:readonly string[];govClass?:string;}
-export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
+export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
  return async (job):Promise<WorkOutcome>=>{
   const started=Date.now(),canRead=input.canRead??(()=>Date.now()-started<job.bound.maxWallMs);
   const selected=input.query ? null : readerQuery();
@@ -35,7 +37,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   const row=identity[0];
   if(row?.state && row.state!==reference.state)throw new Error('HUNT_PLACE_STATE_MISMATCH');
   const governmentId=(row?.kind==='government' || row?.kind==='place'?String(row.id):typeof row?.parent_id==='string' && row.parent_id.startsWith('ocd-division/')?row.parent_id:reference.governmentId??reference.jurisdictionId);
-  const scope:SiteScope={governmentId,govClass:reference.govClass,bodyId:reference.bodyId??(row?.body_id?String(row.body_id):`${reference.jurisdictionId}#${/SCHOOL/.test(reference.govClass??'')?'board':'governing'}`),bodyName:row?.body_name?String(row.body_name):null,name:reference.name,state:reference.state,website:reference.website};
+  const scope:SiteScope={governmentId,govClass:reference.govClass,bodyId:row?.body_id?String(row.body_id):reference.bodyId??`${reference.jurisdictionId}#${/SCHOOL/.test(reference.govClass??'')?'board':'governing'}`,bodyName:row?.body_name?String(row.body_name):null,name:reference.name,state:reference.state,website:reference.website};
   const key=fieldManualEntryId('place-hunt',reference.jurisdictionId);
   const prior=await input.repos.fieldManual.read(key);
   const payload=prior?.value.payload as {website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}|undefined;
@@ -52,6 +54,13 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   };
   const reader=placePageReader({open:input.open,vault:input.vault,spaceOut:input.spaceOut,now:input.now,attemptId:job.attemptId,workItemId:job.workItemId,routeId:job.obligation.obligation.routeId??'own-site-meetings',canRead,endsAt:started+job.bound.maxWallMs,websiteSize:websiteSizeForObligation(job.obligation.obligation,input.root),
    onArtifact:artifact=>recordArtifactMetadata(input.repos,{...artifact,workItemId:job.workItemId,attemptId:job.attemptId,routeTaskId:job.routeTaskId},input.now()).then(()=>undefined)});
+  const readPage=async(url:string)=>{
+   job.assertLeaseHealthy?.();
+   const saved=await (input.readHeldPage??held)(url);
+   const page=saved?await retainHuntPage(input.repos,job.workItemId,saved,input.now()):await reader.read(url);
+   if(page)checked++;
+   return page;
+  };
   try{
    const readBank=input.readHeld??(ids=>readScopedBank(query,ids,scope.state,input.now()));
    const plan=await planPlaceHunt({repos:input.repos,now:input.now(),divisions:[{id:scope.governmentId,label:scope.name}],readHeld:readBank,acquireNational:async()=>({subjects:[],held:[]})});
@@ -59,9 +68,9 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
      let siteRemaining=payload?.siteFrontier??reference.directorySeeds??[];
      let discoveredWebsite:string|undefined;
      const site=await discoverGovernmentSite({name:scope.name,seeds:reference.directorySeeds??[],frontier:payload?.siteFrontier,canRead,
-       read:async url=>{job.assertLeaseHealthy?.();const page=await (input.readHeldPage??held)(url)??await reader.read(url);if(page)checked++;return page;},
+       read:readPage,
        save:async frontier=>{siteRemaining=frontier;const at=input.now();const saved=await writeFieldManual(input.repos,[newFieldManualEntry('place-hunt',reference.jurisdictionId,{role:'SHARED',kind:'SOURCE_PAGE',title:reference.name,states:[scope.state.toLowerCase()],ocdIds:[governmentId],outcome:'REFERENCE',summary:`Read ${checked} directory page(s); this government's own website remains open`,observedAt:at,payload:{...(discoveredWebsite?{website:discoveredWebsite}:{}),siteFrontier:frontier}})],at);if(saved.error)throw new Error(saved.error);},
-       found:async(site,page)=>{discoveredWebsite=site.url;await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,sourceCheckedAt:page.observedAt,sourceWorkItemId:page.sourceWorkItemId,sourceAttemptId:page.sourceAttemptId,finding:{index:findings++,subjectId:governmentId,subjectHint:scope.name,field:'government.website',value:site.url,sourceUrl:page.url,exactQuote:site.quote,artifactIds:[page.artifactId]}},input.now());}});
+       found:async(site,page)=>{discoveredWebsite=site.url;await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,finding:{index:findings++,subjectId:governmentId,subjectHint:scope.name,field:'government.website',value:site.url,sourceUrl:page.url,exactQuote:site.quote,artifactIds:[page.artifactId]}},input.now());}});
      if(!site)return {ranAs:'DETERMINISTIC',kind:checked?'DISPOSED':'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},...(checked?{disposition:{disposition:'WALKED_NO_YIELD',observation:null,permission:'CANNOT_TELL',transport:'REACHABLE',note:`Read ${checked} directory pages; ${siteRemaining.length} directory links remain. The website stays an open blank.`}}:{}),detail:`${scope.name}: the government website remains open after ${checked} source directory page(s).`};
      scope.website=site;
    }
@@ -70,8 +79,8 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
     // Canonical national holdings, the current place and native reader facts
     // precede local requests. They are independent of the original job or ZIP.
     readHeld:readBank,national:async()=>({subjects:[],held:[]}),
-    read:async url=>{job.assertLeaseHealthy?.();const page=await (input.readHeldPage??held)(url)??await reader.read(url);if(page)checked++;return page;},
-    report:async finding=>{job.assertLeaseHealthy?.();await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,sourceWorkItemId:finding.sourceWorkItemId,sourceAttemptId:finding.sourceAttemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,sourceCheckedAt:finding.observedAt,finding:{...finding,index:findings++,subjectHint:scope.name}},input.now());},
+    read:readPage,
+    report:async finding=>{job.assertLeaseHealthy?.();await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,finding:{...finding,index:findings++,subjectHint:scope.name}},input.now());await input.prepareBody?.(finding,{workItemId:job.workItemId,attemptId:job.attemptId});},
     frontier:payload?.frontier,
     saveFrontier:async(frontier,read)=>{const at=input.now();const written=await writeFieldManual(input.repos,[newFieldManualEntry('place-hunt',reference.jurisdictionId,{role:'SHARED',kind:'SOURCE_PAGE',title:reference.name,url:scope.website,states:[scope.state.toLowerCase()],ocdIds:[governmentId],outcome:findings?'YIELDED':'REFERENCE',summary:`${checked} source page(s) read, ${findings} finding(s); ${frontier.length} published link(s) remain`,observedAt:at,payload:{website:scope.website,frontier,read}})],at);if(written.error)throw new Error(written.error);}});
    if(!report.read && report.failures?.length)return {ranAs:'DETERMINISTIC',kind:'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},detail:`${scope.name}: no source page was readable; ${report.failures.length} source failure(s) remain open.`};

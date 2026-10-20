@@ -1,6 +1,5 @@
 import {assertPublicUrl} from './egress.ts';
-import {accessControlIn} from './access-control.ts';
-import {recordAcquisition,deriveSanitized,type Artifact} from '../control-plane/evidence/artifact.ts';
+import {recordAcquisition,deriveSanitized} from '../control-plane/evidence/artifact.ts';
 import {researchFetch,memoryInProcess} from './robots-first-fetch.ts';
 import {DEFAULT_USER_AGENT,type OpenOne,type VaultPut} from '../control-plane/scheduler/route-executor.ts';
 import {websiteRequestLimit,type WebsiteSizeForUrl} from '../control-plane/scheduler/host-supervision.ts';

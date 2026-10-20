@@ -1,5 +1,4 @@
 import type { SpendTotals } from "./spend-window.ts";
-import {isExaModelRequest,EXA_AGENT_PRICE_USD,exaResponseUsd,EXA_AGENT_MODEL} from "../hunt/exa-transport.ts";
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
@@ -170,7 +169,7 @@ export interface PricedCharge {
 export function pricedModelCharge(entry: CostEntry, id: string): PricedCharge | null {
   // Search invoices are tracked separately; the Anthropic token budget must
   // never consume Brave/Exa charges merely because they carry a dollar value.
-  if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || (entry.source === "api.exa.ai" && entry.model!==EXA_AGENT_MODEL && entry.requestedModel!==EXA_AGENT_MODEL)) return null;
+  if (entry.role === "DISCOVERY_SEARCH" || entry.source === "api.search.brave.com" || entry.source === "api.exa.ai") return null;
   const isModelBacked =
     entry.role === "SCOUT" ||
     !!entry.requestedModel || !!entry.servedModel || !!entry.modelRequestBound ||
@@ -339,7 +338,6 @@ export function parseContentRangeTotal(header: string | null): number | null {
 }
 
 export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
-  if(isExaModelRequest(request))return EXA_AGENT_PRICE_USD;
   const rate = rateFor(request.model);
   if (rate === null || !amount(request.max_tokens)) return null;
   const body = JSON.stringify(request);
@@ -353,7 +351,6 @@ export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
 
 /** What a model response cost, from its provider-reported usage; null when the usage is incomplete. */
 export function modelResponseUsd(response: ModelResponse): number | null {
-  if(response.model===EXA_AGENT_MODEL)return exaResponseUsd(response);
   return priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "5m").usd;
 }
 
@@ -741,17 +738,8 @@ export class FleetSafetyController {
     return this.held.until;
   }
 
-  /** A missing or broken robots document is advisory. An actual rate limit or
-   * explicit request to wait still applies to every request on the website. */
-  private advisoryRobots(url: string, response?: Response): boolean {
-    const sourceUrl=new URL(url);
-    return sourceUrl.pathname === "/robots.txt" &&
-      (response === undefined || (response.status !== 429 && this.retryAfterMs(response) === null));
-  }
-
   /** A 429 or 5xx (with its Retry-After, when sent) holds the website for every reader. */
   private async holdWebsiteAfter(url: string, response: Response): Promise<void> {
-    if (this.advisoryRobots(url, response)) return;
     if (response.status !== 429 && response.status < 500) return;
     const now = this.clock();
     const site = websiteOf(url);
@@ -774,8 +762,7 @@ export class FleetSafetyController {
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
   guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
-    return async ({ url, method, headers, body, timeoutMs, ...options }) => {
-      const follow=(options as {followRedirects?:boolean}).followRedirects!==false;
+    return async ({ url, method, headers, body, timeoutMs }) => {
       // Worker processes broker requests through this shared parent, so every
       // caller waits at one gate per provider.
       const started = Date.now();
@@ -815,7 +802,7 @@ export class FleetSafetyController {
             });
             // The bounded reader can reject a partial body before decoding it.
             // Persist that source failure before its download-limit exception.
-            if (!this.advisoryRobots(url, response) && (response.status === 206 || response.headers.has("content-range"))) {
+            if (response.status === 206 || response.headers.has("content-range")) {
               const partial = httpProviderFailure(currentUrl, { status: response.status, bytes: 0,
                 body: "", contentType: "", durationMs: 0, transportError: null,
                 contentRange: response.headers.get("content-range") });
@@ -828,7 +815,7 @@ export class FleetSafetyController {
             throw error;
           }
           const location = response.headers.get("location");
-          if (![301, 302, 303, 307, 308].includes(response.status) || location === null || !follow) break;
+          if (![301, 302, 303, 307, 308].includes(response.status) || location === null) break;
           const nextUrl = new URL(location, currentUrl).toString();
           if (sourceReliabilityKey(nextUrl) !== provider) {
             const index = recoveries.findIndex(([key]) => key === provider);
@@ -840,24 +827,24 @@ export class FleetSafetyController {
             currentBody = undefined;
           }
         }
-        const outcome: FetchOutcome & {finalUrl:string;location:string|null} = {
+        const outcome: FetchOutcome = {
           status: response.status, bytes: merged.byteLength,
           contentType: response.headers.get("content-type") ?? "application/octet-stream",
           body: new TextDecoder().decode(merged), durationMs: Date.now() - started,
-          transportError: null, finalUrl: currentUrl, location: response.headers.get("location"), requestCount: requests, contentRange: response.headers.get("content-range"),
+          transportError: null, requestCount: requests, contentRange: response.headers.get("content-range"),
         };
         const failure = httpProviderFailure(currentUrl, outcome);
         const hard = classifyProviderFailure(new ModelTransportError(
           `HTTP ${response.status}: ${outcome.body.slice(0, 300)}`, response.status));
-        if (!this.advisoryRobots(url, response) && (failure !== null || hard.class === "HARD")) {
+        if (failure !== null || hard.class === "HARD") {
           this.latchProvider(provider, failure ?? hard.condition, work, new Date(this.clock()).toISOString(),
             this.retryAfterMs(response), hard.class === "HARD" ? "HARD" : "TRANSIENT");
-        } else if (response.ok && !this.advisoryRobots(url, response)) this.providerSucceeded(provider, observed);
-        if (!this.advisoryRobots(url, response)) await this.holdWebsiteAfter(currentUrl, response);
+        } else if (response.ok) this.providerSucceeded(provider, observed);
+        await this.holdWebsiteAfter(currentUrl, response);
         return outcome;
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
-        else if (requests > 0 && !this.advisoryRobots(url)) this.latchProvider(provider,
+        else if (requests > 0) this.latchProvider(provider,
           `transport failed: ${error instanceof Error ? error.message : String(error)}`, work, new Date(this.clock()).toISOString());
         return { status: null, bytes: 0, contentType: "", body: "", durationMs: Date.now() - started,
           transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
@@ -908,10 +895,8 @@ export class FleetSafetyController {
               redirect: "manual",
               headers,
             });
-            // The bounded reader may refuse a partial response before it can
-            // be classified below. Record this actual failed recovery once;
-            // a complete oversized body remains a local memory refusal.
-            if (!this.advisoryRobots(url, response) && observed && this.hardCircuit(observed) && (response.status === 206 || response.headers.has("content-range"))) {
+
+            if (observed && this.hardCircuit(observed) && (response.status === 206 || response.headers.has("content-range"))) {
               this.latchProvider(provider, `partial HTTP ${response.status} response`, work,
                 new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
               partialFailureObserved = true;
@@ -938,11 +923,11 @@ export class FleetSafetyController {
           contentType: response.headers.get("content-type") ?? "", durationMs: Date.now() - started,
           transportError: null, contentRange: response.headers.get("content-range"),
         }) : null;
-        if (!this.advisoryRobots(url, response) && !partialFailureObserved && failure.class === "HARD") this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "HARD");
-        else if (!this.advisoryRobots(url, response) && !partialFailureObserved && observed && this.hardCircuit(observed) && (failure.class === "TRANSIENT" || recoveryFailure !== null)) {
+        if (!partialFailureObserved && failure.class === "HARD") this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "HARD");
+        else if (!partialFailureObserved && observed && this.hardCircuit(observed) && (failure.class === "TRANSIENT" || recoveryFailure !== null)) {
           this.latchProvider(provider, recoveryFailure ?? failure.condition, work, new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");
-        } else if (!this.advisoryRobots(url, response) && response.ok && recoveryFailure === null) this.providerSucceeded(provider, observed);
-        if (!this.advisoryRobots(url, response)) await this.holdWebsiteAfter(currentUrl, response);
+        } else if (response.ok && recoveryFailure === null) this.providerSucceeded(provider, observed);
+        await this.holdWebsiteAfter(currentUrl, response);
         return {
           status: response.status,
           bytes: merged,
@@ -954,7 +939,7 @@ export class FleetSafetyController {
         };
       } catch (error) {
         if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
-        else if (!this.advisoryRobots(url) && !partialFailureObserved && sent && observed && this.hardCircuit(observed)) {
+        else if (!partialFailureObserved && sent && observed && this.hardCircuit(observed)) {
           const failure = classifyProviderFailure(error);
           this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), null,
             failure.class === "HARD" ? "HARD" : "TRANSIENT");

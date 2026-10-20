@@ -41,6 +41,7 @@ export function huntBrief(packet: HuntPacket, context: {
   }
   if (packet.held.length > HELD_LINES) lines.push(`- and ${packet.held.length - HELD_LINES} more; read_held lists them all`);
   lines.push("", `BLANKS TO FILL (${packet.blanks.length}). Report each value with report_finding the moment a page states it: subjectId in [brackets], field = the checklist id.`);
+  lines.push("A body inventory asks for newly found bodies: report each actual sourced body name separately against that inventory subject with field GOV-02. Report body names before people. Then use <government>#governing for its city/town/county council or commission, supervisors or commissioners; <government>#board for its school board; otherwise <government>#body:<body-name-in-lowercase-with-spaces-and-punctuation-as-hyphens>. Use that body identity for its officials. Never use the inventory as a person or seat.");
   const families = new Map<string, PacketField[]>();
   for (const blank of packet.blanks) families.set(blank.family, [...families.get(blank.family) ?? [], blank]);
   for (const [family, blanks] of [...families].sort(([a], [b]) => Object.keys(CHECKLIST_FAMILIES).indexOf(a) - Object.keys(CHECKLIST_FAMILIES).indexOf(b))) {

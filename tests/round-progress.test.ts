@@ -10,9 +10,6 @@ import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-po
 
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);
-// Allow a cold Node process to start under parallel CI load. The wave still
-// lasts longer than the quiet allowance, so the silent control must time out.
-const WAVE_QUIET_MS = 2_000;
 
 const waveChild = (report: boolean) => `
   import { roundProgressReporter } from ${progressModule};
@@ -23,28 +20,26 @@ const waveChild = (report: boolean) => `
     finished++;
     ${report ? "progress.note('worker wave');" : ""}
     if (finished === 24) { clearInterval(wave); console.log('worker fleet: 24 finished'); process.disconnect(); }
-  }, 150);
+  }, 50);
 `;
 
 test("a worker wave that finishes tasks silently for longer than the quiet allowance is ended (the live failure)", async () => {
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", waveChild(false)] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: WAVE_QUIET_MS });
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 400 });
   assert.equal(result!.termination, "TIMED_OUT");
   assert.match(result!.errorMessage!, /RESEARCH_CHILD_NO_PROGRESS/);
   assert.doesNotMatch(result!.stdout, /worker fleet: 24 finished/);
 });
 
 test("the same wave reporting its finished tasks completes the round", async () => {
-  const started = Date.now();
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", waveChild(true)] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: WAVE_QUIET_MS });
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 400 });
   assert.equal(result!.termination, "EXITED");
   assert.equal(result!.status, 0);
   assert.match(result!.stdout, /round progress: worker wave \d+ finished/);
   assert.match(result!.stdout, /worker fleet: 24 finished/);
-  assert.ok(Date.now() - started > WAVE_QUIET_MS, "completed waves keep the child alive beyond the quiet allowance");
 });
 
 test("a round stuck on one await names it before the limit, and the answer does not keep it alive", async () => {

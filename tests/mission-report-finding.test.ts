@@ -47,7 +47,7 @@ test("a hunter reports a finding for a subject in its brief from a page it saved
   assert.equal(dropped.ok, true, dropped.forModel);
   assert.match(dropped.forModel, /IN THE BOX/);
   assert.equal(dropped.step, null, "a report is not a research step");
-  assert.deepEqual(written, [{ subjectId: CITY, field: "name", value: "Lee Park", exactQuote: drop.sentence, sourceUrl: PAGE, sourceCheckedAt: NOW, artifactIds: ["held-page"], subjectHint: null, index: 0 }]);
+  assert.deepEqual(written, [{ subjectId: CITY, field: "name", value: "Lee Park", exactQuote: drop.sentence, sourceUrl: PAGE, artifactIds: ["held-page"], subjectHint: null, index: 0 }]);
   assert.deepEqual(kit.reported, written);
 
   assert.match((await kit.call("report_finding", drop)).forModel, /ALREADY IN THE BOX \(box-1\)/);

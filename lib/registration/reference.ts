@@ -1,7 +1,6 @@
 /**
- * The held registration reference, read for one planning state from
- * `data/derived/registration/` by registration and free-source planning.
- * Source workers receive one government's descriptor.
+ * The held registration reference, read for one state from `data/derived/registration/`. Only the registration child script reads
+ * these files (never a request path).
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -38,12 +37,11 @@ export interface LoadedReference {
 }
 
 export function loadRegistrationReference(root: string, state: string): LoadedReference {
-  const path = join(/* turbopackIgnore: true */ root, "data", "derived", "registration", `${state.toLowerCase()}.json`);
-  const text = readFileSync(path, "utf8");
+  const dir = join(/* turbopackIgnore: true */ root, "data", "derived", "registration");
+  const text = readFileSync(join(dir, `${state.toLowerCase()}.json`), "utf8");
   const reference = JSON.parse(text) as RegistrationReference;
   if (reference.formatVersion !== 1 || reference.state !== state.toLowerCase()) throw new Error(`REGISTRATION_REFERENCE_INVALID:${state}`);
-  const indexPath = join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json");
-  const index = JSON.parse(readFileSync(indexPath, "utf8")) as { generatedAt: string; states: Record<string, { sha256: string; generatedAt?: string }> };
+  const index = JSON.parse(readFileSync(join(dir, "index.json"), "utf8")) as { generatedAt: string; states: Record<string, { sha256: string; generatedAt?: string }> };
   const sha256 = createHash("sha256").update(text).digest("hex");
   const entry = index.states[state.toLowerCase()];
   if (entry?.sha256 !== sha256) throw new Error(`REGISTRATION_REFERENCE_DRIFT:${state}: the state file does not match index.json`);

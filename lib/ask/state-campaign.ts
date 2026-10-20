@@ -14,20 +14,15 @@ export async function stateCampaignEvidence(divisions: readonly string[], subjec
       if (read.nextCursor) more++;
       if (read.status !== "HELD") { unavailable++; continue; }
       for (const row of read.records) {
-        const source = row.provenance;
-        records.set(row.id, { id: row.id, kind: row.amounts.length ? "FINANCE_TRANSACTION" : "FINANCE_COMMITTEE", subjectId: subjectId ?? division,
-          text: campaignFinanceRecordText({ ...row, amounts: row.amounts.filter(amount => !amount.provenance) }), sourceUrl: row.filingUrl, sourceOrg: source.publisher,
-          retrievedAt: source.retrievedAt, publicationDate: source.publicationDate, official: true });
-        for (const amount of row.amounts) if (amount.provenance) {
-          const own = amount.provenance;
-          records.set(`${row.id}:${amount.label}`, { id: `${row.id}:${amount.label}`, kind: "FINANCE_TRANSACTION", subjectId: subjectId ?? division,
-            text: `${row.filerName ?? "Filed committee"} · ${row.period ?? row.transactionDate ?? "Filed period not stated"} · ${amount.label}: ${amount.amount}`,
-            sourceUrl: own.url, sourceOrg: own.publisher, retrievedAt: own.retrievedAt, publicationDate: own.publicationDate, official: true });
-        }
+        for (const [index, source] of row.sources.entries()) records.set(`${row.id}:${index}`, {
+          id: `${row.id}:${index}`, kind: "FINANCE_COMMITTEE", subjectId: row.person.id,
+          text: campaignFinanceRecordText(row), sourceUrl: source.filingUrl, sourceOrg: source.publisher,
+          retrievedAt: source.retrievedAt, publicationDate: source.publicationDate, official: true,
+        });
       }
     } catch { unavailable++; }
   }
   if (unavailable) gaps.push({ whose: "OURS", statement: "We're working on getting this info about campaign money for this place." });
-  if (more) gaps.push({ whose: "OURS", statement: "More campaign filings are available on this place's card. These records are part of the held filings." });
+  if (more) gaps.push({ whose: "OURS", statement: "More campaign totals are available on this place's card." });
   return { records: [...records.values()], gaps, denominators: { stateCampaignRecordsReturned: records.size, stateCampaignMorePages: more, stateCampaignUnavailablePlaces: unavailable } };
 }

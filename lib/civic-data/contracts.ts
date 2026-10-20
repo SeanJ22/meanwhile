@@ -572,7 +572,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
     id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
     recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(source.state), fanOut: true,
-    acquisitionFailureDomain: `routine-source:campaign-finance:${source.state}`,
+    acquisitionFailureDomain: "routine-source:campaign-finance",
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/state-campaign-finance.mts", "--promote", `--state=${source.state}`] },
     parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
     cadence: { description: "Daily conditional checks of the official state's campaign-finance publication", defaultEveryMs: DAY },

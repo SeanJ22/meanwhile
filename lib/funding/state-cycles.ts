@@ -8,7 +8,7 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
   const rules=campaignFinanceSource(state).resources.map(resource=>({id:resource.id,aggregation:resource.aggregation??null}));
   await db.transaction(async query=>{
     await query(`CREATE TEMP TABLE money_rows ON COMMIT DROP AS SELECT * FROM (
-      SELECT f.entity_id,e.parent_id,e.name AS committee,f.value,f.source_copy_id,f.checked_at,
+      SELECT f.entity_id,e.parent_id,f.value->>'filerName' AS committee,f.value,f.source_copy_id,f.checked_at,
         CASE WHEN value->>'transactionDate' ~ '^\\d{4}-' THEN substr(value->>'transactionDate',1,4)::int
           WHEN value->>'transactionDate' ~ '^\\d{1,2}/\\d{1,2}/\\d{4}' THEN substring(value->>'transactionDate' from '^\\d{1,2}/\\d{1,2}/(\\d{4})')::int
           ELSE substring(value->>'period' from '(20[0-9]{2})')::int END AS year,
@@ -17,7 +17,7 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
       JOIN fact f ON f.entity_id=e.id AND f.status='live' AND f.field LIKE 'campaign-money:%'
       JOIN jsonb_array_elements($3::jsonb) config(rule) ON value->>'resource'=rule->>'id' OR value->>'resource' LIKE (rule->>'id')||':%'
       WHERE e.state=$1 AND e.parent_id=ANY($2::text[]) AND value#>>'{person,id}'=e.parent_id
-        AND value#>>'{person,name}'=p.name AND value->>'filerName'=e.name AND value->>'filingState'='FILED'
+        AND value#>>'{person,name}'=p.name AND value->>'filingState'='FILED'
     ) r`,[state,people,JSON.stringify(rules)]);
     await query("CREATE INDEX ON money_rows(entity_id,((value->>'cycle')::int))");
     await query("CREATE INDEX ON money_rows(parent_id,((value->>'cycle')::int),(value#>>'{donor,key}'))");
@@ -57,9 +57,9 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
       GROUP BY m.parent_id,m.entity_id,m.cycle,m.source_copy_id,m.person,m.committee,s.sources`);
     await replaceCycles(query,at);
     await query(`UPDATE fact f SET status='superseded' WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live'
-      AND EXISTS(SELECT 1 FROM entity c JOIN entity_external_id x ON x.entity_id=c.id AND x.scheme='campaign-money-record'
-        WHERE c.parent_id=f.entity_id AND f.field LIKE 'campaign-cycle:'||c.id||':%')
-      AND NOT EXISTS(SELECT 1 FROM money_cycles n WHERE n.entity_id=f.entity_id AND n.field=f.field)`,[people]);
+      AND EXISTS(SELECT 1 FROM entity c JOIN fact raw ON raw.entity_id=c.id AND raw.field LIKE 'campaign-money:%' AND raw.produced_by LIKE 'campaign-person-money:'||$2||':%'
+        WHERE c.parent_id=f.entity_id AND raw.value->>'cycle'=f.value->>'cycle' AND f.field LIKE 'campaign-cycle:'||c.id||':%')
+      AND NOT EXISTS(SELECT 1 FROM money_cycles n WHERE n.entity_id=f.entity_id AND n.field=f.field)`,[people,state]);
     await query(`CREATE TEMP TABLE money_donors ON COMMIT DROP AS WITH totals AS (
       SELECT parent_id,(value->>'cycle')::int AS cycle,value#>>'{donor,key}' AS key,sum((value#>>'{donor,amount}')::numeric) AS amount
       FROM money_rows WHERE year>=2020 AND (value->>'cycle')::int>=2020 AND aggregation='TRANSACTION' AND value?'donor'

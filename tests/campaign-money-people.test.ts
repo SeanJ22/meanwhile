@@ -143,6 +143,39 @@ test("a held source document without a filing period cannot become cycle totals"
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
+test("a committee's filed name can change without hiding another cycle",async()=>{
+  const db=await campaignDb();
+  try{
+    await publishPerson(db,person);
+    const current={...bindCampaignMoney(row,[person])!,id:"WA:current",cycle:2026,period:"2026",filerName:"Current filed name"};
+    const older={...current,id:"WA:older",cycle:2024,period:"2024",transactionDate:null,filerName:"Earlier filed name"};
+    await fileCampaignMoneyFacts(db,"WA",[current],at);await fileCampaignMoneyFacts(db,"WA",[older],at);
+    await rebuildCampaignCycles(db,"WA",[person.id],at);
+    const records=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records;
+    assert.deepEqual(records.map(record=>record.cycle),[2026,2024]);
+    assert.deepEqual(records.map(record=>record.committee),["Current filed name","Earlier filed name"]);
+  }finally{await db.pg.close();}
+});
+
+test("an amended native row moves between published people without leaving money or borrowed amounts behind",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-owner-move-"));
+  const other={...person,id:"second-published-person",name:"Other Published Person",seat:person.division+"#other-judge"};
+  let now=at,revision=1792454400,filed={...raw,contributions_amount:"100",expenditures_amount:"50",url:"https://www.pdc.wa.gov/filings/original"};
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:revision}:[filed])};
+  try{
+    await publishPerson(db,person);await publishPerson(db,other);await refreshCampaignMoneyState(options);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,1);
+    now="2026-10-20T02:00:00.000Z";revision+=3600;filed={...filed,filer_id:"second-filer",filer_name:other.name,expenditures_amount:"",url:"https://www.pdc.wa.gov/filings/amended"};
+    await refreshCampaignMoneyState(options);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,0);
+    const records=(await readCampaignFinanceForPlace(other.division,{query:db.query,personId:other.id})).records;
+    assert.equal(records[0]?.totals.find(total=>total.label==="Contributions")?.amount,100);
+    assert.equal(records[0]?.totals.some(total=>total.label==="Expenditures"),false);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-20T03:00:00.000Z")).length,1);
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
 test("two ID-less filed committees remain distinct and a named committee never owns another person's money",async()=>{
   const db=await campaignDb();
   try {

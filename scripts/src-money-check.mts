@@ -3,6 +3,7 @@ import {AsyncLocalStorage} from "node:async_hooks";
 import {spawnSync} from "node:child_process";
 import {randomBytes} from "node:crypto";
 import {readFile,writeFile} from "node:fs/promises";
+import {appendFileSync} from "node:fs";
 import {neon,neonConfig,Pool} from "@neondatabase/serverless";
 import {CAMPAIGN_FINANCE_SOURCES} from "../lib/funding/state-sources.ts";
 import {US_JURISDICTIONS} from "../lib/coverage/states.ts";
@@ -43,6 +44,7 @@ const reportPath=process.env.SRC_MN_CHECK_REPORT??"/tmp/src-mn-ready2-publisher-
 let productionResponseBytes=0;
 const databaseScope=new AsyncLocalStorage<"reader"|"control">();
 const traffic={reader:{read:0,sent:0},control:{read:0,sent:0}};
+process.on("exit",code=>{if(state)appendFileSync("/tmp/src-mn-state-check-exit-bytes.jsonl",JSON.stringify({state,pid:process.pid,code,productionBytesRead:productionResponseBytes,readerPrivate:traffic.reader,control:traffic.control})+"\n");});
 neonConfig.fetchFunction=async(input:RequestInfo|URL,init?:RequestInit)=>{
   const response=await fetch(input,init);if(!response.body)return response;
   return new Response(response.body.pipeThrough(new TransformStream({transform(bytes,controller){productionResponseBytes+=bytes.byteLength;controller.enqueue(bytes);}})),{status:response.status,statusText:response.statusText,headers:response.headers});
@@ -86,7 +88,7 @@ if(!state){
     const rows:Record<string,unknown>[]=from?await readFile(reportPath,"utf8").then(text=>JSON.parse(text).rows).catch(error=>{if(error.code==="ENOENT")return [];throw error;}):[];
     for(const source of CAMPAIGN_FINANCE_SOURCES.slice(from?CAMPAIGN_FINANCE_SOURCES.findIndex(source=>source.state===from):0)){
       const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:{...process.env,SRC_MN_AUDIT_SCHEMA:schema}});
-      if(child.status!==0)throw new Error(`${source.state}: ${child.stderr.slice(-2000)}`);
+      if(child.status!==0){const path=`/tmp/src-mn-${source.state}-check-failure.log`;await writeFile(path,child.stderr);throw new Error(`${source.state} worker failed (${child.status}); details saved in ${path}`);}
       rows.push(JSON.parse(child.stdout.trim().split("\n").at(-1)!));
       await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),schema,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:traffic.reader.read,controllerTestRequestBytes:traffic.reader.sent,rows},null,2));
       console.log(JSON.stringify(rows.at(-1)));

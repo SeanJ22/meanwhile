@@ -80,18 +80,20 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
       const rows=page.records as CampaignSourceRecord[];
       if(!rows.length)continue;
       for(const row of rows)seen.run(row.id);
-      const missing=rows.filter(row=>row.unavailableAmounts.length).map(row=>row.id);
+      const missing=rows.filter(row=>row.unavailableAmounts.length);
       const previous=missing.length?await readCampaignPredecessors(options.facts.query,state,missing):new Map<string,Pick<CampaignSourceRecord,"amounts"|"provenance"|"filingUrl">>();
       for(let index=0;index<rows.length;index++){
         const row=rows[index],old=previous.get(row.id);
         if(old)rows[index]={...row,amounts:[...row.amounts,...old.amounts.filter(amount=>row.unavailableAmounts.includes(amount.label)).map(amount=>({...amount,provenance:amount.provenance??{...old.provenance,filingUrl:old.filingUrl}}))]};
       }
       const at=(options.now??(()=>new Date().toISOString()))();
-      const filed=await fileCampaignMoneyFacts(options.facts,state,rows,at,{purge:options.purge});
+      const moved:string[]=[];
+      const filed=await fileCampaignMoneyFacts(options.facts,state,rows,at,{purge:options.purge,onMoved:people=>moved.push(...people)});
       records+=rows.length;
       if(filed.written || filed.confirmed){
-        if(resource.aggregation==="CYCLE_TOTAL")await options.onPublished?.({state,records:rows.length,people:[...new Set(rows.map(row=>row.person!.id))]});
-        else for(const row of rows)touched.run(row.person!.id);
+        const affected=[...new Set([...moved,...rows.map(row=>row.person!.id)])];
+        if(resource.aggregation==="CYCLE_TOTAL")for(let start=0;start<affected.length;start+=500)await options.onPublished?.({state,records:rows.length,people:affected.slice(start,start+500)});
+        else for(const person of affected)touched.run(person);
       }
     }
     if(!check)throw new Error("The campaign source returned no check");

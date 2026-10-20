@@ -18,16 +18,17 @@ const committeeId = (row: CampaignSourceRecord) => `campaign-committee:${row.sta
 
 interface HeldFact { readonly entity_id: string; readonly field: string; readonly fingerprint: string|null; readonly retrieved_at:string; readonly provenance_kind: string; readonly id: number }
 
-export async function readCampaignPredecessors(query: Query, state: string, ids: readonly string[]): Promise<ReadonlyMap<string, Pick<CampaignSourceRecord,"amounts"|"provenance"|"filingUrl">>> {
-  if (ids.length > 500) throw new Error("Campaign predecessors exceed one source batch.");
+export async function readCampaignPredecessors(query: Query, state: string, records: readonly CampaignSourceRecord[]): Promise<ReadonlyMap<string, Pick<CampaignSourceRecord,"amounts"|"provenance"|"filingUrl">>> {
+  if (records.length > 500) throw new Error("Campaign predecessors exceed one source batch.");
   const held = await query(`SELECT x.value AS record_id,f.value->'amounts' AS amounts,f.value->'provenance' AS provenance,f.value->>'filingUrl' AS filing_url FROM entity_external_id x JOIN entity e ON e.id=x.entity_id
     JOIN fact f ON f.entity_id=e.id AND f.field=$3||x.value AND f.status='live'
-    WHERE x.scheme=$1 AND x.value=ANY($2::text[]) AND e.state=$4`, [SCHEME, ids, FIELD, state]);
+    JOIN unnest($2::text[],$5::text[]) expected(record_id,committee_id) ON expected.record_id=x.value AND expected.committee_id=e.id
+    WHERE x.scheme=$1 AND x.value=ANY($2::text[]) AND e.state=$4`, [SCHEME, records.map(row=>row.id), FIELD, state, records.map(committeeId)]);
   return new Map(held.map(row => [String(row.record_id), {amounts:row.amounts as CampaignSourceRecord["amounts"],provenance:row.provenance as CampaignSourceRecord["provenance"],filingUrl:String(row.filing_url)}]));
 }
 
 export async function fileCampaignMoneyFacts(db: FactDb, state: string, records: readonly CampaignSourceRecord[], at: string,
-  options: { readonly purge?: ReaderCachePurger } = {}): Promise<{ written: number; confirmed: number }> {
+  options: { readonly purge?: ReaderCachePurger; readonly onMoved?: (people:readonly string[])=>void } = {}): Promise<{ written: number; confirmed: number }> {
   if (records.length > 500 || records.some(row => row.state !== state || row.governmentOcdId !== null && campaignFinanceStateScope(row.governmentOcdId) !== `US-${state}:campaign-finance`)) throw new Error("Campaign facts exceed their state or source batch.");
   records = records.filter(row => row.person?.id && row.person.seat && row.person.sourceUrl && row.filerName && (campaignRecordYear(row) ?? 0) >= 2020);
   if (!records.length) return { written: 0, confirmed: 0 };
@@ -61,7 +62,9 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       if (old) replaced.push(old.id);
     }
     if (confirmed.length) await query("UPDATE fact SET checked_at=$2 WHERE id=ANY($1::bigint[])", [confirmed, at]);
-    if (!changed.length) return { written: 0, confirmed: confirmed.length };
+    if (!changed.length) return { written: 0, confirmed: confirmed.length, movedPeople:[] as string[] };
+    const moved=[...new Set(changed.flatMap(row=>{const old=byId.get(row.id);return old && old.entity_id!==committeeId(row)?[old.entity_id]:[];}))];
+    const movedPeople=moved.length?(await query("SELECT DISTINCT parent_id FROM entity WHERE id=ANY($1::text[]) AND state=$2 AND parent_id IS NOT NULL",[moved,state])).map(row=>String(row.parent_id)):[];
     const captures = [...new Map(changed.map(row => [row.provenance.vaultKey, row.provenance])).values()];
     const copies = await query(`INSERT INTO source_copy (url,final_url,fetched_at,http_status,sha256,blob_key,is_archive)
       SELECT url,url,fetched::timestamptz,200,hash,key,false FROM unnest($1::text[],$2::text[],$3::text[],$4::text[]) s(url,fetched,hash,key)
@@ -76,8 +79,9 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       changed.map(row => sourceIds.get(row.provenance.vaultKey)), changed.map(row => `campaign-person-money:${state}:${row.resource}`), at]);
     await query(`INSERT INTO entity_external_id (entity_id,scheme,value) SELECT entity,$3,value FROM unnest($1::text[],$2::text[]) r(entity,value)
       ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
-    return { written: changed.length, confirmed: confirmed.length };
+    return { written: changed.length, confirmed: confirmed.length, movedPeople };
   });
   if (outcome.written || outcome.confirmed) await invalidateReaderCache({ states: [state] }, options.purge);
-  return outcome;
+  if(outcome.movedPeople.length)options.onMoved?.(outcome.movedPeople);
+  return {written:outcome.written,confirmed:outcome.confirmed};
 }

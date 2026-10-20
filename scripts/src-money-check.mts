@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import {AsyncLocalStorage} from "node:async_hooks";
 import {spawnSync} from "node:child_process";
-import {randomBytes} from "node:crypto";
 import {readFile,writeFile} from "node:fs/promises";
 import {appendFileSync} from "node:fs";
 import {neon,neonConfig,Pool} from "@neondatabase/serverless";
@@ -17,7 +16,7 @@ import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import type {Query} from "../lib/facts/publish.ts";
 
 const state=process.argv.find(arg=>arg.startsWith("--state="))?.slice(8);
-const production=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,test=process.env.SRC_MN_TEST_DATABASE_URL??process.env.DATABASE_URL;
+const production=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,test=process.env.SRC_MN_TEST_DATABASE_URL,control=process.env.SRC_MN_TEST_CONTROL_PLANE_DATABASE_URL;
 if(!production)throw new Error("The readonly production handle is required");
 if(process.argv.includes("--retirement")){
   let bytesRead=0;
@@ -37,11 +36,11 @@ if(process.argv.includes("--retirement")){
   assert.ok(rows.every(row=>row.facts===0 && row.publications===0 && row.candidateCopies===0),"The replaced campaign load still has stored facts or publications");
   process.exit(0);
 }
-if(!test)throw new Error("The separate test handle is required");
+if(!test || !control)throw new Error("Separate reader and control-plane production copies are required");
 assert.notEqual(new URL(test).hostname.replace("-pooler",""),new URL(production).hostname.replace("-pooler",""));
 process.env.SRC_MN_TEST_DATABASE_URL=test;
 process.env.DATABASE_URL=production;process.env.WTP_DB_ROLE="production";process.env.WTP_VITAL_SIGNS_REPORT="1";
-const reportPath=process.env.SRC_MN_CHECK_REPORT??"/tmp/src-mn-ready2-publisher-results.json",schemaPath="/tmp/src-mn-ready2-publisher-schema.json";
+const reportPath=process.env.SRC_MN_CHECK_REPORT??"/tmp/src-mn-ready2-publisher-results.json";
 let productionResponseBytes=0;
 const databaseScope=new AsyncLocalStorage<"reader"|"control">();
 const traffic={reader:{read:0,sent:0},control:{read:0,sent:0}};
@@ -66,60 +65,45 @@ const prod=neon(production),productionQuery:Query=async(text,params=[])=>await p
   selectedPeople && text===CAMPAIGN_PEOPLE_SQL?[...params,selectedPeople]:[...params]);
 const [role]=await productionQuery("SELECT current_user,current_setting('neon.branch_id',true) AS branch,has_table_privilege(current_user,'fact','INSERT,UPDATE,DELETE') AS can_write");
 assert.equal(role.current_user,"readonly");assert.equal(role.can_write,false);
-const schema=process.env.SRC_MN_AUDIT_SCHEMA??(process.argv.some(arg=>arg.startsWith("--from="))?JSON.parse(await readFile(schemaPath,"utf8")).schema:`src_mn_ready2_${randomBytes(6).toString("hex")}`);
-assert.match(schema,/^src_mn_ready2_[a-f0-9]{12}$/);
-const url=new URL(test);url.searchParams.set("options",`-c search_path=${schema}`);url.searchParams.set("application_name",schema);
+const url=new URL(test);url.hostname=url.hostname.replace("-pooler.",".");
 const pool=new Pool({connectionString:url.href,max:1,connectionTimeoutMillis:15000});
 pool.on("error",()=>console.warn("An idle private test connection closed; the pool will replace it."));
 const query:Query=(text,params=[])=>databaseScope.run("reader",async()=>{const result=await pool.query(text,[...params]);return result.rows;});
 const [identity]=await query("SELECT current_setting('neon.branch_id',true) AS branch,current_user");
 assert.ok(identity.branch && identity.branch!==role.branch);assert.notEqual(identity.current_user,"readonly");
+assert.equal(identity.branch,process.env.SRC_MN_READER_COPY_BRANCH,"The reader copy must match its declared branch");
 if(!state){
   try{
     const from=process.argv.find(arg=>arg.startsWith("--from="))?.slice(7);
-    if(!from){
-      await query(`CREATE SCHEMA ${schema}`);
-      const {applyCampaignMigrations}=await import("../tests/helpers/campaign-money-db.ts");
-      await applyCampaignMigrations(sql=>query(sql));
-      await writeFile(schemaPath,JSON.stringify({schema}));
-    }
     const rows:Record<string,unknown>[]=from?await readFile(reportPath,"utf8").then(text=>JSON.parse(text).rows).catch(error=>{if(error.code==="ENOENT")return [];throw error;}):[];
     for(const source of CAMPAIGN_FINANCE_SOURCES.slice(from?CAMPAIGN_FINANCE_SOURCES.findIndex(source=>source.state===from):0)){
-      const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:{...process.env,SRC_MN_AUDIT_SCHEMA:schema}});
+      const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:process.env});
       if(child.status!==0){const path=`/tmp/src-mn-${source.state}-check-failure.log`;await writeFile(path,child.stderr);throw new Error(`${source.state} worker failed (${child.status}); details saved in ${path}`);}
       rows.push(JSON.parse(child.stdout.trim().split("\n").at(-1)!));
-      await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),schema,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:traffic.reader.read,controllerTestRequestBytes:traffic.reader.sent,rows},null,2));
+      await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),readerCopy:identity.branch,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:traffic.reader.read,controllerTestRequestBytes:traffic.reader.sent,rows},null,2));
       console.log(JSON.stringify(rows.at(-1)));
     }
   }finally{await pool.end();}
 }else{
-  const controlUrl=new URL(test),controlSchema=`${schema}_control`;
-  controlUrl.searchParams.set("options",`-c search_path=${controlSchema}`);controlUrl.searchParams.set("application_name",controlSchema);
+  const controlUrl=new URL(control);controlUrl.hostname=controlUrl.hostname.replace("-pooler.",".");
   const controlPool=new Pool({connectionString:controlUrl.href,max:1,connectionTimeoutMillis:15000});
   controlPool.on("error",()=>console.warn("An idle private control connection closed; the pool will replace it."));
   const controlQuery:Query=(text,params=[])=>databaseScope.run("control",async()=>{const result=await controlPool.query(text,[...params]);return result.rows;});
   const [controlIdentity]=await controlQuery("SELECT current_setting('neon.branch_id',true) AS branch,current_user");
-  assert.equal(controlIdentity.branch,identity.branch);assert.notEqual(controlIdentity.current_user,"readonly");
-  await controlQuery(`CREATE SCHEMA IF NOT EXISTS ${controlSchema}`);
-  assert.equal((await controlQuery("SELECT current_schema() AS name"))[0].name,controlSchema);
-  const [{pgAggregateRepository},{BOOTSTRAP_DDL}]=await Promise.all([
-    import("../lib/control-plane/repository/pg-store.ts"),import("../lib/control-plane/repository/pg-schema.ts"),
-  ]);
-  for(const statement of BOOTSTRAP_DDL)if(/^CREATE TABLE IF NOT EXISTS cp_doors\s*\(/.test(statement))await controlQuery(statement);
+  assert.ok(controlIdentity.branch && controlIdentity.branch!==identity.branch && controlIdentity.branch!==role.branch);assert.notEqual(controlIdentity.current_user,"readonly");
+  assert.equal(controlIdentity.branch,process.env.SRC_MN_CONTROL_COPY_BRANCH,"The control-plane copy must match its declared branch");
+  const {pgAggregateRepository}=await import("../lib/control-plane/repository/pg-store.ts");
   const doors=pgAggregateRepository<import("../lib/doors/registry.ts").DoorRecord>({query:controlQuery},"Door","cp_doors");
   const started=performance.now(),people=await readCampaignMoneyPeople(productionQuery,state);
-  const size=async()=>Number((await query("SELECT coalesce(sum(pg_total_relation_size(c.oid)),0) AS bytes FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname=$1 AND c.relkind IN ('r','m')",[schema]))[0].bytes);
+  const size=async()=>Number((await query("SELECT pg_database_size(current_database()) AS bytes"))[0].bytes);
   try{
     const before=await size(),place=US_JURISDICTIONS.find(place=>place.usps===state)!;
     const division=`ocd-division/country:us/${place.prefix}:${place.slug}`;
-    const holders=people.map(person=>({id:person.id,personId:person.id,name:person.name,nativeIds:{campaign:person.aliases??[]},provenance:{sourceUrl:person.sourceUrl},memberships:[{current:true,officeId:person.seat,officeTitle:person.office,divisionId:person.division,sourceUrl:person.sourceUrl}]}));
     const facts={query,transaction:async<T,>(work:(query:Query)=>Promise<T>)=>{
       const client=await pool.connect();
       try{await client.query("BEGIN");const value=await work(async(text,params=[])=>{const result=await client.query(text,[...params]);return result.rows;});await client.query("COMMIT");return value;}
       catch(error){await client.query("ROLLBACK");throw error;}finally{client.release();}
     }};
-    const {publishMoneyFixture}=await import("../tests/helpers/campaign-money-db.ts");
-    await publishMoneyFixture(facts,{recordClass:"STATE_LEGISLATOR",scope:`US-${state}:test-people`,payload:{roster:{officeholders:holders}}});
     let bulkDownloads=0;
     const result=await refreshCampaignMoneyState({state,query:productionQuery,facts,doors,vault:new DurableEvidenceStore("/tmp/src-mn-ready2-source-evidence",{remote:null}),directory:"/tmp/src-mn-ready2-source-cache",purge:async()=>({purged:true}),
       ...(process.env.SRC_MN_CHECK_AT?{now:()=>process.env.SRC_MN_CHECK_AT!}:{}),
@@ -138,7 +122,8 @@ if(!state){
       if(person){const {GET:personGET}=await import("../app/api/funding/[target]/route.ts");const begin=performance.now();const response=await personGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/funding/${encodeURIComponent(person)}?division=${encodeURIComponent(division)}`),{params:Promise.resolve({target:person})});const value=await response.json();personApiMs=performance.now()-begin;assert.equal(response.status,200);assert.equal(value.kind,"state-cycle");}
       assert.ok(apiMs<3000 && readerMs<3000 && (personApiMs??0)<3000,`${state} money reads exceeded three seconds`);
     }
-    const [counts]=await query("SELECT count(*) FILTER(WHERE field LIKE 'campaign-money:%') AS rows,count(*) FILTER(WHERE field LIKE 'campaign-cycle:%') AS cycles FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.state=$1 AND f.status='live'",[state]);
+    const [counts]=await query(`SELECT count(*) FILTER(WHERE f.field LIKE 'campaign-money:%') AS rows,count(*) FILTER(WHERE f.field LIKE 'campaign-cycle:%') AS cycles
+      FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.state=$1 AND f.status='live' AND (e.id=ANY($2::text[]) OR e.parent_id=ANY($2::text[]))`,[state,people.map(person=>person.id)]);
     const after=await size();
     assert.ok(traffic.control.read>0 && traffic.reader.read>0,"Both private database connections must be measured");
     console.log(JSON.stringify({...result.report.records[0],privateRawRows:Number(counts.rows),privateCycleSummaries:Number(counts.cycles),productionBytesRead:productionResponseBytes,productionBytesWritten:0,testRequestBytes:traffic.reader.sent+traffic.control.sent,testResponseBytes:traffic.reader.read+traffic.control.read,

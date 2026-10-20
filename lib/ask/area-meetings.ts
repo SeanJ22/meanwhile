@@ -86,6 +86,7 @@ export interface AreaMeetingsComposition {
   inWindow: AreaSitting[];
   records: EvidenceRecord[];
   gaps: EvidenceGap[];
+  missingAnswer?: boolean;
 }
 
 /** Compose the answer from the sittings held for the reader's divisions. */
@@ -106,8 +107,8 @@ export function composeAreaMeetings(input: {
     })
     .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
   if (inWindow.length === 0) {
-    const statement = `We have not recorded a meeting ${window.phrase} for the governments in your area. That is what we hold, not a statement that none are held.`;
-    return { answer: statement, citedUrls: [], inWindow, records: [], gaps: [{ whose: "OURS", statement }] };
+    const statement = `We don't have meeting information ${window.phrase} for your area yet.`;
+    return { answer: statement, citedUrls: [], inWindow, records: [], gaps: [{ whose: "OURS", statement }], missingAnswer: true };
   }
   const listed = inWindow.slice(0, AREA_MEETINGS_LISTED);
   const items = listed.map((sitting) => {

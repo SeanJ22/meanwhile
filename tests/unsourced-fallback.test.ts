@@ -35,10 +35,7 @@ test("ASK-12: it is a DIFFERENT KIND, so it cannot be rendered where a routed an
 });
 
 test("ASK-12: the mark is PLAIN LANGUAGE, and it is not a footnote", () => {
-  assert.ok(UNSOURCED_MARK.length > 60, "the mark is too short to say what it has to say");
-  assert.ok(!/^\s*[*†‡]/.test(UNSOURCED_MARK), "the mark opens as a footnote marker");
-  assert.match(UNSOURCED_MARK, /did not come from any public record/i);
-  assert.match(UNSOURCED_MARK, /have not checked it/i);
+  assert.equal(UNSOURCED_MARK, "AI answer");
   for (const jargon of ["provenance", "corpus", "LLM", "heuristic", "unsourced provenance"]) {
     assert.ok(!UNSOURCED_MARK.includes(jargon), `the mark uses jargon: ${jargon}`);
   }
@@ -92,10 +89,30 @@ test("Sean, October 1, 2026: Ask without a held source may answer, states its so
   const outcome = await askUnsourced("Who is my state senator?", {
     fetchImpl: (async (_url: string, init: { body: string }) => {
       sent = init.body;
-      return new Response(JSON.stringify({ content: [{ type: "text", text: "I am not sure who holds that seat." }] }), { status: 200 });
+      return new Response(JSON.stringify({ content: [{ type: "text", text: "I don't know." }] }), { status: 200 });
     }) as unknown as typeof fetch,
   });
-  assert.match(sent, /ONE or TWO sentences/);
+  assert.match(sent, /For a simple question, use exactly one short sentence/);
   assert.ok(!/DECLINE/.test(sent), "the prompt still orders the model to refuse civic questions");
   assert.equal(outcome.kind, "UNSOURCED");
+  if (outcome.kind === "UNSOURCED") assert.equal(outcome.answer.text, "I don't know.");
+  assert.match(JSON.parse(sent).messages[0].content, /Give only the answer/);
+});
+
+test("the general AI answer preserves its answer text and renders an explicit unknown without process narration", async () => {
+  const { askUnsourced } = await import("../lib/routing/unsourced-fallback.ts");
+  process.env.ANTHROPIC_API_KEY ??= "test-key";
+  let known = true;
+  const fetchImpl = (async (_url: RequestInfo | URL, init?: RequestInit) => {
+    const request = JSON.parse(String(init?.body));
+    assert.deepEqual(request.tools[0].input_schema.required, ["known", "answer"]);
+    return Response.json({ content: [{ type: "tool_use", name: "answer_reader", input: { known, answer: known ? "Mark Kelly voted NO on H.R. 1." : "" } }] });
+  }) as typeof fetch;
+  const answer = await askUnsourced("How did Mark Kelly vote on HR1?", { fetchImpl });
+  assert.equal(answer.kind, "UNSOURCED");
+  if (answer.kind === "UNSOURCED") assert.equal(answer.answer.text, "Mark Kelly voted NO on H.R. 1.");
+  known = false;
+  const unknown = await askUnsourced("How did Mark Kelly vote on HR1?", { fetchImpl });
+  assert.equal(unknown.kind, "UNSOURCED");
+  if (unknown.kind === "UNSOURCED") assert.equal(unknown.answer.text, "I don't know.");
 });

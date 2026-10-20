@@ -31,6 +31,8 @@ test("key-vote identity, missing position, physical-roll deduplication and confl
   const positions = duplicate.records.filter((record) => record.kind === "KEY_VOTE_POSITION");
   assert.equal(positions.length, 1);
   assert.equal(positions[0].keyVote?.positionKeys.length, 2);
+  assert.equal(positions[0].rollCall?.position, positions[0].keyVote?.position);
+  assert.ok(positions[0].rollCall?.when.includes("Congress"), "a verification date is not substituted for the vote date");
   const conflict = await keyVoteEvidenceFor(subject, [subject.id], async () => ({ ...selected, rows: [first, { ...first, positions: [first.positions[0] === "YES" ? "NO" : "YES"] }, first] }));
   assert.ok(conflict.records.every((record) => record.kind !== "KEY_VOTE_POSITION"));
   assert.equal(conflict.denominators.keyVoteIdentityConflicts, 1);

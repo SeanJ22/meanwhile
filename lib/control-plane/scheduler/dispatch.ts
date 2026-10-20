@@ -1,9 +1,3 @@
-/**
- * Hands due work to disposable workers: claim, decide the executor, run, record, compute next due.
- * Leases and reclaim belong to the coordinator. Nothing here closes an Attempt in a `finally`: a killed
- * process runs none, so death is observed from outside by an expired lease (`sweepExpiredLeases`).
- */
-
 import { isExpired, type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
 import {
   abandonAttempt,
@@ -91,11 +85,6 @@ export function chooseExecutor(
   };
 }
 
-/**
- * The one executor-decision rule: a machine-executable shape (declared, or graduated since) runs
- * DETERMINISTIC; genuine novelty with no shape to replay runs BOUNDED_MODEL_WORKER. A disagreement between
- * the declaration and the method store, or a declaration contradicting its own opening, is recorded.
- */
 export interface ExecutorDecision {
   readonly kind: ExecutorKind;
   readonly why: string;
@@ -303,10 +292,6 @@ function unanswered(outcome: WorkOutcome | undefined): Pick<CostEntry, "modelReq
   return bound ? { modelRequestBound: bound, requestedModel: bound.model } : {};
 }
 
-/**
- * Claim one obligation's due work and run it through the canonical lifecycle: claim, begin Attempt, run,
- * record artifacts, dispose, close Attempt, release lease, record cost. A losing claim is a normal outcome.
- */
 export async function dispatchOne(
   repos: ControlPlaneRepositories,
   input: {
@@ -314,9 +299,7 @@ export async function dispatchOne(
     readonly routeTaskId: string | null;
     readonly holder: string;
     readonly now: string;
-    /** Actual wall time for claim, Attempt start and terminal writes. `now`
-     * remains the cycle's scheduling observation. Omission keeps deterministic
-     * legacy callers on their supplied timestamp. */
+
     readonly clock?: () => string;
     readonly leaseTtlMs: number;
     readonly bound?: WorkerBound;
@@ -376,9 +359,7 @@ export async function dispatchOne(
       ttlMs: input.leaseTtlMs,
     });
   } catch (error) {
-    /* A live foreign lease — the other worker has it — or a settled route the
-       coordinator refuses (`RouteTaskSettled`). Either way nothing was claimed,
-       no Attempt opens, and this one moves on. */
+
     return {
       obligationId,
       routeTaskId: input.routeTaskId,
@@ -413,11 +394,7 @@ export async function dispatchOne(
     policyVersion: input.policyVersion ?? "unversioned",
   });
   const attemptId = attempt.value.id;
-  /*
-   * `executor` is filled in per return with what the worker REPORTED, so the
-   * chosen kind cannot leak into the record as the fact. `base` deliberately
-   * does not carry it.
-   */
+
   const base = {
     obligationId,
     routeTaskId: input.routeTaskId,
@@ -524,9 +501,6 @@ export async function dispatchOne(
     await renewal;
   }
 
-  // The executor's measured end is authoritative when it supplies one. A
-  // missing end uses the injected wall clock. An invalid/backward reported end
-  // is named and replaced only by a separately valid wall-clock observation.
   const observedEnd=input.clock?.()??input.now;
   // A worker-result record's own endedAt is the time completeWorkerTask will
   // persist; a separate outcome end must never mask a malformed record clock.
@@ -591,10 +565,6 @@ export async function dispatchOne(
       artifactIds: record.inputArtifactIds, cost: record.cost, detail: outcome.detail };
   }
 
-  /*
-   * Artifacts are recorded first so a disposition can cite them. An artifact the log refuses (same content
-   * under another canonical URL) is recorded by name and does not leave the Attempt open.
-   */
   const artifactIds: string[] = [];
   const artifactRefusals: string[] = [];
   const seenArtifactIds = new Set<string>();
@@ -753,13 +723,15 @@ export async function sweepExpiredLeases(
   input: { readonly now: string; readonly observedBy: string },
 ): Promise<ReclaimSweep> {
   // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
-  await reconcileWorkerCompletions(repos);
+  const leases = await repos.leases.listWhere(["released"], "false");
+  const tasks = await Promise.all(leases.map(row => repos.routeTasks.mustRead(row.value.routeTaskId)));
+  await reconcileWorkerCompletions(repos, [...new Set(tasks.map(row => row.value.workItemId))]);
   const reclaimed: string[] = [];
   const releasedSettled: string[] = [];
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];
 
-  for (const row of await repos.leases.list()) {
+  for (const row of await repos.leases.listWhere(["released"], "false")) {
     const lease = row.value;
     if (lease.released) continue;
     if (!isExpired(lease, input.now)) {

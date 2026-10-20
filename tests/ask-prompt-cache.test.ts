@@ -291,8 +291,8 @@ test("H1: the cached prefix carries the system rules AND the ZIP civic context",
   });
 
   const prefix = seen[0].callerPrefix;
-  assert.match(prefix, /ONLY the records supplied/, "the system rules are not in the prefix");
-  assert.match(prefix, /Never tell the reader how to vote/);
+  assert.match(prefix, /Use only sourced facts in the supplied records/, "the system rules are not in the prefix");
+  assert.match(prefix, /Never recommend how to vote/);
   assert.match(prefix, /Vail Unified District/, "the ZIP civic context is not in the prefix");
   assert.match(prefix, /capital improvement schedule/, "the records are not in the prefix");
   assert.match(prefix, /agendasRead/, "the denominators are not in the prefix");
@@ -348,10 +348,11 @@ test("H1: the two payloads are a PARTITION of the pre-caching payload", () => {
 test("H1: the system prompt contains the current row and the fixed safety frame", () => {
   const prompt = synthesisPrompt(zipPack({ intent: "CIVICS" }));
   assert.equal(typeof prompt, "string");
-  assert.match(prompt, /ONLY the records supplied/);
-  assert.match(prompt, /Never tell the reader how to vote/);
+  assert.match(prompt, /Use only sourced facts in the supplied records/);
+  assert.match(prompt, /Never recommend how to vote/);
   assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
-  assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
+  assert.match(prompt, /LEAD WITH THE ANSWER/, "the answer-first contract is in the prompt");
+  assert.doesNotMatch(prompt, /LEAD WITH THE PLAIN DEFINITION/);
   assert.equal(prompt, `${WORKER_SAFETY_FRAME}\n\nASK_WRITER PLAYBOOK\n${(fixturePlaybooks(["ASK_WRITER"])[0].payload as {text:string}).text}`);
 });
 

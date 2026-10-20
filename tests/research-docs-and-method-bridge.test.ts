@@ -85,19 +85,19 @@ test("dispatch routes differently after an agent writes a route: UNGRADUATED bef
   const { newFieldManualEntry, writeFieldManual } = await import("../lib/control-plane/field-manual.ts");
 
   const repos = createMemoryRepositories();
-  await assert.rejects(methodMaturityFromManual(repos), /holds no learned routes/);
+  await assert.rejects(methodMaturityFromManual(repos,["agent-found-route"]), /holds no learned routes/);
 
   await writeFieldManual(repos, knowledgeEntries(methodFixture()), "2026-09-29");
-  const before = await methodMaturityFromManual(repos);
+  repos.fieldManual.select=async()=>{throw new Error("Maturity read route payloads");};
+  const before = await methodMaturityFromManual(repos,["agent-found-route"]);
   const descriptor = { executorClass: "BOUNDED_MODEL_WORKER" as const, open: { kind: "HTTP_GET" } };
   assert.equal(decideExecutor({ routeId: "agent-found-route", descriptor, maturity: before }).kind, "BOUNDED_MODEL_WORKER");
 
-  // An earlier agent wrote what it learned.
   await writeFieldManual(repos, [newFieldManualEntry("agent", "agent-found-route", {
     role: "SCOUT", kind: "ROUTE", title: "found by an agent", summary: "answers with the agenda list", outcome: "YIELDED",
     payload: { routeId: "agent-found-route" },
   })], "2026-09-29");
 
-  const after = await methodMaturityFromManual(repos);
+  const after = await methodMaturityFromManual(repos,["agent-found-route"]);
   assert.equal(decideExecutor({ routeId: "agent-found-route", descriptor, maturity: after }).kind, "DETERMINISTIC");
 });

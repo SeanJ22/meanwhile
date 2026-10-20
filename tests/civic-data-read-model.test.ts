@@ -176,6 +176,41 @@ test("historical promotions page through an exact anchored chain and prove every
   assert.match(unrelated.issue ?? "", /not in the current pointer/);
 });
 
+test("a filtered federal history walk still proves matching payloads and validates every anchored link", async () => {
+  const { current, store, rows, previous } = await historicalFixture();
+  const recordClass = "FEDERAL_ROLL_CALL" as const, scope = "federal-supported";
+  const key = `${recordClass}:${scope}`;
+  for (const [id, row] of rows) rows.set(id, { ...row,
+    candidate: { ...row.candidate, recordClass, sourceProjectionEvidence: sourceProjectionEvidence(row.candidate.sourceId, recordClass, scope) },
+    receipt: { ...row.receipt!, recordClass } });
+  const projection = { ...current.projection, key, recordClass, receipt: { ...current.projection.receipt, recordClass } };
+  const federal = { ...current, projection };
+  const proofReads: string[][] = [];
+  const filtered = { ...store,
+    pointerMoveChain: async () => [...previous].map(([candidateId, prior]) => ({ candidateId, sequence: 2,
+      state: "PROMOTED" as const, at: "2026-09-02T00:00:00.000Z", detail: `Atomic pointer ${key} moved from ${prior} to ${candidateId}.` })),
+    historicalVoteBillVersions: async (ids: readonly string[], bill: string) => {
+      assert.deepEqual([...ids].sort(), ["candidate-1", "candidate-2", "candidate-3"]);
+      assert.equal(bill, "hr1"); return ["candidate-2"];
+    },
+    readCandidateProofs: async (ids: readonly string[]) => {
+      proofReads.push([...ids]); return ids.map(candidateId => ({ candidateId, record: rows.get(candidateId)! }));
+    },
+  };
+  const result = await readPromotedCivicDataPredecessors(recordClass, scope, federal, { store: filtered, voteBill: "hr1" });
+  assert.equal(result.issue, null);
+  assert.equal(result.complete, true);
+  assert.deepEqual(result.versions.map(version => version.projection.versionId), ["candidate-2"]);
+  assert.deepEqual(proofReads, [["candidate-2"]]);
+  const row = rows.get("candidate-2")!;
+  rows.set("candidate-2", { ...row, candidate: { ...row.candidate, readModel: { answer: 99 } } });
+  assert.match((await readPromotedCivicDataPredecessors(recordClass, scope, federal,
+    { store: filtered, voteBill: "hr1" })).issue ?? "", /failed promotion proof/);
+  previous.set("candidate-3", "candidate-1");
+  assert.match((await readPromotedCivicDataPredecessors(recordClass, scope, federal,
+    { store: filtered, voteBill: "hr1" })).issue ?? "", /cycle/);
+});
+
 test("historical promotions refuse tampered rows, source switches, missing moves and cycles", async () => {
   const { current, store, rows, previous } = await historicalFixture();
   const original = rows.get("candidate-2")!;

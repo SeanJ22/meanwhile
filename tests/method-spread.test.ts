@@ -1,11 +1,3 @@
-/**
- * A method that works somewhere is tried, by plain code, wherever the same
- * kind of website is: the free try runs at every matching place, paced for
- * small publishers, with robots.txt recorded and never obeyed as a block. Its
- * result goes into the fix map, the method's standing in Admin and the field
- * manual. A paid try is allowed only where the free try could not decide,
- * inside places the owner has sent money to and within the budget dial.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -43,10 +35,7 @@ const works = (methodId: string, placeId: string, at = NOW): FixMapRow =>
 const plainTried = (methodId: string, placeId: string): FixMapRow =>
   ({ methodId, placeId, state: "UNTRIED", triedAt: null, attemptId: SPREAD_ATTEMPT.PLAIN_TRIED, cause: "x", updatedAt: NOW });
 
-/**
- * A website double behind the shared paced fetch: each address answers what the table says; anything else is a 404.
- * Every request that reached the website is kept.
- */
+
 function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>,
   options: { readonly pacing?: WebsitePacing; readonly sizeFor?: WebsiteSizeForUrl } = {}) {
   const calls: string[] = [];
@@ -125,7 +114,7 @@ test("a working method is tried by plain code at every matching place, and every
 
   const saved = (await repos.fieldManual.read(method.id))!.value;
   assert.deepEqual(saved.placeResults!.filter((r) => r.place.startsWith("ocd-division/") && r.place !== PIMA).map((r) => [r.place, r.outcome]).sort(), [[MARICOPA, "YIELDED"], [MORRIS, "FAILED"]].sort());
-  const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as AdminConfig;
+  const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true }))!.value as AdminConfig;
   assert.ok(methodStandings(config).some((s) => s.methodId === method.id), "the method's standing in Admin is re-measured");
   assert.match(spreadLine(result), /^1 working method\(s\) tried elsewhere by plain code: 1 worked, 1 did not fit, 0 left for a worker, 1 waiting/);
 

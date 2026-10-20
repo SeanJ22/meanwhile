@@ -1,16 +1,10 @@
-/**
- * The standing hunter lane's guards. One standing lane admits paid model requests and holds each to the round's
- * own guards: the owner's controls read live every refresh (any unreadable one closes paid work by name), the
- * round's budget reading from a host-local file (missing, stale or unreadable holds paid work), each task's own
- * Send marks (an unknown Send waits for the next reading), and the Fleet ceiling, with the lane's own requests
- * counted from its own book so none is lost or counted twice between controllers. Nothing here changes a limit.
- */
+import { readPlanningIntents } from "../repository/pg-store.ts";
 import { ZERO_COST } from "../attempt.ts";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { FleetSafetyController, FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, resolveRollingCeiling, type PricedCharge, type ProviderCircuit } from "../fleet-safety.ts";
-import { readSpendWindow } from "../spend-window.ts";
+import { FleetSafetyController, FleetPreSendRefusal, modelRequestWorstCaseUsd, modelResponseUsd, resolveRollingCeiling, aggregatePricedSpend, type PricedCharge, type ProviderCircuit } from "../fleet-safety.ts";
+import { readSpendWindow, type SpendTotals } from "../spend-window.ts";
 import { ADMIN_CONFIG_ID, adminConfigForPaidWork, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../gateway/admin-config.ts";
 import {
   ASSIGNMENT_BUDGET_CODE,
@@ -25,57 +19,55 @@ import {
 import { ScopeBudgetGate, type BudgetScope } from "../expansion/membership.ts";
 import { DurableSpendHolds, SendBudgetRefusal, SETTLED_HOLD_RETENTION_MS, type BudgetLine } from "../expansion/spend-holds.ts";
 import { modelLaneClosure, type ModelProviderQueue } from "../scheduler/model-lane.ts";
-import { RESEARCH_BOUNDS, RESEARCH_INTENT_LOG_KEY, ceilingPermits, readIntents, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { RESEARCH_BOUNDS, ceilingPermits, readIntents } from "../scheduler/research-policy.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
 import type { backgroundBatchTransport } from "../model-batch.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { paidWorkGuards } from "./paid-work-guards.ts";
 
 export const HUNTER_LANE_ARMING_FORMAT = 1;
-/** How old the round's budget reading may be: well inside SETTLED_HOLD_RETENTION_MS, since a line counts settled holds newer than its reading. */
+
 export const HUNTER_LANE_ARMING_MAX_AGE_MS = 3_600_000;
-/** The lane re-reads the owner's controls and the round's reading this often. */
+
 export const HUNTER_LANE_REFRESH_MS = 5 * 60_000;
 
 if (HUNTER_LANE_ARMING_MAX_AGE_MS >= SETTLED_HOLD_RETENTION_MS) throw new Error("the lane's reading must be younger than the settled-hold retention");
 
-/** Where the round writes its reading and the lane reads it: one host-local file, shared across staged release checkouts. */
-export function hunterLaneArmingPath(root: string, env: Readonly<Record<string, string | undefined>> = process.env): string {
+export function hunterLaneArmingPath(root: string, state: string, env: Readonly<Record<string, string | undefined>> = process.env): string {
   const named = env.WTP_HUNTER_LANE_ARMING?.trim();
-  return named ? named : join(root, ".runtime", "hunter-lane", "arming.json");
+  if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("A hunter queue needs one state");
+  return join(named ? dirname(named) : join(root, ".runtime", "hunter-lane"), state, "arming.json");
 }
 
 interface SerializedScope extends Omit<BudgetScope, "members"> {
   readonly members: readonly string[];
 }
 
-/** What the round read that the lane cannot read cheaply. Written once per round. */
 export interface HunterLaneArming {
   readonly format: typeof HUNTER_LANE_ARMING_FORMAT;
-  /** The round's instant: when the Send and area history was read. */
+
   readonly readAt: string;
   readonly sends: {
-    /** Every budgeted Send the round armed, SCOPE and DISPATCH. */
+
     readonly specs: readonly AssignmentBudgetSpec[];
-    /** Each Send's spend at `readAt`; null when a charge on it reported no dollar figure. Absent: the ledger was unreadable. */
+
     readonly historical: readonly { readonly key: string; readonly usd: number | null }[] | null;
-    /** Every Send key the round saw on any obligation, budgeted or not; a mark outside it is newer than the reading. */
+
     readonly knownKeys: readonly string[];
-    /** Sends the round reached an obligation under whose mark it had not seen written (the fail-closed rule). */
+
     readonly reached: readonly (readonly [string, readonly string[]])[];
   };
-  /** The area budgets, or null when no expansion scope is selected. */
+
   readonly areas: { readonly scopes: readonly SerializedScope[]; readonly malformedScopes: number } | null;
-  /** Subjects covered by a funded hunt's lifetime allowance. */
+
   readonly lifetimeHuntSubjects: readonly string[];
-  /** The owner's place order, for the queue. */
+
   readonly placeOrder: readonly string[];
-  /** The provider circuits the round ended with; the lane starts from them. */
+
   readonly circuits: readonly ProviderCircuit[];
   readonly worstCaseUsd: number;
 }
 
-/** The round's reading, from the gates it armed. */
 export function laneArmingOf(input: {
   readonly readAt: string;
   readonly specs: readonly AssignmentBudgetSpec[];
@@ -108,7 +100,6 @@ export function laneArmingOf(input: {
   };
 }
 
-/** Written whole or not at all: a reader never sees half a reading. */
 export function writeLaneArming(path: string, arming: HunterLaneArming): void {
   mkdirSync(dirname(path), { recursive: true });
   const temporary = `${path}.${process.pid}.tmp`;
@@ -118,7 +109,6 @@ export function writeLaneArming(path: string, arming: HunterLaneArming): void {
 
 export type LaneArmingRead = { readonly arming: HunterLaneArming } | { readonly held: string };
 
-/** The round's reading, or why paid work waits without it. */
 export function readLaneArming(path: string, now: string): LaneArmingRead {
   let parsed: unknown;
   try { parsed = JSON.parse(readFileSync(path, "utf8")); }
@@ -140,17 +130,8 @@ export function readLaneArming(path: string, now: string): LaneArmingRead {
   return { arming: a as HunterLaneArming };
 }
 
-
 interface OwnRequest { readonly taskId: string; readonly at: string; usd: number; pending: boolean }
 
-/**
- * The lane's own model requests, which every Fleet controller it builds
- * counts in place of the ledger's rows for the same tasks. A request is
- * entered before it is sent (at its worst case) and settled at what it
- * measured; an unmeasured or failed send keeps its worst case. A request
- * refused before sending leaves the book. Entries older than the rolling day
- * leave it, and so do the ledger rows they stood for (the window ends).
- */
 export class LaneOwnSpend {
   private readonly requests: OwnRequest[] = [];
   private readonly windowMs: number;
@@ -169,12 +150,7 @@ export class LaneOwnSpend {
     const at = this.requests.indexOf(entry);
     if (at >= 0) this.requests.splice(at, 1);
   }
-  /**
-   * Drops what has left the window, and returns each task the book stands
-   * for with when this lane first sent for it. Only ledger rows from then on
-   * are this lane's: a row recorded earlier is an earlier lane's or round's
-   * work on the same task, and keeps counting.
-   */
+
   tasks(now: string): ReadonlyMap<string, number> {
     const since = Date.parse(now) - this.windowMs;
     for (let i = this.requests.length - 1; i >= 0; i -= 1) if (Date.parse(this.requests[i].at) < since && !this.requests[i].pending) this.requests.splice(i, 1);
@@ -182,18 +158,18 @@ export class LaneOwnSpend {
     for (const r of this.requests) first.set(r.taskId, Math.min(first.get(r.taskId) ?? Infinity, Date.parse(r.at)));
     return first;
   }
-  /** The book as spend-window charges, so a new controller counts them the way it counts the ledger. */
+
   asCharges(): PricedCharge[] {
     return this.requests.map((r, i) => ({ id: `hunter-lane:${r.taskId}:${i}`, at: r.at, jobId: `hunter-lane:${r.taskId}:${i}`,
       routeTaskId: r.taskId, obligationId: null, jurisdiction: null, usd: r.usd, knownUsd: r.usd, measured: true, bounded: false,
       metered: { attemptId: `hunter-lane:${r.taskId}:${i}`, role: "SCOUT", routeId: null, recordedAt: r.at, cost: { ...ZERO_COST, usd: r.usd, requestCount: 1 } } }));
   }
-  /** Every request the book still counts, in dollars. */
+
   usd(): number { return this.requests.reduce((n, r) => n + r.usd, 0); }
 }
 
-
 export interface HunterLaneDeps {
+  readonly state:string;
   readonly repos: ControlPlaneRepositories;
   readonly now: () => string;
   readonly armingPath: string;
@@ -203,14 +179,14 @@ export interface HunterLaneDeps {
   readonly credentialVar: string;
   readonly providerQueue: ModelProviderQueue;
   readonly ownSpend: LaneOwnSpend;
-  /** The circuits the previous controller ended with; the lane's own latches outlive a refresh. */
+
   readonly circuits: readonly ProviderCircuit[] | null;
   readonly requestsPerMinute?: number;
   readonly onCondition: (sentence: string) => void;
 }
 
 export interface ArmedHunterLane {
-  /** Null while paid work may run; otherwise the sentence that holds it. Free work is never this lane's. */
+
   readonly closed: { readonly code: string; readonly reason: string } | null;
   readonly armedAt: string;
   readonly fleetSafety: FleetSafetyController | null;
@@ -218,24 +194,19 @@ export interface ArmedHunterLane {
   readonly arming: HunterLaneArming | null;
   readonly spendHolds: DurableSpendHolds;
   readonly ceilingUsd: number;
-  /** The owner's paid-search switch, read from the same row (off when the row cannot be trusted). */
+
   readonly discoverySearchOn: boolean;
 }
 
 const message = (error: unknown): string => error instanceof Error ? error.message : String(error);
 
-/**
- * One refresh: read the owner's controls and the round's reading, and build
- * the guards every paid request of the next refresh period passes. Never
- * throws: an unreadable input closes paid work and says which.
- */
 export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLane> {
   const now = deps.now();
   const spendHolds = new DurableSpendHolds({ budget: deps.repos.budget, now: deps.now });
   const unreadable: string[] = [];
   let intentLog: ResearchIntent[] = [];
   let intentsReadable = true;
-  try { intentLog = [...await deps.repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)]; }
+  try { intentLog = [...await readPlanningIntents(deps.repos,deps.state)]; }
   catch (error) { intentsReadable = false; unreadable.push(`the owner's research intents could not be read (${message(error)})`); }
   const intents = readIntents(intentLog);
   let configRead: AdminConfigRead;
@@ -247,22 +218,24 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   const ceilingUsd = resolveRollingCeiling(ceilingOverride).rollingCeilingUsd;
   const discoverySearchOn = configHold === null && discoverySearchEnabled(config);
 
-  /* As the round does: the spend window the ledger's writes keep. */
   const ownTasks = deps.ownSpend.tasks(now);
-  let counted: PricedCharge[] | null = null;
+  let counted: SpendTotals | null = null;
   let ledgerUnreadable: string | null = null;
   try {
-    const charges = await readSpendWindow(deps.repos, now);
-    /* The lane's own requests count from its book, never twice. */
-    counted = [...charges.filter(row => row.routeTaskId === null || !(Date.parse(row.at) >= (ownTasks.get(row.routeTaskId) ?? Infinity))),
-      ...deps.ownSpend.asCharges()];
+    const spend = await readSpendWindow(deps.repos, now, {
+      excludeTasks: [...ownTasks].map(([id, since]) => ({ id, since: new Date(since).toISOString() })),
+    });
+    const own = aggregatePricedSpend(deps.ownSpend.asCharges(),
+      new Date(Date.parse(now) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString(), now);
+    counted = { usd: spend.usd + own.usd, knownUsd: spend.knownUsd + own.knownUsd,
+      measured: spend.measured + own.measured, unmeasured: spend.unmeasured + own.unmeasured,
+      worstCaseCharges: spend.worstCaseCharges + own.worstCaseCharges };
   } catch (error) {
-    counted = null;
     ledgerUnreadable = message(error);
     deps.onCondition(`the cost ledger could not be read (${ledgerUnreadable}); paid model work waits`);
   }
   const spendHold = counted === null ? `the cost ledger could not be read (${ledgerUnreadable})`
-    : !ceilingPermits(researchSpendInWindow(counted, now, RESEARCH_BOUNDS.windowHours).windowUsd, ceilingUsd).permits
+    : !ceilingPermits(counted.usd, ceilingUsd).permits
       ? `the owner's $${ceilingUsd.toFixed(2)} model ceiling is reached` : null;
 
   const read = readLaneArming(deps.armingPath, now);
@@ -276,7 +249,7 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   const arming = "arming" in read ? read.arming : null;
   const lifetime = new Set(arming?.lifetimeHuntSubjects ?? []);
   const fleetSafety = counted === null ? null : new FleetSafetyController({
-    now, charges: counted,
+    now, spend: counted,
     costLedgerReadable: true, paused: intents.runnerPause.paused, modelHold: closure?.reason ?? null,
     circuits: deps.circuits ?? arming?.circuits ?? [], rollingCeilingUsd: ceilingOverride,
     lifetimeHuntWork: work => lifetime.has(work),
@@ -286,7 +259,6 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
       armedAt: now, fleetSafety, guards: null, arming, spendHolds, ceilingUsd, discoverySearchOn };
   }
 
-  /* The Send lines: the round's Sends and history; the DISPATCH budgets the owner sent since are read from the live log. */
   const liveSpecs = assignmentBudgetsOf({ scopes: [], intents: intentLog });
   const armedKeys = new Set(arming.sends.specs.map(spec => spec.key));
   const newerSends = liveSpecs.filter(spec => !armedKeys.has(spec.key)).map(spec => spec.key);
@@ -330,12 +302,6 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   return { closed: null, armedAt: now, fleetSafety, guards, arming, spendHolds, ceilingUsd, discoverySearchOn };
 }
 
-/**
- * A worker's paid request through the lane: entered in the lane's own book
- * before it is sent, then passed to the guards armed for this refresh. A
- * refusal before sending leaves the book; a sent request keeps its worst case
- * until it measures.
- */
 export function laneWorkerTransport(lane: () => ArmedHunterLane, ownSpend: LaneOwnSpend, now: () => string) {
   return (jurisdiction: Parameters<ReturnType<typeof paidWorkGuards>["workerTransportFor"]>[0], taskId: string): ModelTransport => async request => {
     const armed = lane();

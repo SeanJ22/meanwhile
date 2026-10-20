@@ -70,6 +70,8 @@ export function campaignMoneyEvidenceFor(
     records.push({ kind: "FINANCE_SUMMARY", id: `fec:${record.fecCandidateId}`, subjectId: subject.id,
       canonicalSubjectId: record.fecCandidateId, text: [...record.sentences, ...(record.registrationLabel ? [`${subject.name} is ${record.registrationLabel}.`] : [])].join(" "),
       sourceUrl: record.sourceUrl, sourceOrg: record.sourceOrg, retrievedAt: record.collectedAt,
+      ...(record.totals ? { fecTotals: { receipts: record.totals.receipts, disbursements: record.totals.disbursements,
+        cashOnHand: record.totals.cashOnHand, cycle: record.cycleLabel, through: record.totals.coverageEndDate ?? null } } : {}),
       ...(record.detailSource ? { fecDetailSource: record.detailSource } : {}),
       fecProfile: { candidateId: record.fecCandidateId, name: subject.name, personId: subject.id } });
     denominators.federalFinanceRecordsReturned = 1;

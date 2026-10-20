@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { fixProof, fixStatus, readFixProofBar, FIX_PROOF_PLACES } from "../lib/method/fix-status.ts";
-import type { FixMapRow } from "../lib/method/fix-map.ts";
+import { proofFromStatistics, readFixProofBar, FIX_PROOF_PLACES } from "../lib/method/fix-status.ts";
+import { methodStatistics, type FixMapRow } from "../lib/method/fix-map.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { withSetting } from "../lib/control-plane/settings.ts";
 
@@ -11,27 +11,27 @@ const row = (n: number, state: FixMapRow["state"] = "WORKS"): FixMapRow => ({ me
 
 test("proof uses distinct places and spread, and a settings change immediately changes the measured label", () => {
   const rows = Array.from({ length: 5 }, (_, i) => row(i));
-  assert.equal(fixStatus(rows), "PROVEN");
+  assert.equal(proofFromStatistics(methodStatistics(rows)).status, "PROVEN");
   const raised = withSetting(defaultAdminConfig(at), { id: "bar", key: FIX_PROOF_PLACES, after: 6, at, why: "" });
-  assert.equal(fixStatus(rows, readFixProofBar(raised)), "TESTING");
-  assert.equal(fixStatus([row(0), row(0), row(0), row(0), row(0)]), "TESTING");
-  assert.equal(fixStatus(rows.map(r => ({ ...r, placeId: r.placeId.replace(/state:[^/]+\/county:[^/]+/, "state:aa/county:one") + "/place:" + r.attemptId }))), "TESTING");
+  assert.equal(proofFromStatistics(methodStatistics(rows), readFixProofBar(raised)).status, "TESTING");
+  assert.equal(proofFromStatistics(methodStatistics([row(0), row(0), row(0), row(0), row(0)])).status, "TESTING");
+  assert.equal(proofFromStatistics(methodStatistics(rows.map(r => ({ ...r, placeId: r.placeId.replace(/state:[^/]+\/county:[^/]+/, "state:aa/county:one") + "/place:" + r.attemptId })))).status, "TESTING");
 });
 
 test("mostly working can prove out, failed places stay visible, and untried places do not inflate the denominator", () => {
   const rows = Array.from({ length: 42 }, (_, i) => row(i, i < 40 ? "WORKS" : "FAILS"));
-  const measured = fixProof([...rows, row(100, "UNTRIED")]);
+  const measured = proofFromStatistics(methodStatistics([...rows, row(100, "UNTRIED")]));
   assert.equal(measured.status, "PROVEN");
   assert.equal(measured.successShare, 40 / 42);
-  assert.equal(measured.failingPlaces.length, 2);
-  assert.equal(fixStatus([...Array.from({ length: 5 }, (_, i) => row(i)), row(5, "FAILS")]), "TESTING");
-  assert.throws(() => fixStatus([row(0), { ...row(1), methodId: "different" }]), /one method/);
+  assert.equal(measured.tried - measured.works, 2);
+  assert.equal(proofFromStatistics(methodStatistics([...Array.from({ length: 5 }, (_, i) => row(i)), row(5, "FAILS")])).status, "TESTING");
+  assert.throws(() => methodStatistics([row(0), { ...row(1), methodId: "different" }]), /one method/);
 });
 
 test("a kind found in multiple states must work in multiple states; held geography supports other place-id formats", () => {
   const rows = Array.from({ length: 5 }, (_, i) => ({ ...row(i), placeId: `place-${i}` }));
-  const places = Object.fromEntries(rows.map((r, i) => [r.placeId, { district: `district-${i % 2}`, state: "aa" }]));
-  assert.equal(fixStatus(rows, undefined, { places, multipleStates: false }), "PROVEN");
-  assert.equal(fixStatus(rows, undefined, { places, multipleStates: true }), "TESTING");
-  assert.equal(fixStatus(rows), "TESTING", "missing geography does not establish spread");
+  const held = { ...methodStatistics(rows), districts: 2, states: 1 };
+  assert.equal(proofFromStatistics(held).status, "PROVEN");
+  assert.equal(proofFromStatistics(held, undefined, true, true).status, "TESTING");
+  assert.equal(proofFromStatistics(methodStatistics(rows)).status, "TESTING", "missing geography does not establish spread");
 });

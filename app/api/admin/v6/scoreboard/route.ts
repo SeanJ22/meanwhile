@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
+    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 }, methodStandings: true })) : null;
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;

@@ -5,6 +5,8 @@ import { canonicalCivicDataHash } from "../../civic-data/changes.ts";
 import { holdRawCapture, type RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
+import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
+
 import { PLURAL_STATES } from "./targets.ts";
 
 export function pluralVoteState(state: string): string {
@@ -43,9 +45,10 @@ export interface PluralVoteFact {
   counts: { option: string; value: number }[];
   positions: { personId: string; option: string; retrievedAt: string }[];
   unresolvedPositions: number;
+  positionCount?: number; positionHash?: string; firstPersonId?: string;
   sourceUrls: string[]; sourceApiUrl: string; retrievedAt: string;
 }
-export interface PluralVotesProjection { formatVersion: 1; state: string; rollCalls: PluralVoteFact[] }
+export interface PluralVotesProjection { formatVersion: 1 | 2; state: string; rollCalls: PluralVoteFact[]; memberPages?: VoteMemberPage[] }
 export interface PluralBillEvidence { requestedUrl: string; finalUrl: string; body: string; retrievedAt: string; sha256: string; sourceCheck?: SourceCheckEvidence; vaultKey?: string }
 /** Held evidence keeps a raw-capture reference; a bulk archive (empty body) keeps its release vault key. */
 export type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
@@ -113,25 +116,9 @@ export function parsePluralBill(state: string, evidence: PluralBillEvidence): { 
   return { votes: votes.filter(vote => !duplicates.has(vote.id)), held };
 }
 
-export function mergePluralVotes(state: string, prior: PluralVotesProjection | null, incoming: readonly PluralVoteFact[]): PluralVotesProjection {
-  if (prior && prior.state !== pluralVoteState(state).toUpperCase()) throw new Error("PLURAL_VOTE_STATE_MISMATCH");
-  const votes = new Map(prior?.rollCalls.map(vote => [vote.id, vote]) ?? []);
-  for (const vote of incoming) {
-    const old = votes.get(vote.id);
-    if (old && (old.billId !== vote.billId || old.session !== vote.session || old.organizationId !== vote.organizationId)) throw new Error("PLURAL_VOTE_NATIVE_IDENTITY_CONFLICT");
-    if (!old || vote.retrievedAt >= old.retrievedAt) {
-      const positions = new Map(old?.positions.map(position => [position.personId, position]) ?? []);
-      for (const position of vote.positions) positions.set(position.personId, position);
-      votes.set(vote.id, { ...vote, positions: [...positions.values()] });
-    }
-  }
-  // Date first: a new vote lands at the end, so the stored parts before it keep their hashes.
-  return { formatVersion: 1, state: pluralVoteState(state).toUpperCase(),
-    rollCalls: [...votes.values()].sort((left, right) => left.date.localeCompare(right.date) || left.id.localeCompare(right.id)) };
-}
-
 export function pluralVotesProjectionIssue(value: PluralVotesProjection): string | null {
-  if (value?.formatVersion !== 1 || !PLURAL_STATES.includes(value.state?.toLowerCase()) || !Array.isArray(value.rollCalls)) return "PLURAL_VOTE_PROJECTION_INVALID";
+  if (![1, 2].includes(value?.formatVersion) || !PLURAL_STATES.includes(value.state?.toLowerCase()) || !Array.isArray(value.rollCalls)) return "PLURAL_VOTE_PROJECTION_INVALID";
+  if (value.formatVersion === 2) { const issue = votePagesIssue(value); if (issue) return issue; }
   if (new Set(value.rollCalls.map(vote => vote.id)).size !== value.rollCalls.length) return "PLURAL_VOTE_DUPLICATE";
   for (const vote of value.rollCalls) {
     if (!id(vote.id, "vote") || !id(vote.billId, "bill") || !id(vote.organizationId, "organization") || !vote.session || !day(vote.date) ||
@@ -140,7 +127,7 @@ export function pluralVotesProjectionIssue(value: PluralVotesProjection): string
       !Number.isSafeInteger(vote.unresolvedPositions) || vote.unresolvedPositions < 0 || !Array.isArray(vote.sourceUrls) || vote.sourceUrls.some(value => url(value) !== value) ||
       !Array.isArray(vote.counts) || vote.counts.some(count => !text(count.option) || !Number.isSafeInteger(count.value) || count.value < 0) ||
       new Set(vote.counts.map(count => count.option)).size !== vote.counts.length ||
-      !Array.isArray(vote.positions) || !vote.positions.length || vote.positions.some(position => !id(position.personId, "person") || !position.option || !Number.isFinite(Date.parse(position.retrievedAt)) || position.retrievedAt > vote.retrievedAt) ||
+      !Array.isArray(vote.positions) || value.formatVersion === 1 && !vote.positions.length || vote.positions.some(position => !id(position.personId, "person") || !position.option || !Number.isFinite(Date.parse(position.retrievedAt)) || position.retrievedAt > vote.retrievedAt) ||
       new Set(vote.positions.map(position => position.personId)).size !== vote.positions.length) return "PLURAL_VOTE_NATIVE_FACT_INVALID";
   }
   return null;
@@ -158,7 +145,7 @@ export function pluralVotesCandidate(input: { projection: PluralVotesProjection;
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: evidence?.requestedUrl ?? "https://v3.openstates.org/bills",
       finalUrl: evidence?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough, rawHash: evidence?.sha256 ?? hash(input.acquired.map(row => row.sha256).sort()),
       ...(evidence?.sourceCheck ? { sourceCheck: evidence.sourceCheck } : {}) },
-    normalization: { succeeded: !issue, parserVersion: PLURAL_VOTES_PARSER, schemaVersion: "plural-native-votes/1",
+    normalization: { succeeded: !issue, parserVersion: PLURAL_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "plural-native-votes/2" : "plural-native-votes/1",
       normalizedHash: hash(projection), normalizedPayloadHash: hash(payload), inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length,
       droppedRecords: 0, missingRequiredFields: [] },
     identities: projection.rollCalls.map(vote => ({ subjectId: vote.id, jurisdiction: `US-${projection.state}`, chamber: vote.chamber,
@@ -176,14 +163,4 @@ export async function readPluralVotesProjection(state: string, options: Promoted
   const read = await readPromotedCivicData<PluralVotesProjection>("STATE_ROLL_CALL", pluralVotesScope(state), options);
   if (read.kind === "PROMOTED" && (read.metadata.sourceId !== PLURAL_VOTES_SOURCE || pluralVotesProjectionIssue(read.value) || read.value.state !== pluralVoteState(state).toUpperCase())) throw new Error("PLURAL_VOTES_READER_INVALID");
   return read;
-}
-export async function readPluralVotesForPerson(state: string, personId: string, options: PromotedCivicDataReadOptions = {}): Promise<(PluralVoteFact & { position: string })[]> {
-  if (!id(personId, "person")) return [];
-  const read = await readPluralVotesProjection(state, options);
-  if (read.kind === "NOT_RECORDED") return [];
-  if (read.kind !== "PROMOTED") throw new Error("PLURAL_VOTES_UNAVAILABLE");
-  return read.value.rollCalls.flatMap(vote => {
-    const position = vote.positions.find(position => position.personId === personId);
-    return position ? [{ ...vote, position: position.option, retrievedAt: position.retrievedAt }] : [];
-  }).sort((left, right) => right.date.localeCompare(left.date));
 }

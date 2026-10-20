@@ -3,7 +3,7 @@ import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -19,7 +19,6 @@ import { createRequire } from "node:module";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
-/* A measured child reserves its largest recent peak, 5% over, rounded up to a whole MiB. */
 const reservedFor = (peaks: readonly number[]) => Math.ceil(Math.max(...peaks) * 1.05 / 1048576) * 1048576;
 
 test("Windows and Linux process probes leave timers and the host lock available", async context => {
@@ -126,16 +125,22 @@ test("concurrent workers share a browser and close only their own contexts", asy
 test("hosted workers receive their own manual rows and browser observations without reading the manual themselves", async () => {
   const priorUrl = process.env.WTP_WORKER_TOOLS_URL, priorToken = process.env.WTP_WORKER_TOOLS_TOKEN;
   const entry = (state: string) => newFieldManualEntry("test", state || "portable", { role: "SHARED", kind: "REFERENCE",
-    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "" });
+    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "",url:state==="az"?"https://one.gov/source":null });
   const shared = createMemoryRepositories();
   await writeFieldManual(shared, [entry("az"), entry("nj"), entry("")], "2026-10-07T00:00:00.000Z");
   const host = await startWorkerToolsHost({ repos: shared, browse: async input => ({ finalUrl: input.url,
     status: 200, html: "official", text: "official", requests: [], transportError: null, durationMs: 1 }) });
   try {
-    const repos = { fieldManual: { slice: async () => { throw new Error("worker must not read the manual itself"); } } };
+    const fail=async():Promise<never>=>{throw new Error("worker must not read the manual itself");};
+    const repos = { fieldManual: { select:fail,sourceHints:fail,learnedRoutes:fail } };
     const manual = await readFieldManual(repos as never, { state: "az" });
     assert.equal(manual.error, undefined);
     assert.deepEqual(manual.store.entries.map(row => row.states).sort(), [[], ["az"]]);
+    assert.deepEqual(await readFieldManualSourceHints(repos as never,{state:"az"},"https://one.gov/"),[
+      {url:"https://one.gov/source",outcome:"REFERENCE",observedAt:null,worked:false,workedFor:[]},
+    ]);
+    await writeFieldManual(shared,[newFieldManualEntry("test","learned-route",{role:"SHARED",kind:"ROUTE",title:"Indexed route",summary:"Shared maturity",outcome:"YIELDED",payload:{routeId:"indexed-route"}})],"2026-10-07T00:00:00.000Z");
+    assert.deepEqual(await readLearnedManualRoutes(repos as never,["indexed-route","unlearned"]),{present:true,routeIds:["indexed-route"]});
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();

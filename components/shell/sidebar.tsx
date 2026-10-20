@@ -6,6 +6,7 @@ import { Logo } from "@/components/brand/logo";
 import { DataFreshness } from "@/components/map/data-freshness";
 import { Legend } from "@/components/map/legend";
 import { TutorialReplayButton } from "@/components/map/tutorial-overlay";
+import { ResetViewButton } from "@/components/reset-view-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { useShellData } from "@/lib/state/data";
@@ -72,9 +73,10 @@ export function Sidebar({
       <div className="sidebar-header">
         <div className="brand">
           <span className="brand-name">
-            <Logo variant="wordmark" size={38} />
+            <Logo variant="wordmark" size={32} />
           </span>
           <span className="mw-brand-actions">
+            <ResetViewButton onReset={onReset} />
             <ThemeToggle className="theme-toggle-btn" />
             <button
               type="button"
@@ -149,9 +151,6 @@ export function Sidebar({
               </div>
               <div className="mw-link-row">
                 <TutorialReplayButton />
-                <button type="button" className="mw-text-btn" onClick={onReset}>
-                  Reset view
-                </button>
               </div>
             </div>
           )}

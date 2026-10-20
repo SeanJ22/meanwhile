@@ -49,9 +49,12 @@ if (process.argv.includes("--prepare")) {
   console.log(`RH01_MODEL_PREPARED ${JSON.stringify(manifest)}`);
 } else {
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  if (manifest.phase !== phase) throw Error("RH01 model component store phase does not match its invocation");
   const role = option("role"); if (role !== "SCOUT" && role !== "ADVERSARIAL_AUDITOR") throw Error("RH01 model replay role is invalid");
   if (!process.env.WTP_RH01_MODEL_BROKER) throw Error("RH01 model replay requires the separately authorized or dry-blocked local broker");
   process.env.WTP_RH01_MODEL_PHASE = phase;
+  if (phase === "before") process.env.WTP_RH01_BASELINE_COMPONENT_STORE = root;
+  else delete process.env.WTP_RH01_BASELINE_COMPONENT_STORE;
   process.env.WTP_RH01_HELD_VAULT_DIRECTORY = join(root, "vault");
   process.env.WTP_RH01_MODEL_CAPTURE = manifest.inputs.heldCapture;
   process.env.WTP_RH01_DIRECTORY ??= root;

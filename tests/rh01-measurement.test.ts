@@ -593,6 +593,64 @@ test("the two model preloads preserve native JSON in an ordinary spawned source 
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
+test("baseline model component bootstrap refreshes AZ fixture doors before the native lease body and fails closed", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-baseline-component-"));
+  try {
+    const harness = process.cwd(), codeRoot = process.env.WTP_RH01_FIXTURE_CODE_ROOT ?? harness;
+    const broker = join(directory, "broker.json");
+    await writeFile(broker, JSON.stringify({ url: "http://127.0.0.1:1/model", auth: "fixture", authorized: false }));
+    const driver = `import assert from 'node:assert/strict';import {fork} from 'node:child_process';
+      import {once} from 'node:events';import {mkdir} from 'node:fs/promises';
+      import {join} from 'node:path';import {pathToFileURL} from 'node:url';
+      globalThis.fetch=()=>{throw Error('ZERO_NETWORK_REQUIRED')};
+      const root=process.env.WTP_RH01_CODE_ROOT,fixture=process.env.WTP_RH01_DIRECTORY;
+      const load=file=>import(pathToFileURL(join(root,file)).href);
+      const {createFileRepositories}=await load('lib/control-plane/repository/file-store.ts');
+      const {seedMeetingDoors}=await load('lib/doors/seed-meetings.ts');
+      const store=join(fixture,'held-az'),repos=await createFileRepositories(store);
+      const at='2026-10-20T08:00:00.000Z',wiring=[{
+        bodyId:'ocd-division/country:us/state:az/county:pima#governing',ocdId:'ocd-division/country:us/state:az/county:pima',
+        agendaSourceType:'LEGISTAR',jurisdiction:'Pima County, AZ',publishingOrg:'Pima County Clerk of the Board',
+        timeZone:'America/Phoenix',config:{slug:'pima',sourceRoutes:'legistar'},verifiedAt:'2026-08-13'}];
+      const seeded=await seedMeetingDoors({repo:repos.doors,wiring,derived:[],deriveInputAt:at,at});
+      assert.equal(seeded.refused.length,0);
+      async function run(phase,selectedStore,configuredStore=selectedStore){
+        const child=fork(join(root,'lib/control-plane/workers/lease-worker.ts'),[],{
+          cwd:root,env:{...process.env,WTP_RH01_MODEL_PHASE:phase,WTP_RH01_BASELINE_COMPONENT_STORE:selectedStore},
+          execArgv:['--experimental-strip-types','--import',join(root,'scripts/register-test-loader.mjs'),
+            '--import',join(process.env.WTP_RH01_HARNESS_ROOT,'scripts/rh01-model-preload.mjs')],
+          stdio:['ignore','pipe','pipe','ipc']});
+        let stdout='',stderr='',finished=false,requests=0;
+        child.stdout.on('data',part=>{stdout+=part});child.stderr.on('data',part=>{stderr+=part});
+        child.on('message',message=>{if(message.kind==='finished')finished=true;else requests++});
+        child.once('spawn',()=>child.send({root,fileStoreRoot:configuredStore,postgres:false,taskIds:[],
+          modelEnabled:false,searchEnabled:false,ceilingUsd:0,fundedSubjects:[]}));
+        const [status]=await once(child,'close');assert.equal(requests,0);
+        return {status,stdout,stderr,finished};
+      }
+      const good=await run('before',store);assert.equal(good.status,0,good.stderr);assert.equal(good.finished,true);
+      const receipt=JSON.parse(good.stdout.split(String.fromCharCode(10)).find(line=>line.startsWith('RH01_BASELINE_COMPONENT_BOOTSTRAP ')).slice(34));
+      assert.equal(receipt.phase,'before');assert.ok(receipt.rows>0);assert.ok(receipt.partitions>0);
+      assert.match(receipt.scope,/original country parent excluded/);
+      const empty=join(fixture,'empty');await mkdir(empty);
+      const failed=await run('before',empty);assert.notEqual(failed.status,0);assert.equal(failed.finished,false);
+      assert.match(failed.stderr,/RH01_BASELINE_COMPONENT_BOOTSTRAP_FAILED/);
+      const mismatch=await run('before',store,empty);assert.notEqual(mismatch.status,0);
+      assert.match(mismatch.stderr,/RH01_BASELINE_COMPONENT_BOOTSTRAP_STORE_MISMATCH/);
+      const after=await run('after',empty);assert.equal(after.status,0,after.stderr);
+      assert.equal(after.finished,true);assert.doesNotMatch(after.stdout,/RH01_BASELINE_COMPONENT_BOOTSTRAP/);
+      console.log('AZ fixture startup, empty/mismatched store refusal, after phase unchanged; no provider calls');`;
+    const child = spawn(process.execPath, ["--experimental-strip-types", "--import", join(codeRoot, "scripts/register-test-loader.mjs"),
+      "--input-type=module", "-e", driver], {
+      cwd: codeRoot, env: { NODE_ENV: "test", PATH: process.env.PATH, WTP_RH01_MODEL_BROKER: broker,
+        WTP_RH01_CODE_ROOT: codeRoot, WTP_RH01_HARNESS_ROOT: harness, WTP_RH01_DIRECTORY: directory },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
+    const [status] = await once(child, "close"); assert.equal(status, 0, stderr.slice(-4000)); assert.match(stdout, /no provider calls/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 test("raw loopback Neon queries use local native SQL while the reader transport remains unchanged", async () => {
   const directory = await mkdtemp(join(tmpdir(), "rh01-raw-neon-"));
   try {

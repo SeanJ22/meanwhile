@@ -15,7 +15,7 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
-import { diagnosticModelCalls, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
+import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -596,7 +596,7 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   activePreparation,
   requiredWorkerRoleCoverage: { required: allRoleCoverageRequired, roles: roleCoverage, missing: roleCoverage.filter(row => !row.complete).map(row => row.role),
     definition: "Actual native committed results produced during the workload. Preparation is excluded. SCOUT must finish its model loop; Auditor must commit a model review; ACQUIRER must complete a genuine generalized acquisition. Paid-role native usage is checked against the authorized phase broker's recorded provider usage." },
-  modelDiagnosticSpend: { calls: modelDiagnosticCalls, measuredUsd: modelDiagnosticCalls.reduce((sum, row) => sum + (row.usd ?? 0), 0) },
+  modelDiagnosticSpend: diagnosticModelSpend(modelDiagnosticCalls),
   temporaryDirectory: process.env.TMPDIR ?? process.env.TEMP ?? process.env.TMP ?? null,
   observationRequestedMs: observationMs, observedFullHour: elapsedMs >= 3600000 && !watchdogExceeded,
   workload: "Every selected command offered simultaneously. Actual parent descendants cover identical child commands; never-spawned offers enter admission after their owner ends. No cadence replay or synthetic clock advance",

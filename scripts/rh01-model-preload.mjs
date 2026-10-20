@@ -2,7 +2,7 @@
 import { registerHooks } from "node:module";
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
 
 installMeasurementNetworkBoundary();
@@ -13,13 +13,16 @@ if (descriptorPath) {
   process.env.WTP_WORKERS_ANTHROPIC_API_KEY = "rh01-local-capped-model-broker";
   const root = process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), prefix = pathToFileURL(root + "/").href;
   const client = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? process.cwd(), "scripts/rh01-model-client.mts")).href;
+  const leaseEntry = join(root, "lib/control-plane/workers/lease-worker.ts");
   registerHooks({ load(url, context, nextLoad) {
     const result = nextLoad(url, context);
     if (!url.startsWith(prefix) || url.includes("/node_modules/") || !result.source) return result;
     const modelEntry = url.endsWith("/lib/control-plane/scheduler/scout-executor.ts");
     const capturedPlace = url.endsWith("/lib/civic-data/held-place-capture.ts") && process.env.WTP_RH01_MODEL_CAPTURE;
-    if (!modelEntry && !capturedPlace) return result;
-    // Decode only the two modules actually transformed. JSON and every other
+    const baselineBootstrap = process.env.WTP_RH01_MODEL_PHASE === "before" && process.env.WTP_RH01_BASELINE_COMPONENT_STORE &&
+      url === pathToFileURL(leaseEntry).href && resolve(process.argv[1] ?? "") === leaseEntry;
+    if (!modelEntry && !capturedPlace && !baselineBootstrap) return result;
+    // Decode only modules actually transformed. JSON and every other
     // native source retain their loader result without a byte-to-string rewrite.
     let source = typeof result.source === "string" ? result.source : Buffer.from(result.source).toString("utf8");
     if (modelEntry) {
@@ -37,6 +40,26 @@ if (descriptorPath) {
           if(ids.length!==1||ids[0]!=='ocd-division/country:us/state:az/county:pima')throw Error('RH01 captured packet escaped its original place');
           return JSON.parse(rhReadCapture(process.env.WTP_RH01_MODEL_CAPTURE,'utf8'));
         }\n`;
+    } else if (baselineBootstrap) {
+      // The original lease child did not initialize process-local meeting partitions.
+      // This disclosed component startup reads only its already-held AZ File store;
+      // it does not stand in for the original country's parent startup or its memory.
+      const fileStore = pathToFileURL(join(root, "lib/control-plane/repository/file-store.ts")).href;
+      const doors = pathToFileURL(join(root, "lib/doors/install.ts")).href;
+      const declaration = "async function work(config: LeaseWorkerConfig): Promise<void> {";
+      if (!source.includes(declaration)) throw Error("RH01 baseline lease entry declaration changed");
+      source = source.replace(declaration, declaration + `
+        if(config.postgres||config.fileStoreRoot!==process.env.WTP_RH01_BASELINE_COMPONENT_STORE)
+          throw Error('RH01_BASELINE_COMPONENT_BOOTSTRAP_STORE_MISMATCH');
+        const rhBaselineRepos=await rhBaselineRepositories(process.env.WTP_RH01_BASELINE_COMPONENT_STORE);
+        const rhBaselineDoors=await rhBaselineRefreshDoors(rhBaselineRepos.doors,{state:'AZ'});
+        if(rhBaselineDoors.reason||!rhBaselineDoors.rows||rhBaselineDoors.partitions?.refreshed!==true||
+          !rhBaselineDoors.doors?.length||rhBaselineDoors.doors.some(door=>!door.ocdId?.startsWith('ocd-division/country:us/state:az/')))
+          throw Error('RH01_BASELINE_COMPONENT_BOOTSTRAP_FAILED:'+JSON.stringify({reason:rhBaselineDoors.reason,rows:rhBaselineDoors.rows,partitions:rhBaselineDoors.partitions?.reason}));
+        console.log('RH01_BASELINE_COMPONENT_BOOTSTRAP '+JSON.stringify({phase:'before',scope:'AZ held File model component; original country parent excluded',rows:rhBaselineDoors.rows,partitions:rhBaselineDoors.partitions.partitions}));
+        \n`);
+      source += `\nimport {createFileRepositories as rhBaselineRepositories} from ${JSON.stringify(fileStore)};
+        import {refreshDoorsForPass as rhBaselineRefreshDoors} from ${JSON.stringify(doors)};\n`;
     }
     return { ...result, source };
   } });

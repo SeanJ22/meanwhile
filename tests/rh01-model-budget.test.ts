@@ -8,7 +8,7 @@ import { once } from "node:events";
 import { readFile, writeFile } from "node:fs/promises";
 import { DiagnosticModelBudget, RH01_DIAGNOSTIC_LIMITS } from "../scripts/rh01-model-budget.mts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { diagnosticModelCalls } from "../scripts/rh01-read-accounting.mts";
+import { diagnosticModelCalls, diagnosticModelSpend } from "../scripts/rh01-read-accounting.mts";
 
 const request = (text = "actual source context"): ModelRequest => ({ model: RH01_DIAGNOSTIC_LIMITS.model,max_tokens:8192,
   system:[],tools:[],messages:[{role:"user",content:text}] });
@@ -24,6 +24,11 @@ test("diagnostic transport blocks before authorization, refuses other models, an
     assert.equal(sent,0);assert.equal(budget.snapshot().calls.length,0);
     await assert.rejects(budget.transport({phase:"before",role:"SCOUT",authorized:true,transport:async()=>{sent++;throw Error("provider unavailable");}})(request()),/provider unavailable/);
     assert.equal(sent,1);assert.equal(budget.snapshot().calls.length,1);
+    const descriptor=join(directory,"broker.json");await writeFile(descriptor,JSON.stringify({budgetPath:join(directory,"budget.sqlite")}));
+    const report=diagnosticModelSpend(await diagnosticModelCalls(descriptor,"before",0));
+    assert.equal(report.calls.length,1);assert.equal(report.measuredUsd,0);assert.equal(report.measuredUsdIsTotal,false);
+    assert.equal(report.unpricedCalls,1);assert.equal(report.unfinishedCalls,1);assert.equal(report.unmeteredCalls,1);
+    assert.ok(report.reservedUsd>0,"a provider connection failure retains its conservative reservation");
   }finally{budget.close();await rm(directory,{recursive:true,force:true});}
 });
 test("one shared SQLite ledger enforces both phases, native calls and the five dollar cap",async()=>{

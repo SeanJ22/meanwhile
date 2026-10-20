@@ -34,6 +34,7 @@ import {
   routineAdmissionClock,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { MEASURE_TRANSLATION_ROUTINE_TASKS } from "../lib/translate/routine-contract.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
@@ -422,13 +423,20 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "socrata-discovery",
     "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
+    ...MEASURE_TRANSLATION_ROUTINE_TASKS.map(task => task.id),
   ]);
-  assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
+  assert.deepEqual(nonMeetingTasks.map((task) => task.id), [
+    ...ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id),
+    ...MEASURE_TRANSLATION_ROUTINE_TASKS.map(task => task.id),
+  ]);
   assert.deepEqual(
     ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass === "MEETING").map((task) => task.id),
     MEETING_PARTITION_CONTRACTS.map((contract) => contract.id),
   );
-  assert.deepEqual(ROUTINE_SOURCE_TASKS.map((task) => task.contract), observableRoutineContracts());
+  const translationIds = new Set(MEASURE_TRANSLATION_ROUTINE_TASKS.map(task => task.id));
+  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => !translationIds.has(task.id)).map(task => task.contract), observableRoutineContracts());
+  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => translationIds.has(task.id)), MEASURE_TRANSLATION_ROUTINE_TASKS,
+    "the independent paid translation clocks use their exact descriptors and durable routine receipts");
   assert.ok(
     ROUTINE_SOURCE_TASKS.every((task) => task.acquisitionFailureDomain.length > 0),
     "every routine child declares its real acquisition failure domain",

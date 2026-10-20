@@ -70,3 +70,12 @@ test('an owner removal of the last record serves an empty edge projection',async
  const current=curatedReaderReadState('campaign-sites');assert.equal(current.kind,'BOOTSTRAP');if(current.kind==='BOOTSTRAP')assert.deepEqual(current.value.records,[]);
  }finally{if(prior===undefined)delete process.env.WTP_READER_EDGE_DIR;else process.env.WTP_READER_EDGE_DIR=prior;await rm(dir,{recursive:true,force:true});}
 });
+
+test('the deployed target constraint permits scalar and named reader flags and rejects an unnamed target',async()=>{
+ const db=await factDb();
+ try{
+ await assert.rejects(db.query("INSERT INTO owner_flag(kind) VALUES('AUDIT_LOOKS_WRONG')"),/owner_flag_target/);
+ await db.query("INSERT INTO owner_flag(kind,reader_family,reader_id) VALUES('AUDIT_LOOKS_WRONG','member-offices','office-1')");
+ assert.equal((await readOwnerFlags(db.query)).length,1);
+ }finally{await db.pg.close();}
+});

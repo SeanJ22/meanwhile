@@ -45,7 +45,8 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
-  "acs-population-promote.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  // Complete original native ACS job: 3,922,288,640-byte RSS peak; current country-sized path still needs its own run.
+  "acs-population-promote.mts": 3741,
   "fetch-congress-legislators.mts": 384,
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.

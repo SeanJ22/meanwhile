@@ -44,7 +44,7 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
-import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
+import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { keepRunnerTransfer } from "../lib/db/transfer.ts";
@@ -86,6 +86,7 @@ import {
 import {
   applyRuntimeRelease,
   resumeRuntimeReleaseInstall,
+  RUNTIME_RELEASE_HOLD_RELATIVE_PATH,
   fetchGithubCheckRuns,
   fetchRuntimeProductionDeploys,
   inspectNewestDeployedRuntimeRelease,
@@ -1406,10 +1407,20 @@ async function persistRuntimeBoundaryFailure(
   }
 }
 
+const runtimeInstallMemory = routineProcessSlots();
+/** The synchronous fallback and recovery install own their complete job hold. */
+async function withRuntimeInstallMemory<T>(work: () => T): Promise<T> {
+  const release = await runtimeInstallMemory.acquire("runtime-release-install.mjs");
+  try { return work(); }
+  finally { release(); }
+}
+
 async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   if (!AUTO_RELEASE_HANDOFF) return null;
   const startedAt = new Date().toISOString();
-  const recovered = resumeRuntimeReleaseInstall({ root: ROOT });
+  const recovered = existsSync(join(ROOT, RUNTIME_RELEASE_HOLD_RELATIVE_PATH))
+    ? await withRuntimeInstallMemory(() => resumeRuntimeReleaseInstall({ root: ROOT }))
+    : null;
   if (recovered?.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(recovered, startedAt);
     return 2;
@@ -1467,7 +1478,8 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
 
-  const applied = applyRuntimeRelease({ root: ROOT, targetSha: final.targetSha });
+  const targetSha = final.targetSha;
+  const applied = await withRuntimeInstallMemory(() => applyRuntimeRelease({ root: ROOT, targetSha }));
   if (applied.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(applied, startedAt);
     return 2;

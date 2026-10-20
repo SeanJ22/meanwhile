@@ -11,7 +11,7 @@ interface PublishedZipOptions {readonly origin: string; readonly fetchImpl?: typ
 /** Stream the published county manifest through scratch storage, selecting ZIP scalars before assembling a member. */
 async function visitPublishedZips(options: PublishedZipOptions, visit: (zip: string) => void): Promise<void> {
   if (options.onlyZip) {visit(options.onlyZip); return;}
-  const response = await (options.fetchImpl ?? fetch)(`${options.origin}/api/warm?places=1`, {
+  const response = await (options.fetchImpl ?? fetch)(`${options.origin}/api/reader/places`, {
     headers: {"x-wtp-synthetic-run": "keep-warm", accept: "application/json"}, signal: AbortSignal.timeout(options.timeoutMs ?? 15_000),
   });
   if (!response.ok || !response.body) return;

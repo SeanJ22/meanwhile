@@ -14,13 +14,19 @@ import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 
 const fail = async (): Promise<never> => { throw new Error("country history was materialized"); };
 function bounded(repos: ControlPlaneRepositories): ControlPlaneRepositories {
+  const scan = <T>(log: import("../lib/control-plane/repository/types.ts").AppendOnlyRepository<T>) => ({...log,
+    readChangedSince: (...args: Parameters<typeof log.readChangedSince>) => {
+      if (!args[2]?.keys) assert.ok(args[2]?.projection, "country history transfers only a selection projection");
+      return log.readChangedSince(...args);
+    },
+  });
   return {...repos,
     workItems: {...repos.workItems, list: fail, listNarrowed: fail},
     attempts: {...repos.attempts, list: fail},
     artifacts: {...repos.artifacts, readAll: fail},
-    scoutResults: {...repos.scoutResults, readAll: fail},
-    workerResults: {...repos.workerResults, readAll: fail, readAllNarrowed: fail},
-    promotionPipeline: {...repos.promotionPipeline, readAll: fail, keys: fail},
+    scoutResults: {...scan(repos.scoutResults), readAll: fail},
+    workerResults: {...scan(repos.workerResults), readAll: fail, readAllNarrowed: fail},
+    promotionPipeline: {...scan(repos.promotionPipeline), readAll: fail, keys: fail},
   };
 }
 async function completed(roles: number) {

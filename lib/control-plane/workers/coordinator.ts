@@ -7,7 +7,7 @@ import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { canonicalJson, RepositoryLockHeld, type ControlPlaneRepositories } from "../repository/types.ts";
 import { isControlPlaneRequestTimeout } from "../repository/request-bounds.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
-import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
+import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type DeclaredExecutor, type DispatchResult, type ReclaimSweep } from "../scheduler/dispatch.ts";
 import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
@@ -422,7 +422,7 @@ interface StreamedCoordinatorOptions extends CoordinatorOptions {
 type CoordinatorDeferred={workItemId:string;reason:string;detail:string};
 type CoordinatorRows<T,D extends boolean>=D extends true?DiskRows<T>:T[];
 interface CoordinatorReading<D extends boolean> {
-  readonly recovery:Awaited<ReturnType<typeof sweepExpiredLeases>>;
+  readonly recovery:ReclaimSweep<boolean>;
   readonly decisions:CoordinatorRows<SelectedDecision,D>;
   readonly dispatches:CoordinatorRows<DispatchResult,D>;
   readonly scoutsAdmitted:number;
@@ -482,7 +482,12 @@ export async function runAutonomousCoordinator(runtime:AutonomousCoordinatorRunt
   const summaries=planner.table<WorkItem>(`${prefix}:snapshot`,row=>row.id);
   try{return await withHistoryIndex(async db=>{
     const now=runtime.now??(()=>new Date().toISOString());
-    const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
+    const recovery=options.planner
+      ?await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator",sink:{
+        reclaimed:output<string>("recovery-reclaimed"),releasedSettled:output<string>("recovery-settled"),
+        stillLive:output<string>("recovery-live"),refused:output<{routeTaskId:string;why:string}>("recovery-refused"),
+      }})
+      :await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
     db.exec(`CREATE TABLE work(id TEXT PRIMARY KEY,body TEXT NOT NULL,accepted INTEGER NOT NULL,selected INTEGER NOT NULL DEFAULT 0,
       served TEXT NOT NULL DEFAULT '',send TEXT NOT NULL DEFAULT '',part TEXT NOT NULL DEFAULT '',item_order INTEGER NOT NULL);
       CREATE TABLE roots(id TEXT PRIMARY KEY,canonical TEXT NOT NULL);

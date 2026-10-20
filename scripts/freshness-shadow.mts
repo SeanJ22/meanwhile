@@ -24,7 +24,6 @@ import { hunterQueuePath, writeHunterQueue } from "../lib/control-plane/workers/
 import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
-import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -150,7 +149,7 @@ import {
   planRetiredResidue,
   planSupersededRetirement,
   settleRetirements,
-  settledRouteTaskIds,
+  scanRecoveryTaskMetadata,
   loadDebts,
   openOccurrence,
   resumeOpenOccurrence,
@@ -161,6 +160,7 @@ import {
   type SettledOccurrence,
   FRESHNESS_PROJECT,
   type StandingObligation,
+  type StandingObligationHeader,
   type SyncPlannerSink,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
@@ -610,6 +610,7 @@ const meetingsRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } :
   [LEGACY_MEETINGS_OBLIGATION_PREFIX],
   NOW,
   LEGACY_MEETINGS_RETIREMENT_REASON,
+  planner,
 );
 console.log(
   `  legacy tracked-snapshot meetings clocks: ${meetingsRetirement.retired.length} retired this cycle; ` +
@@ -620,6 +621,7 @@ const factClockRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } 
   ["freshness:meeting-times:", "freshness:agendas:"],
   NOW,
   "PDC authority transferred meeting and agenda acquisition to source/body production meeting-partition contracts",
+  planner,
 );
 console.log(
   `  legacy parallel meeting-fact clocks: ${factClockRetirement.retired.length} retired this cycle; ` +
@@ -632,6 +634,7 @@ const fecModelRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } :
   [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
   NOW,
   "PDC authority transferred federal acquisition to the state-scoped FEC_FUNDING production civic-data contracts",
+  planner,
 );
 console.log(
   `  legacy parallel federal campaign-finance clocks: ${fecModelRetirement.retired.length} retired this cycle; ` +
@@ -643,7 +646,7 @@ const syncSink: SyncPlannerSink = {
   registered: planner.table<string>("standing-registered", row => row),
   alreadyDurable: planner.table<string>("standing-durable", row => row),
   refreshed: planner.table<{ id: string; changed: readonly string[] }>("standing-refreshed", row => row.id),
-  outside: planner.table<StandingObligation>("standing-outside", row => row.id),
+  outside: planner.table<StandingObligationHeader>("standing-outside", row => row.id),
 };
 const sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle, sink: syncSink });
 finishPhase("references-and-registration");
@@ -694,7 +697,7 @@ const runtimeConditions: string[] = [];
 
 const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
-const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside);
+const residueItems = retirementOutside === null ? [] : planRetiredResidue(retirementOutside, planner);
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
 
 const dispatchedDiscoveryIds = sync.all.filter(row => row.materializedBy === OWNER_DISPATCH).map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
@@ -753,6 +756,7 @@ const movedPlan =
         corpus: corpusUnits,
         providers: registry.byProvider,
         routes: heldRouteRead,
+        planner,
       });
 const supersededPlan =
   retirementOutside === null || movedPlan === null
@@ -761,8 +765,9 @@ const supersededPlan =
         outside: retirementOutside.filter((row) => !movedPlan.owned.has(row.id)),
         corpus: corpusUnits,
         providers: registry.byProvider,
+        planner,
       });
-const retirementHeldBack = [...(movedPlan?.heldBack ?? []), ...(supersededPlan?.heldBack ?? [])];
+const retirementHeldBack = new DiskRows(function* () { yield* movedPlan?.heldBack ?? []; yield* supersededPlan?.heldBack ?? []; });
 const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
   (m, h) => ((m[h.code] = (m[h.code] ?? 0) + 1), m),
   {},
@@ -773,7 +778,7 @@ let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
 const retiredDebtReasons = plannerMap<string>(planner, "retired-debt-reasons");
 if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null) {
-  const items = [...residueItems, ...supersededPlan.retire, ...movedPlan.retire];
+  const items = new DiskRows(function* () { yield* residueItems; yield* supersededPlan.retire; yield* movedPlan.retire; });
   console.log(
     `  retirement: ${movedPlan.retire.length} with a held calendar route, ${supersededPlan.retire.length} superseded, ` +
       `${residueItems.length} retired row(s) still holding an occurrence` +
@@ -787,6 +792,7 @@ if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null)
           items,
           now: NOW,
           budget: { spent: () => false },
+          planner,
         });
         console.log(
           `  retirement: ${retirementApplied.retired.length} obligation(s) retired, ` +
@@ -804,12 +810,12 @@ if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null)
     for (const row of retirementOutside) {
       if (!row.active) retiredDebtReasons.set(row.id, row.retirementReason ?? "RETIRED: this obligation was retired");
     }
-    const reasonOf = new Map(items.map((item) => [item.obligationId, item.reason]));
+    const reasonOf = plannerMap<string>(planner, "retirement-reasons", items.map((item) => [item.obligationId, item.reason] as const));
     for (const id of retirementApplied?.retired ?? []) retiredDebtReasons.set(id, reasonOf.get(id) ?? "RETIRED");
   }
 }
 /* The move takes several cycles under the budget, so every cycle says how many moved and how many remain. */
-const movedIds = new Set((movedPlan?.retire ?? []).map((item) => item.obligationId));
+const movedIds = plannerSet(planner, "moved-retirement-identities", new DiskRows(() => movedPlan?.retire ?? []).map((item) => item.obligationId));
 const movedThisCycle = (retirementApplied?.retired ?? []).filter((id) => movedIds.has(id)).length;
 const movedRemaining = movedIds.size - movedThisCycle;
 if (movedIds.size > 0) {
@@ -1185,19 +1191,10 @@ if (!dry && !canary && !intents.runnerPause.paused) {
   }
 }
 const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
-if (!canary) await forEachAggregate(recoveryRepos.workItems, item => {
-  if (plannedForHunters(item.value.autonomousPlan) && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
-    && lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
-});
 const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
   const settled = plannerSet(planner, "settled-task-ids"), neverClaimed = plannerSet(planner, "never-claimed-task-ids");
-  if (!canary) await forEachAggregate(recoveryRepos.routeTasks, row => {
-    if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
-      lifetimeHuntWorkIds.add(row.id); lifetimeHuntWorkIds.add(row.value.workItemId);
-    }
-    for (const id of settledRouteTaskIds([row])) settled.add(id);
-    if (row.value.state === "PENDING" && !row.value.workerTask) neverClaimed.add(row.id);
-  });
+  if (!canary) await scanRecoveryTaskMetadata(recoveryRepos, { lifetimeHuntSubjects, lifetimeHuntWorkIds,
+    settledTaskIds: settled, neverClaimedTaskIds: neverClaimed });
   return [settled, neverClaimed] as const;
 })();
 finishPhase("schedule-and-intents");
@@ -2010,7 +2007,7 @@ if (!canary) {
     if (dry || ONLY !== null || IDS !== null) {
       console.log(`  abandoned occurrences: ${abandonedOccurrences.length} found (plan only: this cycle writes nothing)`);
     } else {
-      abandonedClosed = await closeAbandonedOccurrences(repos, { abandoned: abandonedOccurrences, now: NOW });
+      abandonedClosed = await closeAbandonedOccurrences(repos, { abandoned: abandonedOccurrences, now: NOW, planner });
       console.log(
         `  abandoned occurrences: ${abandonedOccurrences.length} found, ${abandonedClosed.closed.length} closed unresolved` +
           (abandonedClosed.skipped.length > 0 ? `, ${abandonedClosed.skipped.length} skipped` : "") +

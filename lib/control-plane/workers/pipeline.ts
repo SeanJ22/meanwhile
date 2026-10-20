@@ -4,7 +4,7 @@ import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type Transition
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { visitCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
-import { withHistoryIndex } from "./streamed-history.ts";
+import { readChangedLogRecord, withHistoryIndex } from "./streamed-history.ts";
 import type { WorkerResultRecord } from "./types.ts";
 
 const SCOUT_CONTEXT: PipelineContext = { artifactById: () => null, attemptRoleById: () => null };
@@ -27,17 +27,25 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories): Pro
     });
     if (sequence === 0) return;
     const heldArtifact = db.prepare("SELECT id FROM result_artifacts WHERE id=?");
-    await repos.scoutResults.readChangedSince(null, undefined, { page: async rows => {
-      for (const {record: scout} of rows) for (const offered of scoutedFromScoutResult(scout)) {
-        if (offered.artifactIds.some(id => heldArtifact.get(id))) await appendTransition(repos, offered, SCOUT_CONTEXT, offered.at);
+    await repos.scoutResults.readChangedSince(null, undefined, { projection: { attemptId: true, outcome: true }, page: async rows => {
+      for (const row of rows) {
+        if (row.record.outcome !== "ROUTE_CANDIDATE" && row.record.outcome !== "EVIDENCE_FOUND") continue;
+        const scout = await readChangedLogRecord(repos.scoutResults, row, ["attemptId"], row.record.attemptId);
+        for (const offered of scoutedFromScoutResult(scout)) {
+          if (offered.artifactIds.some(id => heldArtifact.get(id))) await appendTransition(repos, offered, SCOUT_CONTEXT, offered.at);
+        }
       }
     } });
     const insertKey = db.prepare("INSERT OR IGNORE INTO pipeline_keys VALUES(?)");
     const insertScouted = db.prepare("INSERT OR IGNORE INTO scouted_items VALUES(?,?)");
-    await repos.promotionPipeline.readChangedSince(null, undefined, { page: rows => {
-      for (const {key, record} of rows) {
-        insertKey.run(key);
-        if (isPipelineRecord(record) && record.stage === "SCOUTED") insertScouted.run(record.itemId, JSON.stringify(record));
+    await repos.promotionPipeline.readChangedSince(null, undefined, { projection: { formatVersion: true, stage: true, itemId: true, recordId: true }, page: async rows => {
+      for (const row of rows) {
+        insertKey.run(row.key);
+        if (isPipelineRecord(row.record) && row.record.stage === "SCOUTED") {
+          const record = await readChangedLogRecord(repos.promotionPipeline, row, ["recordId"], row.record.recordId);
+          if (!isPipelineRecord(record) || record.stage !== "SCOUTED") throw new Error("FLEET_PIPELINE_SCOUTED_RECORD_CHANGED");
+          insertScouted.run(record.itemId, JSON.stringify(record));
+        }
       }
     } });
     const bindArtifact = db.prepare("INSERT OR IGNORE INTO artifact_items VALUES(?,?)");

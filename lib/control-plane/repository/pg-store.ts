@@ -674,7 +674,9 @@ export function pgAppendOnlyRepository<T>(
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const out: ChangedRecord<T>[] = [];
     await pagedRecords("readChangedSince",
-      at => [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, read.keys === undefined ? "" : `log_key = ANY(${at(read.keys)}::text[])`, heldFilter(held, at, "log_key", "position")],
+      at => [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, read.keys === undefined ? "" : `log_key = ANY(${at(read.keys)}::text[])`,
+        read.recordTimeAtOrAfter === undefined ? "" : `(record #>> '${jsonPathLiteral(table, read.recordTimeAtOrAfter.path)}')::timestamptz >= ${at(read.recordTimeAtOrAfter.at)}::timestamptz`,
+        heldFilter(held, at, "log_key", "position")],
       read.projection ? recordProjectionSql(table, read.projection) : "record",
       async records => { if (read.page) await read.page(records); else out.push(...records); });
     return { records: out, through };
@@ -865,6 +867,11 @@ export function pgAppendOnlyRepository<T>(
         cursor = { key: String(last.log_key), position: Number(last.position) };
       }
       return out;
+    },
+
+    async readRecord(key, recordId) {
+      const rows = await run("readRecord", recordClass, `SELECT record FROM ${table} WHERE log_key=$1 AND record_id=$2`, [key, recordId]) as Record<string, unknown>[];
+      return rows.length === 0 ? null : parseValue<T>(rows[0].record, `${table} ${key}/${recordId}`);
     },
 
     readStampedBetween: (from, until, page) => pagedRecords("readStampedBetween",

@@ -11,7 +11,7 @@ import { pathToFileURL } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import { pgAggregateRepository } from "../lib/control-plane/repository/pg-store.ts";
 import { AGGREGATE_KINDS, APPEND_ONLY_LOGS } from "../lib/control-plane/repository/pg-schema.ts";
-import { projectedRead, updateRead, shadowRead, type SqlShadow } from "./rh01-sql.mts";
+import { projectedRead, updateRead, shadowRead, sqlStatementCode, type SqlShadow } from "./rh01-sql.mts";
 import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { ReadonlySpendHoldOverlay } from "./rh01-spend-holds.mts";
@@ -45,6 +45,7 @@ const { CONSOLE_INPUT_SQL } = await import(pathToFileURL(join(process.env.WTP_RH
 const seededControl = new Set<string>();
 const seededSites = new Set<string>();
 const controlTables = new Map<string, readonly string[]>();
+let productionSpendWindowPresent: Promise<boolean> | undefined;
 const controlReadTiming = { count: 0, aborted: 0, maxQueueWaitMs: 0, maxSnapshotMs: 0, maxRemoteMs: 0 };
 const aggregateTables = new Set(AGGREGATE_KINDS.map(kind => `cp_${kind}`));
 const logTables = new Set(APPEND_ONLY_LOGS.map(kind => `cp_log_${kind}`));
@@ -61,7 +62,11 @@ async function ensureControlTable(table: string): Promise<readonly string[]> {
   let keys: readonly string[];
   if (aggregateTables.has(table)) {
     keys = ["id"];
-    await db.exec(`CREATE TABLE IF NOT EXISTS ${table} (id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL,changed_at timestamptz NOT NULL DEFAULT now())`);
+    if (table === "cp_spend_window") {
+      const ddl = (phaseSchema.BOOTSTRAP_DDL as readonly string[]).find(statement => /^\s*CREATE TABLE IF NOT EXISTS cp_spend_window\s*\(/i.test(statement));
+      if (!ddl) throw Error("RH01_PHASE_SPEND_WINDOW_SCHEMA_MISSING");
+      await db.exec(ddl);
+    } else await db.exec(`CREATE TABLE IF NOT EXISTS ${table} (id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL,changed_at timestamptz NOT NULL DEFAULT now())`);
   } else if (logTables.has(table)) {
     keys = ["log_key", "record_id"];
     await db.exec(`CREATE TABLE IF NOT EXISTS ${table} (log_key text NOT NULL,record_id text NOT NULL,position bigint NOT NULL,recorded_at timestamptz NOT NULL,record jsonb NOT NULL,changed_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(log_key,record_id),UNIQUE(log_key,position))`);
@@ -76,16 +81,36 @@ async function ensureControlTable(table: string): Promise<readonly string[]> {
   controlTables.set(table, keys); return keys;
 }
 async function controlRemoteRead(text: string, params: readonly unknown[], signal?: AbortSignal): Promise<Record<string, unknown>[]> {
-  if (!/^\s*(?:SELECT|WITH)\b/i.test(text) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "")))
+  const structure = sqlStatementCode(text).replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
+  if (!/^\s*(?:SELECT|WITH)\b/i.test(structure) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(structure))
     throw Error("RH01_REMOTE_CONTROL_MUTATION_REFUSED");
   const connection = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!connection || decodeURIComponent(new URL(connection).username) !== "wtp_cp_release_readonly") throw Error("RH01 control SQL requires the read-only role");
   const rows = await neon(connection).query(text, [...params], { fetchOptions: { signal: AbortSignal.any([shutdown.signal, AbortSignal.timeout(30_000), ...(signal ? [signal] : [])]) } });
   remoteControlBytes += Buffer.byteLength(JSON.stringify(rows)); return rows;
 }
+/** A new phase-native counter may not exist on the older production release.
+ * Its ordinary native first-seed lifecycle then runs wholly in the disposable DB.
+ */
+async function localOnlySpendWindow(text: string): Promise<boolean> {
+  const structure = sqlStatementCode(text);
+  if (!/\bcp_spend_window\b/i.test(structure)) return false;
+  productionSpendWindowPresent ??= process.env.WTP_CONTROL_PLANE_DATABASE_URL
+    ? controlRemoteRead("SELECT to_regclass($1::text) IS NOT NULL AS present", ["public.cp_spend_window"]).then(rows => {
+      if (rows.length !== 1 || typeof rows[0]?.present !== "boolean") throw Error("RH01_SPEND_WINDOW_CATALOG_RESULT_INVALID");
+      return rows[0].present;
+    }) : Promise.resolve(false);
+  if (await productionSpendWindowPresent) return false;
+  if (!/^\s*(?:SELECT|WITH|INSERT|UPDATE)\b/i.test(structure) || /\bDELETE\s+FROM\b/i.test(structure))
+    throw Error("RH01_ABSENT_SPEND_WINDOW_STATEMENT_UNSUPPORTED");
+  if ([...structure.matchAll(/\bcp_[a-z_0-9]+\b/gi)].some(match => match[0].toLowerCase() !== "cp_spend_window"))
+    throw Error("RH01_ABSENT_SPEND_WINDOW_MIXED_QUERY_UNSUPPORTED");
+  await ensureControlTable("cp_spend_window");
+  return true;
+}
 function ordinaryControlRead(text: string): boolean {
   if (text === CONSOLE_INPUT_SQL) return true;
-  const structure = text.replace(/'(?:''|[^'])*'/g, "''").replace(/--[^\n]*|\/\*[\s\S]*?\*\//g, " ");
+  const structure = sqlStatementCode(text).replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
   return /^\s*(?:SELECT|WITH)\b/i.test(structure) &&
     !/\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|CREATE|ALTER|DROP|TRUNCATE|cp_spend_holds|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(structure);
 }
@@ -103,6 +128,7 @@ async function snapshotControlRead(text: string, params: readonly unknown[]): Pr
 }
 async function executeControlSql(text: string, params: readonly unknown[]): Promise<Record<string, unknown>[]> {
   const db = await controlDatabase();
+  if (await localOnlySpendWindow(text)) return (await db.query(text, [...params])).rows as Record<string, unknown>[];
   if (text === CONSOLE_INPUT_SQL) {
     const query = await snapshotControlRead(text, params);
     return controlRemoteRead(query.text, query.params);
@@ -191,6 +217,40 @@ async function controlOperation(method: string, args: unknown[]) {
   if (typeof operation !== "function") throw Error(`RH01 control method unavailable: ${method}`);
   return Reflect.apply(operation, repository, args);
 }
+/** The actual append-only repository owns these disposable scheduling markers.
+ * Production's already-checked marker cannot skip a measurement; all other inputs use normal reads.
+ */
+async function auditLogOperation(scope: { kind?: unknown; sha?: unknown; week?: unknown }, method: string, args: unknown[]) {
+  if (!["read", "readWhere", "append"].includes(method)) throw Error("RH01_AUDIT_MARKER_METHOD_REFUSED");
+  const key = args[0];
+  if (scope?.kind === "CLAIMS") {
+    const { weekOf } = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/workers/claim-audit.ts")).href);
+    if (typeof scope.week !== "string" || scope.week !== weekOf(new Date().toISOString()) || key !== `claims:${scope.week}` || method === "readWhere")
+      throw Error("RH01_AUDIT_MARKER_SCOPE_REFUSED");
+    if (method === "append") {
+      const record = args[2] as { kind?: unknown; pass?: { week?: unknown; at?: unknown; synthetic?: unknown } } | undefined;
+      if (record?.kind !== "CLAIMS" || record.pass?.week !== scope.week || record.pass.synthetic !== false ||
+          typeof args[3] !== "string" || record.pass.at !== args[3] || args[1] !== `claims@${args[3]}`)
+        throw Error("RH01_AUDIT_MARKER_RECORD_REFUSED");
+    }
+  } else if (scope?.kind === "LOOK" && typeof scope.sha === "string" && /^[a-f0-9]{7,40}$/i.test(scope.sha)) {
+    if (method === "read" && key !== `look:${scope.sha}` || method === "readWhere" &&
+        (key !== "looked" || JSON.stringify(args[1]) !== '["sha"]' || args[2] !== scope.sha)) throw Error("RH01_AUDIT_MARKER_SCOPE_REFUSED");
+    if (method === "append") {
+      const record = args[2] as { kind?: unknown; sha?: unknown; at?: unknown; pass?: { sha?: unknown; at?: unknown } } | undefined;
+      if (typeof args[3] !== "string" || !(key === "looked" && record?.kind === "LOOKED" && record.sha === scope.sha &&
+          record.at === args[3] && args[1] === `${scope.sha}@${args[3]}` || key === `look:${scope.sha}` && record?.kind === "LOOK" &&
+          record.pass?.sha === scope.sha && record.pass.at === args[3] && args[1] === `look@${args[3]}`))
+        throw Error("RH01_AUDIT_MARKER_RECORD_REFUSED");
+    }
+  } else throw Error("RH01_AUDIT_MARKER_SCOPE_REFUSED");
+  await ensureControlTable("cp_log_live_audits"); await ensureControlTable("cp_log_heads");
+  const db = await controlDatabase();
+  const { pgAppendOnlyRepository } = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-store.ts")).href);
+  const repository = pgAppendOnlyRepository({ query: async (text: string, params: readonly unknown[] = []) =>
+    /\bINSERT\s+INTO\s+cp_log_heads\b/i.test(text) ? executeControlSql(text, params) : (await db.query(text, [...params])).rows }, "live_audits");
+  return Reflect.apply(Reflect.get(repository, method), repository, args);
+}
 type LocalConnection = PGlite | Transaction;
 interface FactSession {
   readonly token: string; readonly connection: Transaction;
@@ -199,7 +259,8 @@ interface FactSession {
 let current: FactSession | null = null;
 const mutatedTables = new Set<string>();
 const remoteRead = async (text: string, params: readonly unknown[]) => {
-  if (!/^\s*(?:SELECT|WITH)\b/i.test(text) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "")))
+  const structure = sqlStatementCode(text).replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
+  if (!/^\s*(?:SELECT|WITH)\b/i.test(structure) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(structure))
     throw Error("RH01_REMOTE_FACT_MUTATION_REFUSED");
   const result = await remote.query(text, [...params], { fetchOptions: { signal: AbortSignal.any([shutdown.signal, AbortSignal.timeout(30_000)]) } });
   remoteBytes += Buffer.byteLength(JSON.stringify(result));
@@ -338,7 +399,8 @@ async function hydrateSimpleRead(connection: LocalConnection, text: string, para
   return true;
 }
 async function execute(connection: LocalConnection, text: string, params: readonly unknown[]) {
-  const read = /^\s*(SELECT|WITH)\b/i.test(text) && !/\b(INSERT|UPDATE|DELETE|MERGE|CALL)\b/i.test(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, ""));
+  const structure = sqlStatementCode(text).replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
+  const read = /^\s*(SELECT|WITH)\b/i.test(structure) && !/\b(INSERT|UPDATE|DELETE|MERGE|CALL)\b/i.test(structure);
   if (!read) {
     const update = updateRead(text);
     if (update) {
@@ -370,7 +432,8 @@ async function execute(connection: LocalConnection, text: string, params: readon
     const query = shadowRead(text, params, shadows);
     return remoteRead(query.text, query.params);
   }
-  return remoteRead(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, ""), params);
+  const query = shadowRead(text, params, []);
+  return remoteRead(query.text, query.params);
 }
 // Local publication IDs must never collide with later hydrated production IDs.
 await pg.exec("SELECT setval(pg_get_serial_sequence('fact','id'),1000000000000,true); SELECT setval(pg_get_serial_sequence('source_copy','id'),1000000000000,true)");
@@ -379,7 +442,7 @@ const server = createServer((request, response) => withProductionReadOwner({
   ownerPid: Number(request.headers["x-rh01-owner-pid"]) || process.pid,
   jobId: String(request.headers["x-rh01-owner-job"] ?? ""), taskId: String(request.headers["x-rh01-owner-task"] ?? ""),
 }, async () => {
-  if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
+  if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing", "/audit-log"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
   const disconnected = new AbortController();
   request.once("aborted", () => disconnected.abort(Error("RH01 local read caller disconnected")));
   response.once("close", () => { if (!response.writableEnded) disconnected.abort(Error("RH01 local read caller disconnected")); });
@@ -400,6 +463,11 @@ const server = createServer((request, response) => withProductionReadOwner({
       const results = await pending;
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ results })); return;
     }
+    if (request.url === "/audit-log") {
+      const pending = controlQueue.then(() => auditLogOperation(decoded.scope, decoded.method, decoded.args));
+      controlQueue = pending.catch(() => undefined);
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ result: await pending })); return;
+    }
     if (request.url === "/control" || request.url === "/control-sql" || request.url === "/pacing") {
       const sqlRequest = request.url === "/control-sql";
       if (sqlRequest && process.env.WTP_CONTROL_PLANE_DATABASE_URL && ordinaryControlRead(text)) {
@@ -408,12 +476,17 @@ const server = createServer((request, response) => withProductionReadOwner({
           disconnected.signal.throwIfAborted();
           const started = Date.now();
           controlReadTiming.maxQueueWaitMs = Math.max(controlReadTiming.maxQueueWaitMs, started - queuedAt);
+          if (await localOnlySpendWindow(text)) return { rows: (await (await controlDatabase()).query(text, [...params])).rows as Record<string, unknown>[] };
           const query = await snapshotControlRead(text, params);
           controlReadTiming.maxSnapshotMs = Math.max(controlReadTiming.maxSnapshotMs, Date.now() - started);
-          return query;
+          return { query };
         });
         controlQueue = prepared.catch(() => undefined);
-        const query = await prepared, started = Date.now();
+        const preparedRead = await prepared;
+        if ("rows" in preparedRead) {
+          response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ rows: preparedRead.rows })); return;
+        }
+        const { query } = preparedRead, started = Date.now();
         controlReadTiming.count++;
         let rows: Record<string, unknown>[];
         try { rows = await controlRemoteRead(query.text, query.params, disconnected.signal); }

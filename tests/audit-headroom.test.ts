@@ -113,7 +113,10 @@ test("speed's link fixes read exact link-sweep metadata instead of the country's
 
 test("published ZIP sampling and the complete new-resident queue use disk indexes, including lifetime task membership", async () => {
   const places = Array.from({length: 91}, (_,index) => ({zip: String(10000 + index), lat: index, lng: -index, unused: "unused manifest text ".repeat(200)}));
-  const fetchImpl = async () => new Response(JSON.stringify({unneeded: "unneeded national metadata ".repeat(20_000), places}));
+  const fetchImpl = async (input: string | URL | Request) => {
+    assert.equal(String(input), "https://example.gov/api/reader/places");
+    return new Response(JSON.stringify({unneeded: "unneeded national metadata ".repeat(20_000), places}));
+  };
   const options = {origin: "https://example.gov", fetchImpl, count: 3, now: NOW};
   assert.deepEqual(await samplePublishedZips(options), sampleZips(places.map(row => row.zip), 3, NOW));
   const repos = createMemoryRepositories();

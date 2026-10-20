@@ -21,7 +21,11 @@ test("system upkeep selects the latest Scout per subject across logs without who
   const bounded = {...repos.scoutResults,
     readAll: async () => { throw new Error("whole-country results"); },
     keys: async () => { throw new Error("country log keys"); },
-    readChangedSince: async (...args: Parameters<typeof original>) => { assert.equal(typeof args[2]?.page,"function"); pageReads++; return original(...args); },
+    readChangedSince: async (...args: Parameters<typeof original>) => {
+      assert.equal(typeof args[2]?.page,"function");
+      assert.deepEqual(args[2]?.projection, {subjectId: true, recordClass: true, recordedAt: true, outcome: true, attemptId: true});
+      pageReads++; return original(...args);
+    },
   };
   await forEachLatestScout(bounded, async row => { visited++; if(row.subjectId==="same-place") selected.push(row.outcome); });
   assert.equal(pageReads,1); assert.equal(visited,601); assert.deepEqual(selected,["EVIDENCE_FOUND"],"an older result in a later log cannot reopen a completed adapter job");
@@ -42,9 +46,11 @@ test("upkeep fetches changes after its first pass while revisiting unchanged pen
   const { forEachLatestScout } = await import("../lib/control-plane/workers/streamed-history.ts");
   const since:(string|null)[]=[],outcomes:string[]=[];let pass=0;
   const row=(outcome:string)=>({subjectId:"az:one",recordClass:"OFFICIAL_ROSTER",recordedAt:"2026-10-20T12:00:00Z",outcome}) as unknown as import("../lib/control-plane/scheduler/scout-result.ts").ScoutResult;
-  const log={readChangedSince:async(after:string|null,_held:unknown,options:{page:(rows:unknown[])=>Promise<void>|void})=>{
+  const log={readRecord:async(key:string,recordId:string)=>{
+    assert.equal(recordId,key);return row(key==="z"?"NEEDS_ADAPTER":"EVIDENCE_FOUND");
+  },readChangedSince:async(after:string|null,_held:unknown,options:{page:(rows:unknown[])=>Promise<void>|void})=>{
     since.push(after);const current=pass++;
-    if(current<2)await options.page([{key:current===0?"z":"a",position:0,record:row(current===0?"NEEDS_ADAPTER":"EVIDENCE_FOUND")}]);
+    if(current<2)await options.page([{key:current===0?"z":"a",recordId:current===0?"z":"a",position:0,record:row(current===0?"NEEDS_ADAPTER":"EVIDENCE_FOUND")}]);
     return{records:[],through:`2026-10-20T12:0${current+1}:00.000Z`};
   }} as unknown as import("../lib/control-plane/repository/types.ts").AppendOnlyRepository<import("../lib/control-plane/scheduler/scout-result.ts").ScoutResult>;
   for(let i=0;i<3;i++)await forEachLatestScout(log,async result=>{outcomes.push(result.outcome);});

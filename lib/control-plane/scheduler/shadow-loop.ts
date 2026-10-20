@@ -120,7 +120,7 @@ export interface LaneCounts {
 export interface CycleResult {
   readonly startedAt: string;
   readonly finishedAt: string;
-  readonly reclaim: ReclaimSweep;
+  readonly reclaim: ReclaimSweep<boolean>;
   readonly schedule: {readonly scheduled:DiskRows<ScheduledObligation>;readonly unscheduled:DiskRows<UnscheduledObligation>};
   readonly dueCount: number;
   readonly dispatched: DiskRows<DispatchResult>;

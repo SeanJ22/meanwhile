@@ -7,10 +7,44 @@ import { aggregatePricedSpend, pricedModelCharge, type PricedCharge } from "../l
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { costRecordId, readSpendWindow, SPEND_WINDOW_ID } from "../lib/control-plane/spend-window.ts";
+import { pgAggregateRepository, pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";
+import type { SpendWindow } from "../lib/control-plane/spend-window.ts";
 
 const NOW="2026-10-20T12:00:00.000Z";
 const entry=(id:string,usd=1):CostEntry=>({attemptId:id,workItemId:id,routeTaskId:id,routeId:null,source:"api.anthropic.com",jurisdiction:"own-place",
   project:"freshness",role:"SCOUT",model:"claude-haiku-4-5",recordedAt:NOW,cost:{...ZERO_COST,usd,requestCount:1}});
+
+test("the native first seed reads only payload-time charges and counts old-appended backfills at the same price",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite"),db=new PGlite();
+  try{
+    await db.exec("CREATE TABLE cp_log_costs(log_key text,record_id text,position bigint,record jsonb,recorded_at timestamptz,changed_at timestamptz); CREATE TABLE cp_spend_window(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL,changed_at timestamptz NOT NULL DEFAULT now())");
+    const old="2026-10-01T00:00:00.000Z",cutoff="2026-10-19T06:00:00.000Z";
+    const backfill={...entry("backfilled",2),recordedAt:"2026-10-20T07:00:00.000Z"};
+    const offset={...entry("offset",3),recordedAt:"2026-10-20T11:00:00+02:00"};
+    const current=entry("current",4);
+    const rows=[{...entry("expired",100),recordedAt:old},backfill,offset,current];
+    for(let n=0;n<rows.length;n++)await db.query("INSERT INTO cp_log_costs VALUES($1,$2,$3,$4::jsonb,$5::timestamptz,$5::timestamptz)",
+      [rows[n].workItemId,costRecordId(rows[n]),0,JSON.stringify(rows[n]),n===1?old:NOW]);
+    let transferred=0;
+    const sql={async query(text:string,params:readonly unknown[]=[]){
+      const result=await db.query(text,[...params]);
+      if(/FROM cp_log_costs/.test(text)){
+        assert.match(text,/\(record #>> '\{recordedAt\}'\)::timestamptz >= \$1::timestamptz/);
+        assert.equal(params[0],cutoff);
+        transferred+=result.rows.length;
+      }
+      return result.rows as Record<string,unknown>[];
+    }};
+    const repos={costs:pgAppendOnlyRepository<CostEntry>(sql,"costs"),spendWindow:pgAggregateRepository<SpendWindow>(sql,"SpendWindow","cp_spend_window"),locks:createMemoryRepositories().locks};
+    const snapshot=await readSpendWindow(repos,NOW);
+    try{
+      assert.equal(transferred,3,"the old payload never leaves PostgreSQL even when its append clock is current");
+      const expected=JSON.parse(JSON.stringify([backfill,offset,current].map(row=>pricedModelCharge(row,costRecordId(row))!))) as PricedCharge[];
+      assert.deepEqual(Array.from(snapshot).sort((a,b)=>a.id.localeCompare(b.id)),expected.sort((a,b)=>a.id.localeCompare(b.id)));
+      assert.equal(aggregatePricedSpend(snapshot,cutoff,NOW).usd,9);
+    }finally{snapshot.close();}
+  }finally{await db.close();}
+});
 
 test("the spend snapshot pages stable ids across concurrent prefix expiry and never opens a complete counter",async()=>{
   const repos=createMemoryRepositories();

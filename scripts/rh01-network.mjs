@@ -7,6 +7,7 @@ import https from "node:https";
 import subprocess from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { AsyncLocalStorage } from "node:async_hooks";
+import { sqlStatementCode } from "./rh01-sql.mts";
 
 const productionReadOwner = new AsyncLocalStorage();
 export const withProductionReadOwner = (owner, work) => productionReadOwner.run(owner, work);
@@ -36,7 +37,7 @@ const localHost = hostname => ["localhost", "127.0.0.1", "::1", "[::1]"].include
 
 /** Refuse raw whole-table/cursor-only hydration; needed exact rows and narrow scalar/page projections remain available. */
 export function assertNeededProductionRead(text) {
-  const structure = text.replace(/'(?:''|[^'])*'/g, "''").replace(/--[^\n]*|\/\*[\s\S]*?\*\//g, " ")
+  const structure = sqlStatementCode(text)
     .replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
   if (!/^\s*(?:SELECT|WITH)\b/i.test(structure) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|CREATE|ALTER|DROP|TRUNCATE|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock|cp_admit_spend_hold)\b/i.test(structure))
     throw Error("RH01_UNSUPPORTED_PRODUCTION_READ: only read SQL may reach production");
@@ -139,8 +140,10 @@ export function installMeasurementNetworkBoundary(options = {}) {
       const body = JSON.parse(init.body), queries = body.queries ?? [body];
       for (const query of queries) assertNeededProductionRead(String(query.query));
       try {
-        queryRead = queries.length > 0 && queries.every(query => /^\s*(SELECT|WITH)\b/i.test(query.query) &&
-          !/\b(INSERT|UPDATE|DELETE|MERGE|CALL)\b/i.test(query.query.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "")));
+        queryRead = queries.length > 0 && queries.every(query => {
+          const code = sqlStatementCode(query.query).replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
+          return /^\s*(SELECT|WITH)\b/i.test(code) && !/\b(INSERT|UPDATE|DELETE|MERGE|CALL)\b/i.test(code);
+        });
       } catch { /* Only recognized read-only SQL is retried. */ }
     }
     if (queryRead && options.retryReadSql !== false) {

@@ -6,7 +6,8 @@ import { canonicalJson, readByKeys, type ControlPlaneRepositories } from "./type
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
-import { forEachAggregate } from "../workers/streamed-history.ts";
+import { forEachAggregate, readChangedLogRecord } from "../workers/streamed-history.ts";
+import { createPlannerSpool, plannerMap, type PlannerSpool } from "../scheduler/planner-spool.ts";
 
 export type UncommittedWorkerResult = Omit<WorkerResultRecord, "completion">;
 
@@ -92,7 +93,10 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
 export const RECONCILE_APPEND_SLACK_MS = 10 * 60_000;
 
 /** Per process and store: the first pass reads every result; later passes read what was appended since (with slack) plus those still pending. */
-const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string | null; pending: Map<string, string> }>();
+interface ReconcileState { readonly since: string | null; readonly pending: Map<string, string>; readonly spool: PlannerSpool }
+const reconcileState = new WeakMap<ControlPlaneRepositories, ReconcileState>();
+const recoveryOwners = new FinalizationRegistry<PlannerSpool>(spool => { void spool.close().catch(() => undefined); });
+const RESULT_IDENTITIES = { id: true, workItemId: true, attemptId: true } as const;
 
 /** Dependency discovery carries identities and transitions, never the country's work payloads. */
 async function visitDependents(repos: ControlPlaneRepositories, upstreamId: string,
@@ -119,7 +123,9 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
   if (keys?.length === 0) return;
   const selected = keys ? new Set(keys) : null;
   const state = scope === undefined ? reconcileState.get(repos) : undefined;
-  const pending = new Map<string, string>();
+  const spool = await createPlannerSpool(), pending = plannerMap<string>(spool, "pending");
+  let retained = false;
+  try {
   for (const [id, key] of state?.pending ?? []) {
     const records = await repos.workerResults.readWhere(key, ["id"], id);
     if (records.length !== 1) throw new Error("WORKER_COMPLETION_PENDING_RESULT_MISSING_OR_AMBIGUOUS");
@@ -128,14 +134,24 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
   const appended = await repos.workerResults.readChangedSince(state?.since
     ? new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString() : null, undefined, {
     ...(keys ? { keys } : {}),
+    projection: RESULT_IDENTITIES,
     page: async rows => {
       if (selected && rows.some(row => !selected.has(row.key) || row.record.workItemId !== row.key))
         throw new Error("WORKER_COMPLETION_SCOPE_MISMATCH");
       // Store pages and task batches are bounded even on a fresh process's first recovery pass.
-      for (let at = 0; at < rows.length; at += 32) await reconcilePage(repos, rows.slice(at, at + 32).map(row => row.record), pending);
+      for (let at = 0; at < rows.length; at += 32) {
+        const records: WorkerResultRecord[] = [];
+        for (const row of rows.slice(at, at + 32)) records.push(await readChangedLogRecord(repos.workerResults, row, ["id"], row.record.id));
+        await reconcilePage(repos, records, pending);
+      }
     },
   });
-  if (scope === undefined) reconcileState.set(repos, { since: appended.through, pending });
+  if (scope === undefined) {
+    const next = { since: appended.through, pending, spool };
+    reconcileState.set(repos, next); recoveryOwners.register(repos, spool, next); retained = true;
+    if (state) { recoveryOwners.unregister(state); await state.spool.close(); }
+  }
+  } finally { if (!retained) await spool.close(); }
 }
 
 async function reconcilePage(repos: ControlPlaneRepositories, offered: readonly WorkerResultRecord[],
@@ -234,10 +250,17 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
 /** Lifetime consumers fold committed results a bounded page at a time. */
 export async function visitCompletedWorkerResults(repos: ControlPlaneRepositories,
   visit: (record: WorkerResultRecord) => Promise<void> | void): Promise<void> {
-  await repos.workerResults.readChangedSince(null, undefined, { page: async rows => {
+  await repos.workerResults.readChangedSince(null, undefined, { projection: RESULT_IDENTITIES, page: async rows => {
     for (let at = 0; at < rows.length; at += 32) {
-      const records = rows.slice(at, at + 32).map(row => row.record);
-      for (const record of await completedWorkerResults(repos, records)) await visit(record);
+      const selected = rows.slice(at, at + 32);
+      const attempts = new Map((await readAttemptsById(repos, selected.map(row => row.record.attemptId))).map(row => [row.id, row.value]));
+      for (const row of selected) {
+        const attempt = attempts.get(row.record.attemptId);
+        if (!attempt) continue;
+        const record = await readChangedLogRecord(repos.workerResults, row, ["id"], row.record.id);
+        try { assertCompletedWorkerResult(record, attempt); } catch { continue; }
+        await visit(record);
+      }
     }
   } });
 }

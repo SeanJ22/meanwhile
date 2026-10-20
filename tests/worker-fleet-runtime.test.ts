@@ -19,7 +19,7 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, RECONCILE_APPEND_SLACK_MS, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
-import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { projectRecord, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
 import {
@@ -211,17 +211,19 @@ test("lifetime worker history validates 1500 producers in bounded pages and reje
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
   const attempts = await h.repos.attempts.list();
+  const records = [...Array.from({ length: 1500 }, () => parser),
+    { ...parser, id: "missing-producer", attemptId: "absent" },
+    { ...parser, id: "divergent-producer", completion: { ...parser.completion,
+      closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
+  for (const record of records.slice(-2)) await h.repos.workerResults.append(record.workItemId, record.id, record, START);
   let calls = 0;
   const observed: ControlPlaneRepositories = { ...h.repos,
     workerResults: { ...h.repos.workerResults, readAll: async () => { throw new Error("whole cp_worker_results read"); },
       readChangedSince: async (_since, _held, options) => {
         assert.ok(options?.page);
-        const records = [...Array.from({ length: 1500 }, () => parser),
-        { ...parser, id: "missing-producer", attemptId: "absent" },
-        { ...parser, id: "divergent-producer", completion: { ...parser.completion,
-          closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
+        assert.ok(options.projection);
         for (let at = 0; at < records.length; at += 64) await options.page(records.slice(at, at + 64).map((record, position) => ({
-          key: record.workItemId, recordId: record.id, position, record,
+          key: record.workItemId, recordId: record.id, position, record: projectRecord(record, options.projection!) as typeof record,
         })));
         return { records: [], through: START };
       } },

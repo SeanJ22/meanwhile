@@ -20,6 +20,7 @@ import { installFactReader } from "../lib/facts/db.ts";
 import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
@@ -110,4 +111,49 @@ test("round upkeep replays durable Scout findings once without resetting a compl
   await start();
   assert.equal((await h.repos.boxFindings.list()).length, 1);
   assert.equal((await h.repos.boxFindings.mustRead(row.id)).value.publicationId, "published");
+});
+
+test("standing upkeep projects method eligibility before opening one exact work item and rechecks a concurrent plan", async t => {
+  const h = await autonomousHarness({ plan: plan => {
+    assert.ok(plan.contract.schemaVersion === 2);
+    return { ...plan, contract: { ...plan.contract, methodVersion: 0,
+      extraction: { format: "UNSUPPORTED", mediaType: "application/json", fields: {}, reason: "The source shape remains owed" },
+      sourceScope: { ...plan.contract.sourceScope, observationArtifactIds: [] } } };
+  } });
+  const root = await mkdtemp(join(tmpdir(), "standing-upkeep-projection-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await writeFieldManual(h.repos, [methodVersionEntry({ version: 72, updatedOn: "2026-10-20", routes: [] })], h.now());
+  const race = createWorkItem({ project: h.item.project, subject: "fixture:nh:other", obligation: "Concurrent plan", why: "Preserve a new observation", now: h.now() });
+  await h.repos.workItems.put(race.id, { ...race, autonomousPlan: h.item.autonomousPlan }, h.now());
+  for (let index = 0; index < 125; index++) {
+    const item = createWorkItem({ project: h.item.project, subject: `fixture:nh:country-${index}`, obligation: "Other work", why: "x".repeat(4000), now: h.now() });
+    await h.repos.workItems.put(item.id, item, h.now());
+  }
+  let projectedPages = 0;
+  const opened: string[] = [];
+  const repos = { ...h.repos, workItems: { ...h.repos.workItems,
+    listChangedSince: (...args: Parameters<NonNullable<typeof h.repos.workItems.listChangedSince>>) => {
+      assert.deepEqual(args[2]?.projection, { autonomousPlan: { contract: { schemaVersion: true, methodVersion: true, extraction: ["format"], sourceScope: ["observationArtifactIds"] } } });
+      projectedPages++; return h.repos.workItems.listChangedSince!(...args);
+    },
+    mustRead: async (id: string) => {
+      assert.ok([h.item.id, race.id].includes(id), "another place's full work item never crosses the selection boundary");
+      opened.push(id);
+      if (id === race.id) {
+        const current = await h.repos.workItems.mustRead(id), plan = current.value.autonomousPlan!;
+        assert.ok(plan.contract.schemaVersion === 2);
+        await h.repos.workItems.compareAndSet(id, current.revision, { ...current.value, autonomousPlan: { ...plan,
+          contract: { ...plan.contract, methodVersion: 23 } } }, h.now());
+      }
+      return h.repos.workItems.mustRead(id);
+    },
+  } };
+  await maintainAutonomousStandingRuntime({ root, repos, now: h.now });
+  assert.equal(projectedPages, 1); assert.deepEqual(new Set(opened), new Set([h.item.id, race.id]));
+  const current = (await h.repos.workItems.mustRead(h.item.id)).value;
+  const initialized = current.autonomousPlan!.contract, raced = (await h.repos.workItems.mustRead(race.id)).value.autonomousPlan!.contract;
+  assert.ok(initialized.schemaVersion === 2 && raced.schemaVersion === 2);
+  assert.equal(initialized.methodVersion, 72);
+  assert.equal(raced.methodVersion, 23, "the current observed plan is never overwritten from projected eligibility");
+  assert.deepEqual({ ...current, autonomousPlan: h.item.autonomousPlan }, h.item, "method initialization preserves the rest of the work and its lifecycle");
 });

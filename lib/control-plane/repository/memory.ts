@@ -268,6 +268,11 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
     read: async (key: string): Promise<readonly T[]> =>
       (partitions.get(key) ?? []).map((entry) => jsonCopy(entry.record)),
 
+    readRecord: async (key: string, recordId: string): Promise<T | null> => {
+      const entry = (partitions.get(key) ?? []).find(row => row.recordId === recordId);
+      return entry === undefined ? null : jsonCopy(entry.record);
+    },
+
     readWhere: async (
       key: string,
       jsonPath: readonly string[],
@@ -336,6 +341,8 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
       const records = coordinates(read.keys).filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
+        .filter(({ changed }) => read.recordTimeAtOrAfter === undefined ||
+          Date.parse(jsonTextAtPath(changed.record, read.recordTimeAtOrAfter.path) ?? "") >= Date.parse(read.recordTimeAtOrAfter.at))
         .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
       if (!read.page) return { through, records };
       await read.page(records);

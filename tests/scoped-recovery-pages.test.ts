@@ -7,6 +7,18 @@ import { memoryAggregateRepository,memoryAppendOnlyRepository } from "../lib/con
 import { fileAggregateRepository,fileAppendOnlyRepository } from "../lib/control-plane/repository/file-store.ts";
 import { AGGREGATE_LIST_READ_PAGE,APPEND_ONLY_LOG_READ_PAGE,pgAggregateRepository,pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";
 
+test("payload time selection preserves a backfilled record independently of both repository clocks",async()=>{
+  const directory=await mkdtemp(join(tmpdir(),"rh01-payload-time-"));
+  try{
+    for(const repo of [memoryAppendOnlyRepository<{recordedAt:string;body:string}>("time"),fileAppendOnlyRepository<{recordedAt:string;body:string}>(directory,"time")]){
+      await repo.append("own","old-value-new-append",{recordedAt:"2026-10-01T00:00:00Z",body:"old"},"2026-10-20T12:00:00Z");
+      await repo.append("own","new-value-old-append",{recordedAt:"2026-10-20T12:00:00Z",body:"backfilled"},"2026-10-01T00:00:00Z");
+      const page=await repo.readChangedSince(null,undefined,{recordTimeAtOrAfter:{path:["recordedAt"],at:"2026-10-19T06:00:00Z"},projection:{body:true}});
+      assert.deepEqual(page.records.map(row=>({id:row.recordId,record:row.record})),[{id:"new-value-old-append",record:{body:"backfilled"}}]);
+    }
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
 test("selected log pages preserve exact append coordinates while excluding unrelated payloads",async()=>{
   const directory=await mkdtemp(join(tmpdir(),"rh01-scoped-log-"));
   try{

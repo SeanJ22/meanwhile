@@ -185,8 +185,8 @@ test("PLAN: only an active row outside the corpus, owned by a cleanly-read provi
     ],
     "an inactive row and a row the corpus still names are neither retired nor held",
   );
-  assert.match(plan.heldBack[0].why, /az jurisdictions file failed to parse/);
-  assert.match(plan.heldBack[3].why, /PRESENT_UNSCHEDULABLE/);
+  assert.match(Array.from(plan.heldBack)[0].why, /az jurisdictions file failed to parse/);
+  assert.match(Array.from(plan.heldBack)[3].why, /PRESENT_UNSCHEDULABLE/);
 });
 
 test("PLAN: a provider that would suddenly retire more than the bound holds every row back for a person", () => {
@@ -196,7 +196,7 @@ test("PLAN: a provider that would suddenly retire more than the bound holds ever
   assert.equal(SUPERSEDED_RETIREMENT_BOUND, 0.25);
   assert.deepEqual(over.retire, [], "2 of 3 standing is over a 25% bound");
   assert.deepEqual(over.heldBack.map((h) => h.code), ["OVER_RETIREMENT_BOUND", "OVER_RETIREMENT_BOUND"]);
-  assert.match(over.heldBack[0].why, /retire 2 of its 3 standing obligations/);
+  assert.match(Array.from(over.heldBack)[0].why, /retire 2 of its 3 standing obligations/);
 
   const wide = Array.from({ length: 6 }, (_, i) => ({ providerId: "candidate-enrichment", obligationId: `${WIKI}-${i}` }));
   const under = planSupersededRetirement({ outside: [stored(AWAITS)], corpus: wide, providers: [{ ...CLEAN, units: 6 }] });

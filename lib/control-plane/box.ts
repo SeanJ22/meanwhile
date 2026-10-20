@@ -6,6 +6,7 @@ import { completedWorkerResults } from "./repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
+import { readChangedLogRecord } from "./workers/streamed-history.ts";
 
 /** References into the existing result and artifact stores, never another evidence store. */
 export interface BoxOrigin {
@@ -261,11 +262,13 @@ export async function backfillBox(repos: BackfillRepositories, now: string): Pro
   const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
   const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : null;
   let indexed = 0;
-  const scouts = await repos.scoutResults.readChangedSince(since, undefined, { page: async rows => {
-    for (const {record} of rows) indexed += await indexResults(repos, [record], [], now);
+  const scouts = await repos.scoutResults.readChangedSince(since, undefined, { projection: { attemptId: true }, page: async rows => {
+    for (const row of rows) indexed += await indexResults(repos,
+      [await readChangedLogRecord(repos.scoutResults, row, ["attemptId"], row.record.attemptId)], [], now);
   } });
-  const workers = await repos.workerResults.readChangedSince(since, undefined, { page: async rows => {
-    for (const {record} of rows) indexed += await indexResults(repos, [], [record], now);
+  const workers = await repos.workerResults.readChangedSince(since, undefined, { projection: { id: true }, page: async rows => {
+    for (const row of rows) indexed += await indexResults(repos, [],
+      [await readChangedLogRecord(repos.workerResults, row, ["id"], row.record.id)], now);
   } });
   const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
   if (through) {

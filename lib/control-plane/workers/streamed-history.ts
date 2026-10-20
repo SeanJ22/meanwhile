@@ -4,7 +4,7 @@ import { rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { temporaryPath } from "../../civic-data/temporary-path.ts";
-import type { AggregateRepository, AppendOnlyRepository, Persisted, RecordProjection } from "../repository/types.ts";
+import type { AggregateRepository, AppendOnlyRepository, ChangedRecord, Persisted, RecordProjection } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 
 /** A system pass streams pages; a task reads a single area's rows through the indexed repository methods. */
@@ -19,6 +19,20 @@ export async function forEachAggregate<T>(repo: AggregateRepository<T>, visit: (
     const row = projection ? await repo.readNarrowed(slot.id, projection) : await repo.read(slot.id);
     if (row) await visit(row as Persisted<T>);
   }
+}
+
+/** Coordinates, rather than a possibly missing or duplicated payload id, identify an immutable log row. */
+export async function readChangedLogRecord<T>(repo: AppendOnlyRepository<T>, coordinate: Pick<ChangedRecord<T>, "key" | "recordId">,
+  identityPath: readonly string[], identity: unknown): Promise<T> {
+  if (repo.readRecord) {
+    const record = await repo.readRecord(coordinate.key, coordinate.recordId);
+    if (record === null) throw new Error(`CHANGED_LOG_RECORD_MISSING:${coordinate.key}/${coordinate.recordId}`);
+    return record;
+  }
+  if (typeof identity !== "string" || !identity) throw new Error("CHANGED_LOG_RECORD_IDENTITY_UNAVAILABLE");
+  const records = await repo.readWhere(coordinate.key, identityPath, identity);
+  if (records.length !== 1) throw new Error(`CHANGED_LOG_RECORD_IDENTITY_AMBIGUOUS:${coordinate.key}/${coordinate.recordId}`);
+  return records[0]!;
 }
 
 export interface HistoryIndex {
@@ -65,19 +79,22 @@ const latestScoutIndexes=new WeakMap<AppendOnlyRepository<ScoutResult>,Promise<L
 const openLatestIndexes=new Set<LatestScoutIndex>();
 process.once("exit",()=>{for(const index of openLatestIndexes){index.db.close();rmSync(temporaryPath(index.directory),{recursive:true,force:true});}});
 
-/** Fetch only changed rows after the first pass. Every latest result still receives upkeep on every pass. */
-export async function forEachLatestScout(repo: AppendOnlyRepository<ScoutResult>, visit: (result: ScoutResult) => Promise<void>): Promise<void> {
+type LatestScoutHeader = Pick<ScoutResult, "subjectId" | "recordClass" | "recordedAt" | "outcome" | "attemptId">;
+/** Fetch only changed headers after the first pass, then open each eligible latest result at its original coordinate. */
+export async function forEachLatestScout(repo: AppendOnlyRepository<ScoutResult>, visit: (result: ScoutResult) => Promise<void>,
+  eligible: (header: LatestScoutHeader) => boolean | Promise<boolean> = () => true): Promise<void> {
   let opening=latestScoutIndexes.get(repo);
   if(!opening){opening=(async()=>{
     const held={...await openHistoryIndex(),through:null};
-    held.db.exec("CREATE TABLE latest(subject TEXT PRIMARY KEY, recorded_at TEXT NOT NULL, log_key TEXT NOT NULL, position INTEGER NOT NULL, first_at TEXT NOT NULL, first_key TEXT NOT NULL, first_position INTEGER NOT NULL, body TEXT NOT NULL)");
+    held.db.exec("CREATE TABLE latest(subject TEXT PRIMARY KEY, recorded_at TEXT NOT NULL, log_key TEXT NOT NULL, position INTEGER NOT NULL, first_at TEXT NOT NULL, first_key TEXT NOT NULL, first_position INTEGER NOT NULL, body TEXT NOT NULL, record_id TEXT NOT NULL)");
     openLatestIndexes.add(held);return held;
   })();latestScoutIndexes.set(repo,opening);}
   const index=await opening,db=index.db;
   const newer="excluded.recorded_at>latest.recorded_at OR (excluded.recorded_at=latest.recorded_at AND (excluded.log_key>latest.log_key OR (excluded.log_key=latest.log_key AND excluded.position>=latest.position)))";
   const earlier="excluded.first_at<latest.first_at OR (excluded.first_at=latest.first_at AND (excluded.first_key<latest.first_key OR (excluded.first_key=latest.first_key AND excluded.first_position<latest.first_position)))";
-    const upsert = db.prepare(`INSERT INTO latest VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(subject) DO UPDATE SET
+    const upsert = db.prepare(`INSERT INTO latest VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(subject) DO UPDATE SET
       body=CASE WHEN ${newer} THEN excluded.body ELSE latest.body END,
+      record_id=CASE WHEN ${newer} THEN excluded.record_id ELSE latest.record_id END,
       position=CASE WHEN ${newer} THEN excluded.position ELSE latest.position END,
       log_key=CASE WHEN ${newer} THEN excluded.log_key ELSE latest.log_key END,
       recorded_at=MAX(latest.recorded_at,excluded.recorded_at),
@@ -85,9 +102,12 @@ export async function forEachLatestScout(repo: AppendOnlyRepository<ScoutResult>
       first_key=CASE WHEN ${earlier} THEN excluded.first_key ELSE latest.first_key END,
       first_at=MIN(latest.first_at,excluded.first_at)`);
     const since=index.through===null?null:new Date(Date.parse(index.through)-60_000).toISOString();
-    const changed=await repo.readChangedSince(since, undefined, { page: rows => {
-      for (const {record,key,position} of rows) upsert.run(`${record.subjectId}\0${record.recordClass}`,record.recordedAt,key,position,record.recordedAt,key,position,JSON.stringify(record));
+    const changed=await repo.readChangedSince(since, undefined, { projection: { subjectId: true, recordClass: true, recordedAt: true, outcome: true, attemptId: true }, page: rows => {
+      for (const {record,key,recordId,position} of rows) upsert.run(`${record.subjectId}\0${record.recordClass}`,record.recordedAt,key,position,record.recordedAt,key,position,JSON.stringify(record),recordId);
     } });
     index.through=changed.through;
-    for (const row of db.prepare("SELECT body FROM latest ORDER BY first_at,first_key,first_position").iterate()) await visit(JSON.parse(row.body) as ScoutResult);
+    for (const row of db.prepare("SELECT body,log_key,record_id FROM latest ORDER BY first_at,first_key,first_position").iterate()) {
+      const header = JSON.parse(row.body) as LatestScoutHeader;
+      if (await eligible(header)) await visit(await readChangedLogRecord(repo, { key: row.log_key, recordId: row.record_id }, ["attemptId"], header.attemptId));
+    }
 }

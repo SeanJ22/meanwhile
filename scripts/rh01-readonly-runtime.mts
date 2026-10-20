@@ -2,9 +2,9 @@
  * Production reads retain their real credentials; publication writes go to temporary local storage.
  */
 import { DatabaseSync } from "node:sqlite";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
-import { join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import type { RoutineDataStore } from "../lib/civic-data/store.ts";
@@ -12,6 +12,7 @@ import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } f
 import type { ConfirmUnchangedInput } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import type { LookPass } from "../lib/frontend/look-pass.ts";
 
 const root = process.env.WTP_RH01_DIRECTORY;
 if (!root) throw Error("RH01 measurement directory is required");
@@ -402,4 +403,77 @@ export function controlOverlay(production: ControlPlaneRepositories): ControlPla
     if (name === "websitePacing") return pacing;
     return Reflect.get(target, name);
   } });
+}
+
+type AuditDueScope = { readonly kind: "LOOK"; readonly sha: string } | { readonly kind: "CLAIMS"; readonly week: string };
+/** Only these two native CLIs get disposable scheduling markers; their actual inputs and controls remain unchanged. */
+export function auditDueRepositories(production: Pick<ControlPlaneRepositories, "liveAudits">, scope: AuditDueScope): Pick<ControlPlaneRepositories, "liveAudits"> {
+  const entry = scope.kind === "LOOK" ? "look-pass.mts" : "claim-audit-pass.mts";
+  if (!process.argv.some(value => value.replaceAll("\\", "/").endsWith(`/scripts/${entry}`) || value === `scripts/${entry}`)) return production;
+  if (scope.kind === "CLAIMS") {
+    const monday = new Date(); monday.setUTCDate(monday.getUTCDate() - (monday.getUTCDay() + 6) % 7); monday.setUTCHours(0, 0, 0, 0);
+    if (scope.week !== monday.toISOString().slice(0, 10)) return production;
+  }
+  const endpoint = process.env.WTP_RH01_FACTS_URL?.replace(/\/query$/, "/audit-log");
+  if (!endpoint || new URL(endpoint).hostname !== "127.0.0.1") throw Error("RH01 audit scheduling markers require the local coordinator");
+  const liveAudits = new Proxy(production.liveAudits, { get(target, method) {
+    const original = Reflect.get(target, method);
+    if (!["read", "readWhere", "append"].includes(String(method)) || typeof original !== "function") return original;
+    return async (...args: unknown[]) => {
+      if (scope.kind === "LOOK" && method === "read" && args[0] === "looked") {
+        const prior = await target.read("looked");
+        const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ scope, method: "readWhere", args: ["looked", ["sha"], scope.sha] }) });
+        const body = await response.json() as { result?: Awaited<ReturnType<typeof target.read>>; error?: string };
+        if (!response.ok || !Array.isArray(body.result)) throw Error(body.error ?? "RH01 local look marker read failed");
+        return [...prior.filter(row => row.kind !== "LOOKED" || row.sha !== scope.sha), ...body.result];
+      }
+      const selected = scope.kind === "CLAIMS" ? args[0] === `claims:${scope.week}`
+        : args[0] === `look:${scope.sha}` || args[0] === "looked" &&
+          (method === "readWhere" && JSON.stringify(args[1]) === '["sha"]' && args[2] === scope.sha ||
+            method === "append" && (args[2] as { sha?: unknown } | undefined)?.sha === scope.sha);
+      if (!selected) return Reflect.apply(original, target, args);
+      const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ scope, method, args }) });
+      const body = await response.json() as { result?: unknown; error?: string };
+      if (!response.ok) throw Error(body.error ?? "RH01 local audit marker operation failed");
+      return body.result;
+    };
+  } });
+  return { liveAudits };
+}
+
+/** Keep the native screenshot prefix and only-if-new semantics without any remote publication. */
+export async function storeMeasurementScreenshot(key: string, bytes: Uint8Array): Promise<void> {
+  const directory = resolve(sharedRoot, "screenshots"), path = resolve(directory, key);
+  if (!key.startsWith("resident-tasks/") || key.split(/[\\/]/).includes("..") || !path.startsWith(directory + sep)) throw Error("RH01_SCREENSHOT_KEY_OUTSIDE_PREFIX");
+  mkdirSync(dirname(path), { recursive: true });
+  try { writeFileSync(path, bytes, { flag: "wx" }); }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error; }
+}
+
+/** Read back the actual local pass, then expose only completion scalars, never screenshot bodies. */
+export async function observeLookPass(repos: Pick<ControlPlaneRepositories, "liveAudits">, pass: LookPass): Promise<void> {
+  if (!process.argv.some(value => value.replaceAll("\\", "/").endsWith("/scripts/look-pass.mts") || value === "scripts/look-pass.mts")) return;
+  const local = auditDueRepositories(repos, { kind: "LOOK", sha: pass.sha });
+  const retained = (await local.liveAudits.read(`look:${pass.sha}`)).find(row => row.kind === "LOOK" && row.pass.runId === pass.runId);
+  const marked = (await local.liveAudits.readWhere("looked", ["sha"], pass.sha)).some(row => row.kind === "LOOKED" && row.at === pass.at);
+  const [{ lookTargets }, { canonicalJson }] = await Promise.all([
+    import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT!, "lib/frontend/look-pass.ts")).href),
+    import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT!, "lib/control-plane/repository/types.ts")).href),
+  ]);
+  const key = (row: { zip: string; surface: string; profile: string }) => JSON.stringify([row.zip, row.surface, row.profile]);
+  const targets = lookTargets(pass.zips) as { zip: string; surface: string; profile: string }[];
+  const expected = targets.map(key).sort(), actual = pass.screens.map(key).sort();
+  const durable = marked && retained?.kind === "LOOK" && canonicalJson(retained.pass) === canonicalJson(pass);
+  const shots = pass.screens.filter(screen => screen.shot !== null && screen.failed === null &&
+    existsScreenshot(screen.shot)).length;
+  console.log("RH01_LOOK_RESULT " + JSON.stringify({ sha: pass.sha, runId: pass.runId, durable,
+    expectedScreens: expected.length, screens: actual.length, exactTargets: JSON.stringify(actual) === JSON.stringify(expected), shots,
+    reviewer: pass.reviewerSays === null ? "REVIEWED" : "NOT_RUN", reviewerSays: pass.reviewerSays,
+    red: pass.red, green: pass.green, notReviewed: pass.notReviewed }));
+}
+
+function existsScreenshot(key: string): boolean {
+  const directory = resolve(sharedRoot, "screenshots"), path = resolve(directory, key);
+  if (!key.startsWith("resident-tasks/") || key.split(/[\\/]/).includes("..") || !path.startsWith(directory + sep)) return false;
+  try { const held = statSync(path); return held.isFile() && held.size > 0; } catch { return false; }
 }

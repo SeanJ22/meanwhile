@@ -23,6 +23,7 @@ import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerR
 import { PolicyRefusal } from "../capability.ts";
 import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare, type ModelRequestBound } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
+import { DiskRows } from "./disk-rows.ts";
 
 import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
 
@@ -741,30 +742,45 @@ export async function dispatchOne(
 }
 
 /** Reclaim every route whose holder stopped renewing. A live lease is skipped, never forced. */
-export interface ReclaimSweep {
-  readonly reclaimed: readonly string[];
+type ReclaimRows<T, D extends boolean> = D extends true ? DiskRows<T> : readonly T[];
+export interface ReclaimSweep<D extends boolean = false> {
+  readonly reclaimed: ReclaimRows<string, D>;
   /** Expired leases on routes already disposed, released as dead state; each appears once. */
-  readonly releasedSettled: readonly string[];
-  readonly stillLive: readonly string[];
-  readonly refused: readonly { readonly routeTaskId: string; readonly why: string }[];
+  readonly releasedSettled: ReclaimRows<string, D>;
+  readonly stillLive: ReclaimRows<string, D>;
+  readonly refused: ReclaimRows<{ readonly routeTaskId: string; readonly why: string }, D>;
 }
-
+interface ReclaimOutput<T> { readonly rows: DiskRows<T>; add(value: T): void }
+export interface ReclaimSink {
+  readonly reclaimed: ReclaimOutput<string>;
+  readonly releasedSettled: ReclaimOutput<string>;
+  readonly stillLive: ReclaimOutput<string>;
+  readonly refused: ReclaimOutput<{ readonly routeTaskId: string; readonly why: string }>;
+}
+type ReclaimInput = { readonly now: string; readonly observedBy: string; readonly workItemIds?: readonly string[] };
+export function sweepExpiredLeases(repos: ControlPlaneRepositories, input: ReclaimInput & { readonly sink: ReclaimSink }): Promise<ReclaimSweep<true>>;
+export function sweepExpiredLeases(repos: ControlPlaneRepositories, input: ReclaimInput & { readonly sink?: undefined }): Promise<ReclaimSweep<false>>;
 export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
-  input: { readonly now: string; readonly observedBy: string; readonly workItemIds?: readonly string[] },
-): Promise<ReclaimSweep> {
+  input: ReclaimInput & { readonly sink?: ReclaimSink },
+): Promise<ReclaimSweep<boolean>> {
   // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
   await reconcileWorkerCompletions(repos, input.workItemIds === undefined ? undefined : { workItemIds: input.workItemIds });
-  const reclaimed: string[] = [];
-  const releasedSettled: string[] = [];
-  const stillLive: string[] = [];
-  const refused: { routeTaskId: string; why: string }[] = [];
+  const output = <T>(sink: ReclaimOutput<T> | undefined) => {
+    if (sink) {
+      let count = 0;
+      return { rows: new DiskRows<T>(() => sink.rows, () => count), add: (row: T) => { sink.add(row); count++; } };
+    }
+    const rows: T[] = []; return { rows, add: (row: T) => { rows.push(row); } };
+  };
+  const reclaimed = output(input.sink?.reclaimed), releasedSettled = output(input.sink?.releasedSettled);
+  const stillLive = output(input.sink?.stillLive), refused = output(input.sink?.refused);
 
   const visitLease = async (row: { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> }) => {
     const lease = row.value;
     if (lease.released) return;
     if (!(Date.parse(lease.expiresAt) <= Date.parse(input.now))) {
-      stillLive.push(lease.routeTaskId);
+      stillLive.add(lease.routeTaskId);
       return;
     }
     try {
@@ -773,11 +789,11 @@ export async function sweepExpiredLeases(
         now: input.now,
         observedBy: input.observedBy,
       });
-      (outcome.settled ? releasedSettled : reclaimed).push(lease.routeTaskId);
+      (outcome.settled ? releasedSettled : reclaimed).add(lease.routeTaskId);
     } catch (error) {
       /* NothingToReclaim is the honest case where a lease expired before any
          Attempt opened. Recorded, never swallowed. */
-      refused.push({
+      refused.add({
         routeTaskId: lease.routeTaskId,
         why: error instanceof Error ? error.message : String(error),
       });
@@ -792,5 +808,5 @@ export async function sweepExpiredLeases(
       if (lease) await visitLease(lease as { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> });
     }
   }
-  return { reclaimed, releasedSettled, stillLive, refused };
+  return { reclaimed: reclaimed.rows, releasedSettled: releasedSettled.rows, stillLive: stillLive.rows, refused: refused.rows };
 }

@@ -10,8 +10,12 @@ import type { CycleInput, CycleResult, LaneCounts } from "./shadow-loop.ts";
 export async function runStreamedCycle(input:CycleInput):Promise<CycleResult> {
   const nowMs=Date.parse(input.now),workset=await CycleWorkset.open();
   try {
+    const recoveryOutput = <T>(name: string) => ({ rows: workset.output<T>(name), add: (value: T) => workset.append(name, value) });
     const reclaim=input.skipReclaim?{reclaimed:[],releasedSettled:[],stillLive:[],refused:[]}
-      :await sweepExpiredLeases(input.recoveryRepos??input.repos,{now:input.now,observedBy:input.holder});
+      :await sweepExpiredLeases(input.recoveryRepos??input.repos,{now:input.now,observedBy:input.holder,sink:{
+        reclaimed:recoveryOutput<string>("recovery-reclaimed"),releasedSettled:recoveryOutput<string>("recovery-settled"),
+        stillLive:recoveryOutput<string>("recovery-live"),refused:recoveryOutput<{routeTaskId:string;why:string}>("recovery-refused"),
+      }});
     input.onRecoveryComplete?.();
     for await(const debt of input.debts)workset.addDebt(debt,nowMs,true);
     const cadenceSources:Record<string,number>={};

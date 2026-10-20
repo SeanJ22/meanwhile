@@ -295,6 +295,8 @@ export interface ChangedReadOptions<R> {
 /** Append-only partition selection is applied by the store before records are decoded or transferred. */
 export interface ChangedLogReadOptions<T> extends ChangedReadOptions<ChangedRecord<T>> {
   readonly keys?: readonly string[];
+  /** The record's own timestamp, independent of append/backfill and store clocks. */
+  readonly recordTimeAtOrAfter?: { readonly path: readonly string[]; readonly at: string };
 }
 
 /** Slots a reader already holds, left out of a changed-since read: an aggregate's [id, revision], a log record's [key, position]. */
@@ -351,6 +353,8 @@ export interface AppendOnlyRepository<T> {
   append(key: string, recordId: string, record: T, now: string): Promise<AppendOutcome<T>>;
   /** Records under one key, in append order. */
   read(key: string): Promise<readonly T[]>;
+  /** One immutable append coordinate; payload identity fields need not exist or be unique. */
+  readRecord?(key: string, recordId: string): Promise<T | null>;
   /** A content filter returning every match under one key, in append order. */
   readWhere(key: string, path: readonly string[], value: string): Promise<readonly T[]>;
   /** `readWhere`'s newest `limit` matches, newest first, narrowed by the store. */

@@ -107,6 +107,28 @@ export async function load(url, context, nextLoad) {
   } else if (url.endsWith("/lib/control-plane/evidence/durable-store.ts")) {
     source = source.replace("this.remote = options.remote === undefined ? netlifyEvidenceStoreFromEnv() : options.remote;", "this.remote = null;");
     source = source.replace("constructor(root: string, options: DurableEvidenceStoreOptions = {}) {", "constructor(root: string, options: DurableEvidenceStoreOptions = {}) { root = process.env.WTP_RH01_HELD_VAULT_DIRECTORY ?? (process.env.WTP_RH01_SHARED_STATE_DIRECTORY ?? process.env.WTP_RH01_DIRECTORY) + '/vault';");
+  } else if (url.endsWith("/lib/photos/store.ts")) {
+    const declaration = "export async function storeRunScreenshot(";
+    if (!source.includes(declaration)) throw Error("RH01 native screenshot writer did not match");
+    source = source.replace(declaration, "async function rhOriginalStoreRunScreenshot(");
+    add(`import {storeMeasurementScreenshot as rhLocalScreenshot} from ${JSON.stringify(runtime)};
+      export async function storeRunScreenshot(key,bytes,io) { return rhOriginalStoreRunScreenshot(key,bytes,io??{put:rhLocalScreenshot}); }`);
+  } else if (url.endsWith("/lib/control-plane/live-audit-log.ts")) {
+    for (const name of ["recordClaimPass", "readRecentClaimPasses", "recordLookPass"]) {
+      const declaration = `export async function ${name}(`;
+      if (!source.includes(declaration)) throw Error(`RH01 native audit lifecycle did not match: ${name}`);
+      source = source.replace(declaration, `async function rhOriginal${name}(`);
+    }
+    add(`import {auditDueRepositories as rhAuditDue,observeLookPass as rhObserveLook} from ${JSON.stringify(runtime)};
+      export async function recordClaimPass(repos,pass) { return rhOriginalrecordClaimPass(rhAuditDue(repos,{kind:'CLAIMS',week:pass.week}),pass); }
+      export async function readRecentClaimPasses(repos,weeks) { return rhOriginalreadRecentClaimPasses(weeks.length===1?rhAuditDue(repos,{kind:'CLAIMS',week:weeks[0]}):repos,weeks); }
+      export async function recordLookPass(repos,pass) { const local=rhAuditDue(repos,{kind:'LOOK',sha:pass.sha}); await rhOriginalrecordLookPass(local,pass); await rhObserveLook(local,pass); }`);
+  } else if (url.endsWith("/scripts/look-pass.mts")) {
+    const current = "hasLookedCommit(repos, served.sha)", before = "readLookedCommits(repos)";
+    if (source.includes(current)) source = source.replace(current, "hasLookedCommit(rhAuditDue(repos,{kind:'LOOK',sha:served.sha}), served.sha)");
+    else if (source.includes(before)) source = source.replace(before, "readLookedCommits(rhAuditDue(repos,{kind:'LOOK',sha:served.sha}))");
+    else throw Error("RH01 native look scheduling read did not match");
+    add(`import {auditDueRepositories as rhAuditDue} from ${JSON.stringify(runtime)};`);
   } else if (url.endsWith("/lib/reader/cache.ts")) {
     source = source.replace("export async function purgeReaderCacheTags(", "async function rhOriginalPurgeReaderCacheTags(");
     add('export async function purgeReaderCacheTags() { return { purged: true, detail: "RH01 local publication" }; }');

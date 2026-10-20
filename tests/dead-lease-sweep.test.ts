@@ -32,12 +32,44 @@ import { createRouteTask, type RouteTask } from "../lib/control-plane/route-task
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { createPlannerSpool } from "../lib/control-plane/scheduler/planner-spool.ts";
+import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
 
 const T0 = "2026-09-22T10:00:00.000Z"; // walked to a disposition
 const T1 = "2026-09-22T10:05:00.000Z"; // a later dispatch re-claims the settled task
 const T2 = "2026-09-22T10:10:00.000Z"; // the re-claim's lease has expired: the sweep
 const T3 = "2026-09-22T10:20:00.000Z"; // the NEXT sweep
 const TTL = 60_000;
+
+test("the production recovery sink retains every live and refused lease on disk with the same classifications", async () => {
+  for (const [label, repos] of await eachStore()) {
+    const planner = await createPlannerSpool();
+    try {
+      for (let n = 0; n < 205; n++) {
+        const id = `live-${String(n).padStart(3, "0")}`;
+        await repos.leases.put(id, claim(id, "holder", T2, TTL, null), T2);
+      }
+      for (let n = 0; n < 17; n++) {
+        const id = `expired-${n}`;
+        await repos.leases.put(id, claim(id, "holder", T0, TTL, null), T0);
+      }
+      const output = <T>(name: string) => {
+        let position = 0;
+        const table = planner.table<{ position: number; value: T }>(name, row => String(row.position));
+        return { rows: table.rows.map(row => row.value), add: (value: T) => table.add({ position: position++, value }) };
+      };
+      const streamed = await sweepExpiredLeases(repos, { now: T2, observedBy: "supervisor", sink: {
+        reclaimed: output<string>("reclaimed"), releasedSettled: output<string>("settled"), stillLive: output<string>("live"),
+        refused: output<{ routeTaskId: string; why: string }>("refused"),
+      } });
+      for (const rows of Object.values(streamed)) assert.ok(rows instanceof DiskRows, label);
+      assert.equal(streamed.stillLive.length, 205); assert.equal(streamed.refused.length, 17);
+      const collected = await sweepExpiredLeases(repos, { now: T2, observedBy: "supervisor" });
+      assert.deepEqual({ reclaimed: [...streamed.reclaimed], releasedSettled: [...streamed.releasedSettled],
+        stillLive: [...streamed.stillLive], refused: [...streamed.refused] }, collected, label);
+    } finally { await planner.close(); }
+  }
+});
 
 async function eachStore(): Promise<Array<readonly [string, ControlPlaneRepositories]>> {
   return [

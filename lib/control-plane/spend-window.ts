@@ -79,7 +79,7 @@ async function ensureSeeded(repos: Repositories, now: string): Promise<void> {
     if (current && (current.value as SpendWindow).seedState !== "SEEDING") return;
     if (!current) await repos.spendWindow.put(SPEND_WINDOW_ID,{charges: [],seedState: "SEEDING"},now);
     const since = Date.parse(now) - keepMs();
-    await repos.costs.readChangedSince(null,undefined,{page: async rows => {
+    await repos.costs.readChangedSince(null,undefined,{recordTimeAtOrAfter:{path:["recordedAt"],at:new Date(since).toISOString()},page: async rows => {
       for (const {record} of rows) {
         const charge = pricedModelCharge(record,costRecordId(record));
         if (charge && Date.parse(charge.at) >= since) await appendCharge(repos,charge,now);

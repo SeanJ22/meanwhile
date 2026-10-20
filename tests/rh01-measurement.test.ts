@@ -12,6 +12,20 @@ import { projectedRead, updateRead, shadowRead } from "../scripts/rh01-sql.mts";
 import { commandIdentity, workloadAdmissionEntry, workloadOffers } from "../scripts/rh01-workload.mts";
 import { physicalRunReads, reserveProductionReadRun } from "../scripts/rh01-read-accounting.mts";
 import { processStartTicks } from "../scripts/rh01-remote-process.mts";
+import { PLACE_PACKAGE_SQL } from "../lib/reader/place.ts";
+
+test("native reader comments and quoted source text retain their exact read predicates while real mutations are refused", () => {
+  assert.equal(shadowRead(PLACE_PACKAGE_SQL, [], []).text, PLACE_PACKAGE_SQL);
+  assert.doesNotThrow(() => assertNeededProductionRead(PLACE_PACKAGE_SQL));
+  const source = "/* SELECT merge / UPDATE /* nested DELETE */ */ WITH held AS (SELECT 'FOR UPDATE' AS quote, $source$DROP; UPDATE$source$ AS note) SELECT * FROM held";
+  assert.equal(shadowRead(source, [], []).text, source);
+  assert.doesNotThrow(() => assertNeededProductionRead(source));
+  for (const statement of ["WITH x AS (DELETE FROM entity RETURNING *) SELECT * FROM x", "SELECT 1; DROP TABLE entity", "SELECT * INTO copied FROM entity", "/* read */ UPDATE entity SET name='x'"])
+    assert.throws(() => shadowRead(statement, [], []), /REQUIRES_READ/);
+  const locked = shadowRead("SELECT 'FOR UPDATE' AS quote FROM entity WHERE id=$1 FOR UPDATE", ["own"], []);
+  assert.match(locked.text, /'FOR UPDATE'/);
+  assert.equal(locked.text.trimEnd().endsWith("WHERE id=$1"), true);
+});
 
 test("native admission excludes only the identity-verified remote database stand-in and retains runner browsers", async () => {
   const root = process.cwd(), marker = join(root, "scripts/rh01-facts-server.mts");
@@ -791,14 +805,19 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
   let server: ReturnType<typeof spawn> | undefined;
   try {
     await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
-    const marker = join(directory, "remote-started"), cancelled = join(directory, "remote-cancelled"), preload = join(directory, "remote-fixture.mjs");
+    const marker = join(directory, "remote-started"), cancelled = join(directory, "remote-cancelled"), catalog = join(directory, "spend-window-catalog"), preload = join(directory, "remote-fixture.mjs");
     await writeFile(preload, `import {writeFileSync} from 'node:fs';
       import {PGlite} from '@electric-sql/pglite';
       const production=new PGlite();
       await production.exec("CREATE TABLE cp_leases(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb); INSERT INTO cp_leases VALUES ('nightly-window',17,'2026-10-20T10:00:00Z',jsonb_build_object('holder','production-runner','released',false))");
+      let spendWindowCatalogReads=0;
       globalThis.fetch=async(url,init)=>{
         if(!String(url).startsWith('https://api.'))throw Error('ZERO_NETWORK_FIXTURE_ONLY');
         const body=JSON.parse(init.body);let rows=[],fields=[];
+        if(body.query==='SELECT to_regclass($1::text) IS NOT NULL AS present'){
+          if(body.params.length!==1||body.params[0]!=='public.cp_spend_window')throw Error('UNEXPECTED_CATALOG_SURVEY');
+          writeFileSync(${JSON.stringify(catalog)},String(++spendWindowCatalogReads));rows=[[false]];fields=[{name:'present',dataTypeID:16}];
+        }else if(/\\bcp_spend_window\\b/.test(body.query))throw Error('ABSENT_COUNTER_QUERY_ESCAPED_TO_PRODUCTION');
         if(/FROM cp_leases WHERE id\\s*=/.test(body.query)) {
           const result=await production.query(body.query,body.params);fields=result.fields;
           rows=result.rows.map(row=>fields.map(field=>field.dataTypeID===3802?JSON.stringify(row[field.name]):row[field.name]));
@@ -840,15 +859,24 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
     };
     const at = "2026-10-20T10:00:00.000Z";
     await query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)", ["snapshot", at, JSON.stringify({ n: 1 })]);
+    const { pgAggregateRepository } = await import("../lib/control-plane/repository/pg-store.ts");
+    const spendWindow = pgAggregateRepository<import("../lib/control-plane/spend-window.ts").SpendWindow>(
+      { query: (text, params) => query(text, [...params ?? []]) }, "SpendWindow", "cp_spend_window");
+    assert.equal(await spendWindow.readNarrowed("model-charges", { seedState: true }), null);
+    await spendWindow.put("model-charges", { charges: [], seedState: "SEEDING" }, at);
+    const seed = await spendWindow.readNarrowed("model-charges", { seedState: true });
+    assert.equal(seed!.revision, 1);
+    await spendWindow.compareAndSetFields!("model-charges", seed!.revision, { seedState: "READY" }, at);
+    assert.deepEqual((await spendWindow.readNarrowed("model-charges", { seedState: true }))!.value, { seedState: "READY" });
+    assert.deepEqual((await spendWindow.readArrayPage!("model-charges", "charges", { limit: 32 }))!.values, []);
+    assert.equal(await readFile(catalog, "utf8"), "1", "only the exact new counter relation was checked, once");
     const [{ CONSOLE_INPUT_SQL }, { VITAL_SIGNS_UPSERT }] = await Promise.all([
       import("../scripts/pilot-runtime-publish.mts"), import("../lib/control-plane/vital-signs.ts"),
     ]);
     assert.deepEqual(await query(CONSOLE_INPUT_SQL, []), [{ signature: "0123456789abcdef0123456789abcdef" }]);
     await query(VITAL_SIGNS_UPSERT, [at, 7, null, null, 0, 0, 0, 12, "{}", 0, 0, 0, 0, 0, null, at]);
-    assert.deepEqual(await query("SELECT facts_live FROM cp_vital_signs WHERE hour=$1", [at]), [{ facts_live: 7 }]);
-    const [{ pgAggregateRepository }, { acquireWindowLease, releaseWindowLease, WindowLockHeld }] = await Promise.all([
-      import("../lib/control-plane/repository/pg-store.ts"), import("../lib/control-plane/promotion/window.ts"),
-    ]);
+    assert.deepEqual(await query("SELECT facts_live FROM cp_vital_signs WHERE hour=$1 /* merge a comment; never UPDATE rows */", [at]), [{ facts_live: 7 }]);
+    const { acquireWindowLease, releaseWindowLease, WindowLockHeld } = await import("../lib/control-plane/promotion/window.ts");
     const leases = pgAggregateRepository<import("../lib/control-plane/attempt.ts").ExecutionLease>(
       { query: (text, params) => query(text, [...params ?? []]) }, "ExecutionLease", "cp_leases");
     const repos = { leases } as import("../lib/control-plane/repository/types.ts").ControlPlaneRepositories;

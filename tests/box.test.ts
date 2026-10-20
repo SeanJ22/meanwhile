@@ -89,7 +89,10 @@ test("the backfill indexes Scout and committed Detective findings recorded since
   await backfillBox(repos, NOW);
   const cursor = (await repos.passCursors.mustRead("box-backfill")).value.through;
   const asked: (string | null)[] = [];
-  const watched = { ...repos, scoutResults: { ...repos.scoutResults, readChangedSince: (since: string | null) => { asked.push(since); return repos.scoutResults.readChangedSince(since); } } };
+  const watched = { ...repos, scoutResults: { ...repos.scoutResults, readChangedSince: (...args: Parameters<typeof repos.scoutResults.readChangedSince>) => {
+    asked.push(args[0]); assert.deepEqual(args[2]?.projection, { attemptId: true });
+    return repos.scoutResults.readChangedSince(...args);
+  } } };
   await backfillBox(watched, LATER);
   assert.deepEqual(asked, [new Date(Date.parse(cursor) - 60_000).toISOString()], "the next pass reads only what changed since the last, a minute back");
   const rows = await repos.boxFindings.list();

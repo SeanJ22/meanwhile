@@ -1,4 +1,43 @@
 /** Measurement SQL keeps the actual predicate; subquery FROM tokens cannot replace the outer projection. */
+/** Mask quoted values, identifiers and comments without moving statement tokens. */
+export function sqlStatementCode(text: string): string {
+  const code: string[] = [];
+  for (let at = 0; at < text.length;) {
+    const start = at;
+    if (text.startsWith("--", at)) {
+      const end = text.indexOf("\n", at + 2); at = end < 0 ? text.length : end;
+    } else if (text.startsWith("/*", at)) {
+      let depth = 1; at += 2;
+      while (at < text.length && depth) {
+        if (text.startsWith("/*", at)) { depth++; at += 2; }
+        else if (text.startsWith("*/", at)) { depth--; at += 2; }
+        else at++;
+      }
+      if (depth) throw Error("RH01_SQL_SHADOW_REQUIRES_READ");
+    } else if (text[at] === "'" || text[at] === '"') {
+      const quote = text[at++]!, escaped = quote === "'" && /(?:^|[^a-z_0-9])e$/i.test(text.slice(Math.max(0, start - 2), start));
+      let closed = false;
+      while (at < text.length) {
+        if (escaped && text[at] === "\\") { at += 2; continue; }
+        if (text[at++] === quote) { if (text[at] === quote) at++; else { closed = true; break; } }
+      }
+      if (!closed) throw Error("RH01_SQL_SHADOW_REQUIRES_READ");
+    } else if (text[at] === "$" && /^\$(?:[a-z_][a-z_0-9]*)?\$/i.test(text.slice(at))) {
+      const delimiter = /^\$(?:[a-z_][a-z_0-9]*)?\$/i.exec(text.slice(at))![0], end = text.indexOf(delimiter, at + delimiter.length);
+      if (end < 0) throw Error("RH01_SQL_SHADOW_REQUIRES_READ");
+      at = end + delimiter.length;
+    } else { code.push(text[at++]!); continue; }
+    code.push(text.slice(start, at).replace(/[^\n\r]/g, " "));
+  }
+  return code.join("");
+}
+
+function withoutRowLocks(text: string): string {
+  const code = sqlStatementCode(text);
+  return text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, (matched, at: number) =>
+    code.slice(at, at + matched.length).toUpperCase() === matched.toUpperCase() ? " ".repeat(matched.length) : matched);
+}
+
 export function outerKeyword(text: string, keyword: string): number {
   let depth = 0;
   for (let at = 0; at < text.length;) {
@@ -61,7 +100,8 @@ export interface SqlShadow {
  * The production statement is still SELECT-only; JSON parameters represent temporary local writes.
  */
 export function shadowRead(text: string, params: readonly unknown[], shadows: readonly SqlShadow[]): { text: string; params: unknown[] } {
-  if (!/^\s*(?:SELECT|WITH)\b/i.test(text) || /\b(?:INSERT|DELETE|MERGE|CALL|UPDATE)\b/i.test(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "")))
+  const unlocked = withoutRowLocks(text), code = sqlStatementCode(unlocked);
+  if (!/^\s*(?:SELECT|WITH)\b/i.test(code) || /\b(?:INSERT|DELETE|MERGE|CALL|UPDATE|INTO|CREATE|ALTER|DROP|TRUNCATE|GRANT|REVOKE|COPY|DO|SET|RESET)\b/i.test(code))
     throw Error("RH01_SQL_SHADOW_REQUIRES_READ");
   const values = [...params], ctes: string[] = [];
   for (const shadow of shadows) {
@@ -75,9 +115,9 @@ export function shadowRead(text: string, params: readonly unknown[], shadows: re
     ctes.push(`${local} AS (SELECT * FROM jsonb_populate_recordset(NULL::public.${table},${at}::jsonb))`,
       `${table} AS (SELECT p.* FROM public.${table} p WHERE NOT EXISTS (SELECT 1 FROM ${local} l WHERE ${shadow.keys.map(key => `p."${key}" IS NOT DISTINCT FROM l."${key}"`).join(" AND ")})${shadow.deletedKeys?.length ? ` AND NOT EXISTS (SELECT 1 FROM ${deleted} d WHERE ${shadow.keys.map(key => `p."${key}" IS NOT DISTINCT FROM d."${key}"`).join(" AND ")})` : ""} UNION ALL SELECT * FROM ${local})`);
   }
-  if (!ctes.length) return { text: text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, ""), params: values };
-  let original = text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "");
+  if (!ctes.length) return { text: unlocked, params: values };
+  let original = unlocked;
   for (const { table } of shadows) original = original.replace(new RegExp(`\\b(FROM|JOIN)\\s+public\\.("?${table}"?)(?=\\s|,|\\))`, "gi"), "$1 $2");
-  const prefix = /^\s*WITH\s+(RECURSIVE\s+)?/i.exec(original);
+  const prefix = /^\s*WITH\s+(RECURSIVE\s+)?/i.exec(code);
   return { text: prefix ? `WITH ${prefix[1] ?? ""}${ctes.join(",")},${original.slice(prefix[0].length)}` : `WITH ${ctes.join(",")} ${original}`, params: values };
 }

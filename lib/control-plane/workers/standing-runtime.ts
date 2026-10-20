@@ -172,22 +172,30 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
 export async function maintainAutonomousStandingRuntime(input: Parameters<typeof autonomousStandingRuntime>[0]): Promise<void> {
   const now = input.now ?? (() => new Date().toISOString());
   const methodVersion = await requireRuntimeMethodVersion(input.repos);
-  const update = async (rows: readonly import("../repository/types.ts").Persisted<WorkItem>[]) => {
-    for (const row of rows) {
-      const plan = row.value.autonomousPlan;
-      if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
-        plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
-      await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
-        autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion } } }, now());
-    }
+  const needsMethod = (item: WorkItem) => {
+    const contract = item.autonomousPlan?.contract;
+    return contract?.schemaVersion === 2 && contract.methodVersion === 0 &&
+      contract.extraction.format === "UNSUPPORTED" && contract.sourceScope.observationArtifactIds.length === 0;
   };
-  await forEachAggregate(input.repos.workItems, row => update([row]));
+  await forEachAggregate(input.repos.workItems, async header => {
+    if (!needsMethod(header.value)) return;
+    const row = await input.repos.workItems.mustRead(header.id);
+    if (!needsMethod(row.value)) return;
+    const plan = row.value.autonomousPlan;
+    if (!plan || plan.contract.schemaVersion !== 2) return;
+    await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
+      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion } } }, now());
+  }, { autonomousPlan: { contract: { schemaVersion: true, methodVersion: true, extraction: ["format"], sourceScope: ["observationArtifactIds"] } } });
   await backfillBox(input.repos, now());
   const vault = workerUpkeepEvidence(input);
   await forEachLatestScout(input.repos.scoutResults, result => workAdapterQueue({ repos: input.repos,
     results: [result], now: now(), readEvidence: vault,
     ...(input.transportFor ? { transportFor: result => input.transportFor!({ subjectId: result.subjectId,
-      state: scoutStateHint(result.subjectId, result.obligationId)[0] ?? null }) } : {}) }).then(() => {}));
+      state: scoutStateHint(result.subjectId, result.obligationId)[0] ?? null }) } : {}) }).then(() => {}), async header => {
+    if (header.outcome === "NEEDS_ADAPTER") return true;
+    await workAdapterQueue({ repos: input.repos, results: [], now: now() });
+    return false;
+  });
 }
 
 function workerUpkeepEvidence(input: Parameters<typeof autonomousStandingRuntime>[0]) {

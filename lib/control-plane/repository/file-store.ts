@@ -598,6 +598,11 @@ export function fileAppendOnlyRepository<T>(
     read: async (key: string): Promise<readonly T[]> =>
       (await readLines(key)).map((line) => line.record),
 
+    readRecord: async (key: string, recordId: string): Promise<T | null> => {
+      for await (const line of fileLines(fileFor(key))) if (line.recordId === recordId) return line.record;
+      return null;
+    },
+
     readWhere: async (
       key: string,
       jsonPath: readonly string[],
@@ -651,6 +656,7 @@ export function fileAppendOnlyRepository<T>(
       const records:ChangedRecord<T>[]=[];
       for await(const changed of coordinateLines(read.keys)){
         if((from!==null&&Date.parse(changed.stampedAt!)<from)||skip.has(`${changed.key}\n${changed.position}`))continue;
+        if(read.recordTimeAtOrAfter!==undefined&&!(Date.parse(jsonTextAtPath(changed.record,read.recordTimeAtOrAfter.path)??"")>=Date.parse(read.recordTimeAtOrAfter.at)))continue;
         const selected=read.projection?{...changed,record:projectRecord(changed.record,read.projection)as T}:changed;
         if(read.page)await read.page([selected]);else records.push(selected);
       }

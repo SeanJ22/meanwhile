@@ -98,6 +98,15 @@ export function measuredCompletion(input: { readonly script: string; readonly st
     return match && Number(match[1]) > 0 && !/lessons not saved:|could not be done:/.test(stdout)
       ? yes("Production claims were actually recomputed", Number(match[1])) : no("Claims were skipped, unreadable, or not recomputed");
   }
+  if (script === "look-pass.mts") {
+    const look = jsonLine(stdout, "RH01_LOOK_RESULT ");
+    if (look?.durable !== true || look.exactTargets !== true || typeof look.runId !== "string" ||
+        !Number.isInteger(look.expectedScreens) || Number(look.expectedScreens) <= 0 ||
+        look.screens !== look.expectedScreens || look.shots !== look.expectedScreens || !["REVIEWED", "NOT_RUN"].includes(String(look.reviewer)))
+      return no("The native look pass did not retain every requested screenshot and its local pass");
+    return { ...yes(`Every native browser target and the local look pass completed; reviewer ${look.reviewer === "REVIEWED" ? "ran" : `NOT_RUN (${String(look.reviewerSays)})`}`, Number(look.expectedScreens)),
+      successful: look.reviewer === "REVIEWED" && look.notReviewed === 0 && look.red === 0 };
+  }
   if (script === "live-audit-pass.mts") {
     const match = /live audit: (\d+) sampled in (\d+) areas;/.exec(stdout);
     return match && Number(match[1]) > 0 && !/not read:|lessons not kept:/.test(stdout)

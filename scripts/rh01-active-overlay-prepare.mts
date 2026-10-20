@@ -22,13 +22,13 @@ if (!codeRoot) throw Error("RH01 active setup requires the immutable native code
 const code = (file: string) => import(pathToFileURL(join(codeRoot, file)).href);
 const [{ createFileRepositories }, { createPgRepositories }, { submit }, { readIntents, RESEARCH_INTENT_LOG_KEY },
   { DurableEvidenceStore }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint, contentHash, routeTaskId }, { findReceipt }, { canonicalJson },
-  { registerAutonomousPlan }, { openRuntimeMethod }, { standingFleetRuntime }, { disposeRoute }, { artifactId: deriveArtifactId }] = await Promise.all([
+  { registerAutonomousPlan }, { autonomousStandingRuntime }, { disposeRoute }, { artifactId: deriveArtifactId }] = await Promise.all([
   code("lib/control-plane/repository/file-store.ts"), code("lib/control-plane/repository/pg-store.ts"),
   code("lib/control-plane/gateway/gateway.ts"), code("lib/control-plane/scheduler/research-policy.ts"),
   code("lib/control-plane/evidence/durable-store.ts"), code("lib/control-plane/workers/runtime.ts"),
   code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/repository/worker-completion.ts"), code("lib/control-plane/ids.ts"),
   code("lib/control-plane/gateway/receipts.ts"), code("lib/control-plane/repository/types.ts"),
-  code("lib/control-plane/workers/coordinator.ts"), code("lib/method/runtime-manual.ts"), code("lib/control-plane/workers/standing.ts"),
+  code("lib/control-plane/workers/coordinator.ts"), code("lib/control-plane/workers/standing-runtime.ts"),
   code("lib/control-plane/route-task.ts"), code("lib/control-plane/evidence/artifact.ts"),
 ]);
 interface PreparedHandoff {
@@ -150,14 +150,15 @@ if (!handoff.parserExpectedFields || parser.result.records.length !== 1 || parse
 const validatorTask = await enqueueWorkerTask(repos, { workItemId, role: "VALIDATOR", artifactId, contract, now: at,
   producerResultId: parser.id, purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
 const validator = await execute(validatorTask.id, "VALIDATOR", "PASS");
-// Verify canonical first-party context before any paid audit work is offered.
-const method = await openRuntimeMethod(repos);
-try {
-  const runtime = standingFleetRuntime({ root: codeRoot, repos, vaultRoot: join(shared, "vault"), method, now: () => new Date().toISOString() });
-  await runtime.independentContext({ artifactId, contract, auditScope: handoff.plan.auditScope, methodVersion: method.version, workItemId });
-} finally { await method.close(); }
 const audit = await enqueueWorkerTask(repos, { workItemId, role: "ADVERSARIAL_AUDITOR", artifactId,
   contract, now: at, producerResultId: parser.id, validatorResultId: validator.id, purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
+// Verify canonical first-party context after the exact startup used by the real lease worker, without dispatching the audit.
+const runtime = await autonomousStandingRuntime({ root: codeRoot, repos, vaultRoot: join(shared, "vault"), environment: process.env,
+  auditCeilingUsd: 0, now: () => new Date().toISOString() });
+try {
+  await runtime.beginTask(audit, (await repos.workItems.mustRead(workItemId)).value);
+  await runtime.independentContext({ artifactId, contract, auditScope: handoff.plan.auditScope, methodVersion: runtime.methodVersion, workItemId });
+} finally { await runtime.close(); }
 const receipts = [];
 for (const [type, input] of [
   ["research.resume", { note: "RH-01 user-authorized isolated memory diagnostic; production pause unchanged" }],

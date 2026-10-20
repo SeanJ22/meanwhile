@@ -12,6 +12,11 @@ test('city commission aliases share one body and a profile does not seat its per
   const findings=siteFindings(scope,page(`<h1>${name}</h1>`));
   assert.equal(findings.find(f=>f.field==='GOV-02')?.subjectId,scope.bodyId);
  }
+ for(const name of ['K.O. Lee Aberdeen Public Library Board of Trustees','Council of People with Disabilities']){
+  const finding=siteFindings(scope,page(`<h1>${name}</h1>`)).find(f=>f.field==='GOV-02');
+  assert.ok(finding);
+  assert.notEqual(finding.subjectId,scope.bodyId,'a named advisory body does not become the governing body');
+ }
  const profile=siteFindings({...scope,bodyContext:true},page('<h1>Sharon McDonald</h1><p>Sharon McDonald Mayor</p><h2>Mayor\'s Youth Advisory Commission</h2>'));
  assert.ok(!profile.some(f=>f.field==='GOV-02'));
  assert.ok(profile.every(f=>f.subjectId===scope.bodyId));

@@ -18,7 +18,9 @@ test("a government source reads despite advisory robots and passes saved evidenc
   const facts=await factDb(),vault=new MemoryEvidenceStore();
   let repos=createMemoryRepositories();
   let readHeldPage:(url:string)=>Promise<SitePage|null>=async()=>null;
-  const now=new Date().toISOString(),place='ocd-division/country:us/state:az/place:example',government='az:city:example',body=place+'#governing';
+  const now=new Date().toISOString();
+  let clock=now;
+  const place='ocd-division/country:us/state:az/place:example',government='az:city:example',body=place+'#governing';
   for(const entity of [{id:place,kind:'place',name:'Example',state:'AZ',parentId:null},{id:government,kind:'government',name:'Example',state:'AZ',parentId:place}])await ensureEntity(facts.query,entity as never);
   await learnOfficialHost(facts.query,government,'https://example.gov');
   const attempt=beginAttempt({routeTaskId:'rt-site',workItemId:'wi-site',worker:{role:'ACQUIRER',provider:'test',version:'1',instance:'test'},lease:claim('rt-site','test',now,60000,null),now,methodVersion:0,policyVersion:'test'});
@@ -28,7 +30,7 @@ test("a government source reads despite advisory robots and passes saved evidenc
   const job={obligation:scheduled,workItemId:'wi-site',routeTaskId:'rt-site',attemptId:attempt.id,holder:'test',executor:'DETERMINISTIC',bound:{maxAttempts:3,maxWallMs:60000}} as const;
   const seen:string[]=[];
   const pages:Record<string,string>={'https://example.gov/robots.txt':'User-agent: *\nDisallow: /','https://example.gov/':'<title>Example, Arizona</title><main><a href="/council">City Council</a></main>','https://example.gov/council':'<title>Example, Arizona</title><main><h1>City Council</h1><table><tr><td>Jane Doe</td><td>Mayor</td><td>jane@example.gov</td><td><img src="https://example.gov/jane.jpg" alt="Jane Doe"></td></tr><tr><td>John Smith</td><td>Councilmember</td><td>john@example.gov</td></tr></table></main>'};
-  const createRun=()=>placeSourceExecutor({repos,scope:{jurisdictionId:government,governmentId:place,bodyId:body,name:'Example',state:'AZ',website:'https://example.gov/'},query:facts.query,prepareBody:async(finding,origin)=>{if(finding.field!=='GOV-02')return;for(const record of await repos.artifacts.read(origin.workItemId)){if(!finding.artifactIds.includes(record.artifactId))continue;const capture=await heldCaptureReader(vault)(record);if(capture)await ensureHuntBodyTarget({facts,subjectId:finding.subjectId,name:finding.value,quote:finding.exactQuote,capture,clocks:factClocks(null),now:new Date(now)});}},now:()=>now,readHeldPage:url=>readHeldPage(url),spaceOut:async()=>{},vault:async(a,text)=>{const saved=await putArtifact(vault,'freshness',a,Buffer.from(text));return {stored:true,where:saved.key,why:'saved'};},open:async({url})=>{seen.push(url);const body=pages[url];assert.ok(body,'unexpected source '+url);return {status:200,body,bytes:Buffer.byteLength(body),contentType:url.endsWith('robots.txt')?'text/plain':'text/html',durationMs:1,transportError:null};}});
+  const createRun=()=>placeSourceExecutor({repos,scope:{jurisdictionId:government,governmentId:place,bodyId:body,name:'Example',state:'AZ',website:'https://example.gov/'},query:facts.query,prepareBody:async(finding,origin)=>{if(finding.field!=='GOV-02')return;for(const record of await repos.artifacts.read(origin.workItemId)){if(!finding.artifactIds.includes(record.artifactId))continue;const capture=await heldCaptureReader(vault)(record);if(capture)await ensureHuntBodyTarget({facts,subjectId:finding.subjectId,name:finding.value,quote:finding.exactQuote,capture,clocks:factClocks(null),now:new Date(clock)});}},now:()=>clock,readHeldPage:url=>readHeldPage(url),spaceOut:async()=>{},vault:async(a,text)=>{const saved=await putArtifact(vault,'freshness',a,Buffer.from(text));return {stored:true,where:saved.key,why:'saved'};},open:async({url})=>{seen.push(url);const body=pages[url];assert.ok(body,'unexpected source '+url);return {status:200,body,bytes:Buffer.byteLength(body),contentType:url.endsWith('robots.txt')?'text/plain':'text/html',durationMs:1,transportError:null};}});
   const outcome=await createRun()(job);
   console.log(JSON.stringify({outcome,seen}));
   assert.equal(outcome.kind,'DISPOSED');assert.equal(outcome.cost?.requestCount,3);assert.ok((outcome.disposition?.observation?.normalizedCount??0)>=5);
@@ -39,7 +41,8 @@ test("a government source reads despite advisory robots and passes saved evidenc
   repos=createMemoryRepositories();
   for(const record of originalRecords)await repos.artifacts.append(record.workItemId,record.artifactId,record,record.recordedAt);
   for(const row of earlierFindings)await repos.boxFindings.put(row.id,{...row.value,origins:row.value.origins.map(origin=>({...origin,workItemId:'wi-older-consumer',resultId:'aaa-old-consumer'}))},now);
-  const laterAttempt=beginAttempt({routeTaskId:'rt-reuse',workItemId:'wi-reuse',worker:{role:'ACQUIRER',provider:'test',version:'1',instance:'test'},lease:claim('rt-reuse','test',now,60000,null),now,methodVersion:0,policyVersion:'test'});
+  clock=new Date(Date.parse(now)+300_000).toISOString();
+  const laterAttempt=beginAttempt({routeTaskId:'rt-reuse',workItemId:'wi-reuse',worker:{role:'ACQUIRER',provider:'test',version:'1',instance:'test'},lease:claim('rt-reuse','test',clock,60000,null),now:clock,methodVersion:0,policyVersion:'test'});
   await repos.attempts.put(laterAttempt.id,laterAttempt,now);
   readHeldPage=async url=>{
    for(const record of originalRecords){
@@ -55,15 +58,18 @@ test("a government source reads despite advisory robots and passes saved evidenc
   assert.equal(seen.length,3);
   const references=await repos.artifacts.read('wi-reuse');
   assert.equal(references.length,2);
-  for(const record of references)assert.deepEqual(record,originalRecords.find(original=>original.artifactId===record.artifactId));
+  for(const record of references){assert.equal(record.recordedAt,now);assert.deepEqual(record,originalRecords.find(original=>original.artifactId===record.artifactId));}
   const repaired=await repos.artifacts.read('wi-older-consumer');
   assert.equal(repaired.length,1);
   assert.deepEqual(repaired[0],references.find(record=>record.canonicalUrl==='https://example.gov/council'));
   for(const row of await repos.boxFindings.list())assert.ok(row.value.origins.some(origin=>origin.workItemId==='wi-reuse'));
-  const published=await publishBoxFindings({repos,facts,vault,fetch:async()=>{throw new Error('must reuse saved evidence')},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now,limit:100,purge:async()=>({purged:true})});
+  const published=await publishBoxFindings({repos,facts,vault,fetch:async()=>{throw new Error('must reuse saved evidence')},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now:clock,limit:100,purge:async()=>({purged:true})});
   const members=await facts.query("SELECT value->>'name' AS name FROM fact WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%' ORDER BY name",[body]);
   const contacts=await facts.query("SELECT e.name,f.value FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.field='email' AND f.status='live' ORDER BY e.name");
   assert.deepEqual(members.map(r=>r.name),['Jane Doe','John Smith']);
+  const copies=await facts.query('SELECT fetched_at FROM source_copy');
+  assert.ok(copies.length);
+  assert.ok(copies.every(copy=>(copy.fetched_at instanceof Date?copy.fetched_at.getTime():Date.parse(String(copy.fetched_at)))===Date.parse(now)),'publication preserves the source clock even when the report is five minutes later');
   console.log(JSON.stringify({published,members,contacts,requests:seen.length,usd:0}));
   await facts.pg.close();
 

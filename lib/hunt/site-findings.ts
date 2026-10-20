@@ -123,8 +123,7 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
   const bodyNames=documentPage || personPage?[]:[...main.matchAll(/<h[1-2]\b[^>]*>([\s\S]*?)<\/h[1-2]\s*>/gi)].map(match=>cleanHeading(match[1]))
     .filter(name=>isBodyName(name));
   const sameBody=(name:string)=>((scope.bodyId?.endsWith('#governing') || scope.bodyName && isGoverningBodyName(scope.bodyName,scope.name,scope.govClass)) && isGoverningBodyName(name,scope.name,scope.govClass)) || scope.bodyName && normalizeText(name).toLowerCase()===normalizeText(scope.bodyName).toLowerCase() ||
-    (scope.bodyId?.endsWith('#governing') && /\b(council|board of (?:supervisors|commissioners|trustees)|selectboard|selectmen|town board|county commission|county assembly)\b/i.test(name)) ||
-    (scope.bodyId?.endsWith('#board') && /\b(school board|board of education|governing board|board of trustees)\b/i.test(name));
+    (scope.bodyId?.endsWith('#board') && /^(?:school board|board of education|governing board|board of trustees)$/i.test(name.trim()));
   const namedBodies=[...new Set(bodyNames)];
   const identified=namedBodies.length===1 && sameBody(namedBodies[0]);
   const historic=/\b(former|previous|past|histor(?:y|ic)|memorial)\b/i.test(namedBodies.join(' ')) || /\/(?:history|former|past-members|archives)(?:\/|[.?]|$)/i.test(page.url);

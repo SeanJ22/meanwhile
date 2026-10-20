@@ -227,6 +227,13 @@ try{
     const map=(window as unknown as {__wtpMap?:{queryRenderedFeatures:()=>unknown[]}}).__wtpMap;
     return Boolean(map?.queryRenderedFeatures().length);
    }),"The finished map must already have rendered geography");
+   if(built&&(surface==="home"||surface==="map"))assert.ok(await page.evaluate(()=>{
+    const map=(window as unknown as {__wtpMap?:{getStyle:()=>{layers:{id:string}[]};project:(point:number[])=>{x:number;y:number};queryRenderedFeatures:(point:{x:number;y:number},options:{layers:string[]})=>unknown[]}}).__wtpMap;
+    const point=window.__readerStart?.value as {lat:number;lng:number}|undefined;
+    if(!map||!point)return false;
+    const layers=map.getStyle().layers.filter(layer=>/^district-.+-fill$/.test(layer.id)).map(layer=>layer.id);
+    return Boolean(map.queryRenderedFeatures(map.project([point.lng,point.lat]),{layers}).length);
+   }),"The transparent district interiors must remain available to a tap at the ZIP point");
    if(built&&surface!=="ballot")assert.ok(rasterResponses>0,"The software basemap must actually receive its raster tiles");
    if(built&&surface!=="ballot")assert.equal(archiveRanges.filter(range=>range==="bytes=0-16383").length,1,"The early archive header must be consumed without a duplicate read");
    if(built)assert.deepEqual(ballotPrefetches,[],"An unopened ballot must not spend production reads or first-page work");

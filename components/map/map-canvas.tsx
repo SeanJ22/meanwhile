@@ -491,8 +491,8 @@ export function MapCanvas({
 
     let userMoved = false;
     let settleTimer: number | undefined;
-    const onMoveStart = (event: { originalEvent?: unknown }) => {
-      enterMotionDegrade();
+    const onMoveStart = (event: { originalEvent?: unknown; instant?: boolean }) => {
+      if (!event.instant) enterMotionDegrade();
       if (event.originalEvent) {
         userMoved = true;
         // The reader has taken the camera until an explicit action hands it back.
@@ -790,7 +790,7 @@ export function MapCanvas({
     if (!map) return;
     map.setPadding(
       insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 },
-      { duration: 0 },
+      { instant: true },
     );
   }, [leftInset, insets]);
 
@@ -811,7 +811,7 @@ export function MapCanvas({
     };
 
     if (cameraMapRef.current !== map || prefersReducedMotion()) {
-      map.jumpTo(options);
+      map.jumpTo(options, { instant: true });
     } else {
       map.flyTo({ ...options, duration: 350, essential: true, curve: 1.5 });
     }
@@ -914,7 +914,7 @@ export function MapCanvas({
         padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 900,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -947,7 +947,7 @@ export function MapCanvas({
         padding: 24,
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 600,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -981,7 +981,7 @@ export function MapCanvas({
       zoom: focus.zoom ?? 13,
     };
 
-    if (prefersReducedMotion()) map.jumpTo(options);
+    if (prefersReducedMotion()) map.jumpTo(options, { instant: true });
     else map.flyTo({ ...options, duration: 900, essential: true });
   }, [focus]);
 
@@ -1049,7 +1049,7 @@ export function MapCanvas({
         padding: { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
         duration: 0,
-      });
+      }, { instant: true });
     };
 
     // Initial ZIP arrival is a jump. Later choices wait for the actual flight,

@@ -19,7 +19,9 @@ import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-re
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
-import { promotedRegistries } from "../scheduler/provider-inputs.ts";
+import { installOperationalReferenceSubjects, releaseOperationalReferenceState, requiredJurisdictionRegistry } from "../../civic-data/operational-references.ts";
+import { readOperationalReferenceSubjects, readOperationalReferenceStateIndex } from "../../civic-data/operational-reference-state-read.ts";
+import { hasReviewedRegistry } from "../../civic-data/reviewed-registry-states.ts";
 import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
 import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
@@ -62,14 +64,19 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
     ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
   const knowledge=await openRuntimeMethod(input.repos);
+  let taskState: string | null = null, installedState: string | null = null;
+  let reviewedStates: readonly string[] | null = null;
+  const releaseState = () => { if (installedState !== null) releaseOperationalReferenceState(); installedState = null; };
   try {
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
 
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
-  const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
-    if ("unreadable" in installed) return null;
-    const found = [...installed.registries.values()].flatMap(registry=>registry.jurisdictions.filter(row=>row.id===subjectId));
+    const state = taskState ?? scoutStateHint(subjectId, null)[0];
+    if (!state) return null;
+    let registry;
+    try { registry = requiredJurisdictionRegistry(state); } catch { return null; }
+    const found = registry.jurisdictions.filter(row=>row.id===subjectId);
     if (found.length !== 1) return null;
     const address = found[0]!.ownWebAddress;
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
@@ -98,17 +105,27 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
     return lineage?.rootWorkItemId??null;
   };
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: () => knowledge.close(),
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: () => { releaseState(); taskState = null; return knowledge.close(); },
     beginTask:async (task)=>{
+      releaseState(); lineages = []; sharedOriginByRoot.clear(); taskState = null;
+      const item = await input.repos.workItems.read(task.workItemId);
+      const contract = task.workerTask?.contract ?? item?.value.autonomousPlan?.contract;
+      const jurisdiction = contract?.schemaVersion === 2 ? contract.jurisdiction.state : item?.value.autonomousPlan?.jurisdiction;
+      const states = scoutStateHint(item?.value.subject, jurisdiction), state = states.length === 1 ? states[0] : null;
+      taskState = state;
       if (!mayUseTestFixture()) {
-        const item = await input.repos.workItems.read(task.workItemId);
-        const contract = task.workerTask?.contract;
-        const jurisdiction = contract?.schemaVersion === 2 ? contract.jurisdiction.state : item?.value.autonomousPlan?.jurisdiction;
-        const states = scoutStateHint(item?.value.subject, jurisdiction);
-        if (states.length === 1) {
-          const doors = await refreshDoorsForPass(input.repos.doors, { state: states[0] });
+        if (state) {
+          reviewedStates ??= (await readOperationalReferenceStateIndex()).states;
+          if (reviewedStates.includes(state) || hasReviewedRegistry(state)) {
+            const subjectIds = [...new Set([item?.value.subject, contract?.subjectId,
+              contract?.schemaVersion === 2 ? contract.jurisdiction.canonicalId : undefined].filter((id): id is string => Boolean(id)))];
+            const read = await readOperationalReferenceSubjects(state, subjectIds);
+            installOperationalReferenceSubjects(read.registry, reviewedStates, subjectIds);
+            installedState = state;
+          }
+          const doors = await refreshDoorsForPass(input.repos.doors, { state });
           if (!doors.partitions?.refreshed) throw new Error(doors.reason ?? "The task's registered doors could not be read");
-          await refreshVenueResolutionsFromPromoted({ state: states[0] });
+          await refreshVenueResolutionsFromPromoted({ state });
         }
       }
       brokerLineages(await readLineageHistory(input.repos,task.workItemId)); },
@@ -144,7 +161,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         ...(search?{search}:{}),...(input.environment?{environment:input.environment}:{}),readHeldArtifact},item,task);
     }}:{})};
   return runtime;
-  } catch (error) { await knowledge.close(); throw error; }
+  } catch (error) { releaseState(); await knowledge.close(); throw error; }
 }
 
 /** The round's upkeep streams one source log or work page; lease workers do only their place's work. */

@@ -17,8 +17,8 @@ import { computeRouteFloor } from "../preflight.ts";
 import { fingerprint } from "../ids.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import type { WorkerEvidence } from "./types.ts";
-import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
-import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { requiredJurisdictionRegistry, requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
+import { readRegistryBodyProjection } from "../../registry/place-read.ts";
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
@@ -94,7 +94,7 @@ interface RegistrySubject {
 async function registryScope(contract: GeneralizedCivicExtractionContract) {
   const state = contract.jurisdiction.state.toLowerCase();
   if (!/^[a-z]{2}$/.test(state) || contract.jurisdiction.country.toLowerCase() !== "us") throw new Error("AUDIT_CANONICAL_JURISDICTION_INVALID");
-  const registry = requiredOperationalJurisdictionRegistry(state) as {
+  const registry = requiredJurisdictionRegistry(state) as {
     readonly jurisdictions: readonly RegistrySubject[];
     readonly sourceCatalog: Readonly<Record<string, { readonly url: string | null; readonly routeId: string | null }>>;
   };
@@ -104,12 +104,9 @@ async function registryScope(contract: GeneralizedCivicExtractionContract) {
     const knownUrls = [subject.ownWebAddress, ...subject.sourceIds.map(id => registry.sourceCatalog[id]?.url)].filter((url): url is string => Boolean(url));
     return { subject, knownUrls };
   }
-  const read = await readRegistryRuntimeProjection([state]);
-  if (read.kind !== "PROMOTED") throw new Error(`AUDIT_REGISTRY_UNAVAILABLE:${state}:${read.kind}`);
-  const bodies = read.value.registry.bodies as {
-    id: string; ocdId: string | null; bodyClass: string; homepageUrl: string | null; agendaSourceRef: string | null; provenance?: { sourceUrl?: string };
-  }[];
-  const body = bodies.find(row => row.id === contract.subjectId);
+  const read = await readRegistryBodyProjection(state, contract.subjectId);
+  if (!read) throw new Error(`AUDIT_REGISTRY_UNAVAILABLE:${state}:NOT_RECORDED`);
+  const body = read.records.find(row => row.id === contract.subjectId);
   if (!body || !new RegExp(`(?:state:|curated:)${state}(?:[/#]|$)`).test(body.id)) throw new Error("AUDIT_CANONICAL_OBLIGATION_MISSING");
   const knownUrls = [body.homepageUrl, body.agendaSourceRef, body.provenance?.sourceUrl].filter((url): url is string => Boolean(url && hostname(url)));
   const jurisdiction = registry.jurisdictions.find(row => row.id === contract.jurisdiction.canonicalId);

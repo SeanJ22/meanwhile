@@ -190,6 +190,20 @@ export function clearOperationalReferenceBundle(): void {
 export function installOperationalReferenceState(registry: JurisdictionRegistry, reviewedStates: readonly string[]): void {
   const state = registry.stateCode.toLowerCase(), issues = registryIssues({ [state]: registry }, [state]);
   if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_STATE_INVALID:${issues.join(",")}`);
+  installState(registry, reviewedStates);
+}
+
+/** A task's view can contain no reviewed row when its registered body is the canonical subject. */
+export function installOperationalReferenceSubjects(registry: JurisdictionRegistry, reviewedStates: readonly string[], subjectIds: readonly string[]): void {
+  const state = registry.stateCode.toLowerCase(), subjects = new Set(subjectIds);
+  const issues = registryIssues({ [state]: registry }, [state]).filter(issue => issue !== `${state}:ZERO_JURISDICTIONS`);
+  if (!subjects.size || registry.jurisdictions.some(row => !subjects.has(row.id))) issues.push(`${state}:SUBJECT_SCOPE_MISMATCH`);
+  if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_SUBJECTS_INVALID:${issues.join(",")}`);
+  installState(registry, reviewedStates);
+}
+
+function installState(registry: JurisdictionRegistry, reviewedStates: readonly string[]): void {
+  const state = registry.stateCode.toLowerCase();
   installedBundle = { formatVersion: 1, sourceVersion: JURISDICTION_REFERENCE_VERSION,
     registries: { [state]: structuredClone(registry) } as OperationalReferenceBundle["registries"] };
   installedAzBundle = null;

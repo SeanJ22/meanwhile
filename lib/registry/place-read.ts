@@ -13,6 +13,12 @@ const escaped=(value:string)=>value.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const exact=(ids:readonly string[])=>ids.length?`^(?:${ids.map(escaped).join("|")})$`:"(?!)";
 const arrayMember=(ids:readonly string[])=>ids.length?`"(?:${ids.map(escaped).join("|")})"`:"(?!)";
 
+/** Audit authority needs one registered body, never its state's rosters or neighboring bodies. */
+export async function readRegistryBodyProjection(state: string, bodyId: string, query?: ReadOnlyQuery | null): Promise<PublishedArraySlice<Body> | null> {
+  return readPublishedArraySlice<Body>({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(requireRegistryState(state)),
+    path: ["registry", "bodies"], statePath: ["id"], statePattern: exact([bodyId]), query });
+}
+
 function selected(read:PlaceCaptureRead<RegistryRuntimeReadModel>,ids:ReadonlySet<string>):PlaceCaptureRead<RegistryRuntimeReadModel>{
   if(read.kind!=="PROMOTED"||!read.value)return read;
   const value=read.value,bodies=value.registry.bodies.filter(body=>[body.ocdId,...body.alsoServesOcdIds??[]].some(id=>id!==null&&ids.has(id)));

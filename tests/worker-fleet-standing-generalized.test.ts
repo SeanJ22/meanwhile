@@ -4,7 +4,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import test, { type TestContext } from "node:test";
+import test, { after, type TestContext } from "node:test";
+import { PGlite } from "@electric-sql/pglite";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
@@ -33,6 +34,9 @@ import { installFactReader } from "../lib/facts/db.ts";
 import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { insertPublishedSliceFixture, PUBLISHED_SLICE_FIXTURE_SCHEMA } from "./helpers/published-slice-fixture.ts";
+import { PUBLISHED_ARRAY_SLICE_SQL } from "../lib/civic-data/published-array-slice.ts";
 
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
@@ -75,7 +79,24 @@ const METHOD = methodFixture();
 installOperationalReferenceBundle(operationalReferenceBundle(
   JSON.parse(readFileSync(path.join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")),
 ));
-await installRegistryRuntime(["AZ"]);
+const installedRegistry = await installRegistryRuntime(["AZ"]);
+const registryDatabase = new PGlite();
+await registryDatabase.exec(PUBLISHED_SLICE_FIXTURE_SCHEMA);
+await insertPublishedSliceFixture(registryDatabase, { id: "generalized-registry-az", sourceId: "registry-runtime", recordClass: "REGISTRY_RUNTIME_BINDING",
+  scope: stateRegistryRuntimeScope("AZ"), readModel: installedRegistry.value, at: "2026-09-03T03:00:00.000Z" });
+installReaderDatabaseQuery(async statements => {
+  const results: Record<string, unknown>[][] = [];
+  for (const statement of statements) {
+    assert.equal(statement.text, PUBLISHED_ARRAY_SLICE_SQL);
+    assert.equal(statement.params[0], "REGISTRY_RUNTIME_BINDING");
+    assert.equal(statement.params[1], stateRegistryRuntimeScope("AZ"));
+    assert.deepEqual(statement.params[2], ["registry", "bodies"]);
+    assert.equal(statement.params[4], "^(?:curated:az/corona-de-tucson-fire-district#governing)$");
+    results.push((await registryDatabase.query<Record<string, unknown>>(statement.text, [...statement.params])).rows);
+  }
+  return results;
+});
+after(async () => { installReaderDatabaseQuery(undefined); await registryDatabase.close(); });
 const SUBJECT = "curated:az/corona-de-tucson-fire-district#governing";
 const START = "2026-09-03T04:00:00.000Z";
 const PRIMARY = "https://www.coronafire.org/sitemap.xml";

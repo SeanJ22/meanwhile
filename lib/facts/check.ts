@@ -1,3 +1,5 @@
+import { stateName as stateNameForCode } from "./entity-read.ts";
+
 export type FieldKind =
   | "officeholder" | "contact" | "comment_rule" | "meeting" | "agenda" | "outcome" | "vote"
   | "money" | "statement" | "portrait" | "ballot" | "law" | "news" | "same_person_link";
@@ -109,8 +111,11 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
     const typed=/^(.+) (township|borough|city|town|village|county)$/.exec(jurisdiction);
     if(typed) names.push(`${typed[2]} of ${typed[1]}`);
   }
-  return names.some(name=>boundedIndexOf(lower,name)!==-1) &&
-    (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1);
+  const stateCode=/\/state:([a-z]{2})(?:\/|#|$)/i.exec(entity.id)?.[1];
+  const stateWritten=entity.stateName === null || boundedIndexOf(lower,entity.stateName.toLowerCase())!==-1 ||
+    Boolean(stateCode && stateNameForCode(stateCode)===entity.stateName &&
+      new RegExp(`\\b${stateCode.toLowerCase()} \\d{5}(?:-\\d{4})?\\b`).test(lower));
+  return names.some(name=>boundedIndexOf(lower,name)!==-1) && stateWritten;
 }
 
 /** The value is on a saved page about this entity, captured inside its freshness window, and nothing more. */

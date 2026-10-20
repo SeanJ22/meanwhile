@@ -4,13 +4,13 @@ Production read-only investigation on October 20, 2026, of the 2:45 AM ET Scoreb
 
 ## Source checks
 
-**225 facts pass on freshly saved public pages; 726 reconstructed claims still fail §3.** Another 976 rejected claims were not retained, and 18 sources could not be reread. These last two groups are unresolved detective work, not established wrong facts. The 1,945 total exactly matches the reported queue.
+**232 facts pass on freshly saved public pages; 719 reconstructed claims still fail §3.** Another 976 rejected claims were not retained, and 18 sources could not be reread. These last two groups are unresolved detective work, not established wrong facts. The 1,945 total exactly matches the reported queue.
 
 The comparison uses real rejected entity/field/source rows and values recovered from their held roster/comment/candidate records. It does not invent missing values. The original rejected quote was generally discarded: these are checks of the uniquely recovered held value on a fresh saved page, not a claim that the old capture contained it. Each source was fetched once and reused locally.
 
 | Family | Original reason | Total | Pass now | Fail §3 | Claim lost | Unreadable |
 |---|---|---:|---:|---:|---:|---:|
-| body | PAGE_NOT_ABOUT_ENTITY | 270 | 40 | 14 | 215 | 1 |
+| body | PAGE_NOT_ABOUT_ENTITY | 270 | 47 | 7 | 215 | 1 |
 | body | QUOTE_NOT_ON_SAVED_COPY | 103 | 7 | 88 | 1 | 7 |
 | body | VALUE_NOT_IN_QUOTE | 1 | 0 | 0 | 1 | 0 |
 | body | SOURCE_BLOCKED | 159 | 131 | 24 | 1 | 3 |
@@ -20,14 +20,14 @@ The comparison uses real rejected entity/field/source rows and values recovered 
 | person | QUOTE_NOT_ON_SAVED_COPY | 297 | 17 | 255 | 18 | 7 |
 | person | VALUE_NOT_IN_QUOTE | 1 | 0 | 0 | 1 | 0 |
 
-Current §3 failures: 30 PAGE_NOT_ABOUT_ENTITY, 696 QUOTE_NOT_ON_SAVED_COPY.
+Current §3 failures: 23 PAGE_NOT_ABOUT_ENTITY, 696 QUOTE_NOT_ON_SAVED_COPY.
 
 Causes repaired:
 
 - PDF bytes are preserved exactly and checked through a complete text derivative. Public pages with scanner findings use the existing sanitized derivative while retaining their civic words. They previously failed acquisition.
 - The saved artifact must have the finding’s cited URL; the first unrelated fresh artifact no longer substitutes. Unchanged content observed again updates its observation time. Stale receipts trigger a fresh acquisition.
 - Equivalent UTC calendar instants and local wall times carry the full source date/time into the quote. A different UTC instant does not pass.
-- Generated “governing” suffixes and “Township of Denville” / “Denville township” word order no longer prevent jurisdiction identification. The complete jurisdiction and state remain required.
+- Generated “governing” suffixes and “Township of Denville” / “Denville township” word order no longer prevent jurisdiction identification. The complete jurisdiction and state remain required; an official postal state abbreviation with a ZIP is normalized to the state name. Bare state abbreviations do not count.
 - A rejected claim now retains its value, quote, source/copy, provenance and producer in its existing blank. Scoped hunt packets expose the exact failure to detectives. The existing import checksum replays the replaced checker once per current input so verified values publish without an owner gate.
 - Unsupported full addresses, absent names/roles and unproved identity remain blocked. No §3 requirement was waived.
 
@@ -41,17 +41,17 @@ Each nonempty group has three distinct fact examples below, or every example whe
 - `ocd-division/country:us/state:az/county:pinal#governing` / `comment:detail`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://pinal.novusagenda.com/AgendaPublic/MeetingView.aspx?MeetingID=1443&MinutesMeetingID=-1&doctype=Agenda).
 - `ocd-division/country:us/state:az/county:pinal#governing` / `member:ocd-person/f251bc90-e3e2-4a15-af14-a3d396dc926e`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.pinalcso.org/staff-directory).
 
-**body · PAGE_NOT_ABOUT_ENTITY · FAILS_SECTION3 (14)**
+**body · PAGE_NOT_ABOUT_ENTITY · FAILS_SECTION3 (7)**
 
-- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/04da06c1-d2f4-4039-b029-eb3baadfe817` — value: "Glenn R. Buie"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
-- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/41fba2af-9561-4555-9bef-c5757cb1f123` — value: "Mark Venis"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
-- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/6c14979a-2734-4ff6-acd7-5bba7398cbf3` — value: "Adrienne Zimmermann"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
+- `ocd-division/country:us/state:nj/place:morris_plains#governing` / `member:ocd-person/2d2cda1f-c961-4640-b695-08483c807bd6` — value: "Bill Houston"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://morrisplainsboro.org/governing-body/).
+- `ocd-division/country:us/state:nj/place:morris_plains#governing` / `member:ocd-person/677c8650-47de-4f7b-95bb-566c8da3320c` — value: "Jason Karr"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://morrisplainsboro.org/governing-body/).
+- `ocd-division/country:us/state:nj/place:morris_plains#governing` / `member:ocd-person/7af5f005-6c2a-4ac0-a464-16a17ac89f52` — value: "Art Bruhn, Jr."; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://morrisplainsboro.org/governing-body/).
 
-**body · PAGE_NOT_ABOUT_ENTITY · NOW_PASSES (40)**
+**body · PAGE_NOT_ABOUT_ENTITY · NOW_PASSES (47)**
 
-- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/055b62aa-6b62-492a-9962-da3be6c0a5d1` — value: "Raymond Verdonik"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
-- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/164b76cc-66f6-472b-9717-8c41d7bef349` — value: "Jose Guzman"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
-- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/49fa25ba-34b8-45d5-aa5c-67f4c85fae1a` — value: "Marc Piccirillo"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/04da06c1-d2f4-4039-b029-eb3baadfe817` — value: "Glenn R. Buie"; `PASS`; [source](https://www.denvillenj.gov/administration/township_council.php).
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/41fba2af-9561-4555-9bef-c5757cb1f123` — value: "Mark Venis"; `PASS`; [source](https://www.denvillenj.gov/administration/township_council.php).
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/6c14979a-2734-4ff6-acd7-5bba7398cbf3` — value: "Adrienne Zimmermann"; `PASS`; [source](https://www.denvillenj.gov/administration/township_council.php).
 
 **body · PAGE_NOT_ABOUT_ENTITY · UNREADABLE_SOURCE (1)**
 
@@ -284,6 +284,6 @@ Production Neon response bodies read: **2,020,646 bytes**, across 19 bounded rea
 
 Reproduce bounded production counts, three samples per family/reason and exact audit IDs with `scripts/ck-01-check.mts` using existing production read-only role connections in `CK01_READER_URL` and `CK01_CONTROL_URL`. `CK01_REPLAY` accepts recovered Claim inputs and invokes the actual §3 checker. No production credentials or raw scanner findings are committed.
 
-Focused checks: source capture/normalization, source artifact selection, publish/confirm and OWNER precedence, import replay, detective packet delivery, audit row identity and retired history, four owner choices and reader CAS, meeting facts, roster publication and reader preservation. Admin preview checks the four choices and a typed-value request, including refusal feedback. The 16-file focused suite passed (93 tests); the additional quoted-universe regression also passed. TypeScript, changed-file ESLint and diff whitespace checks passed after merging current River. The sandbox initially refused isolated worker processes; the same roster checks passed with subprocess execution enabled. The local HTTPS Admin preview passed in Chromium; no deployed Admin is claimed.
+Focused checks: source capture/normalization, source artifact selection, publish/confirm and OWNER precedence, import replay, detective packet delivery, audit row identity and retired history, four owner choices and reader CAS, meeting facts, roster publication and reader preservation. Admin preview checks the four choices and a typed-value request, including refusal feedback. The 16-file focused suite passed (93 tests); the additional quoted-universe regression also passed. TypeScript, changed-file ESLint and diff whitespace checks passed after merging current River. The sandbox initially refused isolated worker processes; the same roster checks passed with subprocess execution enabled. The local HTTPS Admin preview passed in Chromium; no deployed Admin is claimed. The postal-address normalization was then checked against the production replay, source-capture and fact-store tests, including wrong-state and abbreviation-without-ZIP negatives; TypeScript and lint passed again.
 
 Built for River; no migration or code deployment to production was performed by this lane. River must number/apply `CK-01_audit_flags.sql` with this code. Current counts are evidence of the read-only comparison, not a claim that production has already published the repaired facts.

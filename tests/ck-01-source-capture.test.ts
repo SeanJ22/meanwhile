@@ -37,6 +37,9 @@ test('a generated governing label matches the complete official jurisdiction nam
  const make=(text:string)=>checkFact({entity:{id:'ocd-division/country:us/state:nj/county:morris/place:denville_township#governing',fullName:'Denville township governing',stateName:'New Jersey',hosts:[],externalIds:[]},fieldKind:'officeholder',provenance:'OFFICIAL',valueText:'Glenn R. Buie',quote:'Glenn R. Buie',copy:{id:1,finalUrl:'https://www.denvillenj.gov/administration/township_council.php',text,fetchedAt:new Date(at),isArchive:false}},new Date(at),()=>168);
  assert.equal(make('Township of Denville New Jersey Glenn R. Buie').ok,true);
  assert.equal(make('Denville Township New Jersey Glenn R. Buie').ok,true);
+ assert.equal(make('Township of Denville, NJ 07834 Glenn R. Buie').ok,true);
+ assert.equal(make('Township of Denville, NH 03255 Glenn R. Buie').ok,false);
+ assert.equal(make('Township of Denville, NJ Glenn R. Buie').ok,false);
  assert.equal(make('Township of Denville New Hampshire Glenn R. Buie').ok,false);
  assert.equal(make('Township of Randolph New Jersey Glenn R. Buie').ok,false);
 });

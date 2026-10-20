@@ -162,7 +162,7 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
 function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
   return <>
     {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}
-    {seat.representatives.length === 0 && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
+    {seat.representatives.length === 0 && !seat.vacancy && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
     {(seat.label || seat.representatives.length > 0) && <li
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
@@ -170,6 +170,7 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
     >
       {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">Seat vacant · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">House Clerk</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}
@@ -665,7 +666,7 @@ function CoverageBody({
         </p>
       ))}
 
-      {seats.length > 0 && seatCounts.named === 0 && statewideExecutives.length === 0 && senators.length === 0 ? (
+      {seats.length > 0 && !seats.some(seat => seat.vacancy) && seatCounts.named === 0 && statewideExecutives.length === 0 && senators.length === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
         <p className="mt-2.5 t-detail leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.

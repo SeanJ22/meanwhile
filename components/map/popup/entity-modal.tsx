@@ -182,11 +182,13 @@ export interface ModalSubject {
   /** The office title of whoever represents the district, for that office's explainer. */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
+  vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
   /** Each legislative district at the clicked point and its statewide offices. */
   spotRepresentation?: {
     ocdId: string;
     label: string;
     holders: SeatHolder[];
+    vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
     rosterGaps?: RosterReaderGap[];
     note: string;
   }[];
@@ -663,7 +665,7 @@ export function EntityModal({
           <CardSectionGroup independent={embedded}>
             <CardSection title="What this body does">{overview}{meetingLinks}</CardSection>
             <CardSection title={subject.subjectKind === "MEETING" || subject.divisionOcdId == null ? "Who sits on it" : "Representation"}>
-              <Representation holders={subject.representation} gaps={subject.rosterGaps} note={subject.representationNote}
+              <Representation holders={subject.representation} vacancy={subject.vacancy} gaps={subject.rosterGaps} note={subject.representationNote}
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.spotRepresentation && subject.spotRepresentation.length > 0 && (
@@ -671,7 +673,7 @@ export function EntityModal({
                 {subject.spotRepresentation.map(division => (
                   <div key={division.ocdId} data-spot-division={division.ocdId} className="mb-4 last:mb-0">
                     <PopupSectionLabel>{division.label}</PopupSectionLabel>
-                    <Representation holders={division.holders} gaps={division.rosterGaps} note={division.note}
+                    <Representation holders={division.holders} vacancy={division.vacancy} gaps={division.rosterGaps} note={division.note}
                       onOpenHolder={onOpenHolder} showTopOffices={false} />
                   </div>
                 ))}
@@ -704,17 +706,20 @@ export function EntityModal({
 
 export function Representation({
   holders,
+  vacancy,
   gaps = [],
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
   showTopOffices = true,
 }: {
   holders: SeatHolder[];
+  vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
   note: string;
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
 }) {
+  if (holders.length === 0 && vacancy) return <p className="t-detail leading-relaxed">This seat is vacant.</p>;
   if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
 
   // The appointed executive leads the list.

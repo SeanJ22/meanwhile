@@ -28,7 +28,11 @@ const revision = async () => ({ sha: SHA, sourceCheck: {
 } });
 function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
   const name = options.releaseId.split("/").at(-1)!;
-  const bytes = new TextEncoder().encode(JSON.stringify(files[name]));
+  const bytes = new TextEncoder().encode(options.releaseId === "chamber-directory:house"
+    ? '<MemberData><member><statedistrict>AZ01</statedistrict><bioguideID>A000001</bioguideID><official-name>Jane Example</official-name><office-room>100</office-room><office-building>CHOB</office-building><office-zip>20515</office-zip><phone>202-225-1000</phone></member></MemberData>'
+    : options.releaseId === "chamber-directory:senate"
+      ? '<contact_information><member><state>WA</state><bioguide_id>B000002</bioguide_id><member_full>Sam Elsewhere</member_full></member></contact_information>'
+      : JSON.stringify(files[name]));
   return { sourceId: options.sourceId, releaseId: options.releaseId, requestedUrl: options.url, finalUrl: options.url,
     bytes, sha256: createHash("sha256").update(bytes).digest("hex"), httpStatus: 200, retrievedAt: NOW,
     sourceObservedAt: NOW, checkedAt: NOW, lastCheckStatus: 200, etag: null, lastModified: null,
@@ -37,7 +41,7 @@ function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
 const expected = { id: "congress-bulk-roster:AZ", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY" as const,
   scope: "US-AZ:current-congress-directory", contract: requiredManualProductionContract("congress-bulk-roster:AZ") };
 
-test("the Congress roster runner keeps each publication and emits one supervisor receipt after all five source files", async t => {
+test("the Congress runner publishes core first, attaches chamber contacts, and emits one supervisor receipt", async t => {
   const store = new MemoryRoutineDataStore(), lines: string[] = [], stages: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   const create = store.create.bind(store);
@@ -54,8 +58,8 @@ test("the Congress roster runner keeps each publication and emits one supervisor
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
     },
   });
-  assert.equal(acquired, 5);
-  assert.equal(stages.length, 4, "the committee list alone changes nothing this place's members sit on, so it confirms instead of writing");
+  assert.equal(acquired, 7);
+  assert.equal(stages.length, 5, "core and each enrichment publish independently; unrelated chamber rows confirm without writing");
   for (const id of stages) {
     const held = await store.readCandidate(id);
     assert.equal(held?.state, "PROMOTED");
@@ -71,6 +75,7 @@ test("the Congress roster runner keeps each publication and emits one supervisor
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.roster.officeholders.map(row => row.id), ["congress:A000001"], "a place's record holds only that place's members");
   assert.equal(read.value.roster.officeholders[0].phone, "202-225-1000");
+  assert.equal(read.value.roster.officeholders[0].offices?.[0].address, "100 Cannon House Office Building, Washington, DC 20515");
   assert.equal(read.value.directory.byMember.A000001.committees[0].title, "Chair");
   assert.deepEqual(Object.keys(read.value.directory.committees), ["HSEX"], "and only the committees they sit on");
   assert.equal(await store.readPromotion("FEDERAL_DIRECTORY", "US-WA:current-congress-directory"), null, "another place publishes only on its own run");

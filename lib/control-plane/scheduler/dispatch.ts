@@ -764,8 +764,6 @@ export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
   input: ReclaimInput & { readonly sink?: ReclaimSink },
 ): Promise<ReclaimSweep<boolean>> {
-  // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
-  await reconcileWorkerCompletions(repos, input.workItemIds === undefined ? undefined : { workItemIds: input.workItemIds });
   const output = <T>(sink: ReclaimOutput<T> | undefined) => {
     if (sink) {
       let count = 0;
@@ -775,6 +773,12 @@ export async function sweepExpiredLeases(
   };
   const reclaimed = output(input.sink?.reclaimed), releasedSettled = output(input.sink?.releasedSettled);
   const stillLive = output(input.sink?.stillLive), refused = output(input.sink?.refused);
+  // A missing historical owner refuses that result, remains pending for retry,
+  // and cannot prevent other committed workers from being recovered.
+  // A scoped task still throws when its own required WorkItem is absent.
+  await reconcileWorkerCompletions(repos, input.workItemIds === undefined ? undefined : { workItemIds: input.workItemIds }, row => refused.add({
+    routeTaskId: row.routeTaskId, why: `Worker completion ${row.resultId} remains pending: ${row.why}`,
+  }));
 
   const visitLease = async (row: { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> }) => {
     const lease = row.value;

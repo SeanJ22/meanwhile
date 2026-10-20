@@ -1,11 +1,17 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import * as nodeModule from "node:module";
 import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { spawnSync } from "node:child_process";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
+import { armingNeedsRebuild, HUNTER_LANE_LEGACY_BYTES } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
+import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
 const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
@@ -20,7 +26,8 @@ function nextWait(overrides: Record<string, unknown> = {}): (ok: boolean) => Pro
     readRunnerControls: async () => ({ config: null, state: null, research: [] }),
     readIntents: () => ({ paused: false, runnerPause: { paused: false } }),
     expansionScopesOf: () => ({ malformed: 0, scopes: [] }),
-    isAdminConfig: () => false, isExpansionCycleReading: () => false, isAssignmentCycleReading: () => false,
+    isAdminConfig: () => false, isExpansionCycleReading: () => false,
+    readAssignmentCycleHeader: async () => null, readAssignmentForSend: async () => null,
     originalLifetimeHuntContinuation: () => null, continuingDirectedHunt: () => null,
     RUNNER_ID: "test", console: { log: () => {}, error: () => {} }, ...overrides,
   });
@@ -47,7 +54,8 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
 
 test("failed round continuation caps a long lifetime delay and retains shorter waits", async () => {
   for (const delayMs of [60_000, 600_000, 3_600_000]) {
-    const next = nextWait({ originalLifetimeHuntContinuation: () => ({
+    const next = nextWait({ expansionScopesOf: () => ({ malformed: 0, scopes: [{ key: "funded", receiptId: "receipt" }] }),
+      originalLifetimeHuntContinuation: () => ({
       label: "funded place", due: 20, dispatched: 0, reason: "ELIGIBLE_ZERO_DISPATCH", delayMs,
     }) });
     assert.equal(await next(false), Math.min(delayMs, 600_000));
@@ -67,6 +75,40 @@ test("a wake reconciles the deployed release before admitting another research c
   assert.ok(held >= 0 && held < reconciled);
   assert.ok(reconciled < releaseExit && releaseExit < breakOnRelease && breakOnRelease < incremented);
   assert.ok(incremented < child && child < slept);
+});
+
+test("an oversized legacy arming handoff wakes the existing idle cycle while owner controls and in-flight work retain precedence", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "arming-wake-")), path = join(directory, "arming.sqlite");
+  const old = new DatabaseSync(path);
+  old.exec("CREATE TABLE metadata(body TEXT NOT NULL)");
+  old.prepare("INSERT INTO metadata SELECT CAST(zeroblob(?) AS TEXT)").run(HUNTER_LANE_LEGACY_BYTES + 1);
+  old.close();
+  const fn = source.match(/async function ownerSays\(\): Promise<OwnerSays> \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(fn);
+  const wake = async (action?: "PAUSE" | "PAUSE_RUNNER", active = false, unreadable = false) => {
+    let compatibilityReads = 0;
+    const context = createContext({ provider: "postgres", ROOT: directory, CONTROL_PLANE_URL_VAR: "fixture", researchCycleActive: active,
+      ownerRepositories: async () => ({}),
+      readRunnerControls: async () => {
+        if (unreadable) throw new Error("controls unavailable");
+        return { config: null, research: action ? [buildResearchIntent(action, "2026-10-06T03:00:00.000Z", "test", null, "test")] : [] };
+      }, readIntents, intentReadFailed: false, announcedPause: null, lastPauseBeatMs: 0, PAUSE_BEAT_MS: 60_000,
+      honorRunnerIntent: async () => {}, beatWhilePaused: async () => {}, unhonoredResume: () => null,
+      unacknowledgedResearchResume: () => null, expansionScopesOf: () => ({ scopes: [] }), isAdminConfig: () => false,
+      hunterLaneArmingPath: () => path,
+      armingNeedsRebuild: (file: string) => { compatibilityReads++; return armingNeedsRebuild(file); },
+      console: { log: () => {}, error: () => {} },
+    });
+    const result = await runInContext(stripTypeScriptTypes(fn) + "\nownerSays()", context);
+    return { result, compatibilityReads };
+  };
+  try {
+    assert.deepEqual(await wake(), { result: "START_NOW", compatibilityReads: 1 });
+    assert.deepEqual(await wake("PAUSE"), { result: "NOTHING", compatibilityReads: 0 });
+    assert.deepEqual(await wake("PAUSE_RUNNER"), { result: "HOLD", compatibilityReads: 0 });
+    assert.deepEqual(await wake(undefined, true), { result: "NOTHING", compatibilityReads: 0 });
+    assert.deepEqual(await wake(undefined, false, true), { result: "UNREADABLE", compatibilityReads: 0 });
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
 test("both release and shutdown bound coordination and idle waits, and never await a timed-out drain again", () => {

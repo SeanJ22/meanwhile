@@ -9,6 +9,16 @@ export interface WorkloadOffer {
 const pilotChildren = new Set(["routine-civic-data-runner", "publish-now-runner", "publish-owner-snapshot", "intake-tripwire", "platform-census-runner", "hunter-lane", "freshness-shadow"]);
 export const REPLAY_WRAPPER_PARENT_PEAK_MIB = 352;
 
+/** A real typed handoff waits for its own offered parser before consuming worker admission. */
+export function heldReplayParserPredecessor<T extends WorkloadJob>(job: T, jobs: readonly T[]): T | undefined {
+  const script = "scripts/rh01-held-worker-replay.mts";
+  const option = (row: WorkloadJob, name: string) => row.command.find(argument => argument.startsWith(`--${name}=`))?.slice(name.length + 3);
+  if (job.script !== script || option(job, "role") !== "VALIDATOR") return undefined;
+  const store = option(job, "store");
+  if (!store) return undefined;
+  return jobs.find(row => row.script === script && option(row, "role") === "PARSER" && option(row, "store") === store);
+}
+
 /** Supplemental inventory labels keep the exact native task's admission class. */
 export function workloadAdmissionEntry(job: WorkloadJob): string {
   const entry = `${job.id}/${job.script}`;

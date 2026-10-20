@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
-import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
+import { civicElectionRows, civicLookupFromRaw, type CivicProjection } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate, failureCandidate, parseFailureCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
 import { GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_RECORD_CLASS, civicGovernmentScope, civicStateScope, GOOGLE_CIVIC_STATES } from "../lib/sources/google-civic/targets.ts";
@@ -113,20 +113,32 @@ test("provider Retry-After is honored on 429 and 5xx without small-government pa
   assert.equal(result.checkedAt, AT);
 });
 
-test("national refresh visits every state, records missing inventories and publishes a catalog without dropping covered rows", async () => {
+test("national refresh retains the catalog source clock as state processing advances", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), visited: string[] = [];
+  let tick = 0;
+  const now = () => new Date(Date.parse(AT) + tick++ * 1000).toISOString();
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
-  const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
+  const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now,
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
   assert.deepEqual(visited, GOOGLE_CIVIC_STATES);
   assert.equal(result.coverage.length, GOOGLE_CIVIC_STATES.length);
   assert.ok(result.coverage.every(row => row.reason?.includes("inventory")));
   assert.ok(result.outcome.promoted, JSON.stringify(result.outcome.candidate.receipt));
+  assert.equal(result.candidate.retrieval.retrievedAt, AT);
+  const expectedRows = civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"]));
+  for (const scope of [GOOGLE_CIVIC_SCOPE, ...GOOGLE_CIVIC_STATES.map(civicStateScope)]) {
+    const held = await store.readPromotion<CivicProjection>(GOOGLE_CIVIC_RECORD_CLASS, scope);
+    assert.ok(held, scope);
+    assert.equal(held.payload.checkedAt, AT);
+    assert.deepEqual(held.payload.rows, expectedRows);
+  }
+  assert.ok(tick > GOOGLE_CIVIC_STATES.length, "publication processing advances after the one source capture");
   const { rawCapture } = result.candidate.normalizedPayload as { rawCapture: RawCaptureRef };
   assert.deepEqual(await vault.list(""), [rawCapture.vaultKey], "one catalog response is stored once for every state marker");
   assert.equal(await readRawCaptureText(vault, rawCapture), fixture("elections"));
+  const later = now();
   const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
-    { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), AT);
+    { formatVersion: 1, kind: "CATALOG", checkedAt: later, rows: civicElectionRows(fixture("elections"), later, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), later);
   assert.ok(next.confirmed);
 });
 

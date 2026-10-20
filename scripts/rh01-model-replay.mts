@@ -56,6 +56,9 @@ if (process.argv.includes("--prepare")) {
   process.env.WTP_RH01_MODEL_PHASE = phase;
   if (phase === "before") process.env.WTP_RH01_BASELINE_COMPONENT_STORE = root;
   else delete process.env.WTP_RH01_BASELINE_COMPONENT_STORE;
+  if (phase === "before" && manifest.inputs.beforeBodyContext) {
+    process.env.WTP_RH01_DIRECTORY = root; process.env.WTP_RH01_SHARED_STATE_DIRECTORY = root;
+  }
   process.env.WTP_RH01_HELD_VAULT_DIRECTORY = join(root, "vault");
   process.env.WTP_RH01_MODEL_CAPTURE = manifest.inputs.heldCapture;
   process.env.WTP_RH01_DIRECTORY ??= root;

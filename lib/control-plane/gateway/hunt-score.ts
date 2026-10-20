@@ -5,8 +5,7 @@ import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
 import { scopeKeyOf, expansionScopesOf, type ExpansionScopeGeography } from "../expansion/scopes.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, placeTargetOf } from "./admin-config.ts";
-import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
-import type { AssignmentCycleReading } from "../expansion/assignment-budget.ts";
+import { readAssignmentCycleHeader, readAssignmentForSend } from "../expansion/assignment-reading.ts";
 import type { ActionReceipt } from "./contract.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { Confirmation } from "./confirmation.ts";
@@ -38,16 +37,16 @@ export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:A
   const accepted=receipt.huntScores;
   if(!accepted?.length)return core;
   try{
-    const [held,state]=await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),repos.researchState.readNarrowed(RESEARCH_STATE_ID,{assignments:true})]);
+    const [held,assignments]=await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),readAssignmentCycleHeader(repos)]);
     const config=held&&isAdminConfig(held.value)?held.value:null;
-    const assignments=(state?.value as {assignments?:AssignmentCycleReading}|undefined)?.assignments;
     const scopes=config?expansionScopesOf(config):null;
     const current=await Promise.all(accepted.map(score=>read(score.placeKey).catch(()=>null)));
-    const finished=accepted.every(score=>{
-      const assignment=assignments?.assignments.find(a=>a.key===score.scopeKey&&a.ref===(score.assignmentRef??receipt.receiptId));
+    let finished=true;
+    for(const score of accepted){
+      const assignment=await readAssignmentForSend(repos,assignments,score.scopeKey,score.assignmentRef??receipt.receiptId);
       const stopped=Boolean(scopes&&scopes.malformed===0&&!scopes.scopes.some(s=>s.key===score.scopeKey));
-      return stopped||assignment?.completion?.kind==="COMPLETE";
-    });
+      if(!stopped&&assignment?.completion?.kind!=="COMPLETE")finished=false;
+    }
     const before=accepted.map(score=>`${score.label}: ${scoreWords(score.before)}`).join("; ");
     const after=accepted.map((score,i)=>`${score.label}: ${scoreWords(current[i])}`).join("; ");
     const known=accepted.every((s,i)=>s.before?.percent!==null&&s.before!==null&&current[i]?.percent!==null&&current[i]!==null);

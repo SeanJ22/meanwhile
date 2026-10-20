@@ -6,10 +6,9 @@ import { zip } from "../scripts/xlsx.mjs";
 import { normalizeSession,parseDatasetList,billScope,LEGISCAN_BULK_SCOPE,joinSponsor,type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { bulkCandidate,publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import { readBulkProjection,readBillsForState,billsForPerson } from "../lib/sources/legiscan/reader.ts";
-import { refreshLegiscan } from "../scripts/legiscan-bulk.mts";
+import { refreshLegiscan,recordLegiscanBulkFailure } from "../scripts/legiscan-bulk.mts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { legiscanBillEvidence } from "../lib/ask/legiscan-bills.ts";
-import { recordRegisteredSourceAcquisitionFailure,sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
@@ -95,7 +94,15 @@ test("bulk refresh downloads archives once and unchanged hashes confirm success 
   assert.equal(second.counts.AK.unchanged,1);assert.equal(second.counts.AR.unchanged,1);
   assert.equal((await readBulkProjection(billScope(datasets[0].session_id),{store,now:later,bypassCache:true})).metadata.retrievedAt,later);
   const held=await store.readPromotion("STATE_BILL",LEGISCAN_BULK_SCOPE);
-  const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:"legiscan-bulk",failure:sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE","LegiScan HTTP 403"),attemptedAt:later});
+  let acquisitionError:unknown;
+  try {
+    await refreshLegiscan(store,AbortSignal.timeout(10000),{...options,fetchImpl:async()=>new Response("",{status:403})});
+  } catch(error) {acquisitionError=error;}
+  assert.ok(acquisitionError instanceof Error);
+  assert.equal(acquisitionError.message,"LegiScan getDatasetList HTTP 403");
+  const failed=await recordLegiscanBulkFailure(store,acquisitionError,later);
   assert.equal(failed.outcome.candidate.state,"SOURCE_BLOCKED");assert.equal(failed.outcome.promoted,null);
+  assert.equal(failed.outcome.candidate.candidate.retrieval.requestedUrl,"https://api.legiscan.com/?op=getDatasetList");
+  assert.equal(failed.outcome.candidate.candidate.retrieval.failureDetail,"PUBLISHER_UNAVAILABLE: LegiScan getDatasetList HTTP 403");
   assert.equal((await store.readPromotion("STATE_BILL",LEGISCAN_BULK_SCOPE))?.versionId,held?.versionId);
 });

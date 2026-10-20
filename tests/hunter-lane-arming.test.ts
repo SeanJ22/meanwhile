@@ -25,6 +25,8 @@ import {
   HUNTER_LANE_ARMING_MAX_AGE_MS,
   LaneOwnSpend,
   armHunterLane,
+  armingNeedsRebuild,
+  HUNTER_LANE_LEGACY_BYTES,
   hunterLaneArmingPath,
   laneArmingOf,
   laneWorkerTransport,
@@ -36,6 +38,10 @@ import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
 import { ScopeBudgetGate } from "../lib/control-plane/expansion/membership.ts";
+import { createPlannerSpool, plannerMap } from "../lib/control-plane/scheduler/planner-spool.ts";
+import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
+import type { AssignmentBudgetSpec, AssignmentSpend } from "../lib/control-plane/expansion/assignment-budget.ts";
+import type { ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 
 const NOW = "2026-10-06T03:00:00.000Z";
 const request = { model: MODELS.haiku.model, max_tokens: 1_024, system: [], tools: [], messages: [{ role: "user", content: "x" }] } as unknown as ModelRequest;
@@ -65,7 +71,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
     const intent = buildResearchIntent("PAUSE_RUNNER", NOW, "test", null, "test");
     await repos.researchIntents.append("level-1", intent.intentId, intent, NOW);
   }
-  if (options.intentsUnreadable) (repos.researchIntents as { read: unknown }).read = async () => { throw new Error("socket closed"); };
+  if (options.intentsUnreadable) repos.researchIntents.readChangedSince = async () => { throw new Error("socket closed"); };
   for (const cost of options.costs ?? []) await repos.costs.append(cost.workItemId, cost.attemptId, cost, cost.recordedAt);
   const task = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
   await repos.routeTasks.put(task.id, task, NOW);
@@ -100,7 +106,7 @@ test("CH-24 lane: the round's reading round-trips, and a missing, malformed or s
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /no research round has written its budget reading yet/);
   writeLaneArming(path, reading());
   const saved = readLaneArming(path, NOW); assert.ok("arming" in saved);
-  try { assert.deepEqual(saved.arming.sends.specs, reading().sends.specs); assert.deepEqual([...saved.arming.sends.knownKeys], [SEND]);
+  try { assert.deepEqual([...saved.arming.sends.specs], [...reading().sends.specs]); assert.deepEqual([...saved.arming.sends.knownKeys], [SEND]);
     assert.deepEqual([...saved.arming.sends.reached], []); assert.equal(saved.arming.readAt, NOW); assert.equal(saved.arming.worstCaseUsd, 1); }
   finally { saved.arming.close(); }
   writeFileSync(path, JSON.stringify({ ...reading(), worstCaseUsd: null }));
@@ -125,7 +131,7 @@ test("hunter arming holds large membership inventories on disk and lets an in-fl
   context.mock.method(DatabaseSync.prototype, "prepare", function(this: DatabaseSync, sql: string) {
     opened.add(String(prepare.call(this, "PRAGMA database_list").get()?.file));
     const statement = prepare.call(this, sql);
-    if (sql === "SELECT body FROM metadata") headerBytes = Buffer.byteLength(String(statement.get()?.body));
+    if (sql.startsWith("SELECT json_remove(body")) headerBytes = Buffer.byteLength(String(statement.get()?.body));
     return statement;
   });
   const read = readLaneArming(path, NOW); assert.ok("arming" in read);
@@ -155,6 +161,153 @@ test("hunter arming holds large membership inventories on disk and lets an in-fl
     assert.throws(() => saved.lifetimeHuntSubjects.has("NH:body:19999"), /not open|closed|finalized/);
   } finally { finishRequest?.(); saved.close(); }
   for (const snapshot of snapshots) { assert.equal(existsSync(snapshot), false); assert.equal(existsSync(dirname(snapshot)), false); }
+});
+
+test("country Send specs and history stream into local detail pages with an exact-key snapshot and bounded header", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-arming-sends-")), path = join(dir, "arming.sqlite");
+  const planner = await createPlannerSpool();
+  try {
+    const specs = planner.table<AssignmentBudgetSpec>("arming-spec-fixture", row => row.key);
+    const historical = plannerMap<AssignmentSpend>(planner, "arming-history-fixture");
+    for (let n = 0; n < 20_000; n++) {
+      const key = `send:${n}`;
+      specs.add({ key, kind: "DISPATCH", ref: `receipt:${n}`, label: `Send ${n}`, budgetUsd: 5, sentAt: NOW });
+      historical.set(key, { usd: n % 17 === 0 ? null : 1.25 } as AssignmentSpend);
+    }
+    const snapshot = laneArmingOf({ readAt: NOW, specs: Object.assign(specs.rows, { toJSON() { throw new Error("COUNTRY_SPECS_SERIALIZED"); } }), historical,
+      knownKeys: specs.keys, reached: new Map(), areas: null, lifetimeHuntSubjects: [], placeOrder: specs.rows.map(row => row.ref), circuits: [], worstCaseUsd: 1 });
+    writeLaneArming(path, snapshot);
+    const disk = new DatabaseSync(path, { readOnly: true });
+    try {
+      const header = String(disk.prepare("SELECT body FROM metadata WHERE key='header'").get()!.body);
+      assert.ok(Buffer.byteLength(header) < 4_096);
+      const metadata = JSON.parse(header) as { sends: { specs: { rows: number; pages: number }; historical: { rows: number } }; placeOrder: { rows: number } };
+      assert.equal(metadata.sends.specs.rows, 20_000);
+      assert.equal(metadata.sends.historical.rows, 20_000);
+      assert.equal(metadata.placeOrder.rows, 20_000);
+      assert.ok(metadata.sends.specs.pages > 1);
+      for (const row of disk.prepare("SELECT body FROM metadata WHERE key LIKE 'hunter-arming:%'").iterate()) {
+        const page = JSON.parse(String(row.body)) as { freshnessDetails: { rows: unknown[] } };
+        assert.ok(page.freshnessDetails.rows.length <= 32);
+      }
+    } finally { disk.close(); }
+    const read = readLaneArming(path, NOW); assert.ok("arming" in read);
+    try {
+      assert.ok(read.arming.sends.specs instanceof DiskRows);
+      assert.equal(read.arming.sends.specs.length, 20_000);
+      assert.equal(read.arming.sends.historical instanceof Map, false);
+      assert.equal(read.arming.sends.historical!.size, 20_000);
+      assert.equal(read.arming.sends.specFor("send:19999")?.ref, "receipt:19999");
+      assert.equal(read.arming.sends.specFor("absent"), undefined);
+      assert.equal(read.arming.sends.historical!.get("send:19999")?.usd, 1.25);
+      assert.equal(read.arming.sends.historical!.get("send:0")?.usd, null);
+      assert.equal(read.arming.sends.historical!.get("absent"), undefined);
+      assert.deepEqual([...read.arming.sends.historical!.keys().take(2)], ["send:0", "send:1"]);
+      assert.deepEqual([...read.arming.sends.historical!.values().take(2)].map(row => row.usd), [null, 1.25]);
+      assert.equal(read.arming.placeOrder.length, 20_000);
+      assert.equal(read.arming.placeOrder.slice(-1).find(() => true), "receipt:19999");
+      const release = read.arming.retain();
+      read.arming.close();
+      writeLaneArming(path, reading());
+      assert.equal(read.arming.sends.specFor("send:19999")?.budgetUsd, 5, "the in-flight request retains the original exact Send reading");
+      release();
+      assert.throws(() => read.arming.sends.specFor("send:19999"), /not open|closed|finalized/);
+    } finally { read.arming.close(); }
+  } finally { await planner.close(); }
+});
+
+test("bounded legacy arrays preserve exact Send values while projecting unused fields before parsing", context => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-arming-legacy-")), path = join(dir, "arming.sqlite");
+  writeLaneArming(path, reading());
+  const old = new DatabaseSync(path);
+  try {
+    old.exec("DROP TABLE metadata; CREATE TABLE metadata(body TEXT NOT NULL)");
+    const base = { format: 2, readAt: NOW, sends: { specs: [], historical: [] }, areas: null, placeOrder: [], circuits: [], worstCaseUsd: 1 };
+    old.prepare(`WITH RECURSIVE numbers(n) AS (SELECT 0 UNION ALL SELECT n+1 FROM numbers WHERE n<199)
+      INSERT INTO metadata SELECT json_set(?, '$.sends.specs', json((SELECT json_group_array(json_object(
+        'key','legacy:'||n,'kind','DISPATCH','label','Send '||n,'ref','receipt:'||n,'budgetUsd',5,'sentAt',?,
+        'unneeded',replace(hex(zeroblob(10)),'00','UNRELATED_COUNTRY_PAYLOAD'))) FROM numbers)),
+        '$.sends.historical', json((SELECT json_group_array(json_object('key','legacy:'||n,'usd',CASE WHEN n=0 THEN NULL ELSE 2.5 END,
+          'unneeded',replace(hex(zeroblob(10)),'00','UNRELATED_COUNTRY_PAYLOAD'))) FROM numbers)),
+        '$.placeOrder',json((SELECT json_group_array('receipt:'||n) FROM numbers)))`).run(JSON.stringify(base), NOW);
+  } finally { old.close(); }
+  const parse = JSON.parse;
+  context.mock.method(JSON, "parse", (source: string) => {
+    assert.ok(Buffer.byteLength(source) < 65_536, "no country's legacy array crosses the SQLite boundary");
+    assert.equal(source.includes("UNRELATED_COUNTRY_PAYLOAD"), false);
+    return parse(source);
+  });
+  const prepare = DatabaseSync.prototype.prepare;
+  context.mock.method(DatabaseSync.prototype, "prepare", function(this: DatabaseSync, sql: string) {
+    assert.notEqual(sql, "SELECT body FROM metadata");
+    return prepare.call(this, sql);
+  });
+  const read = readLaneArming(path, NOW); assert.ok("arming" in read);
+  try {
+    assert.equal(read.arming.sends.specs.length, 200);
+    assert.deepEqual(read.arming.sends.specFor("legacy:199"), { key: "legacy:199", kind: "DISPATCH", label: "Send 199",
+      ref: "receipt:199", budgetUsd: 5, sentAt: NOW });
+    assert.equal(read.arming.sends.historical!.get("legacy:199")?.usd, 2.5);
+    assert.equal(read.arming.sends.historical!.get("legacy:0")?.usd, null);
+    assert.equal(read.arming.placeOrder.length, 200);
+  } finally { read.arming.close(); }
+});
+
+test("an oversized legacy handoff requests the existing cycle's rebuild before any JSON parse and the normal writer restores admission", context => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-arming-rebuild-")), path = join(dir, "arming.sqlite");
+  const old = new DatabaseSync(path);
+  old.exec("CREATE TABLE metadata(body TEXT NOT NULL)");
+  old.prepare("INSERT INTO metadata SELECT CAST(zeroblob(?) AS TEXT)").run(HUNTER_LANE_LEGACY_BYTES + 1);
+  old.close();
+  const parse = context.mock.method(JSON, "parse", () => { throw new Error("LEGACY_COUNTRY_JSON_PARSED"); });
+  const prepare = DatabaseSync.prototype.prepare;
+  context.mock.method(DatabaseSync.prototype, "prepare", function(this: DatabaseSync, sql: string) {
+    assert.ok(sql === "PRAGMA table_info(metadata)" || sql.includes("octet_length(body)"), "the compatibility decision reads only SQLite cell metadata");
+    return prepare.call(this, sql);
+  });
+  assert.equal(armingNeedsRebuild(path), true);
+  assert.match((readLaneArming(path, NOW) as { held: string }).held, /needs a bounded rebuild/);
+  assert.equal(parse.mock.callCount(), 0);
+  context.mock.restoreAll();
+  writeLaneArming(path, reading());
+  assert.equal(armingNeedsRebuild(path), false);
+  const restored = readLaneArming(path, NOW); assert.ok("arming" in restored);
+  try { assert.equal(restored.arming.sends.specFor(SEND)?.budgetUsd, 5); assert.equal(restored.arming.sends.historical?.get(SEND)?.usd, 0); }
+  finally { restored.arming.close(); }
+});
+
+test("refresh pages Send intents to private disk and folds owner pauses in requested-time order without retaining the country log", async () => {
+  const h = await lane();
+  const fail = async (): Promise<never> => { throw new Error("COUNTRY_INTENT_LOG_READ"); };
+  h.repos.researchIntents.read = fail; h.repos.researchIntents.readAll = fail;
+  for (let n = 0; n < 2_000; n++) {
+    const intent = { ...buildResearchIntent("DISPATCH", NOW, "test", `Another place ${n}`, "test"), intentId: `dispatch-${n}`, budgetUsd: 5 } as ResearchIntent;
+    await h.repos.researchIntents.append("level-1", intent.intentId, intent, NOW);
+  }
+  const read = h.repos.researchIntents.readChangedSince;
+  let pages = 0;
+  h.repos.researchIntents.readChangedSince = async (since, held, options) => {
+    assert.deepEqual(options?.keys, ["level-1"]);
+    assert.ok(options?.page);
+    assert.equal(options.projection?.budgetUsd, true);
+    return read(since, held, { ...options, page: async rows => {
+      for (let at = 0; at < rows.length; at += 64) { pages++; await options.page!(rows.slice(at, at + 64)); }
+    } });
+  };
+  try {
+    await h.rearm();
+    assert.equal(h.armed.closed, null);
+    assert.ok(pages > 1);
+    await h.send(request);
+    assert.equal(h.sent.length, 1, "unrelated Sends cannot replace or remove this obligation's existing budget");
+    const pause = buildResearchIntent("PAUSE", "2026-10-06T03:02:00.000Z", "test", null, "test");
+    const olderResume = buildResearchIntent("RESUME", "2026-10-06T03:01:00.000Z", "test", null, "test");
+    await h.repos.researchIntents.append("level-1", pause.intentId, pause, NOW);
+    await h.repos.researchIntents.append("level-1", olderResume.intentId, olderResume, NOW);
+    const paused = await h.rearm();
+    assert.ok(paused.closed);
+    assert.match(paused.closed.reason, /paused/i, "a later append with an older requested time cannot undo the owner's pause");
+  } finally { h.armed.arming?.close(); }
 });
 
 test("the exact obligation's unwritten Send mark still holds paid work when reached membership lives on disk", async () => {

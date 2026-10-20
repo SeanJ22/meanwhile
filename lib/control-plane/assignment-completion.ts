@@ -1,4 +1,5 @@
 /** COMPLETE only when every member passes `evaluateCompletion`; an assignment with no members, or a member not read, is never complete. */
+import { setImmediate as cooperate } from "node:timers/promises";
 import { evaluateCompletion, type CompletionSnapshot, type RefusalCode } from "./completion.ts";
 import type { AssignmentMembership as SendMembership } from "./expansion/assignment-budget.ts";
 import type { WorkItemState } from "./work-item.ts";
@@ -122,21 +123,30 @@ export interface MemberRecord {
 export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref: string | undefined, planner: PlannerSpool): DiskRows<MemberRecord>;
 export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref?: string): MemberRecord[];
 export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref?: string, planner?: PlannerSpool): MemberRecord[] | DiskRows<MemberRecord> {
-  const slot = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key, ref));
+  const selected = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key, ref));
   const prefix = `completion-${nextCompletion++}`;
-  if (!slot) return planner ? new DiskRows(() => [], () => 0) : [];
-  const out = planner?.table<MemberRecord>(`${prefix}-members`, row => row.id), native: MemberRecord[] = [];
-  for (const member of (function* () { yield* slot.created.values(); yield* slot.reordered.values(); })()) {
+  if (!selected) return planner ? new DiskRows(() => [], () => 0) : [];
+  const slot = selected;
+  const out = planner?.table<MemberRecord>(`${prefix}-members`, row => row.id);
+  function* records(): IterableIterator<MemberRecord> {
+  for (const member of (function* () { yield* slot.created.values(); for (const row of slot.reordered.values()) if (!out || !slot.created.has(row.obligationId)) yield row; })()) {
+    const cached = out?.read(member.obligationId);
+    if (cached) { yield cached; continue; }
+    // The old disk table's last duplicate replaced its value at the original
+    // created-first position. Resolve that final value without hydrating a Send.
+    const finalMember = out ? slot.reordered.get(member.obligationId) ?? member : member;
     const held = readRecord(member.obligationId), relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
     const fields = held === undefined ? {} : Object.fromEntries(
       (["lastWorkedAt", "openOccurrenceId", "nextDueAt", "absentUntil", "instructionJoinedAt"] as const)
         .filter(key => Object.hasOwn(held, key)).map(key => [key, held[key]]));
-    const row: MemberRecord = { ...fields, id: member.obligationId, ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
+    const row: MemberRecord = { ...fields, id: member.obligationId, ...(ref === undefined ? {} : { instructionJoinedAt: finalMember.joinedAt }),
       assignments: [...(held?.assignments ?? []).map(({ assignmentKey, relation, at }) => ({ assignmentKey, relation, at })),
-        { assignmentKey: key, relation, at: member.joinedAt }] };
-    if (out) out.add(row); else native.push(row);
+        { assignmentKey: key, relation, at: finalMember.joinedAt }] };
+    out?.add(row);
+    yield row;
   }
-  return out ? out.rows : native;
+  }
+  return out ? new DiskRows(records) : Array.from(records());
 }
 
 export interface MemberDebt {
@@ -148,15 +158,17 @@ export interface MemberDebt {
 /** At most this many exceptions ride on a reading; the count is always whole. */
 export const COMPLETION_EXCEPTION_CAP = 12;
 
-export function evaluateAssignmentFromRecords(input: {
+interface AssignmentFromRecordsInput {
   readonly assignmentKey: string;
   readonly obligations: Iterable<MemberRecord>;
   readonly debtFor: (obligationId: string) => MemberDebt | null;
   readonly now: string;
-}): AssignmentCompletion {
+}
+function* assignmentFromRecordsSteps(input: AssignmentFromRecordsInput): Generator<void, AssignmentCompletion> {
   const exceptions: CompletionException[] = [];
   let members = 0, settled = 0, refusedCount = 0, unsettledCount = 0;
   for (const member of assigned(input.obligations, input.assignmentKey)) {
+    yield;
     members += 1;
     const debt = input.debtFor(member.id);
     let exception: CompletionException | null = null;
@@ -174,6 +186,20 @@ export function evaluateAssignmentFromRecords(input: {
     : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled, exceptions, refusedCount, unsettledCount };
 }
 
+function finishSteps(steps: Generator<void, AssignmentCompletion>): AssignmentCompletion {
+  for (;;) { const next = steps.next(); if (next.done) return next.value; }
+}
+async function finishStepsCooperatively(steps: Generator<void, AssignmentCompletion>): Promise<AssignmentCompletion> {
+  let batch = 0;
+  for (;;) { const next = steps.next(); if (next.done) return next.value; if (++batch % 64 === 0) await cooperate(); }
+}
+export function evaluateAssignmentFromRecords(input: AssignmentFromRecordsInput): AssignmentCompletion {
+  return finishSteps(assignmentFromRecordsSteps(input));
+}
+export function evaluateAssignmentFromRecordsCooperatively(input: AssignmentFromRecordsInput): Promise<AssignmentCompletion> {
+  return finishStepsCooperatively(assignmentFromRecordsSteps(input));
+}
+
 export function isUnfilledRow(item: PlaceOwedItem): boolean {
   if (item.state !== "missing" && item.state !== "stale") return false;
   if (item.statuses.due === "not-yet-due") return false;
@@ -188,15 +214,17 @@ export function missionMapCount(items: Iterable<PlaceOwedItem>, before: number |
 }
 
 /** Done only when the map has no unfilled row and every door it opened has a next read; a map that was not read is never Done. */
-export function evaluateMissionDone(input: {
+interface MissionDoneInput {
   readonly assignmentKey: string;
   readonly obligations: Iterable<MemberRecord>;
   readonly debtFor: (obligationId: string) => MemberDebt | null;
   readonly map: MissionMapCount | { readonly unreadable: string };
-}): AssignmentCompletion {
+}
+function* missionDoneSteps(input: MissionDoneInput): Generator<void, AssignmentCompletion> {
   let members = 0, unscheduled = 0, failing = 0;
   const missing: CompletionException[] = [], failures: CompletionException[] = [];
   for (const member of assigned(input.obligations, input.assignmentKey)) {
+    yield;
     members += 1;
     if ("unreadable" in input.map) { sample(missing, { obligationId: member.id, kind: "UNSETTLED", codes: [], says: `the mission map was not read (${input.map.unreadable.slice(0, 160)})` }); continue; }
     if (!member.nextDueAt && !member.openOccurrenceId) { unscheduled += 1; sample(missing, { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "no next read is scheduled for this door" }); }
@@ -212,6 +240,13 @@ export function evaluateMissionDone(input: {
   if (map.unfilled === 0 && unscheduled === 0) return { kind: "COMPLETE", assignmentKey: input.assignmentKey, members, satisfied: [], map };
   return { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled: members - unscheduled,
     exceptions: [...missing, ...failures].slice(0, COMPLETION_EXCEPTION_CAP), refusedCount: failing, unsettledCount: map.unfilled + unscheduled, map };
+}
+
+export function evaluateMissionDone(input: MissionDoneInput): AssignmentCompletion {
+  return finishSteps(missionDoneSteps(input));
+}
+export function evaluateMissionDoneCooperatively(input: MissionDoneInput): Promise<AssignmentCompletion> {
+  return finishStepsCooperatively(missionDoneSteps(input));
 }
 
 export function missionDoneWords(c: AssignmentCompletion): string {

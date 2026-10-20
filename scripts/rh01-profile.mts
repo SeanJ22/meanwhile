@@ -15,9 +15,10 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { readCompletionLogEvidence } from "./rh01-completion-evidence.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
-import { commandIdentity, workloadAdmissionEntry, workloadOffers, REPLAY_WRAPPER_PARENT_PEAK_MIB } from "./rh01-workload.mts";
+import { commandIdentity, workloadAdmissionEntry, workloadOffers, heldReplayParserPredecessor, REPLAY_WRAPPER_PARENT_PEAK_MIB } from "./rh01-workload.mts";
 import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
 import { processStartTicks } from "./rh01-remote-process.mts";
+import { prepareMeasurementArtifacts } from "./rh01-local-artifacts.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -190,6 +191,7 @@ function terminateTree(root: number | undefined): void {
 }
 
 const environment: NodeJS.ProcessEnv = { ...process.env, WTP_RH01_DIRECTORY: directory, WTP_RH01_SHARED_STATE_DIRECTORY: directory, WTP_RH01_CODE_ROOT: codeRoot, WTP_RH01_HARNESS_ROOT: harnessRoot, NODE_USE_ENV_PROXY: "1", WTP_VITAL_SIGNS_REPORT: "1" };
+Object.assign(environment, await prepareMeasurementArtifacts(directory));
 const modelBroker = arg("model-broker") ?? environment.WTP_RH01_MODEL_BROKER;
 if (modelBroker) environment.WTP_RH01_MODEL_BROKER = resolve(modelBroker);
 // An archive has no .git: its caller supplies the exact archived commit instead of inheriting this checkout's identity.
@@ -551,6 +553,16 @@ function runOffer(job: Job): Promise<JobResult> {
       const actual = await runOffer(jobById.get(offer.aliasOf)!);
       return recordResult({ ...actual, ...job, execution: "IDENTICAL_COMMAND_ALIAS", coveredByJobId: actual.id,
         completionReason: `The identical actual command and authority ran as ${actual.id}: ${actual.completionReason}` });
+    }
+    const predecessor = heldReplayParserPredecessor(job, selection);
+    if (predecessor) {
+      const parsed = await runOffer(predecessor);
+      if (!parsed.complete) {
+        const local = join(directory, createHash("sha256").update(job.id).digest("hex").slice(0, 16));
+        await mkdir(local, { recursive: true });
+        return recordResult({ ...job, complete: false, peakRssBytes: null, logDirectory: local,
+          completionReason: `The authentic parser predecessor ${predecessor.id} did not complete; no validator was started` });
+      }
     }
     if (offer.ownerId) {
       let ended = false;

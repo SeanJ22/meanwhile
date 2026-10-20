@@ -948,6 +948,12 @@ export interface FreshnessCycleOutcome {
     readonly detail: string;
   }>;
   readonly research: {
+    readonly runtimeConditionCount?: number;
+    readonly runtimeConditionDetails?: FreshnessDetailReference;
+    readonly runtimeConditionDetailsUnavailable?: string | null;
+    readonly assignmentDetails?: FreshnessDetailReference;
+    readonly cycleLogLineCount?: number;
+    readonly cycleLogDetails?: FreshnessDetailReference;
     readonly lanes: {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
       readonly model?: { readonly due?: number; readonly dispatched?: number; readonly deferred?: number };

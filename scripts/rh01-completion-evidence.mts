@@ -6,6 +6,8 @@ export const COMPLETION_LINE_BYTES = 4 * 1024 * 1024;
 export const COMPLETION_EVIDENCE_BYTES = 1024 * 1024;
 const controls = ["RH01_NATIONAL_RESULT ", "RH01_ROUTE_REPLAY ", "RH01_REPLAY ", "RH01_FRESHNESS_RESULT ", "RH01_PILOT_CYCLE ", "RH01_LOOK_RESULT ", "RH01_BROWSER_RESULT ",
   "RCD_OPERATIONAL_OUTCOME=", "RCD_RUN=", "RCD_RECEIPT=", "INTAKE_RUNTIME_RECEIPT="] as const;
+const nativeControls = ["RH01_PLATFORM_CENSUS_RESULT ", "RH01_FEDERAL_SPLIT_RESULT ", "CENSUS_SHUT ", "CENSUS_PAGES ", "CENSUS_STATE ",
+  "FEDERAL_PEOPLE_COUNT ", "FEDERAL_PEOPLE_SPLIT ", "CENSUS_SOURCE ", "CENSUS_METRICS "] as const;
 const statuses = /hunter lane:|refresh failed|open request hold could not be released|pilot-runner · 1 cycle\(s\) complete\.|owner-snapshot · published: snapshot;|incomplete control-plane inputs|NOT BUILT|--dry-run:|target: [^\r\n]*role=readonly|DRY RUN — nothing applied|No pending [^\r\n]* migrations within this plan|loss study:|not read:|nothing was measured|nothing was studied|break patterns:|claim audit:|lessons not saved:|could not be done:|live audit:|lessons not kept:|resident tasks:|speed:/;
 type Receipt = { readonly acquisitionSucceeded?: boolean; readonly decision?: string; readonly state?: string };
 export interface CompletionLogEvidence {
@@ -37,6 +39,56 @@ function compactControl(line: string): { text: string; receipt?: Receipt } {
     row && typeof row === "object" ? { claimed: row.claimed, outcome: row.outcome, attemptId: row.attemptId } : row);
   if (prefix === "INTAKE_RUNTIME_RECEIPT=" && Array.isArray(compact.reactionDays)) compact.reactionDays = [];
   return { text: prefix + JSON.stringify(compact), ...(prefix === "RCD_RECEIPT=" ? { receipt: compact as Receipt } : {}) };
+}
+
+/** Keep identities and scalar outcomes, never a state's source/error arrays. */
+function nativeControl(line: string): { key: string; text: string; repeatable?: boolean } {
+  const object = (text: string): Record<string, unknown> => {
+    const value: unknown = JSON.parse(text);
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("NATIVE_CONTROL_SHAPE");
+    return value as Record<string, unknown>;
+  };
+  const pick = (value: Record<string, unknown>, keys: readonly string[]) => Object.fromEntries(keys.filter(key => key in value).map(key => [key, value[key]]));
+  const compactFailures = (value: Record<string, unknown>) => {
+    if (!Array.isArray(value.failures)) throw Error("NATIVE_CONTROL_FAILURES_SHAPE");
+    return { failures: [], failureCount: value.failures.length };
+  };
+  for (const prefix of ["RH01_PLATFORM_CENSUS_RESULT ", "RH01_FEDERAL_SPLIT_RESULT "] as const) if (line.startsWith(prefix)) {
+    const value = object(line.slice(prefix.length));
+    return { key: prefix, text: prefix + JSON.stringify(pick(value, prefix === "RH01_PLATFORM_CENSUS_RESULT "
+      ? ["exhausted", "stopped", "states"] : ["exhausted", "requested", "settled"])) };
+  }
+  const census = /^(CENSUS_SHUT |CENSUS_PAGES |CENSUS_SOURCE |CENSUS_METRICS )([a-z]{2}): (.*)$/.exec(line);
+  if (census) {
+    const [, prefix, state, body] = census, key = prefix + state;
+    if (prefix === "CENSUS_SOURCE " || prefix === "CENSUS_METRICS ") return { key, text: `${prefix}${state}: recorded native failure`, repeatable: true };
+    const value = object(body);
+    return { key, text: `${prefix}${state}: ` + JSON.stringify({ ...pick(value, prefix === "CENSUS_SHUT " ? ["checked", "reopened"] : ["read", "changed"]), ...compactFailures(value) }) };
+  }
+  if (line.startsWith("CENSUS_STATE ")) {
+    const skipped = /^CENSUS_STATE ([a-z]{2}): discoveries are not due$/.exec(line);
+    if (skipped) return { key: "CENSUS_STATE " + skipped[1], text: line };
+    const value = object(line.slice("CENSUS_STATE ".length));
+    if (typeof value.state !== "string" || !/^[a-z]{2}$/.test(value.state)) throw Error("NATIVE_CONTROL_STATE");
+    return { key: "CENSUS_STATE " + value.state, text: "CENSUS_STATE " + JSON.stringify({ ...pick(value, ["state", "checked", "walked", "unchanged", "notDue"]), ...compactFailures(value) }) };
+  }
+  if (line.startsWith("FEDERAL_PEOPLE_COUNT ")) {
+    const value = object(line.slice("FEDERAL_PEOPLE_COUNT ".length));
+    const tally = (raw: unknown) => {
+      if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw Error("NATIVE_CONTROL_COUNT_SHAPE");
+      const row = raw as Record<string, unknown>;
+      if (![row.missing, row.duplicated, row.added].every(Array.isArray)) throw Error("NATIVE_CONTROL_COUNT_SHAPE");
+      return { ...pick(row, ["old", "new"]), missing: [], duplicated: [], added: [], missingCount: (row.missing as unknown[]).length,
+        duplicatedCount: (row.duplicated as unknown[]).length, addedCount: (row.added as unknown[]).length };
+    };
+    return { key: "FEDERAL_PEOPLE_COUNT", text: "FEDERAL_PEOPLE_COUNT " + JSON.stringify({ members: tally(value.members), positions: tally(value.positions) }) };
+  }
+  if (line.startsWith("FEDERAL_PEOPLE_SPLIT ")) {
+    const value = object(line.slice("FEDERAL_PEOPLE_SPLIT ".length));
+    if (typeof value.scope !== "string" || !value.scope) throw Error("NATIVE_CONTROL_SCOPE");
+    return { key: "FEDERAL_PEOPLE_SPLIT " + value.scope, text: "FEDERAL_PEOPLE_SPLIT " + JSON.stringify(pick(value, ["scope", "from", "to", "refusal"])) };
+  }
+  throw Error("NATIVE_CONTROL_MALFORMED");
 }
 
 /** Each checker keeps its last status, while failure observations are monotone. */
@@ -89,7 +141,7 @@ export async function readCompletionLogEvidence(input: { readonly stdoutFile: st
         if (index >= 0) { remote = true; text = text.slice(index + "RH01_REMOTE_".length); }
       }
       if (remote && text.includes("_BLOCKED")) refusedOperation = true;
-      relevant ||= controls.some(prefix => start.startsWith(prefix)) ||
+      relevant ||= controls.some(prefix => start.startsWith(prefix)) || nativeControls.some(prefix => start.startsWith(prefix)) ||
         /^(?:hunter lane:|target:|loss study:|break patterns:|claim audit:|live audit:|resident tasks:|speed:|owner-snapshot|pilot-runner)/.test(start.trimStart()) ||
         statuses.test(carry + decoded);
       carry = text.slice(-256);
@@ -101,7 +153,13 @@ export async function readCompletionLogEvidence(input: { readonly stdoutFile: st
       else {
         const line = Buffer.concat(chunks, lineBytes).toString("utf8").replace(/\r$/, "");
         const prefix = controls.find(value => line.startsWith(value));
-        if (prefix) {
+        if (nativeControls.some(value => line.startsWith(value))) {
+          try {
+            const observed = nativeControl(line);
+            if (!observed.repeatable && (lines.stdout.has(observed.key) || lines.stderr.has(observed.key))) failures.add("DUPLICATE_NATIVE_CONTROL");
+            keep(channel, observed.key, observed.text);
+          } catch { failures.add("MALFORMED_NATIVE_CONTROL"); }
+        } else if (prefix) {
           const compact = compactControl(line);
           if (keep(channel, prefix, compact.text) && channel === "stdout" && compact.receipt) receipt = compact.receipt;
         }

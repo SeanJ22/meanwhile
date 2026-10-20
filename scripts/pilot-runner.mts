@@ -20,7 +20,7 @@ import {
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
-import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { readAssignmentCycleHeader, readAssignmentForSend } from "../lib/control-plane/expansion/assignment-reading.ts";
 import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
 import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
@@ -79,7 +79,7 @@ import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
-import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { armingNeedsRebuild, hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane/workers/hunter-lane.ts";
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
@@ -1713,17 +1713,22 @@ async function ownerSays(): Promise<OwnerSays> {
       const config = controls.config;
       const held = expansionScopesOf(config !== null && isAdminConfig(config.value) ? config.value : null);
       if (held.scopes.length > 0) {
-        const state = controls.state;
-        const raw: unknown = (state?.value as { assignments?: unknown } | undefined)?.assignments;
-        const last = isAssignmentCycleReading(raw) ? raw : null;
-        const pending = unacknowledgedScope(held.scopes, last);
-        if (pending !== null) {
-          console.log(`  Send ${pending.receiptId} has not been read by a completed cycle — starting the next cycle now`);
-          return "START_NOW";
+        const header = await readAssignmentCycleHeader(repos);
+        for (const scope of held.scopes) {
+          const row = await readAssignmentForSend(repos, header, scope.key, scope.receiptId);
+          const pending = unacknowledgedScope([scope], header ? { ...header, assignments: row ? [row] : [] } : null);
+          if (pending !== null) {
+            console.log(`  Send ${pending.receiptId} has not been read by a completed cycle — starting the next cycle now`);
+            return "START_NOW";
+          }
         }
       }
     } catch (error) {
       console.error(`  Send wake check could not be read; ordinary cycle interval stands: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    if (!researchCycleActive && armingNeedsRebuild(hunterLaneArmingPath(ROOT))) {
+      console.log("  the hunter lane's legacy budget handoff needs a bounded rebuild — starting the next freshness cycle now");
+      return "START_NOW";
     }
   }
   return "NOTHING";
@@ -1796,12 +1801,18 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
     if (scopes.malformed > 0) return ordinary;
     const value = state?.value as { expansion?: unknown; assignments?: unknown } | undefined;
     const expansion = isExpansionCycleReading(value?.expansion) ? value.expansion : null;
-    const assignments = isAssignmentCycleReading(value?.assignments) ? value.assignments : null;
-    const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
+    const header = await readAssignmentCycleHeader(repos);
+    let lifetime: ReturnType<typeof originalLifetimeHuntContinuation> = null;
+    for (const scope of scopes.scopes) {
+      const row = await readAssignmentForSend(repos, header, scope.key, scope.receiptId);
+      lifetime = originalLifetimeHuntContinuation([scope], expansion, header ? { ...header, assignments: row ? [row] : [] } : null,
+        cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
+      if (lifetime) break;
+    }
     if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
     else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
     const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
-    const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
+    const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, header ? { ...header, assignments: [] } : null));
     if (hunt === null) return ordinary;
     const requestedWaitMs = lifetime?.delayMs ?? POLL_MS;
     const waitMs = cycleOk ? requestedWaitMs : Math.min(requestedWaitMs, ordinary);

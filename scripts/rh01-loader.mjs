@@ -5,12 +5,14 @@ import { join } from "node:path";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { isMainThread } from "node:worker_threads";
 import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
+import { observeNativeBody } from "./rh01-native-body.mjs";
 
 const root = process.env.WTP_RH01_CODE_ROOT ?? process.cwd();
 const runtime = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-readonly-runtime.mts")).href;
 const neonBridge = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-loopback-neon.mjs")).href;
 const routeReplay = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-route-replay.mts")).href;
 const browserEvidence = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-browser-evidence.mts")).href;
+const localArtifacts = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-local-artifacts.mts")).href;
 
 export async function resolve(specifier, context, nextResolve) {
   const parent = context.parentURL ?? "";
@@ -108,6 +110,19 @@ export async function load(url, context, nextLoad) {
   } else if (url.endsWith("/lib/control-plane/evidence/durable-store.ts")) {
     source = source.replace("this.remote = options.remote === undefined ? netlifyEvidenceStoreFromEnv() : options.remote;", "this.remote = null;");
     source = source.replace("constructor(root: string, options: DurableEvidenceStoreOptions = {}) {", "constructor(root: string, options: DurableEvidenceStoreOptions = {}) { root = process.env.WTP_RH01_HELD_VAULT_DIRECTORY ?? (process.env.WTP_RH01_SHARED_STATE_DIRECTORY ?? process.env.WTP_RH01_DIRECTORY) + '/vault';");
+    const restricted = "this.restricted = options.restricted ?? null;";
+    if (!source.includes(restricted)) throw Error("RH01 native restricted evidence provider seam did not match");
+    source = source.replace(restricted, "this.restricted = options.restricted ?? rhRestrictedProvider({keyToRelativePath,reconcileExistingObject}) ?? null;");
+    add(`import {restrictedMeasurementProvider as rhRestrictedProvider} from ${JSON.stringify(localArtifacts)};`);
+  } else if (url.endsWith("/lib/control-plane/evidence/store.ts")) {
+    for (const name of ["putArtifact", "readArtifact"]) {
+      const declaration = `export async function ${name}(`;
+      if (!source.includes(declaration)) throw Error(`RH01 native artifact custody seam did not match: ${name}`);
+      source = source.replace(declaration, `async function rhOriginal${name}(`);
+    }
+    add(`import {withRestrictedMeasurementCustody as rhRestrictedCustody} from ${JSON.stringify(localArtifacts)};
+      export function putArtifact(...args) { return rhRestrictedCustody('ACQUIRER',()=>rhOriginalputArtifact(...args)); }
+      export function readArtifact(...args) { return rhRestrictedCustody(args[3],()=>rhOriginalreadArtifact(...args)); }`);
   } else if (url.endsWith("/lib/photos/store.ts")) {
     const declaration = "export async function storeRunScreenshot(";
     if (!source.includes(declaration)) throw Error("RH01 native screenshot writer did not match");
@@ -151,6 +166,8 @@ export async function load(url, context, nextLoad) {
     else if (source.includes(before)) source = source.replace(before, "readLookedCommits(rhAuditDue(repos,{kind:'LOOK',sha:served.sha}))");
     else throw Error("RH01 native look scheduling read did not match");
     add(`import {auditDueRepositories as rhAuditDue} from ${JSON.stringify(runtime)};`);
+  } else if (url.endsWith("/scripts/platform-census-runner.mts") || url.endsWith("/scripts/split-federal-people.mts")) {
+    source = observeNativeBody(url.split("/").at(-1), source);
   } else if (url.endsWith("/lib/reader/cache.ts")) {
     source = source.replace("export async function purgeReaderCacheTags(", "async function rhOriginalPurgeReaderCacheTags(");
     add('export async function purgeReaderCacheTags() { return { purged: true, detail: "RH01 local publication" }; }');

@@ -46,12 +46,23 @@ if (descriptorPath) {
       // it does not stand in for the original country's parent startup or its memory.
       const fileStore = pathToFileURL(join(root, "lib/control-plane/repository/file-store.ts")).href;
       const doors = pathToFileURL(join(root, "lib/doors/install.ts")).href;
+      const references = pathToFileURL(join(root, "lib/civic-data/operational-references.ts")).href;
+      const registry = pathToFileURL(join(root, "lib/registry/runtime-read-model.ts")).href;
+      const routineStore = pathToFileURL(join(root, "lib/civic-data/store.ts")).href;
       const declaration = "async function work(config: LeaseWorkerConfig): Promise<void> {";
       if (!source.includes(declaration)) throw Error("RH01 baseline lease entry declaration changed");
       source = source.replace(declaration, declaration + `
         if(config.postgres||config.fileStoreRoot!==process.env.WTP_RH01_BASELINE_COMPONENT_STORE)
           throw Error('RH01_BASELINE_COMPONENT_BOOTSTRAP_STORE_MISMATCH');
         const rhBaselineRepos=await rhBaselineRepositories(process.env.WTP_RH01_BASELINE_COMPONENT_STORE);
+        const rhBodyContext=JSON.parse(rhBaselineReadFile(process.env.WTP_RH01_BASELINE_COMPONENT_STORE+'/rh01-model-replay.json','utf8')).inputs?.beforeBodyContext;
+        if(rhBodyContext){
+          if(rhBodyContext.state!=='AZ'||rhBodyContext.subjectId!=='ocd-division/country:us/state:az/county:pima#governing')throw Error('RH01_BASELINE_BODY_CONTEXT_SCOPE_MISMATCH');
+          const rhReference=await rhBaselineAzReference({store:new RhBaselineRoutineStore(),bypassCache:true});
+          const rhRegistry=await rhBaselineRegistry(['az'],{store:new RhBaselineRoutineStore(),bypassCache:true});
+          if(rhReference.metadata.versionId!==rhBodyContext.operationalVersionId||rhRegistry.kind!=='PROMOTED'||rhRegistry.metadata.versionId!==rhBodyContext.registryVersionId)
+            throw Error('RH01_BASELINE_BODY_CONTEXT_PUBLICATION_CHANGED');
+        }
         const rhBaselineDoors=await rhBaselineRefreshDoors(rhBaselineRepos.doors,{state:'AZ'});
         if(rhBaselineDoors.reason||!rhBaselineDoors.rows||rhBaselineDoors.partitions?.refreshed!==true||
           !rhBaselineDoors.doors?.length||rhBaselineDoors.doors.some(door=>!door.ocdId?.startsWith('ocd-division/country:us/state:az/')))
@@ -59,7 +70,11 @@ if (descriptorPath) {
         console.log('RH01_BASELINE_COMPONENT_BOOTSTRAP '+JSON.stringify({phase:'before',scope:'AZ held File model component; original country parent excluded',rows:rhBaselineDoors.rows,partitions:rhBaselineDoors.partitions.partitions}));
         \n`);
       source += `\nimport {createFileRepositories as rhBaselineRepositories} from ${JSON.stringify(fileStore)};
-        import {refreshDoorsForPass as rhBaselineRefreshDoors} from ${JSON.stringify(doors)};\n`;
+        import {refreshDoorsForPass as rhBaselineRefreshDoors} from ${JSON.stringify(doors)};
+        import {readFileSync as rhBaselineReadFile} from 'node:fs';
+        import {preloadAzOperationalReferenceBundle as rhBaselineAzReference} from ${JSON.stringify(references)};
+        import {readRegistryRuntimeProjection as rhBaselineRegistry} from ${JSON.stringify(registry)};
+        import {PostgresRoutineDataStore as RhBaselineRoutineStore} from ${JSON.stringify(routineStore)};\n`;
     }
     return { ...result, source };
   } });

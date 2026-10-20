@@ -19,7 +19,7 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, RECONCILE_APPEND_SLACK_MS, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
-import { projectRecord, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { projectRecord, UnknownAggregate, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
 import {
@@ -41,11 +41,11 @@ const CONTRACT: CivicExtractionContract = {
   expectedSourceDate: null,
 };
 
-async function harness(repos: ControlPlaneRepositories = createMemoryRepositories(), store: EvidenceStore = new MemoryEvidenceStore()) {
+async function harness(repos: ControlPlaneRepositories = createMemoryRepositories(), store: EvidenceStore = new MemoryEvidenceStore(), label = "") {
   let clock = Date.parse(START);
   const now = () => new Date(clock += 1_000).toISOString();
   const item = createWorkItem({ project: PROJECT, subject: CONTRACT.subjectId,
-    obligation: "Extract and independently verify the captured Pima event representation",
+    obligation: "Extract and independently verify the captured Pima event representation" + label,
     why: "The evidence owed to readers must survive disposable worker execution.",
     contract: { requiresValidation: true, requiresAudit: true }, now: START });
   await registerWorkItem(repos, item, START);
@@ -421,6 +421,59 @@ for (const scoped of [false, true]) test(`file-provider restart ${scoped ? "scop
   assert.equal(item.state, "AWAITING_VALIDATION");
   assert.equal(item.transitions.filter((transition) => transition.by === `worker-result:${committed.id}`).length, 1);
 }));
+
+test("global recovery reports an orphan result, continues other work and retries it beyond the cursor; scoped recovery still refuses its missing owner", async () => {
+  const repos = createMemoryRepositories(), store = new MemoryEvidenceStore();
+  const orphan = await harness(repos, store, " orphan history"), independent = await harness(repos, store, " independent history");
+  const orphanResult = await run(orphan, await orphan.hold(CAPTURE), "PARSER");
+  const artifact = await independent.hold(CAPTURE);
+  const task = await enqueueWorkerTask(repos, { workItemId: independent.item.id, role: "PARSER", artifactId: artifact.id, contract: CONTRACT, now: independent.now() });
+  const crashing: ControlPlaneRepositories = { ...repos, attempts: { ...repos.attempts, compareAndSet: async (...args) => {
+    if (args[2].workItemId === independent.item.id && args[2].outcome === "COMPLETED") throw Error("SEEDED_CRASH_AFTER_RESULT_COMMIT");
+    return repos.attempts.compareAndSet(...args);
+  } } };
+  await assert.rejects(dispatchWorkerTask({ ...independent.runtime, repos: crashing }, task), /SEEDED_CRASH_AFTER_RESULT_COMMIT/);
+  const independentResult = (await repos.workerResults.read(independent.item.id))[0];
+  assert.ok(independentResult);
+  const readWorkItems = repos.workItems.readMany;
+  if (typeof readWorkItems !== "function") throw Error("The actual memory provider must support batched work-item reads");
+  let absent = true, globalReads = 0, pendingReads = 0;
+  const observed: ControlPlaneRepositories = { ...repos,
+    workItems: { ...repos.workItems,
+      read: async id => absent && id === orphan.item.id ? null : repos.workItems.read(id),
+      readMany: async ids => (await readWorkItems.call(repos.workItems, ids)).filter(row => !absent || row.id !== orphan.item.id),
+      mustRead: async id => { if (absent && id === orphan.item.id) throw new UnknownAggregate("WorkItem", id); return repos.workItems.mustRead(id); },
+    },
+    workerResults: { ...repos.workerResults,
+      readWhere: async (...args) => { if (args[0] === orphan.item.id) pendingReads++; return repos.workerResults.readWhere(...args); },
+      readChangedSince: async (...args) => {
+        if (args[2]?.keys) return repos.workerResults.readChangedSince(...args);
+        if (globalReads++ === 0) return repos.workerResults.readChangedSince(...args);
+        assert.ok(args[0], "The global source cursor advances even while a missing owner stays pending.");
+        return { records: [], through: "2026-12-01T00:00:00.000Z" };
+      },
+    },
+  };
+  const later = "2026-12-02T00:00:00.000Z";
+  const first = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
+  assert.equal(first.refused.length, 1); assert.equal(first.refused[0].routeTaskId, orphanResult.routeTaskId);
+  assert.match(first.refused[0].why, new RegExp(orphanResult.id)); assert.match(first.refused[0].why, new RegExp(orphan.item.id));
+  assert.deepEqual(first.reclaimed, []);
+  assert.equal((await readCompletedWorkerResult(repos, independentResult.id)).attempt.outcome, "COMPLETED");
+  assert.equal((await repos.workItems.mustRead(independent.item.id)).value.state, "AWAITING_VALIDATION");
+  assert.equal((await repos.costs.read(independent.item.id)).filter(row => row.attemptId === independentResult.attemptId).length, 1);
+  await assert.rejects(reconcileWorkerCompletions(observed, { workItemIds: [orphan.item.id] }), error =>
+    error instanceof UnknownAggregate && error.kind === "WorkItem" && error.id === orphan.item.id);
+  const second = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
+  assert.equal(second.refused.length, 1); assert.ok(pendingReads > 0);
+  absent = false;
+  const recovered = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
+  assert.deepEqual(recovered.refused, []);
+  const readsAfterRecovery = pendingReads;
+  await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
+  assert.equal(pendingReads, readsAfterRecovery, "Successfully reconciled owner history leaves the retry set.");
+  assert.equal((await repos.costs.read(orphan.item.id)).filter(row => row.attemptId === orphanResult.attemptId).length, 1);
+});
 
 test("partial computation lost before commit stays nonterminal, then lease recovery runs a fresh Parser", async () => temporaryStore(async (root) => {
   const storePath = path.join(root, "control-plane");

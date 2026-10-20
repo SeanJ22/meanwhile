@@ -64,7 +64,8 @@ import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { registryLines, type ProviderReport, type RegisteredUnit } from "../lib/control-plane/scheduler/registry.ts";
 import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
 import { writeStreamedJsonSync } from "../lib/control-plane/scheduler/streamed-json.ts";
-import { appendFreshnessCycleDetails, summarizeFreshnessIncidents } from "../lib/control-plane/freshness-cycle-details.ts";
+import { appendFreshnessCycleDetails, spoolFreshnessCycleLines, summarizeFreshnessIncidents } from "../lib/control-plane/freshness-cycle-details.ts";
+import { freshnessConditions } from "../lib/control-plane/freshness-conditions.ts";
 import { createPlannerSpool, plannerMap, plannerSet } from "../lib/control-plane/scheduler/planner-spool.ts";
 import { forEachStateRegistry, withRegistryState, plannerStateOf, type RegistryStateAuthority } from "../lib/control-plane/scheduler/registry-state-planner.ts";
 import { spooledTerritoryIndex } from "../lib/control-plane/expansion/spooled-territory.ts";
@@ -254,13 +255,15 @@ import {
   malformedAssignmentBudgetsOf,
   type AssignmentBudgetGate,
   type AssignmentCycleReading,
+  type StreamedAssignmentCycleReading,
 } from "../lib/control-plane/expansion/assignment-budget.ts";
+import { publishAssignmentCycleReading, readAssignmentCycleHeader, readAssignmentForSend } from "../lib/control-plane/expansion/assignment-reading.ts";
 import {
   DurableSpendHolds,
   SendBudgetRefusal,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
-import { evaluateAssignmentFromRecords, evaluateMissionDone, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
+import { evaluateAssignmentFromRecordsCooperatively, evaluateMissionDoneCooperatively, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runIndependentRuntimePass, type IndependentRuntimeOutcome } from "../lib/ops/independent-runtime-pass.ts";
 import { withControlPlaneConnectRetry } from "../lib/control-plane/repository/connect-retry.ts";
@@ -319,13 +322,18 @@ const boundedAfterCutoff = <T,>(work: Promise<T>) => untilQuietLimit(work, { clo
 const stallDiagnostic: CycleStallDiagnostic | null = null;
 /** True once the cycle wrote its own record; a later failure must not overwrite it. */
 let finalRecordWritten = false;
+let runtimeConditionDiagnostic: (() => Readonly<Record<string, unknown>> | null) | null = null;
+let cycleLogDiagnostic: DiskRows<string> | null = null;
 
 /** The cycle's local record at the reserved path, carrying the stall block forward if the diagnostic fired. */
 function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
   const stallBlock = finalRecordWritten ? null : (stallDiagnostic?.claimRecord() ?? null);
   const path = finalRecordWritten ? nextRunRecordPath(RUNS_DIR, today()) : RUN_RECORD_PATH;
   mkdirSync(RUNS_DIR, { recursive: true });
-  writeStreamedJsonSync(path, stallBlock === null ? record : { ...record, stallDiagnostic: stallBlock });
+  const conditions = runtimeConditionDiagnostic?.();
+  const diagnostic = { ...record, ...(conditions ? { runtimeConditionPublication: conditions } : {}),
+    ...(cycleLogDiagnostic && record.digest !== cycleLogDiagnostic ? { cycleLog: cycleLogDiagnostic } : {}) };
+  writeStreamedJsonSync(path, stallBlock === null ? diagnostic : { ...diagnostic, stallDiagnostic: stallBlock });
   finalRecordWritten = true;
   return path;
 }
@@ -692,8 +700,9 @@ const decisionDisagreements = units
 /* ------------------------------------------------------- the occurrences --- */
 
 const nowMs = Date.parse(NOW);
-/** Named runtime conditions, accumulated from here on; the research state carries them. */
-const runtimeConditions: string[] = [];
+/** Exact conditions leave memory after each source event; state retains only finite examples and a page reference. */
+const runtimeConditions = freshnessConditions(planner, { cycleId: CYCLE_ID, finishedAt: NOW, testedSha: RUNNING_CODE_SHA });
+runtimeConditionDiagnostic = () => runtimeConditions.localPending();
 
 const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
@@ -1052,7 +1061,7 @@ const expansionLoad = await loadExpansionPlan({
   loadTerritory: (states: readonly string[], zips: ReadonlySet<string>, places: Parameters<typeof readTerritoryIndex>[4]) =>
     spooledTerritoryIndex(planner, states, state => { const registry = registryView.get(state.toLowerCase()); return readTerritoryIndex(ROOT, registry ? [registry] : [], [state], zips, places); }),
 });
-runtimeConditions.push(...expansionLoad.conditions);
+for (const condition of expansionLoad.conditions) runtimeConditions.push(condition);
 const expansionPlan = expansionLoad.plan;
 const subjectByObligation = plannerMap(planner, "obligation-subjects", sync.all.map((o) => [o.id, o.subjectId] as const));
 const lifetimeHuntSubjects = plannerSet(planner, "lifetime-hunt-subjects");
@@ -1383,15 +1392,20 @@ let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
 let finalSpendAsOf: string | null = null;
 let priorCircuits: readonly ProviderCircuit[] = [];
 let priorLastSuccessfulActivity: string | null = null;
-let priorResearchState: ResearchState | null = null;
+type PreviousResearchState = Pick<ResearchState, "fleetSafety" | "dispatchWork" | "researchProgression" | "cycleFinishedAt" | "host" | "cycleStartedAt">;
+let priorResearchState: PreviousResearchState | null = null;
 /* This round is the research state's only writer: the revision it read or last wrote is the one it writes on. */
 let researchStateRevision: number | null | undefined;
 try {
-  const previous = await repos.researchState.read(RESEARCH_STATE_ID);
+  const previous = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, {
+    fleetSafety: ["providerCircuits", "lastSuccessfulActivity"], dispatchWork: true,
+    researchProgression: true, cycleFinishedAt: true, host: true, cycleStartedAt: true,
+  });
+  const value = previous?.value as PreviousResearchState | undefined;
   researchStateRevision = previous?.revision ?? null;
-  priorResearchState = previous?.value ?? null;
-  priorCircuits = previous?.value.fleetSafety?.providerCircuits ?? [];
-  priorLastSuccessfulActivity = previous?.value.fleetSafety?.lastSuccessfulActivity ?? null;
+  priorResearchState = value ?? null;
+  priorCircuits = value?.fleetSafety?.providerCircuits ?? [];
+  priorLastSuccessfulActivity = value?.fleetSafety?.lastSuccessfulActivity ?? null;
 } catch (error) {
   runtimeConditions.push(`prior Fleet safety state could not be read: ${error instanceof Error ? error.message : String(error)}`);
 }
@@ -1683,8 +1697,9 @@ if (plannedSendMarks !== null) {
 } else {
   for (const [id, keys] of dispatchMatchReached) sendsReachedThisCycle.set(id, keys);
 }
-const assignmentSpecs = assignmentBudgetsOf({ scopes: (expansionPlan?.scopes ?? []).map((s) => s.decision), intents: intentLog });
+const assignmentSpecs = assignmentBudgetsOf({ scopes: (expansionPlan?.scopes ?? []).map((s) => s.decision), intents: intentLog }, planner);
 const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
+  planner,
   now: NOW,
   specs: assignmentSpecs,
   membership: assignmentMembers,
@@ -1693,10 +1708,10 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
   /* An unread log cannot say which DISPATCH carries a budget, so its work is held (assignment-budget.ts). */
   intentsReadable: intentLogUnreadable === null,
   /* Fail closed: a DISPATCH whose budget is unreadable holds its work; so does work this cycle reached under a Send whose record on the row was not written. */
-  malformed: malformedAssignmentBudgetsOf(intentLog),
+  malformed: malformedAssignmentBudgetsOf(intentLog, planner),
   reachedThisCycle: sendsReachedThisCycle,
 });
-const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
+const assignmentLabels = plannerMap(planner, "assignment-labels", dispatchTargets.map((t) => [t.key, t.label] as const));
 
 const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
 /* A round's end deletes the holds that no longer count (bounded; never accumulated). */
@@ -1770,28 +1785,42 @@ const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), a
 const debtByObligation = plannerMap(planner, "assignment-debts", debtsIn.map((d) => [d.obligationId, d] as const));
 const readAssignmentObligation = (id: string) => syncSink.outside.read(id) ?? syncSink.all.read(id);
 /* A Send over resolved places is Done by its mission map: no unfilled row and every door it opened has a next read. */
-const resolvedReceipts = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
-const priorMapBefore = (key: string, ref: string): number | null => {
-  const rows = (priorResearchState?.assignments as { assignments?: readonly { key?: unknown; ref?: unknown; completion?: { map?: { before?: unknown } } | null }[] } | null | undefined)?.assignments ?? [];
-  const before = rows.find(row => row.key === key && row.ref === ref)?.completion?.map?.before;
-  return typeof before === "number" && Number.isSafeInteger(before) && before >= 0 ? before : null;
-};
-const assignmentCompletion = (key: string) => {
+const resolvedReceipts = plannerSet(planner, "assignment-resolved-receipts", new DiskRows(() => expansionPlan?.scopes ?? [])
+  .filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
+const priorAssignmentMapBefore = plannerMap<number>(planner, "prior-assignment-map-before");
+try {
+  const priorHeader = await readAssignmentCycleHeader(repos);
+  if (priorHeader) for (const spec of assignmentSpecs) {
+    try {
+      const prior = await readAssignmentForSend(repos, priorHeader, spec.key, spec.ref);
+      const before = prior?.completion && "map" in prior.completion ? prior.completion.map?.before : undefined;
+      if (typeof before === "number" && Number.isSafeInteger(before) && before >= 0)
+        priorAssignmentMapBefore.set(JSON.stringify([spec.key, spec.ref]), before);
+    } catch (error) {
+      runtimeConditions.push(`the prior Send reading for ${spec.key} could not be read: ${error instanceof Error ? error.message : String(error)}; the current map is its first known baseline`);
+    }
+  }
+} catch (error) {
+  runtimeConditions.push(`prior Send reading metadata could not be read: ${error instanceof Error ? error.message : String(error)}; current maps retain their first known baseline`);
+}
+const priorMapBefore = (key: string, ref: string): number | null => priorAssignmentMapBefore.get(JSON.stringify([key, ref])) ?? null;
+const assignmentCompletion = async (key: string) => {
   const ref = assignmentSpecs.find(spec=>spec.key===key)?.ref;
   const obligations = memberRecordsForSend(key, assignmentMembers, readAssignmentObligation, ref, planner);
   const debtFor = (id: string) => debtByObligation.get(id) ?? null;
   if (ref !== undefined && resolvedReceipts.has(ref)) {
     const counted = missionMaps.get(ref);
-    return evaluateMissionDone({ assignmentKey: key, obligations, debtFor,
+    return evaluateMissionDoneCooperatively({ assignmentKey: key, obligations, debtFor,
       map: counted ? { ...counted, before: priorMapBefore(key, ref) ?? counted.unfilled }
         : { unreadable: missionMapUnread ?? "this Send's places were not in the owed-list read" } });
   }
-  return evaluateAssignmentFromRecords({ assignmentKey: key, obligations, debtFor, now: NOW });
+  return evaluateAssignmentFromRecordsCooperatively({ assignmentKey: key, obligations, debtFor, now: NOW });
 };
-const assignmentsReading = (): AssignmentCycleReading | null =>
+const assignmentsReading = (): StreamedAssignmentCycleReading | null =>
   assignmentSpecs.length === 0 && assignmentMembers.byKey.size === 0
     ? null
     : assignmentCycleReading({
+        planner,
         at: nowIso(),
         now: NOW,
         gate: assignmentBudget,
@@ -1865,6 +1894,7 @@ let researchProgressionFailure: string | null = null;
 let autonomousDispatchedThisCycle = 0;
 
 type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatchRecord | null };
+let publishedAssignments: AssignmentCycleReading | null = null;
 
 function researchState(cycleFinishedAt: string | null): CycleResearchState {
   const measuredSpend = finalSpendWindow ?? spendWindow;
@@ -1925,7 +1955,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
         }),
     },
     running: [...running],
-    runtimeConditions: [...runtimeConditions],
+    ...runtimeConditions.snapshot(),
     cyclePhases: [...cycleObservation.phases, ...leaseTaskReadsPhase()],
     methodCandidates: null,
     hostSupervision,
@@ -1936,12 +1966,21 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     researchProgression,
     expansion: expansionReading,
     dispatchWork,
-    assignments: assignmentsReading(),
+    assignments: publishedAssignments,
   };
 }
 
 const putResearchState = soleWriter(repos.researchState, RESEARCH_STATE_ID, researchStateRevision);
 const writeResearchState = cycleStateWriter(async (cycleFinishedAt) => {
+  const assignmentSnapshot = assignmentsReading();
+  try {
+    publishedAssignments = assignmentSnapshot ? await publishAssignmentCycleReading(repos, {
+      cycleId: CYCLE_ID, finishedAt: assignmentSnapshot.at, testedSha: RUNNING_CODE_SHA,
+    }, assignmentSnapshot) : null;
+  } catch (error) {
+    runtimeConditions.push(`the exact Send reading could not be published: ${error instanceof Error ? error.message : String(error)}; the last recorded reading is retained and additional details are unknown`);
+  }
+  await runtimeConditions.flush(repos);
   await (async () => {
     for (let tries = 0; tries < 4; tries += 1) {
       try {
@@ -2421,7 +2460,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         for (const state of trackedStateCodes) {
           const holdings = await step(`${state} candidate authorities`, () => readCandidateEnrichmentAuthorities(state));
           const { subjects, linked, failures } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-          if (failures.length) runtimeConditions.push(...failures);
+          for (const failure of failures) runtimeConditions.push(failure);
           subjectCount += subjects.size;
           linkedCount += linked.size;
           if (!subjects.size) continue;
@@ -2806,45 +2845,42 @@ const deferredByLine = Object.entries(laneCounts.deferredBy)
   .map(([k, v]) => `${k} ${v}`)
   .join(", ");
 const safety = finalState.fleetSafety!;
-const researchLines = [
-  "FLEET SAFETY",
-  `  state              ${safety.status}`,
-  `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
+function* researchLines(): Generator<string> {
+  yield "FLEET SAFETY";
+  yield `  state              ${safety.status}`;
+  yield `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} · ` +
     `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)} (the one spend ceiling)` +
-    ((safety.rolling24Hours.worstCaseCharges ?? 0) > 0 ? ` · ${safety.rolling24Hours.worstCaseCharges} unpriced charge(s) counted at worst case` : ""),
-  `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
-    `per-download cap ${safety.bounds.maxDownloadBytes} · elapsed ${safety.cycle.elapsedMs}ms`,
-  `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
-  `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
-  `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
-  "",
-  "RESEARCH — LEVEL 1",
-  `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
-  `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
-  `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
-  `  hunts              ${openedModel} packet(s) opened for the hunters of ${dueModel.length} due model-class · ` +
-    `${autonomousDispatchedThisCycle} worker task(s) run${deferredByLine ? ` · deferred ${deferredByLine}` : ""}`,
-  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${spendWindow.windowUsd.toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
-    `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle)`,
-  `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
-  `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
-    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intentLogUnreadable !== null ? "UNKNOWN (log unreadable; paid lane held closed)" : intents.paused ? "yes" : "no"}`,
-  ...ownerDispatches.map(
-    (d) => `  owner dispatch     ${d.intentId}: "${d.target}" -> ${d.matched} of ${d.registered} registered unit(s) placed first in both lanes`,
-  ),
-  `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
-  `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
-    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`,
-  "",
-  ...(metrics === null ? ["RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)"] : researchDigestLines(metrics)),
-];
+    ((safety.rolling24Hours.worstCaseCharges ?? 0) > 0 ? ` · ${safety.rolling24Hours.worstCaseCharges} unpriced charge(s) counted at worst case` : "");
+  yield `  aggregate          dispatches ${safety.cycle.dispatches} · requests ${safety.cycle.requests} · payload bytes ${safety.cycle.payloadBytes} · ` +
+    `per-download cap ${safety.bounds.maxDownloadBytes} · elapsed ${safety.cycle.elapsedMs}ms`;
+  yield `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`;
+  yield `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`;
+  yield `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`;
+  yield "";
+  yield "RESEARCH — LEVEL 1";
+  yield `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`;
+  yield `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`;
+  yield `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`;
+  yield `  hunts              ${openedModel} packet(s) opened for the hunters of ${dueModel.length} due model-class · ` +
+    `${autonomousDispatchedThisCycle} worker task(s) run${deferredByLine ? ` · deferred ${deferredByLine}` : ""}`;
+  yield `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${spendWindow.windowUsd.toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
+    `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle)`;
+  yield `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`;
+  yield `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
+    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intentLogUnreadable !== null ? "UNKNOWN (log unreadable; paid lane held closed)" : intents.paused ? "yes" : "no"}`;
+  for (const d of ownerDispatches) yield `  owner dispatch     ${d.intentId}: "${d.target}" -> ${d.matched} of ${d.registered} registered unit(s) placed first in both lanes`;
+  yield `  runtime            ${runtimeConditions.line()}`;
+  yield `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
+    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`;
+  yield "";
+  if (metrics === null) yield "RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)";
+  else yield* researchDigestLines(metrics);
+}
 
-const lines = [
-  ...digestLines(cycle),
-  ...(movedPlan === null || supersededPlan === null
-    ? []
-    : [
-        `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) · ` +
+const logLines = spoolFreshnessCycleLines(planner, new DiskRows(function* () {
+  yield* digestLines(cycle);
+  if (movedPlan !== null && supersededPlan !== null) {
+    yield `  retired            ${retirementApplied?.retired.length ?? 0} of ${movedPlan.retire.length + supersededPlan.retire.length} planned obligation(s) · ` +
           `${movedThisCycle} with a held calendar route this cycle, ${movedRemaining} remain · ` +
           `${supersededPlan.retire.length} planned that the registry no longer emits · ` +
           `${retirementApplied?.occurrencesClosed.length ?? 0} open occurrence(s) closed unresolved · ` +
@@ -2852,22 +2888,22 @@ const lines = [
           (retirementHeldBack.length > 0 ? ` · held back ${JSON.stringify(retirementHolds)}` : "") +
           ((retirementApplied?.failed.length ?? 0) > 0 ? ` · ${retirementApplied?.failed.length} did not complete, planned again` : "") +
           ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
-          (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
-      ]),
-  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`,
-  ...(abandonedOccurrences.length === 0
-    ? []
-    : [
-        `  abandoned          ${abandonedOccurrences.length} open occurrence(s) their obligation moved past, on RouteTasks never claimed · ` +
+          (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : "");
+  }
+  yield campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`;
+  if (abandonedOccurrences.length !== 0) {
+    yield `  abandoned          ${abandonedOccurrences.length} open occurrence(s) their obligation moved past, on RouteTasks never claimed · ` +
           (abandonedClosed === null
             ? "plan only: this cycle wrote nothing"
-            : `${abandonedClosed.closed.length} closed unresolved, ${abandonedClosed.skipped.length} skipped, ${abandonedClosed.failed.length} failed`),
-      ]),
-  "",
-  ...researchLines,
-  "",
-  ...registryLines(registry),
-];
+            : `${abandonedClosed.closed.length} closed unresolved, ${abandonedClosed.skipped.length} skipped, ${abandonedClosed.failed.length} failed`);
+  }
+  yield "";
+  yield* researchLines();
+  yield "";
+  yield* registryLines(registry);
+}));
+const lines = logLines.rows;
+cycleLogDiagnostic = lines;
 console.log();
 for (const line of lines) console.log(line);
 
@@ -2878,6 +2914,7 @@ for (const line of lines) console.log(line);
   const notReleased = await releaseRoundHolds!();
   if (notReleased.length) runtimeConditions.push(`budget holds this round could not release (${notReleased.join("; ")}); each leaves the ledger after ${SPEND_HOLD_STALE_HOURS} hours`);
 }
+await runtimeConditions.flush(repos);
 
 const runRecord = {
       startedAt: cycle.startedAt,
@@ -2993,7 +3030,7 @@ const runRecord = {
         detail: d.detail,
       })),
       research: {
-        state: finalState,
+        state: { ...finalState, ...runtimeConditions.snapshot() },
         fleetSafety: safety,
         lanes: cycle.lanes,
         /* This cycle's cache rows from the cost ledger, read by the digest's COST section. */
@@ -3034,6 +3071,9 @@ const cycleId = CYCLE_ID;
 const detailCycle = { cycleId, finishedAt, testedSha: RUNNING_CODE_SHA };
 const recordDetails = <T,>(section: string, rows: Iterable<T>) =>
   finalStep(`digest:details:${section}`, () => appendFreshnessCycleDetails(repos, detailCycle, section, rows));
+const cycleLogDetails = await recordDetails("lines", lines);
+const ownerDigestLines = [...logLines.examples,
+  `${logLines.count} ordered cycle log lines in all; first ${logLines.examples.length} shown here. Full report: /api/admin/v6/freshness-report?cycleId=${encodeURIComponent(cycleId)}&section=lines&page=0`];
 const canonicalOutcome: FreshnessCycleOutcome = {
   kind: "FRESHNESS_CYCLE",
   state: "SUCCEEDED",
@@ -3068,7 +3108,12 @@ const canonicalOutcome: FreshnessCycleOutcome = {
     disposition: row.disposition,
     detail: row.detail,
   }))),
-  research: { lanes: runRecord.research.lanes },
+  research: { lanes: runRecord.research.lanes,
+    assignmentDetails: (publishedAssignments as AssignmentCycleReading | null)?.details,
+    cycleLogLineCount: logLines.count, cycleLogDetails,
+    runtimeConditionCount: runtimeConditions.length,
+    runtimeConditionDetails: runtimeConditions.snapshot().runtimeConditionDetails,
+    runtimeConditionDetailsUnavailable: runtimeConditions.snapshot().runtimeConditionDetailsUnavailable },
   deferred: runRecord.deferred,
   debts: runRecord.debts,
   incidents: await recordDetails("incidents", runRecord.incidents.map((incident) => ({
@@ -3086,7 +3131,7 @@ const canonicalOutcome: FreshnessCycleOutcome = {
 };
 
 await finalStep("digest:append", () =>
-  withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines }), {
+  withControlPlaneConnectRetry(() => appendFreshnessCycleDigest(repos, { outcome: canonicalOutcome, lines: ownerDigestLines }), {
     maxAttempts: 3,
     onRetry: ({ attempt, delayMs, error }) =>
       console.error(
@@ -3096,7 +3141,7 @@ await finalStep("digest:append", () =>
   }));
 console.log(`\n  canonical outcome: ${cycleId}`);
 /* Vital signs: a round that named a post-cutoff deferral counts as deferred, else finished (the watchdog's kills are counted by the parent). */
-countVitalSign(runtimeConditions.some(line => /\bdeferred: /.test(line)) ? VITAL_COUNTERS.roundsDeferred : VITAL_COUNTERS.roundsFinished);
+countVitalSign(runtimeConditions.hasDeferred ? VITAL_COUNTERS.roundsDeferred : VITAL_COUNTERS.roundsFinished);
 
 const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord));
 console.log(`  local diagnostic: ${path}`);
@@ -3127,6 +3172,8 @@ await maturity.close();
 await standaloneWorkerToolsHost?.close();
 await cycle.close();
 await vault.close();
+runtimeConditionDiagnostic = null;
+cycleLogDiagnostic = null;
 await planner.close();
 if ("close" in spendCharges && typeof spendCharges.close === "function") spendCharges.close();
 /* Nothing is left to await. A drained loop exits now; anything still holding it open is named, then the cycle exits with its own code instead of waiting for the wall (cycle-exit.ts). */

@@ -22,7 +22,7 @@ test("hunt acceptance persists its score once; pickup stays in progress and comp
  const out=await submit(request,s.deps);assert.equal(out.ok,true,out.receipt.says);assert.equal(out.receipt.huntScores?.[0].before?.percent,20);
  await submit(request,s.deps);assert.equal(s.calls(),1,"replay must keep the original baseline");
  const key=out.receipt.huntScores![0].scopeKey;
- const state=(complete:boolean)=>({formatVersion:RESEARCH_FORMAT_VERSION,assignments:{formatVersion:1,at:AT,assignments:[{key,ref:out.receipt.receiptId,completion:complete?{kind:"COMPLETE",assignmentKey:key,members:1,satisfied:[]}:{kind:"NO_MEMBERS",assignmentKey:key,says:"No members"}}]}} as unknown as ResearchState);
+ const state=(complete:boolean)=>({formatVersion:RESEARCH_FORMAT_VERSION,assignments:{formatVersion:1,at:AT,costsReadable:true,intentsReadable:true,rule:"Shared work counts toward each Send.",assignments:[{key,ref:out.receipt.receiptId,completion:complete?{kind:"COMPLETE",assignmentKey:key,members:1,satisfied:[]}:{kind:"NO_MEMBERS",assignmentKey:key,says:"No members"}}]}} as unknown as ResearchState);
  await s.repos.researchState.put(RESEARCH_STATE_ID,state(false),AT);s.setScore(35);
  const running=await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore);
  assert.equal(running.state,"in-progress");assert.deepEqual(running.progress,{done:15,of:80});assert.match(running.change!.before,/20%/);assert.match(running.change!.after,/35%/);

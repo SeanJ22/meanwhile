@@ -6,6 +6,13 @@ const jsonLine = (output: string, prefix: string): Record<string, unknown> | nul
   if (!line) return null;
   try { return JSON.parse(line.slice(prefix.length)); } catch { return null; }
 };
+const jsonLines = (output: string, prefix: string): Record<string, unknown>[] | null => {
+  try {
+    const rows: unknown[] = output.split(/\r?\n/).filter(line => line.startsWith(prefix)).map(line => JSON.parse(line.slice(prefix.length)));
+    return rows.every(row => row !== null && typeof row === "object" && !Array.isArray(row)) ? rows as Record<string, unknown>[] : null;
+  } catch { return null; }
+};
+const count = (value: unknown): value is number => typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
 export function measuredCompletion(input: { readonly script: string; readonly stdout: string; readonly stderr: string;
   readonly code: number | null; readonly timedOut: boolean; readonly receipt?: Receipt | null }): MeasuredCompletion {
   const { stdout, stderr } = input;
@@ -27,6 +34,61 @@ export function measuredCompletion(input: { readonly script: string; readonly st
     return no(`Source workload did not complete: ${input.receipt.state ?? input.receipt.decision}`);
   }
   if (input.code !== 0) return no(`The executable exited ${input.code}`);
+  if (script === "platform-census-runner.mts") {
+    const terminal = jsonLine(stdout, "RH01_PLATFORM_CENSUS_RESULT ");
+    const states = terminal?.states;
+    if (terminal?.exhausted !== true || terminal.stopped !== false || !Array.isArray(states) || !states.length ||
+        !states.every(state => typeof state === "string" && /^[a-z]{2}$/.test(state)) || new Set(states).size !== states.length)
+      return no("The native Census state loops and resource release did not finish");
+    const logs = stdout.split(/\r?\n/);
+    let failureCount = 0;
+    const observedFailures = (report: Record<string, unknown>) => {
+      if (!Array.isArray(report.failures) || report.failureCount !== undefined && (!count(report.failureCount) || report.failureCount < report.failures.length)) return false;
+      failureCount += report.failureCount === undefined ? report.failures.length : Number(report.failureCount);
+      return true;
+    };
+    const stage = (prefix: string, counter: string) => {
+      const rows = logs.filter(line => line.startsWith(prefix));
+      return rows.length === states.length && rows.every((line, index) => {
+        const expected = `${prefix}${states[index]}: `;
+        if (!line.startsWith(expected)) return false;
+        try {
+          const report = JSON.parse(line.slice(expected.length));
+          return count(report[counter]) && observedFailures(report);
+        } catch { return false; }
+      });
+    };
+    const discoveries = logs.filter(line => line.startsWith("CENSUS_STATE "));
+    let dueChecks = 0;
+    if (!stage("CENSUS_SHUT ", "checked") || !stage("CENSUS_PAGES ", "read") || discoveries.length !== states.length ||
+        !discoveries.every((line, index) => {
+          if (line === `CENSUS_STATE ${states[index]}: discoveries are not due`) { dueChecks++; return true; }
+          try {
+            const report = JSON.parse(line.slice("CENSUS_STATE ".length));
+            return report.state === states[index] && [report.checked, report.walked, report.unchanged, report.notDue].every(count) && observedFailures(report);
+          } catch { return false; }
+        })) return no("A native Census state check, discovery result, or durable end of the full state pass was missing");
+    return { ...yes(`The native Census state pass and release completed: ${states.length - dueChecks} discovery passes, ${dueChecks} explicit not-due checks; not-due checks do not prove source acquisition`, states.length),
+      successful: failureCount === 0 && !/^CENSUS_(?:SOURCE|METRICS) /m.test(stderr + "\n" + stdout) };
+  }
+  if (script === "split-federal-people.mts") {
+    const terminal = jsonLine(stdout, "RH01_FEDERAL_SPLIT_RESULT "), counts = jsonLines(stdout, "FEDERAL_PEOPLE_COUNT "), outcomes = jsonLines(stdout, "FEDERAL_PEOPLE_SPLIT ");
+    const clean = (value: unknown) => {
+      if (!value || typeof value !== "object") return false;
+      const row = value as Record<string, unknown>;
+      return count(row.old) && row.old === row.new && ["missing", "duplicated", "added"].every(key => {
+        const values = row[key];
+        return Array.isArray(values) && values.length === 0 && (row[key + "Count"] === undefined || row[key + "Count"] === 0);
+      });
+    };
+    if (terminal?.exhausted !== true || !count(terminal.requested) || !terminal.requested || terminal.settled !== terminal.requested ||
+        counts?.length !== 1 || !clean(counts[0].members) || !clean(counts[0].positions) || !outcomes || outcomes.length !== terminal.requested ||
+        new Set(outcomes.map(row => row.scope)).size !== outcomes.length || !outcomes.every(row => typeof row.scope === "string" && row.scope.length > 0 &&
+          typeof row.from === "string" && row.from.length > 0 && (typeof row.to === "string" && row.to.length > 0 || row.to === null && typeof row.refusal === "string" && row.refusal.length > 0)))
+      return no("The native federal split did not exhaust its publication loop with preserved member/position counts and an outcome for every actual publication");
+    const refused = outcomes.filter(row => row.to === null).length;
+    return { ...yes(`The native held federal split exhausted all ${outcomes.length} publication bodies with preserved source counts; ${refused} refused`, outcomes.length), successful: refused === 0 };
+  }
   if (script === "rh01-route-replay.mts") {
     const replay = jsonLine(stdout, "RH01_ROUTE_REPLAY ");
     return replay?.complete === true ? yes("The actual pending production route acquired and processed fresh source bytes with local lifecycle writes", 1)

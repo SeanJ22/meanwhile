@@ -74,9 +74,10 @@ test("each Send resolves only its members and never copies a place's source plan
     assert.deepEqual(native.map(row => row.id), order, "the native result preserves duplicate submissions");
     lookups.length = 0;
     const disk = memberRecordsForSend(key, membership, readRecord, ref, planner);
-    assert.deepEqual(lookups, order);
+    assert.deepEqual(lookups, [], "a disk reading does not hydrate the whole Send before its cooperative consumer starts");
     assert.ok(disk instanceof DiskRows);
     assert.deepEqual([...disk].map(row => row.id), ["created", "duplicate", "missing", "reordered"]);
+    assert.deepEqual(lookups, ["created", "duplicate", "missing", "reordered"], "only final selected member values are hydrated, in created-before-reordered order");
     const duplicate = [...disk].find(row => row.id === "duplicate")!;
     assert.equal(duplicate.instructionJoinedAt, late, "the last duplicate value replaces the first at its original output position");
     assert.deepEqual(duplicate.assignments, [{ assignmentKey: key, relation: "CREATED", at: late }], "created membership governs the relation even on its later reordered copy");

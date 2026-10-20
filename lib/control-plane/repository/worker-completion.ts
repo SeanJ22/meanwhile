@@ -2,7 +2,7 @@ import { indexDetectiveFindings } from "../box.ts";
 import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
 import type { AuditFinding, ValidationRecord } from "../audit.ts";
 import type { RouteTask } from "../route-task.ts";
-import { canonicalJson, readByKeys, type ControlPlaneRepositories } from "./types.ts";
+import { canonicalJson, readByKeys, UnknownAggregate, type ControlPlaneRepositories } from "./types.ts";
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
@@ -115,21 +115,24 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
 }
 
 export interface WorkerCompletionScope { readonly workItemIds: readonly string[] }
+export interface WorkerCompletionRefusal { readonly resultId: string; readonly workItemId: string; readonly routeTaskId: string; readonly why: string }
 
 /** A task replays only its own keys. Its cursor and pending work live for this invocation;
  * the parent's country cursor cannot skip another place, and task identities never accumulate in a cache. */
-export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories, scope?: WorkerCompletionScope): Promise<void> {
+export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories, scope?: WorkerCompletionScope,
+  onRefused?: (refusal: WorkerCompletionRefusal) => void): Promise<void> {
   const keys = scope === undefined ? undefined : [...new Set(scope.workItemIds)].sort();
   if (keys?.length === 0) return;
   const selected = keys ? new Set(keys) : null;
   const state = scope === undefined ? reconcileState.get(repos) : undefined;
   const spool = await createPlannerSpool(), pending = plannerMap<string>(spool, "pending");
+  const refused = scope === undefined ? onRefused ?? (row => console.warn(`Worker completion ${row.resultId} remains pending: ${row.why}`)) : undefined;
   let retained = false;
   try {
   for (const [id, key] of state?.pending ?? []) {
     const records = await repos.workerResults.readWhere(key, ["id"], id);
     if (records.length !== 1) throw new Error("WORKER_COMPLETION_PENDING_RESULT_MISSING_OR_AMBIGUOUS");
-    await reconcilePage(repos, records, pending);
+    await reconcilePage(repos, records, pending, refused);
   }
   const appended = await repos.workerResults.readChangedSince(state?.since
     ? new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString() : null, undefined, {
@@ -142,7 +145,7 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
       for (let at = 0; at < rows.length; at += 32) {
         const records: WorkerResultRecord[] = [];
         for (const row of rows.slice(at, at + 32)) records.push(await readChangedLogRecord(repos.workerResults, row, ["id"], row.record.id));
-        await reconcilePage(repos, records, pending);
+        await reconcilePage(repos, records, pending, refused);
       }
     },
   });
@@ -155,7 +158,7 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
 }
 
 async function reconcilePage(repos: ControlPlaneRepositories, offered: readonly WorkerResultRecord[],
-  stillPending: Map<string, string>): Promise<void> {
+  stillPending: Map<string, string>, onRefused?: (refusal: WorkerCompletionRefusal) => void): Promise<void> {
   const records = [...new Map(offered.map(record => [record.id, record])).values()];
   if (records.length === 0) return;
   // Only exact, fully applied commits skip replay; incomplete projections use the guarded writer.
@@ -175,6 +178,14 @@ async function reconcilePage(repos: ControlPlaneRepositories, offered: readonly 
     costsByAttempt.set(cost.attemptId, rows);
   }
   for (const record of records) {
+    if (!items.has(record.workItemId)) {
+      const error = new UnknownAggregate("WorkItem", record.workItemId);
+      if (!onRefused) throw error;
+      const alreadyOffered = stillPending.has(record.id);
+      stillPending.set(record.id, record.workItemId);
+      if (!alreadyOffered) onRefused({ resultId: record.id, workItemId: record.workItemId, routeTaskId: record.routeTaskId, why: error.message });
+      continue;
+    }
     const task = tasks.get(record.routeTaskId);
     const lease = leases.get(record.routeTaskId);
     const result = record.result;

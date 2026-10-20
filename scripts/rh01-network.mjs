@@ -7,6 +7,7 @@ import https from "node:https";
 import subprocess from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { AsyncLocalStorage } from "node:async_hooks";
+import { promisify } from "node:util";
 import { sqlStatementCode } from "./rh01-sql.mts";
 
 const productionReadOwner = new AsyncLocalStorage();
@@ -193,7 +194,7 @@ export function installMeasurementNetworkBoundary(options = {}) {
   }
   if (options.subprocess !== false) for (const methodName of ["spawn", "spawnSync", "execFile", "execFileSync"]) {
     const original = subprocess[methodName];
-    subprocess[methodName] = function (file, ...args) {
+    const check = (file, args) => {
       const command = basename(String(file)).replace(/\.exe$/i, ""), words = Array.isArray(args[0]) ? args[0].map(String) : [];
       if (command === "gh" && !["view", "list", "status", "checks", "diff"].includes(words[1] ?? "") ||
           command === "git" && ["push", "send-email", "request-pull"].includes(words[0] ?? "") ||
@@ -202,8 +203,21 @@ export function installMeasurementNetworkBoundary(options = {}) {
             /^(?:-X|--request)$/.test(word) && !["GET", "HEAD"].includes(words[index + 1]) || /^--request=(?!GET|HEAD)/.test(word))) {
         throw Error(`RH01_REMOTE_COMMAND_BLOCKED:${command}`);
       }
+    };
+    const guarded = function (file, ...args) {
+      check(file, args);
       return Reflect.apply(original, this, [file, ...args]);
     };
+    // execFile's native promisifier preserves {stdout, stderr}, error output,
+    // and promise.child. Guard that entry point before its native closure runs.
+    const nativePromisified = original[promisify.custom];
+    if (typeof nativePromisified === "function") Object.defineProperty(guarded, promisify.custom, {
+      value: function (file, ...args) {
+        check(file, args);
+        return Reflect.apply(nativePromisified, this, [file, ...args]);
+      }, configurable: true,
+    });
+    subprocess[methodName] = guarded;
   }
   if (options.subprocess !== false) for (const methodName of ["exec", "execSync"]) subprocess[methodName] = () => { throw Error("RH01_REMOTE_COMMAND_BLOCKED:shell"); };
   syncBuiltinESMExports();

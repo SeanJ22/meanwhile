@@ -40,6 +40,7 @@ import type { ActionReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowOpen, type LeadOrder } from "../leads/order.ts";
+import { hasAssignmentReceipt, readAssignmentCycleHeader } from "../expansion/assignment-reading.ts";
 
 export type ConfirmationState =
   | "applied"
@@ -147,10 +148,6 @@ function later(a: string | null | undefined, b: string | null | undefined): bool
   const x = Date.parse(a);
   const y = Date.parse(b);
   return Number.isFinite(x) && Number.isFinite(y) && x > y;
-}
-
-interface AssignmentReading {
-  readonly assignments?: { readonly assignments?: readonly { readonly ref?: unknown }[] };
 }
 
 /** Has the runner picked this receipt's action up? Never throws: an unreadable record is "unread". */
@@ -271,9 +268,8 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
       return applied(heartbeat.discoverySearch.appliedAt ?? null);
     }
     if (type === "expansion.scope.set" || type === "expansion.scope.setMany") {
-      const state = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { assignments: true });
-      const refs = (state?.value as AssignmentReading | undefined)?.assignments?.assignments ?? [];
-      if (refs.some((a) => a.ref === receipt.receiptId)) return applied(heartbeat?.lastCycleStartedAt ?? null);
+      const header = await readAssignmentCycleHeader(repos);
+      if (await hasAssignmentReceipt(repos, header, receipt.receiptId)) return applied(heartbeat?.lastCycleStartedAt ?? null);
     }
     if (later(heartbeat?.lastCycleStartedAt, receipt.completedAt ?? receipt.startedAt)) return applied(heartbeat?.lastCycleStartedAt ?? null);
     return waiting;

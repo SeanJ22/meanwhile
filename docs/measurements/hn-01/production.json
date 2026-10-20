@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-20T12:29:41.449Z",
+  "at": "2026-10-20T14:26:42.993Z",
   "readOnly": true,
   "readerDaily": [
     {
@@ -62,12 +62,12 @@
         "dailyRequestCap": 200
       },
       "exa_host_state": {
-        "day": "2026-10-13",
+        "day": "2026-10-20",
         "inFlight": 0,
         "backoffUntil": null,
         "backoffReason": null,
-        "lastRequestAt": "2026-10-13T12:44:58.585Z",
-        "requestsToday": 2
+        "lastRequestAt": "2026-10-20T12:58:04.011Z",
+        "requestsToday": 1
       },
       "exa_host": {
         "host": "api.exa.ai",
@@ -83,47 +83,42 @@
   "memory": [
     {
       "memory": {
-        "at": "2026-10-20T12:29:39.987Z",
+        "at": "2026-10-20T14:24:50.290Z",
         "parents": [
           {
             "pid": 808635,
-            "rssBytes": 243834880,
+            "rssBytes": 230051840,
             "peakBytes": 0
           },
           {
-            "pid": 809518,
-            "rssBytes": 429645824,
-            "peakBytes": 3070230528
-          },
-          {
-            "pid": 810282,
-            "rssBytes": 377798656,
+            "pid": 841079,
+            "rssBytes": 372408320,
             "peakBytes": 0
           }
         ],
         "totalBytes": 8326938624,
         "reservations": [
           {
-            "entry": "ingest.ts",
-            "rssBytes": 154791936,
-            "peakBytes": 389021696
+            "entry": "platform-census-runner.mts",
+            "rssBytes": 242753536,
+            "peakBytes": 348127232
           },
           {
-            "entry": "platform-census-runner.mts",
-            "rssBytes": 263032832,
-            "peakBytes": 341835776
+            "entry": "ingest.ts",
+            "rssBytes": 149622784,
+            "peakBytes": 391118848
           }
         ],
         "headroomBytes": 805306368,
-        "availableBytes": 5997043712,
-        "fitLeaseWorkers": 6,
-        "runnerTreeRssBytes": 2900160512,
-        "reservedGrowthBytes": 2953617408,
-        "runnerTreeProcesses": 17,
+        "availableBytes": 6179606528,
+        "fitLeaseWorkers": 14,
+        "runnerTreeRssBytes": 2539741184,
+        "reservedGrowthBytes": 346869760,
+        "runnerTreeProcesses": 23,
         "leaseWorkerPeakBytes": 358612992
       },
       "tested_sha": "58115789b1d0342cc8563e97f909ac62db01f9b2",
-      "beat_at": "2026-10-20T12:29:40.139Z"
+      "beat_at": "2026-10-20T14:24:50.477Z"
     }
   ],
   "transfer": {
@@ -135,7 +130,7 @@
     "control-plane": {
       "requests": 6,
       "requestBytes": 1711,
-      "responseBytes": 3894
+      "responseBytes": 3823
     }
   }
 }

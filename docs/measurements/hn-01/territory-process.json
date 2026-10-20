@@ -1,0 +1,313 @@
+{
+  "summary": {
+    "at": "2026-10-20T14:21:16.663398+00:00",
+    "checkedGitHead": "5e22c3491",
+    "states": 5,
+    "workerProcesses": 5,
+    "productionWrites": 0,
+    "adminWrites": 0,
+    "httpRequests": 17,
+    "providerUsd": 0,
+    "findingsLocallyBoxed": 0,
+    "worked": 1,
+    "failedOpen": 4,
+    "peakWorkerRssBytes": 170565632,
+    "probeBoundMs": 5000,
+    "probeHttpTimeoutMs": 3000,
+    "minimumHostSpacingMs": 1000,
+    "databaseTransfer": {
+      "reader": {
+        "requests": 25,
+        "requestBytes": 19908,
+        "responseBytes": 144121
+      },
+      "control-plane": {
+        "requests": 0,
+        "requestBytes": 0,
+        "responseBytes": 0
+      }
+    },
+    "section3Passed": 0,
+    "additionalReaderFactRows": 0,
+    "additionalFactsPerActiveWorkerHour": 0,
+    "websiteBlanksAttempted": 5,
+    "blanksAddressedByFindings": 0,
+    "sourceWorkerSeconds": 25.158
+  },
+  "states": [
+    {
+      "state": "AS",
+      "at": "2026-10-20T14:20:20.681Z",
+      "checkedGitHead": "5e22c3491",
+      "pids": [
+        122239
+      ],
+      "opened": [
+        "https://aselectionoffice.gov/robots.txt",
+        "https://aselectionoffice.gov/"
+      ],
+      "result": {
+        "obligationId": "freshness:meetings-discovery:as:city:aasu-village#find-own-site",
+        "routeTaskId": "rt-9999adb0a0eb96b409af896a",
+        "executorChosen": "DETERMINISTIC",
+        "decisionDisagreement": null,
+        "claimed": true,
+        "attemptId": "at-2cdea06ca008f772330e1446",
+        "worker": {
+          "role": "ACQUIRER",
+          "provider": "we-the-people",
+          "version": "route-executor/1.0 (find-own-site)",
+          "instance": "HN-01-readonly-AS:worker:122239"
+        },
+        "executor": "DETERMINISTIC",
+        "executorMismatch": false,
+        "outcome": "FAILED",
+        "dispositionCommitted": false,
+        "disposition": null,
+        "artifactIds": [],
+        "cost": {
+          "inputTokens": null,
+          "outputTokens": null,
+          "usd": 0,
+          "durationMs": 1660,
+          "bytesFetched": 0,
+          "requestCount": 2,
+          "cacheReadInputTokens": null,
+          "cacheCreationInputTokens": null,
+          "cacheCreation5mInputTokens": null,
+          "cacheCreation1hInputTokens": null,
+          "uncachedInputTokens": null,
+          "batch": false
+        },
+        "detail": "route find-own-site is graduated in the method store, so the deterministic walker owns it; no terminal disposition was reached: Aasu village: the government website remains open after 0 source directory page(s)."
+      },
+      "findings": 0,
+      "productionWrites": 0,
+      "adminWrites": 0,
+      "elapsedMs": 3330,
+      "peakRssBytes": 170565632
+    },
+    {
+      "state": "GU",
+      "at": "2026-10-20T14:20:24.977Z",
+      "checkedGitHead": "5e22c3491",
+      "pids": [
+        122301
+      ],
+      "opened": [
+        "http://gec.guam.gov/robots.txt",
+        "http://gec.guam.gov/"
+      ],
+      "result": {
+        "obligationId": "freshness:meetings-discovery:gu:state:guam#find-own-site",
+        "routeTaskId": "rt-55bfddff14422ec534f879e3",
+        "executorChosen": "DETERMINISTIC",
+        "decisionDisagreement": null,
+        "claimed": true,
+        "attemptId": "at-5ef3d23d7ab1466d5d3b890f",
+        "worker": {
+          "role": "ACQUIRER",
+          "provider": "we-the-people",
+          "version": "route-executor/1.0 (find-own-site)",
+          "instance": "HN-01-readonly-GU:worker:122301"
+        },
+        "executor": "DETERMINISTIC",
+        "executorMismatch": false,
+        "outcome": "FAILED",
+        "dispositionCommitted": false,
+        "disposition": null,
+        "artifactIds": [],
+        "cost": {
+          "inputTokens": null,
+          "outputTokens": null,
+          "usd": 0,
+          "durationMs": 6464,
+          "bytesFetched": 0,
+          "requestCount": 2,
+          "cacheReadInputTokens": null,
+          "cacheCreationInputTokens": null,
+          "cacheCreation5mInputTokens": null,
+          "cacheCreation1hInputTokens": null,
+          "uncachedInputTokens": null,
+          "batch": false
+        },
+        "detail": "route find-own-site is graduated in the method store, so the deterministic walker owns it; no terminal disposition was reached: Guam: the government website remains open after 0 source directory page(s)."
+      },
+      "findings": 0,
+      "productionWrites": 0,
+      "adminWrites": 0,
+      "elapsedMs": 8414,
+      "peakRssBytes": 168890368
+    },
+    {
+      "state": "MP",
+      "at": "2026-10-20T14:20:35.216Z",
+      "checkedGitHead": "5e22c3491",
+      "pids": [
+        122487
+      ],
+      "opened": [
+        "https://www.votecnmi.gov.mp/robots.txt",
+        "https://www.votecnmi.gov.mp/"
+      ],
+      "result": {
+        "obligationId": "freshness:meetings-discovery:mp:county:northern-islands-municipality#find-own-site",
+        "routeTaskId": "rt-59d3a8db6b036634aea02ed7",
+        "executorChosen": "DETERMINISTIC",
+        "decisionDisagreement": null,
+        "claimed": true,
+        "attemptId": "at-b10febd803f51218b6dedb6d",
+        "worker": {
+          "role": "ACQUIRER",
+          "provider": "we-the-people",
+          "version": "route-executor/1.0 (find-own-site)",
+          "instance": "HN-01-readonly-MP:worker:122487"
+        },
+        "executor": "DETERMINISTIC",
+        "executorMismatch": false,
+        "outcome": "FAILED",
+        "dispositionCommitted": false,
+        "disposition": null,
+        "artifactIds": [],
+        "cost": {
+          "inputTokens": null,
+          "outputTokens": null,
+          "usd": 0,
+          "durationMs": 6463,
+          "bytesFetched": 0,
+          "requestCount": 2,
+          "cacheReadInputTokens": null,
+          "cacheCreationInputTokens": null,
+          "cacheCreation5mInputTokens": null,
+          "cacheCreation1hInputTokens": null,
+          "uncachedInputTokens": null,
+          "batch": false
+        },
+        "detail": "route find-own-site is graduated in the method store, so the deterministic walker owns it; no terminal disposition was reached: Northern Islands Municipality: the government website remains open after 0 source directory page(s)."
+      },
+      "findings": 0,
+      "productionWrites": 0,
+      "adminWrites": 0,
+      "elapsedMs": 9476,
+      "peakRssBytes": 168214528
+    },
+    {
+      "state": "PR",
+      "at": "2026-10-20T14:20:46.179Z",
+      "checkedGitHead": "5e22c3491",
+      "pids": [
+        122581
+      ],
+      "opened": [
+        "https://ceepur.org/robots.txt",
+        "https://ceepur.org/",
+        "https://oce.pr.gov/robots.txt",
+        "https://oce.pr.gov/"
+      ],
+      "result": {
+        "obligationId": "freshness:meetings-discovery:pr:county:a-asco-municipio#find-own-site",
+        "routeTaskId": "rt-b59d9b10d417ee94960dd2a0",
+        "executorChosen": "DETERMINISTIC",
+        "decisionDisagreement": null,
+        "claimed": true,
+        "attemptId": "at-c67ecd465c4c7b580557e2c2",
+        "worker": {
+          "role": "ACQUIRER",
+          "provider": "we-the-people",
+          "version": "route-executor/1.0 (find-own-site)",
+          "instance": "HN-01-readonly-PR:worker:122581"
+        },
+        "executor": "DETERMINISTIC",
+        "executorMismatch": false,
+        "outcome": "WORKED",
+        "dispositionCommitted": true,
+        "disposition": "WALKED_NO_YIELD",
+        "artifactIds": [
+          "ar-6af530bbb8fa5bcf28fa919e",
+          "ar-be7d88b56a2f5ce340d07160",
+          "ar-efe38d3191279b5c434ff99b"
+        ],
+        "cost": {
+          "inputTokens": null,
+          "outputTokens": null,
+          "usd": 0,
+          "durationMs": 5553,
+          "bytesFetched": 6948,
+          "requestCount": 4,
+          "cacheReadInputTokens": null,
+          "cacheCreationInputTokens": null,
+          "cacheCreation5mInputTokens": null,
+          "cacheCreation1hInputTokens": null,
+          "uncachedInputTokens": null,
+          "batch": false
+        },
+        "detail": "route find-own-site is graduated in the method store, so the deterministic walker owns it; lease ls-4ec3238eb7c59f4b74b20fce; Attempt at-c67ecd465c4c7b580557e2c2 closed COMPLETED with disposition WALKED_NO_YIELD over 3 artifact(s): A\u00f1asco Municipio: the government website remains open after 1 source directory page(s)."
+      },
+      "findings": 0,
+      "productionWrites": 0,
+      "adminWrites": 0,
+      "elapsedMs": 8523,
+      "peakRssBytes": 164462592
+    },
+    {
+      "state": "VI",
+      "at": "2026-10-20T14:20:55.938Z",
+      "checkedGitHead": "5e22c3491",
+      "pids": [
+        122884
+      ],
+      "opened": [
+        "https://www.vivote.gov/robots.txt",
+        "https://vivote.gov/robots.txt",
+        "https://www.vivote.gov/",
+        "https://vivote.gov/robots.txt",
+        "https://vivote.gov/",
+        "https://www.vivote.gov/",
+        "https://vivote.gov/"
+      ],
+      "result": {
+        "obligationId": "freshness:meetings-discovery:vi:state:u-s-virgin-islands#find-own-site",
+        "routeTaskId": "rt-8f7145f7455e69f1d97cfa74",
+        "executorChosen": "DETERMINISTIC",
+        "decisionDisagreement": null,
+        "claimed": true,
+        "attemptId": "at-344cc51c7087a3eda67ca520",
+        "worker": {
+          "role": "ACQUIRER",
+          "provider": "we-the-people",
+          "version": "route-executor/1.0 (find-own-site)",
+          "instance": "HN-01-readonly-VI:worker:122884"
+        },
+        "executor": "DETERMINISTIC",
+        "executorMismatch": false,
+        "outcome": "FAILED",
+        "dispositionCommitted": false,
+        "disposition": null,
+        "artifactIds": [
+          "ar-0dceba5183af3eb4d4dca623",
+          "ar-417c1a0a0d6e4efeda2e25f3"
+        ],
+        "cost": {
+          "inputTokens": null,
+          "outputTokens": null,
+          "usd": 0,
+          "durationMs": 5018,
+          "bytesFetched": 500606,
+          "requestCount": 7,
+          "cacheReadInputTokens": null,
+          "cacheCreationInputTokens": null,
+          "cacheCreation5mInputTokens": null,
+          "cacheCreation1hInputTokens": null,
+          "uncachedInputTokens": null,
+          "batch": false
+        },
+        "detail": "route find-own-site is graduated in the method store, so the deterministic walker owns it; no terminal disposition was reached: U.S. Virgin Islands: 2 saved pages, 0 findings; source remains owed: HUNT_WALK_DEFERRED"
+      },
+      "findings": 0,
+      "productionWrites": 0,
+      "adminWrites": 0,
+      "elapsedMs": 6918,
+      "peakRssBytes": 162607104
+    }
+  ]
+}

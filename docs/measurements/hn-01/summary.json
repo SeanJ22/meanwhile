@@ -4,8 +4,8 @@
   "admin_writes": 0,
   "source_states": 51,
   "background_catalog_states": 56,
-  "background_governments": 111858,
-  "background_held_own_sites": 57354,
+  "background_governments": 112090,
+  "background_held_own_sites": 57357,
   "source_runs": 69,
   "source_requests": 2828,
   "provider_usd": 0,
@@ -19,20 +19,20 @@
   "peak_initial_source_worker_rss_bytes": 621502464,
   "metered_production_transfer": {
     "reader": {
-      "requests": 860,
-      "requestBytes": 761133,
-      "responseBytes": 3476594
+      "requests": 908,
+      "requestBytes": 799071,
+      "responseBytes": 3762962
     },
     "control-plane": {
-      "requests": 13,
-      "requestBytes": 3903,
-      "responseBytes": 8839
+      "requests": 19,
+      "requestBytes": 5614,
+      "responseBytes": 12662
     }
   },
-  "metered_response_bytes": 3485433,
-  "reader_egress_estimate_usd": 0.00034765940000000003,
+  "metered_response_bytes": 3775624,
+  "reader_egress_estimate_usd": 0.0003762962,
   "reader_facts_per_hour_baseline": 0.2916666666666667,
-  "production_observed_at": "2026-10-20T12:29:41.449Z",
+  "production_observed_at": "2026-10-20T14:26:42.993Z",
   "validation_worker_seconds": 170.315,
   "actual_exa": {
     "findings": 0,
@@ -47,7 +47,7 @@
   "actual_production_facts_added": 0,
   "blanks_addressed": 422,
   "all_production_wire_bytes_known": false,
-  "metered_request_bytes": 765036,
+  "metered_request_bytes": 804685,
   "checked_source_commit": "77ac3f6e1",
   "real_route_process": {
     "at": "2026-10-20T12:52:27.228819+00:00",
@@ -85,7 +85,7 @@
     "validationWorkerSeconds": 122.615,
     "additionalFactsPerActiveWorkerHour": 293.53852844182984
   },
-  "all_civic_http_requests_including_diagnostic": 5732,
+  "all_civic_http_requests_including_diagnostic": 5749,
   "entrypoint_recheck": {
     "state": "CO",
     "checkedGitHead": "d315063a9",
@@ -126,6 +126,45 @@
   },
   "metric_definitions": {
     "reader_officials": "Published roster entries, including a person once per body when they serve on more than one body.",
-    "database_bytes": "Metered application response bodies from the existing TX counter; the initial baseline response size is unknown."
-  }
+    "database_bytes": "Metered application response bodies from the existing TX counter; the initial baseline response size is unknown.",
+    "per_state_rate": "Additional isolated-reader rows divided by this state\u2019s active source plus validation seconds; no claim of sustained production throughput.",
+    "production_daily_rate": "New non-campaign native facts in 24 hours / 24 at the production snapshot; title and starts_at belong to MTG."
+  },
+  "territory_route_process": {
+    "at": "2026-10-20T14:21:16.663398+00:00",
+    "checkedGitHead": "5e22c3491",
+    "states": 5,
+    "workerProcesses": 5,
+    "productionWrites": 0,
+    "adminWrites": 0,
+    "httpRequests": 17,
+    "providerUsd": 0,
+    "findingsLocallyBoxed": 0,
+    "worked": 1,
+    "failedOpen": 4,
+    "peakWorkerRssBytes": 170565632,
+    "probeBoundMs": 5000,
+    "probeHttpTimeoutMs": 3000,
+    "minimumHostSpacingMs": 1000,
+    "databaseTransfer": {
+      "reader": {
+        "requests": 25,
+        "requestBytes": 19908,
+        "responseBytes": 144121
+      },
+      "control-plane": {
+        "requests": 0,
+        "requestBytes": 0,
+        "responseBytes": 0
+      }
+    },
+    "section3Passed": 0,
+    "additionalReaderFactRows": 0,
+    "additionalFactsPerActiveWorkerHour": 0,
+    "websiteBlanksAttempted": 5,
+    "blanksAddressedByFindings": 0,
+    "sourceWorkerSeconds": 25.158
+  },
+  "current_source_commit": "5e22c3491",
+  "database_transactions": 927
 }

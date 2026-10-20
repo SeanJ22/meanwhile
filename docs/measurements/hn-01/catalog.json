@@ -1,394 +1,394 @@
 [
   {
     "state": "AL",
-    "governments": 1369,
+    "governments": 1370,
     "ownSites": 755,
-    "directoryBlanks": 614,
+    "directoryBlanks": 615,
     "noSource": 0
   },
   {
     "state": "AK",
-    "governments": 290,
+    "governments": 291,
     "ownSites": 174,
-    "directoryBlanks": 116,
+    "directoryBlanks": 117,
     "noSource": 0
   },
   {
     "state": "AZ",
-    "governments": 1467,
+    "governments": 1468,
     "ownSites": 1104,
-    "directoryBlanks": 363,
+    "directoryBlanks": 364,
     "noSource": 0
   },
   {
     "state": "AR",
-    "governments": 1867,
+    "governments": 1868,
     "ownSites": 782,
-    "directoryBlanks": 1085,
+    "directoryBlanks": 1086,
     "noSource": 0
   },
   {
     "state": "CA",
-    "governments": 6670,
+    "governments": 6671,
     "ownSites": 4881,
-    "directoryBlanks": 1789,
+    "directoryBlanks": 1790,
     "noSource": 0
   },
   {
     "state": "CO",
-    "governments": 3990,
+    "governments": 3991,
     "ownSites": 1509,
-    "directoryBlanks": 2481,
+    "directoryBlanks": 2482,
     "noSource": 0
   },
   {
     "state": "CT",
-    "governments": 985,
+    "governments": 986,
     "ownSites": 604,
-    "directoryBlanks": 381,
+    "directoryBlanks": 382,
     "noSource": 0
   },
   {
     "state": "DE",
-    "governments": 380,
+    "governments": 381,
     "ownSites": 120,
-    "directoryBlanks": 260,
+    "directoryBlanks": 261,
     "noSource": 0
   },
   {
     "state": "DC",
-    "governments": 76,
+    "governments": 77,
     "ownSites": 76,
-    "directoryBlanks": 0,
+    "directoryBlanks": 1,
     "noSource": 0
   },
   {
     "state": "FL",
-    "governments": 2036,
+    "governments": 2037,
     "ownSites": 1180,
-    "directoryBlanks": 856,
+    "directoryBlanks": 857,
     "noSource": 0
   },
   {
     "state": "GA",
-    "governments": 1639,
+    "governments": 1640,
     "ownSites": 804,
-    "directoryBlanks": 835,
+    "directoryBlanks": 836,
     "noSource": 0
   },
   {
     "state": "HI",
-    "governments": 23,
+    "governments": 24,
     "ownSites": 10,
-    "directoryBlanks": 13,
+    "directoryBlanks": 14,
     "noSource": 0
   },
   {
     "state": "ID",
-    "governments": 1364,
+    "governments": 1365,
     "ownSites": 369,
-    "directoryBlanks": 995,
+    "directoryBlanks": 996,
     "noSource": 0
   },
   {
     "state": "IL",
-    "governments": 7964,
+    "governments": 7965,
     "ownSites": 3397,
-    "directoryBlanks": 4567,
+    "directoryBlanks": 4568,
     "noSource": 0
   },
   {
     "state": "IN",
-    "governments": 3110,
+    "governments": 3111,
     "ownSites": 1430,
-    "directoryBlanks": 1680,
+    "directoryBlanks": 1681,
     "noSource": 0
   },
   {
     "state": "IA",
-    "governments": 2188,
+    "governments": 2189,
     "ownSites": 1225,
-    "directoryBlanks": 963,
+    "directoryBlanks": 964,
     "noSource": 0
   },
   {
     "state": "KS",
-    "governments": 4096,
+    "governments": 4097,
     "ownSites": 1061,
-    "directoryBlanks": 3035,
+    "directoryBlanks": 3036,
     "noSource": 0
   },
   {
     "state": "KY",
-    "governments": 1482,
+    "governments": 1483,
     "ownSites": 761,
-    "directoryBlanks": 721,
+    "directoryBlanks": 722,
     "noSource": 0
   },
   {
     "state": "LA",
-    "governments": 728,
+    "governments": 729,
     "ownSites": 277,
-    "directoryBlanks": 451,
+    "directoryBlanks": 452,
     "noSource": 0
   },
   {
     "state": "ME",
-    "governments": 1271,
+    "governments": 1272,
     "ownSites": 724,
-    "directoryBlanks": 547,
+    "directoryBlanks": 548,
     "noSource": 0
   },
   {
     "state": "MD",
-    "governments": 406,
+    "governments": 407,
     "ownSites": 240,
-    "directoryBlanks": 166,
+    "directoryBlanks": 167,
     "noSource": 0
   },
   {
     "state": "MA",
-    "governments": 1512,
+    "governments": 1513,
     "ownSites": 1057,
-    "directoryBlanks": 455,
+    "directoryBlanks": 456,
     "noSource": 0
   },
   {
     "state": "MI",
-    "governments": 3752,
-    "ownSites": 2692,
+    "governments": 3753,
+    "ownSites": 2693,
     "directoryBlanks": 1060,
     "noSource": 0
   },
   {
     "state": "MN",
-    "governments": 4221,
+    "governments": 4222,
     "ownSites": 1966,
-    "directoryBlanks": 2255,
+    "directoryBlanks": 2256,
     "noSource": 0
   },
   {
     "state": "MS",
-    "governments": 1131,
+    "governments": 1132,
     "ownSites": 497,
-    "directoryBlanks": 634,
+    "directoryBlanks": 635,
     "noSource": 0
   },
   {
     "state": "MO",
-    "governments": 4362,
-    "ownSites": 1804,
-    "directoryBlanks": 2558,
+    "governments": 4363,
+    "ownSites": 1806,
+    "directoryBlanks": 2557,
     "noSource": 0
   },
   {
     "state": "MT",
-    "governments": 1715,
+    "governments": 1716,
     "ownSites": 703,
-    "directoryBlanks": 1012,
+    "directoryBlanks": 1013,
     "noSource": 0
   },
   {
     "state": "NE",
-    "governments": 2828,
+    "governments": 2829,
     "ownSites": 500,
-    "directoryBlanks": 2328,
+    "directoryBlanks": 2329,
     "noSource": 0
   },
   {
     "state": "NV",
-    "governments": 210,
+    "governments": 211,
     "ownSites": 143,
-    "directoryBlanks": 67,
+    "directoryBlanks": 68,
     "noSource": 0
   },
   {
     "state": "NH",
-    "governments": 768,
+    "governments": 769,
     "ownSites": 449,
-    "directoryBlanks": 319,
+    "directoryBlanks": 320,
     "noSource": 0
   },
   {
     "state": "NJ",
-    "governments": 2098,
+    "governments": 2099,
     "ownSites": 1861,
-    "directoryBlanks": 237,
+    "directoryBlanks": 238,
     "noSource": 0
   },
   {
     "state": "NM",
-    "governments": 1199,
+    "governments": 1200,
     "ownSites": 400,
-    "directoryBlanks": 799,
+    "directoryBlanks": 800,
     "noSource": 0
   },
   {
     "state": "NY",
-    "governments": 4612,
+    "governments": 4613,
     "ownSites": 3205,
-    "directoryBlanks": 1407,
+    "directoryBlanks": 1408,
     "noSource": 0
   },
   {
     "state": "NC",
-    "governments": 1514,
+    "governments": 1515,
     "ownSites": 1057,
-    "directoryBlanks": 457,
+    "directoryBlanks": 458,
     "noSource": 0
   },
   {
     "state": "ND",
-    "governments": 2802,
+    "governments": 2803,
     "ownSites": 602,
-    "directoryBlanks": 2200,
+    "directoryBlanks": 2201,
     "noSource": 0
   },
   {
     "state": "OH",
-    "governments": 5088,
+    "governments": 5089,
     "ownSites": 2897,
-    "directoryBlanks": 2191,
+    "directoryBlanks": 2192,
     "noSource": 0
   },
   {
     "state": "OK",
-    "governments": 2426,
+    "governments": 2427,
     "ownSites": 1314,
-    "directoryBlanks": 1112,
+    "directoryBlanks": 1113,
     "noSource": 0
   },
   {
     "state": "OR",
-    "governments": 1755,
+    "governments": 1756,
     "ownSites": 950,
-    "directoryBlanks": 805,
+    "directoryBlanks": 806,
     "noSource": 0
   },
   {
     "state": "PA",
-    "governments": 5641,
+    "governments": 5642,
     "ownSites": 2893,
-    "directoryBlanks": 2748,
+    "directoryBlanks": 2749,
     "noSource": 0
   },
   {
     "state": "RI",
-    "governments": 226,
+    "governments": 227,
     "ownSites": 115,
-    "directoryBlanks": 111,
+    "directoryBlanks": 112,
     "noSource": 0
   },
   {
     "state": "SC",
-    "governments": 761,
+    "governments": 762,
     "ownSites": 474,
-    "directoryBlanks": 287,
+    "directoryBlanks": 288,
     "noSource": 0
   },
   {
     "state": "SD",
-    "governments": 2078,
+    "governments": 2079,
     "ownSites": 498,
-    "directoryBlanks": 1580,
+    "directoryBlanks": 1581,
     "noSource": 0
   },
   {
     "state": "TN",
-    "governments": 1179,
+    "governments": 1180,
     "ownSites": 618,
-    "directoryBlanks": 561,
-    "noSource": 0
-  },
-  {
-    "state": "TX",
-    "governments": 6796,
-    "ownSites": 3770,
-    "directoryBlanks": 3026,
-    "noSource": 0
-  },
-  {
-    "state": "UT",
-    "governments": 797,
-    "ownSites": 483,
-    "directoryBlanks": 314,
-    "noSource": 0
-  },
-  {
-    "state": "VT",
-    "governments": 758,
-    "ownSites": 396,
-    "directoryBlanks": 362,
-    "noSource": 0
-  },
-  {
-    "state": "VA",
-    "governments": 864,
-    "ownSites": 682,
-    "directoryBlanks": 182,
-    "noSource": 0
-  },
-  {
-    "state": "WA",
-    "governments": 2245,
-    "ownSites": 1277,
-    "directoryBlanks": 968,
-    "noSource": 0
-  },
-  {
-    "state": "WV",
-    "governments": 709,
-    "ownSites": 271,
-    "directoryBlanks": 438,
-    "noSource": 0
-  },
-  {
-    "state": "WI",
-    "governments": 3518,
-    "ownSites": 1967,
-    "directoryBlanks": 1551,
-    "noSource": 0
-  },
-  {
-    "state": "WY",
-    "governments": 882,
-    "ownSites": 320,
     "directoryBlanks": 562,
     "noSource": 0
   },
   {
+    "state": "TX",
+    "governments": 6797,
+    "ownSites": 3770,
+    "directoryBlanks": 3027,
+    "noSource": 0
+  },
+  {
+    "state": "UT",
+    "governments": 798,
+    "ownSites": 483,
+    "directoryBlanks": 315,
+    "noSource": 0
+  },
+  {
+    "state": "VT",
+    "governments": 759,
+    "ownSites": 396,
+    "directoryBlanks": 363,
+    "noSource": 0
+  },
+  {
+    "state": "VA",
+    "governments": 865,
+    "ownSites": 682,
+    "directoryBlanks": 183,
+    "noSource": 0
+  },
+  {
+    "state": "WA",
+    "governments": 2246,
+    "ownSites": 1277,
+    "directoryBlanks": 969,
+    "noSource": 0
+  },
+  {
+    "state": "WV",
+    "governments": 710,
+    "ownSites": 271,
+    "directoryBlanks": 439,
+    "noSource": 0
+  },
+  {
+    "state": "WI",
+    "governments": 3519,
+    "ownSites": 1967,
+    "directoryBlanks": 1552,
+    "noSource": 0
+  },
+  {
+    "state": "WY",
+    "governments": 883,
+    "ownSites": 320,
+    "directoryBlanks": 563,
+    "noSource": 0
+  },
+  {
     "state": "PR",
-    "governments": 1,
+    "governments": 80,
     "ownSites": 1,
-    "directoryBlanks": 0,
+    "directoryBlanks": 79,
     "noSource": 0
   },
   {
     "state": "VI",
-    "governments": 2,
+    "governments": 3,
     "ownSites": 2,
-    "directoryBlanks": 0,
+    "directoryBlanks": 1,
     "noSource": 0
   },
   {
     "state": "AS",
-    "governments": 1,
+    "governments": 96,
     "ownSites": 1,
-    "directoryBlanks": 0,
+    "directoryBlanks": 95,
     "noSource": 0
   },
   {
     "state": "GU",
-    "governments": 5,
+    "governments": 6,
     "ownSites": 5,
-    "directoryBlanks": 0,
+    "directoryBlanks": 1,
     "noSource": 0
   },
   {
     "state": "MP",
-    "governments": 1,
+    "governments": 6,
     "ownSites": 1,
-    "directoryBlanks": 0,
+    "directoryBlanks": 5,
     "noSource": 0
   }
 ]

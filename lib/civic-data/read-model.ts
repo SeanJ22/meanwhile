@@ -324,7 +324,7 @@ export interface CivicDataBootstrap<T> {
 export interface PromotedOrBootstrapOptions<T> extends PromotedCivicDataReadOptions {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
-  readonly bootstrap: () => CivicDataBootstrap<T>;
+  readonly bootstrap: () => CivicDataBootstrap<T> | Promise<CivicDataBootstrap<T>>;
   /** Production never consults the fixture: an absent pointer is an authority gap. */
   readonly allowUnconfiguredBootstrap?: boolean;
 }
@@ -1368,7 +1368,7 @@ export async function readPromotedOrBootstrap<T>(
     (result.kind === "NOT_RECORDED" ||
       (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED"))
   ) {
-    return bootstrapResult(options.recordClass, options.scope, options.bootstrap(), now, options.maxAgeMs);
+    return bootstrapResult(options.recordClass, options.scope, await options.bootstrap(), now, options.maxAgeMs);
   }
   return result;
 }
@@ -1423,7 +1423,7 @@ export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header -
           @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
   FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
 /** Keep a place's complete selected slice when later card reads add aliases to its selection. */
-export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<PromotedEdgeEntry> {
+export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
   const selection = currentReaderSelection();
   if (!selection) throw new Error("READER_SELECTION_REQUIRED");
   let held = readerProjectionReads.get(selection);
@@ -1431,7 +1431,7 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   const pointer = `${recordClass}:${scope}`;
   const existing = held.get(pointer);
   if (existing) return existing;
-  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set([...selection.keys, ...keys]) });
+  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) });
   held.set(pointer, read);
   void read.catch(() => undefined);
   return read;

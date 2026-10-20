@@ -14,7 +14,7 @@ export const WARM_CONCURRENCY = 24;
 
 /** The arriving page starts this ZIP request before hydration; fill that exact CDN key. */
 export function readerMeetingsPath(point: WarmPlace): string {
-  return `/api/meetings?zip=${point.zip}`;
+  return `/api/meetings?zip=${point.zip}&include=state`;
 }
 
 export interface DeployToWarm {

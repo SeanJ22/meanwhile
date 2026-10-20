@@ -15,6 +15,10 @@
   outline: 1px solid var(--ring);
   outline-offset: -1px;
 }
+/* CPU-drawn controls answer the opening press without a second sheet transition. */
+[data-raster="software"] .mw-reader .sidebar {
+  transition-duration: var(--dur-instant);
+}
 .mw-reader {
   background: var(--ground);
   color: var(--text);

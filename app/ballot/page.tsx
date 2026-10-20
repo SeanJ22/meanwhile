@@ -579,7 +579,7 @@ export default readerRoute("/ballot", async function BallotPage({
       preload(
         "state-money",
         async () => {
-          if (readerData) await primeBallotStateMoneyRead(state);
+          if (readerData) await primeBallotStateMoneyRead(state,set!,matched.contests.filter(contest=>!isFederalContest(contest)));
           return settleStateMoneyRead(state);
         },
       );
@@ -820,6 +820,7 @@ export default readerRoute("/ballot", async function BallotPage({
         <p className="t-body">
           <Link
             href="/"
+            prefetch={false}
             className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
           >
             ← Back to the map
@@ -844,7 +845,7 @@ export default readerRoute("/ballot", async function BallotPage({
       {zip && (
         <div className="ballot-top-pills">
           <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
+          <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">
             Moving here? Know the basics →
           </Link>
           <BallotAskPill

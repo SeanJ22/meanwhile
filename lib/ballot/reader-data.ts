@@ -22,6 +22,8 @@ import type { GeographySelection } from "../census-geography/selection.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { BallotPlace } from "./reader-place.ts";
 import type { BallotSet, Contest } from "./types.ts";
+import {lineupForContest} from "./general-lineup.ts";
+import {reconciledCandidacyIdForCard} from "../identity/az-2026.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
@@ -96,20 +98,33 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   return { registryRead, districtRead, entry };
 }
 
-/** State money is needed only after the selected ballot includes a nonfederal contest. */
-export async function primeBallotStateMoneyRead(state: StateCampaignFinanceJurisdiction): Promise<void> {
+/** Every card key and its held Arizona alias, including earlier filing candidacies. */
+function ballotCandidateKeys(set: BallotSet, contests: readonly Contest[]): string[] {
+  const ids = new Set(contests.map(contest=>contest.id));
+  const keys = new Set([...set.candidacies,...set.filingCandidacies ?? []].filter(candidate=>ids.has(candidate.contestId)).map(candidate=>candidate.id));
+  for (const contest of contests) {
+    const lineup = lineupForContest(set.election.state,contest.id) ?? set.generalLineup?.contests.find(row=>row.contestId===contest.id);
+    for (const nominee of lineup?.nominees ?? []) {
+      const key = `${contest.id}|${nominee.name}`;
+      keys.add(key);
+      if (set.election.state === "AZ") {
+        const canonical = reconciledCandidacyIdForCard(key);
+        if (canonical) keys.add(canonical);
+      }
+    }
+  }
+  return [...keys];
+}
+
+/** The ballot reads state money only for its displayed candidate cards. */
+export async function primeBallotStateMoneyRead(state: StateCampaignFinanceJurisdiction, set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
-  const entry = { recordClass: "STATE_CAMPAIGN_FINANCE" as const, scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope };
-  await primeReaderCanonicalStore([entry], readCanonicalShelf([entry]));
+  await primeReaderProjection("STATE_CAMPAIGN_FINANCE",STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,ballotCandidateKeys(set,contests),{exactKeys:true});
 }
 
 /** Read money for the exact displayed contests, retaining candidates and earlier filings. */
 export async function primeBallotFundingRead(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
-  const ids = new Set(contests.map(contest => contest.id));
-  const keys = [...set.candidacies, ...set.filingCandidacies ?? []].filter(candidate => ids.has(candidate.contestId)).map(candidate => candidate.id);
-  for (const lineup of set.generalLineup?.contests ?? []) if (ids.has(lineup.contestId)) {
-    keys.push(...lineup.nominees.map(nominee => `${lineup.contestId}|${nominee.name}`));
-  }
-  if (keys.length) await primeReaderProjection("FEC_FUNDING", requiredRoutineContract("fec-funding").scope, keys);
+  const keys = ballotCandidateKeys(set,contests);
+  if (keys.length) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,keys);
 }

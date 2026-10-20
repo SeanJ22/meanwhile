@@ -52,7 +52,7 @@ const PLACES: readonly WarmPlace[] = [
 
 test("POST-DEPLOY · the fill and arriving page request the same CDN object", async () => {
   const point=PLACES[0],calls:string[]=[];
-  const runtime={URL,URLSearchParams,
+  const runtime={URL,URLSearchParams,Response,
     location:{pathname:"/",search:`?zip=${point.zip}`,href:`${PUBLIC_SITE_ORIGIN}/?zip=${point.zip}`},
     document:{documentElement:{dataset:{}}},window:{}as{__readerStart?:{location:Promise<unknown>}},
     fetch:async(input:string)=>{calls.push(input);return Response.json({locations:{[point.zip]:point}});},

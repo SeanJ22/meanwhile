@@ -53,9 +53,9 @@ test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA tabl
 test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async (t) => {
   const shards = readerZipStarts(centroidFile.centroids as unknown as CentroidTable, postalFile.zips as unknown as PostalTable);
   t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
-    const path = new URL(input instanceof Request ? input.url : input, "http://localhost").pathname;
-    const match = /^\/geo\/reader-zips\/(\d{2})\.json$/.exec(path);
-    assert.ok(match, path);
+    const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
+    const match = /^\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname);
+    assert.ok(match, requestUrl.pathname);
     return Response.json(shards[Number(match[1])]);
   });
   const centroids = parseGazetteer(fixture("gazetteer.tsv"));

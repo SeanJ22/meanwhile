@@ -7,6 +7,7 @@ declare global {
   interface Window {
     __readerStart?: { zip: string; location: Promise<ZctaCentroid | null>; value?: unknown; expires: number; requests: Record<string, Promise<Response>>; parsed: WeakMap<Response, Promise<unknown>> };
     __startReaderZip?: (zip: string) => Promise<ZctaCentroid | null> | null;
+    __readerSnapshots?: {expires: number; requests: Record<string,Promise<Response>>};
     __readerBoundary?: ReaderBoundary;
     __startReaderBoundary?: (url: string) => ReaderBoundary;
   }
@@ -15,16 +16,21 @@ declare global {
 /** A ZIP link starts its data and boundary reads before hydration. */
 export function readerStartScript(boundaryUrl: string): string { return `try{
 if(location.pathname==="/")document.documentElement.dataset.raster="pending";
+if(location.pathname==="/ballot"&&!window.__readerSnapshots){
+const url="/api/reader/link-health",pending=fetch(url,{cache:"no-cache"});pending.catch(()=>{});
+window.__readerSnapshots={expires:Date.now()+30000,requests:{[url]:pending}};
+}
 window.__startReaderBoundary=url=>{
 if(window.__readerBoundary)return window.__readerBoundary;
-const worker=new Worker("/map-boundary-worker.mjs",{type:"module"}),pending=new Map();let serial=0;
+const worker=new Worker("/map-boundary-worker.mjs",{type:"module"}),pending=new Map();let serial=0,failed;
 worker.onmessage=({data})=>{const held=pending.get(data.id);if(!held)return;pending.delete(data.id);held.clean();data.error?held.reject(new Error(data.error)):held.resolve(data.value)};
-worker.onerror=error=>{for(const held of pending.values()){held.clean();held.reject(new Error(error.message))}pending.clear()};
+worker.onerror=error=>{failed=new Error(error.message);for(const held of pending.values()){held.clean();held.reject(failed)}pending.clear()};
 const request=(request,signal)=>new Promise((resolve,reject)=>{
+if(failed){reject(failed);return}
 const id=++serial,abort=()=>{pending.delete(id);worker.postMessage({id,cancel:true});reject(signal.reason||new DOMException("Aborted","AbortError"))};
 if(signal?.aborted){abort();return}
 pending.set(id,{resolve,reject,clean:()=>signal?.removeEventListener("abort",abort)});
-signal?.addEventListener("abort",abort,{once:true});worker.postMessage({id,request});
+signal?.addEventListener("abort",abort,{once:true});worker.postMessage({id,request},request.kind==="bootstrap"?[request.body]:[]);
 });
 return window.__readerBoundary={url,request};
 };
@@ -38,12 +44,19 @@ if(archive){try{
 const url=new URL(archive,location.href).href;
 window.__startReaderBoundary(url).request({kind:"header",url}).catch(()=>{});
 }catch(e){}}
-const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(r=>{
-const response=r.clone(),value=r.json();value.catch(()=>{});parsed.set(response,value);return response});
-const stateUrl="/api/reader/state?zip="+zip;
-const state=window.__readerBoundary?window.__readerBoundary.request({kind:"state",url:stateUrl}).then(result=>{
-const response=new Response(null,{status:result.status,headers:result.headers});parsed.set(response,Promise.resolve(result.value));return response;
-}):early(stateUrl),place=early("/api/meetings?zip="+zip);
+const parseResponse=r=>{
+const response=r.clone(),value=r.json();value.catch(()=>{});parsed.set(response,value);return response};
+const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(parseResponse);
+const placeUrl="/api/meetings?zip="+zip+"&include=state";
+const parsedResponse=result=>{const response=new Response("",{status:result.status,headers:result.headers});parsed.set(response,Promise.resolve(result.value));return response};
+const combined=fetch(placeUrl,{headers:{accept:"application/json"}}).then(async response=>{
+const split=value=>{const state=value.stateResponse;delete value.stateResponse;
+return{state:state||{value:{error:"The state's information could not be loaded"},status:503,headers:[["cache-control","no-store"]]},place:{value,status:response.status,headers:[...response.headers]}}};
+if(!window.__readerBoundary)return split(await response.json());
+const body=await response.arrayBuffer(),backup=body.slice(0);
+return window.__readerBoundary.request({kind:"bootstrap",body,status:response.status,headers:[...response.headers]}).catch(()=>split(JSON.parse(new TextDecoder().decode(backup))));
+});
+const state=combined.then(result=>parsedResponse(result.state)),place=combined.then(result=>parsedResponse(result.place));
 const settings="/api/reader/settings";
 const outlines="/geo/state-outlines.geojson";
 if(previous?.requests[outlines])requests[outlines]=previous.requests[outlines];
@@ -74,6 +87,9 @@ export const READER_START_SCRIPT = readerStartScript(typeof process === "undefin
 
 /** Consume each early response once; normal navigation keeps its abort behavior. */
 export function fetchReaderResponse(url: string, init?: RequestInit): Promise<Response> {
+  const snapshots = typeof window === "undefined" ? undefined : window.__readerSnapshots;
+  const snapshot = snapshots && snapshots.expires > Date.now() ? snapshots.requests[url] : undefined;
+  if (snapshot) { delete snapshots!.requests[url]; return snapshot; }
   const early = typeof window === "undefined" ? undefined : window.__readerStart;
   const response = early && early.expires > Date.now() ? early.requests[url] : undefined;
   if (response) { delete early!.requests[url]; return response; }

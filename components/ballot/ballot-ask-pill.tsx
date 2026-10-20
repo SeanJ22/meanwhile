@@ -2,11 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import dynamic from "next/dynamic";
+import { BallotAsk } from "@/components/ask/ballot-ask";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import type { AskSubjectRef } from "@/lib/ask/subject";
-
-const BallotAsk = dynamic(() => import("@/components/ask/ballot-ask").then(module => module.BallotAsk), { ssr: false });
 
 /**
  * The ballot page's Ask pill. Placement only: `<BallotAsk>` holds the engine.
@@ -57,7 +55,17 @@ export function BallotAskPill({
   }, [open]);
 
   const toggle = useCallback(() => {
-    setOpen(was => !was);
+    setOpen((was) => {
+      const next = !was;
+      if (next) {
+        requestAnimationFrame(() => {
+          document
+            .querySelector<HTMLInputElement>("[data-ballot-ask] [data-ask-input]")
+            ?.focus({ preventScroll: true });
+        });
+      }
+      return next;
+    });
   }, []);
 
   return (

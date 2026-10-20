@@ -91,12 +91,6 @@ import { DistrictPicker } from "./district-picker";
 import type { CameraTarget, MapFocus, VotingSitePin } from "./map-canvas";
 import type { ModalSubject } from "./popup/entity-modal";
 
-const AskBox = dynamic(
-  () => import("@/components/ask/ask-box").then((m) => m.AskBox),
-  { ssr: false },
-);
-const DoorOverlay = dynamic(() => import("./door-overlay").then(m => m.DoorOverlay), { ssr: false });
-const ListOverlay = dynamic(() => import("./list-overlay").then(m => m.ListOverlay), { ssr: false });
 const MeetingPanel = dynamic(
   () => import("./meeting-panel").then((m) => m.MeetingPanel),
   { ssr: false },
@@ -146,6 +140,9 @@ interface ViewTarget {
 
 const EMPTY_COVERED_BODIES: CoveredBody[] = [];
 const EMPTY_MEETINGS: Meeting[] = [];
+// Start the split map download when its client module arrives, before hydration's effects.
+const arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
+void arrivingMap?.catch(() => {});
 
 export function MapEntry() {
   return (
@@ -157,10 +154,13 @@ export function MapEntry() {
 
 function MapEntryInner() {
   const [MapCanvas, setMapCanvas] = useState<typeof import("./map-canvas").MapCanvas | null>(null);
+  const [AskBox, setAskBox] = useState<typeof import("@/components/ask/ask-box").AskBox | null>(null);
+  const [DoorOverlay, setDoorOverlay] = useState<typeof import("./door-overlay").DoorOverlay | null>(null);
+  const [ListOverlay, setListOverlay] = useState<typeof import("./list-overlay").ListOverlay | null>(null);
   const [mapLoadError, setMapLoadError] = useState<Error | null>(null);
   useEffect(() => {
     let active = true;
-    void import("./map-canvas").then(module => {
+    void (arrivingMap ?? import("./map-canvas")).then(module => {
       module.prepareMapWorkers();
       if (active) setMapCanvas(() => module.MapCanvas);
     }).catch(error => { if (active) setMapLoadError(error); });
@@ -1068,6 +1068,21 @@ function MapEntryInner() {
           : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
+  const cardKind = cardView?.kind;
+  useEffect(() => {
+    let active = true;
+    // Publish a downloaded panel directly, as with the map. Suspending an
+    // already-open card adds React's reveal delay after its module arrives.
+    const failed = (kind: "list" | "door" | "ask", error: Error) => { if (active && (cardKind === kind || kind === "ask" && pop === "ask")) setMapLoadError(error); };
+    const phoneMenu = layoutBp === "phone" && sidebarState === "open";
+    if ((cardKind === "list" || phoneMenu) && !ListOverlay) void import("./list-overlay")
+      .then(module => { if (active) setListOverlay(() => module.ListOverlay); }).catch(error=>failed("list",error));
+    if ((cardKind === "door" || phoneMenu) && !DoorOverlay) void import("./door-overlay")
+      .then(module => { if (active) setDoorOverlay(() => module.DoorOverlay); }).catch(error=>failed("door",error));
+    if (pop === "ask" && !AskBox) void import("@/components/ask/ask-box")
+      .then(module => { if (active) setAskBox(() => module.AskBox); }).catch(error=>failed("ask",error));
+    return () => { active = false; };
+  }, [cardKind, pop, AskBox, DoorOverlay, ListOverlay, layoutBp, sidebarState]);
 
   interface CardSnapshot {
     key: string;
@@ -1344,7 +1359,6 @@ function MapEntryInner() {
       onOpenPop={openPopup}
       onOpenGoverns={openGoverns}
       onOpenBallot={closePop}
-      askReady={Boolean(clusterCoverage && clusterZip)}
     />
   );
 
@@ -1390,9 +1404,9 @@ function MapEntryInner() {
           />
         );
       case "list":
-        return <ListOverlay embedded onPickMeeting={onPickMeeting} />;
+        return ListOverlay && <ListOverlay embedded onPickMeeting={onPickMeeting} />;
       case "door":
-        return (
+        return DoorOverlay && (
           <DoorOverlay
             embedded
             door={cardView.door}
@@ -1764,7 +1778,7 @@ function MapEntryInner() {
             {pop === "ask" &&
               (clusterCoverage && clusterZip ? (
                 <div data-ask-panel>
-                  <AskBox
+                  {AskBox && <AskBox
                     coverage={clusterCoverage}
                     zip={clusterZip}
                     ocdIds={clusterOcdIds}
@@ -1776,7 +1790,7 @@ function MapEntryInner() {
                       })
                     }
                     onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
-                  />
+                  />}
                 </div>
               ) : (
                 <p className="mw-pop-note">

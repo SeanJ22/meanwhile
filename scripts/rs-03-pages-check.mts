@@ -14,11 +14,14 @@ import {join,resolve,extname} from "node:path";
 import {gzipSync} from "node:zlib";
 import {neon,neonConfig} from "@neondatabase/serverless";
 import type {Request as BrowserRequest} from "playwright";
+import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import {launchGuarded} from "./browser.mts";
 
 const built=process.argv.includes("--built");
+const buildRoot=process.env.RS03_BUILD_ROOT;if(buildRoot)process.chdir(buildRoot);
 const motion=process.argv.includes("--reduced-motion")?"reduce":"no-preference";
-const origin="https://meanwhileusa.com";
+const origin=PUBLIC_SITE_ORIGIN;
+const publicUrl=new URL(origin);
 const serverOrigin="http://127.0.0.1:3305";
 const output=process.argv.find(arg=>arg.startsWith("--out="))?.slice(6)??`.scratch/rs03/pages/${built?"built":"main-full"}`;
 const zips=(process.argv.find(arg=>arg.startsWith("--zips="))?.slice(7)??"03046,03032,07005,85701").split(",");
@@ -27,6 +30,7 @@ const profiles=(process.argv.find(arg=>arg.startsWith("--profiles="))?.slice(11)
 assert.ok(profiles.length&&profiles.every(profile=>["phone","desktop"].includes(profile)));
 assert.ok(zips.length&&zips.every(zip=>/^\d{5}$/.test(zip)));
 assert.ok(surfaces.length&&surfaces.every(surface=>["home","map","meetings","officials","ask","ballot"].includes(surface)));
+assert.equal(zips.length*profiles.length*surfaces.length,1,"Each process measures one fresh page");
 await mkdir(output,{recursive:true});
 let directReadBytes=0,serverReadBytes=0,serverLog="";
 let server:ReturnType<typeof spawn>|undefined;
@@ -35,15 +39,15 @@ const relaySessions=new Set<ServerHttp2Session>();
 const rows:Record<string,unknown>[]=[];
 let build:unknown,buildId:string|undefined,identity:unknown;
 const save=()=>writeFile(`${output}/timings.json`,JSON.stringify({at:new Date().toISOString(),origin,serverOrigin:built?serverOrigin:null,motion,build,buildId,identity,
-  transport:built?"Streaming HTTP/2 TLS loopback proxy; DNS override in this browser only":"Live production",
+  transport:built?"Streaming HTTP/2 TLS loopback proxy; Next starts on the first dynamic request; browser-only DNS override":"Live production",
   provider:{mode:browser.provider.policy.mode,spent:browser.provider.spent,blocked:browser.provider.blocked,refused:browser.provider.refused},
-  productionReadBytes:built?{direct:directReadBytes,server:serverReadBytes,total:directReadBytes+serverReadBytes}:null,
-  method:"Fresh browser context per ZIP/profile/surface, sequential; navigation through full rendering, load event, complete initial API reads, and two painted frames; one real first Ask click; no question submission",rows},null,2)+"\n");
+  productionCopyReadBytes:built?{direct:directReadBytes,server:serverReadBytes,total:directReadBytes+serverReadBytes}:null,
+  method:built?"Fresh browser and server process per ZIP/profile/surface; production-copy database; local cold server startup is inside the navigation clock; navigation through full rendering, load event, complete initial API reads, and two painted frames; one real first Ask opening, input tap and typing; no question submission":"Fresh browser process/context; live production server warmth is uncontrolled; complete page rendering and first Ask opening, input tap and typing; no question submission",rows},null,2)+"\n");
 if(built){
- const connection=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
- assert.ok(connection,"The existing production readonly connection is required");
+ const connection=process.env.RS03_READER_COPY_DATABASE_URL;
+ assert.ok(connection,"The production-copy readonly connection is required");
  const target=new URL(connection);assert.equal(target.username,"readonly");
- assert.ok(target.hostname.replace(/-pooler(?=\.)/,"").startsWith("ep-dry-river-axwtolzc."));
+ assert.equal(target.hostname.replace(/-pooler(?=\.)/,""),process.env.RS03_COPY_READER_HOST);
  neonConfig.fetchFunction=async(input:Parameters<typeof fetch>[0],init?:Parameters<typeof fetch>[1])=>{
   const response=await fetch(input,init);directReadBytes+=(await response.clone().arrayBuffer()).byteLength;return response;
  };
@@ -52,19 +56,22 @@ if(built){
   EXISTS(SELECT 1 FROM pg_tables WHERE schemaname='public' AND has_table_privilege(current_user,quote_ident(schemaname)||'.'||quote_ident(tablename),'INSERT,UPDATE,DELETE')) AS can_write`,[])],{readOnly:true});
  assert.equal(role.role,"readonly");assert.equal(role.read_only,"on");assert.equal(role.can_write,false);identity=role;
  buildId=(await readFile(".next/BUILD_ID","utf8")).trim();
+ let starting:Promise<void>|undefined;
+ const ensureServer=()=>starting??=(async()=>{
  server=spawn(process.execPath,["node_modules/next/dist/bin/next","start","-p","3305","-H","127.0.0.1"],{
-  env:{...process.env,DATABASE_URL:connection,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
+  env:{...process.env,DATABASE_URL:connection,WTP_CONTROL_PLANE_DATABASE_URL:process.env.RS03_CONTROL_COPY_DATABASE_URL,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
  });
  server.stdout!.on("data",chunk=>{serverLog+=chunk;});server.stderr!.on("data",chunk=>{serverLog+=chunk;});
- await new Promise<void>((ready,fail)=>{
+ return new Promise<void>((ready,fail)=>{
   const timer=setTimeout(()=>fail(new Error("Built server did not start")),20000);
   server!.stdout!.on("data",()=>{if(serverLog.includes("Ready in")){clearTimeout(timer);ready();}});
   server!.once("exit",code=>{clearTimeout(timer);fail(new Error(`Built server exited (${code})`));});
  });
+ })();
  // Stream the production build under its actual public origin in this browser.
  // A buffered route.fulfill would delay streamed HTML and decompress every asset.
  certDirectory=await mkdtemp(join(tmpdir(),"rs03-browser-"));
- execFileSync("openssl",["req","-x509","-newkey","rsa:2048","-nodes","-keyout",join(certDirectory,"key.pem"),"-out",join(certDirectory,"cert.pem"),"-days","1","-subj","/CN=meanwhileusa.com","-addext","subjectAltName=DNS:meanwhileusa.com"],{stdio:"ignore"});
+ execFileSync("openssl",["req","-x509","-newkey","rsa:2048","-nodes","-keyout",join(certDirectory,"key.pem"),"-out",join(certDirectory,"cert.pem"),"-days","1","-subj",`/CN=${publicUrl.hostname}`,"-addext",`subjectAltName=DNS:${publicUrl.hostname}`],{stdio:"ignore"});
  // Netlify serves build assets from its CDN, without invoking the Next function.
  // Project those same bytes here; dynamic documents and APIs stay on cold Next.
  const staticFiles=new Map<string,{body:Buffer;type:string;compressed:boolean}>();
@@ -82,11 +89,14 @@ if(built){
  const prerender=JSON.parse(await readFile(".next/prerender-manifest.json","utf8"));
  assert.equal(prerender.routes["/"]?.compute,"static","Only the build's static document can bypass its function");
  staticFiles.set("/",{body:gzipSync(await readFile(".next/server/app/index.html")),type:"text/html; charset=utf-8",compressed:true});
- relay=createSecureServer({allowHTTP1:true,key:await readFile(join(certDirectory,"key.pem")),cert:await readFile(join(certDirectory,"cert.pem"))},(request,response)=>{
-  const asset=request.method==="GET"&&!request.headers.rsc?staticFiles.get(new URL(request.url!,origin).pathname):undefined;
+ relay=createSecureServer({allowHTTP1:true,key:await readFile(join(certDirectory,"key.pem")),cert:await readFile(join(certDirectory,"cert.pem"))},async(request,response)=>{
+  // The request's HTTP path selects an asset URL; it is never a filesystem path.
+  const requestUrl=new URL(request.url!,origin);
+  const asset=request.method==="GET"&&!request.headers.rsc?staticFiles.get(requestUrl.pathname):undefined;
   if(asset){response.writeHead(200,{"content-type":asset.type,"content-length":asset.body.length,...(asset.compressed?{"content-encoding":"gzip"}:{}),"x-rs03-build":buildId});response.end(asset.body);return;}
+  try{await ensureServer();}catch{response.writeHead(502);response.end();return;}
   const headers=Object.fromEntries(Object.entries(request.headers).filter(([key])=>!key.startsWith(":")));
-  const upstream=httpRequest(`${serverOrigin}${request.url}`,{method:request.method,headers:{...headers,host:"meanwhileusa.com"}},reply=>{
+  const upstream=httpRequest(`${serverOrigin}${request.url}`,{method:request.method,headers:{...headers,host:publicUrl.host}},reply=>{
    const headers=Object.fromEntries(Object.entries(reply.headers).filter(([key])=>!["connection","keep-alive","transfer-encoding","upgrade","proxy-connection"].includes(key)));
    response.writeHead(reply.statusCode??502,{...headers,"x-rs03-build":buildId});reply.pipe(response);
   });
@@ -98,8 +108,8 @@ if(built){
 }
 const browser=await launchGuarded({label:"rs03-full-pages",blockWrites:true,headless:true,
  ...(process.argv.includes("--provider")?{spendsProviderQuota:"maptiler" as const}:{}),
- proxy:{server:process.env.HTTPS_PROXY??"http://proxy:8080",bypass:`127.0.0.1,localhost${built?",meanwhileusa.com":""}`},
- args:["--no-sandbox","--disable-dev-shm-usage","--ignore-certificate-errors","--use-angle=swiftshader","--enable-unsafe-swiftshader",...(built?["--host-resolver-rules=MAP meanwhileusa.com 127.0.0.1:3310"]:[])],
+ proxy:{server:process.env.HTTPS_PROXY??"http://proxy:8080",bypass:`127.0.0.1,localhost${built?`,${publicUrl.hostname}`:""}`},
+ args:["--no-sandbox","--disable-dev-shm-usage","--ignore-certificate-errors","--use-angle=swiftshader","--enable-unsafe-swiftshader",...(built?[`--host-resolver-rules=MAP ${publicUrl.hostname} 127.0.0.1:3310`]:[])],
 });
 try{
  build=built?{localBuildId:buildId}:await(await fetch(`${origin}/api/build`,{headers:{"x-wtp-synthetic-run":browser.runId}})).json();
@@ -154,20 +164,22 @@ try{
   let rasterResponses=0;
   context.on("response",response=>{
    const url=new URL(response.url());
+   if(url.pathname.startsWith("/api/") && response.status()>=400)errors.push(`API ${url.pathname}: HTTP ${response.status()}`);
    if(url.hostname==="maptiler.com"||url.hostname.endsWith(".maptiler.com")){
     if(response.status()>=400)errors.push(`Basemap ${url.pathname}: HTTP ${response.status()}`);
     else if(url.pathname.endsWith(".png"))rasterResponses++;
    }
   });
   context.on("request",request=>{
-   if(surface!=="ballot"&&new URL(request.url()).pathname==="/ballot")ballotPrefetches.push(request.url());
-   if(new URL(request.url()).pathname.endsWith(".pmtiles"))archiveRanges.push(request.headers().range??"");
-   if(new URL(request.url()).pathname.startsWith("/api/")&&!/\/api\/(log|events|reactions)(?:\/|$)/.test(new URL(request.url()).pathname))pending.add(request);
+   const requestUrl=new URL(request.url());
+   if(surface!=="ballot"&&requestUrl.pathname==="/ballot")ballotPrefetches.push(request.url());
+   if(requestUrl.pathname.endsWith(".pmtiles"))archiveRanges.push(request.headers().range??"");
+   if(requestUrl.pathname.startsWith("/api/")&&!/\/api\/(log|events|reactions)(?:\/|$)/.test(requestUrl.pathname))pending.add(request);
   });
   context.on("requestfailed",request=>pending.delete(request));
   context.on("requestfinished",async request=>{
    pending.delete(request);const sizes=await request.sizes().catch(()=>null);bytes+=sizes?.responseBodySize??0;
-   if(request.url().includes("/api/"))requests.push({url:request.url(),timing:request.timing(),sizes});
+   if(request.url().includes("/api/"))requests.push({url:request.url(),timing:request.timing(),sizes,serverTiming:(await request.response())?.headers()["server-timing"]});
   });
   page.on("pageerror",error=>errors.push(error.message));
   try{
@@ -177,12 +189,12 @@ try{
     // A real first click waits for a usable control; a custom event before hydration is lost.
     await page.locator(".ask-pill").filter({visible:true}).first().click({timeout:15000});
     const box=page.locator("[data-ask-panel] [data-ask-box]").first();await box.waitFor({state:"visible",timeout:15000});
-    await page.waitForFunction(()=>document.activeElement?.matches("[data-ask-panel] [data-ask-box]"),undefined,{timeout:5000});
+    await box.click({timeout:5000});
     await box.fill("Where can I attend a meeting?");
    }else if(surface==="ballot"){
     await page.getByRole("heading",{name:/^What's on the ballot/}).first().waitFor({state:"visible",timeout:20000});
     await page.locator("[data-ballot-ask-pill]").first().click({timeout:15000});
-    await page.waitForFunction(()=>document.activeElement?.matches("[data-ballot-ask] [data-ask-input]"),undefined,{timeout:5000});
+    await page.locator("[data-ballot-ask] [data-ask-input]").first().click({timeout:5000});
     await page.locator("[data-ballot-ask] [data-ask-input]").first().fill("What is on my ballot?",{timeout:15000});
    }else{
     await page.waitForFunction(phone=>{
@@ -267,5 +279,5 @@ try{
  await save();
 }
 const failures=rows.filter(row=>row.ms===null||row.note||Number(row.ms)>=3000||(row.errors as string[]).length);
-console.log(JSON.stringify({run:browser.runId,rows:rows.length,failures:failures.map(({zip,profile,surface,ms,note})=>({zip,profile,surface,ms,note})),productionReadBytes:built?directReadBytes+serverReadBytes:null,browserResponseBytes:rows.reduce((sum,row)=>sum+Number(row.bytes),0)}));
+console.log(JSON.stringify({run:browser.runId,rows:rows.length,failures:failures.map(({zip,profile,surface,ms,note})=>({zip,profile,surface,ms,note})),productionCopyReadBytes:built?directReadBytes+serverReadBytes:null,browserResponseBytes:rows.reduce((sum,row)=>sum+Number(row.bytes),0)}));
 assert.equal(rows.length,zips.length*profiles.length*surfaces.length);assert.deepEqual(failures.map(({zip,profile,surface,ms,note})=>({zip,profile,surface,ms,note})),[]);

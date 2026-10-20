@@ -185,8 +185,6 @@ export function AskBox({
   const debounce = useRef<number | undefined>(undefined);
   const blurTimer = useRef<number | undefined>(undefined);
   const listRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => { inputRef.current?.focus({ preventScroll: true }); }, []);
   /* The beat shows only while the answer is being worked out. */
   const [dots, setDots] = useState(1);
   useEffect(() => {
@@ -500,7 +498,6 @@ export function AskBox({
       <div className="mt-2.5 flex gap-2">
         <div className="relative min-w-0 flex-1">
           <input
-            ref={inputRef}
             id={inputId}
             data-ask-box
             type="text"

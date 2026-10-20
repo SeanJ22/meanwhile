@@ -14,7 +14,7 @@ import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
 
-function stateRows(version: string, divisions: readonly string[]) {
+function stateRows(version: string, divisions: readonly string[], zip = false) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";
   const division = (ocdId: string, label: string, local = false): Division => ({
     ocdId, label, divisionType: local ? ocdId.includes("/county:") ? "county" : "place" : "state", tier: local ? "local" : "state", state: "AZ",
@@ -28,11 +28,11 @@ function stateRows(version: string, divisions: readonly string[]) {
     officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
   const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope, sourceId: "registry-reviewed-bindings", versionId: version, value: runtime });
   const p = entry.projection;
-  return [{ row_kind: "promotion", key: p.key, record_class: p.recordClass, scope: p.scope, source_id: p.sourceId,
+  const row = { row_kind: "promotion", key: p.key, record_class: p.recordClass, scope: p.scope, source_id: p.sourceId,
     current_version_id: p.versionId, last_known_good_version_id: p.lastKnownGoodVersionId, promoted_at: p.promotedAt,
-    retrieved_at: entry.attested.retrievedAt, validation_receipt: p.receipt, normalized_hash: entry.attested.payloadSha256, payload: p.payload, published: true },
-  { row_kind: "additional", part_payload: [{ version_id: `geography:${version}`, geography: [],
-    local_divisions: divisions.map(ocdId => division(ocdId, ocdId, true)) }] }];
+    retrieved_at: entry.attested.retrievedAt, validation_receipt: p.receipt, normalized_hash: entry.attested.payloadSha256, payload: p.payload, published: true };
+  return [...(zip?[]:[row]),{ row_kind: "additional", part_payload: [{ version_id: `geography:${version}`, geography: [],
+    ...(zip?{zip_registry:row}:{}),local_divisions: divisions.map(ocdId => division(ocdId, ocdId, true)) }] }];
 }
 
 const selection = (state: string): ReaderSelection => ({ states: [state], keys: new Set([`state:${state}`]) });
@@ -151,11 +151,11 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   let reads = 0;
   const scope = "US:plain-english-translations:ocd-division/country:us/state:az/cd:7";
   installReaderDatabaseQuery(async statements => {
-    const statement = statements[0], keys = statement.params[0] as string[];
-    if (!keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
+    const statement = statements[0], keys = Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    if (!statement.text.includes("AS zip_registry") && !keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     const rows = stateRows(`zip-request:${statement.params[7]}`,[]);
-    return [[rows[0],{ row_kind:"additional",part_payload:[{version_id:"zip-geography",geography:[],local_divisions:[],canonical_keys:[`CURATED_READER_RECORD:${scope}`]}] }]];
+    return [[rows[0],{ row_kind:"additional",part_payload:[{version_id:"zip-geography",geography:[],local_divisions:[],zip_registry:rows[0],canonical_keys:[`CURATED_READER_RECORD:${scope}`]}] }]];
   });
   try {
     await withReaderSelection(selection("AZ"),async()=>{
@@ -182,11 +182,11 @@ test("the ballot submits state and place reads before its independent auxiliary 
     assert.equal(statements.length,1);
     const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
-    const family=keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
+    const family=statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
-    if (family === "state") return [stateRows("priority-state",[])];
+    if (family === "state") return [stateRows("priority-state",[],statement.text.includes("AS zip_registry"))];
     if (family === "place") return [[{ entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false }]];
     return [[]];
   });
@@ -199,7 +199,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
       "CURATED_READER_RECORD:US:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
     release!();
     await Promise.all([data.registryRead,data.districtRead]);
-    assert.equal(order.length,3,"geographic qualification and registry composition add no follow-up lookup");
+    assert.equal(order.length,3,"the selected ZIP people travel in the state batch without another connection");
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
 });
 
@@ -211,7 +211,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
   installReaderDatabaseQuery(async statements=>{
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
-    if (keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[])];
+    if (statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     auxiliaries++;
     return [[]];

@@ -366,7 +366,8 @@ export function MapCanvas({
       attributionControl: false,
       pitchWithRotate: false,
       dragRotate: false,
-      fadeDuration: prefersReducedMotion() ? 0 : 300,
+      // Labels appear in their first complete frame, including the automatic ZIP fit.
+      fadeDuration: 0,
     }));
     if (!map) {
       document.documentElement.dataset.raster = "unknown";

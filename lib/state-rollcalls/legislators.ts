@@ -21,7 +21,7 @@ import {
   type OfficialStateVoteScope,
 } from "./authority.ts";
 
-const NH_COUNTY: Readonly<Record<string, string>> = {
+export const NH_COUNTY: Readonly<Record<string, string>> = {
   Belknap: "BEL",
   Carroll: "CAR",
   Cheshire: "CHE",

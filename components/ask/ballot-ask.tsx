@@ -4,7 +4,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { AskBodyConfirmation } from "./body-confirmation";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
@@ -49,8 +49,6 @@ export function BallotAsk({
     { question: string; resolvedSubject: string | null }[]
   >([]);
   const inFlight = useRef<AbortController | null>(null);
-  const input = useRef<HTMLInputElement>(null);
-  useEffect(() => { input.current?.focus({ preventScroll: true }); }, []);
 
   async function ask(confirmation?: BodyConfirmation) {
     const question = confirmation?.question ?? text.trim();
@@ -130,7 +128,6 @@ export function BallotAsk({
           Ask a question about this ballot
         </label>
         <input
-          ref={input}
           id="ballot-ask-input"
           data-ask-input
           className="min-w-0 flex-1 rounded-[10px] border border-[var(--panel-border)] bg-transparent px-3 py-2 t-body"

@@ -5,7 +5,8 @@ import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
 import type { ZctaCentroid } from "../lib/geo/zcta-core.ts";
 
 function shard(input: string | URL | Request) {
-  const prefix=/\/geo\/reader-zips\/(\d{2})\.json$/.exec(new URL(input instanceof Request?input.url:input,"http://localhost").pathname)?.[1];
+  const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
+  const prefix=/\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname)?.[1];
   assert.ok(prefix);
   return Response.json({locations:Object.fromEntries(["05009","85701","89109"].filter(zip=>zip.startsWith(prefix)).map(zip=>[zip,lookupZcta(zip)]))});
 }

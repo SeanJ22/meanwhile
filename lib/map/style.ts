@@ -38,6 +38,7 @@ export function basemapStyle(choice: BasemapChoice, software: boolean): StyleSpe
   if (!software) return choice.styleUrl;
   return {
     version: 8,
+    transition: { duration: 0, delay: 0 },
     glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf${new URL(choice.styleUrl).search}`,
     sources: {
       basemap: {

@@ -313,3 +313,4 @@ One line per batch folded into river.
 - 2026-10-20T10:16:06Z · vt-01 · VT-01 · ready 263aa1050e82 · river 026804b0e903 · pnpm gates pass on 026804b0e903
 - 2026-10-20T11:40:11Z · control-reads · CP-01 · ready 579454847ebf · river 51e9ae378092 · pnpm gates pass on 51e9ae378092
 - 2026-10-20T13:59:41Z · src-money · SRC-MN · ready ba5791c5dceb · river a258e6881136 · pnpm gates pass on a258e6881136
+- 2026-10-20T15:07:58Z · hf-01 · HF-01 · ready 1322ea710b60 · river d9cb87e0f686 · pnpm gates pass on d9cb87e0f686

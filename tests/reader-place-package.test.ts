@@ -320,6 +320,23 @@ test("one indexed place read joins local facts and complete calendars from any s
   } finally { await db.pg.close(); }
 });
 
+test("a state's, district's or territory's root never supplies an unassociated native body to a local place", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    for (const [state, segment] of [["AZ", "state:az"], ["DC", "district:dc"], ["PR", "territory:pr"]]) {
+      const root = `ocd-division/country:us/${segment}`, place = `${root}/place:fixture`;
+      const native = `government:US-${state}:cog:unassociated#governing`, local = `${place}#governing`;
+      await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Root',$5,NULL),($2,'place','Local place',$5,$1),($3,'body','Unknown service area',$5,$1),($4,'body','Local council',$5,$2)",
+        [root, place, native, local, state]);
+      const result = await readPlacePackage({ state, divisionIds: [place] }, db.query);
+      assert.deepEqual(result.bodies.map(body => body.id), [local], "a registered state is not an invented local service boundary");
+      const explicit = await readPlacePackage({ state, divisionIds: [], bodyIds: [native] }, db.query);
+      assert.deepEqual(explicit.bodies.map(body => body.id), [native], "the native body remains independently readable");
+    }
+  } finally { await db.pg.close(); }
+});
+
 test("canonical state-family scopes preserve meetings and venue details independently of partial sitting facts", async () => {
   const db = await factDb();
   try {

@@ -1,4 +1,5 @@
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
+import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factReader, statementQuery } from "../facts/db.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
 import { sittingFactsFromRows, withSittingFacts } from "../facts/meeting-read.ts";
@@ -433,7 +434,8 @@ export function readPlacePackage(input: PlaceInput, query?: Query | null): Promi
 async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise<PlacePackage> {
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   const state = input.state.toUpperCase();
-  const [row] = await query(PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], `ocd-division/country:us/state:${state.toLowerCase()}`,
+  const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
+  const [row] = await query(PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], stateRoot,
     input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false]);
   if (!row) throw new Error("PLACE_PACKAGE_READ_FAILED");
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;

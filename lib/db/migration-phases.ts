@@ -164,7 +164,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "CK-01_audit_flags": { phase: "expand", why: "Adds nullable owner flag metadata and indexes and permits null fact_id for a named legacy reader record. Every old writer still supplies fact_id and keeps working; apply before code that uses the new columns." },
-  "CK-01_audit_flags_target": { phase: "contract", why: "After the flag writers serving scalar or named reader targets deploy, require every flag to name one of those targets. The ADD CONSTRAINT is narrowing, so it is separate from the columns required before deploy." },
+  "CK-01_flag_target": { phase: "contract", why: "After the flag writers serving scalar or named reader targets deploy, require every flag to name one of those targets. The ADD CONSTRAINT is narrowing, so it is separate from the columns required before deploy." },
   "0044_rs01_retire_copies": { phase: "contract", why: "After direct canonical readers deploy, removes obsolete reader copy documents, publication queues and their triggers while retaining source candidates, facts and history." },
   "0043_rs01_place_reads": { phase: "expand", why: "Indexes each canonical meeting source calendar by body, so one place query retrieves every source without an adapter list or a publication copy. Existing readers and writers keep working." },
   "0042_rm01_confirmation_times": { phase: "expand", why: "Indexes unchanged-version confirmation times so the reader edge reads only what was confirmed since it last published." },

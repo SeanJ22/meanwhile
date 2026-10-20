@@ -8,6 +8,7 @@ import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scope
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
+import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export type FederalDirectoryState = typeof REGISTRY_STATES[number];
@@ -19,7 +20,7 @@ export function federalDirectoryStateOf(contractId: string): FederalDirectorySta
   const state = /^congress-bulk-roster:([A-Z]{2})$/.exec(contractId)?.[1];
   return FEDERAL_DIRECTORY_STATES.find(place => place === state) ?? null;
 }
-export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/4" as const;
+export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/5" as const;
 
 export interface FederalDirectoryAcquisition {
   readonly requestedUrl: string;
@@ -144,7 +145,8 @@ export function heldDirectoryCandidate(input: {
     if (!authority.ok) issues.push(`${authority.code}:${acquisition.finalUrl}`);
     if (acquisition.httpStatus < 200 || acquisition.httpStatus >= 300) issues.push(`HTTP_${acquisition.httpStatus}:${acquisition.finalUrl}`);
     if (!acquisition.raw.byteLength) issues.push(`EMPTY_BODY:${acquisition.finalUrl}`);
-    if (!acquisition.finalUrl.includes(`/${input.projection.sourceSha}/`)) issues.push(`ACQUISITION_NOT_PINNED_TO_SOURCE_SHA:${acquisition.finalUrl}`);
+    const chamberFeed = Object.values(CHAMBER_DIRECTORY_URLS).some(url => url === acquisition.finalUrl);
+    if (!chamberFeed && !acquisition.finalUrl.includes(`/${input.projection.sourceSha}/`)) issues.push(`ACQUISITION_NOT_PINNED_TO_SOURCE_SHA:${acquisition.finalUrl}`);
   }
   const acquiredFiles = input.acquisitions.map((row) => {
     try { return new URL(row.finalUrl).pathname.split("/").at(-1) ?? ""; }

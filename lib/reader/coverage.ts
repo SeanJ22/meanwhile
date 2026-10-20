@@ -80,7 +80,11 @@ export function stateCoverage(
   const president = presidents.get("ocd-division/country:us") ?? [];
   return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
-    const seats = president.length ? [...coverage.seats, { ocdId: "ocd-division/country:us", label: "United States", divisionType: "country", tier: "national" as const, representatives: president }] : coverage.seats;
+    const stateSeats = coverage.seats.map(seat => {
+      const vacancy = !seat.representatives.length && state.federal?.vacancies?.find(row => row.ocdId === seat.ocdId);
+      return vacancy ? { ...seat, vacancy } : seat;
+    });
+    const seats = president.length ? [...stateSeats, { ocdId: "ocd-division/country:us", label: "United States", divisionType: "country", tier: "national" as const, representatives: president }] : stateSeats;
     return {
       ...coverage,
       seats,

@@ -59,6 +59,7 @@ export interface PanelSeat {
   readonly divisionType: string;
   readonly tier: Seat["tier"];
   readonly representatives: readonly SeatHolder[];
+  readonly vacancy?: Seat["vacancy"];
   readonly standing: BodyStanding;
   readonly sourcing: SeatSourcing;
 }
@@ -68,6 +69,7 @@ export interface PanelSeat {
  * resolved it. The shape `hooks/use-confirmed-divisions.ts` returns.
  */
 export interface ConfirmedRow {
+  readonly vacancy?: Seat["vacancy"];
   readonly ocdId: string;
   readonly label: string | null;
   readonly divisionType: string | null;
@@ -95,6 +97,7 @@ function seatOf(seat: Seat, location: ResolvedLocation): PanelSeat {
     divisionType: seat.divisionType,
     tier: seat.tier,
     representatives: seat.representatives,
+    ...(seat.vacancy ? { vacancy: seat.vacancy } : {}),
     standing: standingOf({ ocdId: seat.ocdId }, location),
     // A seat off the coverage payload came with its people or genuinely has
     // none we hold. There is no request in flight to be honest about.
@@ -145,6 +148,7 @@ export function panelSeatsFor(
       divisionType: row.divisionType ?? divisionTypes[0] ?? "",
       tier: (row.tier ?? "state") as Seat["tier"],
       representatives: row.holders,
+      ...(row.vacancy ? { vacancy: row.vacancy } : {}),
       standing: "CONFIRMED" as const,
       sourcing: row.status,
     }));

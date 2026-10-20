@@ -112,12 +112,12 @@ test("ALIGN-2: the who-governs card calls the shared helper and indents the bloc
     source.includes('className="block person-under-heading"'),
     "the holder block lost its subparagraph indent",
   );
-  /* The count is a proxy for "every heading block on this card indents"; a new
-     block that did NOT indent is what it catches. */
+  /* Four member-name blocks and the mutually exclusive vacancy alternative
+     indent beneath their headings. The vacancy text adds no heading. */
   assert.equal(
     (source.match(/className="block person-under-heading"/g) ?? []).length,
-    4,
-    "every heading block on this card indents, or the card is inconsistent",
+    5,
+    "member names and the vacancy alternative must indent beneath their headings",
   );
 
   const css = readFileSync("app/globals.css", "utf8");

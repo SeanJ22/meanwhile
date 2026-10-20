@@ -3,6 +3,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader/cache";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
+import { federalDirectoryReadState } from "@/lib/officials/federal-directory-read-model";
 
 
 
@@ -44,6 +45,9 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   });
   const holders = seats;
   const { known } = metadata;
+  const federal = federalDirectoryReadState();
+  const vacancy = !holders.length && (federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP")
+    ? federal.value.vacancies?.find(row => row.ocdId === ocdId) : undefined;
 
   return Response.json(
     {
@@ -54,6 +58,7 @@ export const GET = readerRoute("/api/representation/[division]", async function 
       holderStatus: holders.length > 0 ? "HELD"
         : !metadata.available || /\/(?:sldu|sldl):/.test(ocdId) ? "HOLDING_UNAVAILABLE" : "NOT_RECORDED",
       holders,
+      ...(vacancy ? { vacancy } : {}),
       rosterGaps: metadata.rosterGaps,
       metadataStatus: metadata.available ? "HELD" : "HOLDING_UNAVAILABLE",
     },

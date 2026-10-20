@@ -5,7 +5,7 @@ import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, workerMemoryPeakKey, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -95,12 +95,15 @@ test("capacity closed during an asynchronous host read cannot admit queued child
   host.transact(state => { assert.equal(state.reservations.length, 0); }, false);
 });
 
-test("a nested research parent keeps only its inherited reservation after the fresh sample", async () => {
+test("a nested parent must reserve each child at the margin, even inside an admitted process", async () => {
   const host = workerMemoryHost({ processes: () => [{ pid: process.pid, parentPid: process.ppid, rss: 200 }] });
   host.transact(state => { state.reservations.push({ id: "ancestor", owner: process.ppid, pid: process.pid, peak: 600, entry: "ancestor" }); }, false);
-  const slots = workerProcessSlots(() => 20, { host, parentPeakBytes: 400, availableBytes: () => 0, headroomBytes: 100, peakBytes: () => 600 });
-  const release = await slots.acquire();
-  host.transact(state => { assert.equal(state.parents.some(parent => parent.pid === process.pid), false); assert.equal(state.reservations.length, 1); }, false);
+  let free = 0;
+  const slots = workerProcessSlots(() => 20, { host, parentPeakBytes: 400, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 600 });
+  await assert.rejects(slots.acquire(undefined, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  free = 1100; // Parent's remaining 400, the new child's 600, and the 100 margin.
+  const release = await slots.acquire(undefined, Date.now() + 500);
+  host.transact(state => { assert.equal(state.parents.some(parent => parent.pid === process.pid), false); assert.equal(state.reservations.length, 2); }, false);
   release();
 });
 
@@ -188,7 +191,7 @@ test("all publication siblings and routine script families reserve their measure
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
   const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
-  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts", "campaign-money/state-campaign-finance.mts"]) {
+  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts"]) {
     await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   }
 });
@@ -217,13 +220,13 @@ test("state publishers retain their state-unit floor after small-state measureme
   const mib = 1024 * 1024;
   for (const [family, script, measured] of [
     ["ballot-contests", "assemble-ballot-package.mts", 512 * mib],
-    ["candidate-profiles", "promote-manual-civic-projection.mts", 512 * mib],
-    ["candidate-corpus", "promote-manual-civic-projection.mts", 512 * mib],
+    ["candidate-profiles", "promote-manual-civic-projection.mts", WORKER_ENTRY_PEAK_MIB.national! * mib],
+    ["candidate-corpus", "promote-manual-civic-projection.mts", WORKER_ENTRY_PEAK_MIB.national! * mib],
     ["voting-sites", "fetch-voting-sites.mts", 512 * mib],
     ["candidate-campaign-sites-derived", "derive-candidate-campaign-sites.mts", 512 * mib],
   ] as const) {
     const host = workerMemoryHost({ processes: () => [] });
-    host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
+    host.transact(state => { state.peaks = { [workerMemoryPeakKey(script)!]: Array(5).fill(200 * mib) }; }, false);
     const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
     const task = family === "candidate-profiles" ? `candidate-findings:${family}` : family;
     const first = await slots.acquire(`${task}:IL/${script}`, Date.now() + 500);
@@ -305,12 +308,12 @@ test("a burst of queued offers shares one fresh admission sample without blockin
 });
 
 test("children already at their peaks do not reserve their current RSS a second time", async () => {
-  const rows = [{ pid: 100001, parentPid: process.pid, rss: 300 }, { pid: 100002, parentPid: process.pid, rss: 300 }];
+  const rows: { pid: number; parentPid: number; rss: number }[] = [];
   let free = 1000;
   const host = workerMemoryHost({ processes: () => rows });
   const slots = workerProcessSlots(() => 10, { host, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 300 });
-  const one = await slots.acquire(); one.observe!(100001); free = 700;
-  const two = await slots.acquire(); two.observe!(100002); free = 400;
+  const one = await slots.acquire(); rows.push({ pid: 100001, parentPid: process.pid, rss: 300 }); one.observe!(100001); free = 700;
+  const two = await slots.acquire(); rows.push({ pid: 100002, parentPid: process.pid, rss: 300 }); two.observe!(100002); free = 400;
   const three = await slots.acquire(undefined, Date.now() + 100);
   one(); two(); three();
 });
@@ -419,7 +422,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   const mib = 1024 * 1024;
   const crashed = 3.57e9;
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
+  host.transact(state => { state.peaks = { [workerMemoryPeakKey("national-people-refresh.mts")!]: [1.1e9, crashed, 1.2e9] }; }, false);
   let free = crashed + 768 * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   const people = "people-wikidata-people-ca/national-people-refresh.mts";
@@ -437,7 +440,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
 
 test("a running child's high-water memory is sampled, raises its live reservation and sets the next one", { skip: process.platform !== "linux" }, async () => {
   const mib = 1024 * 1024;
-  const host = workerMemoryHost({ processes: () => [] });
+  const host = workerMemoryHost();
   const slots = workerProcessSlots(() => 10, { host, availableBytes: () => Number.MAX_SAFE_INTEGER, headroomBytes: 0, peakBytes: () => mib });
   const release = await slots.acquire("probe/peak-probe.mts");
   const child = spawn(process.execPath, ["-e", "const b = Buffer.alloc(160 * 1024 * 1024, 1); setTimeout(() => b.length, 2600)"], { stdio: "ignore" });
@@ -448,7 +451,7 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   release();
   await yieldToEventLoop();
   let recorded: number[] = [];
-  host.transact(state => { recorded = state.peaks?.["peak-probe.mts"] ?? []; }, false);
+  host.transact(state => { recorded = state.peaks?.[workerMemoryPeakKey("peak-probe.mts")!] ?? []; }, false);
   assert.equal(recorded.length, 1);
   assert.ok(recorded[0]! >= 160 * mib);
   const next = await slots.acquire("probe/peak-probe.mts");

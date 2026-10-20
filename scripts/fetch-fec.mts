@@ -3,13 +3,12 @@ import { config as loadEnv } from "dotenv";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { discoverFecCandidates, fecRegistrationTargets, type FecDiscovery } from "../lib/funding/fec-discovery.ts";
+import { discoverFecCandidates, fecRegistrationTargets, type FecDiscovery, type FecRoster } from "../lib/funding/fec-discovery.ts";
 import { fecBulkUrls, fecBulkText, parseFecBulk } from "../lib/funding/fec-bulk.ts";
 import { collectFecCandidate, collectFecCommittee, collectFecSmallDonorLines, projectFecDiscovery } from "../lib/funding/fec-collector.ts";
 import { fecCycle, parseFecPage, type FecReadPage } from "../lib/funding/fec-api.ts";
 import type { FundingSnapshot, SecondHopCommittee } from "../lib/funding/types.ts";
 import { FEDERAL_DIRECTORY_STATES, federalDirectoryScope, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
-import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -32,11 +31,15 @@ const cycle = fecCycle(new Date(), process.argv.find(arg => arg.startsWith("--cy
 const key = process.env.FEC_API_KEY;
 const current = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
 const prior = current?.payload ?? JSON.parse(readFileSync(join(ROOT, "data/fec/fec-2026.json"), "utf8")) as FundingSnapshot;
-// FEC registrations are national, so every place's members are joined by their exact FEC IDs.
-const places = (await Promise.all(FEDERAL_DIRECTORY_STATES.map(state => store.readPromotion<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))))
-  .flatMap(row => row ? [row.payload.roster] : []);
-const roster: OfficeholderSet | null = places.length ? { ...places[0], officeholders: places.flatMap(row => row.officeholders), divisions: places.flatMap(row => row.divisions),
-  unmatched: places.flatMap(row => row.unmatched) } : null;
+// The join needs only native FEC-to-person IDs. Each state's full directory is
+// released before the next read; contacts, districts and source evidence stay out.
+const rosterIds: FecRoster["officeholders"][number][] = [];
+for (const state of FEDERAL_DIRECTORY_STATES) {
+  const held = await store.readPromotion<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state));
+  for (const holder of held?.payload.roster.officeholders ?? []) rosterIds.push({ id: holder.id,
+    fecCandidateIds: holder.fecCandidateIds ?? holder.nativeIds?.fec ?? [] });
+}
+const roster: FecRoster | null = rosterIds.length ? { officeholders: rosterIds } : null;
 const gaps: { code: string; detail: string }[] = [];
 if (!roster) gaps.push({ code: "CONGRESS_SOURCE_NOT_HELD", detail: "FEC registrations remain separate candidate records until the directory supplies their exact FEC IDs." });
 const domain = openSourceAcquisitionDomain({ sourceLabel: "FEC national registrations and filings", timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS });

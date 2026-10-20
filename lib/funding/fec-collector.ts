@@ -1,7 +1,7 @@
+import { collectFecOrganizationReceipts } from "./fec-transaction-file.ts";
 import { currentFecTransactions, fecId, fecNumber, fecObject, fecSourceObservedAt, fecText, readFecPages, type FecReadPage, type FecRow } from "./fec-api.ts";
 import { smallDonorShare } from "./small-donors.ts";
-import { fecRegistrationLabel, fecRegistrationTargets, type FecTarget, type FecDiscovery, type FecRegistration } from "./fec-discovery.ts";
-import type { OfficeholderSet } from "../officials/types.ts";
+import { fecRegistrationLabel, fecRegistrationTargets, type FecTarget, type FecDiscovery, type FecRegistration, type FecRoster } from "./fec-discovery.ts";
 import type { ContributionRow, FundingCandidate, SecondHopCommittee } from "./types.ts";
 import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 
@@ -21,7 +21,7 @@ export function fecTotalsForPeriod(rows: readonly FecRow[], candidateId: string,
 
 /** National totals do not contain the unitemized line. Preserve it with its own
  * filing date; a bulk individual total never stands in for that line. */
-export function projectFecDiscovery(discovery: FecDiscovery, cycle: number, roster?: OfficeholderSet, previous: readonly FundingCandidate[] = []): FundingCandidate[] {
+export function projectFecDiscovery(discovery: FecDiscovery, cycle: number, roster?: FecRoster, previous: readonly FundingCandidate[] = []): FundingCandidate[] {
   const totals = new Map<string, FecRow[]>(), held = new Map(previous.map(row => [row.fecCandidateId, row]));
   for (const row of discovery.totals) {
     const id = fecText(row.candidate_id); if (!id) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_TOTALS_IDENTITY_INVALID");
@@ -81,13 +81,12 @@ export async function collectFecCommittee(input: { committeeId: string; cycle: n
   if (details.length !== 1 || details[0].committee_id !== id || !fecText(details[0].name)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_COMMITTEE_IDENTITY_INVALID");
   const detail = details[0];
   const latest = fecTotalsForPeriod(await readFecPages(read, `/committee/${id}/totals/`, { cycle }), id, cycle);
-  const rows = await readFecPages(read, "/schedules/schedule_a/", { committee_id: id,
-    two_year_transaction_period: cycle, is_individual: false, sort: "-contribution_receipt_amount" }, true);
+  const contributions = await collectFecOrganizationReceipts(read, id, cycle, row => fecOrganizationRows([row], id));
   const observedAt = input.observedAt();
   return { dataClass: "FEC_CONTRIBUTOR", committeeId: id, name: fecText(detail.name)!,
     committeeType: fecText(detail.committee_type), organizationType: fecText(detail.organization_type),
     designation: fecText(detail.designation), cycle, receipts: fecNumber(latest?.receipts),
-    topContributions: fecOrganizationRows(rows, id).sort((a, b) => b.amount - a.amount).slice(0, 5), provenance: {
+    topContributions: contributions, provenance: {
       sourceUrl: `https://www.fec.gov/data/committee/${id}/?cycle=${cycle}`, sourceOrg: "Federal Election Commission",
       collectedAt: observedAt, verifiedAt: observedAt,
     } };
@@ -135,9 +134,8 @@ export async function collectFecCandidate(input: {
       if (row.designation === "P" || row.designation === "A") committeeIds.push(String(row.committee_id));
     }
     for (const committeeId of [...new Set(committeeIds)]) {
-      const rows = await readFecPages(read, "/schedules/schedule_a/", { committee_id: committeeId,
-        two_year_transaction_period: cycle, is_individual: false, sort: "-contribution_receipt_amount" }, true);
-      contributions.push(...fecOrganizationRows(rows, committeeId));
+      contributions.push(...await collectFecOrganizationReceipts(read, committeeId, cycle, row => fecOrganizationRows([row], committeeId)));
+      contributions = contributions.sort((a, b) => b.amount - a.amount).slice(0, 5);
     }
   } catch (error) {
     if (!isSourceAcquisitionFailure(error)) throw error;

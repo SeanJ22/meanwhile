@@ -44,7 +44,7 @@ import {
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
-import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { hostMemoryReading } from "../lib/control-plane/workers/worker-slots.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { keepRunnerTransfer } from "../lib/db/transfer.ts";
@@ -188,6 +188,8 @@ const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
 const PARENT_CODE_SHA = headSha(ROOT);
 
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
+if (RUNNING_CODE_SHA) process.env.WTP_WORKER_MEMORY_RELEASE = RUNNING_CODE_SHA;
+else delete process.env.WTP_WORKER_MEMORY_RELEASE;
 let CODE_ROOT = ROOT;
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
@@ -980,6 +982,7 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
   const previous = RUNNING_CODE_SHA;
   CODE_ROOT = directory;
   RUNNING_CODE_SHA = targetSha;
+  process.env.WTP_WORKER_MEMORY_RELEASE = RUNNING_CODE_SHA;
   console.log(`  release ${targetSha.slice(0, 8)} switched without a drain: new children start from it; children already running finish on ${previous?.slice(0, 8) ?? "the code they loaded"}; partition admissions continued`);
   return "SWITCHED";
 }
@@ -1158,20 +1161,15 @@ const auditPasses = auditPassClock({
   env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
 });
 
-const censusMemory = routineProcessSlots();
 async function runPlatformCensus(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
-  const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
-  try {
-    const [run] = await runRuntimeChildren([{
-      id: "platform-census", executable: process.execPath,
-      args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
-      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
-    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
-      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
-      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
-    if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
-  } finally { release(); }
+  const [run] = await runRuntimeChildren([{
+    id: "platform-census", executable: process.execPath,
+    args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
+  }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
+    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+  if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
 }
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([

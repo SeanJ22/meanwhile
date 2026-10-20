@@ -13,13 +13,16 @@ export interface FecRegistration {
 export interface FecDiscovery {
   registrations: FecRegistration[]; totals: FecRow[]; route: "api" | "bulk";
 }
+export interface FecRoster {
+  readonly officeholders: readonly Pick<OfficeholderSet["officeholders"][number], "id" | "fecCandidateIds" | "nativeIds">[];
+}
 export function fecRegistrationLabel(row: { office: "H" | "S"; state: string; district: string | null }): string {
   if (row.office === "H" && row.district === null) return `registered with the FEC for House ${row.state}; district not recorded`;
   return `registered with the FEC for ${row.office === "H" ? "House" : "Senate"} ${row.state}-${row.district ?? "00"}`;
 }
 
 /** The directory's native ID is the person join. A name never supplies one. */
-export function fecRegistrationTargets(row: FecRegistration, roster?: OfficeholderSet): FecTarget[] {
+export function fecRegistrationTargets(row: FecRegistration, roster?: FecRoster): FecTarget[] {
   const base = { displayName: row.name, state: row.state, office: row.office, district: row.district, knownFecCandidateId: row.candidateId };
   const holders = roster?.officeholders.filter(holder => holder.id.startsWith("congress:") &&
     (holder.fecCandidateIds ?? holder.nativeIds?.fec ?? []).includes(row.candidateId)) ?? [];

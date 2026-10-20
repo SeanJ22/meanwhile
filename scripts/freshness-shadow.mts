@@ -12,7 +12,7 @@ import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { freshnessProcessMemoryEntry, routineProcessPeakBytes, routineProcessSlots, reportingWorkerSlots, hostMemoryReading, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
@@ -298,7 +298,7 @@ process.on("message", message => {
 });
 
 const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
-  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
+  { parentPeakBytes: routineProcessPeakBytes(freshnessProcessMemoryEntry(process.argv.slice(2))), admissionsOpen: () => !releaseDrainRequested });
 
 const ROOT = process.cwd();
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs", planningStateArg(process.argv.slice(2)) ?? "round");
@@ -424,25 +424,59 @@ if(STATE===null) {
     }
     await parentRepos.controlReadsBackfill.finish(PLANNING_STATES);
   }
-  const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
-    if(releaseDrainRequested){resolve(false);return;}
-    const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,env:admittedRuntimeChildEnvironment({capability:"RESEARCH_CYCLE",parentPid:process.pid}),execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
-    const forward=(message:unknown)=>{if(child.connected)child.send(message as object);};
-    const terminate=()=>{releaseDrainRequested=true;child.kill("SIGTERM");};
-    process.on("SIGTERM",terminate);
-    process.on("message",forward);
-    child.on("message", message => {
-      const summary = message as {type?: string; summary?: StatePlanningSummary};
-      if (summary.type === "STATE_PLANNING_SUMMARY" && summary.summary?.state === state) summaries.set(state, mergeStatePlanningPass(summaries.get(state),summary.summary));
-      else if (process.connected) process.send?.(message);
-    });
-    child.once("error",reject);child.once("exit",code=>{
-      process.off("message",forward);
-      process.off("SIGTERM",terminate);
-      const cleanup=releaseWindowLease(parentRepos,`cycle@${HOST}#${child.pid}`,nowIso());
-      void cleanup.then(()=>resolve(code===0 && summaries.has(state)),reject);
-    });
-  });
+  const statePlanningSlots = reportingWorkerSlots(routineProcessSlots({ admissionsOpen: () => !releaseDrainRequested }));
+  const runState = async (state: string): Promise<boolean> => {
+    if (releaseDrainRequested) return false;
+    const admission = new AbortController();
+    const cancelAdmission = () => {
+      releaseDrainRequested = true;
+      admission.abort(new Error("RUNTIME_RELEASE_DRAINED: state planning remains owed"));
+    };
+    const drainAdmission = (message: unknown) => {
+      if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") cancelAdmission();
+    };
+    process.on("SIGTERM", cancelAdmission);
+    process.on("message", drainAdmission);
+    let release: Awaited<ReturnType<typeof statePlanningSlots.acquire>>;
+    try {
+      release = await statePlanningSlots.acquire(freshnessProcessMemoryEntry([...argv, `--state=${state}`]), undefined, admission.signal);
+    } catch (error) {
+      if (releaseDrainRequested) return false;
+      throw error;
+    } finally {
+      process.off("SIGTERM", cancelAdmission);
+      process.off("message", drainAdmission);
+    }
+    let released = false;
+    const releaseOnce = () => { if (!released) { released = true; release(); } };
+    try {
+      if (releaseDrainRequested || admission.signal.aborted) return false;
+      return await new Promise<boolean>((resolve, reject) => {
+        const child = fork(new URL(import.meta.url), [...argv, `--state=${state}`, `--round-at=${NOW}`], { cwd: ROOT,
+          env: admittedRuntimeChildEnvironment({ capability: "RESEARCH_CYCLE", parentPid: process.pid }),
+          execArgv: [...process.execArgv.filter(arg => !arg.startsWith("--max-old-space-size")), "--max-old-space-size=1536"], stdio: ["ignore", "inherit", "inherit", "ipc"] });
+        const forward = (message: unknown) => { if (child.connected) child.send(message as object); };
+        const terminate = () => { releaseDrainRequested = true; child.kill("SIGTERM"); };
+        process.on("SIGTERM", terminate);
+        process.on("message", forward);
+        child.on("message", message => {
+          const summary = message as { type?: string; summary?: StatePlanningSummary };
+          if (summary.type === "STATE_PLANNING_SUMMARY" && summary.summary?.state === state) summaries.set(state, mergeStatePlanningPass(summaries.get(state), summary.summary));
+          else if (process.connected) process.send?.(message);
+        });
+        let spawnError: Error | null = null;
+        child.once("spawn", () => release.observe?.(child.pid!));
+        child.once("error", error => { spawnError = error; });
+        child.once("close", code => {
+          process.off("message", forward);
+          process.off("SIGTERM", terminate);
+          releaseOnce();
+          const cleanup = child.pid === undefined ? Promise.resolve() : releaseWindowLease(parentRepos, `cycle@${HOST}#${child.pid}`, nowIso());
+          void cleanup.then(() => spawnError ? reject(spawnError) : resolve(code === 0 && summaries.has(state)), reject);
+        });
+      });
+    } finally { releaseOnce(); }
+  };
   const states=IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES;
   let result=await runStatePlanningRound(runState,states);
   if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
@@ -2005,6 +2039,8 @@ const routeUrl = (obligationId: string): string | null => {
   const open = registry.routeFor(obligationId)?.open;
   return open && (open.kind === "HTTP_GET" || open.kind === "HTTP_POST") ? open.url : null;
 };
+const schedulerMemory = await hostMemoryReading(NOW);
+const deterministicWaiters = Math.max(1, Math.floor((schedulerMemory.totalBytes - schedulerMemory.headroomBytes) / (Math.min(...Object.values(WORKER_ENTRY_PEAK_MIB)) * 1024 * 1024)));
 const cycle = await runCycle({
   repos,
   recoveryRepos,
@@ -2013,7 +2049,7 @@ const cycle = await runCycle({
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   maturity,
   executor: executorFor,
-  workerCapacity: Math.max(1, dueDeterministicRows.length),
+  workerCapacity: deterministicWaiters,
   placeComparator: async () => {
     await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
     return (a, b) => (placementRank(a.obligation.id) ?? Infinity) - (placementRank(b.obligation.id) ?? Infinity);

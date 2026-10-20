@@ -1,14 +1,9 @@
-/**
- * A fix shows once when it proves out, then goes quiet. After fix-map writes,
- * each touched method is measured against the proof bar in Admin settings; a
- * fix in Testing is a Queue row. Each status change writes one update together
- * with the standing, so a retried pass never tells it twice.
- */
+
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { withUpdateAdded } from "./updates.ts";
 import type { FixMapRepository } from "../method/fix-map.ts";
-import { capStandings, currentFixProof, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
+import { proofFromStatistics, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
@@ -26,20 +21,19 @@ export function withStanding(config: AdminConfig, standing: MethodStanding, upda
   const list = methodStandings(config);
   const prior = list.find((s) => s.methodId === standing.methodId);
   if (prior && update === null && JSON.stringify(prior) === JSON.stringify(standing)) return config;
-  const next = { ...config, methodStandings: capStandings([...list.filter((s) => s.methodId !== standing.methodId), standing]), updatedAt: update?.at ?? config.updatedAt };
+  const next = { ...config, methodStandings: [...list.filter((s) => s.methodId !== standing.methodId), standing], updatedAt: update?.at ?? config.updatedAt };
   return update === null ? next : withUpdateAdded(next, { id: update.id, what: update.what, at: update.at, label: update.label, setback: update.setback,
     ...(update.claim ? { claim: update.claim } : {}) });
 }
 
-async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
+async function mutate(repos: Repos, methodId: string, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
   for (let attempt = 0; ; attempt++) {
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: { ids: [methodId] }, updates: { ids: [] } });
     const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
     const next = change(current);
     if (next === current) return;
     try {
-      if (held) await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
-      else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+      await repos.adminConfig.save(held, next, at);
       return;
     } catch (error) {
       if (attempt >= 1) throw error;
@@ -53,12 +47,8 @@ export interface MethodTouch {
   readonly brokeIn?: number;
 }
 
-/**
- * Re-measures each touched method and records any status change with its one
- * update. Returns the updates written. `titleOf` gives the plain name Admin
- * shows (the field-manual title); without one a neutral name is used.
- */
-export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, touched: readonly MethodTouch[], at: string,
+
+export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, touched: readonly MethodTouch[], at: string,
   titleOf: (methodId: string) => string | null = () => null): Promise<readonly StandingUpdate[]> {
   if (touched.length === 0) return [];
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -69,11 +59,11 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
   const merged = new Map<string, number>();
   for (const t of touched) merged.set(t.methodId, (merged.get(t.methodId) ?? 0) + (t.brokeIn ?? 0));
   for (const [methodId, brokeIn] of merged) {
-    const map = await fixMap.forMethod(methodId, 1000);
-    if (map.length === 0) continue;
-    const proof = currentFixProof(map, bar, at, recentDays);
+    const stats = await fixMap.statistics(methodId, new Date(Date.parse(at) - recentDays * 86_400_000).toISOString());
+    if (stats.total === 0) continue;
+    const proof = proofFromStatistics(stats, bar);
     let told: StandingUpdate | null = null;
-    await mutate(repos, at, (c) => {
+    await mutate(repos, methodId, at, (c) => {
       const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
       const { standing, update } = nextStanding(methodId, prior, proof, titleOf(methodId) ?? "", at, { brokeIn });
       told = update;
@@ -85,14 +75,15 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
 }
 
 /** A loss study changed a method: it goes back into Testing and says so once. */
-export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, methodId: string, lesson: string, at: string,
+export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, methodId: string, lesson: string, at: string,
   title: string | null = null): Promise<StandingUpdate | null> {
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   const config = held && isAdminConfig(held.value) ? held.value : null;
-  const proof = currentFixProof(await fixMap.forMethod(methodId, 1000), readFixProofBar(config), at, readFixProofRecentDays(config));
+  const stats = await fixMap.statistics(methodId, new Date(Date.parse(at) - readFixProofRecentDays(config) * 86_400_000).toISOString());
+  const proof = proofFromStatistics(stats, readFixProofBar(config));
   let told: StandingUpdate | null = null;
   const event: StandingEvent = { lesson };
-  await mutate(repos, at, (c) => {
+  await mutate(repos, methodId, at, (c) => {
     const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
     const { standing, update } = nextStanding(methodId, prior, proof, title ?? "", at, event);
     told = update;
@@ -101,12 +92,9 @@ export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod
   return told;
 }
 
-/**
- * Re-measure each Proven label on today's results. One that no longer holds says "Proven, broke since", writes
- * its one update, and is back in the Queue. Run daily.
- */
-export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+
+export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true });
   const proven = methodStandings(held && isAdminConfig(held.value) ? held.value : null).filter((s) => s.status === "PROVEN");
   return noteMethodStandings(fixMap, repos, proven.map((s) => ({ methodId: s.methodId })), now, (id) => proven.find((s) => s.methodId === id)?.title ?? null);
 }

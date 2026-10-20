@@ -159,10 +159,6 @@ function ingests(vaultRoot: string, url: string, body: string): RunWork {
   };
 }
 
-/**
- * An occurrence walked to a committed disposition by a cycle that then ended
- * before its occurrence-and-debt phase: no occurrence closed, no debt persisted.
- */
 async function interrupted(repos: ControlPlaneRepositories, o: FreshnessObligation, run: RunWork) {
   await repos.obligations.put(o.id, standing(o, T0), T0);
   const opened = await openOccurrence(repos, {
@@ -214,7 +210,7 @@ async function cycleAt(
     ...(options.research !== undefined ? { research: options.research } : {}),
     openOccurrence: async (row) => {
       const held = rows.find((o) => o.id === row.obligation.id)!;
-      const resumed = await resumeOpenOccurrence(repos, held);
+      const resumed = await resumeOpenOccurrence(repos, held, await repos.dispatchState.readOpen({ obligationIds: [held.id] }));
       if (resumed?.kind === "SETTLED") return { settled: resumed.settled };
       if (resumed !== null) {
         open.set(held.id, { id: resumed.id, routeTaskId: resumed.routeTaskId });
@@ -257,7 +253,7 @@ test("cycle closure runs independent occurrences together and serializes occurre
   for (const [label, repos] of await eachStore("wtp-close-parallel-")) {
     const first = await interrupted(repos, obligation("shared-obligation"), disposes("WALKED_NO_YIELD"));
     const other = await interrupted(repos, obligation("independent-obligation"), disposes("REQUIRES_NEW_ADAPTER"));
-    const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("shared-obligation")).value);
+    const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("shared-obligation")).value, await repos.dispatchState.readOpen({ obligationIds: ["shared-obligation"] }));
     assert.equal(resumed?.kind, "SETTLED");
     if (resumed?.kind !== "SETTLED") throw new Error("fixture did not settle");
     const secondId = `${first.occurrenceId}:second-period`;
@@ -481,7 +477,7 @@ test("SEEDED: claimRouteTask refuses a disposed RouteTask and writes nothing, an
       `${label}: the refusal does not take over the dead lease, open an Attempt or touch the state`,
     );
 
-    const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value);
+    const resumed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value, await repos.dispatchState.readOpen({ obligationIds: ["ob-settled"] }));
     assert.equal(resumed?.kind, "SETTLED", `${label}: resumed as settled despite state ${residue.task.value.state}`);
 
     const sweep = await sweepExpiredLeases(repos, { now: T2, observedBy: "sweeper" });
@@ -886,13 +882,13 @@ test("findSettledOccurrences names exactly the open occurrences whose RouteTask 
 
     const obligations = (await repos.obligations.list()).map((row) => row.value);
     const routeTasks = await repos.routeTasks.list();
-    const closing = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-closed")).value);
+    const closing = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-closed")).value, await repos.dispatchState.readOpen({ obligationIds: ["ob-closed"] }));
     assert.equal(closing?.kind, "SETTLED");
     if (closing?.kind === "SETTLED") await closeSettledOccurrence(repos, { settled: closing.settled, now: T1 });
 
     const found = await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: settledRouteTaskIds(routeTasks) });
     assert.deepEqual(found.map((s) => s.obligationId), ["ob-settled"], `${label}: only the settled one still open`);
-    const confirmed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value);
+    const confirmed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value, await repos.dispatchState.readOpen({ obligationIds: ["ob-settled"] }));
     assert.deepEqual(found[0], confirmed?.kind === "SETTLED" ? confirmed.settled : null, `${label}: exactly what a lane's resume reads`);
     assert.deepEqual(
       await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: new Set() }),

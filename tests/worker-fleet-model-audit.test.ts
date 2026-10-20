@@ -1,3 +1,4 @@
+import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { contentHash } from "../lib/control-plane/ids.ts";
@@ -233,7 +234,7 @@ async function reposWithAuditSpend(usd: number) {
     project: "fleet", role: "ADVERSARIAL_AUDITOR", recordedAt: "2026-09-03T09:00:00.000Z",
     cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
   };
-  await repos.costs.append(cost.workItemId, cost.attemptId, cost, NOW);
+  await recordCost(repos, cost, NOW);
   return repos;
 }
 

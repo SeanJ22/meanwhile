@@ -7,6 +7,7 @@ import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
 import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
@@ -227,7 +228,7 @@ test("a calendar that answered is never called unreachable, and its answer is ne
   assert.match(clause, /^our latest check\b/, "the clause is about our check, whose it is");
 });
 
-test("the reason survives its writer, the body's record, the edge, the wire and the route's search", async () => {
+test("the reason survives its writer, the body's record, the edge, the wire and the route's search", async (t) => {
   assert.ok(ROCKAWAY, "the Rockaway Township council partition is registered");
   const store = new MemoryRoutineDataStore();
 
@@ -253,9 +254,16 @@ test("the reason survives its writer, the body's record, the edge, the wire and 
 
   const expected = { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" };
 
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
   const edge = freshEdge();
   await publishPass(store, edge, NO_LONGER_HELD);
   const read = await readPlace(edge, store, [ROCKAWAY.ocdId!], NO_LONGER_HELD);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const served = JSON.parse(JSON.stringify(read.value)) as typeof read.value;

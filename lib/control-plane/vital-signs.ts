@@ -1,9 +1,3 @@
-/**
- * One row per UTC hour saying whether the factory worked: a running partial row every 10 minutes and a final row
- * once the hour's processes flush. Neon bytes, rounds and facts come from the hour files every runner process
- * writes; spend from one aggregate over the hour's cost rows. A count nobody recorded is null, never 0.
- * `neon_project_bytes` is written by River, never the runner.
- */
 import type { NeonBytesHour } from "../db/transfer-by-caller.ts";
 import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type BoundableSql } from "./repository/request-bounds.ts";
 
@@ -81,10 +75,11 @@ export function costPerFact(spendUsd: number | null, factsLive: number | null): 
 
 /** The control plane's callers, largest first, top `top` plus "other". Reader-database reads are not in this total. */
 export function controlPlaneByCaller(hour: NeonBytesHour, top = 20): Record<string, number> {
-  const ranked = Object.entries(hour.byCaller).filter(([caller]) => !caller.startsWith("reader: "))
+  const ranked = Object.entries(hour.byCaller).filter(([caller]) => caller !== "other" && !caller.startsWith("reader: "))
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   const out: Record<string, number> = Object.fromEntries(ranked.slice(0, top));
-  const rest = ranked.slice(top).reduce((total, [, bytes]) => total + bytes, 0);
+  // A child's truncated "other" mixes both databases; the database total preserves its control-plane share.
+  const rest = hour.bytes["control-plane"] - Object.values(out).reduce((total, bytes) => total + bytes, 0);
   if (rest > 0) out.other = rest;
   return out;
 }

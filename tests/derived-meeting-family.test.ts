@@ -1,17 +1,3 @@
-/**
- * A reviewed calendar publishes through the runner's doors with no code release, and keeps its verified sittings
- * through temporary outages. Every step is the production door, on the in-memory store:
- *
- * 1. a reviewed crosswalk row is promoted through the manual door;
- * 2. the wiring store is derived from it, a validated walk and the vault, and
- *    promoted through the routine door, which checks every promoted input;
- * 3. the state's derived family reads the member on its attested host and
- *    promotes through the meeting-partition door, which checks every member
- *    read's host against the wiring version it names;
- * 4. the meetings Reader composes the family's sittings beside every partition.
- *
- * No code names the body, the calendar or the host: they are data from step 1.
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";

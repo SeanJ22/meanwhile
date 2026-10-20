@@ -1,16 +1,3 @@
-/**
- * Fleet · Now and Readiness read the fields they draw, not the whole rows.
- *
- * ```
- *   readNarrowed   an aggregate narrowed by the store, with its revision; an empty projection is
- *                  the revision alone. Every provider answers alike.
- *   the pulse      the snapshot's four counted fields and the research state's lane queue, never
- *                  the whole rows, and the same pulse, field for field
- *   Fleet · Now    its own cards alone
- *   Readiness      each state's grid, without the ZIP rows it never draws, beside its counties,
- *                  every read started before the policy row
- * ```
- */
 import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -192,7 +179,7 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
     },
   });
   const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots),
-    researchState: watch("the research state", repos.researchState), adminConfig: watch("the hunt policy", repos.adminConfig) }, NOW);
+    researchState: watch("the research state", repos.researchState), adminConfig: { ...repos.adminConfig, ...watch("the hunt policy", repos.adminConfig) } }, NOW);
   assert.deepEqual(pulse.unread, [], "nothing it reads was refused");
   assert.deepEqual(asked, [
     { which: "the snapshot", projection: PULSE_SNAPSHOT_FIELDS },

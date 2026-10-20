@@ -1,8 +1,5 @@
-/**
- * The paid-work guards live in one module that the research round builds from the controllers it arms, so a
- * standing lease-worker lane builds the same ones. Each refusal is checked on the real holds, Fleet controller and
- * provider queue, with a fake model that counts what it was asked to send.
- */
+import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
+
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -45,7 +42,7 @@ async function harness(options: {
   };
   const conditions: string[] = [];
   const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: () => NOW, sleep: async () => undefined });
-  const fleetSafety = new FleetSafetyController({ now: NOW, charges: (options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), modelHold: options.modelHold ?? null,
+  const fleetSafety = new FleetSafetyController({ now: NOW, spend: aggregatePricedSpend((options.costs ?? []).flatMap(row => pricedModelCharge(row, row.attemptId) ?? []), new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), NOW), modelHold: options.modelHold ?? null,
     rollingCeilingUsd: options.ceilingUsd ?? 50, clock: () => Date.parse(NOW) });
   const deps: PaidWorkGuardDeps = { batchEnv: { WTP_BACKGROUND_WORKER_BATCH: options.batch ? "1" : "0" }, repos, now: () => NOW, armedAt: NOW, fleetSafety, providerQueue: new ModelProviderQueue(), spendHolds,
     assignmentBudget: { linesFor: () => options.sends ?? { lines: [] } } as unknown as AssignmentBudgetGate,

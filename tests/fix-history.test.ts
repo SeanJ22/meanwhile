@@ -1,4 +1,3 @@
-/** A door or method's history is its fix-list items in order; a gap that broke twice reads as two episodes with how long each fix held. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -53,7 +52,7 @@ test("a method going from working to failing in a place opens a fix item; workin
   assert.equal(out.broke, 0, "a first failure with nothing known to work is not a break");
   out = await recordAttemptsKeepingHistory(map, repos, [attempt("a2", "SUCCEEDED", "2026-09-02T00:00:00.000Z"), attempt("a3", "FAILED", "2026-09-03T00:00:00.000Z")]);
   assert.deepEqual([out.written, out.broke], [2, 1]);
-  const config = () => repos.adminConfig.mustRead(ADMIN_CONFIG_ID).then((r) => r.value as AdminConfig);
+  const config = () => repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { fixList: true }).then((r) => r.value as AdminConfig);
   const where = methodBreakFixWords("m-1", "place-1").where;
   assert.deepEqual(fixItems(await config()).filter((i) => i.where === where).map((i) => [i.state, i.addedBy]), [["OPEN", "The fix map"]]);
   out = await recordAttemptsKeepingHistory(map, repos, [attempt("a4", "SUCCEEDED", "2026-09-04T00:00:00.000Z")]);

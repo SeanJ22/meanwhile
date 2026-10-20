@@ -1,4 +1,3 @@
-/** Per-surface share over three seconds, errors and dead links on the Scoreboard row; a surface over its limit leads the stuck list and opens one fix item. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -56,7 +55,7 @@ test("the pass opens one fix item per surface over its limit, and the same gap s
   const again = await openSurfaceFixes(repos, pass, "2026-10-05T13:00:00.000Z");
   assert.equal(first.opened.length, 2);
   assert.deepEqual(again.opened, first.opened);
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: true });
   const config = held && isAdminConfig(held.value) ? held.value : null;
   const items = config ? fixItems(config) : [];
   assert.equal(items.length, 2);

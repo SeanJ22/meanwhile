@@ -35,6 +35,8 @@ async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text);
     CREATE TABLE cp_work_items(id text PRIMARY KEY,value jsonb);
     CREATE INDEX cp_work_items_publication_body ON cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'));
+    CREATE TABLE cp_work_items_archive (LIKE cp_work_items INCLUDING ALL);
+    CREATE VIEW cp_work_items_history AS SELECT * FROM cp_work_items UNION ALL SELECT * FROM cp_work_items_archive;
     CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,
@@ -725,6 +727,9 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.equal(attempts.lastGood?.acceptedCount,1,"exact accepted members take precedence over legacy record and body counts");
     assert.equal(attempts.lastGood?.sourceUrl,SOURCE);
     assert.equal(attempts.publishedNow?.versionId,"published-version");
+    await db.query("WITH moved AS (DELETE FROM cp_work_items WHERE id='older-good' RETURNING *) INSERT INTO cp_work_items_archive SELECT * FROM moved");
+    const archived = await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL]},db.query);
+    assert.deepEqual(archived.publicationAttempts,result.publicationAttempts,"archived outcomes remain visible through the canonical place read");
     let compactWire = "";
     const compact = await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],meetingIds:[meeting.id],includeAgenda:true},async(sql,params) => {
       const rows = await db.query(sql,params);compactWire=JSON.stringify(rows);return rows;

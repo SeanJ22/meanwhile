@@ -1,6 +1,7 @@
 /**
- * The held registration reference, read for one state from `data/derived/registration/`. Only the registration child script reads
- * these files (never a request path).
+ * The held registration reference, read for one planning state from
+ * `data/derived/registration/` by registration and free-source planning.
+ * Source workers receive one government's descriptor.
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";

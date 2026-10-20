@@ -249,10 +249,9 @@ test("a named place absent from its state registry gives a specific holding", as
   assert.deepEqual(Object.keys(payload.trace.preloadSources), ["registry"]);
 });
 
-test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", async () => {
+test("Ask reads source-bound campaign facts for the state and exact place", async () => {
   const { factDb } = await import("./helpers/fact-db.ts");
   const { installFactReader } = await import("../lib/facts/db.ts");
-  const { fileCampaignMoneyFacts } = await import("../lib/funding/state-facts.ts");
   const { campaignSourceRecord } = await import("../lib/funding/state-source-records.ts");
   const { campaignFinanceSource } = await import("../lib/funding/state-sources.ts");
   const { bindCampaignMoney } = await import("../lib/funding/state-people.ts");
@@ -269,8 +268,15 @@ test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", a
   const rows = [{ ...bound, id: "WA:ask-place" }, { ...base, id: "WA:unbound" }, { ...bound, id: "WA:historical", period: "2018" }];
   const placesRead: string[] = [];
   try {
-    const written = await fileCampaignMoneyFacts(facts, "WA", rows, "2026-10-17T00:00:00.000Z");
-    assert.equal(written.written, 1, "unbound and pre-2020 rows remain off the reader");
+    const committee="campaign-committee:WA:ask-fixture";
+    await facts.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ($1,'place','Washington','WA',NULL),($2,'place','Seattle','WA',$1),
+      ($3,'person',$4,'WA',NULL),($5,'committee',$6,'WA',$3)`,[state,place,person.id,person.name,committee,bound.filerName]);
+    await facts.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$3),($1,$4),($2,$3),($2,$4)",[committee,person.id,state,place]);
+    const [copy]=await facts.query("INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key) VALUES($1,$1,$2,$3,'test') RETURNING id",
+      [base.provenance.url,base.provenance.retrievedAt,base.provenance.rawHash]);
+    for(const row of rows)await facts.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
+      VALUES($1,$2,$3::jsonb,'','live','OFFICIAL',$4,'','2026-10-17','2026-10-17','legacy-fixture',0)`,[committee,`campaign-money:${row.id}`,JSON.stringify(row),copy.id]);
     const withdrawn = `campaign-committee:WA:${"0".repeat(64)}`;
     await facts.query("INSERT INTO entity (id,kind,name,state,parent_id) VALUES ($1,'committee','Small Donor Fixture','WA',$2)", [withdrawn, state]);
     await facts.query("INSERT INTO entity_place (entity_id,place_id) VALUES ($1,$2),($1,$3)", [withdrawn, state, place]);

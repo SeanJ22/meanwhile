@@ -14,7 +14,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
-import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
+import { commandIdentity, workloadAdmissionEntry, workloadOffers } from "./rh01-workload.mts";
 import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
 import { processStartTicks } from "./rh01-remote-process.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
@@ -457,7 +457,7 @@ async function runDirect(job: Job): Promise<JobResult> {
     let release: (() => void) & { observe?: (pid: number) => void };
     try {
       if (watchdogExceeded) throw Error("RH01 measurement watchdog ended the controlled replay; production jobs remain unchanged");
-      release = await slots.acquire(`${job.id}/${job.script}`, Date.now() + Number(arg("admission-ms") ?? 600000));
+      release = await slots.acquire(workloadAdmissionEntry(job), Date.now() + Number(arg("admission-ms") ?? 600000));
       if (watchdogExceeded) { release(); throw Error("RH01 measurement watchdog ended the controlled replay; production jobs remain unchanged"); }
     }
     catch (error) {

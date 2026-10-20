@@ -55,10 +55,11 @@ export function measuredCompletion(input: { readonly script: string; readonly st
       : no("The parent did not finish its full registered scheduling and canonical publication lifecycle");
   }
   if (script === "hunter-lane.mts") {
-    const ended = /hunter lane: ended after (\d+) wave\(s\), (\d+) task result\(s\): its life ended; the runner starts a fresh lane/.exec(stdout);
-    return ended && Number(ended[1]) > 0 && Number(ended[2]) > 0 && /hunter lane: armed;/.test(stdout) && !/refresh failed|open request hold could not be released/.test(stdout + stderr)
-      ? yes("The standing parent's full normal lifetime, refresh and release lifecycle completed; typed worker bodies remain separate measurements", Number(ended[2]))
-      : no("The standing parent did not complete its normal lifetime and release lifecycle");
+    const ended = /^hunter lane: ended after (\d+) wave\(s\), (\d+) task result\(s\): (its life ended; the runner starts a fresh lane|a release asked it to drain)\r?$/m.exec(stdout);
+    const failed = /refresh failed|open request hold could not be released|hunter lane: stuck worker ended alone:|hunter lane: task done: [^\r\n]*; (?:FAILED|NOT_CLAIMED|NOT_RUN)\b|hunter lane: hunt done: [^\r\n]*; REFUSED;|hunter lane: lease worker process ended: pid \d+; (?!exit 0\r?$)[^\r\n]+/m.test(stdout + "\n" + stderr);
+    return ended && Number(ended[1]) > 0 && Number(ended[2]) > 0 && /^hunter lane: armed;/m.test(stdout) && !failed
+      ? yes(`The standing parent's native work and ${ended[3] === "a release asked it to drain" ? "graceful release-drain" : "normal rollover"} lifecycle completed; typed worker bodies remain separate measurements`, Number(ended[2]))
+      : no("The standing parent did not complete native work and a successful rollover or release-drain lifecycle");
   }
   if (script === "pilot-runner.mts") {
     const cycle = jsonLine(stdout, "RH01_PILOT_CYCLE ");

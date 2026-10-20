@@ -7,6 +7,20 @@ export interface WorkloadOffer {
   readonly id: string; readonly ownerId: string | null; readonly aliasOf: string | null;
 }
 const pilotChildren = new Set(["routine-civic-data-runner", "publish-now-runner", "publish-owner-snapshot", "intake-tripwire", "platform-census-runner", "hunter-lane", "freshness-shadow"]);
+
+/** Supplemental inventory labels keep the exact native task's admission class. */
+export function workloadAdmissionEntry(job: WorkloadJob): string {
+  const entry = `${job.id}/${job.script}`;
+  const native = /^worker:(national-place:(\d{5})(?::([A-Z]{2}))?)$/.exec(job.id);
+  if (!native || job.source !== "production standing national-place obligation" ||
+      job.script !== "scripts/promote-registry-runtime.mts" || !job.command.includes("--promote")) return entry;
+  const option = (name: string) => job.command.find(arg => arg.startsWith(`--${name}=`))?.slice(name.length + 3);
+  const state = option("state");
+  if (!state || !/^[A-Z]{2}$/.test(state) || native[3] && native[3] !== state ||
+      option("national-zips") !== native[2] || option("place-task") !== native[1]) return entry;
+  return `${native[1]}/${job.script}`;
+}
+
 export function commandIdentity(command: readonly string[]): string {
   const options = new Set(["--import", "--require", "-r", "--loader", "--experimental-loader", "--env-file"]);
   const start = command.findIndex((word, index) => !options.has(command[index - 1]) && /(?:^|[/\\])scripts[/\\].+[.](?:mts|mjs|ts|js)$/.test(word));

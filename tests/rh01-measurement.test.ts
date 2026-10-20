@@ -9,7 +9,7 @@ import { once } from "node:events";
 import { DatabaseSync } from "node:sqlite";
 import { measuredCompletion } from "../scripts/rh01-completion.mts";
 import { projectedRead, updateRead, shadowRead } from "../scripts/rh01-sql.mts";
-import { commandIdentity, workloadOffers } from "../scripts/rh01-workload.mts";
+import { commandIdentity, workloadAdmissionEntry, workloadOffers } from "../scripts/rh01-workload.mts";
 import { physicalRunReads, reserveProductionReadRun } from "../scripts/rh01-read-accounting.mts";
 import { processStartTicks } from "../scripts/rh01-remote-process.mts";
 
@@ -62,6 +62,24 @@ test("all-offer ownership retains exact modes and aliases only identical authori
   assert.equal(rows[5].aliasOf, "source:CA"); assert.equal(rows[6].aliasOf, null);
   assert.equal(commandIdentity(["--experimental-strip-types", "--import", "/workspace/archive/scripts/register-test-loader.mjs", "/workspace/archive/scripts/source.mts", "--state=CA"]), commandIdentity(["scripts/source.mts", "--state=CA"]));
   assert.notEqual(commandIdentity(["scripts/source.mts", "--state=CA"]), commandIdentity(["scripts/source.mts", "--state=TX"]));
+});
+
+test("supplemental national-place admission uses its exact native task name without changing commands or authority", () => {
+  const job = { id: "worker:national-place:85535", script: "scripts/promote-registry-runtime.mts",
+    source: "production standing national-place obligation", authority: { capability: "MANUAL_CONTRACT", contract: "registry-runtime:AZ" },
+    command: ["scripts/promote-registry-runtime.mts", "--promote", "--state=AZ", "--national-zips=85535", "--place-task=national-place:85535"] };
+  const original = structuredClone(job);
+  assert.equal(workloadAdmissionEntry(job), "national-place:85535/scripts/promote-registry-runtime.mts");
+  const split = { ...job, id: "worker:national-place:85535:AZ", command: job.command.map(arg => arg === "--place-task=national-place:85535" ? arg + ":AZ" : arg) };
+  assert.equal(workloadAdmissionEntry(split), "national-place:85535:AZ/scripts/promote-registry-runtime.mts");
+  assert.deepEqual(job, original);
+  for (const other of [
+    { ...job, id: "national-place:85535" }, { ...job, id: "unknown:national-place:85535" },
+    { ...job, script: "scripts/unrelated.mts" }, { ...job, source: "standing source contract" },
+    { ...job, command: job.command.filter(arg => arg !== "--promote") },
+    { ...job, command: job.command.map(arg => arg === "--national-zips=85535" ? "--national-zips=00000" : arg) },
+    { ...split, command: split.command.map(arg => arg === "--state=AZ" ? "--state=TX" : arg) },
+  ]) assert.equal(workloadAdmissionEntry(other), `${other.id}/${other.script}`);
 });
 
 test("SQL hydration retains the outer predicate and reads every UPDATE predecessor without executing its mutation remotely", () => {
@@ -121,11 +139,52 @@ test("completion evidence refuses exit-only, failed receipts, incomplete parents
   }
   assert.equal(check("scripts/freshness-shadow.mts", 'RH01_FRESHNESS_RESULT {"state":"SUCCEEDED","durable":true,"simulated":false,"filtered":false,"registeredUnits":10,"workedUnits":9,"cycleId":"one"}'), false);
   assert.equal(check("scripts/freshness-shadow.mts", 'RH01_FRESHNESS_RESULT {"state":"SUCCEEDED","durable":true,"simulated":false,"filtered":false,"registeredUnits":10,"workedUnits":10,"cycleId":"one"}'), true);
-  assert.equal(check("scripts/hunter-lane.mts", 'hunter lane: armed; paid work held\nhunter lane: ended after 1 wave(s), 2 task result(s): a release asked it to drain'), false);
+  assert.equal(check("scripts/hunter-lane.mts", 'hunter lane: armed; paid work held\nhunter lane: ended after 1 wave(s), 2 task result(s): a release asked it to drain'), true);
   assert.equal(check("scripts/hunter-lane.mts", 'hunter lane: armed; paid work held\nhunter lane: ended after 1 wave(s), 2 task result(s): its life ended; the runner starts a fresh lane'), true);
   assert.equal(check("scripts/hunter-lane.mts", 'hunter lane: armed; paid work held\nhunter lane: ended after 0 wave(s), 0 task result(s): its life ended; the runner starts a fresh lane'), false);
   assert.equal(check("scripts/pilot-runner.mts", 'pilot-runner · 1 cycle(s) complete.'), false);
   assert.equal(check("scripts/pilot-runner.mts", 'RH01_PILOT_CYCLE {"ok":true,"recorded":true,"registeredUnits":10,"workedUnits":10}\npilot-runner · 1 cycle(s) complete.'), true);
+});
+
+test("hunter parent completion accepts a worked native release drain and rejects stopped or incomplete lifecycles", () => {
+  const worked = [
+    "hunter lane: armed; paid work open under the $50.00 ceiling",
+    "hunter lane: wave 1 over the queue written 2026-10-20T00:00:00.000Z: 2 task(s), 1 plain-code",
+    "hunter lane: task done: parser-task; WORKED",
+    "hunter lane: hunt done: scout-obligation; CAPTURED; code INGESTED; usd 0.001000",
+    "hunter lane: lease worker process ended: pid 123; exit 0",
+    "hunter lane: runtime release requested; the current wave finishes and the lane ends",
+    "hunter lane: ended after 1 wave(s), 2 task result(s): a release asked it to drain",
+  ].join("\n");
+  const check = (stdout = worked, options: { code?: number | null; timedOut?: boolean; stderr?: string } = {}) =>
+    measuredCompletion({ script: "scripts/hunter-lane.mts", stdout, stderr: options.stderr ?? "", code: options.code === undefined ? 0 : options.code,
+      timedOut: options.timedOut ?? false });
+  const complete = check();
+  assert.equal(complete.complete, true);
+  assert.equal(complete.units, 2);
+  assert.match(complete.reason, /graceful release-drain/);
+  assert.match(complete.reason, /typed worker bodies remain separate measurements/);
+  assert.equal(check(worked.replace("a release asked it to drain", "its life ended; the runner starts a fresh lane")).complete, true);
+  for (const stdout of [
+    worked.replace("1 wave(s), 2 task result(s)", "0 wave(s), 0 task result(s)"),
+    worked.replace("2 task result(s)", "0 task result(s)"),
+    worked.replace(/^hunter lane: armed;[^\n]*\n/, ""),
+    worked.replace("a release asked it to drain", "a watchdog stopped it"),
+    worked.replace("exit 0", "exit null"),
+    worked.replace("exit 0", "exit 1"),
+    worked.replace("exit 0", "WORKER_CHILD_TIMEOUT:123: work remains owed"),
+    worked.replace("parser-task; WORKED", "parser-task; FAILED"),
+    worked.replace("parser-task; WORKED", "parser-task; NOT_CLAIMED"),
+    worked.replace("CAPTURED; code INGESTED", "REFUSED; code REFUSED"),
+    `${worked}\nhunter lane: stuck worker ended alone: pid 123; task parser-task; work remains owed`,
+    `${worked}\nhunter lane: refresh failed; keeping the guards in force: controls unreadable`,
+    `${worked}\nhunter lane: an open request hold could not be released (job-1); it counts in full until it goes stale`,
+  ]) assert.equal(check(stdout).complete, false, stdout);
+  assert.equal(check(worked, { timedOut: true }).complete, false);
+  assert.equal(check(worked, { code: null }).complete, false);
+  assert.equal(check(worked, { code: 1 }).complete, false);
+  assert.equal(check(worked, { stderr: "hunter lane: refresh failed; keeping the guards in force: controls unreadable" }).complete, false);
+  assert.equal(check(worked, { stderr: "RH01_REMOTE_WRITE_BLOCKED:POST" }).complete, false);
 });
 
 test("measurement permits source reads and declared public query forms while refusing external writes and model calls", () => {

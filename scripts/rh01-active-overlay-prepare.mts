@@ -6,6 +6,8 @@ import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
+import type { ObjectMeta } from "../lib/control-plane/evidence/store.ts";
+import { savedSourceTaskFork } from "./rh01-source-fork.mts";
 
 const option = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const phase = option("phase"); if (phase !== "before" && phase !== "after") throw Error("RH01 overlay phase is invalid");
@@ -19,14 +21,15 @@ const codeRoot = process.env.WTP_RH01_CODE_ROOT;
 if (!codeRoot) throw Error("RH01 active setup requires the immutable native code root");
 const code = (file: string) => import(pathToFileURL(join(codeRoot, file)).href);
 const [{ createFileRepositories }, { createPgRepositories }, { submit }, { readIntents, RESEARCH_INTENT_LOG_KEY },
-  { DurableEvidenceStore }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint, contentHash }, { findReceipt }, { canonicalJson },
-  { registerAutonomousPlan }, { openRuntimeMethod }, { standingFleetRuntime }] = await Promise.all([
+  { DurableEvidenceStore }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint, contentHash, routeTaskId }, { findReceipt }, { canonicalJson },
+  { registerAutonomousPlan }, { openRuntimeMethod }, { standingFleetRuntime }, { disposeRoute }, { artifactId: deriveArtifactId }] = await Promise.all([
   code("lib/control-plane/repository/file-store.ts"), code("lib/control-plane/repository/pg-store.ts"),
   code("lib/control-plane/gateway/gateway.ts"), code("lib/control-plane/scheduler/research-policy.ts"),
   code("lib/control-plane/evidence/durable-store.ts"), code("lib/control-plane/workers/runtime.ts"),
   code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/repository/worker-completion.ts"), code("lib/control-plane/ids.ts"),
   code("lib/control-plane/gateway/receipts.ts"), code("lib/control-plane/repository/types.ts"),
   code("lib/control-plane/workers/coordinator.ts"), code("lib/method/runtime-manual.ts"), code("lib/control-plane/workers/standing.ts"),
+  code("lib/control-plane/route-task.ts"), code("lib/control-plane/evidence/artifact.ts"),
 ]);
 interface PreparedHandoff {
   format: number; phase: string;
@@ -39,6 +42,24 @@ if (manifest.format !== 2 || manifest.nativeHandoff?.plan.contract.schemaVersion
   throw Error("RH01 active setup requires genuine native v2 source instructions; legacy v1 audit is unsupported");
 const at = new Date().toISOString(), repos = await createPgRepositories(connection, at, { skipBootstrap: true });
 const held = await createFileRepositories(prepared), handoff = manifest.nativeHandoff, { workItemId } = handoff, contract = handoff.plan.contract;
+const sourceTasks = await Promise.all(handoff.sourceRouteTaskIds.map(id => held.routeTasks.mustRead(id)));
+const sourceAttempts = await Promise.all(handoff.sourceAttemptIds.map(id => held.attempts.mustRead(id)));
+// Verify the saved execution and bytes before restoring any local lifecycle projection.
+const sourceObjects = await Promise.all(handoff.sourceArtifacts.map(async ({ record: source, key }) => {
+  const task = sourceTasks.find(row => row.id === source.routeTaskId)?.value;
+  const attempt = sourceAttempts.find(row => row.id === source.attemptId)?.value;
+  if (!task || !attempt || deriveArtifactId(source.tier, source.contentHash) !== source.artifactId)
+    throw Error("RH01 original source lineage is absent or has a different content address");
+  const bytes = await readFile(join(prepared, "vault", key));
+  const { meta } = JSON.parse(await readFile(join(prepared, "vault", key + ".meta.json"), "utf8")) as { meta: ObjectMeta };
+  if (contentHash(bytes) !== source.contentHash || bytes.byteLength !== source.byteLength || meta.contentHash !== source.contentHash ||
+      meta.byteLength !== source.byteLength || meta.custom?.canonicalUrl !== source.canonicalUrl || meta.custom?.retrievedAt !== source.recordedAt ||
+      meta.custom?.workItemId !== source.workItemId || meta.custom?.attemptId !== source.attemptId || meta.custom?.tier !== source.tier)
+    throw Error("RH01 held source sidecar does not identify the original acquisition");
+  savedSourceTaskFork({ source: task, existing: { ...task, state: "PENDING", disposition: null, attemptIds: [], policyDenial: null, policyReauthorizations: [] },
+    attempt, artifacts: [source], canonicalJson, routeTaskId, disposeRoute });
+  return { source, key, bytes, meta };
+}));
 for (const id of handoff.sourceWorkItemIds) {
   const source = await held.workItems.mustRead(id), existing = await repos.workItems.read(id);
   if (existing) {
@@ -49,34 +70,38 @@ for (const id of handoff.sourceWorkItemIds) {
     await repos.workItems.put(id, value, source.updatedAt);
   }
 }
-for (const id of handoff.sourceRouteTaskIds) {
-  const source = await held.routeTasks.mustRead(id), existing = await repos.routeTasks.read(id);
-  if (!existing) await repos.routeTasks.put(id, source.value, source.updatedAt);
-  else if (canonicalJson(existing.value) !== canonicalJson(source.value)) throw Error("RH01 source task changed; no immutable lineage is overwritten");
-}
-for (const id of handoff.sourceAttemptIds) {
-  const source = await held.attempts.mustRead(id), existing = await repos.attempts.read(id);
-  if (!existing) await repos.attempts.put(id, source.value, source.updatedAt);
+for (const source of sourceAttempts) {
+  const existing = await repos.attempts.read(source.id);
+  if (!existing) await repos.attempts.put(source.id, source.value, source.updatedAt);
   else if (canonicalJson(existing.value) !== canonicalJson(source.value)) throw Error("RH01 source Attempt changed; no immutable lineage is overwritten");
 }
 await mkdir(join(shared, "vault"), { recursive: true });
 const vault = new DurableEvidenceStore(join(shared, "vault"), { remote: null });
 let restored = 0;
-for (const { record: source, key } of handoff.sourceArtifacts) {
+for (const { source, key, bytes, meta } of sourceObjects) {
   const found = await repos.artifacts.readWhere(source.workItemId, ["artifactId"], source.artifactId) as readonly ArtifactRecord[];
   if (found.length > 1 || found.some(original => canonicalJson(original) !== canonicalJson(source))) throw Error("RH01 source metadata changed; no immutable artifact is overwritten");
   if (!found.length) await repos.artifacts.append(source.workItemId, source.artifactId, source, source.recordedAt);
-  const acquisition = (await repos.attempts.mustRead(source.attemptId)).value;
-  if (acquisition.workItemId !== source.workItemId || acquisition.routeTaskId !== source.routeTaskId || acquisition.outcome !== "COMPLETED" || !["ACQUIRER", "SCOUT"].includes(acquisition.worker.role))
-    throw Error("RH01 original source lineage has no completed acquisition or SCOUT receipt");
-  const bytes = await readFile(join(prepared, "vault", key));
-  const sidecar = JSON.parse(await readFile(join(prepared, "vault", key + ".meta.json"), "utf8"));
-  const meta = sidecar.meta;
-  if (contentHash(bytes) !== source.contentHash || bytes.byteLength !== source.byteLength || meta.contentHash !== source.contentHash ||
-      meta.byteLength !== source.byteLength || meta.custom?.canonicalUrl !== source.canonicalUrl || meta.custom?.retrievedAt !== source.recordedAt ||
-      meta.custom?.workItemId !== source.workItemId || meta.custom?.attemptId !== source.attemptId)
-    throw Error("RH01 held source sidecar does not identify the original acquisition");
   await vault.put(key, bytes, meta); restored++;
+}
+const sourceForks: ReturnType<typeof savedSourceTaskFork>[] = [];
+for (const source of sourceTasks) {
+  const existing = await repos.routeTasks.read(source.id);
+  if (!existing) await repos.routeTasks.put(source.id, source.value, source.updatedAt);
+  else if (canonicalJson(existing.value) !== canonicalJson(source.value)) {
+    // A local completed replay and an unstarted production occurrence can share the native derived ID.
+    // Keep both snapshots in the measurement receipt; never describe this local fork as production completion.
+    const snapshot = join(shared, `source-task-snapshot-${source.id}.json`);
+    await writeFile(snapshot, JSON.stringify({ at, source: prepared, existing, savedExecution: source, productionWrites: 0 }, null, 2) + "\n");
+    const attempt = sourceAttempts.find(row => row.id === source.value.disposition?.attemptId)?.value;
+    if (!attempt) throw Error(`RH01 source task differs without a saved completed Attempt; snapshots: ${snapshot}`);
+    const fork = savedSourceTaskFork({ source: source.value, existing: existing.value, attempt,
+      artifacts: sourceObjects.filter(row => row.source.routeTaskId === source.id).map(row => row.source), canonicalJson, routeTaskId, disposeRoute });
+    await repos.routeTasks.compareAndSet(source.id, existing.revision, source.value, source.updatedAt);
+    sourceForks.push(fork);
+    await writeFile(join(shared, "saved-source-local-forks.json"), JSON.stringify({ at, source: prepared, sourceForks, productionWrites: 0,
+      note: "Saved native completions replaced only untouched pending projections in the disposable local fork. Production lifecycle and controls were not changed." }, null, 2) + "\n");
+  }
 }
 await registerAutonomousPlan(repos, workItemId, handoff.plan, at);
 async function execute(taskId: string, role: "ACQUIRER" | "PARSER" | "VALIDATOR", verdict: string): Promise<WorkerResultRecord> {
@@ -125,7 +150,7 @@ for (const [type, input] of [
 }
 const controls = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
 if (controls.paused || !controls.pendingDispatch.length) throw Error("RH01 local Resume/Send did not read back");
-const result = { phase, at, source: prepared, restored, acquisitionResultId: acquired.id, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
+const result = { phase, at, source: prepared, restored, sourceForks, acquisitionResultId: acquired.id, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
   note: "Exact saved source observations grounded a new native v2 ACQUIRER/parser/validator chain. Canonical independent context passed without a provider call. The audit is pending and no old v1 task or result was relabeled. All writes used the disposable local overlay." };
 await writeFile(join(shared, "active-overlay-preparation.json"), JSON.stringify(result, null, 2) + "\n");
 console.log(`RH01_ACTIVE_OVERLAY_PREPARED ${JSON.stringify(result)}`);

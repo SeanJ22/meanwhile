@@ -2154,23 +2154,21 @@ a.ballot-pill-main:focus {
   isolation: isolate;
   overflow: hidden;
   display: inline-flex;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   align-items: center;
   gap: 7px;
   min-height: 44px;
-  max-width: 100%;
-  padding: 10px 14px;
+  padding: 0 14px;
   border: 0;
   border-radius: var(--radius-pill);
   background-color: var(--lumen-floor);
   background-image: radial-gradient(ellipse 130% 100% at 50% 100%, var(--lumen-peak) 0%, var(--lumen-floor) 66%);
   box-shadow: inset 0 0 0 1px var(--lumen-rim);
   color: var(--text);
-  font-size: var(--text-body);
+  font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.2;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
   transition: box-shadow var(--dur-lumen) var(--ease-lumen),
@@ -2885,8 +2883,8 @@ a.ballot-pill-main:focus {
 .al-empty {
   padding: 32px 22px;
   text-align: center;
-  font-size: var(--text-body);
-  color: var(--text);
+  font-size: 12px;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
@@ -3285,6 +3283,27 @@ button.jurisdiction-badge-action:focus-visible {
   font-size: 0.76rem;
   line-height: 1.4;
   color: var(--text-muted);
+}
+
+.voting-open-button {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
+  color: var(--text);
+  border-radius: var(--radius-pill);
+  padding: 11px 15px;
+  min-height: 44px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.voting-open-button:hover,
+.voting-open-button:focus-visible {
+  border-color: var(--accent-voting);
 }
 
 .provisions-summary {
@@ -4596,12 +4615,23 @@ main[data-sidebar="closed"] .map-top-row {
   color: var(--danger);
 }
 
+.address-prompt-promise {
+  margin-top: 9px;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--voice);
+}
+
 /* What is already settled reads as settled, above the extra question. Partial
    ambiguity resolves partially, and the reader can see which half is done. */
 .address-prompt-confirmed {
   font-size: 0.8125rem;
   line-height: 1.55;
   color: var(--text);
+}
+
+.address-prompt-kept {
+  color: var(--voice);
 }
 
 .address-prompt-settled {
@@ -5045,17 +5075,9 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 
 .ballot-top-pills {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 14px;
-}
-
-.ballot-address-action,
-.ballot-actions {
-  display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 16px;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .ballot-top-pills .address-prompt {
@@ -5064,17 +5086,16 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 
 .ballot-top-pill,
-.ballot-top-pill .address-prompt-trigger,
-.voting-open-button {
+.ballot-top-pill .address-prompt-trigger {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
   color: var(--text);
-  font-size: var(--text-body);
+  font-size: 0.8125rem;
   font-weight: 600;
   /* A pill is a control, so the link underline comes off — the shape is what
      says it is pressable now. */
@@ -5085,11 +5106,9 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 
 .ballot-top-pill:hover,
 .ballot-top-pill:focus-visible,
-.ballot-top-pill .address-prompt-trigger:hover,
-.voting-open-button:hover,
-.voting-open-button:focus-visible {
+.ballot-top-pill .address-prompt-trigger:hover {
   border-color: var(--link);
-  background: color-mix(in srgb, var(--link) 10%, var(--surface));
+  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
   text-decoration: none;
 }
 
@@ -5164,6 +5183,17 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
     margin-top: 0;
     margin-bottom: 14px;
   }
+}
+
+.ballot-ask-pill {
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--panel-border));
+  background: color-mix(in srgb, var(--signal) 8%, var(--panel-bg));
+}
+
+.ballot-ask-pill:hover,
+.ballot-ask-pill:focus-visible {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 14%, var(--panel-bg));
 }
 
 /* The level tag: `inline-block` + `white-space: nowrap` keeps it whole after a title's last word, or wrapped beneath. Colour is set inline from `--accent-<tier>`. */

@@ -6,13 +6,13 @@ import { relative } from "node:path";
 import { ROOT, sourceFilesUnder } from "./read-code.ts";
 
 /**
- * `localStorage` fires a `storage` event in every OTHER tab and never in the
+ * `sessionStorage` fires a `storage` event in every OTHER tab and never in the
  * tab that performed the write, so a write must publish to its own tab's
  * listeners. The reader's own interaction in one tab is asserted in
  * `scripts/walk-all.mts` against a rendered build.
  */
 
-/** A persistent store that does not notify the writing tab. */
+/** A `sessionStorage` that behaves like the browser's, for one test. */
 function fakeWindow() {
   const items = new Map<string, string>();
   const handlers = new Set<() => void>();
@@ -20,7 +20,7 @@ function fakeWindow() {
     items,
     handlers,
     window: {
-      localStorage: {
+      sessionStorage: {
         getItem: (key: string) => items.get(key) ?? null,
         setItem: (key: string, value: string) => void items.set(key, value),
         removeItem: (key: string) => void items.delete(key),
@@ -59,7 +59,7 @@ test("a same-tab write notifies the session-address subscribers", async () => {
     assert.equal(
       notifications,
       1,
-      "writeSessionAddress must publish to same-tab subscribers — localStorage will not",
+      "writeSessionAddress must publish to same-tab subscribers — sessionStorage will not",
     );
     assert.equal(
       readSessionAddress()?.divisionIds[0],
@@ -129,23 +129,4 @@ test("no module keeps a listener set that nothing ever publishes", () => {
     [],
     `a listener set that is never iterated can never notify anyone: ${orphans.join("; ")}`,
   );
-});
-
-test("address memory survives a new tab session and Forget removes it", async () => {
-  const stub = fakeWindow();
-  const previous = Reflect.get(globalThis, "window");
-  Reflect.set(globalThis, "window", stub.window);
-  try {
-    const { writeSessionAddress, readSessionAddress, clearSessionAddress, SESSION_ADDRESS_KEY } = await import("../lib/geo/session-address.ts");
-    writeSessionAddress({ zip: "85641", streetLabel: "South Bear Table Tank Drive", divisionIds: ["district-fixture"], contestIds: ["contest-fixture"], splitLevels: [] });
-    // A new window has fresh session storage and the same browser's persistent store.
-    Reflect.set(globalThis, "window", { ...stub.window, sessionStorage: { getItem: () => null } });
-    assert.equal(readSessionAddress()?.streetLabel, "South Bear Table Tank Drive");
-    clearSessionAddress();
-    assert.equal(readSessionAddress(), null);
-    assert.equal(stub.items.has(SESSION_ADDRESS_KEY), false);
-  } finally {
-    if (previous === undefined) Reflect.deleteProperty(globalThis, "window");
-    else Reflect.set(globalThis, "window", previous);
-  }
 });

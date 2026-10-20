@@ -20,8 +20,8 @@ export default function TransparencyPage() {
           </section>
           <section className="space-y-2">
             <h2 className="text-lg font-semibold">Your address and districts</h2>
-            <p>The address box asks for your street. It asks for a house number when the street crosses a boundary or the street name alone cannot be placed. The lookup sends what you type through our server to the U.S. Census Bureau to find your districts and contests.</p>
-            <p>Your street label, ZIP, matched districts and contests, and lookup time are remembered in this browser until you choose “Forget this address” or clear the browser&apos;s site data. The house-number field is cleared after the request. The district lookup does not write the address to our database.</p>
+            <p>The address box asks for your street. It asks for a house number when the street crosses a boundary or the street name alone cannot be placed. What you type passes through our server to the U.S. Census Bureau to find your districts and contests.</p>
+            <p>Your street label, ZIP, matched districts and contests, and lookup time are held in this tab until you choose “Forget this address,” close the tab or clear the browser&apos;s site data. The house-number field is cleared after the request. The district lookup does not write the address to our database.</p>
           </section>
           <section className="space-y-2">
             <h2 className="text-lg font-semibold">Finding where to vote</h2>
@@ -41,7 +41,7 @@ export default function TransparencyPage() {
           </section>
           <section className="space-y-2">
             <h2 className="text-lg font-semibold">Browser storage and request limits</h2>
-            <p>This browser also remembers your ZIP, recent ZIPs, selected districts and street, theme, map preferences, tutorial progress, reactions and ballot picks. Clearing site data removes these saved choices and random browser keys. It does not remove records already saved on our server.</p>
+            <p>This browser also remembers your ZIP, recent ZIPs, theme, map preferences, tutorial progress, reactions and ballot picks. The selected districts and street are held for the tab. Clearing site data removes these saved choices and random browser keys. It does not remove records already saved on our server.</p>
             <p>Server records have no automatic deletion schedule in the application. Requests may use an IP address temporarily to limit repeated submissions. Hosting and lookup providers may keep their own request logs.</p>
           </section>
           <Card title="ZIP locations" sources={[

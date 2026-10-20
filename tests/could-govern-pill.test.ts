@@ -175,7 +175,7 @@ test("the pill never gates — the page renders every contest regardless", () =>
   );
 });
 
-test("the remembered scope keeps a street label without house-number or coordinate fields", () => {
+test("the session store keeps the OUTCOME, never the address", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
 
   assert.doesNotMatch(
@@ -183,11 +183,11 @@ test("the remembered scope keeps a street label without house-number or coordina
     /\b(houseNumber|house_number|lat\??:|lng\??:|latitude|longitude)\b/,
     "no coordinate and no house number may enter the session payload",
   );
-  assert.match(mod, /localStorage/, "the address remains until the reader forgets it");
+  assert.match(mod, /sessionStorage/, "the lifetime is the tab, not the device");
   assert.doesNotMatch(
     mod,
-    /sessionStorage|document\.cookie/,
-    "address memory must survive the tab without using a cookie",
+    /localStorage|document\.cookie/,
+    "localStorage survives the session and a cookie reaches the server's access logs",
   );
 });
 
@@ -203,7 +203,7 @@ test("nothing about the address reaches the server or a store", () => {
 test("an address scope stays inside its ZIP and selected election date", async () => {
   let saved: string | null = null;
   const previous = Reflect.get(globalThis, "window");
-  Reflect.set(globalThis, "window", { localStorage: {
+  Reflect.set(globalThis, "window", { sessionStorage: {
     getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; },
   } });
   try {

@@ -753,19 +753,17 @@ export default readerRoute("/ballot", async function BallotPage({
         What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
       </h1>
 
-      {zip && (
-        <div className="ballot-top-pills">
-          <div className="ballot-address-action">
+      <div className="ballot-top-pills items-start">
+        <WhereToVote />
+        {zip && <>
+          <div className="flex flex-wrap items-center gap-3">
             {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
             <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
           </div>
-          <div className="ballot-actions">
-            <WhereToVote />
-            <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">About this area</Link>
-            <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
-          </div>
-        </div>
-      )}
+          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">About this area</Link>
+          <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+        </>}
+      </div>
 
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />

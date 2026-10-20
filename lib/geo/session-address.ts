@@ -37,14 +37,14 @@ export interface SessionAddressScope {
 
 function storage(): Storage | null {
   try {
-    return typeof window === "undefined" ? null : window.localStorage;
+    return typeof window === "undefined" ? null : window.sessionStorage;
   } catch {
-    // A browser refusing storage can still resolve an address for the open view.
+    // Private modes and webviews can throw on access; that means no session address.
     return null;
   }
 }
 
-/** Read the remembered address scope, or null. Never throws. */
+/** Read the session's resolved address scope, or null. Never throws. */
 export function readSessionAddress(): SessionAddressScope | null {
   const store = storage();
   if (!store) return null;
@@ -77,7 +77,7 @@ export function readSessionAddress(): SessionAddressScope | null {
   }
 }
 
-/** Remember the street and resolved scope until the reader chooses to forget it. */
+/** Write it. `resolvedAt` is the browser's clock: a fact about the reader's own session. */
 export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt">): void {
   const store = storage();
   if (!store) return;
@@ -93,7 +93,7 @@ export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt
   );
 }
 
-/** Forget the address and widen every subscribed surface to the whole ZIP. */
+/** Forget it. The reader asking to see the whole zip again is asking for this. */
 export function clearSessionAddress(): void {
   const store = storage();
   if (!store) return;

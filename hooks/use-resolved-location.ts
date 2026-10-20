@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import {
-  readSessionAddress,
+  SESSION_ADDRESS_KEY,
   sessionAddressFor,
   subscribeToSessionAddress,
 } from "@/lib/geo/session-address";
@@ -24,7 +24,7 @@ export function useResolvedLocation(zip: string | null): ResolvedLocation {
     subscribeToSessionAddress,
     () => {
       try {
-        return `${zip ?? ""}|${JSON.stringify(readSessionAddress())}`;
+        return `${zip ?? ""}|${window.sessionStorage.getItem(SESSION_ADDRESS_KEY) ?? ""}`;
       } catch {
         // A refused store means no address, never an error.
         return `${zip ?? ""}|`;

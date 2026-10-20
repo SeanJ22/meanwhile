@@ -96,10 +96,10 @@ test("BAL-23: the open form gets its own row inside the ballot's pill strip", ()
   assert.match(rule[1], /flex:\s*1 0 100%/);
 });
 
-test("ballot actions share the collapsed address control's shape", () => {
-  const rule = /\.ballot-top-pill,\s*\n\.ballot-top-pill \.address-prompt-trigger,\s*\n\.voting-open-button\s*\{([^}]*)\}/.exec(
+test("BAL-23: the pill class is still a pill for the collapsed control", () => {
+  const rule = /\.ballot-top-pill,\s*\n\.ballot-top-pill \.address-prompt-trigger\s*\{([^}]*)\}/.exec(
     css(),
   );
   assert.ok(rule, "the ballot pill no longer styles the address prompt's trigger");
-  assert.match(rule[1], /border-radius:\s*var\(--radius-sm\)/);
+  assert.match(rule[1], /border-radius:\s*var\(--radius-pill\)/);
 });

@@ -4322,7 +4322,7 @@ for (const target of SCOPE_ADDRESSES) {
 
     await page.evaluate(
       `(() => {
-        localStorage.setItem('wtp.session_address_scope', ${scopeJson});
+        sessionStorage.setItem('wtp.session_address_scope', ${scopeJson});
         window.dispatchEvent(new StorageEvent('storage', { key: 'wtp.session_address_scope' }));
       })()`,
     );

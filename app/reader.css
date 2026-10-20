@@ -296,12 +296,12 @@
 .mw-reader .scope-select {
   min-height: var(--mw-44);
   padding: 0 var(--mw-10);
-  border: 1px solid var(--panel-border);
+  border: 0;
   border-radius: var(--radius);
   background-color: var(--sheet);
   color: var(--text);
   font-size: var(--text-mw-14);
-  box-shadow: none;
+  box-shadow: var(--well);
   min-width: 0;
 }
 .mw-reader .scope-banner {

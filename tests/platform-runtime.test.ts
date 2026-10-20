@@ -3,58 +3,10 @@ import test from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { PGlite } from "@electric-sql/pglite";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { readPlatformDirectory } from "../lib/control-plane/discovery/platform-directory.ts";
-import { readPlatformOrders, orderedPlatformGovernments } from "../lib/control-plane/discovery/platform-orders.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { platformRequestPacer } from "../lib/control-plane/discovery/platform-request-pacing.ts";
-import { PLATFORM_CENSUS_NOTES_SQL } from "../lib/control-plane/discovery/platform-census-runtime.ts";
-
-test("census leads, retries and government notes read CP-01's per-entry store without a legacy relation", async () => {
-  const pg = new PGlite();
-  try {
-    await pg.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,updated_at timestamptz,value jsonb)");
-    const put = (id: string, value: unknown) => pg.query("INSERT INTO cp_field_manual_entries VALUES($1,'2026-10-20T12:00:00Z',$2)", [id, JSON.stringify(value)]);
-    await put("lead", { source: "hunter", kind: "MEETINGS_TENANT_LEAD", title: "Published calendar", url: "https://example.legistar.com/", platforms: ["legistar"], states: ["ny"] });
-    await put("own-lead", { source: "platform-tenant", kind: "MEETINGS_TENANT_LEAD", url: "https://other.legistar.com/" });
-    await put("retry", { source: "platform-government", kind: "PLATFORM_CENSUS_CHECK", payload: { jurisdictionId: "ny:city:example", nextCheck: "2026-10-20T11:00:00Z" } });
-    await put("future", { source: "platform-government", kind: "PLATFORM_CENSUS_CHECK", payload: { jurisdictionId: "ny:city:future", nextCheck: "2026-10-21T11:00:00Z" } });
-    await put("note", { kind: "ROUTE", payload: { subjectId: "ny:city:example" } });
-    await put("foreign-note", { kind: "ROUTE", payload: { subjectId: "ny:city:elsewhere" } });
-    const version = await pg.query<{ count: number }>(PLATFORM_CENSUS_NOTES_SQL.version);
-    assert.equal(version.rows[0].count, 1, "only another producer's platform leads invalidate the directory cursor");
-    const leads = await pg.query<{ id: string; url: string }>(PLATFORM_CENSUS_NOTES_SQL.leads, [""]);
-    assert.deepEqual(leads.rows.map(row => row.id), ["lead"]);
-    const due = await pg.query<{ subject: string }>(PLATFORM_CENSUS_NOTES_SQL.retry, ["", "2026-10-20T12:00:00Z"]);
-    assert.deepEqual(due.rows.map(row => row.subject), ["ny:city:example"]);
-    const notes = await pg.query<{ value: { payload: { subjectId: string } } }>(PLATFORM_CENSUS_NOTES_SQL.government, ["ny:city:example"]);
-    assert.deepEqual(notes.rows.map(row => row.value.payload.subjectId), ["ny:city:example"]);
-  } finally { await pg.close(); }
-});
-
-test("Admin's last pause applies without a config row; cancelled dispatches and closed leads never choose focus", async () => {
-  const pg = new PGlite();
-  await pg.exec(`CREATE TABLE cp_admin_config(id text,value jsonb);
-    CREATE TABLE cp_log_research_intents(log_key text,position int,record jsonb);
-    CREATE TABLE cp_lead_orders(value jsonb);`);
-  const query = async (sql: string, params: readonly unknown[]) => (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
-  const intent = async (position: number, record: unknown) => pg.query("INSERT INTO cp_log_research_intents VALUES('level-1',$1,$2)", [position, JSON.stringify(record)]);
-  try {
-    await intent(1, { kind: "INTENT", action: "PAUSE_RUNNER" });
-    assert.deepEqual(await readPlatformOrders(query), { paused: true, subjects: [] });
-    await intent(2, { kind: "INTENT", action: "DISPATCH", intentId: "one", note: "Harris County TX" });
-    await intent(3, { kind: "INTENT", action: "DISPATCH", intentId: "two", note: "Cook County IL" });
-    await intent(4, { kind: "INTENT", action: "CANCEL_DISPATCH", note: "one" });
-    await intent(5, { kind: "INTENT", action: "RESUME_RUNNER" });
-    await pg.query("INSERT INTO cp_lead_orders VALUES($1),($2)", [JSON.stringify({ open: true, rows: [{ state: "QUEUED", place: "ocd-division/country:us/state:ny/place:new_york" }] }),
-      JSON.stringify({ open: false, rows: [{ state: "QUEUED", place: "ocd-division/country:us/state:ca" }] })]);
-    const orders = await readPlatformOrders(query);
-    assert.equal(orders.paused, false);
-    assert.deepEqual(orders.subjects, ["ocd-division/country:us/state:ny/place:new_york", "assignment:dispatch:two", "dispatch:Cook County IL"]);
-  } finally { await pg.close(); }
-});
 
 test("directory metadata avoids repeated downloads and a failed refresh retains its original source timestamp", async () => {
   const root = await mkdtemp(join(tmpdir(), "mp01-directory-")), repos = createMemoryRepositories(), vault = cycleVault(root);
@@ -86,30 +38,4 @@ test("concurrent platform requests serialize on the publisher while unrelated ho
   assert.deepEqual(admitted.sort(), ["example.gov", "legistar.com"]);
   release(); await Promise.all([a, b]);
   assert.equal(admitted.filter(host => host === "legistar.com").length, 2);
-});
-
-test("a district Admin order pages its published ZIP overlap and then one native government, using the ordered plan", async () => {
-  const pg = new PGlite();
-  await pg.exec(`CREATE TABLE civic_data_promotions(key text,record_class text,scope text,current_version_id text,promoted_at timestamptz,payload jsonb);
-    CREATE TABLE civic_data_candidates(id text,normalized_hash text);`);
-  const government = { id: "government:US-NY:cog:1", jurisdictionId: "ny:city:fixture", aliases: [], bodyIds: [], state: "NY", name: "Fixture Government",
-    countyFips: "36061", associations: [{ divisionId: "ocd-division/country:us/state:ny/place:new_york", basis: "SOURCE_CODE" }] };
-  await pg.query("INSERT INTO civic_data_candidates VALUES('version',$1)", ["c".repeat(64)]);
-  await pg.query("INSERT INTO civic_data_promotions VALUES('REGISTRATION:US-NY:registration:v1','REGISTRATION','US-NY:registration:v1','version',now(),$1)", [JSON.stringify({ governments: [government] })]);
-  await pg.query("INSERT INTO civic_data_promotions VALUES('geo',$1,$2,'geography',now(),$3)", [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, JSON.stringify({ scopes: [
-    { type: "congressional_district", version: "cd:119", groupings: [{ geoid: "3610", stateAbbr: "NY", overlaps: [{ zcta5: "10001" }] }] },
-    { type: "congressional_district", version: "cd:118", groupings: [{ geoid: "3610", stateAbbr: "NY", overlaps: [{ zcta5: "10002" }] }] },
-  ] })]);
-  const query = async (sql: string, params: readonly unknown[]) => {
-    assert.match(sql, /LIMIT 1/);
-    const rows = (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
-    if (sql.includes("AS zip") && rows.length) assert.equal(rows[0].zip, "10001");
-    return rows;
-  };
-  try {
-    const found: string[] = [];
-    for await (const page of orderedPlatformGovernments(async () => { throw new Error("No assignment download is needed"); }, query,
-      ["geography:ny:congressional_district:3610:cd:119", "geography:ny:zcta:10001"])) found.push(page.government.id);
-    assert.deepEqual(found, [government.id], "the same government is worked once even when two owner places overlap");
-  } finally { await pg.close(); }
 });

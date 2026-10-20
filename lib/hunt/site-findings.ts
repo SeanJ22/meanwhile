@@ -83,7 +83,8 @@ export function isBodyName(name:string):boolean {
  * still go to the shared Box; publication decides their target and checks. */
 export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
   const ownHost = new URL(scope.website).hostname.toLowerCase().replace(/^www\./, '');
-  const pageHost = new URL(page.url).hostname.toLowerCase().replace(/^www\./, '');
+  const pageAddress = new URL(page.url);
+  const pageHost = pageAddress.hostname.toLowerCase().replace(/^www\./, '');
   if (ownHost !== pageHost && !pageHost.endsWith(`.${ownHost}`)) return [];
   let subjectId = scope.bodyId ?? scope.governmentId;
   const out = new Map<string, SiteFinding>();
@@ -132,9 +133,9 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
     add('GOV-02',name,name);
   }
   else for(const name of namedBodies)add('GOV-03',name,name);
-  const candidates=/\b(candidates?|elections?|ballots?)\b/i.test(new URL(page.url).pathname) || [...main.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].some(m=>/\b(candidates?|elections?|ballots?)\b/i.test(cellText(m[1])));
+  const candidates=/\b(candidates?|elections?|ballots?)\b/i.test(pageAddress.pathname) || [...main.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].some(m=>/\b(candidates?|elections?|ballots?)\b/i.test(cellText(m[1])));
   const historicalDocument=/\/(?:news(?:_detail)?|archives?|meetings?|minutes|agendas?|calendar)(?:\/|[_.?]|$)|CivicAlerts\.aspx|AgendaCenter|Calendar\.aspx/i.test(page.url);
-  const rosterPage=scope.bodyContext || namedBodies.length===1 || /(?:council|selectboard|selectmen|board-of-(?:education|supervisors|trustees|commissioners)|school-board)/i.test(new URL(page.url).pathname);
+  const rosterPage=scope.bodyContext || namedBodies.length===1 || /(?:council|selectboard|selectmen|board-of-(?:education|supervisors|trustees|commissioners)|school-board)/i.test(pageAddress.pathname);
   const roster=rosterPage && (namedBodies.length<=1) && !historic && !candidates && !historicalDocument ? extractRoster(page.url,main).members : [];
   for (const member of roster) {
     const ownQuote=(value:string)=>member.sourceQuote && boundedIndexOf(normalizeText(member.sourceQuote),normalizeText(value))>=0 ? member.sourceQuote : memberQuote(main,member.name,value);
@@ -175,7 +176,8 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
   }
   const links=extractLinks(main,new URL(page.url),Number.MAX_SAFE_INTEGER);
   for (const link of links) {
-    if (/\b(meetings?|agendas?|minutes|calendar|icalendar)\b|\.ics(?:$|[?#])/i.test(`${link.text} ${new URL(link.url).pathname}`)) {
+    const linkAddress = new URL(link.url);
+    if (/\b(meetings?|agendas?|minutes|calendar|icalendar)\b|\.ics(?:$|[?#])/i.test(`${link.text} ${linkAddress.pathname}`)) {
       const document=/\.(?:pdf|docx?|rtf)(?:[?#]|$)/i.test(link.url) || /\b(?:19|20)\d{2}\b/.test(link.text);
       add(document?'DOC-02':'MTG-01',link.url,link.url);
     }
@@ -202,6 +204,8 @@ export function blankLinks(page: SitePage, families: ReadonlySet<string>): reado
     CAM:/campaign|finance|contribution|expenditure|disclosure|filing/i,
     FIN:/budget|financ|audit|annual.report|revenue|expenditure|tax/i,
   };
-  return extractLinks(page.html,new URL(page.url),Number.MAX_SAFE_INTEGER).filter(link=>
-    [...families].some(family=>patterns[family]?.test(`${link.text} ${new URL(link.url).pathname}`)));
+  return extractLinks(page.html,new URL(page.url),Number.MAX_SAFE_INTEGER).filter(link=>{
+    const linkAddress=new URL(link.url);
+    return [...families].some(family=>patterns[family]?.test(`${link.text} ${linkAddress.pathname}`));
+  });
 }

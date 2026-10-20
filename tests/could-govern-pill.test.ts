@@ -29,7 +29,7 @@ const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
-const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
+const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({ edgeOnly: true }, () => zipCertainty(zip));
 
 test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {
   const c = await sampledZipCertainty("07866");

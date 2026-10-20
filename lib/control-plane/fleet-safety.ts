@@ -744,7 +744,8 @@ export class FleetSafetyController {
   /** A missing or broken robots document is advisory. An actual rate limit or
    * explicit request to wait still applies to every request on the website. */
   private advisoryRobots(url: string, response?: Response): boolean {
-    return new URL(url).pathname === "/robots.txt" &&
+    const sourceUrl=new URL(url);
+    return sourceUrl.pathname === "/robots.txt" &&
       (response === undefined || (response.status !== 429 && this.retryAfterMs(response) === null));
   }
 

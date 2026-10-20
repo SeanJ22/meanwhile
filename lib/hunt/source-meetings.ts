@@ -25,7 +25,7 @@ export function sourceMeetings(input:{repos:ControlPlaneRepositories;governmentI
   if(work!==input.workItemId && !inherited.has(key))inherited.set(key,Promise.all(robotsUrls.map(url=>input.repos.artifacts.readWhere(work,['canonicalUrl'],url))).then(groups=>groups.flat()));
   const artifacts=work===input.workItemId?input.currentArtifacts():await inherited.get(key)!;
   const host=new URL(page.url).hostname.replace(/^www\./,'');
-  const robots=artifacts.filter(row=>new URL(row.canonicalUrl).hostname.replace(/^www\./,'')===host && new URL(row.canonicalUrl).pathname==='/robots.txt' && row.recordedAt<=page.observedAt).sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt))[0];
+  const robots=artifacts.filter(row=>{const sourceUrl=new URL(row.canonicalUrl);return sourceUrl.hostname.replace(/^www\./,'')===host && sourceUrl.pathname==='/robots.txt' && row.recordedAt<=page.observedAt;}).sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt))[0];
   const steps:DiscoveryStep[]=[];
   if(robots)steps.push({purpose:'robots',url:robots.canonicalUrl,permission:'CANNOT_TELL',status:(robots as WorkArtifact & {httpStatus?:number|null}).httpStatus??null,transportError:null,bytes:robots.byteLength,artifactId:robots.artifactId,rung:null,note:`Saved robots observation from ${robots.recordedAt}`});
   steps.push({purpose:page.url===home.url?'homepage':'endpoint',url:page.url,permission:'CANNOT_TELL',status:200,transportError:null,bytes:Buffer.byteLength(page.html),artifactId:page.artifactId,rung:page.requestCount?2:null,note:`Saved source page observed ${page.observedAt}`});

@@ -32,6 +32,7 @@ import { huntPacketObligationId, reportableSubjects } from "../../hunt/packet.ts
 import type { HuntSearch, SearchBudget } from "../../hunt/search.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { forEachAggregate, forEachLatestScout } from "./streamed-history.ts";
+import { refreshDoorsForPass } from "../../doors/install.ts";
 
 /** One runtime over the same stores and bounded worker infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -101,7 +102,11 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       if (!mayUseTestFixture()) {
         const item = await input.repos.workItems.read(task.workItemId);
         const states = scoutStateHint(item?.value.subject, item?.value.id);
-        if (states.length === 1) await refreshVenueResolutionsFromPromoted({ state: states[0] });
+        if (states.length === 1) {
+          const doors = await refreshDoorsForPass(input.repos.doors, { state: states[0] });
+          if (!doors.partitions?.refreshed) throw new Error(doors.reason ?? "The task's registered doors could not be read");
+          await refreshVenueResolutionsFromPromoted({ state: states[0] });
+        }
       }
       brokerLineages(await readLineageHistory(input.repos,task.workItemId)); },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",

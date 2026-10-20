@@ -68,6 +68,7 @@ describe("DB-13: meeting work follows the doors in use each pass", () => {
     const batches: Set<string>[] = [];
     const repo = Object.assign(Object.create(repos.doors), {
       list: async () => { throw new Error("the whole country's door records must stay in the database"); },
+      listNarrowed: async () => { throw new Error("the whole country's door identities must stay on disk"); },
       readMany: async (ids: readonly string[]) => {
         const rows = await repos.doors.readMany!(ids);
         batches.push(new Set(rows.flatMap(row => ocdStateCode(row.value.ocdId) ?? [])));

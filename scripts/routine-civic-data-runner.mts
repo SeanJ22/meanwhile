@@ -200,13 +200,17 @@ if (controlPlaneUrlFromEnv() === null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const doorPass = await refreshDoorsForPass(doorRepos.doors);
+    const skippedDoorCount = doorPass.partitions?.skippedCount ?? doorPass.partitions?.skipped.length ?? 0;
     console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
       `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
-      `${(doorPass.partitions?.skipped.length ?? 0) > 0 ? `; ${doorPass.partitions!.skipped.length} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` : ""}`);
+      `${skippedDoorCount > 0 ? `; ${skippedDoorCount} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` +
+        `${skippedDoorCount > doorPass.partitions!.skipped.length ? `; showing ${doorPass.partitions!.skipped.length} of ${skippedDoorCount} issues` : ""}` : ""}`);
     if (doorPass.outcomes !== null) {
+      const skippedOutcomeCount = doorPass.outcomes.skippedCount ?? doorPass.outcomes.skipped.length;
       console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
         `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
-        `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
+        `${skippedOutcomeCount > 0 ? `; ${skippedOutcomeCount} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` +
+          `${skippedOutcomeCount > doorPass.outcomes.skipped.length ? `; showing ${doorPass.outcomes.skipped.length} of ${skippedOutcomeCount} issues` : ""}` : ""}`);
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);

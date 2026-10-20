@@ -26,14 +26,19 @@ if(process.argv.includes("--retirement")){
   assert.equal(role.current_user,"readonly");assert.equal(role.can_write,false);
   for(const {state} of CAMPAIGN_FINANCE_SOURCES){
     const [facts]=await q.query(`SELECT count(*) AS records,count(*) FILTER(WHERE f.status='live') AS live FROM entity e JOIN fact f ON f.entity_id=e.id
-      WHERE e.state=$1 AND e.kind='committee' AND f.produced_by LIKE $2 AND f.field LIKE 'campaign-money:%'`,[state,`campaign-finance:${state}:%`]);
+      WHERE e.state=$1 AND f.produced_by LIKE $2 AND f.field LIKE 'campaign-money:%'`,[state,`campaign-finance:${state}:%`]);
     const [publications]=await q.query("SELECT count(*) AS records FROM civic_data_promotions WHERE source_id=$1 AND record_class='CAMPAIGN_FINANCE'",[`US-${state}:campaign-finance-source`]);
     const [copies]=await q.query("SELECT count(*) AS records FROM civic_data_candidates WHERE source_id=$1 AND record_class='CAMPAIGN_FINANCE'",[`US-${state}:campaign-finance-source`]);
-    rows.push({state,facts:Number(facts.records),liveFacts:Number(facts.live),publications:Number(publications.records),candidateCopies:Number(copies.records)});
+    const [dependent]=await q.query(`SELECT
+      (SELECT count(*) FROM civic_data_candidate_events e JOIN civic_data_candidates c ON c.id=e.candidate_id WHERE c.source_id=$1 AND c.record_class='CAMPAIGN_FINANCE') AS events,
+      (SELECT count(*) FROM owner_flag o JOIN fact f ON f.id=o.fact_id JOIN entity e ON e.id=f.entity_id
+        WHERE e.state=$2 AND f.produced_by LIKE $3 AND f.field LIKE 'campaign-money:%') AS flags,
+      (SELECT count(*) FROM pass_cursor WHERE name LIKE $3) AS checkpoints`,[`US-${state}:campaign-finance-source`,state,`campaign-finance:${state}:%`]);
+    rows.push({state,facts:Number(facts.records),liveFacts:Number(facts.live),publications:Number(publications.records),candidateCopies:Number(copies.records),candidateEvents:Number(dependent.events),flags:Number(dependent.flags),checkpoints:Number(dependent.checkpoints)});
   }
   const result={at:new Date().toISOString(),bytesRead,rows};
   await writeFile("/tmp/src-mn-campaign-retirement-check.json",JSON.stringify(result,null,2));console.log(JSON.stringify(result));
-  assert.ok(rows.every(row=>row.facts===0 && row.publications===0 && row.candidateCopies===0),"The replaced campaign load still has stored facts or publications");
+  assert.ok(rows.every(row=>row.facts===0 && row.publications===0 && row.candidateCopies===0 && row.candidateEvents===0 && row.flags===0 && row.checkpoints===0),"The replaced campaign load still has stored facts or publications");
   process.exit(0);
 }
 if(!test || !control)throw new Error("Separate reader and control-plane production copies are required");

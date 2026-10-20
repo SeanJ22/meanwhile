@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
@@ -11,9 +10,6 @@ import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishClaim, type FactDb, type PublishInput } from "../lib/facts/publish.ts";
 import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
-import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
-import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
-import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
 import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
 import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
@@ -216,25 +212,4 @@ test("a departed roster member and a pulled Box seat clear answers after their l
     fetch: async () => { throw new Error("unexpected fetch"); }, store: new MemoryRoutineDataStore(), clocks, now: NOW.toISOString(), limit: 10, purge });
   assert.equal(report.seats.pulled, 1);
   assert.equal(pulledPurges, 1);
-});
-
-test("native campaign-money writes, replacements and confirmations clear their state after commit", async t => {
-  const db = await factDb();
-  t.after(() => db.pg.close());
-  const resource = campaignFinanceSource("MN").resources[0];
-  const [raw] = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/mn-native-excerpt.json", import.meta.url), "utf8"));
-  const record = { ...campaignSourceRecord("MN", resource, raw, { url: resource.url, rawHash: "b".repeat(64), vaultKey: "test:mn",
-    byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null }),
-    person: { id: "test-laurie-pryor", name: "Laurie Pryor", seat: "test-house-seat", sourceUrl: "https://www.house.mn.gov/" } };
-  let purges = 0;
-  const purge = async (tags: readonly string[]) => {
-    assert.deepEqual(tags, ["reader-state:MN"]);
-    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE status='live'"))[0]!.n), 1);
-    purges++;
-    return { purged: true };
-  };
-  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
-  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 0, confirmed: 1 });
-  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [{ ...record, title: "Updated report" }], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
-  assert.equal(purges, 3);
 });

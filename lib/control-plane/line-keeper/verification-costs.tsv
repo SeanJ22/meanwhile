@@ -1,0 +1,33 @@
+Check	Direct database response bytes	Basis
+preview-current.json	2670970	Measured direct Neon response bytes
+preview-expanded.json	5999796	Measured direct Neon response bytes
+preview-final-inputs.json	5655893	Measured direct Neon response bytes
+preview-pages.json	2905452	Measured direct Neon response bytes
+preview-record-inputs.json	7371970	Measured direct Neon response bytes
+preview-resolved-records.json	8385400	Measured direct Neon response bytes
+production-final.json	35392510	Measured direct Neon response bytes
+production-latest.json	19211081	Measured direct Neon response bytes
+production-preview.json	955406	Measured direct Neon response bytes
+production-ready.json	22268609	Measured direct Neon response bytes
+production-today.json	161899	Measured direct Neon response bytes
+production-verified.json	10750047	Measured direct Neon response bytes
+approved-counts.json	753	Measured direct Neon response bytes
+connections.json	7403	Measured direct Neon response bytes
+country-all.json	33322064	Measured direct Neon response bytes
+country-all-memo-seed.json	33316655	Measured direct Neon response bytes
+country.json	711	Measured direct Neon response bytes
+destinations.json	7506662	Measured direct Neon response bytes
+generic-shape.json	2997	Measured direct Neon response bytes
+held-state.json	7831670	Measured direct Neon response bytes
+indices.json	2933	Measured direct Neon response bytes
+inspect.json	18908	Measured direct Neon response bytes
+inspect2.json	5059	Measured direct Neon response bytes
+inspect3.json	3847	Measured direct Neon response bytes
+posting-current.json	366741	Measured direct Neon response bytes
+results-check.json	3635	Measured direct Neon response bytes
+transfer-baseline.json	10381	Measured direct Neon response bytes
+Earlier country initialization	33302830	Earlier recorded measurement; later output file superseded
+Earlier connection metadata check	2827	Earlier recorded measurement; later output file superseded
+Earlier Results reader check	3150	Earlier recorded measurement; later output file superseded
+Second Results reader check	3500	Earlier recorded measurement; later output file superseded
+Configuration growth SELECT review	188273	Earlier recorded measurement; later output file superseded

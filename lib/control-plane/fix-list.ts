@@ -32,6 +32,8 @@ export interface FixItem {
   /** "owner" for Admin, or the plain-words part of the factory that found it ("The shut-door check"). */
   readonly addedBy: string;
   readonly addedAt: string;
+  /** The enduring part of the system accountable for the repair, in plain words. */
+  readonly owner?: string;
   readonly state: FixState;
   readonly startedAt?: string;
   readonly dispatch?: { readonly intentId: string; readonly note: string; readonly at: string; readonly honoredAt?: string; readonly honoredDetail?: string };
@@ -66,7 +68,7 @@ function put(config: AdminConfig, items: readonly FixItem[], at: string): AdminC
 }
 
 /** Add an item. A gap already on the list that is not finished is left alone; a FIXED one that is reported again CAME_BACK. */
-export function withFixAdded(config: AdminConfig, add: { where: string; says: string; addedBy: string; at: string; sourceKey?: string; technical?: readonly string[] }): AdminConfig {
+export function withFixAdded(config: AdminConfig, add: { where: string; says: string; addedBy: string; at: string; sourceKey?: string; technical?: readonly string[]; owner?: string }): AdminConfig {
   const id = fixSubjectId(add.where, add.sourceKey ?? add.says);
   const items = fixItems(config);
   const held = items.find((i) => i.id === id);
@@ -74,7 +76,7 @@ export function withFixAdded(config: AdminConfig, add: { where: string; says: st
     if (held.state !== "FIXED") return config;
     return put(config, items.map((i) => (i.id === id ? { ...i, state: "CAME_BACK" as const, cameBackAt: add.at, dispatch: undefined } : i)), add.at);
   }
-  return put(config, [...items, { id, where: add.where.trim(), says: add.says.trim(), addedBy: add.addedBy, addedAt: add.at, state: "OPEN", ...(add.technical ? { technical: add.technical } : {}) }], add.at);
+  return put(config, [...items, { id, where: add.where.trim(), says: add.says.trim(), addedBy: add.addedBy, addedAt: add.at, state: "OPEN", owner:add.owner??'River', ...(add.technical ? { technical: add.technical } : {}) }], add.at);
 }
 
 export function withFixStarted(config: AdminConfig, id: string, at: string): AdminConfig {
@@ -94,6 +96,8 @@ export interface FixCompletion {
 
 export function withFixCompleted(config: AdminConfig, id: string, done: FixCompletion, at: string): AdminConfig {
   const items = fixItems(config);
+  const held=items.find(i=>i.id===id);
+  if(held?.addedBy==='The line keeper'&&done.changedBy!=='The line keeper')return config;
   if (!items.some((i) => i.id === id)) return config;
   return put(config, items.map((i) => (i.id === id
     ? { ...i, state: "FIXED" as const, fixedAt: at, whatChanged: done.whatChanged, changedBy: done.changedBy, before: done.before, after: done.after, undo: done.undo ?? null }
@@ -122,8 +126,8 @@ async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => Admi
  * The one way code adds a broken thing to the fix list. `by` names the part of
  * the factory in plain words. Returns the item id.
  */
-export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string; sourceKey?: string; technical?: readonly string[] }): Promise<string> {
-  await mutate(repos, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
+export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string; sourceKey?: string; technical?: readonly string[];owner?:string }): Promise<string> {
+  await mutate(repos, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical,owner:add.owner }));
   return fixSubjectId(add.where, add.sourceKey ?? add.says);
 }
 

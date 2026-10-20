@@ -46,14 +46,13 @@ test("the results section is announced with the snapshot revision and the worker
 
 /* -------------------------------------------------------------------- SQL */
 
-test("the pipeline reads only the published snapshot, only reads, and joins each approval to its own witness", () => {
+test("the pipeline reads retained publications and grouped pipeline stages, joining exact approval witnesses", () => {
   for (const sql of [PIPELINE_HEAD_SQL, PIPELINE_PENDING_SQL, PIPELINE_APPROVED_SQL, ZIP_WITNESS_SQL]) {
-    assert.match(sql, /FROM cp_owner_snapshots/);
-    assert.match(sql, /s\.id = 'current'/);
+    assert.match(sql, /FROM cp_(?:owner_snapshots|log_promotion_pipeline)/);
     assert.doesNotMatch(sql, /\b(INSERT|UPDATE|DELETE|ALTER|DROP|CREATE|TRUNCATE)\b/i);
   }
   assert.match(PIPELINE_PENDING_SQL, /GROUP BY/, "the items are counted inside the database, never shipped one by one");
-  assert.match(PIPELINE_APPROVED_SQL, /e->>'approvalId' = p->>'version'/, "a witness counts only for the exact approval it observed");
+  assert.match(PIPELINE_APPROVED_SQL, /e->>'approvalId'=p->'publicationOutcome'->>'workerResultId'/, "a witness counts only for the exact approval it observed");
   assert.match(PIPELINE_APPROVED_SQL, /interval '3 hours'/);
   assert.match(ZIP_WITNESS_SQL, /e->>'url' = \$1/, "a ZIP's check is the witness for that exact page");
 });
@@ -65,7 +64,7 @@ function fakeSql(replies: readonly (readonly Record<string, unknown>[])[]) {
 }
 
 test("the pipeline read maps grouped rows, drops what it cannot trust, and says unread rather than zero", async () => {
-  const head = { published_at: new Date("2026-10-01T21:50:44.205Z"), revision: 671, pending_kind: "array", promotions_kind: "array" };
+  const head = { published_at: new Date("2026-10-01T21:50:44.205Z"), revision: 671, states_kind: "object" };
   const f = fakeSql([[head], [
     { record_class: "local-jurisdiction", stage: "SCOUTED", prefix: "az", n: 570 },
     { record_class: "agendas", stage: "NOT_A_STAGE", prefix: "x", n: 4 },
@@ -85,8 +84,8 @@ test("the pipeline read maps grouped rows, drops what it cannot trust, and says 
   assert.deepEqual(f.seen[2].params, [NOW], "freshness is judged at the request time");
 
   assert.deepEqual(await readPipeline(fakeSql([[]]).sql, NOW), { state: "UNREAD", says: "No owner snapshot has been published." });
-  const old = await readPipeline(fakeSql([[{ ...head, pending_kind: null }]]).sql, NOW);
-  assert.equal(old.state, "UNREAD", "a snapshot without the pipeline lists is unread, not an empty pipeline");
+  const old = await readPipeline(fakeSql([[{ ...head, states_kind: null }]]).sql, NOW);
+  assert.equal(old.state, "UNREAD", "a missing assignment publication remains unread");
 });
 
 test("a ZIP's witnesses are read for its own ballot page only, and a malformed ZIP reads nothing", async () => {

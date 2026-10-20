@@ -1,0 +1,13 @@
+import { seedLineKeeper } from "../../lib/control-plane/line-keeper/runtime.ts";
+export const config={background:true};
+/** Netlify's production deploy event seeds just the source clocks; subsequent hourly reads are deltas. */
+export function isPublishedProductionDeploy(event:{deploy:{context?:string;publishedAt?:string|null}}):boolean {
+  return event.deploy.context==="production"&&typeof event.deploy.publishedAt==="string"&&Number.isFinite(Date.parse(event.deploy.publishedAt));
+}
+const initializer={
+  async deploySucceeded(event:{deploy:{context?:string;publishedAt?:string|null}}):Promise<void> {
+    if(!isPublishedProductionDeploy(event)) return;
+    await seedLineKeeper();
+  },
+};
+export default initializer;

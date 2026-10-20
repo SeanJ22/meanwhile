@@ -30,8 +30,10 @@ import { fixItems } from "@/lib/control-plane/fix-list.ts";
 import { readLatestLookPasses } from "@/lib/control-plane/live-audit-log.ts";
 import { deadLinkReadings, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING } from "@/lib/health/surface-speed.ts";
 import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
-import { readVitalNow } from "@/lib/control-plane/admin-view/vital-now.ts";
+import { readLineReport } from "@/lib/control-plane/line-keeper/report.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
+import { keeperStatus } from "@/lib/control-plane/line-keeper/model.ts";
+import { keeperVital } from "@/lib/control-plane/line-keeper/admin.ts";
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
@@ -51,18 +53,28 @@ async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
 export async function GET(request: NextRequest) {
   return adminGet(request, async (observedAt) => {
     const now = new Date(observedAt);
+    if(request.nextUrl.searchParams.get('reading')==='hourly'){
+      const url=controlPlaneUrlFromEnv();
+      const [keeper,pipeline]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null]);
+      return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
+        data:buildScoreboard({lineKeeper:keeper,observedAt,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
+          learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:keeper?.hours[0]?.gates??null,readiness:readinessCounts(keeper?.hours[0]?.readiness??{})}),
+        missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
+    }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
     const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
-    const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, vital, deadLinks, looks] = await Promise.all([
+    let doorUnreadable=0;
+    const doorList = opened ? await attempt(async () => await listDoors(opened.doors).then(r=>{doorUnreadable=r.unreadable;return r.doors;})) : null;
+    const keeperRead=attempt(async()=>url?readLineReport(neon(url)):null);
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
-      attempt(async () => (opened ? projectDoors({ ...(await listDoors(opened.doors)), saves: [], observedAt }).counts : null)),
+      attempt(async () => (opened ? projectDoors({ doors:doorList??[], unreadable:doorUnreadable, saves: [], observedAt }).counts : null)),
       attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
-      attempt(() => readDoorNumbers({ now: observedAt, doors: doorList, config })),
+      attempt(async () => readDoorNumbers({ now: observedAt, doors: doorList, config, keeper:await keeperRead })),
       attempt(async () => { if (!url) return null; const r = await readPipeline(neon(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
       attempt(async () => {
@@ -85,12 +97,11 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
       // The latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
-      // The last seven days of the flow from findings to live, from hourly counts; seven bounded reads.
-      attempt(async () => (url ? readFlowWeek({ control: neon(url), through: observedAt }) : null)),
-      // The fact store's last 24 hours of live facts and its open blanks; three small reads of the reader database.
-      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query, observedAt) : null; }),
-      // Now: the last two full hours of the runner's vital signs; one indexed read of at most two small rows.
-      attempt(async () => (url ? readVitalNow(neon(url), observedAt) : null)),
+      attempt(async () => (url ? readFlowWeek({control:neon(url),through:observedAt}) : null)),
+      // Keep the existing blank reasons. Reader delivery comes from the hourly report.
+      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query) : null; }),
+      // One compact, independently maintained checkpoint supplies all hourly numbers.
+      keeperRead,
       // The link sweep's dead links per surface, kept beside door health.
       attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
       // The last deploys' look passes (a week's worth), for the look row.
@@ -109,7 +120,9 @@ export async function GET(request: NextRequest) {
       doorNumbers,
       flow,
       factStore,
-      vital,
+      vital: keeperVital(keeper),
+      lineKeeper: keeper,
+      observedAt,
       audit,
       speed,
       deadLinks,
@@ -117,11 +130,11 @@ export async function GET(request: NextRequest) {
       speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
       provenFixes,
       reportAccuracy: claims,
-      gates: opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null }),
-      readiness: readinessCounts(recoveryWitnesses({
+      gates: keeper?.hours[0]?.gates ?? (opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null })),
+      readiness: readinessCounts({...recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,
         failureDebts: null, failureDebtsWithReason: null, absences: null, absencesWithRecheck: null, manualWriteBacks: null,
-      })),
+      }),...(keeper?.hours[0]?.readiness ?? {})}),
     };
     return {
       contract: "admin-v6/scoreboard@1",

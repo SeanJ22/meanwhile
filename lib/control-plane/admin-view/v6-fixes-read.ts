@@ -48,7 +48,7 @@ function listOpen(item: FixItem): OpenFix {
     id: item.id,
     title: titleOf(item.says),
     tab: item.state === "OPEN" ? "attention" : "fixing",
-    owner: "The team",
+    owner: item.owner ?? "River",
     problem: item.says,
     helps: item.where,
     placeInLine: item.dispatch ? (item.dispatch.honoredAt ? "Agents sent" : "Waiting for the runner") : item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
@@ -56,7 +56,7 @@ function listOpen(item: FixItem): OpenFix {
     taskStage: null,
     taskId: null,
     linkedStuck: [],
-    origin: item.addedBy === "owner" ? "engineering" : "automatic",
+    origin: (item.addedBy === "owner" || item.owner === "River") ? "engineering" : "automatic",
     technical: [`Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`, ...(item.technical ?? []), ...(item.dispatch?.honoredDetail ? [item.dispatch.honoredDetail] : [])].join("\n"),
   };
 }

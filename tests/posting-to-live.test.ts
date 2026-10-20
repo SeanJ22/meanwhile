@@ -102,13 +102,13 @@ test("DB-27: read from the store, the clock stops at the readback PASS of the ve
   assert.equal(agenda.basis, "POSTED");
   assert.equal(agenda.postedAt, POSTED);
   assert.equal(agenda.firstSeenAt, SECOND);
-  assert.equal(agenda.liveAt, null, "promoted but not yet read back");
-  assert.equal(agenda.minutesToLive, null);
+  assert.equal(agenda.liveAt, SECOND, "the publication stamps its own typed Reader without waiting for the fleet repair");
+  assert.equal(agenda.minutesToLive, 40);
 
   await repairMeetingReaderProjectionReadbacks(store, [legistar], LIVE, "f".repeat(40));
   const after = (await readPostingToLive(store, versionId))!.find((row) => row.kind === "AGENDA_LINK")!;
-  assert.equal(after.liveAt, LIVE);
-  assert.equal(after.minutesToLive, 47, "posted 14:20, live 15:07");
-  assert.equal(readbackPassAt(await store.events(versionId), versionId), LIVE);
+  assert.equal(after.liveAt, SECOND);
+  assert.equal(after.minutesToLive, 40, "the later repair preserves the first observation");
+  assert.equal(readbackPassAt(await store.events(versionId), versionId), SECOND);
   assert.equal(await readPostingToLive(store, "cv-nothing-here"), null);
 });

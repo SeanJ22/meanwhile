@@ -10,6 +10,9 @@ import { nationalScopeOf, v6NationalSection, type NationalDeps } from "./v6-nati
 import { population } from "./v6-stuck-route.ts";
 import { readV6Sources } from "./v6-money-hunts-route.ts";
 import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
+import { neon } from "@neondatabase/serverless";
+import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
+import { readCountryScores } from "../line-keeper/country.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -40,11 +43,15 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
     readV6Sources(opened.repos, deps.now(), false),
     population().then((read) => read?.rows ?? null, () => null),
   ]);
+  const country=query.scope.kind==='country' && !options.deps && controlPlaneUrlFromEnv()
+    ? await readCountryScores(neon(controlPlaneUrlFromEnv()!)).catch(()=>null):null;
   const out = await v6NationalSection({ scopeKey: query.scopeKey, scope: query.scope,
-    sources: { hunts: { scopes: sources.scopes, malformedScopes: sources.malformedScopes, attribution: sources.attribution }, stuck }, deps });
+    sources: { hunts: { scopes: sources.scopes, malformedScopes: sources.malformedScopes, attribution: sources.attribution }, stuck }, deps,
+    ...(!options.deps && query.scope.kind==='country'?{publishedScores:new Map((country??[]).map(s=>[`st:${s.state}`,s.score]))}:{}) });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
   const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);
   const acs = await readPopulationFacts(keys.filter((id): id is string => id !== null));
-  return NextResponse.json({ ...out, data: out.data.map((row, index) => ({ ...row,
+  const countryGaps=!options.deps&&query.scope.kind==='country'?(country===null||country.length===0?['The country’s published Readers have report is unavailable.']:country.filter(s=>s.error!==null).map(s=>`${s.state.toUpperCase()}: ${s.error}`)):[];
+  return NextResponse.json({ ...out,missingParts:[...out.missingParts,...countryGaps], data: out.data.map((row, index) => ({ ...row,
     population: acs.rows.find(fact => `${fact.geography}:${fact.code}` === keys[index]) ?? null })) }, { headers: NO_STORE });
 }

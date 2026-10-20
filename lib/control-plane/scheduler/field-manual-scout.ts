@@ -8,12 +8,13 @@ import {
 
 const STATE_TOKEN = /\b(az|nh|nj|a[klrz]|c[aot]|d[ce]|fl|ga|hi|i[adln]|k[sy]|la|m[adeinost]|n[cdehjmvy]|o[hkr]|pa|ri|s[cd]|t[nx]|ut|v[at]|w[aivy])\b/i;
 const OCD_STATE = /state:([a-z]{2})/i;
+const OPAQUE_ID = /^(?:wi|rt|at|wr|ar|cv)-[a-f0-9]{24,64}$/i;
 
 /** The two-letter state(s) an obligation is about, from its OCD subject or its id. Empty = jurisdiction-agnostic. */
 export function scoutStateHint(subjectId: string | null | undefined, obligationId: string | null | undefined): string[] {
   const out = new Set<string>();
   for (const value of [subjectId, obligationId]) {
-    if (!value) continue;
+    if (!value || OPAQUE_ID.test(value)) continue;
     const ocd = OCD_STATE.exec(value) ?? /^([a-z]{2}):/i.exec(value);
     if (ocd) out.add(ocd[1]!.toLowerCase());
     const tok = STATE_TOKEN.exec(value.replace(/^[a-z]+:/i, ""));

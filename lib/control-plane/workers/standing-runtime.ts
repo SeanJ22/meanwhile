@@ -101,7 +101,9 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     beginTask:async (task)=>{
       if (!mayUseTestFixture()) {
         const item = await input.repos.workItems.read(task.workItemId);
-        const states = scoutStateHint(item?.value.subject, item?.value.id);
+        const contract = task.workerTask?.contract;
+        const jurisdiction = contract?.schemaVersion === 2 ? contract.jurisdiction.state : item?.value.autonomousPlan?.jurisdiction;
+        const states = scoutStateHint(item?.value.subject, jurisdiction);
         if (states.length === 1) {
           const doors = await refreshDoorsForPass(input.repos.doors, { state: states[0] });
           if (!doors.partitions?.refreshed) throw new Error(doors.reason ?? "The task's registered doors could not be read");

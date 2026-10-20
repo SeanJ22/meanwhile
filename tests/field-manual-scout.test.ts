@@ -4,11 +4,21 @@ import assert from "node:assert/strict";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { projectFieldManual } from "../lib/control-plane/field-manual.ts";
 import { blankRecordClass, scoutFieldManualProjection, scoutStateHint } from "../lib/control-plane/scheduler/field-manual-scout.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 
 test("scoutStateHint reads the state from an OCD subject and from an obligation id", () => {
   assert.deepEqual(scoutStateHint("ocd-division/country:us/state:nj/county:morris#governing", null), ["nj"]);
   assert.deepEqual(scoutStateHint(null, "freshness:jurisdiction:az:city:city-of-tucson#meetings-1"), ["az"]);
   assert.deepEqual(scoutStateHint("nothing here", "nothing here"), []);
+});
+
+test("opaque work-item IDs do not add Wisconsin to a worker's actual place", () => {
+  const item = createWorkItem({ project: "worker-place", subject: "ocd-division/country:us/state:az/county:pima#governing",
+    obligation: "Read this body's meeting source", why: "Initialize its registered source", now: "2026-10-20T08:00:00.000Z" });
+  assert.match(item.id, /^wi-/);
+  assert.deepEqual(scoutStateHint(item.subject, item.id), ["az"]);
+  assert.deepEqual(scoutStateHint(null, item.id), []);
+  assert.deepEqual(scoutStateHint(null, "freshness:jurisdiction:wi:county:dane#meetings-1"), ["wi"]);
 });
 
 test("a projection never exceeds its limit — a worker inherits a page, not the whole store", () => {

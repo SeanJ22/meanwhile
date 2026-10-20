@@ -31,55 +31,147 @@ Causes repaired:
 - A rejected claim now retains its value, quote, source/copy, provenance and producer in its existing blank. Scoped hunt packets expose the exact failure to detectives. The existing import checksum replays the replaced checker once per current input so verified values publish without an owner gate.
 - Unsupported full addresses, absent names/roles and unproved identity remain blocked. No §3 requirement was waived.
 
-Three real examples per family/outcome (IDs are durable entity IDs; all values were checked on the linked saved reread):
+### Real examples by family, original reason and recheck result
 
-**body: pass now**
+Each nonempty group has three distinct fact examples below, or every example when fewer than three exist. A missing claim or unreadable source is unresolved, rather than a failed fact.
 
-- `ocd-division/country:us/state:nj/place:butler#governing` — `member:ocd-person/055b62aa-6b62-492a-9962-da3be6c0a5d1` = “Raymond Verdonik”; PASS; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
-- `ocd-division/country:us/state:nj/place:chatham#governing` — `member:ocd-person/3dbc8bd6-c206-4bb8-95db-2eebe39b1d70` = “Jocelyn Mathiasen”; PASS; [source](https://www.chathamborough.org/government/mayor).
-- `ocd-division/country:us/state:nj/place:chester#governing` — `member:ocd-person/2230dc27-a81f-4afe-b719-95cd1a1e455a` = “Russell Goodwin”; PASS; [source](https://chesterborough.org/government/mayor).
+**body · PAGE_NOT_ABOUT_ENTITY · CLAIM_NOT_RETAINED (215)**
 
-**body: still fail §3**
+- `ocd-division/country:us/state:az/county:graham#governing` / `member:ocd-person/e6867fcc-bd6f-411b-b983-7f32182fdcf7`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.azcleanelections.gov/november-3-2026/graham).
+- `ocd-division/country:us/state:az/county:pinal#governing` / `comment:detail`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://pinal.novusagenda.com/AgendaPublic/MeetingView.aspx?MeetingID=1443&MinutesMeetingID=-1&doctype=Agenda).
+- `ocd-division/country:us/state:az/county:pinal#governing` / `member:ocd-person/f251bc90-e3e2-4a15-af14-a3d396dc926e`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.pinalcso.org/staff-directory).
 
-- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` — `member:ocd-person/04da06c1-d2f4-4039-b029-eb3baadfe817` = “Glenn R. Buie”; PAGE_NOT_ABOUT_ENTITY; [source](https://www.denvillenj.gov/administration/township_council.php).
-- `ocd-division/country:us/state:nj/place:morris_plains#governing` — `member:ocd-person/2d2cda1f-c961-4640-b695-08483c807bd6` = “Bill Houston”; QUOTE_NOT_ON_SAVED_COPY; [source](https://morrisplainsboro.org/governing-body/).
-- `curated:az/pima-community-college#governing` — `comment:attend` = “District Office, 4905 E. Broadway Blvd., Tucson; regular meetings are live-streamed per the board meetings page.”; QUOTE_NOT_ON_SAVED_COPY; [source](https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/public-comment.html).
+**body · PAGE_NOT_ABOUT_ENTITY · FAILS_SECTION3 (14)**
 
-**person: pass now**
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/04da06c1-d2f4-4039-b029-eb3baadfe817` — value: "Glenn R. Buie"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/41fba2af-9561-4555-9bef-c5757cb1f123` — value: "Mark Venis"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
+- `ocd-division/country:us/state:nj/county:morris/place:denville_township#governing` / `member:ocd-person/6c14979a-2734-4ff6-acd7-5bba7398cbf3` — value: "Adrienne Zimmermann"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.denvillenj.gov/administration/township_council.php).
 
-- `ocd-person/137cc2af-1fd7-4007-980c-c9f7e7dc041b` — `website` = “https://www.rocktwp.net/page/board-members”; PASS; [source](https://www.rocktwp.net/page/board-members).
-- `ocd-person/1c952818-8541-4a1d-be5e-61c434b66f61` — `name` = “Ed Buster”; PASS; [source](https://www.vailschooldistrict.org/o/vsd/page/governing-board).
-- `ocd-person/1ef7e5d1-6f6f-464b-aba2-1de869af1b06` — `website` = “https://www.rocktwp.net/page/board-members”; PASS; [source](https://www.rocktwp.net/page/board-members).
+**body · PAGE_NOT_ABOUT_ENTITY · NOW_PASSES (40)**
 
-**person: still fail §3**
+- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/055b62aa-6b62-492a-9962-da3be6c0a5d1` — value: "Raymond Verdonik"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
+- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/164b76cc-66f6-472b-9717-8c41d7bef349` — value: "Jose Guzman"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
+- `ocd-division/country:us/state:nj/place:butler#governing` / `member:ocd-person/49fa25ba-34b8-45d5-aa5c-67f4c85fae1a` — value: "Marc Piccirillo"; `PASS`; [source](https://www.butlerborough.com/cn/webpage.cfm?TID=19&TPID=3570).
 
-- `ocd-person/0488cc07-9af5-42f7-812c-2acfdf0bd5ad` — `website` = “https://www.rockawayborough.org/departments/council/”; PAGE_NOT_ABOUT_ENTITY; [source](https://www.rockawayborough.org/departments/council/).
-- `ocd-person/183e2f48-b2c8-4cd0-bbfe-02e91f316dec` — `office:ocd-division/country:us/state:nj/place:chester#governing` = “Council Member”; PAGE_NOT_ABOUT_ENTITY; [source](https://chesterborough.org/government/mayor).
-- `ocd-person/1a122750-3cd6-46b8-9fad-b19fd870d7f3` — `office:ocd-division/country:us/state:nj/place:chester#governing` = “Council Member”; PAGE_NOT_ABOUT_ENTITY; [source](https://chesterborough.org/government/mayor).
+**body · PAGE_NOT_ABOUT_ENTITY · UNREADABLE_SOURCE (1)**
 
-**meeting: pass now**
+- `ocd-division/country:us/state:az/place:safford#governing` / `comment:detail`; `SourceHttpError: HTTP 403 for https://library.municode.com/az/safford/codes/code_of_ordinances?nodeId=COOR_TIT2ADPE. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://library.municode.com/az/safford/codes/code_of_ordinances?nodeId=COOR_TIT2ADPE).
 
-- `meeting:ical:bradford-cemetery-trustees:5knqlqc2tp4vkdc8hq2seggpms@google.com/20261208T200000Z` — `starts_at` = “20261208T150000”; PASS; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
-- `meeting:ical:bradford-cemetery-trustees:5knqlqc2tp4vkdc8hq2seggpms@google.com/20270112T200000Z` — `starts_at` = “20270112T150000”; PASS; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
-- `meeting:ical:bradford-independence-day-committee:2bqlbi9sard6qg20h3q0kkle0g@google.com` — `starts_at` = “20261029T220000Z”; PASS; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
+**body · QUOTE_NOT_ON_SAVED_COPY · CLAIM_NOT_RETAINED (1)**
 
-**meeting: still fail §3**
+- `ocd-division/country:us/state:az/school_district:elfrida_elementary_district#board` / `homepage`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.elfridaschools.org/).
 
-- `meeting:clerksboards:128:2026-07-20` — `location` = “900 S. Randolph Way, Tucson, AZ”; QUOTE_NOT_ON_SAVED_COPY; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
-- `meeting:clerksboards:128:2026-10-19` — `location` = “900 S. Randolph Way, Tucson, AZ”; QUOTE_NOT_ON_SAVED_COPY; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
-- `meeting:clerksboards:128:2027-01-18` — `location` = “900 S. Randolph Way, Tucson, AZ”; QUOTE_NOT_ON_SAVED_COPY; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
+**body · QUOTE_NOT_ON_SAVED_COPY · FAILS_SECTION3 (88)**
 
-**claim not retained — three real examples**
+- `curated:az/pima-community-college#governing` / `comment:attend` — value: "District Office, 4905 E. Broadway Blvd., Tucson; regular meetings are live-streamed per the board meetings page."; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/public-comment.html).
+- `curated:az/pima-community-college#governing` / `comment:detail` — value: "Public Comment is a standing part of Governing Board meetings, per the board's published procedure."; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/public-comment.html).
+- `curated:az/pima-community-college#governing` / `comment:period` — value: "Public Comment is a standing part of Governing Board meetings, per the board's published procedure."; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/public-comment.html).
 
-- `ocd-division/country:us/state:az/county:graham#governing` / `member:ocd-person/e6867fcc-bd6f-411b-b983-7f32182fdcf7`: The rejected claim was not kept on its blank, and no unique matching record is held.; source detail: `https://www.azcleanelections.gov/november-3-2026/graham`.
-- `ocd-division/country:us/state:az/county:pinal#governing` / `comment:detail`: The rejected claim was not kept on its blank, and no unique matching record is held.; source detail: `https://pinal.novusagenda.com/AgendaPublic/MeetingView.aspx?MeetingID=1443&MinutesMeetingID=-1&doctype=Agenda`.
-- `ocd-division/country:us/state:az/county:pinal#governing` / `member:ocd-person/f251bc90-e3e2-4a15-af14-a3d396dc926e`: The rejected claim was not kept on its blank, and no unique matching record is held.; source detail: `https://www.pinalcso.org/staff-directory`.
+**body · QUOTE_NOT_ON_SAVED_COPY · NOW_PASSES (7)**
 
-**unreadable source — three real examples**
+- `ocd-division/country:us/state:az/place:tucson#governing` / `member:ocd-person/38b05eaa-b9c1-45e0-bfe1-9aec3e932170` — value: "Regina Romero"; `PASS`; [source](https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager/Mayor-Regina-Romero).
+- `ocd-division/country:us/state:az/place:tucson#governing` / `member:ocd-person/5e0f62d2-e2cc-4356-a106-cccd74e5f6a9` — value: "Nikki Lee"; `PASS`; [source](https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager/City-Council-Wards).
+- `ocd-division/country:us/state:az/school_district:vail_unified_district#board` / `member:ocd-person/1c952818-8541-4a1d-be5e-61c434b66f61` — value: "Ed Buster"; `PASS`; [source](https://www.vailschooldistrict.org/o/vsd/page/governing-board).
 
-- `ocd-division/country:us/state:az/place:safford#governing` / `comment:detail`: SourceHttpError: HTTP 403 for https://library.municode.com/az/safford/codes/code_of_ordinances?nodeId=COOR_TIT2ADPE. This is a WALL on rung 2, not an absent document — an access control, never bypassed.; source detail: `https://library.municode.com/az/safford/codes/code_of_ordinances?nodeId=COOR_TIT2ADPE`.
-- `ocd-division/country:us/state:az/place:sierra_vista#governing` / `member:ocd-person/3eb76a55-ede6-4a00-b29f-b096eb5f0b9b`: SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.; source detail: `https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council`.
-- `ocd-division/country:us/state:az/place:sierra_vista#governing` / `member:ocd-person/47fc2b46-632a-478b-932f-c5f6dc3c8c33`: SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.; source detail: `https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council`.
+**body · QUOTE_NOT_ON_SAVED_COPY · UNREADABLE_SOURCE (7)**
+
+- `ocd-division/country:us/state:az/place:sierra_vista#governing` / `member:ocd-person/3eb76a55-ede6-4a00-b29f-b096eb5f0b9b`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+- `ocd-division/country:us/state:az/place:sierra_vista#governing` / `member:ocd-person/47fc2b46-632a-478b-932f-c5f6dc3c8c33`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+- `ocd-division/country:us/state:az/place:sierra_vista#governing` / `member:ocd-person/53dcfa00-659f-48b2-83ee-3013df821204`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+
+**body · VALUE_NOT_IN_QUOTE · CLAIM_NOT_RETAINED (1)**
+
+- `ocd-division/country:us/state:az/school_district:safford_unified_district#board` / `member:ocd-person/7aaa1f9d-bad6-438f-82e9-5ad800bdf81a`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.saffordusd.com/district111/governing-board-home/governing-board-home).
+
+**body · SOURCE_BLOCKED · CLAIM_NOT_RETAINED (1)**
+
+- `ocd-division/country:us/state:az/place:marana#governing` / `meeting_cadence`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.maranaaz.gov/Council/Council-Meetings-Agendas-and-Citizen-Participation).
+
+**body · SOURCE_BLOCKED · FAILS_SECTION3 (24)**
+
+- `ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4` / `member-row:roster:pima-boa4#1` — value: "Robert Fee"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.gov/2792).
+- `ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4` / `member-row:roster:pima-boa4#2` — value: "Greg Stanton"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.gov/2792).
+- `ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4` / `member-row:roster:pima-boa4#3` — value: "William Yarnell"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.pima.gov/2792).
+
+**body · SOURCE_BLOCKED · NOW_PASSES (131)**
+
+- `ocd-division/country:us/state:az/county:pima#governing` / `member-row:roster:pima#1` — value: "Rex Scott"; `PASS`; [source](https://www.pima.gov/government/board_of_supervisors/).
+- `ocd-division/country:us/state:az/county:pima#governing` / `member-row:roster:pima#2` — value: "Dr. Matt Heinz"; `PASS`; [source](https://www.pima.gov/government/board_of_supervisors/).
+- `ocd-division/country:us/state:az/county:pima#governing` / `member-row:roster:pima#3` — value: "Jennifer Allen"; `PASS`; [source](https://www.pima.gov/government/board_of_supervisors/).
+
+**body · SOURCE_BLOCKED · UNREADABLE_SOURCE (3)**
+
+- `ocd-division/country:us/state:nh/county:merrimack#governing` / `member-row:roster:merrimack#1`; `PDF_EXTRACTION_INCOMPLETE`; [source](https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf).
+- `ocd-division/country:us/state:nh/county:merrimack#governing` / `member-row:roster:merrimack#2`; `PDF_EXTRACTION_INCOMPLETE`; [source](https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf).
+- `ocd-division/country:us/state:nh/county:merrimack#governing` / `member-row:roster:merrimack#3`; `PDF_EXTRACTION_INCOMPLETE`; [source](https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf).
+
+**meeting · QUOTE_NOT_ON_SAVED_COPY · CLAIM_NOT_RETAINED (738)**
+
+- `meeting:boardbook:2065:750774` / `location`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://meetings.boardbook.org/Public/Organization/2065).
+- `meeting:boardbook:2065:754104` / `location`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://meetings.boardbook.org/Public/Organization/2065).
+- `meeting:boardbook:2065:756139` / `location`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://meetings.boardbook.org/Public/Organization/2065).
+
+**meeting · QUOTE_NOT_ON_SAVED_COPY · FAILS_SECTION3 (319)**
+
+- `meeting:clerksboards:128:2026-07-20` / `location` — value: "900 S. Randolph Way, Tucson, AZ"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
+- `meeting:clerksboards:128:2026-07-20` / `starts_at` — value: "2026-07-20T17:30:00-07:00"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
+- `meeting:clerksboards:128:2026-10-19` / `location` — value: "900 S. Randolph Way, Tucson, AZ"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://clerksboards.tucsonaz.gov/boards/?board=128).
+
+**meeting · QUOTE_NOT_ON_SAVED_COPY · NOW_PASSES (22)**
+
+- `meeting:ical:bradford-cemetery-trustees:5knqlqc2tp4vkdc8hq2seggpms@google.com/20261208T200000Z` / `starts_at` — value: "20261208T150000"; `PASS`; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
+- `meeting:ical:bradford-cemetery-trustees:5knqlqc2tp4vkdc8hq2seggpms@google.com/20270112T200000Z` / `starts_at` — value: "20270112T150000"; `PASS`; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
+- `meeting:ical:bradford-independence-day-committee:2bqlbi9sard6qg20h3q0kkle0g@google.com` / `starts_at` — value: "20261029T220000Z"; `PASS`; [source](https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics).
+
+**meeting · VALUE_NOT_IN_QUOTE · CLAIM_NOT_RETAINED (1)**
+
+- `meeting:ical:warner-warner-river-local-advisory-committee:3mk1ko7kkosq1vqtkut055qbc5@google.com` / `starts_at`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://calendar.google.com/calendar/ical/mq5sbbdfvg3le9ddpc76qpo5d8%40group.calendar.google.com/public/basic.ics).
+
+**meeting · VALUE_NOT_IN_QUOTE · FAILS_SECTION3 (3)**
+
+- `meeting:schedulepage:chandler-city-council:2026-09-14:20870` / `starts_at` — value: "2026-09-14T16:00:00-07:00"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.chandleraz.gov/rest/events/day/20260914).
+- `meeting:schedulepage:chandler-city-council:2026-09-14:20871` / `starts_at` — value: "2026-09-14T16:00:00-07:00"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.chandleraz.gov/rest/events/day/20260914).
+- `meeting:schedulepage:chandler-city-council:2026-09-17:20875` / `starts_at` — value: "2026-09-17T16:00:00-07:00"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.chandleraz.gov/rest/events/day/20260917).
+
+**meeting · VALUE_NOT_IN_QUOTE · NOW_PASSES (8)**
+
+- `meeting:schedulepage:chandler-city-council:2026-09-14:20873` / `starts_at` — value: "202609146:00pm"; `PASS`; [source](https://www.chandleraz.gov/rest/events/day/20260914).
+- `meeting:schedulepage:chandler-city-council:2026-09-17` / `starts_at` — value: "202609176:00pm"; `PASS`; [source](https://www.chandleraz.gov/rest/events/day/20260917).
+- `meeting:schedulepage:chandler-city-council:2026-10-12` / `starts_at` — value: "202610126:00pm"; `PASS`; [source](https://www.chandleraz.gov/rest/events/day/20261012).
+
+**person · PAGE_NOT_ABOUT_ENTITY · FAILS_SECTION3 (23)**
+
+- `ocd-person/0488cc07-9af5-42f7-812c-2acfdf0bd5ad` / `website` — value: "https://www.rockawayborough.org/departments/council/"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://www.rockawayborough.org/departments/council/).
+- `ocd-person/183e2f48-b2c8-4cd0-bbfe-02e91f316dec` / `office:ocd-division/country:us/state:nj/place:chester#governing` — value: "Council Member"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://chesterborough.org/government/mayor).
+- `ocd-person/183e2f48-b2c8-4cd0-bbfe-02e91f316dec` / `website` — value: "https://chesterborough.org/government/mayor"; `PAGE_NOT_ABOUT_ENTITY`; [source](https://chesterborough.org/government/mayor).
+
+**person · QUOTE_NOT_ON_SAVED_COPY · CLAIM_NOT_RETAINED (18)**
+
+- `ocd-person/0c931440-1edf-4b49-8b10-45e4d2a93393` / `office:ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.cap-az.com/board/board-members/).
+- `ocd-person/0c931440-1edf-4b49-8b10-45e4d2a93393` / `term_note:ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.cap-az.com/board/board-members/).
+- `ocd-person/0d61e973-3cf0-46dc-9e55-ad32f84ef6b8` / `term_note:ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.cap-az.com/board/board-members/).
+
+**person · QUOTE_NOT_ON_SAVED_COPY · FAILS_SECTION3 (255)**
+
+- `ocd-person/02a3d802-a020-470b-8df9-13ca610e474c` / `email` — value: "mark@kammarketing.com"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.florhamparknj.gov/departments/mayorandcouncil).
+- `ocd-person/02a3d802-a020-470b-8df9-13ca610e474c` / `term_note:ocd-division/country:us/state:nj/place:florham_park#governing` — value: "Term ends 2027"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.florhamparknj.gov/departments/mayorandcouncil).
+- `ocd-person/02a3d802-a020-470b-8df9-13ca610e474c` / `website` — value: "https://www.florhamparknj.gov/MayorsDesk"; `QUOTE_NOT_ON_SAVED_COPY`; [source](https://www.florhamparknj.gov/departments/mayorandcouncil).
+
+**person · QUOTE_NOT_ON_SAVED_COPY · NOW_PASSES (17)**
+
+- `ocd-person/137cc2af-1fd7-4007-980c-c9f7e7dc041b` / `website` — value: "https://www.rocktwp.net/page/board-members"; `PASS`; [source](https://www.rocktwp.net/page/board-members).
+- `ocd-person/1c952818-8541-4a1d-be5e-61c434b66f61` / `name` — value: "Ed Buster"; `PASS`; [source](https://www.vailschooldistrict.org/o/vsd/page/governing-board).
+- `ocd-person/1c952818-8541-4a1d-be5e-61c434b66f61` / `website` — value: "https://www.vailschooldistrict.org/o/vsd/page/governing-board"; `PASS`; [source](https://www.vailschooldistrict.org/o/vsd/page/governing-board).
+
+**person · QUOTE_NOT_ON_SAVED_COPY · UNREADABLE_SOURCE (7)**
+
+- `ocd-person/3eb76a55-ede6-4a00-b29f-b096eb5f0b9b` / `name`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+- `ocd-person/47fc2b46-632a-478b-932f-c5f6dc3c8c33` / `name`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+- `ocd-person/53dcfa00-659f-48b2-83ee-3013df821204` / `name`; `SourceHttpError: HTTP 403 for https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council. This is a WALL on rung 2, not an absent document — an access control, never bypassed.`; [source](https://www.sierravistaaz.gov/government/city-council/contact-the-mayor-council).
+
+**person · VALUE_NOT_IN_QUOTE · CLAIM_NOT_RETAINED (1)**
+
+- `ocd-person/7aaa1f9d-bad6-438f-82e9-5ad800bdf81a` / `name`; `The rejected claim was not kept on its blank, and no unique matching record is held.`; [source](https://www.saffordusd.com/district111/governing-board-home/governing-board-home).
 
 ## Audit
 

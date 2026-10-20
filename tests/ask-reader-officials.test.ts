@@ -11,6 +11,14 @@ const seat = (id: string, name: string, officeTitle: string, partyLabel: string 
 });
 const held = (s: SeatHolder, divisionIds: string[] = [], body: { id: string; name: string } | null = null): HeldOfficial => ({ seat: s, divisionIds, bodyId: body?.id ?? null, bodyName: body?.name ?? null });
 
+test("a missing requested official needs the AI fallback even when other officials are held", () => {
+  const answer = composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my governor?")!, holdingFailed: false,
+    held: [held(seat("senator", "Casey Example", "United States Senator"), [AZ])] });
+  assert.equal(answer?.answer, "We have not recorded who your governor is yet.");
+  assert.equal(answer?.missingAnswer, true);
+  assert.deepEqual(answer?.citedUrls, []);
+});
+
 test("the closed forms are read; a qualifier, a second subject or an unlisted office is left to the model", () => {
   const accepted: [string, string[]][] = [
     ["Who is my state senator?", ["state_senator"]],

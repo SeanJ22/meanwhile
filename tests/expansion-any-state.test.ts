@@ -1,4 +1,3 @@
-import type {HuntSourceScope} from '../lib/hunt/own-site-runtime.ts';
 import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
 
 import assert from "node:assert/strict";
@@ -54,6 +53,7 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { HuntSourceScope } from "../lib/hunt/own-site-runtime.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdictions.ts";

@@ -4,26 +4,24 @@ lane: control-reads
 owner: control-reads
 writer: the control-reads lane
 check: fold-conflict
-ready: CP-01 9293c19fb4135c22da8d1ca6dfb7a7a2935269c1
-river: 5307d8b75678fc416f8e062cc9c65839d6d23da8
-at: 2026-10-20T05:23:00Z
+ready: no step ids unknown
+river: a24a073807bc8991a2cd579eb1a9065d07f57939
+at: 2026-10-20T08:12:54Z
 state: returned
-fix_subject: fix:89077350
-fix: River · stream/control-reads — fold-conflict failed for control-reads: CP-01 READY 9293c19fb413 failed the actual river.mjs fold alone against River 5307d8b75678 (release 60: RS-03 + SRC-MN step 1, merged to main as 9a159f69f054; release 59 SH-01 is also in). The merge was aborted cleanly; no gates ran. This i
+fix_subject: fix:ad420f8b
+fix: River · stream/control-reads — fold-conflict failed for control-reads: lib/hunt/runtime.ts . 1 hunk . scoutFieldManual read: AQ-01 added `&& !readerQuestion` to the early return and a `.catch(() => null)` around readFieldManual; CP-01 changed the call to readFieldManual(repos, query).projection.lines with the
 
 ## Failure
 
 ```
-CP-01 READY 9293c19fb413 failed the actual river.mjs fold alone against River 5307d8b75678 (release 60: RS-03 + SRC-MN step 1, merged to main as 9a159f69f054; release 59 SH-01 is also in). The merge was aborted cleanly; no gates ran. This is an integration conflict, not a test failure.
+CP-01 READY 3156d5677 folds cleanly alone onto River a24a07380 plus main (preflight 0 findings; carries the control-plane migration CP-01), but it cannot be folded with AQ-01 READY a5902541c, which Sean asked to ship together. Folding them conflicts in two files (git merge, River a24a07380 + main + AQ-01 + CP-01):
 
-One conflicting file (git merge-tree origin/river origin/stream/control-reads):
-  tests/routine-civic-data-runner.test.ts
+  lib/hunt/runtime.ts . 1 hunk . scoutFieldManual read: AQ-01 added `&& !readerQuestion` to the early return and a `.catch(() => null)` around readFieldManual; CP-01 changed the call to readFieldManual(repos, query).projection.lines with the query carrying recordClasses and limit. Keep CP-01's new read shape and AQ-01's reader-question case and failure tolerance.
+  app/api/ask/grounded/route.ts . 15 hunks . the grounded Ask route (2,634 lines). Both lanes edited it heavily. Keep AQ-01's concise grounded answers and unanswered-question wiring and CP-01's paid-control and state-history reads.
 
-SRC-MN (campaign money off reader pages) also edited this test file. Keep both sides' intent: CP-01's runner/control changes and SRC-MN's changes to the same test (the SRC-MN edit removes cases tied to the incorrect campaign money; do not bring them back).
+River will not hand-merge the Ask route: a wrong guess changes what readers are answered, and the owners have the tests. AQ-01 ships in release 62 (with VT-01 and CK-01) and will be in River soon.
 
-Everything else merges cleanly onto River, including a clean trial merge earlier onto 5307d8b-1 and preflight (0 findings). CP-01 carries a control-plane migration named CP-01 (lib/control-plane/repository/migrations/CP-01.ts plus the journal); River will number it on fold.
-
-Fix: merge current River (5307d8b75678, and main 9a159f69f054) into stream/control-reads, resolve that one file, run `node scripts/preflight.mjs` and the focused checks, then send a new READY. Never merge later WIP into the READY.
+Fix: merge origin/stream/aq-01 (READY a5902541c, or River once release 62 lands) and current main into stream/control-reads, resolve those two files, run `node scripts/preflight.mjs`, the focused CP-01 and AQ-01 checks (tests/ask-*, tests/answer-length.test.ts, tests/government-finance.test.tsx, tests/local-votes.test.ts, tests/worker-reader-publication.test.ts) with the CI flags, and the full pnpm gates, then send a new READY. DG-01, HN-01 and MP-01 are waiting on CP-01 before they edit shared files, so this is the critical path.
 ```
 
 ## Repair

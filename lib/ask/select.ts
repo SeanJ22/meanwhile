@@ -15,14 +15,14 @@ export function selectSitting<T extends SittingLike>(
   requestedDate?: string | null,
 ): T | null {
   if (selection === "DATE") return requestedDate
-    ? [...sittings].filter((meeting) => localDate(meeting) === requestedDate).sort((a, b) => a.startsAt.localeCompare(b.startsAt))[0] ?? null
+    ? [...sittings].filter((meeting) => localDate(meeting) === requestedDate).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))[0] ?? null
     : null;
   const upcoming = sittings
     .filter((m) => Date.parse(m.startsAt) >= now)
-    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
+    .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
   const past = sittings
     .filter((m) => Date.parse(m.startsAt) < now)
-    .sort((a, b) => (a.startsAt < b.startsAt ? 1 : -1));
+    .sort((a, b) => Date.parse(b.startsAt) - Date.parse(a.startsAt));
 
   if (selection === "NEXT") return upcoming[0] ?? null;
   if (selection === "LAST") return past[0] ?? null;
@@ -37,7 +37,7 @@ export function sittingsOnSameLocalDay<T extends SittingLike & { timeZone?: stri
   const day = localDate(chosen);
   return sittings
     .filter((m) => localDate(m) === day)
-    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0));
+    .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
 }
 
 export function emptySelectionState(

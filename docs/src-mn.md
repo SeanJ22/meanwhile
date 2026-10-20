@@ -22,7 +22,7 @@ Fixture provenance is in `tests/fixtures/federal-money/provenance.json`. Generat
 
 The native state campaign load is retired. Its 56 scheduled contracts and its acquisition/publishing entry point are deleted. No job from this load can repopulate the reader stores after the cleanup. Source acquisition/parsing fixtures and the existing Arizona, New Hampshire, New Jersey and Pima publications remain held. The people-driven replacement is the next SRC-MN READY.
 
-Release 60 already excludes unbound, misfiled and pre-2020 native campaign facts from cards and Ask. Individual donation lists are excluded. Rulings §9 permits individual names only above $200 in a cycle; small donors and home addresses remain private. The forthcoming person-cycle publisher implements that rule.
+Government cards and Ask read the same cycle summaries, with filing links only in the bottom Sources list. Individual transactions are no longer a reader response. Rulings §9 keeps individual donors who gave $200 or less in the cycle anonymous; donors above $200 may appear as filed, and home addresses never appear. Organizations and committees keep their filed names. Person-driven hourly acquisition and cycle donor aggregates belong to the second READY.
 
 The journaled contract migration `SRC-MN_retire_campaign_load` deletes every fact version from the retired producer, its native publication pointers, candidate copies/events, old checkpoints and now-empty committee identities and links. Source copies and raw evidence-vault files are preserved. Other funding producers, valid legacy source publications and corrected future money are untouched. No database column is added.
 

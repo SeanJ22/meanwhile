@@ -24,7 +24,7 @@ test("a person's stance question is written from the statements we hold, like an
   } });
   assert.equal(bodies.length, 1, "the writer answers from the held passage");
   assert.match(bodies[0], /campaign\.example\/issues/, "the statement's source goes to the writer for Sources");
-  assert.match(synthesisPrompt(passagePack), /SOURCE_PASSAGE is a matched quotation/);
+  assert.match(synthesisPrompt(passagePack), /a page search hit does not identify a speaker/);
 });
 
 test("a question about what a page says is not composed as the person's own words", () => {

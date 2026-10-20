@@ -23,11 +23,10 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     ...zipShards,
   ];
   return [
-    // `api/warm/route` resolves a place per published state on the instance it warms.
-    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "api/warm/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
     // The map reads only the ZIP index; the tier ledger's reader for it is `/api/log`.
     { route: "api/meetings/route", loader: "lib/geo/zip-division-index.ts + lib/registry/server.ts", files: zipShards },
-    { route: "api/warm/route", loader: "lib/geo/zip-division-index.ts", files: [...zipShards, "data/derived/zip-divisions/index.json"] },
+    { route: "api/reader/places/route", loader: "lib/geo/zip-division-index.ts", files: [...zipShards, "data/derived/zip-divisions/index.json"] },
     { route: "ballot/page", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
     { route: "api/ask/grounded/route", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
     { route: "about-area/page", loader: "lib/coverage/zip-tier.ts", files: [zipArea[0]] },

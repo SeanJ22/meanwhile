@@ -65,7 +65,7 @@ const ZIPS = {
 } as const;
 const WALK_PLACES = (await publishedPlaces(BASE, fetch, 15_000).catch(() => [])).map(({ zip }) => ({ zip }));
 if (WALK_PLACES.length === 0) {
-  console.error(`walk:all · ${BASE} publishes no place (/api/warm?places=1); there is nothing to walk`);
+  console.error(`walk:all · ${BASE} publishes no place (/api/reader/places); there is nothing to walk`);
   process.exit(1);
 }
 

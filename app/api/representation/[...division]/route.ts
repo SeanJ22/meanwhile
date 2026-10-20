@@ -2,7 +2,7 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader/cache";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
-import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
+import { representationDivisionMetadata, seatHoldersForDivision } from "@/lib/registry/server";
 import { federalDirectoryReadState } from "@/lib/officials/federal-directory-read-model";
 
 
@@ -29,7 +29,6 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   }
 
   const timing = stageTimer();
-  prefetchReaderGeography();
 
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 
@@ -37,7 +36,7 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   // failure leaves that metadata unavailable while held legislative people still reach the card.
   const metadata = await timing.time("division", async () => {
     try {
-      const [known] = await divisionsByOcdIds([ocdId]);
+      const known = await representationDivisionMetadata(ocdId);
       return { known, rosterGaps: rosterGapsForDivision(ocdId), available: true };
     } catch {
       return { known: undefined, rosterGaps: [], available: false };

@@ -128,7 +128,7 @@ import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadOperationalReferenceState } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
@@ -545,24 +545,9 @@ const startupReadRetry = {
     ),
 };
 
-let legacyOperationalReference:Awaited<ReturnType<typeof preloadOperationalReferenceBundle>>|null=null;
-let azOperationalReference:Awaited<ReturnType<typeof preloadAzOperationalReferenceBundle>>|null=null;
-if (PLANNING_STATE !== "system") {
-[legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
-  () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-}), retryStartupRead(
-  () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-})]);
-if (!legacyOperationalReference && !azOperationalReference) throw new Error(
-  "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
-);
-}
+const operationalReference = PLANNING_STATE === "system" ? null : await pending.step("startup:operational-reference", () => retryStartupRead(
+  () => preloadOperationalReferenceState(PLANNING_STATE), () => null, startupReadRetry,
+));
 
 {
   const doors = await refreshDoorsForPass(repos.doors);
@@ -725,7 +710,7 @@ const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 
 const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
   ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
+    operationalReference?.versionId ?? null) });
 const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
 
 const freeWalkSubjects: readonly FreeWalkSubject[] = [

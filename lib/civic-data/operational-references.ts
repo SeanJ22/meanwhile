@@ -20,6 +20,7 @@ import {
   type JurisdictionReferenceState,
 } from "./reviewed-registry-states.ts";
 import { sourceProjectionEvidence, type CivicRecordMember, type RoutineCandidate } from "./types.ts";
+import { readOperationalReferenceState } from "./operational-reference-state-read.ts";
 import {
   applicableWebsiteCorrections,
   registryIsTheSitesOwn,
@@ -273,6 +274,25 @@ export function requiredJurisdictionRegistry(state: string): JurisdictionRegistr
       ? `JURISDICTION_REGISTRY_NOT_READ:${state}: no reviewed registry, and its registration was not read by this process`
       : `REGISTRATION_NOT_READ:${state}: ${why}`,
   );
+}
+
+/** A planner holds one state. A successful absence leaves registration in charge;
+ * a transport or publication failure remains an error, never an empty registry. */
+export async function preloadOperationalReferenceState(state: string, query?: Parameters<typeof readOperationalReferenceState>[1]) {
+  const key = state.toLowerCase();
+  const result = await readOperationalReferenceState(key, query);
+  if (result.registry) {
+    const issues = registryIssues({ [key]: result.registry }, [key]);
+    if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_BUNDLE_INVALID:${issues.join(",")}`);
+    installedBundle = { formatVersion: 1, sourceVersion: JURISDICTION_REFERENCE_VERSION,
+      registries: { [key]: structuredClone(result.registry) } as OperationalReferenceBundle["registries"] };
+    installReviewedRegistryStates([key]);
+    installedRegistration.delete(key);
+    refusedRegistration.delete(key);
+  } else if (hasReviewedRegistry(key)) {
+    throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:${key}`);
+  }
+  return result;
 }
 
 export async function preloadOperationalReferenceBundle(

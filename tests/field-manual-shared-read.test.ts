@@ -2,15 +2,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { newFieldManualEntry, readFieldManualForPlaces, readFieldManualRows, writeFieldManual, type FieldManualQuery } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManualForPlaces, readFieldManualRows, writeFieldManual, coveringPlaces, type FieldManualQuery } from "../lib/control-plane/field-manual.ts";
 import { scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 
-/*
- * A cycle briefs every due place's Scout before dispatch. 17 read one manual slice per place and held them all, so a
- * cycle with ~1,700 due places built ~1,700 copies of the rows and Node aborted at its heap limit. The places now
- * share one read: each place's rows are the same row objects, narrowed to it, and each place still gets exactly the
- * rows, order, projection and evidence its own read gave it.
- */
+/* A place receives its own projected history. Procedures remain reusable across
+ * places without carrying every place where a procedure was tried. */
 
 const NOW = "2026-10-08T12:00:00.000Z";
 const AZ = "ocd-division/country:us/state:az";
@@ -32,27 +28,23 @@ async function seeded() {
   return repos;
 }
 
-test("many places' Scout reads are one manual read, and each place's rows are the shared row objects", async () => {
+test("each Scout reads only its own projected place history", async () => {
   const repos = await seeded();
   let reads = 0;
-  const slice = repos.fieldManual.slice.bind(repos.fieldManual);
-  repos.fieldManual.slice = (query: FieldManualQuery) => { reads += 1; return slice(query); };
+  const visit = repos.fieldManual.visitSlice.bind(repos.fieldManual);
+  repos.fieldManual.visitSlice = (query: FieldManualQuery, next) => { reads += 1; return visit(query, next); };
   const queries = Array.from({ length: 60 }, (_, i) => scoutFieldManualQuery({ subjectId: PLACES[i % PLACES.length]!, obligationId: `ob-${i}`, divisions: [PLACES[i % PLACES.length]!] }));
 
   const shared = await readFieldManualForPlaces(repos, { role: "SCOUT", everywhere: true }, queries);
-  assert.equal(reads, 1, "one read for every place");
+  assert.equal(reads, queries.length, "every read is narrowed to its asking place before transfer");
   assert.equal(shared.length, queries.length);
-  const byId = new Map<string, object>();
-  for (const read of shared) {
+  for (const [index, read] of shared.entries()) {
     assert.equal(read.error, undefined);
     assert.ok(read.store.entries.length > 0);
-    for (const entry of read.store.entries) {
-      const first = byId.get(entry.id) ?? entry;
-      byId.set(entry.id, first);
-      assert.equal(entry, first, `${entry.id} is one object across places, never a copy`);
-    }
+    const places = new Set(coveringPlaces(queries[index]));
+    for (const entry of read.store.entries) assert.ok((entry.ocdIds ?? []).every(place => places.has(place)), "unrelated places remain in the store");
+    assert.equal(read.store.entries.some(entry => entry.role === "PARSER"), false, "another role's rows are not handed to a Scout");
   }
-  assert.ok(!byId.has(shared[0]!.store.entries.find((e) => e.role === "PARSER")?.id ?? "-"), "another role's rows are not handed to a Scout");
 
   reads = 0;
   for (const [i, query] of queries.entries()) {
@@ -67,7 +59,7 @@ test("many places' Scout reads are one manual read, and each place's rows are th
 
 test("a failed shared read fails every place by name and holds nothing", async () => {
   const repos = await seeded();
-  repos.fieldManual.slice = async () => { throw new Error("store unreachable"); };
+  repos.fieldManual.visitSlice = async () => { throw new Error("store unreachable"); };
   const reads = await readFieldManualForPlaces(repos, { role: "SCOUT", everywhere: true }, [scoutFieldManualQuery({ subjectId: PLACES[0]!, obligationId: "ob", divisions: [] })]);
   assert.equal(reads[0]!.error, "store unreachable");
   assert.deepEqual(reads[0]!.store.entries, []);

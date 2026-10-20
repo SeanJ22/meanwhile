@@ -73,6 +73,7 @@ test("not-due governments read one marker batch and never read hint, publication
   repos.fieldManual.readMany = ids => { batches++; return readMany(ids); };
   const forbidden = async (): Promise<never> => { throw new Error("a not-due government read acquisition data"); };
   repos.fieldManual.slice = forbidden;
+  repos.fieldManual.visitSlice = forbidden;
   repos.doors.read = forbidden;
   repos.workItems.listWhereNarrowed = forbidden;
   repos.scoutResults.keysWhere = forbidden;

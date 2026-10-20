@@ -29,6 +29,44 @@ const STAGE_WORDS: Readonly<Record<TrailView["events"][number]["stage"], string>
   SOURCE: "Source", ATTEMPT: "Attempt", SAVED: "Saved", EXTRACTED: "Extracted", CHECKED: "Checked", PUBLISHED: "Published", READER: "On the page",
 };
 
+interface FreshnessIncidentPage {
+  readonly cycleId: string;
+  readonly page: number;
+  readonly rows: readonly { readonly cause: string; readonly target: string; readonly obligationsAffected: number; readonly nextRetryAt?: string }[];
+  readonly total: number;
+  readonly nextPage: number | null;
+}
+
+/** A click reads one page; moving through a report replaces the previous page. */
+export function FreshnessIncidentDetails({ cycleId }: { readonly cycleId: string }) {
+  const [load, setLoad] = useState<Load<FreshnessIncidentPage>>({ state: "idle" });
+  const read = useCallback(async (page: number) => {
+    setLoad({ state: "loading" });
+    try {
+      const response = await fetch(`/api/admin/v6/freshness-report?cycleId=${encodeURIComponent(cycleId)}&page=${page}`,
+        { credentials: "same-origin", cache: "no-store", headers: { accept: "application/json" } });
+      if (!response.ok) throw new Error("Report unavailable");
+      setLoad({ state: "held", data: await response.json() as FreshnessIncidentPage });
+    } catch { setLoad({ state: "unread" }); }
+  }, [cycleId]);
+  return <div className={s.stack}>
+    {(load.state === "idle" || load.state === "unread") && <button type="button" className={s.btnLink} onClick={() => void read(0)}>Show exact incident targets</button>}
+    {load.state === "loading" && <span role="status">Reading…</span>}
+    {load.state === "unread" && <span>—</span>}
+    {load.state === "held" && <>
+      <p>{load.data.total.toLocaleString("en-US")} incidents · page {load.data.page + 1}</p>
+      <ul>{load.data.rows.map((row, i) => <li key={i}>
+        <code style={{ overflowWrap: "anywhere" }}>{row.cause} · {row.target}</code> · {row.obligationsAffected} affected
+        {row.nextRetryAt && <> · next retry {mst(row.nextRetryAt)}</>}
+      </li>)}</ul>
+      <div className={s.inline}>
+        {load.data.page > 0 && <button type="button" className={s.btnLink} onClick={() => void read(load.data.page - 1)}>Previous</button>}
+        {load.data.nextPage !== null && <button type="button" className={s.btnLink} onClick={() => void read(load.data.nextPage!)}>Next</button>}
+      </div>
+    </>}
+  </div>;
+}
+
 export function EvidenceTrail(props: { readonly id: string; readonly label?: string }) {
   const [load, run] = useOnDemand<TrailView>(`/api/admin/v6/trail?scope=us&item=${encodeURIComponent(props.id)}`);
   return (

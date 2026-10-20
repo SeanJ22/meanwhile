@@ -110,7 +110,12 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   let lastPositions = "{}";
   const contained = (position: string, ranges: string) => [...ranges.matchAll(/\[(\d+),(\d+)\)/g)]
     .some(([, start, end]) => BigInt(position) >= BigInt(start) && BigInt(position) < BigInt(end));
-  repos.adminConfig.read = async () => { configReads++; return null; };
+  repos.adminConfig.read = async () => { throw new Error("whole config should never be transferred"); };
+  repos.adminConfig.readNarrowed = async (_id, projection) => {
+    assert.equal(projection.fixList, undefined);
+    assert.equal(projection.latestBrief, undefined);
+    configReads++; return null;
+  };
   repos.researchState.readNarrowed = async () => { stateReads++; return null; };
   repos.researchIntents.read = async () => { throw new Error("whole log should never be transferred"); };
   const reader = runnerControlReader("unused", repos, {

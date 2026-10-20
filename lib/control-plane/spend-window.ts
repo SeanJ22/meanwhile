@@ -1,65 +1,124 @@
 import type { CostEntry } from "./cost.ts";
 import { pricedModelCharge, type PricedCharge } from "./fleet-safety.ts";
 import { fingerprint } from "./ids.ts";
-import type { ControlPlaneRepositories } from "./repository/types.ts";
+import type { AggregateArrayRetention, ControlPlaneRepositories } from "./repository/types.ts";
 import { RESEARCH_BOUNDS } from "./scheduler/research-policy.ts";
+import { filterIterable, mapIterable, retainSpendScratch, spendScratch } from "./spend-scratch.ts";
 
-/** The running spend counter: every model charge recorded in the last day and a margin, priced as it was written. */
+/** The existing running counter; only its exact members and finite metadata leave the store. */
 export interface SpendWindow {
   readonly charges: readonly PricedCharge[];
+  readonly seedState?: "SEEDING" | "READY";
 }
-
+export interface SpendCharges extends Iterable<PricedCharge> {
+  readonly size: number;
+  get(id: string): PricedCharge | null;
+  forJob(jobId: string): Iterable<PricedCharge>;
+  filter(keep: (charge: PricedCharge) => boolean): Iterable<PricedCharge>;
+  close(): void;
+}
+type Repositories = Pick<ControlPlaneRepositories, "costs" | "spendWindow" | "locks">;
 export const SPEND_WINDOW_ID = "model-charges";
-
-/** A writer's clock can run ahead of the store's, so charges stay this long past the longest window any reader asks for. */
 const keepMs = (): number => (RESEARCH_BOUNDS.windowHours + 6) * 3_600_000;
-
 const CAS_ATTEMPTS = 6;
 
-/** The ledger's record id for a cost row; an append and its count share it, so neither ever counts twice. */
 export function costRecordId(entry: Pick<CostEntry, "attemptId" | "routeTaskId" | "recordedAt">): string {
   return `ce-${fingerprint([entry.attemptId, entry.routeTaskId, entry.recordedAt])}`;
 }
-
-function kept(charges: readonly PricedCharge[], now: string): PricedCharge[] {
-  const since = Date.parse(now) - keepMs();
-  return charges.filter(charge => Date.parse(charge.at) >= since);
+export function mapCharges<T>(charges: Iterable<PricedCharge>, map: (charge: PricedCharge) => T): Iterable<T> {
+  return mapIterable(charges, map);
 }
-
-/* The counter's first write prices the ledger's rows still inside its span, once. */
-async function seeded(repos: Pick<ControlPlaneRepositories, "costs">, now: string): Promise<PricedCharge[]> {
-  const rows = await repos.costs.readSince(new Date(Date.parse(now) - keepMs()).toISOString());
-  return rows.flatMap(entry => pricedModelCharge(entry, costRecordId(entry)) ?? []);
+function retention(now: string): AggregateArrayRetention {
+  return {limit: 2_147_483_647, discardPath: ["id"], discardValue: "", oldestPath: ["at"],
+    pruneBefore: {path: ["at"], at: new Date(Date.parse(now) - keepMs()).toISOString()}};
 }
-
-/** Every model charge the counter holds; the first read on a new store builds it from the ledger. */
-export async function readSpendWindow(repos: Pick<ControlPlaneRepositories, "costs" | "spendWindow">, now: string): Promise<readonly PricedCharge[]> {
+function snapshot() {
+  const scratch = spendScratch(), {db, owner} = scratch;
+  const add = db.prepare("INSERT OR IGNORE INTO charges(owner,id,job,body) VALUES(?,?,?,?)");
+  const one = db.prepare("SELECT body FROM charges WHERE owner=? AND id=?");
+  let closed = false;
+  const requireOpen = () => { if (closed) throw new Error("SPEND_WINDOW_SNAPSHOT_CLOSED"); };
+  const charges: SpendCharges = {
+    get size() { requireOpen(); return Number(db.prepare("SELECT COUNT(*) AS count FROM charges WHERE owner=?").get(owner)?.count); },
+    get(id) { requireOpen(); const row = one.get(owner,id); return row ? JSON.parse(String(row.body)) as PricedCharge : null; },
+    forJob(jobId) { return {[Symbol.iterator]: function* () {
+      requireOpen();
+      for (const row of db.prepare("SELECT body FROM charges WHERE owner=? AND job=? ORDER BY sequence").iterate(owner,jobId))
+        yield JSON.parse(String(row.body)) as PricedCharge;
+    }}; },
+    filter(keep) { return filterIterable(charges, keep); },
+    [Symbol.iterator]: function* () {
+      requireOpen();
+      for (const row of db.prepare("SELECT body FROM charges WHERE owner=? ORDER BY sequence").iterate(owner))
+        yield JSON.parse(String(row.body)) as PricedCharge;
+    },
+    close() { if (!closed) { closed = true; scratch.release(); } },
+  };
+  retainSpendScratch(charges,owner);
+  return {charges, add: (charge: PricedCharge) => add.run(owner,charge.id,charge.jobId,JSON.stringify(charge))};
+}
+async function appendCharge(repos: Repositories, charge: PricedCharge, now: string): Promise<void> {
+  const store = repos.spendWindow;
+  if (!store.readArrayPage || !store.compareAndSetArrayItem) throw new Error("SPEND_WINDOW_NATIVE_ARRAY_API_REQUIRED");
   for (let attempt = 1; ; attempt++) {
-    const row = await repos.spendWindow.read(SPEND_WINDOW_ID);
-    if (row !== null) return kept(row.value.charges, now);
+    const row = await store.readArrayPage(SPEND_WINDOW_ID,"charges", {match: {path: ["id"],value: charge.id},limit: 1,projection: {id: true}});
+    if (!row) throw new Error("SPEND_WINDOW_COUNTER_MISSING");
+    if (row.values.length) return;
     try {
-      const charges = kept(await seeded(repos, now), now);
-      await repos.spendWindow.put(SPEND_WINDOW_ID, { charges }, now);
-      return charges;
-    } catch (error) { if (attempt >= CAS_ATTEMPTS) throw error; }
-  }
-}
-
-/** Counts one ledger row's model charge; plain code and search invoices change nothing. */
-export async function countCharge(repos: Pick<ControlPlaneRepositories, "costs" | "spendWindow">, entry: CostEntry, now: string): Promise<void> {
-  const charge = pricedModelCharge(entry, costRecordId(entry));
-  if (charge === null) return;
-  for (let attempt = 1; ; attempt++) {
-    try {
-      const row = await repos.spendWindow.read(SPEND_WINDOW_ID);
-      if (row === null) {
-        const charges = (await seeded(repos, now)).filter(held => held.id !== charge.id);
-        await repos.spendWindow.put(SPEND_WINDOW_ID, { charges: kept([...charges, charge], now) }, now);
-        return;
-      }
-      if (row.value.charges.some(held => held.id === charge.id)) return;
-      await repos.spendWindow.compareAndSet(SPEND_WINDOW_ID, row.revision, { charges: kept([...row.value.charges, charge], now) }, now);
+      await store.compareAndSetArrayItem(SPEND_WINDOW_ID,row.revision,"charges",["id"],charge.id,charge,now,retention(now));
       return;
     } catch (error) { if (attempt >= CAS_ATTEMPTS) throw error; }
   }
+}
+/** Partial first seeds refuse spend readings. Killed seeds resume from the ledger under the existing operational lock. */
+async function ensureSeeded(repos: Repositories, now: string): Promise<void> {
+  const existing = await repos.spendWindow.readNarrowed(SPEND_WINDOW_ID,{seedState: true});
+  if (existing && (existing.value as SpendWindow).seedState !== "SEEDING") return;
+  await repos.locks.withLock("spend-window:first-seed",async () => {
+    let current = await repos.spendWindow.readNarrowed(SPEND_WINDOW_ID,{seedState: true});
+    if (current && (current.value as SpendWindow).seedState !== "SEEDING") return;
+    if (!current) await repos.spendWindow.put(SPEND_WINDOW_ID,{charges: [],seedState: "SEEDING"},now);
+    const since = Date.parse(now) - keepMs();
+    await repos.costs.readChangedSince(null,undefined,{page: async rows => {
+      for (const {record} of rows) {
+        const charge = pricedModelCharge(record,costRecordId(record));
+        if (charge && Date.parse(charge.at) >= since) await appendCharge(repos,charge,now);
+      }
+    }});
+    if (!repos.spendWindow.compareAndSetFields) throw new Error("SPEND_WINDOW_NATIVE_ARRAY_API_REQUIRED");
+    for (let attempt = 1; ; attempt++) {
+      current = await repos.spendWindow.readNarrowed(SPEND_WINDOW_ID,{seedState: true});
+      if (!current) throw new Error("SPEND_WINDOW_COUNTER_MISSING");
+      try { await repos.spendWindow.compareAndSetFields(SPEND_WINDOW_ID,current.revision,{seedState: "READY"},now); break; }
+      catch (error) { if (attempt >= CAS_ATTEMPTS) throw error; }
+    }
+  });
+}
+/** Repeatable native snapshot. Unique immutable ids prevent concurrent prefix pruning from skipping live charges. */
+export async function readSpendWindow(repos: Repositories, now: string): Promise<SpendCharges> {
+  await ensureSeeded(repos,now);
+  if (!repos.spendWindow.readArrayPage) throw new Error("SPEND_WINDOW_NATIVE_ARRAY_API_REQUIRED");
+  const held = snapshot(), since = Date.parse(now) - keepMs();
+  try {
+    let after: string | undefined;
+    do {
+      const page = await repos.spendWindow.readArrayPage(SPEND_WINDOW_ID,"charges",{limit: 32,order: {path: ["id"],after}});
+      if (!page) throw new Error("SPEND_WINDOW_COUNTER_MISSING");
+      for (const value of page.values) {
+        const charge = value as PricedCharge;
+        if (typeof charge.id !== "string" || typeof charge.jobId !== "string") throw new Error("SPEND_WINDOW_CHARGE_INVALID");
+        if (Date.parse(charge.at) >= since) held.add(charge);
+      }
+      after = page.nextKey ?? undefined;
+    } while (after !== undefined);
+    return held.charges;
+  } catch (error) { held.charges.close(); throw error; }
+}
+/** One exact append and timestamp pruning happen atomically without transferring the country array. */
+export async function countCharge(repos: Repositories, entry: CostEntry, now: string): Promise<void> {
+  const charge = pricedModelCharge(entry,costRecordId(entry));
+  if (!charge) return;
+  const row = await repos.spendWindow.readNarrowed(SPEND_WINDOW_ID,{seedState: true});
+  if (!row) await ensureSeeded(repos,now);
+  await appendCharge(repos,charge,now);
 }

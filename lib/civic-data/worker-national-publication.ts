@@ -1,10 +1,10 @@
-import { registryJurisdictions, requireRegistryState, stateRegistryRuntimeContractId } from "./state-scopes.ts";
+import { registryJurisdictions, requireRegistryState, stateRegistryRuntimeContractId,stateRegistryRuntimeScope } from "./state-scopes.ts";
 /** A one-person profile is never a complete roster, so a partial roster reading never departs anyone. */
 import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
 import { bodiesFor } from "../registry/derive.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior,copyRegistryRuntimePrior,type RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
@@ -119,7 +119,7 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
 }
 
 async function promote(store: RoutineDataStore, prepared: Parameters<typeof registryRuntimeCandidate>[0], prior: NonNullable<Awaited<ReturnType<typeof readRegistryRuntimePrior>>>, now: string) {
-  const candidate = registryRuntimeCandidate(prepared, { prior });
+  const candidate = registryRuntimeCandidate(prepared, { prior:copyRegistryRuntimePrior(prior) });
   const published = await processRegisteredManualCandidate(store, prepared.contractId, candidate, now, prior.versionId);
   if (!published.promoted) throw new Error(`NATIONAL_REGISTRY_GATE_HELD:${published.candidate.failureCode ?? ""}:${published.candidate.failureDetail ?? published.candidate.state}`);
   if (!published.confirmed) {
@@ -131,14 +131,46 @@ async function promote(store: RoutineDataStore, prepared: Parameters<typeof regi
     prior: await acceptedRegistryPrior(store, published) };
 }
 
+/** One registered state publisher owns one immutable base; a ZIP worker never receives it. */
+class NationalStatePublication {
+  private prior:RegistryRuntimePrior|null=null;
+  readonly store:RoutineDataStore;
+  readonly state:string;
+  constructor(store:RoutineDataStore,state:string){this.store=store;this.state=state;}
+  accept(prior:RegistryRuntimePrior):RegistryRuntimePrior{this.prior=prior;return copyRegistryRuntimePrior(prior);}
+  async read(now:string):Promise<RegistryRuntimePrior>{
+    if(this.prior){
+      const scope=stateRegistryRuntimeScope(this.state),pointer=await this.store.readPromotionIdentity("REGISTRY_RUNTIME_BINDING",scope);
+      if(pointer&&pointer.key===`REGISTRY_RUNTIME_BINDING:${scope}`&&pointer.recordClass==="REGISTRY_RUNTIME_BINDING"&&pointer.scope===scope&&
+        pointer.sourceId===requiredManualProductionContract(stateRegistryRuntimeContractId(this.state)).sourceId&&
+        pointer.versionId===pointer.lastKnownGoodVersionId&&pointer.versionId===this.prior.versionId)return copyRegistryRuntimePrior(this.prior);
+    }
+    const prior=await readRegistryRuntimePrior(this.store,now,this.state);
+    if(!prior)throw new Error("NATIONAL_REGISTRY_PRIOR_MISSING");
+    return this.accept(prior);
+  }
+  async refresh(now:string):Promise<RegistryRuntimePrior>{this.prior=null;return this.read(now);}
+}
+
+export function createNationalPlacePublisher(store:RoutineDataStore,state:string){
+  const session=new NationalStatePublication(store,requireRegistryState(state));
+  return (input:NationalPlacePublicationInput)=>{
+    if(input.store!==store||requireRegistryState(input.state)!==session.state)throw new Error("NATIONAL_PLACE_PUBLISHER_STATE_MISMATCH");
+    return publishNationalPlaceWithSession(input,session);
+  };
+}
+
 export async function publishNationalPlaceSources(input: NationalPlacePublicationInput): Promise<NationalPlacePublication> {
+  return publishNationalPlaceWithSession(input,new NationalStatePublication(input.store,requireRegistryState(input.state)));
+}
+
+async function publishNationalPlaceWithSession(input:NationalPlacePublicationInput,session:NationalStatePublication):Promise<NationalPlacePublication>{
   const state = requireRegistryState(input.state);
   if (input.divisions.some(row => registryJurisdictions(row.id).some(value => value !== state)) ||
     input.sources.officials.some(row => registryJurisdictions(row.divisionId).some(value => value !== state)))
     throw new Error(`NATIONAL_PLACE_STATE_SCOPE_MISMATCH:${state}`);
   const gaps: { key: string; detail: string }[] = [];
-  let prior = await readRegistryRuntimePrior(input.store, input.now, state);
-  if (!prior) throw new Error("NATIONAL_REGISTRY_PRIOR_MISSING");
+  let prior = await session.read(input.now);
   let candidateId: string | null = null, promotedVersionId: string | null = null;
 
   const heldDivisions = new Map(prior.payload.registry.divisions.map(d => [d.ocdId, d]));
@@ -178,10 +210,10 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
     ({ candidateId } = published); promotedVersionId = published.versionId;
-    prior = published.prior;
+    prior = session.accept(published.prior);
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
-      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(detail)) prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
+      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(detail)) prior = await session.refresh(input.now);
       for (const division of divisions) gaps.push({ key: `division:${division.ocdId}`, detail });
       for (const body of bodies) gaps.push({ key: `body:${body.id}`, detail });
       divisions.length = 0;
@@ -218,11 +250,11 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
               authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: s.row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null, unresolvedCandidacyIds: [],
               reason: "Officeholding verified on the official's own page. Ballot candidacy remains owed; no candidacy or absence is asserted." })) } } }, prior, input.now);
       ({ candidateId } = published); promotedVersionId = published.versionId;
-      prior = published.prior;
+      prior = session.accept(published.prior);
       for (const s of statewide) statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: published.versionId, discoveryIds: [s.official.discoveryId] });
     } catch (error) {
       if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
-        prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
+        prior = await session.refresh(input.now);
       for (const s of statewide) gaps.push({ key: `official:${s.official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
     }
   }
@@ -269,14 +301,14 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
                   reviewedEvidence:"Downloaded, checked by the existing image decoder and stored; source identity and permitted use are bound to the saved corroborating pages."}]},
               payload:{...prior!.payload,registry:{...prior!.payload.registry,divisions:[],bodies:[]},statewideExecutives:[],officialCandidacies:{...prior!.payload.officialCandidacies,rows:[]},
                 officialPhotos:{photos:[{officeholderId:holder.id,personId:holder.personId ?? holder.id,name:official.name,...photo}]},rosterPhotos:{[holder.id]:photo.url}}},prior!,input.now);
-            prior=saved.prior;candidateId=saved.candidateId;promotedVersionId=saved.versionId;
+            prior=session.accept(saved.prior);candidateId=saved.candidateId;promotedVersionId=saved.versionId;
           } catch (error) {
             gaps.push({key:`portrait:${official.discoveryId}`,detail:error instanceof Error ? error.message : String(error)});
           }
         }
       } catch (error) {
         if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
-          prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
+          prior = await session.refresh(input.now);
         gaps.push({ key: `official:${official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
       }
     }

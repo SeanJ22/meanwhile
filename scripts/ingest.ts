@@ -87,7 +87,7 @@ import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } fro
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { derivedFamilyReadGroups, readDerivedFamilyMembers } from "../lib/civic-data/derived-meeting-acquisition.ts";
-import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
+import { DERIVED_WIRING_RECORD_CLASS } from "../lib/civic-data/derived-door.ts";
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   familyMembers,
@@ -543,7 +543,7 @@ export async function promoteDerivedMeetingFamily(
     const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
   };
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
+  const wiring = await readDerivedMeetingWiring({ state: partition.derivedFamily!.replace(/^US-/, ""), store, bypassCache: true, now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
     await refuse(
       wiring.kind === "NOT_RECORDED"
@@ -583,9 +583,9 @@ export async function promoteDerivedMeetingFamily(
     wiringInput: {
       kind: "PROMOTED_VERSION",
       recordClass: DERIVED_WIRING_RECORD_CLASS,
-      scope: DERIVED_WIRING_SCOPE,
+      scope: wiring.metadata.scope,
       versionId,
-      readModelSha256: sha256(canonicalCivicDataJson(wiring.value)),
+      readModelSha256: wiring.sourceInput?.readModelSha256 ?? sha256(canonicalCivicDataJson(wiring.value)),
       promotedAt,
     },
     members,
@@ -604,8 +604,8 @@ export async function promoteDerivedMeetingFamily(
       return { meetings: reconciled.meetings, agendaDocuments: reconciled.agendaDocuments, removalEvidence: reconciled.removalEvidence };
     },
   });
-  const venueRead = await readCuratedReaderProjection("venue-resolutions", { store, now: new Date().toISOString(), bypassCache: true });
-  const reviewed = venueRead.kind === "PROMOTED" ? venueRead.value.records as unknown as VenueEntry[] : [];
+  const venueRead = await readCuratedReaderProjection("venue-resolutions", { state: partition.derivedFamily!.replace(/^US-/, ""), store, now: new Date().toISOString(), bypassCache: true });
+  const reviewed = venueRead.kind === "PROMOTED" ? currentVenueCache() : [];
   if (venueRead.kind !== "PROMOTED" && venueRead.kind !== "NOT_RECORDED") {
     console.warn(`AUTOMATIC_VENUE_REVIEWED_UNAVAILABLE:${venueRead.kind}:${venueRead.detail}`);
   }
@@ -614,7 +614,7 @@ export async function promoteDerivedMeetingFamily(
   const cited = normalizeFamilyMeetingCitations(build.snapshot.meetings, memberRoutes);
   const retained = retainPreviouslyVerifiedVenuePoints(cited, previous?.meetings ?? []);
   const fromReviewed = placeMeetingsFromVerifiedVenues(retained, reviewed);
-  const existingIds = new Set(venueRead.kind === "PROMOTED" ? venueRead.value.records.map((row) => row.id) : []);
+  const existingIds = new Set(reviewed.map(venueResolutionRecordId));
   const census = await placeMeetingsFromCensusVenues({
     snapshot: { ...build.snapshot, meetings: [...fromReviewed.meetings] }, existingIds, memberRoutes,
   });
@@ -678,7 +678,14 @@ async function main() {
   const diagnosticState = name === "composite" ? null : requireRegistryState(
     process.argv.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
   );
-  const doors = await ensureMeetingDoors();
+  const partitionArgument = process.argv.find(argument => argument.startsWith("--only-partition="))?.slice("--only-partition=".length);
+  const requestedStates = diagnosticState ? [diagnosticState] : statesForRegistryDivisions([
+    process.argv.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? "",
+    partitionArgument ? decodeURIComponent(partitionArgument) : "",
+    partitionArgument?.startsWith("meetings:derived:") ? partitionArgument.split(":").at(-1)! : "",
+  ]);
+  if (requestedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
+  const doors = await ensureMeetingDoors({ state: requestedStates[0] });
   if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   const partitions = name === "composite"
     ? selectedMeetingPartitions(process.argv.slice(3))

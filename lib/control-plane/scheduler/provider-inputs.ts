@@ -6,7 +6,7 @@
 
 import {
   installedRegistrationJurisdictionRegistries,
-  installedOperationalReferenceRegistries,
+  installedOperationalReferenceStateCodes,
   requiredOperationalJurisdictionRegistry,
 } from "../../civic-data/operational-references.ts";
 import type { JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
@@ -35,7 +35,7 @@ export function trackedStatesFromOperationalReference(): TrackedStatesSource {
   return {
     read() {
       try {
-        const states = normalized(Object.keys(installedOperationalReferenceRegistries()));
+        const states = normalized(installedOperationalReferenceStateCodes());
         if (states.length === 0) {
           return { unreadable: "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted operational-reference registry was preloaded", source };
         }
@@ -52,9 +52,10 @@ export function promotedRegistries():
   | { readonly registries: ReadonlyMap<string, JurisdictionRegistry>; readonly refused: ReadonlyMap<string, string> }
   | { readonly unreadable: string } {
   let states: string[];
+  const registration = installedRegistrationJurisdictionRegistries();
   try {
-    states = normalized(Object.keys(installedOperationalReferenceRegistries()));
-    if (states.length === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
+    states = normalized(installedOperationalReferenceStateCodes());
+    if (states.length === 0 && registration.registries.size === 0) throw new Error("OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: no promoted jurisdiction registry was preloaded");
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }
@@ -68,7 +69,6 @@ export function promotedRegistries():
     }
   }
   /* Every other state a Send reached, read from its registration; one whose registration could not be read is named, never used. */
-  const registration = installedRegistrationJurisdictionRegistries();
   for (const [state, registry] of registration.registries) if (!registries.has(state)) registries.set(state, registry);
   for (const [state, why] of registration.refused) if (!registries.has(state)) refused.set(state, why);
   return { registries, refused };
@@ -140,7 +140,7 @@ export const UNREAD_FREE_DISCOVERY_WALKS: FreeDiscoveryWalks = {
 
 /** The obligation ids the owner's dispatch materialized, or why they could not be read. */
 export type MaterializedReading =
-  | { readonly ids: ReadonlySet<string> }
+  | { readonly ids: Iterable<string> & { readonly size: number; has(id: string): boolean } }
   | { readonly unreadable: string };
 
 /** No dispatch has materialized anything: the default for a provider nobody wired. */

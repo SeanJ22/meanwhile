@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync } from "node:fs";
@@ -34,12 +35,7 @@ import {
   type FreshnessObligation,
   type ScheduledObligation,
 } from "../lib/control-plane/scheduler/obligation.ts";
-import {
-  closeCycleOccurrences,
-  digestLines,
-  runCycle,
-  type ResearchLanes,
-} from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { closeCycleOccurrences, digestLines, type ResearchLanes } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {

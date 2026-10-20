@@ -15,7 +15,6 @@ import { derivedRetrieval, type DerivedInputRef } from "../civic-data/derived-au
 import { derivedRequestedUrl } from "../civic-data/derived-door.ts";
 import { refreshMeetingPartitions, type MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
 import { refreshOutcomePartitions, type OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
-import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { installDoorHosts } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { refreshCuratedBodyStatus } from "../registry/curated-bodies.ts";
@@ -24,10 +23,18 @@ import { refreshLegistarClients } from "../sources/legistar/client-registry.ts";
 import { refreshInSiteTenants } from "../sources/legistar-insite/tenant-registry.ts";
 import { DOOR_STATUSES, type DoorRecord, type DoorStatus } from "./registry.ts";
 import { meetingDoorHosts, wiringRowsFromDoors } from "./rows.ts";
+import { meetingDerivationInput, readMeetingDerivationProjection, type MeetingDerivationRead, type MeetingDerivationReadOptions } from "../civic-data/meeting-derivation-read.ts";
+import { requireRegistryState } from "../civic-data/state-scopes.ts";
 
 export const MEETING_DOORS_CONTRACT_ID = "meeting-doors" as const;
 export const MEETING_DOORS_SOURCE_ID = "meeting-doors" as const;
 export const MEETING_DOORS_RECORD_CLASS = "CURATED_READER_RECORD" as const;
+export const MEETING_DOOR_STATES_SQL = `SELECT DISTINCT upper(coalesce(substring(value->>'ocdId' FROM '/(?:state|district|territory):([a-z]{2})(?:/|$)'),substring(value->'bodyIds'->>0 FROM '^curated:([a-z]{2})/'))) AS state
+  FROM cp_doors WHERE jsonb_typeof(value->'meeting')='object' AND coalesce(value->'meeting'->>'family','')='' AND value->>'status'<>'SUSPENDED'
+  ORDER BY state`;
+export const MEETING_DOORS_STATE_SQL = `SELECT revision,updated_at,value FROM cp_doors
+  WHERE (value->>'ocdId' ~ $1 OR value->'bodyIds'->>0 ~ $2) AND jsonb_typeof(value->'meeting')='object'
+  AND coalesce(value->'meeting'->>'family','')='' AND value->>'status'<>'SUSPENDED' ORDER BY id`;
 export const MEETING_DOORS_SCOPE = "US:meeting-doors" as const;
 const PARSER = "meeting-doors/1" as const;
 
@@ -96,7 +103,8 @@ function asRecord(door: PublishedDoor, at: string): DoorRecord {
 }
 
 /** The version, authentic only as the registry records it was computed from. */
-export function meetingDoorsCandidate(rows: readonly { readonly revision: number; readonly updatedAt: string; readonly value: DoorRecord }[], attemptedAt: string): RoutineCandidate {
+export function meetingDoorsCandidate(rows: readonly { readonly revision: number; readonly updatedAt: string; readonly value: DoorRecord }[], attemptedAt: string, state?: string): RoutineCandidate {
+  const scope = state === undefined ? MEETING_DOORS_SCOPE : `meeting-doors:${requireRegistryState(state)}`;
   const used = rows.filter((row) => isPublishedMeetingDoor(row.value));
   const readModel = meetingDoorsProjection(used.map((row) => row.value));
   const inputs: DerivedInputRef[] = used.map((row) => ({
@@ -113,14 +121,14 @@ export function meetingDoorsCandidate(rows: readonly { readonly revision: number
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   const normalizedPayload = { readModel };
   return {
-    id: `cv-${sha256Hex(`${MEETING_DOORS_SOURCE_ID}\u001f${MEETING_DOORS_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${MEETING_DOORS_SOURCE_ID}\u001f${scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: MEETING_DOORS_SOURCE_ID,
     recordClass: MEETING_DOORS_RECORD_CLASS,
-    scope: MEETING_DOORS_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(MEETING_DOORS_SOURCE_ID, MEETING_DOORS_RECORD_CLASS, MEETING_DOORS_SCOPE),
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(MEETING_DOORS_SOURCE_ID, MEETING_DOORS_RECORD_CLASS, scope),
     retrieval: {
       succeeded,
-      requestedUrl: derivedRequestedUrl(MEETING_DOORS_SOURCE_ID, MEETING_DOORS_SCOPE),
+      requestedUrl: derivedRequestedUrl(MEETING_DOORS_SOURCE_ID, scope),
       finalUrl: null,
       httpStatus: null,
       retrievedAt,
@@ -146,7 +154,7 @@ export function meetingDoorsCandidate(rows: readonly { readonly revision: number
       matchBasis: "EXACT_SCOPED_ID" as const,
       ambiguous: false,
     })),
-    temporal: { version: MEETING_DOORS_SCOPE, expectedVersion: MEETING_DOORS_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
+    temporal: { version: scope, expectedVersion: scope, sourceThrough: retrievedAt, staleAtRetrieval: false },
     semantics: {
       factKind: "the door registry's hand-wired meeting doors in use",
       violations: shapeIssue === null ? [] : [`the version is not a doors version: ${shapeIssue}`],
@@ -172,11 +180,16 @@ export function meetingDoorsCandidate(rows: readonly { readonly revision: number
 }
 
 /** The promoted doors version. A malformed one is refused as unreadable, never installed. */
-export async function readMeetingDoors(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<MeetingDoorsProjection>> {
-  const read = await readPromotedCivicData<MeetingDoorsProjection>(MEETING_DOORS_RECORD_CLASS, MEETING_DOORS_SCOPE, options);
+export async function readMeetingDoors(options: MeetingDerivationReadOptions = {}): Promise<MeetingDerivationRead<MeetingDoorsProjection>> {
+  const read = await readMeetingDerivationProjection<MeetingDoorsProjection>({ family: "meeting-doors", options,
+    path: ["doors"], statePath: ["ocdId"], value: records => ({ kind: "meeting-doors", formatVersion: 1, doors: records as readonly PublishedDoor[] }) });
   if (read.kind !== "PROMOTED") return read;
   const issue = meetingDoorsProjectionIssue(read.value);
-  return issue === null ? read
+  // A proven national inventory may have no hand-wired door in this selected state.
+  // Its empty slice says nothing about that state's actual meetings or derived routes.
+  const emptyStateSlice = options.state !== undefined && read.sourceInput?.scope === MEETING_DOORS_SCOPE &&
+    Array.isArray(read.value.doors) && read.value.doors.length === 0;
+  return issue === null || emptyStateSlice ? read
     : { kind: "STORE_UNREACHABLE", value: null, metadata: read.metadata, code: "PROMOTION_PROOF_INVALID", detail: `meeting-doors ${read.metadata.versionId}: ${issue}` };
 }
 
@@ -189,7 +202,8 @@ export interface MeetingDoorsInstall {
 /** How long a process keeps the doors it installed before it reads the published version again. */
 export const MEETING_DOORS_REFRESH_MS = 5 * 60_000;
 
-let installed: { readonly at: number; readonly versionId: string } | null = null;
+type DoorInventoryInput = Extract<DerivedInputRef, { kind: "PROMOTED_VERSION" }>;
+let installed: { readonly at: number; readonly versionId: string; readonly state?: string; readonly input?: DoorInventoryInput } | null = null;
 let pending: Promise<MeetingDoorsReady> | null = null;
 
 /**
@@ -210,7 +224,7 @@ export function installDoorRecords(doors: readonly DoorRecord[], from = "the doo
 }
 
 export type MeetingDoorsReady =
-  | { readonly ready: true; readonly versionId: string; readonly rows: number; readonly skipped: readonly string[] }
+  | { readonly ready: true; readonly versionId: string; readonly rows: number; readonly skipped: readonly string[]; readonly input?: DoorInventoryInput }
   | { readonly ready: false; readonly reason: string };
 
 /**
@@ -218,9 +232,11 @@ export type MeetingDoorsReady =
  * them answers at once, and once they are older than `MEETING_DOORS_REFRESH_MS` reads the published version again
  * behind that answer. A version that cannot be read leaves the installed doors in place until the next try.
  */
-export async function ensureMeetingDoors(options: PromotedCivicDataReadOptions & { readonly clock?: () => number } = {}): Promise<MeetingDoorsReady> {
+export async function ensureMeetingDoors(options: MeetingDerivationReadOptions & { readonly clock?: () => number } = {}): Promise<MeetingDoorsReady> {
   const now = (options.clock ?? Date.now)();
-  const current = (): MeetingDoorsReady => ({ ready: true, versionId: installed!.versionId, rows: activeWiring().length, skipped: [] });
+  const state = options.state === undefined ? undefined : requireRegistryState(options.state);
+  if (installed?.state !== state) { installed = null; pending = null; }
+  const current = (): MeetingDoorsReady => ({ ready: true, versionId: installed!.versionId, rows: activeWiring().length, skipped: [], ...(installed!.input ? { input: installed!.input } : {}) });
   if (installed !== null && now - installed.at < MEETING_DOORS_REFRESH_MS) return current();
   pending ??= (async (): Promise<MeetingDoorsReady> => {
     try {
@@ -228,7 +244,9 @@ export async function ensureMeetingDoors(options: PromotedCivicDataReadOptions &
       if (read.kind !== "PROMOTED") throw new Error(`${read.kind}${"detail" in read && read.detail ? `: ${read.detail}` : ""}`);
       const versionId = read.metadata.versionId ?? "unnamed";
       const done = installDoorRecords(read.value.doors.map((door) => asRecord(door, read.metadata.promotedAt ?? new Date(now).toISOString())), versionId, now);
-      return { ready: true, versionId, rows: done.rows, skipped: done.partitions.skipped };
+      const input = meetingDerivationInput(read) ?? undefined;
+      installed = { at: now, versionId, state, input };
+      return { ready: true, versionId, rows: done.rows, skipped: done.partitions.skipped, ...(input ? { input } : {}) };
     } catch (error) {
       if (installed !== null) {
         installed = { ...installed, at: now };

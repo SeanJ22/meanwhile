@@ -1,12 +1,13 @@
+import { requireRegistryState } from "../lib/civic-data/state-scopes.ts";
+import { meetingDerivationContractId } from "../lib/civic-data/meeting-derivation-scope.ts";
+import { meetingDerivationInput } from "../lib/civic-data/meeting-derivation-read.ts";
+import { assignment } from "./cli-args.mts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
-  DERIVED_CROSSWALK_CONTRACT_ID,
-  DERIVED_CROSSWALK_RECORD_CLASS,
-  DERIVED_CROSSWALK_SCOPE,
   derivedCrosswalkCandidate,
   derivedCrosswalkFailedCandidate,
   planDerivedCrosswalk,
@@ -34,8 +35,10 @@ import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
+const state = requireRegistryState(assignment(process.argv, "state") ?? "");
+const CONTRACT_ID = meetingDerivationContractId("meeting-body-crosswalk-derived", state);
 if (!process.argv.includes("--promote")) {
-  throw new Error("usage: scripts/derive-meeting-body-crosswalk.mts --promote (the standing runner's child; there is no dry mode against production)");
+  throw new Error("usage: scripts/derive-meeting-body-crosswalk.mts --state=XX --promote (the standing runner's child; there is no dry mode against production)");
 }
 installNeonRequestDeadline();
 prepareProductionCivicDataWrite();
@@ -43,44 +46,43 @@ prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 // A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
-const doors = await ensureMeetingDoors();
+const doors = await ensureMeetingDoors({ state });
 if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+const doorsInput = doors.input;
 
 const AUTO_CROSSWALK_REVIEW_VERSION = "37f3d4f2533c";
 const REVIEWER = autoCrosswalkReviewerId(AUTO_CROSSWALK_REVIEW_VERSION);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now);
-  printSourceRunnerReceipt(DERIVED_CROSSWALK_CONTRACT_ID, candidate, outcome);
+  const outcome = await processRegisteredRoutineCandidate(store, CONTRACT_ID, candidate, now);
+  printSourceRunnerReceipt(CONTRACT_ID, candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }
 
 async function main(): Promise<void> {
-  const lkg = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  const lkg = await readDerivedMeetingBodyCrosswalk({ state, store, bypassCache: true, now });
   if (lkg.kind === "STORE_UNREACHABLE") {
-    await finish(derivedCrosswalkFailedCandidate(now, `The previous automatic crosswalk could not be read (${lkg.code}): ${lkg.detail}`));
+    await finish(derivedCrosswalkFailedCandidate(now, `The previous automatic crosswalk could not be read (${lkg.code}): ${lkg.detail}`, state));
     return;
   }
   const previous = lkg.kind === "PROMOTED" ? lkg.value.records : [];
-  const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
-    : null;
+  const lkgInput = meetingDerivationInput(lkg);
 
   /* Each route's newest actual read, with the original walk and saved evidence. */
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) {
-    await finish(derivedCrosswalkFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
+    await finish(derivedCrosswalkFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read.", state));
     return;
   }
   let walks: { attempt: MeetingsDiscoveryAttempt; recordId: string; recordedAt: string; routes: string[] }[];
   try {
     const sql = neon(controlPlane);
     const found = await sql.query(
-      CURRENT_CALENDAR_READS_SQL, [null],
+      CURRENT_CALENDAR_READS_SQL, [null, state],
     ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt; routes: string[] }[];
     walks = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt, routes: row.routes }));
   } catch (error) {
-    await finish(derivedCrosswalkFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`));
+    await finish(derivedCrosswalkFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`, state));
     return;
   }
 
@@ -90,7 +92,7 @@ async function main(): Promise<void> {
     readonly bodies: ReadonlyMap<string, RegisteredGovernment>;
     readonly reviewedStatus: string;
   } | { readonly unread: string }>();
-  for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
+  for (const state of [requireRegistryState(assignment(process.argv, "state")!)]) {
     console.log(`RCD_PROGRESS meeting-body-crosswalk registration ${state}`);
     try {
       const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
@@ -161,8 +163,6 @@ async function main(): Promise<void> {
   for (const walk of walks) {
     console.log(`RCD_PROGRESS meeting-body-crosswalk ${walk.attempt.jurisdictionId}`);
     if (!walk.attempt.found.some((f) => AUTO_CROSSWALK_VENDORS.has(f.vendor))) continue;
-    for (const f of walk.attempt.found) await cite(f.artifactId);
-    for (const s of walk.attempt.steps) if (s.status !== null && s.status >= 200 && s.status < 300) await cite(s.artifactId);
     const state = walk.attempt.stateCode.toUpperCase();
     const registration = registrations.get(state);
     const registered = registration === undefined
@@ -172,6 +172,9 @@ async function main(): Promise<void> {
         : registration.bodies.get(walk.attempt.jurisdictionId) ?? {
             notRegistered: `${state} registration and ${registration.reviewedStatus} reviewed registry do not pair ${walk.attempt.jurisdictionId} with one exact governing body`,
           };
+    held.clear();
+    for (const f of walk.attempt.found) await cite(f.artifactId);
+    for (const step of walk.attempt.steps) if (step.status !== null && step.status >= 200 && step.status < 300) await cite(step.artifactId);
     reviews.push(reviewDiscoveryWalk({
       walk,
       routes: walk.routes,
@@ -181,6 +184,7 @@ async function main(): Promise<void> {
       reviewer: REVIEWER,
       now,
     }));
+    held.clear();
   }
 
   const plan = planDerivedCrosswalk({ previous, reviews });
@@ -196,9 +200,10 @@ async function main(): Promise<void> {
     reviews.length === 0 ? "no discovery walk was held for any registered government" : "the walks reviewed produced no body to accept, renew or hold",
   )));
   await finish(derivedCrosswalkCandidate(plan, [
+    ...(doorsInput ? [doorsInput] : []),
     ...(lkgInput === null ? [] : [lkgInput]),
     ...[...registrations.values()].flatMap((entry) => "input" in entry ? [entry.input] : []),
-  ], now));
+  ], now, state));
 }
 
 await main();

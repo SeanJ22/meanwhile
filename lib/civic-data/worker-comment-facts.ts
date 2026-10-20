@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
@@ -23,7 +24,7 @@ export async function publishOwedCommentFacts(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
-  const clocks = factClocks((await input.repos.adminConfig.read("current"))?.value ?? null);
+  const clocks = factClocks((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const manual = await readValidatorManual(input.repos);

@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync } from "node:fs";
@@ -25,7 +26,7 @@ import {
   chooseExecutor,
   sweepExpiredLeases,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { digestLines, huntRoundComparator, runCycle, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { digestLines, huntRoundComparator, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
   beginAttemptFor,

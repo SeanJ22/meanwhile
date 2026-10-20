@@ -4,7 +4,8 @@
  * process runs none, so death is observed from outside by an expired lease (`sweepExpiredLeases`).
  */
 
-import { isExpired, type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
+import { type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
+import { forEachAggregate } from "../workers/streamed-history.ts";
 import {
   abandonAttempt,
   beginAttemptFor,
@@ -759,12 +760,12 @@ export async function sweepExpiredLeases(
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];
 
-  for (const row of await repos.leases.list()) {
+  await forEachAggregate(repos.leases, async row => {
     const lease = row.value;
-    if (lease.released) continue;
-    if (!isExpired(lease, input.now)) {
+    if (lease.released) return;
+    if (!(Date.parse(lease.expiresAt) <= Date.parse(input.now))) {
       stillLive.push(lease.routeTaskId);
-      continue;
+      return;
     }
     try {
       const outcome = await reclaimRouteTask(repos, {
@@ -781,6 +782,6 @@ export async function sweepExpiredLeases(
         why: error instanceof Error ? error.message : String(error),
       });
     }
-  }
+  }, { released: true, expiresAt: true, routeTaskId: true });
   return { reclaimed, releasedSettled, stillLive, refused };
 }

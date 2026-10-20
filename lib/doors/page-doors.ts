@@ -2,7 +2,9 @@ import { createHash } from "node:crypto";
 import { FRESHNESS_WINDOW_HOURS } from "../control-plane/promotion/section3.ts";
 import { retireSourceDoors } from "./source-capture.ts";
 import { classifySourceContent, SOURCE_FAMILIES } from "./source-content.ts";
-import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, normalizeHost, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { MAX_CHECK_MINUTES, MIN_CHECK_MINUTES, upsertDerivedDoor, isDoorRecord, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { pageAddress } from "./page-address.ts";
+export { pageAddress } from "./page-address.ts";
 
 export const PAGE_DOOR_KIND = "page";
 const DEFAULT_WINDOW_HOURS = 7 * 24;
@@ -30,25 +32,6 @@ export const holdsOf = (recordClass: string): string => recordClass.toLowerCase(
 export function checkEveryFor(recordClass: string): number {
   const hours = FRESHNESS_WINDOW_HOURS[recordClass] ?? DEFAULT_WINDOW_HOURS;
   return Math.min(MAX_CHECK_MINUTES, Math.max(MIN_CHECK_MINUTES, Math.round(hours * 60)));
-}
-
-/** The address a door is keyed on: no fragment, no tracking noise, no trailing slash. */
-export function pageAddress(raw: string): { readonly url: string; readonly host: string } | null {
-  let parsed: URL;
-  try {
-    parsed = new URL(raw);
-  } catch {
-    return null;
-  }
-  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
-  if (parsed.username || parsed.password) return null;
-  const host = normalizeHost(parsed.hostname);
-  if (host === null) return null;
-  parsed.hash = "";
-  const path = parsed.pathname.replace(/\/+$/, "");
-  const keep = [...parsed.searchParams.entries()].filter(([key]) => !/^(utm_|fbclid$|gclid$)/i.test(key)).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  const query = keep.length === 0 ? "" : `?${new URLSearchParams(keep).toString()}`;
-  return { url: `${parsed.protocol}//${host}${parsed.port ? `:${parsed.port}` : ""}${path}${query}`, host };
 }
 
 export function pageDoorId(address: { readonly url: string; readonly host: string }): string {

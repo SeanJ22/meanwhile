@@ -47,15 +47,15 @@ function goodFecCandidate(): RoutineCandidate {
   const normalizedPayload = { amount: 10 };
   const readModel = {
     formatVersion: 1 as const,
-    candidates: [{ fecCandidateId: "H6AZ01001" }],
+    candidates: [{ fecCandidateId: "H6AZ01001", state: "AZ", targetKeys: ["fec:H6AZ01001"], topContributions: [] }],
     absences: [],
   };
   return {
     id: "source-boundary-good-fec",
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
-    scope: "federal-supported",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    scope: "US-AZ:fec-funding:v1",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"),
     retrieval: {
       succeeded: true,
       requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
@@ -107,12 +107,12 @@ function goodFecCandidate(): RoutineCandidate {
 test("a registered source failure is one durable attempt with retry clock and unchanged LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const good = goodFecCandidate();
-  const promoted = await processRegisteredRoutineCandidate(store, "fec-funding", good, GOOD_AT);
-  assert.equal(promoted.promoted?.versionId, good.id);
+  const promoted = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", good, GOOD_AT);
+  assert.equal(promoted.promoted?.versionId, good.id, promoted.candidate.failureDetail ?? "");
 
   const recorded = await recordRegisteredSourceAcquisitionFailure({
     store,
-    contractId: "fec-funding",
+    contractId: "fec-funding:AZ",
       requestedUrl: "https://api.open.fec.gov/v1/candidates/",
     attemptedAt: FAILED_AT,
     failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "FEC API request timed out."),
@@ -122,13 +122,13 @@ test("a registered source failure is one durable attempt with retry clock and un
   assert.equal(recorded.outcome.candidate.lastKnownGoodVersion, good.id);
   assert.equal(recorded.outcome.promoted, null);
   assert.deepEqual((await store.events(recorded.receipt.candidateId)).map((event) => event.state), ["SOURCE_BLOCKED"]);
-  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEC_FUNDING", "US-AZ:fec-funding:v1"))?.versionId, good.id);
 
   const parsed = parseRoutineRunnerReceipt(`${recorded.line}\n`);
   assert.equal(parsed.ok, true);
   if (!parsed.ok) return;
-  assert.equal(parsed.receipt.source, "fec-funding", "protocol identity is the exact registered task, not a publisher label");
-  const task = routineTaskFromContract(requiredRoutineContract("fec-funding"));
+  assert.equal(parsed.receipt.source, "fec-funding:AZ", "protocol identity is the exact registered task, not a publisher label");
+  const task = routineTaskFromContract(requiredRoutineContract("fec-funding:AZ"));
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, task, store, "HELD"), null);
   assert.deepEqual(await store.clock(task.sourceId, task.recordClass, task.scope), {
     lastAttemptedAt: FAILED_AT,
@@ -141,16 +141,16 @@ test("a registered source failure is one durable attempt with retry clock and un
 
 test("all five registered adapters can persist a well-formed source-scoped failure receipt", async () => {
   for (const [contractId, sourceLabel] of [
-    ["fec-funding", "FEC OpenFEC"],
+    ["fec-funding:AZ", "FEC OpenFEC"],
     ["nh-members", "NH General Court members"],
-    ["census-acs-population", "Census ACS"],
+    ["census-acs-population-az", "Census ACS"],
     ["dotgov", "CISA dotgov"],
   ] as const) {
     const store = new MemoryRoutineDataStore();
     const recorded = await recordRegisteredSourceAcquisitionFailure({
       store,
       contractId,
-      ...(contractId === "fec-funding" ? { requestedUrl: "https://api.open.fec.gov/v1/candidates/" } : {}),
+      ...(contractId === "fec-funding:AZ" ? { requestedUrl: "https://api.open.fec.gov/v1/candidates/" } : {}),
       attemptedAt: FAILED_AT,
       failure: sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `${sourceLabel} answered HTTP 503.`),
     });
@@ -193,9 +193,9 @@ test("a failed FEC candidate cannot mint an absence or block another candidate's
   const candidate = fecFundingCandidate({ snapshot, rawBodies: sourceBodies,
     finalUrl: "https://api.open.fec.gov/v1/candidate/H6AZ01001/totals/?cycle=2026", retrievedAt: GOOD_AT,
     excludedFacts: [{ code: "FEC_CANDIDATE_RETAINED", detail: "H6AZ01002: source acquisition failed; no prior row or absence invented." }] });
-  const published = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, FAILED_AT);
+  const published = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", candidate, FAILED_AT);
   assert.ok(published.promoted, published.candidate.failureDetail ?? "");
-  const held = (await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported"))!.payload;
+  const held = (await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "US-AZ:fec-funding:v1"))!.payload;
   assert.deepEqual(held.candidates.map(row => row.fecCandidateId), ["H6AZ01001"]);
   assert.equal(held.candidates[0].totals.receipts, 10);
   assert.equal(held.candidates[0].provenance.collectedAt, GOOD_AT);
@@ -207,14 +207,14 @@ test("program/store/protocol exceptions cannot be relabelled as a source attempt
   await assert.rejects(
     recordRegisteredSourceAcquisitionFailure({
       store,
-      contractId: "fec-funding",
+      contractId: "fec-funding:AZ",
       requestedUrl: "https://api.open.fec.gov/v1/candidates/",
       attemptedAt: FAILED_AT,
       failure: new Error("program defect") as never,
     }),
     /SOURCE_FAILURE_NOT_CLASSIFIED/,
   );
-  assert.deepEqual(await store.clock("fec-open-api", "FEC_FUNDING", "federal-supported"), {});
+  assert.deepEqual(await store.clock("fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"), {});
 });
 
 test("an unavailable canonical store remains an operational failure and emits no synthetic receipt", async () => {
@@ -224,7 +224,7 @@ test("an unavailable canonical store remains an operational failure and emits no
   await assert.rejects(
     recordRegisteredSourceAcquisitionFailure({
       store: unavailableStore,
-      contractId: "fec-funding",
+      contractId: "fec-funding:AZ",
       requestedUrl: "https://api.open.fec.gov/v1/candidates/",
       attemptedAt: FAILED_AT,
       failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "The publisher timed out."),
@@ -390,7 +390,7 @@ test("the shared meeting client cancels hung request/body work and its real retr
 test("a real acquisition deadline persists one exact source failure while retaining LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const good = goodFecCandidate();
-  await processRegisteredRoutineCandidate(store, "fec-funding", good, GOOD_AT);
+  await processRegisteredRoutineCandidate(store, "fec-funding:AZ", good, GOOD_AT);
 
   let failure: unknown;
   try {
@@ -408,14 +408,14 @@ test("a real acquisition deadline persists one exact source failure while retain
 
   const recorded = await recordRegisteredSourceAcquisitionFailure({
     store,
-    contractId: "fec-funding",
+    contractId: "fec-funding:AZ",
       requestedUrl: "https://api.open.fec.gov/v1/candidates/",
     attemptedAt: FAILED_AT,
     failure,
   });
   assert.equal(recorded.outcome.promoted, null);
   assert.equal(recorded.receipt.lastKnownGoodVersion, good.id);
-  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEC_FUNDING", "US-AZ:fec-funding:v1"))?.versionId, good.id);
   assert.equal((await store.events(recorded.receipt.candidateId)).length, 1);
 });
 

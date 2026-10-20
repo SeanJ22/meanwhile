@@ -2,6 +2,10 @@ import { officeIdentity } from "../../officials/office-identity.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
 import { decodeEntities } from "../http.ts";
 import { acquisition, array, emptyPerson, emptyRoster, gap, json, number, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
+import { knownReleaseSourceCheck, resolveKnownReleaseCache, type KnownRelease } from "../known-release.ts";
+import { holdRawCapture } from "../../civic-data/raw-capture-vault.ts";
+import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
+import { withHistoryIndex } from "../../control-plane/workers/streamed-history.ts";
 
 const textOf = (value: string) => decodeEntities(value.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 function providerPath(value: string): { path: string; params: Record<string, string> } {
@@ -41,31 +45,48 @@ export function normalizeGovinfoMember(value: unknown, document: string, options
   return roster;
 }
 export async function acquireGovinfoDirectory(options: PeopleAcquisitionOptions): Promise<PeopleSourceRelease> {
-  const acquisitions = [], gaps: {sourceUrl:string;detail:string}[] = [], roster = emptyRoster(options.state, options.asOf);
+  const acquisitions: StatePeopleAcquisition[] = [], gaps: {sourceUrl:string;detail:string}[] = [], roster = emptyRoster(options.state, options.asOf);
   const date = new Date(options.asOf), beginning = new Date(Date.UTC(date.getUTCFullYear() - 4, 0, 1)).toISOString(), end = date.toISOString();
   let sourceUrl = `https://api.govinfo.gov/collections/CDIR/${beginning}?${new URLSearchParams({lastModifiedEndDate:end,pageSize:"100",offsetMark:"*"})}`;
-  const packages: Record<string,unknown>[] = [], seen = new Set<string>();
+  const congressYear = date.getUTCMonth() === 0 && date.getUTCDate() < 3 ? date.getUTCFullYear() - 1 : date.getUTCFullYear();
+  const currentCongress = Math.floor((congressYear - 1789) / 2) + 1;
+  const currentTitle = new RegExp(`\\b${currentCongress}(?:st|nd|rd|th)?\\s+Congress\\b`, "i");
+  let current: Record<string, unknown> | null = null;
+  const { store } = await resolveKnownReleaseCache(options);
+  const holdIndex = async (release: KnownRelease): Promise<void> => {
+    const ref = await holdRawCapture(store, "govinfo", release.bytes, release.contentType);
+    acquisitions.push({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
+      retrievedAt: release.retrievedAt, rawHash: ref.rawHash, sourceCheck: knownReleaseSourceCheck(release),
+      body: "", indexOnly: true, heldCapture: { ref, store } });
+  };
+  return withHistoryIndex(async index => {
+  index.exec("CREATE TABLE visited(url TEXT PRIMARY KEY)");
+  const visited = index.prepare("SELECT url FROM visited WHERE url=?"), remember = index.prepare("INSERT INTO visited VALUES (?)");
   try {
     while (sourceUrl) {
-      if (seen.has(sourceUrl)) throw new Error("GOVINFO_COLLECTION_PAGINATION_CYCLE"); seen.add(sourceUrl);
+      if (visited.get(sourceUrl)) throw new Error("GOVINFO_COLLECTION_PAGINATION_CYCLE"); remember.run(sourceUrl);
       const route = providerPath(sourceUrl), release = await savedRead(options, sourceUrl, `cdir-index:${route.params.offsetMark ?? "*"}:${beginning.slice(0,4)}`, bytes => {
         const value = JSON.parse(new TextDecoder().decode(bytes)); if (!Array.isArray(value.packages)) throw new Error("GOVINFO_CDIR_INDEX_INVALID");
       }, {name:"data_gov_api",provider:"govinfo",...route});
-      acquisitions.push(acquisition(release)); const data = json(release); packages.push(...array(data.packages).map(record));
+      await holdIndex(release);
+      const data = json(release);
+      // The selected current package is the only collection record this state job needs.
+      for (const raw of array(data.packages)) {
+        const row = record(raw);
+        if (number(row.congress) !== currentCongress && !currentTitle.test(string(row.title) ?? "")) continue;
+        const issued = string(row.dateIssued) ?? string(row.lastModified) ?? "";
+        const priorIssued = current ? string(current.dateIssued) ?? string(current.lastModified) ?? "" : "";
+        if (current === null || issued.localeCompare(priorIssued) > 0) current = row;
+      }
       sourceUrl = url(data.nextPage) ?? "";
     }
-    const congressYear = date.getUTCMonth() === 0 && date.getUTCDate() < 3 ? date.getUTCFullYear() - 1 : date.getUTCFullYear();
-    const currentCongress = Math.floor((congressYear - 1789) / 2) + 1;
-    // Current package identity is in the publisher's title/metadata; older directories cannot establish current membership.
-    const current = packages.filter(row => number(row.congress) === currentCongress || new RegExp(`\\b${currentCongress}(?:st|nd|rd|th)?\\s+Congress\\b`,"i").test(string(row.title) ?? ""))
-      .sort((a,b)=>(string(b.dateIssued) ?? string(b.lastModified) ?? "").localeCompare(string(a.dateIssued) ?? string(a.lastModified) ?? ""))[0];
     if (!current) throw new Error(`GOVINFO_CURRENT_DIRECTORY_NOT_FOUND:${currentCongress}`);
     const packageId = string(current.packageId); if (!packageId || !/^[a-z0-9.-]+$/i.test(packageId)) throw new Error("GOVINFO_PACKAGE_ID_INVALID");
-    sourceUrl = `https://api.govinfo.gov/packages/${packageId}/granules?pageSize=100&offsetMark=*`; seen.clear();
+    sourceUrl = `https://api.govinfo.gov/packages/${packageId}/granules?pageSize=100&offsetMark=*`; index.exec("DELETE FROM visited");
     while (sourceUrl) {
-      if (seen.has(sourceUrl)) throw new Error("GOVINFO_GRANULE_PAGINATION_CYCLE"); seen.add(sourceUrl);
+      if (visited.get(sourceUrl)) throw new Error("GOVINFO_GRANULE_PAGINATION_CYCLE"); remember.run(sourceUrl);
       const route = providerPath(sourceUrl), release = await savedRead(options, sourceUrl, `${packageId}:granules:${route.params.offsetMark ?? "*"}`, undefined, {name:"data_gov_api",provider:"govinfo",...route});
-      acquisitions.push(acquisition(release)); const data = json(release);
+      await holdIndex(release); const data = json(release);
       if (!Array.isArray(data.granules)) throw new Error("GOVINFO_GRANULE_INDEX_INVALID");
       for (const item of array(data.granules)) {
         const row = record(item), state = stateIdentity(options.state), title = string(row.title ?? row.granuleTitle) ?? "";
@@ -98,4 +119,5 @@ export async function acquireGovinfoDirectory(options: PeopleAcquisitionOptions)
   } catch(error) { gap(gaps,options,sourceUrl || "https://api.govinfo.gov/collections/CDIR",error); }
   roster.currentMembershipComplete = false;
   return result(options,roster,acquisitions,gaps);
+  });
 }

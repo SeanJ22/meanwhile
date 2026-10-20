@@ -6,7 +6,7 @@ import { resolveS3ArchiveStore, type PrlArchiveStore } from "../lib/sources/prl/
 import { readReceipt, writeReceipt } from "../lib/sources/prl/holding.ts";
 import { prlReceiptViolations } from "../lib/sources/prl/receipt.ts";
 import { prlCandidate } from "../lib/sources/prl/data-plane.ts";
-import { PRL_RHETORIC_ATTRIBUTION, type PrlMemberProfile, type PrlSnapshot } from "../lib/sources/prl/types.ts";
+import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 import { prlArchiveCandidate, readPrlArchiveProjection, type PrlArchiveProjection } from "../lib/sources/prl/archive-publication.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -15,6 +15,7 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
+import { legacyPrlArchives } from "../lib/sources/prl/reader.ts";
 
 const ARCHIVES = ["profiles-state", "primary-rhetoric", "state-rhetoric", "statements-national", "newsletters", "press-releases", "floor-speeches"] as const;
 export async function refreshPrl(input: { archives: boolean; store: RoutineDataStore; archive: PrlArchiveStore; fetchImpl?: typeof fetch }) {
@@ -24,6 +25,11 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
   const held = input.archives ? await readPrlArchiveProjection({ store: input.store, bypassCache: true }) : null;
   if (held && held.kind !== "PROMOTED" && held.kind !== "NOT_RECORDED") throw new Error("PRL_ARCHIVE_PRIOR_UNAVAILABLE");
   let projection: PrlArchiveProjection = held?.kind === "PROMOTED" ? held.value : { formatVersion: 1, datasets: {} };
+  const missing = ARCHIVES.filter(id => !projection.datasets[id]);
+  if (input.archives && missing.length && input.store instanceof PostgresRoutineDataStore) {
+    const retained = await legacyPrlArchives(undefined, missing);
+    if (retained) projection = { formatVersion: 1, datasets: { ...retained.datasets, ...projection.datasets } };
+  }
   let last: Awaited<ReturnType<typeof processRegisteredManualCandidate>> | null = null;
   const failures: string[] = [];
   for (const dataset of datasets) {
@@ -39,11 +45,11 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
       const violations = prlReceiptViolations(receipt);
       if (violations.length) throw new Error(violations.join("; "));
       const checkedAt = new Date().toISOString();
-      const profiles = receipt.profiles as readonly PrlMemberProfile[];
       const snapshot: PrlSnapshot | null = input.archives ? null : {
         formatVersion: 1, fetchedAt: receipt.fetchedAt, sourceFile: `${receipt.member} (sha256 ${receipt.sourceSha256})`,
-        sourceUrl: dataset.url, rowsInFile: receipt.rowsSeen, rowsWithStatements: profiles.length,
-        profiles: [...profiles], rosterMisses: [], attribution: PRL_RHETORIC_ATTRIBUTION,
+        sourceUrl: dataset.url, rowsInFile: receipt.rowsSeen, rowsWithStatements: receipt.subjectCount!,
+        profiles: [], rosterMisses: [], attribution: PRL_RHETORIC_ATTRIBUTION,
+        releases: [{ kind: "prl-profiles", objectRoot: receipt.objectRoot!, subjectCount: receipt.subjectCount!, sourceSha256: receipt.sourceSha256 }],
       };
       const next: PrlArchiveProjection = { formatVersion: 1, datasets: { ...projection.datasets, [dataset.id]: receipt } };
       const candidate = snapshot ? prlCandidate({ snapshot, sourceEvidence: { sha256: receipt.sourceSha256, bytes: receipt.sourceBytes ?? 0 },

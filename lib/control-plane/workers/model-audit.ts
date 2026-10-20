@@ -214,8 +214,7 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
   options: {
     readonly ceilingUsd?: number;
     /** Read only the cost rows the rolling window can count. */
-    readonly scopedReads?: boolean;
-    /** The transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
+      /** The transport for the jurisdiction a record is about, so the review is held on the area budget covering it. */
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     /** A durable lifetime hunt hold, rather than the discretionary rolling ceiling, governs this exact subject. */
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;

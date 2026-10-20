@@ -2,7 +2,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
 import type { CbsaClass, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
-import { readXlsxFirstSheet } from "./xlsx.ts";
+import { readXlsxFirstSheet, readXlsxFileRows } from "./xlsx.ts";
 
 /** A CBSA is a union of whole counties, so ZCTA↔CBSA is the exact fold of ZCTA↔county overlaps; metro and micro are never merged. */
 interface CbsaInfo {
@@ -24,51 +24,46 @@ export interface CbsaDelineation {
  * their header text (never by index) and restore FIPS leading zeros that Excel
  * may have dropped by storing the codes as numbers.
  */
-export function parseCbsaDelineation(xlsxBytes: Buffer): CbsaDelineation {
-  const rows = readXlsxFirstSheet(xlsxBytes);
-  const headerIdx = rows.findIndex((r) => r.some((c) => c.trim() === "CBSA Code"));
-  if (headerIdx < 0) throw new Error('CBSA delineation: no "CBSA Code" header row found');
-  const header = rows[headerIdx].map((c) => c.trim());
-  const col = (name: string): number => {
-    const i = header.indexOf(name);
-    if (i < 0) throw new Error(`CBSA delineation: missing column "${name}"; header = ${JSON.stringify(header)}`);
-    return i;
+function cbsaDelineationBuilder(states?: ReadonlySet<string>) {
+  let header: string[] | null = null;
+  const cbsaByCounty = new Map<string,string>(), cbsa = new Map<string,CbsaInfo>();
+  const add = (row: readonly string[]) => {
+    if (!header) { if(row.some(c=>c.trim()==="CBSA Code")) header=row.map(c=>c.trim()); return; }
+    const cell=(name:string)=>{const at=header!.indexOf(name);if(at<0)throw new Error(`CBSA delineation: missing column "${name}"`);return (row[at]??"").trim();};
+    const code=cell("CBSA Code").padStart(5,"0"), stateFips=cell("FIPS State Code").padStart(2,"0"),countyFips=cell("FIPS County Code").padStart(3,"0");
+    if(!/^\d{5}$/.test(code)||!/^\d{2}$/.test(stateFips)||!/^\d{3}$/.test(countyFips)||states&&!states.has(stateFips))return;
+    const text=cell("Metropolitan/Micropolitan Statistical Area");
+    const cbsaClass:CbsaClass|null=text.includes("Metropolitan")?"metropolitan":text.includes("Micropolitan")?"micropolitan":null;
+    if(!cbsaClass)return;
+    const county=stateFips+countyFips;
+    cbsaByCounty.set(county,code);
+    const info=cbsa.get(code)??{title:cell("CBSA Title"),cbsaClass,stateFips:new Set<string>(),counties:[]};
+    info.stateFips.add(stateFips);info.counties.push(county);cbsa.set(code,info);
   };
-  const cCode = col("CBSA Code");
-  const cTitle = col("CBSA Title");
-  const cClass = col("Metropolitan/Micropolitan Statistical Area");
-  const cState = col("FIPS State Code");
-  const cCounty = col("FIPS County Code");
+  const finish=()=>{if(!header)throw new Error('CBSA delineation: no "CBSA Code" header row found');if(!cbsa.size&&!states)throw new Error("CBSA delineation: parsed zero CBSAs (extraction failed)");return {cbsaByCounty,cbsa};};
+  return {add,finish};
+}
+export function parseCbsaDelineation(xlsxBytes:Buffer):CbsaDelineation {
+  const builder=cbsaDelineationBuilder();
+  for(const row of readXlsxFirstSheet(xlsxBytes))builder.add(row);
+  return builder.finish();
+}
 
-  const cbsaByCounty = new Map<string, string>();
-  const cbsa = new Map<string, CbsaInfo>();
-  for (let i = headerIdx + 1; i < rows.length; i++) {
-    const row = rows[i];
-    const code = (row[cCode] ?? "").trim().padStart(5, "0");
-    if (!/^\d{5}$/.test(code)) continue; // footnote / blank row
-    const stateFips = (row[cState] ?? "").trim().padStart(2, "0");
-    const countyFips = (row[cCounty] ?? "").trim().padStart(3, "0");
-    if (!/^\d{2}$/.test(stateFips) || !/^\d{3}$/.test(countyFips)) continue;
-    const areaText = (row[cClass] ?? "").trim();
-    const cbsaClass: CbsaClass | null = areaText.includes("Metropolitan")
-      ? "metropolitan"
-      : areaText.includes("Micropolitan")
-        ? "micropolitan"
-        : null;
-    if (cbsaClass === null) continue;
-    const countyGeoid = stateFips + countyFips;
-    const title = (row[cTitle] ?? "").trim();
-    cbsaByCounty.set(countyGeoid, code);
-    let info = cbsa.get(code);
-    if (info === undefined) {
-      info = { title, cbsaClass, stateFips: new Set(), counties: [] };
-      cbsa.set(code, info);
+/** Shared strings stay on disk; only this state's county relationships survive a row. */
+export async function readCbsaDelineationFile(path:string,states?:ReadonlySet<string>):Promise<CbsaDelineation>{
+  const builder=cbsaDelineationBuilder(states);
+  for await(const row of readXlsxFileRows(path))builder.add(row);
+  const result=builder.finish();
+  if(states){
+    let header:readonly string[]|null=null;
+    for await(const row of readXlsxFileRows(path)){
+      if(!header){if(row.some(c=>c.trim()==="CBSA Code"))header=row;continue;}
+      const code=(row[header.indexOf("CBSA Code")]??"").trim().padStart(5,"0");
+      const info=result.cbsa.get(code);
+      if(info)info.stateFips.add((row[header.indexOf("FIPS State Code")]??"").trim().padStart(2,"0"));
     }
-    info.stateFips.add(stateFips);
-    info.counties.push(countyGeoid);
   }
-  if (cbsa.size === 0) throw new Error("CBSA delineation: parsed zero CBSAs (extraction failed)");
-  return { cbsaByCounty, cbsa };
+  return result;
 }
 
 interface ZctaAgg {
@@ -78,14 +73,14 @@ interface ZctaAgg {
 
 /**
  * Fold a built ZCTA↔county scope up to ZCTA↔CBSA using the delineation.
- * `countyScope` must be the UNFILTERED national county scope (a CBSA can span
- * counties in several states, so a state-filtered county scope would truncate
- * multi-state metros).
+ * State jobs retain the in-state counties of every touching CBSA. Its member
+ * states remain source metadata; another state's county records stay outside the job.
  */
 export function buildCbsaScope(
   countyScope: BuiltScope,
   delineation: CbsaDelineation,
   versionMeta: GeographyVersion,
+  stateFips?: string,
 ): BuiltScope {
   const agg = new Map<string, Map<string, ZctaAgg>>();
   for (const county of countyScope.groupings) {
@@ -124,7 +119,7 @@ export function buildCbsaScope(
     edges += overlaps.length;
     const memberFips = [...info.stateFips].sort();
     const memberStates = memberFips.map((f) => FIPS_TO_STATE[f]?.postal ?? "??");
-    const primaryFips = memberFips[0] ?? code.slice(0, 2);
+    const primaryFips = stateFips ?? memberFips[0] ?? code.slice(0, 2);
     groupings.push({
       geoid: code,
       ocdId: null, // a CBSA is a statistical area, not an OCD division

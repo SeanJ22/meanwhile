@@ -1,13 +1,13 @@
-import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
-import { dirname } from "node:path";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { WorkItem } from "../work-item.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 import { expansionScopesOf } from "../expansion/scopes.ts";
-import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
+import { readRuntimeAdminConfig } from "../runtime-admin-config.ts";
+import { withHistoryIndex } from "../workers/streamed-history.ts";
 import { adminEvidenceKey, mirrorOriginalCapture, type AdminEvidenceRemote } from "./admin-bridge.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
 import { findHeldCapture, readHeldBytes } from "./read-only-vault.ts";
+import { openAdminMirrorCursor, type MirrorLane } from "./admin-mirror-cursor.ts";
 
 export interface AdminMirrorReport {
   readonly state: "DISABLED" | "NOT_CONFIGURED" | "RAN";
@@ -15,79 +15,22 @@ export interface AdminMirrorReport {
   readonly copied: number;
   readonly alreadyVerified: number;
   readonly refused: number;
+  /** First eight diagnostics; every failure is also emitted immediately through onFailure or the runner log. */
   readonly failures: readonly string[];
 }
 
-type Lane = "original" | "recent" | "history";
+type Lane = MirrorLane;
 const LANES: readonly Lane[] = ["original", "recent", "history"];
 // Funded hunts and new captures receive more turns, while history
 // still advances every six opportunities even under continuous new inflow.
 const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
-const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 export const ADMIN_MIRROR_BUDGET_MS = 60_000;
-interface MirrorCursor {
-  readonly version: 2;
-  nextByLane: Record<Lane, number>;
-  turn: number;
-  /** A scheduling hint only. Admin downloads verify the remote copy on every read. */
-  verifiedAt: Record<string, number>;
-}
-const freshCursor = (): MirrorCursor => ({
-  version: 2, nextByLane: { original: 0, recent: 0, history: 0 }, turn: 0, verifiedAt: Object.create(null),
-});
 
 /** Work opened by a funded Send's instruction gets the first lane, whichever Send it is. */
 function isFundedHuntWork(work: WorkItem | undefined, fundedReceipts: ReadonlySet<string>): boolean {
   if (!work || work.project !== "freshness") return false;
   return work.autonomousPlan?.ownerInstructions?.some(receipt => fundedReceipts.has(receipt)) === true ||
     (work.manualSourceGap?.instructionReceipt !== undefined && fundedReceipts.has(work.manualSourceGap.instructionReceipt));
-}
-
-function partition(records: readonly ArtifactRecord[], owners: ReadonlyMap<string, WorkItem>, nowMs: number, fundedReceipts: ReadonlySet<string>): Record<Lane, ArtifactRecord[]> {
-  const lanes: Record<Lane, ArtifactRecord[]> = { original: [], recent: [], history: [] };
-  for (const record of records) {
-    if (record.tier !== "RAW" || record.partial) continue;
-    const lane: Lane = isFundedHuntWork(owners.get(record.workItemId), fundedReceipts) ? "original" :
-      Date.parse(record.recordedAt) >= nowMs - 24 * 60 * 60 * 1000 ? "recent" : "history";
-    lanes[lane].push(record);
-  }
-  lanes.original.sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId));
-  lanes.recent.sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId));
-  lanes.history.sort((a, b) => a.recordedAt.localeCompare(b.recordedAt) || a.artifactId.localeCompare(b.artifactId));
-  return lanes;
-}
-
-async function readCursor(path: string): Promise<MirrorCursor> {
-  try {
-    const raw = JSON.parse(await readFile(path, "utf8")) as Record<string, unknown>;
-    if (raw.version === 2 && raw.nextByLane && typeof raw.nextByLane === "object" &&
-        LANES.every(lane => Number.isSafeInteger((raw.nextByLane as Record<string, unknown>)[lane]) &&
-          Number((raw.nextByLane as Record<string, unknown>)[lane]) >= 0) &&
-        Number.isSafeInteger(raw.turn) && Number(raw.turn) >= 0 &&
-        raw.verifiedAt && typeof raw.verifiedAt === "object" && !Array.isArray(raw.verifiedAt)) {
-      const verifiedAt: Record<string, number> = Object.create(null);
-      for (const [key, value] of Object.entries(raw.verifiedAt)) {
-        if (key.startsWith("freshness/") && typeof value === "number" && Number.isFinite(value) && value >= 0)
-          verifiedAt[key] = value;
-      }
-      return { version: 2, nextByLane: raw.nextByLane as Record<Lane, number>, turn: Number(raw.turn), verifiedAt };
-    }
-    // The previous cursor covered only the oldest-first population.
-    if (Number.isSafeInteger(raw.next) && Number(raw.next) >= 0) {
-      const cursor = freshCursor(); cursor.nextByLane.history = Number(raw.next); return cursor;
-    }
-    throw new Error("ADMIN_EVIDENCE_MIRROR_CURSOR_INVALID");
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return freshCursor();
-    throw error;
-  }
-}
-
-async function saveCursor(path: string, cursor: MirrorCursor): Promise<void> {
-  await mkdir(dirname(path), { recursive: true });
-  const temp = `${path}.${process.pid}.tmp`;
-  await writeFile(temp, JSON.stringify(cursor) + "\n", "utf8");
-  await rename(temp, path);
 }
 
 /** Rotating bounded slices prioritize the exact hunt and new captures while
@@ -103,6 +46,8 @@ export async function runAdminEvidenceMirror(input: {
   readonly maxExamined?: number;
   /** Isolated tests only; production uses the configured private Netlify store. */
   readonly remote?: AdminEvidenceRemote;
+  /** Each diagnostic is delivered before the next copy; the report retains only its first eight. */
+  readonly onFailure?: (failure: string) => void;
 }): Promise<AdminMirrorReport> {
   const env = input.env ?? process.env;
   const empty = (state: AdminMirrorReport["state"]): AdminMirrorReport =>
@@ -128,56 +73,85 @@ export async function runAdminEvidenceMirror(input: {
     read: key => beforeDeadline(() => source.read(key)),
     create: (key, blob) => beforeDeadline(() => source.create(key, blob)),
   };
-  const [records, attempts, workItems, config] = await beforeDeadline(() => Promise.all([
-    input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
-    input.repos.adminConfig.read(ADMIN_CONFIG_ID),
-  ]));
+  const config = await beforeDeadline(() => readRuntimeAdminConfig(input.repos, ["expansionScopes"]));
   const fundedReceipts = new Set(expansionScopesOf(config?.value ?? null).scopes.filter(isFundedHunt).map(scope => scope.receiptId));
   const nowMs = input.nowMs ?? Date.now();
-  const byAttempt = new Map(attempts.map(row => [row.id, row.value]));
-  const byWorkItem = new Map(workItems.map(row => [row.id, row.value]));
-  const lanes = partition(records, byWorkItem, nowMs, fundedReceipts);
-  const total = LANES.reduce((sum, lane) => sum + lanes[lane].length, 0);
+  return withHistoryIndex(async db => {
+  // This is a temporary ordering index, never an evidence store. The source
+  // page and one exact owner's routing fields are released before the next.
+  db.exec("CREATE TABLE owners(id TEXT PRIMARY KEY, funded INTEGER NOT NULL); CREATE TABLE queue(sequence INTEGER PRIMARY KEY, lane TEXT NOT NULL, recorded_at TEXT NOT NULL, artifact_id TEXT NOT NULL, body TEXT NOT NULL); CREATE INDEX lane_order ON queue(lane,recorded_at,artifact_id,sequence)");
+  const ownerQuery = db.prepare("SELECT funded FROM owners WHERE id=?"), ownerInsert = db.prepare("INSERT INTO owners VALUES(?,?)");
+  const insert = db.prepare("INSERT INTO queue VALUES(?,?,?,?,?)");
+  const sizes: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
+  let sequence = 0;
+  await beforeDeadline(() => input.repos.artifacts.readChangedSince(null, undefined, {
+    projection: { artifactId: true, workItemId: true, routeTaskId: true, attemptId: true, tier: true,
+      contentHash: true, byteLength: true, contentType: true, canonicalUrl: true, partial: true, recordedAt: true },
+    page: async rows => {
+      for (const { record } of rows) {
+        if (record.tier !== "RAW" || record.partial) continue;
+        let owner = ownerQuery.get(record.workItemId);
+        if (!owner) {
+          const row = await beforeDeadline(() => input.repos.workItems.readNarrowed(record.workItemId,
+            { project: true, autonomousPlan: ["ownerInstructions"], manualSourceGap: ["instructionReceipt"] }));
+          const funded = isFundedHuntWork(row?.value as WorkItem | undefined, fundedReceipts);
+          ownerInsert.run(record.workItemId, funded ? 1 : 0); owner = { funded: funded ? "1" : "0" };
+        }
+        const lane: Lane = Number(owner.funded) === 1 ? "original" :
+          Date.parse(record.recordedAt) >= nowMs - 24 * 60 * 60 * 1000 ? "recent" : "history";
+        insert.run(sequence++, lane, record.recordedAt, record.artifactId, JSON.stringify(record)); sizes[lane]++;
+      }
+    },
+  }));
+  const next = Object.fromEntries(LANES.map(lane => [lane, db.prepare(`SELECT body FROM queue WHERE lane=? ORDER BY recorded_at ${lane === "history" ? "ASC" : "DESC"},artifact_id ASC,sequence ASC LIMIT 1 OFFSET ?`)]));
+  const total = LANES.reduce((sum, lane) => sum + sizes[lane], 0);
   if (!total) return empty("RAN");
-  const cursor = await readCursor(input.cursorPath);
-  for (const [key, at] of Object.entries(cursor.verifiedAt))
-    if (nowMs - at >= VERIFIED_RECHECK_MS) delete cursor.verifiedAt[key];
+  const cursor = await openAdminMirrorCursor(input.cursorPath, nowMs);
+  try {
   let copied = 0, alreadyVerified = 0, refused = 0, examined = 0, visited = 0;
   const failures: string[] = [];
+  const fail = (record: ArtifactRecord, error: unknown) => {
+    refused++;
+    const detail = `${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`;
+    if (input.onFailure) input.onFailure(detail); else console.error(`  private Admin evidence copy remains owed: ${detail}`);
+    if (failures.length < 8) failures.push(detail);
+  };
   const perLaneVisited: Record<Lane, number> = { original: 0, recent: 0, history: 0 };
   const limit = input.maxExamined ?? Number.POSITIVE_INFINITY;
   while (visited < total && examined < limit && Date.now() < deadlineMs - 500) {
     const lane = TURN_ORDER[cursor.turn % TURN_ORDER.length];
     cursor.turn = (cursor.turn + 1) % TURN_ORDER.length;
-    const group = lanes[lane];
-    if (!group.length || perLaneVisited[lane] >= group.length) continue;
-    const index = cursor.nextByLane[lane] % group.length;
-    const record = group[index];
-    cursor.nextByLane[lane] = (index + 1) % group.length;
+    const size = sizes[lane];
+    if (!size || perLaneVisited[lane] >= size) continue;
+    const index = cursor.nextByLane[lane] % size;
+    const record = JSON.parse(next[lane].get(lane, index)!.body) as ArtifactRecord;
+    cursor.nextByLane[lane] = (index + 1) % size;
     perLaneVisited[lane]++; visited++;
     let key: string;
     try { key = adminEvidenceKey(record); }
-    catch (error) { refused++; failures.push(`${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`); continue; }
-    if (cursor.verifiedAt[key] !== undefined) continue;
+    catch (error) { fail(record, error); continue; }
+    if (cursor.hasVerified(key)) continue;
     examined++;
     try {
-      const attempt = byAttempt.get(record.attemptId);
-      const owner = byWorkItem.get(record.workItemId);
-      if (!attempt || !owner || owner.project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
+      const [attempt, owner] = await beforeDeadline(() => Promise.all([
+        input.repos.attempts.read(record.attemptId), input.repos.workItems.readNarrowed(record.workItemId, { project: true }),
+      ]));
+      if (!attempt || !owner || (owner.value as Pick<WorkItem, "project">).project !== "freshness") throw new Error("ATTRIBUTION_NOT_HELD");
       const held = await beforeDeadline(() => findHeldCapture(input.vaultRoot, record));
       if (!held) throw new Error("ATTRIBUTION_NOT_HELD");
       const bytes = await beforeDeadline(() => readHeldBytes(held));
-      const outcome = await mirrorOriginalCapture({ record, attempt, held, bytes, remote });
+      const outcome = await mirrorOriginalCapture({ record, attempt: attempt.value, held, bytes, remote });
       if (outcome === "COPIED") copied++; else alreadyVerified++;
-      cursor.verifiedAt[key] = nowMs;
+      cursor.markVerified(key, nowMs);
     } catch (error) {
-      refused++;
-      failures.push(`${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`);
+      fail(record, error);
     }
     // Persist each completed remote result before the next operation may block.
-    await saveCursor(input.cursorPath, cursor);
+    cursor.save();
     if (expired) break;
   }
-  await saveCursor(input.cursorPath, cursor);
+  cursor.save();
   return { state: "RAN", examined, copied, alreadyVerified, refused, failures };
+  } finally { cursor.close(); }
+  });
 }

@@ -5,11 +5,11 @@ import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts
 import { printSourceRunnerReceipt } from "../../civic-data/runner-receipt.ts";
 import { federalClient, federalPages, regulationPages, type FederalClientOptions, type FederalPage } from "./acquire.ts";
 import { billIdentity, object, string, normalizeFederalCapture, normalizeFederalCaptureWithRoster } from "./normalize.ts";
-import { countFederalFacts, publishFederalPartition, readFederalSourceProjection } from "./publication.ts";
+import { countFederalFacts, publishFederalPartition, readFederalSourceProjection, readLegacyFederalRule } from "./publication.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, FEDERAL_SOURCES, federalScope } from "./targets.ts";
 import type { FederalCapture, FederalCounts, FederalFact } from "./types.ts";
 import { federalCalendarDate } from "./presentation.ts";
-import { readHeldCongressRoster } from "./lda-roster.ts";
+import { disposeLdaRosterIndex, federalCaptureHonorees, readHeldCongressRosterVersion, readLdaRosterVersion } from "./lda-roster.ts";
 
 export interface FederalRefreshOptions extends FederalClientOptions {
   store: RoutineDataStore;
@@ -49,18 +49,17 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   const counts: FederalCounts = prior.kind === "PROMOTED" ? structuredClone(prior.value.counts ?? emptyCounts()) : emptyCounts();
   let last: Awaited<ReturnType<typeof publishFederalPartition>> | undefined;
   let listing: FederalCapture | undefined;
-  let congress: ReturnType<typeof readHeldCongressRoster> | undefined;
-  const heldCongress = () => congress ??= readHeldCongressRoster(store, vault, startedAt);
-  const memberStates = new Map<string, string | null>();
+  let congress: ReturnType<typeof readHeldCongressRosterVersion> | undefined;
+  const heldCongressVersion = () => congress ??= readHeldCongressRosterVersion(store);
   const memberState = async (id: string) => {
-    if (!memberStates.has(id)) {
-      try { memberStates.set(id, options.memberState ? await options.memberState(id) : (await heldCongress())?.members.find(row => row.bioguideId === id)?.state ?? null); }
-      catch { memberStates.set(id, null); counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1; }
-    }
-    return memberStates.get(id)!;
+    try {
+      if (options.memberState) return await options.memberState(id);
+      const version = await heldCongressVersion();
+      return version ? (await readLdaRosterVersion(store, vault, version, { bioguideIds: [id] }))?.members[0]?.state ?? null : null;
+    } catch { counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1; return null; }
   };
   async function publish(partition: string, captures: FederalCapture[], facts: FederalFact[], primary = true, completePartition = false,
-    replacement: { replaceFilingId?: string; cursor?: string } = {}) {
+    replacement: { replaceFilingId?: string; cursor?: string; previousCounts?: FederalCounts } = {}) {
     const held = await readFederalSourceProjection(source, partition, { store, bypassCache: true, now: now() });
     if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
     const retained = new Map((!completePartition && held.kind === "PROMOTED" ? held.value.records.filter(row => !replacement.replaceFilingId || row.filingId !== replacement.replaceFilingId) : []).map(row => [row.id, row]));
@@ -91,7 +90,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
     const changed = [...(delta?.added ?? []), ...(delta?.changed ?? [])].filter(row => row.key.startsWith("federal:")).length;
     if (changed > 0) console.log("RCD_PROGRESS=" + JSON.stringify({ key: result.candidate.id, records: changed }));
     if (primary) {
-      replaceCounts(counts, result.previousCounts, nextCounts);
+      replaceCounts(counts, result.previousCounts ?? replacement.previousCounts, nextCounts);
       last = await publishFederalPartition({ source, partition: "national", captures, records: [], store, vault, now: now(), counts });
     }
     return result;
@@ -214,23 +213,35 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       const pages: AsyncIterable<FederalPage> = source === "regulations-gov" ? regulationPages(client, today) : federalPages(client, source,
         `${config.url}documents.json?per_page=1000&conditions[comment_date][gte]=${today}&order=oldest&fields[]=document_number&fields[]=title&fields[]=publication_date&fields[]=html_url&fields[]=abstract&fields[]=comments_close_on&fields[]=regulations_dot_gov_info&fields[]=docket_ids`, "rules");
       for await (const page of pages) {
-        const facts = normalizeFederalCapture(page.capture);
-        // Rule partitions retain expired and withdrawn records for Ask; the reader filters the current clock.
-        await publish("rules", [page.capture], facts);
+        for (const document of page.items) {
+          // One native document keeps its own bytes and history. The source page is bounded,
+          // and no refresh reopens every rule published elsewhere in the country.
+          const capture: FederalCapture = { ...page.capture, body: JSON.stringify(source === "regulations-gov" ? { data: [document] } : { results: [document] }) };
+          const facts = normalizeFederalCapture(capture), nativeId = facts[0]?.nativeId;
+          if (!nativeId || facts.length !== 1) throw new Error("A federal rule document did not reproduce exactly one native fact.");
+          const partition = `rule:${nativeId}`;
+          const held = await readFederalSourceProjection(source, partition, { store, bypassCache: true, now: now() });
+          if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
+          const legacy = held.kind !== "PROMOTED" && prior.kind === "PROMOTED" ? await readLegacyFederalRule(source, nativeId, { store, now: now() }) : [];
+          const previousCounts = legacy.length ? countFederalFacts(legacy, new Set(legacy.filter(row => row.kind === "RULE").map(row => row.id))) : undefined;
+          await publish(partition, [capture], facts, true, true, { previousCounts });
+        }
         await checkpoint(today, page.capture);
       }
     } else {
       // Posting-date ranges include amended reports; the provider's next links page the full national LD-203 query.
-      let roster, rosterFailure;
+      let rosterVersion, rosterFailure;
       try {
-        roster = await heldCongress();
-        if (!roster) rosterFailure = "No place holds a federal roster; no honoree identity link can be verified.";
+        const version = await heldCongressVersion();
+        // Validate the held source index once, without loading any member rows.
+        if (version && await readLdaRosterVersion(store, vault, version, {})) rosterVersion = version;
+        if (!rosterVersion) rosterFailure = "No place holds a federal roster; no honoree identity link can be verified.";
       } catch (error) {
         rosterFailure = error instanceof Error ? error.message : String(error);
         counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1;
       }
       // Changing people/aliases reopens historical joins; an unchanged directory refresh does not.
-      const rosterHash = roster ? normalizedHash(roster.members.map(({ bioguideId, names, chamber, state }) => ({ bioguideId, names, chamber, state }))) : null;
+      const rosterHash = rosterVersion ? normalizedHash(rosterVersion) : null;
       const saved = cursor?.startsWith("lda2:") ? JSON.parse(cursor.slice(5)) as { rosterHash: string | null; url?: string; index?: number; after?: string; through?: string } : null;
       const resume = saved?.rosterHash === rosterHash ? saved : null;
       const through = resume?.through ?? startedAt;
@@ -243,8 +254,9 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
           // Disaggregate the acquired page into its unchanged filing objects. Keeping the entire
           // page in every filing and every checkpoint would multiply its storage by its page size.
           // The complete page is still saved at the page boundary; each filing keeps every source field.
-          const capture: FederalCapture = { ...page.capture, body: JSON.stringify({ results: [filing] }), context: roster
-            ? { honoreeRosterVersionId: roster.versionId } : { honoreeRosterFailure: rosterFailure } };
+          const capture: FederalCapture = { ...page.capture, body: JSON.stringify({ results: [filing] }), context: rosterVersion
+            ? { honoreeRosterVersionId: rosterVersion } : { honoreeRosterFailure: rosterFailure } };
+          const roster = rosterVersion ? await readLdaRosterVersion(store, vault, rosterVersion, { honoreeNames: federalCaptureHonorees(capture) }) : undefined;
           const facts = normalizeFederalCaptureWithRoster(capture, roster);
           const previous = filingId ? await readFederalSourceProjection(source, `filing:${filingId}`, { store, now: now(), bypassCache: true }) : null;
           if (previous?.kind === "STORE_UNREACHABLE") throw new Error(previous.detail);
@@ -278,5 +290,5 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
     await recordDoor(false, attemptedAt, reason);
     console.log(JSON.stringify({ source, outage: reason, counts, checkedAt: attemptedAt }));
     return { ok: false as const, reason, counts, outcome };
-  }
+  } finally { await disposeLdaRosterIndex(store); }
 }

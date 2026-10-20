@@ -10,10 +10,10 @@ import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-a
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
 import {
-  CENSUS_GEO_CONTRACT_ID,
+  censusGeographyContractId,
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
-  CENSUS_GEO_SCOPE,
+  censusGeographyScope,
   CENSUS_GEO_SOURCE_ID,
 } from "../lib/census-geography/publication.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
@@ -31,10 +31,10 @@ test("census-geography-relationships is an official .gov source that auto-qualif
 });
 
 test("the routine contract auto-publishes and matches the publication identity", () => {
-  const c = requiredRoutineContract(CENSUS_GEO_CONTRACT_ID);
+  const c = requiredRoutineContract(censusGeographyContractId("AZ"));
   assert.equal(c.sourceId, CENSUS_GEO_SOURCE_ID);
   assert.equal(c.recordClass, CENSUS_GEO_RECORD_CLASS);
-  assert.equal(c.scope, CENSUS_GEO_SCOPE);
+  assert.equal(c.scope, censusGeographyScope("AZ"));
   assert.equal(c.parserNormalizerVersion, CENSUS_GEO_PARSER_VERSION);
   assert.equal(c.autoPromotable, true);
 });
@@ -44,8 +44,8 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
   const dataset = azDataset();
   const outcome = await processRegisteredRoutineCandidate(
     store,
-    CENSUS_GEO_CONTRACT_ID,
-    censusGeographyCandidate(dataset),
+    censusGeographyContractId("AZ"),
+    censusGeographyCandidate(dataset,"AZ"),
     dataset.builtAt,
   );
   assert.ok(
@@ -54,7 +54,7 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
   );
   assert.equal(outcome.candidate.state, "PROMOTED");
 
-  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, {
+  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, censusGeographyScope("AZ"), {
     store,
     now: NOW,
     bypassCache: true,
@@ -74,8 +74,8 @@ test("an empty dataset is refused and never promotes (fail closed)", async () =>
   const empty: BuiltDataset = { formatVersion: 1, builtAt: NOW, coverage: "empty", scopes: [], zctaUniverse: [] };
   const outcome = await processRegisteredRoutineCandidate(
     store,
-    CENSUS_GEO_CONTRACT_ID,
-    censusGeographyCandidate(empty),
+    censusGeographyContractId("AZ"),
+    censusGeographyCandidate(empty,"AZ"),
     NOW,
   );
   assert.equal(outcome.promoted, null);

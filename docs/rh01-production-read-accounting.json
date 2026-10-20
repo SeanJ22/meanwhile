@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-10-20T08:10:55.241Z",
+  "historicalCutoff": "2026-10-20T07:02:40.000Z",
+  "knownReaderResponseBytes": 6982822157,
+  "knownControlResponseBytes": 2107945495,
+  "knownProductionResponseBytes": 9090767652,
+  "knownReaderDecimalGB": 6.982822157,
+  "incrementalChargeAt010USDPerGB": 0.6982822157,
+  "historicalReaderBytes": 6978658460,
+  "historicalControlBytes": 2107945495,
+  "historicalProcessHours": 395,
+  "historicalLogs": 749,
+  "malformedReports": 0,
+  "subsequentReaderBytes": 4163697,
+  "subsequentControlBytes": 0,
+  "subsequentChunks": 1,
+  "subsequentNativeProcessHours": 1,
+  "exactTaskTotalAvailable": false,
+  "limits": [
+    "Historical per-process/hour HTTP body counters are deduplicated across all retained logs by PID, process start and hour, taking each cumulative maximum once.",
+    "The streaming measurement log counts actual subsequent reader/control HTTP body chunks and WebSocket message payloads. Local/cache responses are excluded. Native counters recover a one-place preparation made before the regional HTTP endpoint accounting correction. For each later PID/hour, the larger native or streaming total is counted once, never their sum.",
+    "Earlier preparation queries, unreported interrupted reads and historical temporary-database hydration are not fully counted. The task's exact total is unknown; the reported sum is a known minimum of observed response-body bytes, not a complete billing total.",
+    "Per-job logical bytes and cached replay bytes are separate workload measurements and must not be added to this actual-production sum."
+  ]
+}

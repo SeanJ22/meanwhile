@@ -12,21 +12,26 @@ import { readManualProjectionPrior } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-capture-vault.ts";
+import { copyRawCapture, holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-capture-vault.ts";
 
 /** One page as read, its text in memory for parsing and verification. */
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
   readonly rawHash?:string;
+  /** A source index is retained as evidence, never carried around as a country's page bodies. */
+  readonly heldCapture?: { readonly ref: RawCaptureRef; readonly store: EvidenceStore };
+  readonly indexOnly?: true;
   readonly sourceCheck?: NonNullable<import("./types.ts").RetrievalEvidence["sourceCheck"]>;
   readonly extractedFrom?: {readonly requestedUrl:string;readonly finalUrl:string;readonly sha256:string;readonly member:string};
 }
 /** What a candidate keeps of a page: its metadata and where its exact text lives in the vault. */
-export type StatePeopleCapture = Omit<StatePeopleAcquisition,"body"> & { readonly capture: RawCaptureRef };
+export type StatePeopleCapture = Omit<StatePeopleAcquisition,"body"|"heldCapture"> & { readonly capture: RawCaptureRef };
 
 export async function holdPeopleCaptures(vault:EvidenceStore,sourceId:string,pages:readonly StatePeopleAcquisition[]):Promise<StatePeopleCapture[]> {
   const held:StatePeopleCapture[]=[];
-  for (const {body,...page} of pages) held.push({...page,capture:await holdRawCapture(vault,sourceId,body,/^\s*[{[]/.test(body) ? "application/json" : "text/html")});
+  for (const {body,heldCapture,...page} of pages) held.push({...page,capture:heldCapture
+    ? await copyRawCapture(heldCapture.store,vault,sourceId,heldCapture.ref,"application/octet-stream")
+    : await holdRawCapture(vault,sourceId,body,/^\s*[{[]/.test(body) ? "application/json" : "text/html")});
   return held;
 }
 export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise<string> => readRawCaptureText(vault,row.capture);

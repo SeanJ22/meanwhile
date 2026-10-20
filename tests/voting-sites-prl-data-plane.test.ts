@@ -23,7 +23,6 @@ import { PRL_CONTRACT, prlCandidate } from "../lib/sources/prl/data-plane.ts";
 import {
   prlProfileForSubject,
   readPrlProjection,
-  resetPrlCache,
 } from "../lib/sources/prl/snapshot.ts";
 import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 
@@ -260,7 +259,6 @@ test("a globally empty voting candidate is refused and store failure never opens
 });
 
 test("PRL promotes only its attributed allowlisted measurement and Reader joins by exact Bioguide", async () => {
-  resetPrlCache();
   const store = new MemoryRoutineDataStore();
   const snapshot = prlFixture();
   const candidate = prlCandidate({
@@ -282,10 +280,10 @@ test("PRL promotes only its attributed allowlisted measurement and Reader joins 
   const read = await readPrlProjection({ store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
   const bioguide = snapshot.profiles[0].bioguideId;
-  const profile = prlProfileForSubject(`congress:${bioguide}`);
+  const profile = await prlProfileForSubject(`congress:${bioguide}`, { store, bypassCache: true, now: T0 });
   assert.equal(profile?.bioguideId, bioguide);
   assert.equal(profile?.attribution.citation, snapshot.attribution.citation);
-  assert.equal(prlProfileForSubject(bioguide), null, "a name/bare-id fallback must not join a PRL row");
+  assert.equal(await prlProfileForSubject(bioguide), null, "a name/bare-id fallback must not join a PRL row");
 });
 
 test("PRL licensing/ranking defects and source failures preserve the prior GOOD attributed projection", async () => {

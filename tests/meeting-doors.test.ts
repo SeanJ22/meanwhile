@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { firewallRoutineContracts, meetingRouteKindContracts } from "../lib/civic-data/meeting-route-kinds.ts";
 import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
@@ -32,6 +33,12 @@ async function registryRows(extra: readonly BodySourceWiring[] = []) {
 }
 
 const added = (): BodySourceWiring => ({ ...FIXTURE_DOOR_ROWS[0]!, bodyId: `${FIXTURE_DOOR_ROWS[0]!.bodyId}-published-door` });
+const stateOfDoor = (door: DoorRecord): string => {
+  const [state] = registryJurisdictions(door.ocdId ?? door.bodyIds[0]);
+  assert.ok(state, `${door.doorId} names its state through its division or body`);
+  return state;
+};
+const bodyIds = () => [...new Set(activeWiring().map((row) => row.bodyId))].sort();
 
 describe("the published meeting doors", () => {
   afterEach(() => installFixtureDoors());
@@ -64,34 +71,80 @@ describe("the published meeting doors", () => {
 
   it("promote through their own contract, and a process installs them: a new door becomes meeting work there", async () => {
     const store = new MemoryRoutineDataStore();
+    const { rows: base } = await registryRows();
+    const states = [...new Set(base.map((row) => stateOfDoor(row.value)))].sort();
+    assert.deepEqual(states, ["AZ", "NH", "NJ"], "all previously covered fixture states remain in the publication test");
+    const clock = Date.now();
+    for (const state of states) {
+      const selected = base.filter((row) => stateOfDoor(row.value) === state);
+      const candidate = meetingDoorsCandidate(selected, AT, state);
+      const outcome = await processRegisteredFanOutCandidate(store, MEETING_DOORS_CONTRACT_ID, candidate, AT);
+      assert.equal(outcome.candidate.state, "PROMOTED");
+      assert.ok(outcome.promoted !== null);
+      const read = await readMeetingDoors({ state, store, bypassCache: true, now: AT });
+      assert.equal(read.kind, "PROMOTED");
+      assert.equal(read.metadata.scope, `meeting-doors:${state}`);
+      assert.deepEqual(read.value, meetingDoorsProjection(selected.map((row) => row.value)), "each state's complete doors and body links round-trip");
+      const installed = await ensureMeetingDoors({ state, store, clock: () => clock });
+      assert.equal(installed.ready, true);
+      assert.deepEqual(bodyIds(), [...new Set(selected.flatMap((row) => row.value.bodyIds))].sort(), "the process installs every body from the selected state");
+    }
     const door = added();
+    const [state] = registryJurisdictions(door.ocdId ?? door.bodyId);
+    assert.ok(state);
+    const initial = await ensureMeetingDoors({ state, store, clock: () => clock });
+    assert.equal(initial.ready, true);
+    assert.ok(!activeWiring().some((row) => row.bodyId === door.bodyId));
     const { rows } = await registryRows([door]);
-    const outcome = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(rows, AT), AT);
+    const selected = rows.filter((row) => stateOfDoor(row.value) === state);
+    const outcome = await processRegisteredFanOutCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(selected, AT, state), AT);
     assert.equal(outcome.candidate.state, "PROMOTED");
     assert.ok(outcome.promoted !== null);
-    const read = await readMeetingDoors({ store, bypassCache: true, now: AT });
+    assert.equal(outcome.confirmed, undefined, "an added door advances the state pointer");
+    assert.notEqual(outcome.promoted.versionId, initial.ready && initial.versionId);
+    assert.deepEqual(outcome.candidate.candidate.changeSet?.added.map((delta) => delta.key).sort(),
+      selected.filter((row) => row.value.bodyIds.includes(door.bodyId)).map((row) => `meeting-door:${row.value.doorId}`).sort());
+    const read = await readMeetingDoors({ state, store, bypassCache: true, now: AT });
     assert.equal(read.kind, "PROMOTED");
+    assert.equal(read.metadata.versionId, outcome.promoted.versionId);
+    assert.ok(read.value?.doors.some((published) => published.bodyIds.includes(door.bodyId)), "the new state version holds the added body's door");
+    const unchanged = await processRegisteredFanOutCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(selected, AT, state), AT);
+    assert.equal(unchanged.confirmed?.versionId, read.metadata.versionId, "the same state doors re-confirm their existing version");
 
-    assert.ok(!activeWiring().some((row) => row.bodyId === door.bodyId));
     // This process installed doors just now; once they are older than the refresh window it reads the version again.
-    const later = Date.now() + MEETING_DOORS_REFRESH_MS + 1;
-    const answered = await ensureMeetingDoors({ store, clock: () => later });
+    const later = clock + MEETING_DOORS_REFRESH_MS + 1;
+    const answered = await ensureMeetingDoors({ state, store, clock: () => later });
     assert.equal(answered.ready, true, "a process that has doors answers at once while it reads again");
+    assert.equal(answered.ready && answered.versionId, initial.ready && initial.versionId, "the background refresh first answers with the installed state version");
     for (let i = 0; i < 200 && !activeWiring().some((row) => row.bodyId === door.bodyId); i++) await new Promise((r) => setTimeout(r, 5));
+    const refreshed = await ensureMeetingDoors({ state, store, clock: () => later });
+    assert.equal(refreshed.ready && refreshed.versionId, read.metadata.versionId, "the process reads the newly promoted state version");
     assert.ok(activeWiring().some((row) => row.bodyId === door.bodyId));
     assert.ok(MEETING_PARTITION_CONTRACTS.some((partition) => partition.bodyId === door.bodyId));
     assert.ok(ROUTINE_SOURCE_TASKS.some((task) => task.id.includes(encodeURIComponent(door.bodyId))), "the standing task list follows the doors installed");
-    const again = await ensureMeetingDoors({ store, clock: () => later });
+    const again = await ensureMeetingDoors({ state, store, clock: () => later });
     assert.equal(again.ready && again.versionId, read.metadata.versionId);
   });
 
   it("a version that cannot be read leaves the installed doors in place", async () => {
-    const before = activeWiring().length;
-    const later = Date.now() + 2 * (MEETING_DOORS_REFRESH_MS + 1);
-    const answered = await ensureMeetingDoors({ store: new MemoryRoutineDataStore(), clock: () => later });
-    assert.equal(answered.ready, true);
-    await new Promise((r) => setTimeout(r, 20));
-    assert.equal(activeWiring().length, before);
+    const store = new MemoryRoutineDataStore();
+    const { rows } = await registryRows();
+    const clock = Date.now();
+    const states = [...new Set(rows.map((row) => stateOfDoor(row.value)))].sort();
+    assert.deepEqual(states, ["AZ", "NH", "NJ"]);
+    for (const state of states) {
+      const selected = rows.filter((row) => stateOfDoor(row.value) === state);
+      const outcome = await processRegisteredFanOutCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(selected, AT, state), AT);
+      assert.equal(outcome.candidate.state, "PROMOTED");
+      const installed = await ensureMeetingDoors({ state, store, clock: () => clock });
+      assert.equal(installed.ready, true);
+      const before = bodyIds();
+      const later = clock + MEETING_DOORS_REFRESH_MS + 1;
+      const answered = await ensureMeetingDoors({ state, store: new MemoryRoutineDataStore(), clock: () => later });
+      assert.equal(answered.ready, true);
+      await new Promise((r) => setTimeout(r, 20));
+      assert.deepEqual(bodyIds(), before, `${state} keeps every installed body when its next version cannot be read`);
+    }
   });
 
   it("the registry's doors are what the publisher reads", async () => {

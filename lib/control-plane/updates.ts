@@ -76,12 +76,15 @@ type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
 async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<AdminConfig> {
   for (let attempt = 0; ; attempt++) {
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, updates: true, updatedAt: true});
     const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
     const next = change(current);
     if (next === current) return current;
     try {
-      if (held) await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
+      if (held) {
+        if (!repos.adminConfig.compareAndSetFields) throw new Error("UPDATES_SCOPED_FIELD_STORE_REQUIRED");
+        await repos.adminConfig.compareAndSetFields(ADMIN_CONFIG_ID, held.revision, {updates: next.updates, updatedAt: next.updatedAt}, at);
+      }
       else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
       return next;
     } catch (error) {
@@ -103,7 +106,7 @@ export async function addUpdates(repos: Repos, adds: readonly NewUpdate[], at: s
 
 /** Read what Now has not shown yet, and mark it shown in the same pass, so each update appears once. */
 export async function takeUnshownUpdates(repos: Repos, at: string): Promise<readonly UpdateRecord[]> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, updates: true});
   const config = held && isAdminConfig(held.value) ? held.value : null;
   if (!config) return [];
   const fresh = updateRecords(config).filter((u) => u.shownAt === null);

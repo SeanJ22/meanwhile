@@ -303,6 +303,12 @@ export interface OwnerDigestRecord {
   readonly huntSourceProgress?: HuntSourceProgress;
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
+  readonly freshnessDetails?: {
+    readonly cycleId: string;
+    readonly section: string;
+    readonly page: number;
+    readonly rows: readonly unknown[];
+  };
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
@@ -397,6 +403,7 @@ export type RoutineCivicDataReaderReadbackDisposition =
   | "BACKOFF"
   | "FAILED_BACKOFF"
   | "RECORDED"
+  | "PARTITIONS"
   | "REPAIR_FAILED";
 
 export interface RoutineCivicDataReaderReadbackReference {
@@ -406,6 +413,7 @@ export interface RoutineCivicDataReaderReadbackReference {
   readonly scope: string;
   readonly projectionId: string | null;
   readonly disposition: RoutineCivicDataReaderReadbackDisposition;
+  readonly partitions?: { readonly total: number; readonly passed: number; readonly failed: number; readonly deferred: number };
   /** Present for CURRENT, FAILED_BACKOFF and RECORDED; absent by contract otherwise. */
   readonly receipt: ReaderProjectionReadbackReceipt | null;
 }
@@ -527,6 +535,7 @@ export function routineReaderReadbackEvidenceIssue(
     "BACKOFF",
     "FAILED_BACKOFF",
     "RECORDED",
+    "PARTITIONS",
     "REPAIR_FAILED",
   ];
   const contractIds: string[] = [];
@@ -540,6 +549,16 @@ export function routineReaderReadbackEvidenceIssue(
       !allowedDispositions.includes(reference.disposition)
     ) return "A Reader readback reference has a malformed contract identity or disposition.";
     contractIds.push(reference.contractId);
+    if (reference.partitions !== undefined) {
+      const counts = reference.partitions;
+      if (![counts.total, counts.passed, counts.failed, counts.deferred].every(value => Number.isSafeInteger(value) && value >= 0) ||
+        counts.total !== counts.passed + counts.failed + counts.deferred ||
+        (reference.disposition !== "PARTITIONS" && reference.disposition !== "REPAIR_FAILED") ||
+        (reference.disposition === "PARTITIONS" && counts.failed !== 0) ||
+        (reference.disposition === "REPAIR_FAILED" && counts.failed === 0) || reference.receipt !== null) {
+        return "A partitioned Reader repair does not reconcile its completed, failed and deferred scopes.";
+      }
+    } else if (reference.disposition === "PARTITIONS") return "A partitioned Reader repair is missing its scope counts.";
     if (reference.disposition === "NOT_APPLICABLE") {
       if (reference.projectionId !== null || reference.receipt !== null) {
         return "A non-applicable Reader contract fabricated projection/readback evidence.";
@@ -863,6 +882,26 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
   };
 }
 
+/** Exact cycle rows live in bounded records under the existing owner-history log. */
+export interface FreshnessDetailReference {
+  readonly cycleId: string;
+  readonly logKey: string;
+  readonly section: string;
+  readonly rows: number;
+  readonly pages: number;
+}
+export type FreshnessDetailRows<T> = readonly T[] | FreshnessDetailReference;
+
+export interface FreshnessIncidentSummary {
+  readonly cause: string;
+  readonly target: string;
+  readonly obligationsAffected: number;
+  readonly nextRetryAt?: string;
+  readonly oldestHours?: number;
+  /** Number of exact target incidents represented by this cause summary. */
+  readonly incidents?: number;
+}
+
 export interface FreshnessCycleOutcome {
   readonly kind: "FRESHNESS_CYCLE";
   readonly state: "SUCCEEDED" | "FAILED";
@@ -892,22 +931,22 @@ export interface FreshnessCycleOutcome {
   readonly debtPersisted: number | null;
   readonly debtCleared: number | readonly string[] | null;
   readonly scheduled: number | null;
-  readonly unscheduled: readonly { readonly id?: string; readonly reason?: string }[];
+  readonly unscheduled: FreshnessDetailRows<{ readonly id?: string; readonly reason?: string }>;
   readonly dueCount: number | null;
   readonly dispatched: number | null;
-  readonly worked: readonly string[];
-  readonly dispositions: readonly {
+  readonly worked: FreshnessDetailRows<string>;
+  readonly dispositions: FreshnessDetailRows<{
     readonly obligationId: string;
     readonly disposition: string | null;
     readonly artifacts: number;
-  }[];
-  readonly dispatchDetails: readonly {
+  }>;
+  readonly dispatchDetails: FreshnessDetailRows<{
     readonly obligationId: string;
     readonly attemptId: string | null;
     readonly outcome: string | null;
     readonly disposition: string | null;
     readonly detail: string;
-  }[];
+  }>;
   readonly research: {
     readonly lanes: {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
@@ -916,12 +955,8 @@ export interface FreshnessCycleOutcome {
   } | null;
   readonly deferred: number | null;
   readonly debts: number | null;
-  readonly incidents: readonly {
-    readonly cause: string;
-    readonly target: string;
-    readonly obligationsAffected: number;
-    readonly nextRetryAt?: string;
-  }[];
+  readonly incidents: FreshnessDetailRows<FreshnessIncidentSummary>;
+  readonly incidentSummary?: readonly FreshnessIncidentSummary[];
   readonly risk: Readonly<Record<string, unknown>> | null;
   readonly health: Readonly<Record<string, unknown>> | null;
   readonly promotedToReaderTruth: boolean | null;
@@ -1102,7 +1137,9 @@ export interface OwnerSnapshot {
     readonly target: string;
     readonly obligationsAffected: number;
     readonly oldestHours: number | null;
+    readonly incidents?: number;
   }[];
+  readonly incidentDetails?: FreshnessDetailReference;
 
   readonly costByRole: readonly OwnerCostRow[];
   readonly costByModel: readonly OwnerCostRow[];
@@ -1159,13 +1196,17 @@ export function countClaimsFor(snapshot: OwnerSnapshot): readonly CountClaim[] {
       stated: snapshot.decisionCards.length,
       rendered: snapshot.decisionCards.length,
     },
-    { label: "incidents", stated: snapshot.incidents.length, rendered: snapshot.incidents.length },
+    { label: "incidents", stated: ownerIncidentCount(snapshot.incidents), rendered: ownerIncidentCount(snapshot.incidents) },
     {
       label: "ZIP rows",
       stated: snapshot.zipRows.held ? snapshot.zipRows.value.length : 0,
       rendered: snapshot.zipRows.held ? snapshot.zipRows.value.length : 0,
     },
   ];
+}
+
+export function ownerIncidentCount(rows: readonly { readonly incidents?: number }[]): number {
+  return rows.reduce((count, row) => count + (row.incidents ?? 1), 0);
 }
 
 /** A display band for a contract or the rollup. Never a stored health verdict. */

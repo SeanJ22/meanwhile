@@ -1,6 +1,6 @@
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { refreshStateMoneyProjectionFromPromoted, stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -86,7 +86,7 @@ async function installFinanceAuthorities(): Promise<void> {
   await installStateMoney("AZ", stateMoneyWith("AZ", "ballot-az-pima:governor:hobbs-katie"));
   await installStateMoney("NH", stateMoneyWith("NH", "ballot-nh-merrimack:governor:ayotte-kelly"));
   await installStateMoney("NJ");
-  await readFundingSnapshot({ store: new MemoryRoutineDataStore(), bypassCache: true });
+  await installFundingFixture("AZ");
 }
 
 const failedStore = {
@@ -110,7 +110,7 @@ test("Ask retains exact state finance records when only the unrelated FEC reader
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-  assert.equal((await readFundingSnapshot({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
+  assert.equal((await readFundingSnapshot({ state: "AZ", store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
   assert.equal((await readRegistryRuntimeProjection(["AZ", "NH", "NJ"], { store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
   for (const [index, [state, id, name]] of cases.entries()) {
     assert.deepEqual(stateMoneyReadState(state), before[index]!.stateRead);
@@ -183,7 +183,7 @@ test("state officeholder finance also survives an unrelated FEC failure through 
   ] as const;
   const before = subjects.map(subject => campaignMoneyEvidenceFor(subject, subject.id));
   assert.ok(before.every(answer => answer.records.some(record => record.kind === "FINANCE_SUMMARY")));
-  await readFundingSnapshot({ store: failedStore, bypassCache: true });
+  await readFundingSnapshot({ state: "AZ", store: failedStore, bypassCache: true });
   for (const [index, subject] of subjects.entries()) {
     assert.deepEqual(campaignMoneyEvidenceFor(subject, subject.id), before[index], subject.id);
   }

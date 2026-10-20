@@ -339,7 +339,8 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
 async function governmentDomainsFor(listings: readonly RegistrationGovernmentListing[]): Promise<RegistrationGovernmentListing[]> {
   if (listings.length === 0) return [];
   // An unavailable registry must not hide the independently held Census listing.
-  const read = await readDotGovProjection().catch(() => null);
+  const state = listings[0]!.state.toUpperCase();
+  const read = await readDotGovProjection({ state }).catch(() => null);
   return read?.kind === "PROMOTED" ? attachGovernmentDomains(listings, read.value) : [...listings];
 }
 

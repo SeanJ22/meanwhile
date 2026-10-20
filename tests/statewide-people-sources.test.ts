@@ -16,7 +16,7 @@ const document=(stateName:string,name:string,office:string,method:string)=>`<htm
 
 test("all ten national statewide reference publishers load together, with a gap for a failed source",async()=>{
   const {locks}=createMemoryRepositories(),store=new MemoryEvidenceStore(),requested:string[]=[];
-  const result=await acquireNationalStatewideLeads({signal:new AbortController().signal,store,locks,now:()=>at,acquire:acquireKnownRelease,
+  const result=await acquireNationalStatewideLeads({state:"az",signal:new AbortController().signal,store,locks,now:()=>at,acquire:acquireKnownRelease,
     fetchImpl:(async resource=>{
       const url=String(resource);requested.push(url);
       if(url.includes("www.wikidata.org/w/api.php"))return new Response(JSON.stringify({search:[{id:"P123456",label:new URL(url).searchParams.get("search")}]}));

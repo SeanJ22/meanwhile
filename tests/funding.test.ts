@@ -2,7 +2,8 @@ import { readerCacheHeaders } from "../lib/reader/cache.ts";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
+import { installFundingFixture, recordedFunding } from "./helpers/funding-fixture.ts";
 
 import { RIPCORDS, RIPCORD_NAMES } from "../lib/ripcords.ts";
 import {
@@ -21,9 +22,7 @@ import {
   getContributorReactionTargetIds,
   getFundingSnapshot,
   getFundingTargetIds,
-  refreshFundingFromPromoted,
 } from "../lib/funding/snapshot.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   fundingAnswerForTarget,
   plainContributorLabel,
@@ -33,8 +32,8 @@ import {
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 
 const ROOT = join(import.meta.dirname, "..");
-await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
-const snapshot = getFundingSnapshot();
+beforeEach(async () => { await installFundingFixture("AZ"); });
+const snapshot = recordedFunding();
 
 test("every snapshot record carries its provenance tag", () => {
   assert.ok(snapshot.candidates.length >= 10, `only ${snapshot.candidates.length} candidates`);
@@ -96,7 +95,7 @@ test("D40: no two candidates share an FEC id, a committee id, or a target key", 
   }
 });
 
-test("D40: distinct officials resolve to distinct funding payloads", () => {
+test("D40: distinct officials resolve to distinct funding payloads", async () => {
   const kelly = fundingAnswerForTarget("congress:K000377");
   const gallego = fundingAnswerForTarget("congress:G000574");
   const grijalva = fundingAnswerForTarget("congress:G000606");
@@ -106,10 +105,13 @@ test("D40: distinct officials resolve to distinct funding payloads", () => {
   const bodies = [kelly, gallego, grijalva].map((a) => JSON.stringify(a));
   assert.equal(new Set(bodies).size, 3, "the incident trio shares a payload again");
 
-  const congressKeys = snapshot.candidates
-    .flatMap((c) => c.targetKeys)
-    .filter((k) => k.startsWith("congress:"));
-  const payloads = congressKeys.map((k) => JSON.stringify(fundingAnswerForTarget(k)));
+  const congressKeys: string[] = [], payloads: string[] = [];
+  for (const state of ["AZ", "NH", "NJ"]) {
+    const holding = await installFundingFixture(state);
+    for (const key of holding.candidates.flatMap(row => row.targetKeys).filter(key => key.startsWith("congress:"))) {
+      congressKeys.push(key); payloads.push(JSON.stringify(fundingAnswerForTarget(key)));
+    }
+  }
   assert.equal(
     new Set(payloads).size,
     congressKeys.length,
@@ -227,7 +229,7 @@ test("live (the shipped state): funding reactions are aggregated like any other"
 });
 
 test("flip: pulling the contributor ripcord empties the display and its write path", () => {
-  const withRows = snapshot.candidates.find((c) => c.topContributions.length > 0);
+  const withRows = getFundingSnapshot().candidates.find((c) => c.topContributions.length > 0);
   assert.ok(withRows, "no candidate has contributor rows to test with");
 
   withEnv("WTP_RIPCORD_FEC_CONTRIBUTOR_DISPLAY", "pulled", () => {
@@ -452,6 +454,7 @@ test("item 2: the five Booker Victory Fund lines collapse to one row typed as tr
 });
 
 test("item 3: the hop renders only for committee-typed rows, never for individuals", async () => {
+  await installFundingFixture("NJ");
   const { groupContributions } = await import("../lib/funding/grouping.ts");
   const { secondHopForGroups } = await import("../lib/funding/snapshot.ts");
   const booker = snapshot.candidates.find((c) => c.fecCandidateId === "S4NJ00185");
@@ -545,6 +548,7 @@ test("item 3: the tea is only in the button — the panel's own words stay level
 });
 
 test("item 3: pulling the contributor ripcord empties the second hop too", async () => {
+  await installFundingFixture("NJ");
   const { groupContributions } = await import("../lib/funding/grouping.ts");
   const { secondHopForGroups } = await import("../lib/funding/snapshot.ts");
   const booker = snapshot.candidates.find((c) => c.fecCandidateId === "S4NJ00185")!;
@@ -609,8 +613,9 @@ test("small-donor money uses individual dollars and the inclusive $200 threshold
   assert.match(smallDonorSentence(1_000_000, 1)!, /under 1%/);
 });
 
-test("held federal cards show the authorized small-donor dollar share without a size floor", () => {
+test("held federal cards show the authorized small-donor dollar share without a size floor", async () => {
   for (const key of ["ballot-nh-merrimack:us-house-2:nicholson-dan", "congress:B001288"]) {
+    await installFundingFixture(key.startsWith("ballot-nh-") ? "NH" : "NJ");
     const answer = fundingAnswerForTarget(key);
     assert.equal(answer.kind, "funding");
     if (answer.kind !== "funding") continue;
@@ -647,7 +652,7 @@ test("the FEC acquisition script has no tracked writer and is reachable only thr
   const script = readFileSync(join(ROOT, "scripts", "fetch-fec.mts"), "utf8");
   assert.match(script, /if \(!promote\)/);
   assert.match(script, /fecFundingCandidate\(/);
-  assert.match(script, /processRegisteredRoutineCandidate\(store, "fec-funding", candidate, new Date\(\)\.toISOString\(\)\)/);
+  assert.match(script, /processRegisteredRoutineCandidate\(store, contractId, candidate, new Date\(\)\.toISOString\(\)\)/);
   assert.doesNotMatch(script, /writeStampStable|writeFile(?:Sync)?|absolutePath:\s*OUT|--allow-shrink|findShrinkRegressions/);
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
@@ -660,8 +665,8 @@ test("the FEC acquisition script has no tracked writer and is reachable only thr
     "the standing routine adapter regained a direct package door",
   );
   assert.deepEqual(
-    requiredRoutineContract("fec-funding").acquisitionAdapter.command,
-    ["scripts/fetch-fec.mts", "--promote"],
+    requiredRoutineContract("fec-funding:AZ").acquisitionAdapter.command,
+    ["scripts/fetch-fec.mts", "--promote", "--state=AZ"],
   );
 });
 

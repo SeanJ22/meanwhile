@@ -3,11 +3,11 @@ import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../lib/civic-data/dotgov.ts";
 
-const domains = await readDotGovProjection();
 console.log("state,status,governments,address,website,gov_domain");
 for (const { state } of REGISTRATION_TARGETS) {
   let governments = 0, address = 0, website = 0, domain = 0;
   try {
+    const domains = await readDotGovProjection({ state });
     const registration = await readRegistrationProjection(state);
     if (registration.kind !== "PROMOTED") {
       console.log(`${state},${registration.kind},,,,`);

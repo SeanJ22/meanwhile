@@ -5,7 +5,7 @@ import { collapseDecisionLog } from "../decision-log.ts";
 import { isFeedbackTriageIntent } from "../feedback-inbox.ts";
 import { fixQueueView, isRowDecision } from "../fix-queue.ts";
 import { buildFleetView, whereOf } from "../fleet-view.ts";
-import { decisionCardKind, measured, type Gap, type Held } from "../owner-surface.ts";
+import { decisionCardKind, measured, ownerIncidentCount, type Gap, type Held } from "../owner-surface.ts";
 import { readIntents } from "../scheduler/research-policy.ts";
 import { runnerStanding } from "../runner-standing.ts";
 import type { Attempt } from "../attempt.ts";
@@ -27,6 +27,7 @@ interface Draft {
   readonly needsYou: ChatNeedsYou;
   readonly gaps: readonly Gap[];
   readonly detail: readonly string[];
+  readonly incidentCycleId?: string;
 }
 
 function assemble(topic: ChatTopic, draft: Draft): ChatAnswer {
@@ -43,6 +44,7 @@ function assemble(topic: ChatTopic, draft: Draft): ChatAnswer {
     usedModel: false,
     readBackAt: definition.readBackAt,
     detail: draft.detail,
+    ...(draft.incidentCycleId ? { incidentCycleId: draft.incidentCycleId } : {}),
   };
 }
 
@@ -169,7 +171,7 @@ export function fleetBlockers(ctx: OperatorContext): ChatAnswer {
   if (snapshot.held && snapshot.value.incidents.length > 0) {
     const worst = [...snapshot.value.incidents].sort((a, b) => (b.oldestHours ?? 0) - (a.oldestHours ?? 0))[0];
     says.push(
-      `The published snapshot lists ${count(snapshot.value.incidents.length)} ${snapshot.value.incidents.length === 1 ? "incident" : "incidents"}; the longest-running is ${plainCode(worst.cause).toLowerCase()} against ${worst.target}${worst.oldestHours === null ? "" : `, ${ageWords(worst.oldestHours)} old`}.`,
+      `The published snapshot lists ${count(ownerIncidentCount(snapshot.value.incidents))} ${ownerIncidentCount(snapshot.value.incidents) === 1 ? "incident" : "incidents"}; the longest-running is ${plainCode(worst.cause).toLowerCase()} against ${worst.target}${worst.oldestHours === null ? "" : `, ${ageWords(worst.oldestHours)} old`}.`,
     );
     sources.push(source("the control-centre snapshot the runner publishes after every cycle", snapshot.value.publishedAt, "cp_owner_snapshots #current"));
   }
@@ -185,6 +187,7 @@ export function fleetBlockers(ctx: OperatorContext): ChatAnswer {
     needsYou,
     gaps: gapsOf(heartbeat, research, intents, fleet, snapshot),
     detail,
+    ...(snapshot.held && snapshot.value.incidentDetails ? { incidentCycleId: snapshot.value.incidentDetails.cycleId } : {}),
   });
 }
 
@@ -318,7 +321,7 @@ export function overdueSources(ctx: OperatorContext): ChatAnswer {
 
   if (snap.incidents.length > 0) {
     says.push(
-      `${count(snap.incidents.length)} ${snap.incidents.length === 1 ? "incident is" : "incidents are"} recorded against those obligations: ${snap.incidents
+      `${count(ownerIncidentCount(snap.incidents))} ${ownerIncidentCount(snap.incidents) === 1 ? "incident is" : "incidents are"} recorded against those obligations: ${snap.incidents
         .slice(0, 4)
         .map((i) => `${plainCode(i.cause).toLowerCase()} at ${i.target} (${count(i.obligationsAffected)} affected${i.oldestHours === null ? "" : `, oldest ${ageWords(i.oldestHours)}`})`)
         .join("; ")}.`,
@@ -333,6 +336,7 @@ export function overdueSources(ctx: OperatorContext): ChatAnswer {
     needsYou: NOTHING_NEEDED,
     gaps,
     detail,
+    ...(snap.incidentDetails ? { incidentCycleId: snap.incidentDetails.cycleId } : {}),
   });
 }
 

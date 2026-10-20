@@ -207,6 +207,7 @@ WITH latest_reads AS (
   FROM cp_log_discovery_attempts
   CROSS JOIN LATERAL jsonb_array_elements(record->'steps') step
   WHERE ($1::text[] IS NULL OR log_key = ANY($1::text[]))
+    AND upper(record->>'stateCode')=$2::text
     AND step->>'purpose' = 'endpoint'
     AND (step->>'status' IS NOT NULL OR step->>'transportError' IS NOT NULL)
   ORDER BY log_key, step->>'url', record->>'finishedAt' DESC, position DESC

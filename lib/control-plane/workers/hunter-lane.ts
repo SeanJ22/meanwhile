@@ -4,13 +4,18 @@
  * paid work is held. It ends itself after `HUNTER_LANE_LIFE_MS` (or when a release asks it to drain),
  * releasing request holds it never settled. Each worker has its own progress clock and a stuck one is ended alone.
  */
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, renameSync, rmSync } from "node:fs";
+import { DatabaseSync } from "node:sqlite";
 import { dirname, join } from "node:path";
-import type { DispatchResult } from "../scheduler/dispatch.ts";
-import { releaseOpenJobs, SPEND_HOLD_STALE_MS } from "../expansion/spend-holds.ts";
+import { tmpdir } from "node:os";
+import { temporaryPath } from "../../civic-data/temporary-path.ts";
+import type { LeaseWorkerSummary } from "./process-pool.ts";
+import { releaseOpenJobs, SPEND_HOLD_STALE_MS, type JobSpend } from "../expansion/spend-holds.ts";
 import { HUNTER_LANE_REFRESH_MS, type ArmedHunterLane } from "./hunter-lane-arming.ts";
 
-export const HUNTER_QUEUE_FORMAT = 1;
+export const HUNTER_QUEUE_FORMAT = 2;
+const openQueueSnapshots = new Set<() => void>();
+process.once("exit", () => { for (const close of openQueueSnapshots) close(); });
 /** How long one lane process runs before it hands over to a fresh one. Below the hold staleness, with room for its last wave. */
 export const HUNTER_LANE_LIFE_MS = 55 * 60_000;
 /** While the queue holds nothing new, the lane reads it this often. */
@@ -70,31 +75,70 @@ export function stuckWorkerLine(worker: { readonly pid: number; readonly taskId:
 export interface HunterQueue {
   readonly format: typeof HUNTER_QUEUE_FORMAT;
   readonly writtenAt: string;
-  readonly taskIds: readonly string[];
-  readonly plainTaskIds: readonly string[];
+  readonly taskIds: Iterable<string> & { readonly length: number };
+  readonly plainTaskIds: Iterable<string> & { readonly length: number };
+  readonly rank: (id: string) => number;
+  readonly isPlain: (id: string) => boolean;
+  readonly close: () => void;
 }
 
-/** The queue sits beside the round's reading. */
+/** The queue sits beside the round's reading. Only its metadata enters the lane. */
 export function hunterQueuePath(armingPath: string): string {
-  return join(dirname(armingPath), "queue.json");
+  return join(dirname(armingPath), "queue.sqlite");
 }
 
-export function writeHunterQueue(path: string, queue: Omit<HunterQueue, "format">): void {
+export function writeHunterQueue(path: string, queue: { readonly writtenAt: string; readonly taskIds: Iterable<string>; readonly plainTaskIds: Iterable<string> }): void {
   mkdirSync(dirname(path), { recursive: true });
   const temporary = `${path}.${process.pid}.tmp`;
-  writeFileSync(temporary, JSON.stringify({ format: HUNTER_QUEUE_FORMAT, ...queue }));
+  rmSync(temporary, { force: true });
+  const db = new DatabaseSync(temporary);
+  try {
+    db.exec("PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA cache_size=-1024; PRAGMA mmap_size=0; CREATE TABLE metadata(format INTEGER,written_at TEXT); CREATE TABLE tasks(seq INTEGER PRIMARY KEY,id TEXT UNIQUE NOT NULL,plain INTEGER NOT NULL DEFAULT 0); BEGIN");
+    db.prepare("INSERT INTO metadata VALUES (?,?)").run(HUNTER_QUEUE_FORMAT, queue.writtenAt);
+    const insert = db.prepare("INSERT OR IGNORE INTO tasks(id) VALUES (?)");
+    for (const id of queue.taskIds) insert.run(id);
+    const plain = db.prepare("UPDATE tasks SET plain=1 WHERE id=?");
+    for (const id of queue.plainTaskIds) plain.run(id);
+    db.exec("COMMIT");
+  } catch (error) { db.close(); rmSync(temporary, { force: true }); throw error; }
+  db.close();
   renameSync(temporary, path);
 }
 
 export function readHunterQueue(path: string): HunterQueue | { readonly unread: string } {
+  let db: DatabaseSync | undefined;
+  let directory: string | undefined;
   try {
-    const q = JSON.parse(readFileSync(path, "utf8")) as Partial<HunterQueue> | null;
-    if (q === null || q.format !== HUNTER_QUEUE_FORMAT || typeof q.writtenAt !== "string" || !Array.isArray(q.taskIds) || !Array.isArray(q.plainTaskIds)) {
-      return { unread: "the round's queue is not in the expected form" };
-    }
-    return q as HunterQueue;
+    directory = mkdtempSync(temporaryPath(join(tmpdir(), "meanwhile-hunter-queue-")));
+    const snapshot = temporaryPath(join(directory, "queue.sqlite"));
+    // The public queue stays replaceable on Windows while an older wave reads its immutable disk view.
+    copyFileSync(path, temporaryPath(snapshot));
+    db = new DatabaseSync(snapshot, { readOnly: true });
+    db.exec("PRAGMA cache_size=-1024; PRAGMA mmap_size=0");
+    const meta = db.prepare("SELECT * FROM metadata").get();
+    if (!meta || meta.format !== HUNTER_QUEUE_FORMAT || typeof meta.written_at !== "string") throw new Error("unexpected queue form");
+    const count = db.prepare("SELECT count(*) AS total,coalesce(sum(plain),0) AS plain FROM tasks").get()!;
+    const all = db.prepare("SELECT id FROM tasks ORDER BY seq");
+    const plain = db.prepare("SELECT id FROM tasks WHERE plain=1 ORDER BY seq");
+    const exact = db.prepare("SELECT seq,plain FROM tasks WHERE id=?");
+    const ids = (statement: typeof all, length: number) => ({ length, *[Symbol.iterator]() { for (const row of statement.iterate()) yield String(row.id); } });
+    const held = db;
+    const ownedDirectory = directory;
+    let closed = false;
+    const close = (): void => {
+      if (closed) return;
+      closed = true; openQueueSnapshots.delete(close);
+      try { held.close(); } finally { rmSync(temporaryPath(ownedDirectory), { recursive: true, force: true }); }
+    };
+    openQueueSnapshots.add(close);
+    return { format: HUNTER_QUEUE_FORMAT, writtenAt: meta.written_at,
+      taskIds: ids(all, Number(count.total)), plainTaskIds: ids(plain, Number(count.plain)),
+      rank: id => Number(exact.get(id)?.seq ?? Infinity), isPlain: id => exact.get(id)?.plain === 1,
+      close };
   } catch (error) {
-    return { unread: (error as NodeJS.ErrnoException)?.code === "ENOENT" ? "no round has written a queue yet" : `the round's queue could not be read (${error instanceof Error ? error.message : String(error)})` };
+    try { db?.close(); } finally { if (directory) rmSync(temporaryPath(directory), { recursive: true, force: true }); }
+    return { unread: (error as NodeJS.ErrnoException)?.code === "ENOENT" || (error as { errcode?: number }).errcode === 14
+      ? "no round has written a queue yet" : "the round's queue is not in the expected form" };
   }
 }
 
@@ -109,7 +153,7 @@ export interface HunterLaneLoopDeps {
    * so its tasks join the running workers instead of waiting for the slowest of them.
    */
   readonly runWave: (input: { readonly queue: HunterQueue; readonly paidOpen: boolean; readonly deadlineMs: number;
-    readonly absorb: () => HunterQueue | null }) => Promise<readonly DispatchResult[]>;
+    readonly absorb: () => HunterQueue | null }) => Promise<LeaseWorkerSummary>;
   readonly stopRequested: () => boolean;
   readonly log: (line: string) => void;
   readonly lifeMs?: number;
@@ -131,7 +175,7 @@ export interface HunterLaneRun {
 export function hunterLane(deps: HunterLaneLoopDeps) {
   const lifeMs = deps.lifeMs ?? HUNTER_LANE_LIFE_MS;
   const refreshMs = deps.refreshMs ?? HUNTER_LANE_REFRESH_MS;
-  const armedAll: ArmedHunterLane[] = [];
+  const pendingReleases: {holds: ArmedHunterLane["spendHolds"]; jobs: ReadonlySet<JobSpend>}[] = [];
   let current: ArmedHunterLane | null = null;
   const say = (armed: ArmedHunterLane): void => {
     deps.log(armed.closed === null ? `hunter lane: armed; paid work open under the $${armed.ceilingUsd.toFixed(2)} ceiling`
@@ -139,18 +183,17 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
   };
   const rearm = async (): Promise<ArmedHunterLane> => {
     const armed = await deps.arm();
-    armedAll.push(armed);
+    if (armed.guards) pendingReleases.push({holds: armed.spendHolds, jobs: armed.guards.pendingJobs});
     if (current === null || (current.closed?.reason ?? null) !== (armed.closed?.reason ?? null)) say(armed);
+    const previous = current;
     current = armed;
+    if (previous?.arming !== armed.arming) previous?.arming?.close();
     return armed;
   };
   /** Every request hold any guards of this lane took and never settled. */
   const releaseAll = async (at: string): Promise<readonly string[]> => {
     const failed: string[] = [];
-    for (const armed of armedAll) {
-      if (armed.guards === null) continue;
-      failed.push(...await releaseOpenJobs(armed.spendHolds, armed.guards.openJobs(), at));
-    }
+    for (const pending of pendingReleases) failed.push(...await releaseOpenJobs(pending.holds, [...pending.jobs], at));
     return failed;
   };
   const run = async (): Promise<HunterLaneRun> => {
@@ -179,6 +222,7 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
         const paidOpen = current!.closed === null;
         const fresh = !("unread" in queue) && (queue.writtenAt !== lastQueue || (paidOpen && !lastRanOpen));
         if (!fresh) {
+          if (!("unread" in queue)) queue.close();
           if (deps.clock() - lastSaidMs >= HUNTER_LANE_IDLE_SAY_MS) {
             deps.log(`hunter lane: waiting for the round's next queue (${"unread" in queue ? queue.unread : `last written ${queue.writtenAt}`})`);
             lastSaidMs = deps.clock();
@@ -190,24 +234,30 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
         lastQueue = q.writtenAt;
         lastRanOpen = paidOpen;
         deps.log(`hunter lane: wave ${waves + 1} over the queue written ${q.writtenAt}: ${q.taskIds.length} task(s), ${q.plainTaskIds.length} plain-code${paidOpen ? "" : "; paid tasks wait"}`);
+        const opened = [q];
         let absorbReadMs = deps.clock();
         const absorb = (): HunterQueue | null => {
           if (deps.stopRequested() || deps.clock() >= untilMs || deps.clock() - absorbReadMs < HUNTER_LANE_IDLE_READ_MS) return null;
           absorbReadMs = deps.clock();
           const next = deps.readQueue();
-          if ("unread" in next || next.writtenAt === lastQueue) return null;
+          if ("unread" in next) return null;
+          if (next.writtenAt === lastQueue) { next.close(); return null; }
+          opened.push(next);
           lastQueue = next.writtenAt;
           deps.log(`hunter lane: the queue written ${next.writtenAt} joins the running wave: ${next.taskIds.length} task(s), ${next.plainTaskIds.length} plain-code`);
           return next;
         };
-        const results = await deps.runWave({ queue: q, paidOpen, deadlineMs: untilMs, absorb });
+        let summary: LeaseWorkerSummary;
+        try { summary = await deps.runWave({ queue: q, paidOpen, deadlineMs: untilMs, absorb }); }
+        finally { for (const held of opened) held.close(); }
         waves += 1;
-        dispatched += results.length;
+        dispatched += summary.dispatched;
         lastSaidMs = deps.clock();
       }
       if (deps.clock() >= untilMs) ended = "its life ended; the runner starts a fresh lane";
     } finally {
       stopped = true;
+      current?.arming?.close();
       void refresher;
     }
     const releaseFailures = await releaseAll(new Date(deps.clock()).toISOString());

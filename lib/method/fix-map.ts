@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { AggregateRepository } from "../control-plane/repository/types.ts";
+import { forEachAggregate, withHistoryIndex } from "../control-plane/workers/streamed-history.ts";
 
 /** One observation per reusable method and place. */
 export type FixMapState = "WORKS" | "FAILS" | "UNTRIED";
@@ -77,6 +78,8 @@ type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly 
 export interface FixMapRepository {
   forPlace(placeId: string, limit?: number): Promise<readonly FixMapRow[]>;
   forMethod(methodId: string, limit?: number): Promise<readonly FixMapRow[]>;
+  /** Stable place keyset for a system pass; a page never truncates the rest of the method's history. */
+  forMethodPage(methodId: string, after: string | null, limit?: number): Promise<readonly FixMapRow[]>;
   /** For each named method, where it works. */
   worksFor(methodIds: readonly string[]): Promise<ReadonlyMap<string, MethodWorks>>;
   /** Each method that works somewhere: its newest working row, newest first. */
@@ -100,6 +103,7 @@ export function createFixMapRepository(query: Query): FixMapRepository {
   return {
     forPlace: async (placeId, limit) => (await query("SELECT * FROM cp_fix_map WHERE place_id = $1 ORDER BY method_id LIMIT $2", [placeId, bounded(limit)])).map(decode),
     forMethod: async (methodId, limit) => (await query("SELECT * FROM cp_fix_map WHERE method_id = $1 ORDER BY place_id LIMIT $2", [methodId, bounded(limit)])).map(decode),
+    forMethodPage: async (methodId, after, limit) => (await query("SELECT * FROM cp_fix_map WHERE method_id = $1 AND ($2::text IS NULL OR place_id COLLATE \"C\">$2::text COLLATE \"C\") ORDER BY place_id COLLATE \"C\" LIMIT $3", [methodId, after, bounded(limit)])).map(decode),
     worksFor: async (methodIds) => {
       if (methodIds.length === 0) return new Map();
       const rows = await query(`SELECT method_id,
@@ -130,12 +134,36 @@ export function createFixMapRepository(query: Query): FixMapRepository {
 /** The fix map over any aggregate store (one aggregate per method and place), with the table's replace rules. */
 export function aggregateFixMap(repo: AggregateRepository<FixMapRow>): FixMapRepository {
   const idOf = (r: Pick<FixMapRow, "methodId" | "placeId">): string => createHash("sha256").update(`${r.methodId}\u0000${r.placeId}`).digest("hex").slice(0, 32);
-  const all = async () => (await repo.list()).map((row) => row.value);
+  const forMethodPage: FixMapRepository["forMethodPage"] = async (methodId, after, limit = 200) => {
+      const page: FixMapRow[] = [];
+      await forEachAggregate(repo, ({ value: row }) => {
+        if (row.methodId !== methodId || (after !== null && row.placeId <= after)) return;
+        page.push(row); page.sort((a, b) => a.placeId < b.placeId ? -1 : a.placeId > b.placeId ? 1 : 0); if (page.length > limit) page.pop();
+      });
+      return page;
+  };
   return {
-    forPlace: async (placeId, limit = 200) => (await all()).filter((r) => r.placeId === placeId).sort((a, b) => a.methodId.localeCompare(b.methodId)).slice(0, limit),
-    forMethod: async (methodId, limit = 200) => (await all()).filter((r) => r.methodId === methodId).sort((a, b) => a.placeId.localeCompare(b.placeId)).slice(0, limit),
-    worksFor: async (methodIds) => methodWorksOf(await all(), methodIds),
-    workingMethods: async (limit = 200) => latestWorking(await all(), limit),
+    forPlace: async (placeId, limit = 200) => (await repo.listWhere(["placeId"], placeId)).map(row => row.value).sort((a, b) => a.methodId.localeCompare(b.methodId)).slice(0, limit),
+    forMethod: (methodId, limit) => forMethodPage(methodId, null, limit),
+    forMethodPage,
+    worksFor: async methodIds => {
+      const wanted = new Set(methodIds), out = new Map<string, { places: { id: string; at: number }[]; states: Set<string> }>();
+      await forEachAggregate(repo, ({ value: row }) => {
+        if (row.state !== "WORKS" || !wanted.has(row.methodId)) return;
+        const held = out.get(row.methodId) ?? { places: [], states: new Set<string>() };
+        held.places.push({ id: row.placeId, at: workedAt(row) });
+        held.places.sort((a, b) => b.at - a.at || a.id.localeCompare(b.id)); if (held.places.length > WORKS_PLACES_SHOWN) held.places.pop();
+        const state = stateOfPlace(row.placeId); if (state) held.states.add(state);
+        out.set(row.methodId, held);
+      });
+      return new Map([...out].map(([id, held]) => [id, { places: held.places.map(place => place.id), states: [...held.states].sort() }]));
+    },
+    workingMethods: (limit = 200) => withHistoryIndex(async db => {
+      db.exec("CREATE TABLE working(method TEXT PRIMARY KEY,at REAL NOT NULL,place TEXT NOT NULL,body TEXT NOT NULL)");
+      const put = db.prepare("INSERT INTO working VALUES(?,?,?,?) ON CONFLICT(method) DO UPDATE SET at=excluded.at,place=excluded.place,body=excluded.body WHERE excluded.at>working.at OR (excluded.at=working.at AND excluded.place<working.place)");
+      await forEachAggregate(repo, ({ value: row }) => { if (row.state === "WORKS") put.run(row.methodId, workedAt(row), row.placeId, JSON.stringify(row)); });
+      return Array.from(db.prepare("SELECT body FROM working ORDER BY at DESC,method LIMIT ?").iterate(limit), row => JSON.parse(row.body) as FixMapRow);
+    }),
     put: async (row) => {
       for (let attempt = 0; ; attempt += 1) {
         const held = await repo.read(idOf(row));

@@ -9,6 +9,7 @@
  */
 
 import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { forEachAggregate, withHistoryIndex } from "../control-plane/workers/streamed-history.ts";
 
 const MINUTE_MS = 60_000;
 /** Hourly is the fastest standing check. */
@@ -72,15 +73,28 @@ export function doorRateRow(door: DoorRecord, policyMinutes: number): DoorRateRo
   };
 }
 
-/** Door id → observed change minutes, for the runner's due check. Doors with no observation yet are absent. */
-export function observedChangeMinutesByDoor(doors: readonly DoorRecord[]): ReadonlyMap<string, number> {
-  const out = new Map<string, number>();
-  for (const door of doors) {
-    if (door.status === "OPEN" && door.checkEveryMinutes === null && typeof door.observedChangeMinutes === "number" && door.observedChangeMinutes > 0) {
-      out.set(door.doorId, door.observedChangeMinutes);
-    }
-  }
-  return out;
+/** The runner needs one door's numeric rate, never its source configuration. */
+export function observedChangeMinutesOfDoor(door: Pick<DoorRecord, "status" | "checkEveryMinutes" | "observedChangeMinutes">): number | undefined {
+  return door.status === "OPEN" && door.checkEveryMinutes === null && typeof door.observedChangeMinutes === "number" && door.observedChangeMinutes > 0
+    ? door.observedChangeMinutes : undefined;
+}
+
+/** National due scheduling keeps only an on-disk numeric index, looked up one task at a time. */
+export async function withObservedDoorRates<T>(repo: DoorRepository | null,
+  work: (rate: (doorId: string) => number | undefined) => Promise<T>, unreadable: (error: unknown) => void): Promise<T> {
+  if (!repo) return work(() => undefined);
+  return withHistoryIndex(async db => {
+    db.exec("CREATE TABLE rates(id TEXT PRIMARY KEY,minutes REAL NOT NULL)");
+    const insert = db.prepare("INSERT INTO rates VALUES(?,?)");
+    try {
+      await forEachAggregate(repo, row => {
+        const rate = observedChangeMinutesOfDoor(row.value);
+        if (rate !== undefined) insert.run(row.id, rate);
+      }, { status: true, checkEveryMinutes: true, observedChangeMinutes: true });
+    } catch (error) { unreadable(error); return work(() => undefined); }
+    const read = db.prepare("SELECT minutes FROM rates WHERE id=?");
+    return work(id => { const row = read.get(id); return row ? Number(row.minutes) : undefined; });
+  });
 }
 
 /** Record a changed promotion on a door. False when there is no such door (nothing is invented). A system write: it leaves `updatedAt` alone. */

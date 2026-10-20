@@ -1,6 +1,4 @@
 import { PRL_CATEGORIES, PRL_FORBIDDEN_COLUMN_PATTERN, type PrlCategoryKey } from "./types.ts";
-import type { TextChunks } from "./streaming.ts";
-import { streamCsvObjects } from "./streaming.ts";
 
 /**
  * Per-official numbers precomputed at ingest, so a reader page reads a handful
@@ -60,7 +58,6 @@ export interface StateProfileResult {
     readonly droppedNoIdentity: number;
   };
 }
-
 const OPENSTATES_ID = /^ocd-person\/[0-9a-f-]{36}$/;
 
 /**
@@ -186,11 +183,10 @@ export interface PrimaryAggregator {
 }
 
 /**
- * An incremental per-candidate aggregator, so a single streaming pass can both
- * archive the raw rows to object storage AND compute the per-candidate shares.
+ * One native candidate's running totals. The disk index feeds each candidate separately.
  */
-export function createPrimaryAggregator(): PrimaryAggregator {
-  const byCandidate = new Map<string, PrimaryAccumulator>();
+export function createPrimaryAggregator(subject: string): PrimaryAggregator {
+  let accumulator: PrimaryAccumulator | null = null;
   let rowsSeen = 0;
   let rowsClassified = 0;
   let droppedNoIdentity = 0;
@@ -202,9 +198,10 @@ export function createPrimaryAggregator(): PrimaryAggregator {
         droppedNoIdentity += 1;
         return;
       }
+      if (candidateId !== subject) throw new Error("PRL_PRIMARY_AGGREGATION_CROSSES_NATIVE_PERSON");
       // Every row present in this tweets file is a classified tweet.
       rowsClassified += 1;
-      let acc = byCandidate.get(candidateId);
+      let acc = accumulator;
       if (!acc) {
         acc = {
           name: (record["name"] ?? "").trim(),
@@ -216,7 +213,7 @@ export function createPrimaryAggregator(): PrimaryAggregator {
           count: 0,
           sums: { policy: 0, bipartisanship: 0, creditclaiming: 0, "attack-policy": 0, "attack-personal": 0 },
         };
-        byCandidate.set(candidateId, acc);
+        accumulator = acc;
       }
       acc.count += 1;
       for (const category of PRL_CATEGORIES) {
@@ -224,14 +221,14 @@ export function createPrimaryAggregator(): PrimaryAggregator {
       }
     },
     result(measuredAt: string): PrimaryAggregateResult {
-      const profiles: PrlPrimaryProfile[] = [...byCandidate.entries()].map(([candidateId, acc]) => {
+      const profiles: PrlPrimaryProfile[] = accumulator === null ? [] : [accumulator].map(acc => {
         const shares = {} as Record<PrlCategoryKey, number | null>;
         for (const category of PRL_CATEGORIES) {
           // A percentage of classified tweets, rounded to two decimals like PRL's own means.
           shares[category.key] = acc.count > 0 ? Math.round((acc.sums[category.key] / acc.count) * 10000) / 100 : null;
         }
         return {
-          candidateId,
+          candidateId: subject,
           prlName: acc.name,
           party: acc.party,
           state: acc.state,
@@ -246,14 +243,4 @@ export function createPrimaryAggregator(): PrimaryAggregator {
       return { profiles, counts: { rowsSeen, rowsClassified, candidates: profiles.length, droppedNoIdentity } };
     },
   };
-}
-
-/**
- * Aggregate the primary rhetoric rows into per-candidate shares, streaming so
- * the rows never all sit in memory at once.
- */
-export async function aggregatePrimaryRhetoric(chunks: TextChunks, measuredAt: string): Promise<PrimaryAggregateResult> {
-  const aggregator = createPrimaryAggregator();
-  for await (const record of streamCsvObjects(chunks)) aggregator.add(record);
-  return aggregator.result(measuredAt);
 }

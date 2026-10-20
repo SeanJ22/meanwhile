@@ -25,7 +25,7 @@ const scheduled = { obligation: { id: "pb01", recordClass: "meetings", subjectId
 nodeTest("PB-01 Settings save reaches the next real hunter request, its log, and undo", async () => {
   const repos = createMemoryRepositories();
   // The place-filtered manual deliberately has no instructions: the run must use the exact row read.
-  repos.fieldManual.slice = async () => [];
+  repos.fieldManual.visitSlice = async () => {};
   const deps = { repos, now: () => at, currentStateVersion: null, codeSha: null };
   const fetchImpl = (async (_url: unknown, init?: RequestInit) => {
     const { type, subject, idempotencyKey, returnTo: _returnTo, ...input } = JSON.parse(String(init?.body));

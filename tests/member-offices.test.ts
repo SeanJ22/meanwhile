@@ -41,7 +41,7 @@ test("a member office read from a reference publisher can never be marked offici
   const record: MemberOfficeRecord = { id: "member-office:az-legislature:1:capitol:0", kind: "MEMBER_OFFICE", officeholderId: "az-legislature:1",
     officeKind: "CAPITOL", office: { address: "1700 W Washington St", city: "Phoenix", state: "AZ", zip: "85007", phone: null, lat: null, lng: null },
     sourceUrl: openStatesUrl("AZ"), sourceOrg: OPEN_STATES_ORG, official: true, collectedAt: T0 };
-  const candidate = manualProjectionCandidate({ contractId: "member-offices", version: T0, sourceThrough: T0,
+  const candidate = manualProjectionCandidate({ contractId: "member-offices:AZ", version: T0, sourceThrough: T0,
     sourceReceipt: { contractVersion: 1, reviewedAt: T0, reviewedBy: "test", sources: [{ requestedUrl: openStatesUrl("AZ"), finalUrl: openStatesUrl("AZ"),
       publisher: OPEN_STATES_ORG, sourceClass: "REFERENCE_PUBLISHER", retrievedAt: T0, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "test bytes" }] },
     payload: { kind: "member-offices", records: [record as unknown as Record<string, unknown> & { id: string }] } });
@@ -49,12 +49,12 @@ test("a member office read from a reference publisher can never be marked offici
 });
 
 test("the runner refreshes member offices daily with no owner step", () => {
-  const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "member-offices");
+  const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "member-offices:AZ");
   assert.ok(task);
   assert.equal(task.ownerInvocation, undefined);
-  assert.deepEqual(task.command, ["scripts/publish-member-offices.mts", "--promote"]);
+  assert.deepEqual(task.command, ["scripts/publish-member-offices.mts", "--promote", "--state=AZ"]);
   assert.equal(task.cadenceMs, 24 * 60 * 60_000);
-  assert.equal(routineTaskSelection(["--only=member-offices"], AUTOMATIC_REFRESH_TASKS).ok, true);
-  const contract = requiredManualProductionContract("member-offices");
+  assert.equal(routineTaskSelection(["--only=member-offices:AZ"], AUTOMATIC_REFRESH_TASKS).ok, true);
+  const contract = requiredManualProductionContract("member-offices:AZ");
   assert.equal(contract.recordClass, "CURATED_READER_RECORD");
 });

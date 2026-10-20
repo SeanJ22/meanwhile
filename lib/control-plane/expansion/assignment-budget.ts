@@ -28,12 +28,14 @@
 import type { AssignmentCompletion } from "../assignment-completion.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
+import { filterIterable, spendScratch } from "../spend-scratch.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import type { BudgetLine } from "./spend-holds.ts";
 import { instructionReceiptKey } from "../scheduler/obligation.ts";
+import { plannerMap, type PlannerSpool } from "../scheduler/planner-spool.ts";
 
 export const ASSIGNMENT_BUDGET_CODE = "ASSIGNMENT_BUDGET";
 export const ASSIGNMENT_BUDGET_FORMAT_VERSION = 1;
@@ -113,6 +115,12 @@ export function assignmentBudgetsOf(input: {
 }
 
 /* ------------------------------------------------------------ membership */
+let nextMembership = 0;
+function memberSample(keys: Iterable<string>): string[] {
+  const sample: string[] = [];
+  for (const key of keys) { sample.push(key); sample.sort(); if (sample.length > READING_LIST_CAP) sample.pop(); }
+  return sample;
+}
 
 export interface AssignmentMember {
   readonly obligationId: string;
@@ -141,9 +149,11 @@ export interface AssignmentMembership {
  */
 export function assignmentMembership(
   rows: Iterable<{ readonly id: string; readonly subjectId: string; readonly assignments?: readonly ObligationAssignment[] }>,
-  recorded: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[] = [],
+  recorded: Iterable<{ readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }> = [],
+  planner?: PlannerSpool,
 ): AssignmentMembership {
-  const entries = new Map<string, { subjectId: string; list: ObligationAssignment[] }>();
+  const prefix = `assignment-members-${nextMembership++}`;
+  const entries = planner ? plannerMap<{ subjectId: string; list: ObligationAssignment[] }>(planner, `${prefix}-entries`) : new Map<string, { subjectId: string; list: ObligationAssignment[] }>();
   const add = (obligationId: string, subjectId: string, entry: ObligationAssignment): void => {
     const held = entries.get(obligationId) ?? { subjectId, list: [] };
     held.list.push(entry);
@@ -154,8 +164,10 @@ export function assignmentMembership(
 
   const byKey = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
   const byInstruction = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
-  const keysOf = new Map<string, string[]>();
-  const refsOf = new Map<string, {key:string;ref:string}[]>();
+  const keysOf = planner ? plannerMap<string[]>(planner, `${prefix}-keys`) : new Map<string, string[]>();
+  const refsOf = planner ? plannerMap<{key:string;ref:string}[]>(planner, `${prefix}-refs`) : new Map<string, {key:string;ref:string}[]>();
+  const slotOf = (identity: string) => ({ created: planner ? plannerMap<AssignmentMember>(planner, `${prefix}-${identity}-created`) : new Map<string, AssignmentMember>(),
+    reordered: planner ? plannerMap<AssignmentMember>(planner, `${prefix}-${identity}-reordered`) : new Map<string, AssignmentMember>() });
   for (const [obligationId, { subjectId, list }] of entries) {
     const keys = [...new Set(list.map((e) => e.assignmentKey))];
     keysOf.set(obligationId, keys);
@@ -165,7 +177,7 @@ export function assignmentMembership(
       const mine=list.filter(mark=>mark.assignmentKey===key && mark.ref===ref);
       const member:AssignmentMember={obligationId,subjectId,joinedAt:mine.map(mark=>mark.at).sort()[0]??""};
       const identity=instructionReceiptKey(key,ref);
-      const slot=byInstruction.get(identity)??{created:new Map(),reordered:new Map()};
+      const slot=byInstruction.get(identity)??slotOf(`instruction-${identity}`);
       if (mine.some(mark=>mark.relation==="CREATED")) slot.created.set(obligationId,member);
       else slot.reordered.set(obligationId,member);
       byInstruction.set(identity,slot);
@@ -174,7 +186,7 @@ export function assignmentMembership(
       const mine = list.filter((e) => e.assignmentKey === key);
       const joinedAt = mine.map((e) => e.at).sort()[0] ?? "";
       const member: AssignmentMember = { obligationId, subjectId, joinedAt };
-      const slot = byKey.get(key) ?? { created: new Map(), reordered: new Map() };
+      const slot = byKey.get(key) ?? slotOf(`key-${key}`);
       if (mine.some((e) => e.relation === "CREATED")) slot.created.set(obligationId, member);
       else slot.reordered.set(obligationId, member);
       byKey.set(key, slot);
@@ -195,26 +207,27 @@ export interface AssignmentSpend {
 }
 
 /** One assignment's model-backed spend in a window, by the rule in the header. */
-export function assignmentSpend(charges: readonly PricedCharge[], members: AssignmentMembers, since: string, until: string): AssignmentSpend {
-  const joinedAt = new Map<string, number>();
-  const subjectJoinedAt = new Map<string, number>();
-  for (const m of [...members.created.values(), ...members.reordered.values()]) {
+export function assignmentSpend(charges: Iterable<PricedCharge>, members: AssignmentMembers, since: string, until: string): AssignmentSpend {
+  const scratch = spendScratch(), {db, owner} = scratch;
+  const addObligation = db.prepare("INSERT INTO members VALUES(?,?,?) ON CONFLICT(owner,id) DO UPDATE SET at=excluded.at");
+  const addSubject = db.prepare("INSERT INTO members VALUES(?,?,?) ON CONFLICT(owner,id) DO UPDATE SET at=MIN(members.at,excluded.at)");
+  const joinedAt = db.prepare("SELECT at FROM members WHERE owner=? AND id=?");
+  try {
+  for (const m of (function* () {yield* members.created.values(); yield* members.reordered.values();})()) {
     const t = Date.parse(m.joinedAt);
-    joinedAt.set(m.obligationId, t);
-    subjectJoinedAt.set(m.subjectId, Math.min(subjectJoinedAt.get(m.subjectId) ?? Number.POSITIVE_INFINITY, t));
+    addObligation.run(owner, `o:${m.obligationId}`, t);
+    addSubject.run(owner, `s:${m.subjectId}`, t);
   }
-  const byObligation: PricedCharge[] = [];
-  const bySubject: PricedCharge[] = [];
-  for (const entry of charges) {
+  const byObligation = filterIterable(charges, entry => {
     const at = Date.parse(entry.at);
-    if (entry.obligationId !== null) {
-      const joined = joinedAt.get(entry.obligationId);
-      if (joined !== undefined && at >= joined) byObligation.push(entry);
-      continue;
-    }
-    const joined = entry.jurisdiction === null ? undefined : subjectJoinedAt.get(entry.jurisdiction);
-    if (joined !== undefined && at >= joined) bySubject.push(entry);
-  }
+    const joined = entry.obligationId === null ? undefined : joinedAt.get(owner, `o:${entry.obligationId}`);
+    return joined !== undefined && at >= Number(joined.at);
+  });
+  const bySubject = filterIterable(charges, entry => {
+    if (entry.obligationId !== null || entry.jurisdiction === null) return false;
+    const joined = joinedAt.get(owner, `s:${entry.jurisdiction}`);
+    return joined !== undefined && Date.parse(entry.at) >= Number(joined.at);
+  });
   /* The Fleet's own model-backed and window rule, for both halves. */
   const named = aggregatePricedSpend(byObligation, since, until);
   const unnamed = aggregatePricedSpend(bySubject, since, until);
@@ -224,6 +237,7 @@ export function assignmentSpend(charges: readonly PricedCharge[], members: Assig
     unmeasured: named.unmeasured + unnamed.unmeasured,
     bySubject: unnamed.measured + unnamed.unmeasured,
   };
+  } finally { scratch.release(); }
 }
 
 /* ------------------------------------------------------------ the gate */
@@ -473,10 +487,10 @@ export class AssignmentBudgetGate {
  * Arm the gate at cycle start: each budget's rolling-window spend from the
  * canonical ledger. `costs` null means the ledger could not be read.
  */
-function chargesForInstruction(charges:readonly PricedCharge[], spec:AssignmentBudgetSpec):readonly PricedCharge[] {
+function chargesForInstruction(charges:Iterable<PricedCharge>, spec:AssignmentBudgetSpec):Iterable<PricedCharge> {
   // A charge with a different exact receipt does not belong here. Older rows
   // without receipts are counted by membership and time.
-  return charges.filter(cost=>cost.assignmentRefs===undefined ||
+  return filterIterable(charges,cost=>cost.assignmentRefs===undefined ||
     cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
 }
 
@@ -484,7 +498,7 @@ export function armAssignmentBudget(input: {
   readonly now: string;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: readonly PricedCharge[] | null;
+  readonly charges: Iterable<PricedCharge> | null;
   readonly worstCaseUsd: number;
   readonly intentsReadable: boolean;
   readonly malformed?: readonly MalformedAssignmentBudget[];
@@ -570,7 +584,7 @@ export function assignmentCycleReading(input: {
   readonly gate: AssignmentBudgetGate;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: readonly PricedCharge[] | null;
+  readonly charges: Iterable<PricedCharge> | null;
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
@@ -595,8 +609,8 @@ export function assignmentCycleReading(input: {
       members: {
         created: m.created.size,
         reordered: m.reordered.size,
-        createdSample: [...m.created.keys()].sort().slice(0, READING_LIST_CAP),
-        reorderedSample: [...m.reordered.keys()].sort().slice(0, READING_LIST_CAP),
+        createdSample: memberSample(m.created.keys()),
+        reorderedSample: memberSample(m.reordered.keys()),
       },
       budget:
         spec === null || state === null

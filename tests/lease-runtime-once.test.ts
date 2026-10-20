@@ -10,7 +10,7 @@ import { knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts"
 import type { MethodKnowledge } from "../lib/method/knowledge.ts";
 import { finishBoxFinding, takeBoxFinding } from "../lib/control-plane/box.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
-import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { autonomousStandingRuntime, maintainAutonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
@@ -58,11 +58,11 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
 
 await installRegistryRuntime();
 
-test("a lease worker builds its runtime once per process; the old per-task build stays behind its switch", async () => {
+test("a lease worker builds one runtime per process with the current task's website guard", async () => {
   const source = await readFile(new URL("../lib/control-plane/workers/lease-worker.ts", import.meta.url), "utf8");
   assert.equal(source.match(/autonomousStandingRuntime\(/g)?.length, 1, "one construction site");
-  assert.match(source, /shared \?\?= await buildRuntime\(null\)/);
-  assert.match(source, /WTP_LEASE_RUNTIME_PER_TASK/);
+  assert.match(source, /shared \?\?= await buildRuntime\(\)/);
+  assert.doesNotMatch(source, /WTP_LEASE_RUNTIME_PER_TASK/);
   assert.match(source, /openBytesFor: s => safety\.guardedOpenBytes\("public-web", s\)/, "the website guard follows each task's subject");
 });
 
@@ -80,7 +80,7 @@ test("beginTask refreshes one task's worker history on a runtime that serves man
 });
 
 
-test("Box startup replays durable Scout findings once without resetting a completed build", async t => {
+test("round upkeep replays durable Scout findings once without resetting a completed build", async t => {
   const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
   const root = await mkdtemp(join(tmpdir(), "box-runtime-"));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -98,7 +98,7 @@ test("Box startup replays durable Scout findings once without resetting a comple
     startedAt: h.now(), recordedAt: h.now(),
   };
   await h.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, scout.recordedAt);
-  const start = () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now,
+  const start = () => maintainAutonomousStandingRuntime({ root, repos: h.repos, now: h.now,
     auditCeilingUsd: 1, environment: { NODE_ENV: "test" } });
   await start();
   const [row] = await h.repos.boxFindings.list();

@@ -19,7 +19,7 @@ const T0 = Date.parse("2026-10-06T03:00:00.000Z");
 
 function armedLane(closed: string | null, openJobs: unknown[] = []): ArmedHunterLane {
   return { closed: closed === null ? null : { code: "PAUSED", reason: closed }, armedAt: new Date(T0).toISOString(), fleetSafety: null,
-    guards: { openJobs: () => openJobs } as never, arming: null, spendHolds: { settle: async () => null } as never, ceilingUsd: 50, discoverySearchOn: false };
+    guards: { openJobs: () => openJobs, pendingJobs: new Set(openJobs) } as never, arming: null, spendHolds: { settle: async () => null } as never, ceilingUsd: 50, discoverySearchOn: false };
 }
 
 function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: ArmedHunterLane[]; lifeMs?: number; drainAfterWaves?: number }) {
@@ -48,7 +48,7 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
       /* A wave takes six minutes: longer than a refresh, so the guards change under it. */
       for (let i = 0; i < 6; i += 1) { pass(60_000); await new Promise(done => setImmediate(done)); }
       waves.push({ queue, paidOpen, guardsAtEnd: lane.current() });
-      return queue.taskIds.map(id => ({ obligationId: id }) as never);
+      return { dispatched: queue.taskIds.length, attempted: 0, worked: 0, scoutsAdmitted: 0 };
     },
     stopRequested: () => options.drainAfterWaves !== undefined && waves.length >= options.drainAfterWaves,
     log: line => { log.push(line); },
@@ -58,15 +58,19 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
   return { lane, log, waves, get arms() { return arms; } };
 }
 
-const queue = (writtenAt: string, taskIds: string[], plainTaskIds: string[] = []): HunterQueue => ({ format: 1, writtenAt, taskIds, plainTaskIds });
+const queue = (writtenAt: string, taskIds: string[], plainTaskIds: string[] = []): HunterQueue => ({ format: 2, writtenAt, taskIds, plainTaskIds, rank: id => taskIds.indexOf(id), isPlain: id => plainTaskIds.includes(id), close: () => {} });
 
 test("CH-24 lane: the queue round-trips beside the reading, and a missing or malformed queue is named", () => {
   const dir = mkdtempSync(join(tmpdir(), "hunter-queue-"));
   const path = hunterQueuePath(join(dir, "arming.json"));
-  assert.equal(path, join(dir, "queue.json"));
+  assert.equal(path, join(dir, "queue.sqlite"));
   assert.deepEqual(readHunterQueue(path), { unread: "no round has written a queue yet" });
   writeHunterQueue(path, { writtenAt: "2026-10-06T03:00:00.000Z", taskIds: ["a", "b"], plainTaskIds: ["b"] });
-  assert.deepEqual(readHunterQueue(path), queue("2026-10-06T03:00:00.000Z", ["a", "b"], ["b"]));
+  const held = readHunterQueue(path);
+  assert.ok(!("unread" in held));
+  try { assert.equal(held.writtenAt, "2026-10-06T03:00:00.000Z"); assert.deepEqual([...held.taskIds], ["a", "b"]);
+    assert.deepEqual([...held.plainTaskIds], ["b"]); assert.equal(held.rank("b"), 2); assert.equal(held.isPlain("b"), true); }
+  finally { held.close(); }
   writeFileSync(path, "{\"format\":2}");
   assert.deepEqual(readHunterQueue(path), { unread: "the round's queue is not in the expected form" });
 });
@@ -120,7 +124,7 @@ test("CH-24 lane: the round under the switch closes its own model lane after any
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
   const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
   assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT\)\)/);
-  assert.match(wave, /return \{ \.\.\.planned, dispatches: \[\.\.\.queueFailures\], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 \};/);
+  assert.match(wave, /return \{ \.\.\.planned, dispatched:/);
 });
 
 test("CH-24 lane: the runner starts the lane only under the switch, names one reading path for every checkout, and drains it on a release", () => {

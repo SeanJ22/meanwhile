@@ -73,12 +73,16 @@ export async function processRoutineCandidate(
   if (inputCandidate.stateRetirement && inputCandidate.stateRetirement !== options.retirementAuthority)
     throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const scoped = statePublicationScope(inputCandidate.scope);
-  let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
+  const sharedRoll = inputCandidate.recordClass === "FEDERAL_ROLL_CALL" && inputCandidate.scope === "US:recent-federal-rollcalls";
+  let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope)
+    : sharedRoll && store.readFederalRollCallPublicationBase ? await store.readFederalRollCallPublicationBase() : null;
   let current = base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   let lkg = base ? base.lkg : current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
+  if (sharedRoll && base && preloadedBaseChanged)
+    throw new PromotionBaseChangedError(inputCandidate.id, expectedBaseVersionId!, observedBaseVersionId);
   const lkgPredecessorVersionId = lkg === null
     ? null
     : trustedLkgPredecessorVersionId(lkg.candidate);

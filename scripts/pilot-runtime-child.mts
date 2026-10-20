@@ -2,13 +2,25 @@ import { spawn, type ChildProcess } from "node:child_process";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
 import { RESEARCH_STALL_PROBE, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
 import { vitalSignsLineFilter, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
+import { routineProcessSlots, type WorkerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 
 export const RUNTIME_NO_PROGRESS_MS = 10 * 60_000;
 /** How long before the no-progress limit the child is asked what it is waiting on; its answer is not progress. */
 export const STALL_PROBE_LEAD_MS = 60_000;
-const ownedChildren = new Set<{ lastProgressAt: number; stop: (reason: string) => Promise<void> }>();
+const ownedChildren = new Set<{ pending: boolean; lastProgressAt: number; stop: (reason: string) => Promise<void> }>();
 const progressListeners = new Set<() => void>();
 let vitalSignsSink: ((part: NeonBytesHour) => void) | null = null;
+const runtimeMemorySlots = routineProcessSlots();
+
+/** The executable script, after Node's loader arguments, identifies this job's measured reservation. */
+function childMemoryEntry(command: BoundedChildCommand): string {
+  const nodeOptionValues = new Set(["--import", "--require", "-r", "--loader", "--experimental-loader",
+    "--env-file", "--env-file-if-exists", "--eval", "-e", "--print", "-p"]);
+  const script = command.args.find((arg, index) => !arg.startsWith("-") && !nodeOptionValues.has(command.args[index - 1] ?? "") &&
+    /[.](?:mts|ts|mjs|js)$/.test(arg));
+  return `${command.id}/${script?.split(/[\\/]/).at(-1) ?? command.executable.split(/[\\/]/).at(-1)}`;
+}
 
 /**
  * Children print their hour totals as report lines
@@ -59,7 +71,7 @@ export async function waitForRuntimeQuiescence(work: () => Promise<void>, option
       if (remaining > 0) { timer = setTimeout(expire, remaining); return; }
       expired = true;
       const reason = `RUNTIME_DRAIN_NO_PROGRESS: ${options.reason}; no changed child progress for ${quietMs}ms`;
-      const hung = [...ownedChildren].filter(child => Date.now() - child.lastProgressAt >= quietMs);
+      const hung = [...ownedChildren].filter(child => child.pending || Date.now() - child.lastProgressAt >= quietMs);
       void Promise.all(hung.map(child => child.stop(reason))).then(
         () => rejectDrain(new Error(reason)),
         error => rejectDrain(new Error(`${reason}; ${error instanceof Error ? error.message : String(error)}`)),
@@ -87,12 +99,35 @@ export async function runRuntimeChildren(
     readonly noProgressMs?: number;
     /** The lane's deadline: the child's process tree is ended when it passes. */
     readonly deadlineMs?: number;
+    /** Shared host admission; supplied explicitly by controlled runs. */
+    readonly slots?: WorkerProcessSlots;
     readonly onStarted?: (id: string, child: ChildProcess) => void },
 ): Promise<readonly BoundedChildResult[]> {
   if (options.noProgressMs !== undefined && (!Number.isSafeInteger(options.noProgressMs) || options.noProgressMs <= 0)) {
     throw new Error("RUNTIME_NO_PROGRESS_INTERVAL_INVALID");
   }
-  return Promise.all(commands.map(command => new Promise<BoundedChildResult>(resolve => {
+  return Promise.all(commands.map(async command => {
+    const admission = new AbortController();
+    const owned = { pending: true, lastProgressAt: Date.now(),
+      stop: async (reason: string) => { admission.abort(new Error(reason)); } };
+    ownedChildren.add(owned);
+    let release: Awaited<ReturnType<WorkerProcessSlots["acquire"]>>;
+    try {
+      release = await (options.slots ?? runtimeMemorySlots).acquire(childMemoryEntry(command), options.deadlineMs, admission.signal);
+      if (admission.signal.aborted) {
+        release();
+        admission.signal.throwIfAborted();
+      }
+      if (Date.now() >= (options.deadlineMs ?? Infinity)) {
+        release();
+        throw new Error("PASS_TIME_BUDGET: the pass reached its deadline before this child could start; its work stays owed");
+      }
+    } catch (error) {
+      ownedChildren.delete(owned);
+      return { id: command.id, status: null, signal: null, stdout: "", stderr: "", termination: "SPAWN_FAILED" as const,
+        errorMessage: sanitizedErrorDiagnostic(error) };
+    }
+    try { return await new Promise<BoundedChildResult>(resolve => {
     let stdout = "", stderr = "";
     const bytes = { stdout: 0, stderr: 0 };
     let errorMessage: string | null = null;
@@ -110,7 +145,8 @@ export async function runRuntimeChildren(
       detached: process.platform !== "win32",
       stdio: command.executable === process.execPath ? ["ignore", "pipe", "pipe", "ipc"] : ["ignore", "pipe", "pipe"],
     });
-    const owned = { lastProgressAt: Date.now(), stop: async (reason: string) => {
+    owned.pending = false;
+    owned.stop = async (reason: string) => {
       if (stopped) return;
       stopped = true;
       errorMessage = reason;
@@ -120,8 +156,7 @@ export async function runRuntimeChildren(
       stderr += line;
       options.onStderr?.(command.id, line);
       await endOwnedProcessTree(child);
-    } };
-    ownedChildren.add(owned);
+    };
     const wall = options.deadlineMs === undefined ? undefined : setTimeout(() => {
       void owned.stop(`PASS_TIME_BUDGET: ${command.id} reached its lane deadline; its unfinished work stays owed to the next pass`)
         .catch(error => { errorMessage = `${errorMessage}; ${String(error)}`; child.kill("SIGKILL"); });
@@ -158,7 +193,11 @@ export async function runRuntimeChildren(
     };
     child.stdout?.setEncoding("utf8").on("data", chunk => output("stdout", String(chunk)));
     child.stderr?.setEncoding("utf8").on("data", chunk => output("stderr", String(chunk)));
-    child.once("spawn", () => options.onStarted?.(command.id, child));
+    child.once("spawn", () => {
+      release.observe?.(child.pid!);
+      command.onStarted?.(child.pid!);
+      options.onStarted?.(command.id, child);
+    });
     child.once("error", error => { errorMessage = error.message; });
     child.once("close", (code, signal) => {
       output("stdout", "", true);
@@ -172,5 +211,6 @@ export async function runRuntimeChildren(
         errorMessage });
     });
     renew();
-  })));
+    }); } finally { ownedChildren.delete(owned); release(); }
+  }));
 }

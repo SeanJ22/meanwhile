@@ -1,6 +1,7 @@
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
+import { federalRollPublicationPriorProof } from "./federal-roll-publication-base.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -1216,15 +1217,16 @@ export function promotionProofIssue<T>(
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
   const scoped = statePublicationScope(scope);
   const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
-  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
+  const sharedRollPrior = federalRollPublicationPriorProof(candidate, projection);
+  const readModelHash = sharedRollPrior?.readModelHash ?? indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
     !SHA256.test(candidate.normalization.normalizedHash) ||
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
-  const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
-    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
+  const normalizedPayloadHash = sharedRollPrior?.normalizedPayloadHash ?? (indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
+    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload));
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1234,8 +1236,8 @@ export function promotionProofIssue<T>(
   if (!projectionReceipt || !candidateReceipt) return "the pointer or candidate receipt is malformed";
   if (projectionReceipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD") return "the pointer is not backed by a GOOD receipt";
   const sourceCheck = candidateReceipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY");
-  if (indexedPrior) {
-    if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
+  if (indexedPrior || sharedRollPrior) {
+    if ((indexedPrior ?? sharedRollPrior)!.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
   } else if (candidate.bootstrapImport) {
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;

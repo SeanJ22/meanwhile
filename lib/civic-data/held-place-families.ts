@@ -13,7 +13,7 @@ import type { FundingSnapshot } from "../funding/types.ts";
 import type { StateMoneySnapshot } from "../funding/state-money.ts";
 import { isRenderable } from "../funding/state-money-reader.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../funding/data-plane.ts";
-import { requiredRoutineContract } from "./contracts.ts";
+import { readFecStateSnapshot } from "../funding/fec-state-read.ts";
 import { readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../state-rollcalls/authority.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
@@ -95,7 +95,6 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const moneyScopes = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
   const filings = requiredManualProductionContract("official-filings"), navigation = requiredManualProductionContract("ballot-navigation");
-  const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     Promise.all([...states].filter(state => (REGISTRY_STATES as readonly string[]).includes(state)).map(state => read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))),
     Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
@@ -103,7 +102,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const rosters = [...federal.map(read => value(read)?.roster), ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));
   const [funding, money, filingRead, navigationRead] = await Promise.all([
-    read<FundingSnapshot>(fec.recordClass, fec.scope),
+    Promise.all([...states].map(state => readFecStateSnapshot(state, { ...options, targetKeys: targets }))),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
     read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
@@ -134,7 +133,9 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     derivedCampaignSites.push(...(derived?.records ?? []).filter(row => readerKeys.has(row.id) || readerKeys.has(row.candidacyId)));
   }
   return { rosters, ballots, candidateLineups, candidateProfiles, candidatePublications, derivedCampaignSites,
-    votingSites, funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
+    votingSites, funding: funding.reduce<FundingSnapshot | null>((held, read) => {
+      const own = value(read); return own ? held ? { ...held, candidates: [...held.candidates, ...own.candidates], absences: [] } : own : held;
+    }, null), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
     electionDates: ELECTION_DATES.filter(row => states.has(row.state)),
     electionFields: (value(navigationRead)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[] };

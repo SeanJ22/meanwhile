@@ -1,12 +1,13 @@
+import { requireRegistryState } from "../lib/civic-data/state-scopes.ts";
+import { meetingDerivationContractId } from "../lib/civic-data/meeting-derivation-scope.ts";
+import { meetingDerivationInput, readMeetingDerivationProjection } from "../lib/civic-data/meeting-derivation-read.ts";
+import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
+import { assignment } from "./cli-args.mts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
 
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import {
-  DERIVED_CROSSWALK_RECORD_CLASS,
-  DERIVED_CROSSWALK_SCOPE,
   composeCrosswalk,
   readDerivedMeetingBodyCrosswalk,
 } from "../lib/civic-data/derived-crosswalk.ts";
@@ -41,10 +42,11 @@ import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
-const CONTRACT_ID = "meeting-source-wiring";
+const state = requireRegistryState(assignment(process.argv, "state") ?? "");
+const CONTRACT_ID = meetingDerivationContractId("meeting-source-wiring", state);
 
 if (!process.argv.includes("--promote")) {
-  throw new Error("usage: scripts/derive-meeting-source-wiring.mts --promote (the standing runner's child; there is no dry mode against production)");
+  throw new Error("usage: scripts/derive-meeting-source-wiring.mts --state=XX --promote (the standing runner's child; there is no dry mode against production)");
 }
 installNeonRequestDeadline();
 prepareProductionCivicDataWrite();
@@ -52,7 +54,7 @@ prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 // A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
-const doors = await ensureMeetingDoors();
+const doors = await ensureMeetingDoors({ state });
 if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
@@ -81,38 +83,32 @@ async function heldText(held: HeldVaultArtifact): Promise<HeldCalendarReading["h
 }
 
 async function main(): Promise<void> {
-  const lkg = await readDerivedMeetingWiring({ store, bypassCache: true, now });
+  const lkg = await readDerivedMeetingWiring({ state, store, bypassCache: true, now });
   if (lkg.kind === "STORE_UNREACHABLE") {
-    await finish(derivedWiringFailedCandidate(now, `The previous wiring version could not be read (${lkg.code}): ${lkg.detail}`));
+    await finish(derivedWiringFailedCandidate(now, `The previous wiring version could not be read (${lkg.code}): ${lkg.detail}`, state));
     return;
   }
   const previous = lkg.kind === "PROMOTED" ? derivedWiringEntries(lkg.value) : [];
-  const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInputRef("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
-    : null;
+  const lkgInput = meetingDerivationInput(lkg);
 
 
-  const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
-  const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now });
-  const automaticRead = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  const crosswalk = await readMeetingDerivationProjection<CuratedReaderProjection>({ family: "meeting-body-crosswalk", options: { state, store, bypassCache: true, now },
+    statePath: ["ocdId"], value: records => ({ kind: "meeting-body-crosswalk", records: records as CuratedReaderProjection["records"] }) });
+  const automaticRead = await readDerivedMeetingBodyCrosswalk({ state, store, bypassCache: true, now });
   for (const read of [crosswalk, automaticRead]) {
     if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") {
-      await finish(derivedWiringFailedCandidate(now, `A meeting-body crosswalk could not be read (${read.kind}): ${"detail" in read ? read.detail : ""}`));
+      await finish(derivedWiringFailedCandidate(now, `A meeting-body crosswalk could not be read (${read.kind}): ${"detail" in read ? read.detail : ""}`, state));
       return;
     }
   }
   if (crosswalk.kind !== "PROMOTED" && automaticRead.kind !== "PROMOTED") {
-    await finish(derivedWiringFailedCandidate(now, "No reviewed or automatic meeting-body crosswalk is promoted yet, so no calendar is connected to a body."));
+    await finish(derivedWiringFailedCandidate(now, "No reviewed or automatic meeting-body crosswalk is promoted yet, so no calendar is connected to a body.", state));
     return;
   }
-  const manualInput = crosswalk.kind === "PROMOTED"
-    ? promotedInputRef(crosswalkContract.recordClass, crosswalkContract.scope, crosswalk.metadata.versionId, crosswalk.value, crosswalk.metadata.promotedAt)
-    : null;
-  const automaticInput = automaticRead.kind === "PROMOTED"
-    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, automaticRead.metadata.versionId, automaticRead.value, automaticRead.metadata.promotedAt)
-    : null;
+  const manualInput = meetingDerivationInput(crosswalk);
+  const automaticInput = meetingDerivationInput(automaticRead);
   if ((crosswalk.kind === "PROMOTED" && manualInput === null) || (automaticRead.kind === "PROMOTED" && automaticInput === null)) {
-    await finish(derivedWiringFailedCandidate(now, "A promoted crosswalk carries no version id or promotion time."));
+    await finish(derivedWiringFailedCandidate(now, "A promoted crosswalk carries no version id or promotion time.", state));
     return;
   }
   const composed = composeCrosswalk(
@@ -132,7 +128,7 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
   } | { readonly unread: string }>();
-  for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
+  for (const state of [requireRegistryState(assignment(process.argv, "state")!)]) {
     console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
     try {
       const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
@@ -164,7 +160,7 @@ async function main(): Promise<void> {
   /* The newest walk of each crosswalked government, read only. */
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) {
-    await finish(derivedWiringFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
+    await finish(derivedWiringFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read.", state));
     return;
   }
   const jurisdictions = [...new Set(rows.map((row) => row.jurisdictionId))];
@@ -173,11 +169,11 @@ async function main(): Promise<void> {
     const sql = neon(controlPlane);
     const found = jurisdictions.length === 0 ? [] : await sql.query(
       CURRENT_CALENDAR_READS_SQL,
-      [jurisdictions],
+      [jurisdictions, state],
     ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt }[];
     attempts = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt }));
   } catch (error) {
-    await finish(derivedWiringFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`));
+    await finish(derivedWiringFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`, state));
     return;
   }
 
@@ -207,8 +203,10 @@ async function main(): Promise<void> {
     held === null || held.tier === "RESTRICTED_RAW"
       ? null
       : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
+  const readings = new Map<string, import("../lib/control-plane/discovery/derived-wiring.ts").WiringVerification>();
+  for (const jurisdiction of jurisdictions) {
   const pending: HeldCalendarReading[] = [];
-  for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
+  for (const reviewed of rows.filter((row) => row.jurisdictionId === jurisdiction && row.status === "ACTIVE")) {
     console.log(`RCD_PROGRESS meeting-source-wiring ${reviewed.id}`);
     const walk = latestCalendarWalk(attempts, reviewed.jurisdictionId, reviewed.route)?.attempt;
     if (walk === undefined) continue;
@@ -228,10 +226,11 @@ async function main(): Promise<void> {
   /* The Reader projections the adapters resolve through are read before any reading; an unreadable one refuses the pass. */
   const read = await readHeldCalendars({ options: { store, bypassCache: true, now }, now, adapterDigest, readings: pending });
   if (read.kind === "UNREADABLE") {
-    await finish(derivedWiringFailedCandidate(now, read.detail));
+    await finish(derivedWiringFailedCandidate(now, read.detail, state));
     return;
   }
-  const readings = read.verifications;
+  for (const [key, verification] of read.verifications) readings.set(key, verification);
+  }
 
   const decisions = deriveWiringDecisions({
     crosswalk: {
@@ -282,7 +281,7 @@ async function main(): Promise<void> {
     decisions.filter((d) => d.disposition === "PROMOTE").length,
     decisions.length === 0 ? "no calendar-to-body row reached the derive this pass" : undefined,
   )));
-  await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now));
+  await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is NonNullable<typeof i> => i !== null), now, state));
 }
 
 await main();

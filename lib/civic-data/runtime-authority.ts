@@ -3,6 +3,8 @@ import { randomBytes } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 import { withoutBillingSecrets } from "../control-plane/provider-billing.ts";
+import { PLURAL_STATES } from "../sources/plural/targets.ts";
+import { stateFromRegistryRuntimeContractId, stateBallotContractId } from "./state-scopes.ts";
 
 export const RUNTIME_AUTHORITY_ENV = Object.freeze({
   repo: "WTP_RUNTIME_AUTHORITY_REPO",
@@ -338,6 +340,20 @@ export function admittedRuntimeChildEnvironment(input: {
   };
 }
 
+/** These two state publishers already reconcile official candidacies after their own GOOD publication.
+ * They keep their original admission; only that state's registry derivation is reachable. */
+export function isRegisteredRuntimeDerivation(
+  authority: Pick<RuntimeAuthorityEnvelope, "capability" | "contract">,
+  contractId: string,
+  kind: "routine" | "manual",
+): boolean {
+  if (kind !== "manual") return false;
+  const state = stateFromRegistryRuntimeContractId(contractId);
+  if (!state) return false;
+  return authority.capability === "ROUTINE_CONTRACT" && PLURAL_STATES.includes(state.toLowerCase()) && authority.contract === `openstates-people-${state.toLowerCase()}` ||
+    authority.capability === "MANUAL_CONTRACT" && authority.contract === stateBallotContractId("ballot-contests", state);
+}
+
 export function assertRegisteredRuntimeContract(
   contractId: string,
   kind: "routine" | "manual",
@@ -346,6 +362,11 @@ export function assertRegisteredRuntimeContract(
   // The one-time federal people split publishes many place and member contracts under its own admission.
   if (runtimeAuthorityEnvelope(env)?.capability === "FEDERAL_PEOPLE_SPLIT") {
     assertRuntimeAuthority({ capabilities: ["FEDERAL_PEOPLE_SPLIT"] }, env);
+    return;
+  }
+  const parent = runtimeAuthorityEnvelope(env);
+  if (parent && isRegisteredRuntimeDerivation(parent, contractId, kind)) {
+    assertRuntimeAuthority({ capabilities: [parent.capability], contract: parent.contract }, env);
     return;
   }
   assertRuntimeAuthority({

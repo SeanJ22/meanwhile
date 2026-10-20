@@ -8,7 +8,8 @@ const ACS_CATALOG = "https://api.census.gov/data.json";
 interface AcsRelease { readonly vintage: number; readonly publishedAt: string | null; readonly publicationUrl?: string }
 export interface AcsJoinTarget { readonly geography: AcsScope; readonly geoid: string; readonly divisionId: string }
 export interface AcsLoadCounts { readonly state: string; readonly loaded: number; readonly joined: number; readonly unjoined: number }
-export interface AcsNationalLoad {
+export interface AcsStateLoad {
+  readonly state: string;
   readonly release: AcsRelease;
   readonly captures: readonly AcsFetch[];
   readonly rows: readonly AcsPopulationRow[];
@@ -77,41 +78,50 @@ export function acsLoadCounts(rows: readonly AcsPopulationRow[]): AcsLoadCounts[
   return [...byState.values()].sort((a, b) => a.state.localeCompare(b.state));
 }
 
-/** Bulk wildcard tables, never one request per government. Concurrency bounds memory;
- * provider Retry-After is the only request pacing. A failed table refuses replacement of the LKG. */
-export async function acquireNationalAcs(input: {
+/** One state's wildcard tables and exactly its touching ZCTAs. National source
+ * calls are still used, but no other state's civic records enter this job. */
+export async function acquireStateAcs(input: {
+  readonly state: string;
   readonly key: string | undefined;
   readonly fetcher?: typeof globalThis.fetch;
   readonly signal?: AbortSignal;
   readonly targets: (stateFips: string, rows: readonly AcsPopulationRow[]) => Promise<readonly AcsJoinTarget[]>;
-}): Promise<AcsNationalLoad> {
-  const fetcher = input.fetcher ?? globalThis.fetch;
+}): Promise<AcsStateLoad> {
+  const { acsState } = await import("./publication.ts");
+  const selected = acsState(input.state), fetcher = input.fetcher ?? globalThis.fetch;
   const release = await discoverAcsRelease(fetcher, input.signal);
-  const read = (scope: AcsScope, stateFips?: string) => fetchTable(scope, input.key, fetcher, input.signal, { ...release, stateFips });
-  const initial = await Promise.allSettled([read("zcta"), read("state"), read("nation")]);
-  const captures: AcsFetch[] = initial.map(result => { if (result.status === "rejected") throw result.reason; return result.value; });
-  const stateRows = normalize(captures[1]);
-  const rows: AcsPopulationRow[] = [];
-  const zipTargets: AcsJoinTarget[] = [];
-  const queue = [...stateRows];
-  const worker = async () => {
-    for (let state = queue.pop(); state; state = queue.pop()) {
-      const scopes = (Object.keys(ACS_GEOGRAPHIES) as AcsScope[]).filter(scope => !["zcta", "state", "nation"].includes(scope));
-      const settled = await Promise.allSettled(scopes.map(scope => read(scope, state.code)));
-      const tables = settled.map(result => { if (result.status === "rejected") throw result.reason; return result.value; });
-      const normalized = tables.flatMap(normalize);
-      const held = await input.targets(state.code, normalized);
-      zipTargets.push(...held.filter(target => target.geography === "zcta"));
-      const base = stateBase(state.code)?.base;
-      const targets = [...held, ...(base ? [{ geography: "state" as const, geoid: state.code, divisionId: base }] : [])];
-      rows.push(...joinAcsRows([state, ...normalized], targets));
-      captures.push(...tables);
+  const read = (scope: AcsScope, codes?: readonly string[]) => fetchTable(scope, input.key, fetcher, input.signal,
+    { ...release, stateFips: selected.fips, ...(codes ? { codes } : {}) });
+  const base = await input.targets(selected.fips, []);
+  const zipCodes = [...new Set(base.filter(target => target.geography === "zcta").map(target => target.geoid))].sort();
+  if (!zipCodes.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `The held Census geography has no ZCTAs for ${selected.state}.`);
+  const captures: AcsFetch[] = [];
+  const normalized: AcsPopulationRow[] = [];
+  const capture = async (scope: AcsScope, codes?: readonly string[]): Promise<void> => {
+    const fetched = await read(scope, codes), rows = normalize(fetched);
+    const expected = codes ?? (scope === "state" ? [selected.fips] : scope === "nation" ? ["1"] : undefined);
+    if (expected) {
+      const keys = new Set(expected);
+      if (rows.length !== keys.size || rows.some(row => !keys.has(row.code))) {
+        throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID",
+          `Census ACS ${scope} returned ${rows.length} row(s), expected exactly the ${keys.size} requested geography identifier(s) for ${selected.state}.`);
+      }
     }
+    captures.push(fetched); normalized.push(...rows);
   };
-  const workers = await Promise.allSettled(Array.from({ length: Math.min(4, queue.length) }, worker));
-  for (const result of workers) if (result.status === "rejected") throw result.reason;
-  rows.push(...joinAcsRows(normalize(captures[0]), zipTargets), ...joinAcsRows(normalize(captures[2]), [{ geography: "nation", geoid: "1", divisionId: "ocd-division/country:us" }]));
-  rows.sort((a, b) => `${a.geography}:${a.code}`.localeCompare(`${b.geography}:${b.code}`));
-  captures.sort((a, b) => a.url.localeCompare(b.url));
-  return { release, captures, rows, counts: acsLoadCounts(rows) };
+  // The API's nonhierarchical ZCTA geography accepts explicit native codes.
+  // Every requested native code must arrive once, including a batch's last row.
+  for (let offset = 0; offset < zipCodes.length; offset += 100) await capture("zcta", zipCodes.slice(offset,offset + 100));
+  for (const scope of Object.keys(ACS_GEOGRAPHIES) as AcsScope[]) if (scope !== "zcta") await capture(scope);
+  const state = normalized.filter(row => row.geography === "state");
+  if (state.length !== 1 || state[0].code !== selected.fips || normalized.some(row => row.stateFips && row.stateFips !== selected.fips)) {
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `The ACS response contains an unrelated state for ${selected.state}.`);
+  }
+  const held = await input.targets(selected.fips, normalized);
+  const stateRoot = stateBase(selected.fips)?.base;
+  const targets = [...base, ...held, ...(stateRoot ? [{ geography: "state" as const, geoid: selected.fips, divisionId: stateRoot }] : []),
+    { geography: "nation" as const, geoid: "1", divisionId: "ocd-division/country:us" }];
+  const rows = joinAcsRows(normalized, targets).map(row => row.geography === "nation" ? row : { ...row, stateFips: selected.fips });
+  rows.sort((a,b) => `${a.geography}:${a.code}`.localeCompare(`${b.geography}:${b.code}`));
+  return { state: selected.state, release, captures, rows, counts: acsLoadCounts(rows) };
 }

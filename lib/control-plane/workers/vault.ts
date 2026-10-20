@@ -1,7 +1,9 @@
-import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readForParser, type EvidenceStore, type ObjectMeta } from "../evidence/store.ts";
 import type { ParserInput } from "../evidence/parser-boundary.ts";
+import { readArtifactsById } from "./scoped-history.ts";
+import { artifactVaultKeys } from "./vault-keys.ts";
 
 /** The acquiring roles whose bytes may reach a worker. */
 const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AUDITOR"];
@@ -16,17 +18,12 @@ const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AU
 export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly snapshot?: boolean } = {}) {
   // Only an explicitly bounded projection pass freezes its input index. Normal
   // acquisition workers keep seeing newly appended records on every invocation.
-  let snapshotRecords: Promise<readonly ArtifactRecord[]> | undefined;
-  let snapshotKeys: Promise<string[]> | undefined;
   const snapshotHeads = new Map<string, Promise<ObjectMeta | null>>();
   const resolved = new Map<string, Promise<ParserInput>>();
   const resolve = async (artifactId: string): Promise<ParserInput> => {
-    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
-    const records = all.filter(a => a.artifactId === artifactId && !a.partial);
+    const records = (await readArtifactsById(repos, artifactId)).filter(record => !record.partial);
     if (records.length === 0) throw new Error(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${artifactId}`);
-    const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
-    const hashes = new Set(records.map(record => record.contentHash));
-    const keys = listed.filter(key => hashes.has(key.slice(key.lastIndexOf("/") + 1).split(".")[0]));
+    const keys = await artifactVaultKeys(store, project, records);
     if (!keys.length) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
     const heads = options.snapshot ? snapshotHeads : new Map<string, Promise<ObjectMeta | null>>();
     let admitted = false;

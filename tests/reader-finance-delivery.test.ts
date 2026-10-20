@@ -1,3 +1,4 @@
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { isRenderable } from "../lib/funding/state-money-reader.ts";
 import assert from "node:assert/strict";
@@ -10,8 +11,7 @@ import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity
 import { ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -130,7 +130,7 @@ await installStateMoney("AZ", withRecords("AZ", [
 ]));
 await installStateMoney("NH", withRecords("NH", [filed("NH", "ballot-nh-merrimack:governor:ayotte-kelly", "Governor")]));
 await installStateMoney("NJ");
-await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
+await installFundingFixture("AZ");
 const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 
 const hobbsKey = "ballot-az-pima:governor:hobbs-katie";

@@ -4,6 +4,8 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { readAssignmentSourcesById } from "../assignment-read.ts";
 import { assignmentEvidenceTrail, type AssignmentEvidenceTrail } from "./assignment-evidence-trail.ts";
 import { workName } from "./v6-spend-read.ts";
+import { readOwnerStateReadback } from "../owner-readback-state.ts";
+import { stateCodeOf } from "../unit-state.ts";
 
 export const ADMIN_V6_TRAIL_CONTRACT = "admin-v6/trail@1" as const;
 export const REACHED_LIMIT = 12;
@@ -74,8 +76,8 @@ export async function readTrail(repos: ControlPlaneRepositories, id: string, now
   const read = await readAssignmentSourcesById(repos, id, { nowIso, activation: null, pilotZips: [] });
   if (read.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", detail: read.detail };
   if (read.kind !== "HELD") return { kind: "UNREAD", detail: read.detail };
-  const snapshot = await repos.ownerSnapshots.readNarrowed("current", { servedReaderReadback: true }).catch(() => null);
-  const servedReader = ((snapshot?.value ?? null) as { servedReaderReadback?: AssignmentSourcesServed } | null)?.servedReaderReadback ?? null;
+  const item=read.value.workItems.find(item=>item.id===id)??read.value.workItems[0];
+  const state=stateCodeOf(id,item?.subject??read.value.obligations[0]?.subjectId??"")??"other";
+  const servedReader=await readOwnerStateReadback(repos,state).catch(()=>null);
   return { kind: "HELD", trail: trailView(assignmentEvidenceTrail({ ...read.value, servedReader }, id, null)) };
 }
-type AssignmentSourcesServed = NonNullable<Parameters<typeof assignmentEvidenceTrail>[0]["servedReader"]>;

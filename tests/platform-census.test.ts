@@ -5,6 +5,7 @@ import { dotgovDomainLeads, heldCensusWebsiteNeeds, observePlatformCensus, readP
 import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
+import { acquireDotGov } from "../lib/civic-data/dotgov-acquisition.ts";
 
 const NOW = "2026-10-12T12:00:00.000Z";
 const csv = readFileSync(new URL("./fixtures/platform-census/dotgov.csv", import.meta.url), "utf8");
@@ -57,11 +58,17 @@ test(`${kind}: standing census reads state-scoped government and domain records 
 });
 test(`${kind}: CISA standing reference refresh saves source bytes once and waits for its slow clock`, async () => {
   let reads = 0, captures = 0;
+  const source = await acquireDotGov(undefined, { minimumDomains: 1, minimumElectionDomains: 0,
+    fetchImpl: (async input => String(input).includes("api.github.com")
+      ? new Response(JSON.stringify([{ sha: "1".repeat(40) }])) : new Response(csv)) as typeof fetch });
   const runtime = { now: () => NOW, budget: { spent: () => false }, spaceOut: async () => {},
-    open: async () => { reads++; return { status: 200, body: csv, bytes: csv.length, contentType: "text/csv", location: null, transportError: null }; },
+    open: async () => { throw new Error("the runtime must not retain a national CSV body"); },
     vault: async () => { captures++; return { stored: true, where: "fixture", why: "held" }; } };
-  await refreshDotgovCensusLeads(repos, runtime, "ID");
-  await refreshDotgovCensusLeads(repos, runtime, "ID");
+  try {
+    const shared = async () => { reads++; return source; };
+    await refreshDotgovCensusLeads(repos, runtime, "ID", shared);
+    await refreshDotgovCensusLeads(repos, runtime, "ID", shared);
+  } finally { await source.dispose(); }
   assert.equal(reads, 1);
   assert.equal(captures, 1);
   assert.ok((await readPlatformCensusNeeds("ID", null, { repos, census: () => [] })).needs.some(need => need.ownWebAddress === "https://aberdeenidaho.gov/"));

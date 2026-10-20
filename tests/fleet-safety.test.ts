@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -28,7 +29,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
-import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 
 const priced = (rows: readonly CostEntry[]) => rows.flatMap(row => pricedModelCharge(row, row.attemptId) ?? []);

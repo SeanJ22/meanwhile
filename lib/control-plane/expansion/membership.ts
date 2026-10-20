@@ -31,6 +31,8 @@
  */
 
 import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
+import { filterIterable } from "../spend-scratch.ts";
+import { plannerMap, plannerSet, type PlannerSpool } from "../scheduler/planner-spool.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   MEMBERSHIP_METHOD,
@@ -268,8 +270,8 @@ export function scopeMembers(
   scope: ScopeZctas,
   subjects: Iterable<string>,
   index: TerritoryIndex,
+  members: Set<string> = new Set<string>(),
 ): Set<string> {
-  const members = new Set<string>();
   for (const subject of subjects) {
     const territory = index.bySubject.get(subject);
     if (territory !== undefined && certainlyOverlaps(territory, scope)) members.add(subject);
@@ -314,13 +316,13 @@ export function orderByPlacement<T>(
 
 /** Attributed model spend for a scope's subjects in a window (the Fleet's own model-backed rule). */
 export function scopeModelSpend(
-  charges: readonly PricedCharge[],
+  charges: Iterable<PricedCharge>,
   members: ReadonlySet<string>,
   since: string,
   until: string,
 ): { readonly usd: number | null; readonly measured: number; readonly unmeasured: number } {
   return aggregatePricedSpend(
-    charges.filter((entry) => entry.jurisdiction !== null && members.has(entry.jurisdiction)),
+    filterIterable(charges, (entry) => entry.jurisdiction !== null && members.has(entry.jurisdiction)),
     since,
     until,
   );
@@ -329,6 +331,12 @@ export function scopeModelSpend(
 /* ------------------------------------------------------------ budget */
 
 export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
+
+/** Membership may be an indexed disk view; admission needs only a point lookup and streaming traversal. */
+export interface IndexedMembership extends Iterable<string> {
+  readonly size: number;
+  has(subject: string): boolean;
+}
 
 export interface BudgetScope {
   readonly lifetime?: boolean;
@@ -340,7 +348,7 @@ export interface BudgetScope {
   /** True when the scope's ZCTAs were resolved against the published lookup. */
   readonly resolved: boolean;
   /** The subjects in it (resolved scopes only). */
-  readonly members: ReadonlySet<string>;
+  readonly members: IndexedMembership;
   /** States it spans, upper-case; binds unknown-state subjects too when unresolved. */
   readonly states: readonly string[];
   /** Attributed rolling-24h model spend at cycle start. Null when unmeasured or unresolved. */
@@ -515,6 +523,8 @@ export class ScopeBudgetGate {
 /* ------------------------------------------------------------ the plan */
 
 export interface ExpansionPlanInput {
+  /** The runner's round-local disk index; native collections remain useful for place-sized callers. */
+  readonly planner?: PlannerSpool;
   readonly declaredMembers?: ReadonlyMap<string, ReadonlySet<string>>;
   readonly now: string;
   readonly scopes: readonly ResolvedScope[];
@@ -524,7 +534,7 @@ export interface ExpansionPlanInput {
   readonly territory: TerritoryIndex | null;
   readonly territoryDetail: string | null;
   /** Every registered standing obligation: id and subject. */
-  readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
+  readonly obligations: Iterable<{ readonly id: string; readonly subjectId: string }> & { readonly length: number };
 }
 
 export type PlannedScope = ResolvedScope & { readonly members: ReadonlySet<string> };
@@ -543,10 +553,12 @@ export interface ExpansionPlan {
 
 const DAY_MS = 24 * 3_600_000;
 
-function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<string, number> {
-  const out: Record<string, number> = {};
-  for (const item of items) out[keyOf(item)] = (out[keyOf(item)] ?? 0) + 1;
-  return out;
+let nextExpansionPlan = 0;
+
+/** A sorted reading sample, bounded independently of the territory's size. */
+function sample<T>(held: T[], value: T, cap: number, compare: (a: T, b: T) => number): void {
+  if (held.length === cap && compare(value, held[held.length - 1]) >= 0) return;
+  held.push(value); held.sort(compare); if (held.length > cap) held.pop();
 }
 
 /**
@@ -559,30 +571,34 @@ function coverageOf(
   states: readonly string[],
   index: TerritoryIndex,
   subjectsWithWork: ReadonlySet<string>,
+  covered: Set<string>,
 ): ScopeCoverageReading {
-  const registered: Territory[] = [];
+  let registered = 0, withWork = 0, notRegistered = 0, gap = 0;
+  const registeredByClass: Record<string, number> = {}, notRegisteredByType: Record<string, number> = {};
+  const withWorkSample: ScopeCoverageReading["withWorkSample"][number][] = [], gapSample: string[] = [];
   for (const territory of index.bySubject.values()) {
-    if (certainlyOverlaps(territory, scope)) registered.push(territory);
+    if (!certainlyOverlaps(territory, scope)) continue;
+    registered += 1;
+    registeredByClass[territory.govClass] = (registeredByClass[territory.govClass] ?? 0) + 1;
+    if (!subjectsWithWork.has(territory.subjectId)) continue;
+    withWork += 1;
+    sample(withWorkSample, { subjectId: territory.subjectId, name: territory.name, govClass: territory.govClass }, READING_LIST_CAP, (a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+    for (const z of territory.zctas) if (scope.zctas.has(z)) covered.add(z);
   }
-  const withWork = registered.filter((t) => subjectsWithWork.has(t.subjectId));
-  const covered = new Set<string>();
-  for (const t of withWork) for (const z of t.zctas) if (scope.zctas.has(z)) covered.add(z);
-  const gap = [...scope.zctas].filter((z) => !covered.has(z)).sort();
-  const notRegistered: CensusUnitTerritory[] = [];
-  for (const state of states) notRegistered.push(...unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], index.unitShares));
+  for (const z of scope.zctas) if (!covered.has(z)) { gap += 1; sample(gapSample, z, READING_LIST_CAP * 2, (a, b) => a < b ? -1 : a > b ? 1 : 0); }
+  for (const state of states) for (const unit of unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], index.unitShares)) {
+    notRegistered += 1; notRegisteredByType[unit.type] = (notRegisteredByType[unit.type] ?? 0) + 1;
+  }
   return {
-    registeredJurisdictions: registered.length,
-    registeredByClass: countBy(registered, (t) => t.govClass),
-    withWork: withWork.length,
-    withWorkSample: withWork
-      .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
-      .slice(0, READING_LIST_CAP)
-      .map((t) => ({ subjectId: t.subjectId, name: t.name, govClass: t.govClass })),
-    notRegisteredCensusUnits: notRegistered.length,
-    notRegisteredByType: countBy(notRegistered, (u) => u.type),
+    registeredJurisdictions: registered,
+    registeredByClass,
+    withWork,
+    withWorkSample,
+    notRegisteredCensusUnits: notRegistered,
+    notRegisteredByType,
     zctasWithLocalWork: covered.size,
-    gapZctas: gap.length,
-    gapSample: gap.slice(0, READING_LIST_CAP * 2),
+    gapZctas: gap,
+    gapSample,
   };
 }
 
@@ -599,9 +615,11 @@ function unresolvedBudgetSays(budgetUsd: number, states: readonly string[]): str
  * spend, so it runs before the dispatch order is decided.
  */
 export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
-  const subjectsWithWork = new Set(input.obligations.map((o) => o.subjectId));
-  const obligationsBySubject = new Map<string, number>();
-  for (const o of input.obligations) obligationsBySubject.set(o.subjectId, (obligationsBySubject.get(o.subjectId) ?? 0) + 1);
+  const prefix = `expansion-${nextExpansionPlan++}`;
+  const set = (name: string) => input.planner ? plannerSet(input.planner, `${prefix}-${name}`) : new Set<string>();
+  const subjectsWithWork = set("work-subjects");
+  const obligationsBySubject = input.planner ? plannerMap<number>(input.planner, `${prefix}-obligation-counts`) : new Map<string, number>();
+  for (const o of input.obligations) { subjectsWithWork.add(o.subjectId); obligationsBySubject.set(o.subjectId, (obligationsBySubject.get(o.subjectId) ?? 0) + 1); }
 
   const scopes: PlannedScope[] = input.scopes.map((scope) => {
     if (scope.kind !== "RESOLVED" || input.territory === null) {
@@ -611,13 +629,13 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
           : `the territory index could not be built (${input.territoryDetail ?? "no detail"}), so nothing can be placed in it`;
       return { kind: "UNRESOLVED" as const, decision: scope.decision, why, states: scope.states, members: new Set<string>() };
     }
-    const members = scopeMembers(scope, subjectsWithWork, input.territory);
+    const members = scopeMembers(scope, subjectsWithWork, input.territory, set(`members-${scope.decision.key}`));
     for (const subject of input.declaredMembers?.get(scope.decision.key) ?? []) members.add(subject);
     for (const subject of input.territory.statewide) if (scope.states.includes(stateOfSubject(subject) ?? "")) members.add(subject);
     return { ...scope, members };
   });
   const placementOf = placementIndex(scopes.map((s) => ({ members: s.members })));
-  const placedSubjects = new Set<string>();
+  const placedSubjects = set("placed-subjects");
   for (const s of scopes) for (const m of s.members) placedSubjects.add(m);
 
   const readings: ExpansionScopeReading[] = scopes.map((scope) => {
@@ -641,30 +659,39 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
         budgetSays: unresolvedBudgetSays(d.budgetUsd, scope.states),
       };
     }
-    const members = [...scope.members].sort();
     const subjectCap = READING_LIST_CAP * 8;
+    let registeredObligations = 0;
+    const subjectIds: string[] = [];
+    for (const member of scope.members) {
+      registeredObligations += obligationsBySubject.get(member) ?? 0;
+      sample(subjectIds, member, subjectCap, (a, b) => a < b ? -1 : a > b ? 1 : 0);
+    }
     return {
       ...base,
       resolution: { kind: "RESOLVED" as const, zctaCount: scope.zctas.size },
       work: {
-        registeredObligations: members.reduce((n, s) => n + (obligationsBySubject.get(s) ?? 0), 0),
-        subjects: members.length,
-        subjectIds: members.slice(0, subjectCap),
-        subjectIdsComplete: members.length <= subjectCap,
+        registeredObligations,
+        subjects: scope.members.size,
+        subjectIds,
+        subjectIdsComplete: scope.members.size <= subjectCap,
         dueThisCycle: 0,
         scoutRowsPlacedFirst: 0,
         scoutAdmitted: null,
       },
       spend: null,
-      coverage: input.territory === null ? null : coverageOf(scope, scope.states, input.territory, subjectsWithWork),
+      coverage: input.territory === null ? null : coverageOf(scope, scope.states, input.territory, subjectsWithWork, set(`covered-${scope.decision.key}`)),
       budgetSays: "Spend in this scope has not been read yet this cycle.",
     };
   });
 
   const territory = input.territory;
-  const declaredPlaced = new Set([...(input.declaredMembers?.values() ?? [])].flatMap(members => [...members]));
-  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => !territory.statewide.has(s) && (territory.bySubject.has(s) || declaredPlaced.has(s))).length;
-  const statewideSubjects = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.statewide.has(s)).length;
+  const declaredPlaced = set("declared-placed");
+  for (const members of input.declaredMembers?.values() ?? []) for (const member of members) declaredPlaced.add(member);
+  let placed = 0, statewideSubjects = 0;
+  if (territory !== null) for (const subject of subjectsWithWork) {
+    if (territory.statewide.has(subject)) statewideSubjects += 1;
+    else if (territory.bySubject.has(subject) || declaredPlaced.has(subject)) placed += 1;
+  }
   const reading: ExpansionCycleReading = {
     formatVersion: 1,
     at: input.now,
@@ -695,7 +722,7 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
  */
 export function armExpansionBudget(
   plan: ExpansionPlan,
-  input: { readonly now: string; readonly charges: readonly PricedCharge[] | null; readonly worstCaseUsd: number },
+  input: { readonly now: string; readonly charges: Iterable<PricedCharge> | null; readonly worstCaseUsd: number },
 ): { readonly gate: ScopeBudgetGate; readonly reading: ExpansionCycleReading } {
   const since24 = new Date(Date.parse(input.now) - DAY_MS).toISOString();
   const since7 = new Date(Date.parse(input.now) - 7 * DAY_MS).toISOString();

@@ -107,8 +107,18 @@ function checkCycleFailsClosed(src: string): void {
   assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("async function makeAutonomousFleet"), "the hunters' search is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
-  assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
-    "the auditor is not given the ceiling in force");
+  const fleet = src.match(/async function makeAutonomousFleet\(\) \{[\s\S]*?\n\}/);
+  assert.ok(fleet, "no autonomous Fleet constructor");
+  assert.match(fleet[0], /const input: Parameters<typeof autonomousStandingRuntime>\[0\] = \{[\s\S]*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
+    "the auditor's shared runtime input is not given the ceiling in force");
+  assert.match(fleet[0], /await \(autonomousUpkeep \?\?= maintainAutonomousStandingRuntime\(input\)\);/,
+    "standing upkeep does not use the same guarded input");
+  assert.match(fleet[0], /const runtime = await autonomousStandingRuntime\(input\);/,
+    "the per-task runtime does not use the guarded input");
+  assert.match(fleet[0], /const fleetTransport = modelLaneEnabled \? workerMessages : null;/,
+    "the Fleet's paid transport ignores the lane closure");
+  assert.match(fleet[0], /fleetTransport !== null && paidWorkerCapacity\(\) > 0 \? \{ transport: fleetTransport,\s*transportFor: autonomousTransportFor\(fleetTransport\)/,
+    "the Fleet's paid transport bypasses its capacity or shared admission guard");
 }
 
 /** Free work obeys the runner pause and remains independent of paid controls and explicit dispatches. */
@@ -120,7 +130,7 @@ function checkFreeStandingWork(src: string, walk = source("scripts/platform-cens
   );
   assert.match(walk, /intents.runnerPause.paused/);
   assert.match(walk, /REGISTRATION_TARGETS.map/);
-  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state\)/);
+  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state, dotgovSource\)/);
   assert.match(walk, /readPlatformCensusNeeds\(state, null,/);
   assert.match(walk, /runCensusState/);
   assert.doesNotMatch(walk, /modelLaneEnabled|laneClosure|scoutFor/);
@@ -143,6 +153,8 @@ test("PRODUCTION TODAY: routine intake and standing discovery run while paid con
 
 test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker", () => {
   const src = source("scripts/freshness-shadow.mts");
+  checkCycleFailsClosed(src);
+  checkFreeStandingWork(src);
   const mutations: [string, string, string][] = [
     ["runnerPaused: intents.runnerPause.paused,\n", "", "a lane blind to the runner pause"],
     ["  unreadableControls,\n});", "});", "a lane blind to unreadable controls"],
@@ -150,6 +162,11 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
     ["const scoutSearch = searchBudget === null ? null : makeHuntSearch({", "const scoutSearch = makeHuntSearch({", "a hunters' search outside the switch"],
     ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
+    ["const fleetTransport = modelLaneEnabled ? workerMessages : null;", "const fleetTransport = workerMessages;", "a Fleet transport under a closed paid lane"],
+    ["fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,", "fleetTransport !== null ? { transport: fleetTransport,", "a Fleet transport that bypasses paid capacity"],
+    ["transportFor: autonomousTransportFor(fleetTransport),", "transportFor: () => fleetTransport,", "a Fleet transport that bypasses shared admission"],
+    ["const runtime = await autonomousStandingRuntime(input);", "const runtime = await autonomousStandingRuntime({});", "a task runtime that drops its guarded input"],
+    ["await (autonomousUpkeep ??= maintainAutonomousStandingRuntime(input));", "await maintainAutonomousStandingRuntime({});", "standing upkeep that drops its guarded input"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);

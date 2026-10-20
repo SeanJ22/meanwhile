@@ -6,7 +6,7 @@ import type { EvidenceStore } from "../../lib/control-plane/evidence/store.ts";
 import { processRegisteredManualCandidate } from "../../lib/civic-data/promotion.ts";
 import { normalizeCongressDirectory } from "../../lib/officials/congress-normalize.ts";
 import { FEDERAL_DIRECTORY_STATES, federalDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState } from "../../lib/officials/federal-directory-data-plane.ts";
-import { readHeldCongressRoster } from "../../lib/sources/congress/lda-roster.ts";
+import { federalCaptureHonorees, readHeldCongressRoster } from "../../lib/sources/congress/lda-roster.ts";
 import type { FederalCapture } from "../../lib/sources/congress/types.ts";
 
 export const SRC_CG_NOW = "2026-10-13T04:20:00.000Z";
@@ -21,8 +21,8 @@ export async function seedSrcCgRoster(store: RoutineDataStore, vault: EvidenceSt
     const outcome = await processRegisteredManualCandidate(store, federalDirectoryContractId(state), candidate, SRC_CG_NOW);
     assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? `The real ${state} roster did not promote.`);
   }
-  const roster = await readHeldCongressRoster(store, vault, SRC_CG_NOW);
-  assert.ok(roster); assert.ok(roster.members.length > 500);
+  const roster = await readHeldCongressRoster(store, vault, SRC_CG_NOW, { honoreeNames: [...ldaHonoreeCaptures().flatMap(federalCaptureHonorees), "Sen. John Cornyn", 'Sen. Bernard "Bernie" Sanders'] });
+  assert.ok(roster); assert.ok(roster.members.length > 0 && roster.members.length < national.roster.officeholders.length);
   return roster;
 }
 export function ldaHonoreeCaptures(): FederalCapture[] {

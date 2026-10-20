@@ -46,6 +46,7 @@ import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryC
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
+  isRegisteredRuntimeDerivation,
   runtimeAuthorityEnvelope,
   RuntimeAuthorityRefused,
   type RuntimeAuthorityEnvelope,
@@ -68,8 +69,9 @@ export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> 
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
-    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash" | "stateRecordHashes">;
-  };
+    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash" | "stateRecordHashes"> &
+      Partial<RoutineCandidate["normalization"]>;
+  } & Partial<Pick<RoutineCandidate, "semantics" | "horizon" | "absence" | "sourceProjectionEvidence" | "dependentChecks">>;
 };
 
 export function publishedCandidateMetadata(row: CandidateVersionRecord): PublishedCandidateMetadata {
@@ -77,8 +79,12 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
   const publishedRetrieval = { ...retrieval };
   delete publishedRetrieval.derived;
   return { ...row, candidate: { id, sourceId, recordClass, scope, retrieval: publishedRetrieval, temporal,
-    normalization: { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
-      normalizedPayloadHash: normalization.normalizedPayloadHash,
+    ...(recordClass === "FEDERAL_ROLL_CALL" && scope === "US:recent-federal-rollcalls" ? {
+      semantics: row.candidate.semantics, horizon: row.candidate.horizon, absence: row.candidate.absence,
+      sourceProjectionEvidence: row.candidate.sourceProjectionEvidence, dependentChecks: row.candidate.dependentChecks,
+    } : {}),
+    normalization: recordClass === "FEDERAL_ROLL_CALL" && scope === "US:recent-federal-rollcalls" ? normalization : { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
+      normalizedPayloadHash: normalization.normalizedPayloadHash, parserVersion: normalization.parserVersion,
       ...(normalization.stateRecordHashes ? { stateRecordHashes: normalization.stateRecordHashes } : {}) } } };
 }
 
@@ -118,6 +124,7 @@ export interface RoutineDataStore {
     readonly promoted: boolean; readonly sourceAuthenticity: string | null;
   } | null>;
   readonly readStatePublicationBase?: (recordClass: RoutineRecordClass, scope: string) => Promise<{ readonly current: PromotedProjection | null; readonly lkg: CandidateVersionRecord | null }>;
+  readonly readFederalRollCallPublicationBase?: () => Promise<{ readonly current: PromotedProjection | null; readonly lkg: CandidateVersionRecord | null }>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPublishedCandidateMetadata: (candidateId: string) => Promise<PublishedCandidateMetadata | null>;
@@ -256,6 +263,13 @@ export function routineDataStoreCandidateAuthorityIssue(
   if (authority.capability === "FEDERAL_PEOPLE_SPLIT") {
     return !hasAuthorityTransferMarker && (federalDirectoryStateOf(contract.id) !== null || contract.id === "congress-rollcalls")
       ? null : `the federal people split cannot mutate ${contract.id}`;
+  }
+  // A same-state candidacy derivation still uses the normal registry source receipt,
+  // validated prior, contract identity, candidate validation and Reader readback.
+  if (isRegisteredRuntimeDerivation(authority, contract.id, contract.kind)) {
+    return hasAuthorityTransferMarker
+      ? `ordinary ${authority.capability} authority cannot write an authority-transfer marker`
+      : null;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
@@ -1909,6 +1923,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
   }
 
+  async readFederalRollCallPublicationBase(): Promise<{ current: PromotedProjection | null; lkg: CandidateVersionRecord | null }> {
+    const { readFederalRollCallPublicationBase } = await import("./federal-roll-publication-base.ts");
+    const { readerDatabaseQuery } = await import("../reader/database.ts");
+    return readFederalRollCallPublicationBase(this, readerDatabaseQuery());
+  }
+
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     if (statePublicationScope(scope)) return this.readStatePromotion<T>(recordClass, scope);
     const [row] = await this.promotionRows(recordClass, [scope]);
@@ -1970,11 +1990,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       candidate: sql<PublishedCandidateMetadata["candidate"]>`jsonb_build_object(
         'id', ${column}->'id', 'sourceId', ${column}->'sourceId', 'recordClass', ${column}->'recordClass',
         'scope', ${column}->'scope', 'retrieval', (${column}->'retrieval') - 'derived', 'temporal', ${column}->'temporal',
-        'normalization', case when ${column}->'normalization' ? '$civicPayloadPart' then ${column}->'normalization'
+        'normalization', case when ${column}->>'recordClass'='FEDERAL_ROLL_CALL' and ${column}->>'scope'='US:recent-federal-rollcalls'
+          then (${column}->'normalization')-'stateRecordHashes'
+          when ${column}->'normalization' ? '$civicPayloadPart' then ${column}->'normalization'
           else jsonb_build_object('succeeded', ${column}->'normalization'->'succeeded',
+            'parserVersion', ${column}->'normalization'->'parserVersion',
             'normalizedHash', ${column}->'normalization'->'normalizedHash',
             'normalizedPayloadHash', ${column}->'normalization'->'normalizedPayloadHash',
-            'stateRecordHashes', ${column}->'normalization'->'stateRecordHashes') end)`,
+            'stateRecordHashes', ${column}->'normalization'->'stateRecordHashes') end) ||
+        case when ${column}->>'recordClass'='FEDERAL_ROLL_CALL' and ${column}->>'scope'='US:recent-federal-rollcalls' then jsonb_build_object(
+          'semantics',${column}->'semantics','horizon',${column}->'horizon','absence',${column}->'absence',
+          'sourceProjectionEvidence',${column}->'sourceProjectionEvidence','dependentChecks',${column}->'dependentChecks') else '{}'::jsonb end`,
       state: civicDataCandidates.state,
       acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
       receipt: civicDataCandidates.validationReceipt,

@@ -4,8 +4,9 @@ import test from "node:test";
 
 import { buildLearningTrends } from "../lib/control-plane/admin-view/learning-trends.ts";
 import { auditRow, buildScoreboard, v6LearningView, type ScoreboardReadings } from "../lib/control-plane/admin-view/scoreboard-read.ts";
-import { weeklyAuditAccuracy } from "../lib/control-plane/admin-view/v6-audit-read.ts";
-import { readAuditWeek, recordAuditCorrection, recordLiveAuditResult } from "../lib/control-plane/live-audit-log.ts";
+import { weeklyAuditAccuracy } from "./helpers/live-audit.ts";
+import { recordAuditCorrection, recordLiveAuditResult } from "../lib/control-plane/live-audit-log.ts";
+import { readAuditWeek } from "./helpers/live-audit.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { LiveAuditResult } from "../lib/control-plane/workers/live-audit.ts";
 

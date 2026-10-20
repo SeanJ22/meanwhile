@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 import { playbookRows } from "./helpers/playbooks.ts";
 import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /** The hunter's model lane: capacity, spend holds and cost rows, transport failures, caching and step accounting. */
@@ -17,7 +18,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduledFixture } from "./control-plane-fixtures.ts";
-import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import {
   cacheTtlOrderProblems,

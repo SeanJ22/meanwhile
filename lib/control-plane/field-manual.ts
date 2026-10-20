@@ -5,9 +5,9 @@ import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts"
 import { methodPlaceOf } from "../method/method-places.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
-import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
+import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
-import { jobCostProfiles } from "./bank-job-cost.ts";
+import { savedJobCostProfiles } from "./bank-job-cost.ts";
 
 /** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
@@ -71,6 +71,10 @@ export interface FieldManualEntry {
   readonly outcome: FieldManualOutcome;
   /** One result per place, so a result in one place never overwrites another's. */
   readonly placeResults?: readonly PlaceResult[];
+  /** Point updates to a legacy entry keep its original implicit places alongside these explicit observations. */
+  readonly placeResultsPartial?: boolean;
+  /** A read-only summary made before the country's place histories leave the store. */
+  readonly scopeEvidence?: { readonly here: "WORKS" | "FAILS" | null; readonly places: readonly string[]; readonly states: readonly string[] };
   /** The door itself, when the entry is one. */
   readonly url: string | null;
   /** Which original store this came from (path or table name). Provenance, never dropped. */
@@ -86,6 +90,9 @@ export interface FieldManualEntry {
 /** The rows one read returned. */
 export interface FieldManualStore {
   readonly entries: readonly FieldManualEntry[];
+  readonly parserEvidence?: { readonly host: string; readonly recordClass: string; readonly tiers: Readonly<Record<string, {
+    readonly here?: { readonly id: string; readonly outcome: FieldManualOutcome }; readonly count: number; readonly nonFailed: number; readonly firstId: string;
+  }>> };
 }
 
 export function emptyFieldManual(): FieldManualStore {
@@ -222,6 +229,11 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
+  /** Scout context ranks these blanks before unrelated notes while streaming its bounded page. */
+  readonly recordClasses?: readonly string[];
+  readonly preferredRecordClasses?: readonly string[];
+  /** Parser routing folds publisher observations into tier counts instead of retaining every publisher. */
+  readonly parserHost?: string;
   readonly withinState?: string;
   /** Exact research subject for saved exhausted walks; they are never portable failures. */
   readonly subjectId?: string;
@@ -333,12 +345,14 @@ interface Ranked {
 }
 
 function legacyHere(entry: FieldManualEntry, query: FieldManualQuery): "WORKS" | "FAILS" | null {
+  if (entry.scopeEvidence) return entry.scopeEvidence.here;
   const here = placeResultsOf(entry).filter((r) => r.place !== "any" && !r.place.startsWith("state:") && placeMatches([r.place], query));
   if (here.some((r) => r.outcome === "FAILED" || r.outcome === "BLOCKED")) return "FAILS";
   return here.some((r) => r.outcome === "YIELDED") ? "WORKS" : null;
 }
 
 function legacyWorks(entry: FieldManualEntry): { places: string[]; states: string[] } {
+  if (entry.scopeEvidence) return { places: [...entry.scopeEvidence.places], states: [...entry.scopeEvidence.states] };
   const yielded = placeResultsOf(entry).filter((r) => r.outcome === "YIELDED" && r.place !== "any");
   return {
     places: yielded.filter((r) => !r.place.startsWith("state:")).map((r) => r.place),
@@ -453,40 +467,65 @@ export async function readMethodEvidence(repos: FieldManualRepos, entries: reado
 /** The read against the store itself. */
 export async function readFieldManualRows(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   try {
-    const rows = (await repos.fieldManual.slice(query)).map((row) => row.value).filter((entry) => entryInSlice(entry, query));
-    const store = { entries: rows };
-    const evidence = await readMethodEvidence(repos, rows, query);
-    return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
+    const limit = query.everywhere ? Infinity : Math.max(0, query.limit ?? 40);
+    const chosen: Ranked[] = [], works = new Map<string, MethodWorks>();
+    const baseEvidence = await readMethodEvidence(repos, [], query);
+    const parserTiers: Record<string, { here?: { id: string; outcome: FieldManualOutcome }; count: number; nonFailed: number; firstId: string }> = {};
+    let fields: FieldManualEntry | null = null, total = 0, matched = 0, leftOutFailingHere = 0;
+    const helps = (entry: FieldManualEntry) => query.preferredRecordClasses?.length ? Number(!entry.recordClasses.some(kind => query.preferredRecordClasses!.includes(kind))) : 0;
+    const anyClass = (entry: FieldManualEntry) => query.preferredRecordClasses?.length ? Number(entry.recordClasses.length > 0) : 0;
+    const compare = (a: Ranked, b: Ranked) => helps(a.entry) - helps(b.entry) || a.tier - b.tier || anyClass(a.entry) - anyClass(b.entry) || Number(b.entry.kind === "EXHAUSTED_RUNGS") - Number(a.entry.kind === "EXHAUSTED_RUNGS") ||
+      OUTCOME_RANK[a.entry.outcome] - OUTCOME_RANK[b.entry.outcome] || (b.entry.observedAt ?? "").localeCompare(a.entry.observedAt ?? "") || a.entry.id.localeCompare(b.entry.id);
+    let batch: FieldManualEntry[] = [];
+    const flush = async () => {
+      if (!batch.length) return;
+      const methodIds = batch.filter(isTransferableMethod).map(entry => entry.id);
+      const held = repos.fixMap && methodIds.length ? await repos.fixMap.worksFor(methodIds) : new Map<string, MethodWorks>();
+      const evidence: MethodEvidence = { here: baseEvidence?.here ?? [], works: Object.fromEntries(held) };
+      for (const entry of batch) {
+        if (!entryInSlice(entry, query)) continue;
+        total += 1;
+        if (query.parserHost && entry.kind === "PARSE_OUTCOME") {
+          const payload = entry.payload as { host?: string; recordClass?: string; tier?: string } | null;
+          if (payload && payload.recordClass === query.recordClass && payload.tier && ["haiku", "sonnet"].includes(payload.tier)) {
+            const reading = parserTiers[payload.tier] ?? { count: 0, nonFailed: 0, firstId: entry.id };
+            reading.count += 1; if (entry.outcome !== "FAILED") reading.nonFailed += 1;
+            if (payload.host === query.parserHost && reading.here === undefined) reading.here = { id: entry.id, outcome: entry.outcome };
+            parserTiers[payload.tier] = reading;
+          }
+          continue;
+        }
+        if (query.parserHost && entry.kind === "PARSE_FIELDS") fields ??= entry;
+        if (query.role === "SCOUT" && query.preferredRecordClasses && (entry.kind === "PLAYBOOK" ||
+          (entry.kind === "EXHAUSTED_RUNGS" && query.recordClasses?.length && !entry.recordClasses.some(kind => query.recordClasses!.includes(kind))))) continue;
+        if (BOOKKEEPING_KINDS.has(entry.kind) || (entry.kind === "EXHAUSTED_RUNGS" && (query.subjectId === undefined || (entry.payload as { subjectId?: string } | null)?.subjectId !== query.subjectId))) continue;
+        const ranked = rankEntry(entry, query, evidence);
+        if (!ranked) { leftOutFailingHere += 1; continue; }
+        matched += 1;
+        chosen.push(ranked); chosen.sort(compare);
+        if (held.has(entry.id)) works.set(entry.id, held.get(entry.id)!);
+        if (chosen.length > limit) { const removed = chosen.pop()!; works.delete(removed.entry.id); }
+      }
+      batch = [];
+    };
+    await repos.fieldManual.visitSlice(query, async row => { batch.push(row.value); if (batch.length >= 64) await flush(); });
+    await flush();
+    const entries = chosen.map(row => row.entry).sort((a, b) => a.id.localeCompare(b.id));
+    if (fields && !entries.some(entry => entry.id === fields!.id)) entries.push(fields);
+    const store: FieldManualStore = { entries, ...(query.parserHost ? { parserEvidence: { host: query.parserHost, recordClass: query.recordClass ?? "", tiers: parserTiers } } : {}) };
+    const evidence: MethodEvidence = { here: baseEvidence?.here ?? [], works: Object.fromEntries(works) };
+    return { projection: { ...projectFieldManual(store, query, evidence), total, matched, leftOutFailingHere }, store, ...(repos.fixMap ? { evidence } : {}) };
   } catch (error) {
     const store = emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
-export async function readFieldManualForPlaces(
-  repos: FieldManualRepos,
-  covering: FieldManualQuery,
-  queries: readonly FieldManualQuery[],
-): Promise<FieldManualRead[]> {
-  const failed = (query: FieldManualQuery, error: unknown): FieldManualRead => {
-    const store = emptyFieldManual();
-    return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
-  };
-  let rows: readonly FieldManualEntry[];
-  try {
-    rows = (await repos.fieldManual.slice(covering)).map((row) => row.value).filter((entry) => entryInSlice(entry, covering));
-  } catch (error) {
-    return queries.map((query) => failed(query, error));
-  }
-  return Promise.all(queries.map(async (query): Promise<FieldManualRead> => {
-    try {
-      const store = { entries: rows.filter((entry) => entryInSlice(entry, query)) };
-      const evidence = await readMethodEvidence(repos, store.entries, query);
-      return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
-    } catch (error) {
-      return failed(query, error);
-    }
-  }));
+/** Each place receives its own projected history; no shared national row array is retained. */
+export async function readFieldManualForPlaces(repos: FieldManualRepos, _covering: FieldManualQuery, queries: readonly FieldManualQuery[]): Promise<FieldManualRead[]> {
+  const reads: FieldManualRead[] = [];
+  for (const query of queries) reads.push(await readFieldManualRows(repos, query));
+  return reads;
 }
 
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
@@ -527,19 +566,15 @@ export function newFieldManualEntry(
 const MERGE_ATTEMPTS = 32;
 
 /** Save one entry: merged into its row under the row's own compare-and-set; a lost race re-reads that row only. */
-async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held: Persisted<FieldManualEntry> | null, now: string): Promise<void> {
-  let current = held;
+async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, now: string): Promise<void> {
   for (let attempt = 0; ; attempt += 1) {
-    const next = mergeEntry(current?.value ?? null, entry);
-    if (current !== null && JSON.stringify(next) === JSON.stringify(current.value)) return;
+    const current=await repos.fieldManual.readNarrowed(entry.id,{});
     try {
-      if (current === null) await repos.fieldManual.put(entry.id, next, now);
-      else await repos.fieldManual.compareAndSet(entry.id, current.revision, next, now);
+      await repos.fieldManual.compareAndSetMergedEntry(entry.id,current?.revision??null,entry,now);
       return;
     } catch (error) {
       if (attempt + 1 >= MERGE_ATTEMPTS || !(error instanceof ConcurrentModification || error instanceof IdentityCollision)) throw error;
       await new Promise((resolve) => setTimeout(resolve, Math.random() * Math.min(attempt, 8) * 5));
-      current = await repos.fieldManual.read(entry.id);
     }
   }
 }
@@ -547,12 +582,11 @@ async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held:
 /** Save entries row by row; returns how many saved and the first failure. */
 export async function saveFieldManualEntries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string): Promise<{ written: number; error?: string }> {
   const folded = foldEntries(entries);
-  const held = new Map((await repos.fieldManual.readMany(folded.map((e) => e.id))).map((row) => [row.id, row] as const));
   let written = 0;
   let error: string | undefined;
   for (const entry of folded) {
     try {
-      await saveEntry(repos, entry, held.get(entry.id) ?? null, now);
+      await saveEntry(repos, entry, now);
       written += 1;
     } catch (failure) {
       error ??= failure instanceof Error ? failure.message : String(failure);
@@ -621,14 +655,7 @@ export async function writeFieldManual(
     const saved = await saveFieldManualEntries(repos, entries, now);
     const costs = entries.filter((e) => e.kind === JOB_COST_KIND);
     if (costs.length > 0 && saved.error === undefined) {
-      const keys = new Map(costs.map((e) => {
-        const p = e.payload as { platform: string; recordClass: string };
-        return [`${p.platform}|${p.recordClass}`, p] as const;
-      }));
-      const held = (await Promise.all([...keys.values()].map((p) =>
-        repos.fieldManual.slice({ kinds: [JOB_COST_KIND], platform: p.platform, recordClass: p.recordClass, everywhere: true }))))
-        .flat().map((row) => row.value);
-      const profiles = jobCostProfiles(foldEntries([...held, ...costs]), costs, now);
+      const profiles = await savedJobCostProfiles(repos.fieldManual, costs, now);
       const profiled = await saveFieldManualEntries(repos, profiles, now);
       if (profiled.error !== undefined) throw new Error(profiled.error);
     }

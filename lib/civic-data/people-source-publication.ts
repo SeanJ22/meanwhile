@@ -58,6 +58,7 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
     const body = capture ? await textOf(capture) : "";
     let linkingPage:{url:string;html:string}|undefined;
     if (capture && !isOfficialSource(capture.finalUrl)) for (const row of input.captures) {
+      if(row.indexOnly || !isOfficialSource(row.finalUrl))continue;
       const page={url:row.finalUrl,html:await textOf(row)};
       if (isOfficialSource(capture.finalUrl,page)) { linkingPage=page; break; }
     }

@@ -9,7 +9,7 @@ import { cacheHitRateByRole, scoutCapacity } from "../lib/control-plane/research
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { researchSpendInWindow } from "../lib/control-plane/scheduler/research-policy.ts";
-import { costRecordId, readSpendWindow, SPEND_WINDOW_ID } from "../lib/control-plane/spend-window.ts";
+import { costRecordId, mapCharges, readSpendWindow, SPEND_WINDOW_ID } from "../lib/control-plane/spend-window.ts";
 
 const NOW = "2026-10-13T19:00:00.000Z";
 const haiku = MODELS.haiku.model;
@@ -29,7 +29,7 @@ test("the running counter holds each model charge once, priced as written, and s
   for (const row of rows) await recordCost(repos, row, row.recordedAt);
   await recordCost(repos, rows[0]!, rows[0]!.recordedAt);
   const held = await readSpendWindow(repos, NOW);
-  assert.deepEqual(held.map(row => row.id).sort(), [costRecordId(rows[0]!), costRecordId(rows[1]!)].sort(), "plain code adds nothing and a retried write counts once");
+  assert.deepEqual(Array.from(held,row => row.id).sort(), [costRecordId(rows[0]!), costRecordId(rows[1]!)].sort(), "plain code adds nothing and a retried write counts once");
   const priced = (await repos.costs.readAll()).flatMap(row => pricedModelCharge(row, costRecordId(row)) ?? []);
   assert.equal(researchSpendInWindow(held, NOW).windowUsd, aggregatePricedSpend(priced, at(24), NOW).usd);
   assert.equal(researchSpendInWindow(held, NOW).windowUsd, 1.75);
@@ -40,7 +40,7 @@ test("the counter is built from the ledger once, and charges past the window lea
   await repos.costs.append("wi-old", "old", charge("old", at(40), { usd: 9, requestCount: 1 }), at(40));
   await repos.costs.append("wi-in", "in", charge("in", at(5), { usd: 2, requestCount: 1 }), at(5));
   const seeded = await readSpendWindow(repos, NOW);
-  assert.deepEqual(seeded.map(row => row.usd), [2]);
+  assert.deepEqual(Array.from(seeded,row => row.usd), [2]);
   await recordCost(repos, charge("new", at(0), { usd: 1, requestCount: 1 }), NOW);
   assert.equal(researchSpendInWindow(await readSpendWindow(repos, NOW), NOW).windowUsd, 3);
   const later = new Date(Date.parse(NOW) + 31 * 3_600_000).toISOString();
@@ -77,7 +77,7 @@ test("the cache and capacity readings come from the counter, matching the ledger
     { ...charge("audit", at(2), { usd: 0.004, requestCount: 1, inputTokens: 33_200, outputTokens: 100, ...metering }), role: "ADVERSARIAL_AUDITOR" as const }];
   for (const row of rows) await recordCost(repos, row, row.recordedAt);
   const ledger = await repos.costs.readAll();
-  const counted = (await readSpendWindow(repos, NOW)).map(row => row.metered);
+  const counted = mapCharges(await readSpendWindow(repos, NOW),row => row.metered);
   assert.deepEqual(cacheHitRateByRole({ costs: counted, results: [], sinceIso: at(24), untilIso: NOW }),
     cacheHitRateByRole({ costs: ledger, results: [], sinceIso: at(24), untilIso: NOW }));
   const capacity = { nowIso: NOW, windowHours: 24, ceilingUsd: 100 };

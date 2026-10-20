@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { neon } from "@neondatabase/serverless";
 import { getStore } from "@netlify/blobs";
 import type { AppendOutcome, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -51,7 +52,7 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   const researchRows = new Map<string, Delta<typeof research[number]>>();
   const windowRows = new Map<string, Delta<typeof windows[number]>>();
   let researchPositions = "{}", windowPositions = "{}";
-  let config: Awaited<ReturnType<typeof repos.adminConfig.read>> = null;
+  let config: Awaited<ReturnType<typeof readRuntimeAdminConfig>> = null;
   let state: Awaited<ReturnType<typeof repos.researchState.readNarrowed>> = null;
   let pending: Promise<void> | null = null;
   let forceRequested = false;
@@ -75,7 +76,7 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
     if (!Array.isArray(row.research) || !Array.isArray(row.windows)) throw new Error("RUNNER_CONTROLS_UNREADABLE");
     const next = { config: String(row.config), state: String(row.state) };
     const updates = await Promise.all([
-      signatures.config === next.config ? config : repos.adminConfig.read(ADMIN_CONFIG_ID),
+      signatures.config === next.config ? config : readRuntimeAdminConfig(repos),
       signatures.state === next.state ? state : repos.researchState.readNarrowed(RESEARCH_STATE_ID, { expansion: true, assignments: true }),
     ]);
     // Only positions actually returned are excluded. A MAX watermark would

@@ -34,9 +34,9 @@ export interface GeographyReadOptions {
   readPublished?: (zip: string) => Promise<readonly PlaceDivision[]>;
 }
 
-export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceDivision[]> {
+export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState, selection: GeographySelection = currentRepresentationSelection(), sourceState?: string): Promise<PlaceDivision[]> {
   if (!published && !process.env.DATABASE_URL) return [];
-  const state = published ?? await loadPublishedAreaLookupState([zip]);
+  const state = published ?? await loadPublishedAreaLookupState([zip], undefined, sourceState);
   if (state.source !== "published") return [];
   const result = await state.lookup.groupingsForZcta(zip);
   if (result.status.kind !== "OK") return [];

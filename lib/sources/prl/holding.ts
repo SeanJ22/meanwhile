@@ -19,8 +19,10 @@ export async function writeReceipt(archive: PrlArchiveStore, receipt: PrlIngestR
 
 /** Read the prior receipt for a dataset, or null on first load / unreadable state. */
 export async function readReceipt(archive: PrlArchiveStore, datasetId: string): Promise<PrlIngestReceipt | null> {
+  const meta = await archive.head(receiptKey(datasetId));
+  if (!meta || meta.size > 32 * 1024) return null;
   const bytes = await archive.get(receiptKey(datasetId));
-  if (!bytes) return null;
+  if (!bytes || bytes.byteLength > 32 * 1024 || bytes.byteLength !== meta.size) return null;
   try {
     const value = JSON.parse(new TextDecoder().decode(bytes)) as PrlIngestReceipt;
     return value.formatVersion === 1 && value.datasetId === datasetId ? value : null;

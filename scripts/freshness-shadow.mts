@@ -1,16 +1,17 @@
-import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
-import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
+import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots, startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
+import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots, hostMemoryReading, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
-import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { autonomousStandingRuntime, maintainAutonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { forEachAggregate } from "../lib/control-plane/workers/streamed-history.ts";
 import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
-import { LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor, type LineageArtifact, type LineageAttempt } from "../lib/control-plane/workers/standing-lineage.ts";
+import { persistVerifiedPublicationAnchors, standingLineageCoversDue, standingLineageKeyFor, type StandingLineage } from "../lib/control-plane/workers/standing-lineage.ts";
+import { readStandingLineages } from "../lib/control-plane/workers/standing-lineage-read.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
 import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
@@ -33,7 +34,7 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { ADMIN_MIRROR_BUDGET_MS, runAdminEvidenceMirror } from "../lib/control-plane/evidence/admin-bridge-runner.ts";
 import { retainRecentRoutineMeetingEvidence } from "../lib/control-plane/workers/routine-meeting-intake.ts";
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { hostname } from "node:os";
 import { join } from "node:path";
 
@@ -50,7 +51,6 @@ import {
   closeCycleOccurrences,
   digestLines,
   huntRoundComparator,
-  placeFirstRows,
   runCycle,
   runPool,
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
@@ -62,9 +62,19 @@ import {
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
-import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
-import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
-import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { registryLines, type ProviderReport, type RegisteredUnit } from "../lib/control-plane/scheduler/registry.ts";
+import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
+import { writeStreamedJsonSync } from "../lib/control-plane/scheduler/streamed-json.ts";
+import { appendFreshnessCycleDetails, summarizeFreshnessIncidents } from "../lib/control-plane/freshness-cycle-details.ts";
+import { createPlannerSpool, plannerMap, plannerSet } from "../lib/control-plane/scheduler/planner-spool.ts";
+import { forEachStateRegistry, withRegistryState, plannerStateOf, type RegistryStateAuthority } from "../lib/control-plane/scheduler/registry-state-planner.ts";
+import { spooledTerritoryIndex } from "../lib/control-plane/expansion/spooled-territory.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { readerDatabaseQuery } from "../lib/reader/database.ts";
+import { askGapsInputFromHeld, carrierClocks, askGapCarrierTasks } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
+import { foldAskGapObservations, type AskGapObservation } from "../lib/control-plane/ask-gap-observations.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readRoutineTaskClocks } from "../lib/civic-data/runner.ts";
 import {
   readCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -75,26 +85,20 @@ import {
   withinWallTime,
   type CampaignSiteCycleReport,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
-import { runCandidatePublicationCycle,
-  type CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
-import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import type { CandidatePublicationCycleReport } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
+import { runScopedCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-vault.ts";
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
-  meetingsDiscoveryProvider,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
-  promotedRegistries,
-  trackedStatesFromOperationalReference,
   type FreeDiscoveryWalks,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
-import { createMeetingPartitionOwnership } from "../lib/control-plane/scheduler/meeting-ownership.ts";
 import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { foldNewWorkIntoRound, sameRoundFirstHuntEnabled } from "../lib/control-plane/scheduler/same-round-work.ts";
@@ -116,7 +120,9 @@ import {
   type OwnerDispatchWork,
 } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
-import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { placeMeasures } from "../lib/coverage/place-measures.ts";
+import { percentOf } from "../lib/coverage/place-percent.ts";
+import { buildPlaceOwedList, type PlaceOwedItem } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
 import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
@@ -124,7 +130,7 @@ import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { readOperationalReferenceStateIndex, readOperationalReferenceState } from "../lib/civic-data/operational-reference-state-read.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
@@ -154,6 +160,8 @@ import {
   type AbandonedOccurrence,
   type SettledOccurrence,
   FRESHNESS_PROJECT,
+  type StandingObligation,
+  type SyncPlannerSink,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -188,7 +196,6 @@ import { candidateCounts as countMethodCandidates, emptyCandidateStore } from ".
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
-  cacheDefectCounts,
   cacheHitRateByRole,
   costPerUsefulOutcome,
   graduationFunnel,
@@ -201,8 +208,9 @@ import {
   type ResearchMetrics,
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
-import { readSpendWindow } from "../lib/control-plane/spend-window.ts";
+import { mapCharges, readSpendWindow } from "../lib/control-plane/spend-window.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
+import { readScoutMetricSummary } from "../lib/control-plane/research-metrics-read.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
@@ -220,7 +228,6 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import {
-  ADMIN_CONFIG_ID,
   adminConfigForPaidWork,
   discoverySearchEnabled,
   fleetSpendCeilingOverrideUsd,
@@ -235,7 +242,6 @@ import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/cont
 import {
   armExpansionBudget,
   countByScope,
-  orderByPlacement,
   withCycleCounts,
 } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
@@ -319,7 +325,7 @@ function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
   const stallBlock = finalRecordWritten ? null : (stallDiagnostic?.claimRecord() ?? null);
   const path = finalRecordWritten ? nextRunRecordPath(RUNS_DIR, today()) : RUN_RECORD_PATH;
   mkdirSync(RUNS_DIR, { recursive: true });
-  writeFileSync(path, `${JSON.stringify(stallBlock === null ? record : { ...record, stallDiagnostic: stallBlock }, null, 2)}\n`, "utf8");
+  writeStreamedJsonSync(path, stallBlock === null ? record : { ...record, stallDiagnostic: stallBlock });
   finalRecordWritten = true;
   return path;
 }
@@ -432,6 +438,7 @@ const cycleObservation = observeCyclePhases(repos);
 /* Every repository call is tracked while in flight, for the stall diagnostic. */
 repos = trackStoreCalls(cycleObservation.repos, pending);
 crashRepos = repos;
+const standaloneWorkerToolsHost = process.env.WTP_WORKER_TOOLS_URL ? null : await startWorkerToolsHost({ repos, browse: browseWithPlaywright });
 const finishPhase = (name: string) => {
   const phase = cycleObservation.finish(name);
   pending.phaseFinished(name);
@@ -446,20 +453,9 @@ const startupReadRetry = {
     ),
 };
 
-const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
-  () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-}), retryStartupRead(
-  () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-})]);
-if (!legacyOperationalReference && !azOperationalReference) throw new Error(
-  "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
-);
+const readStartupAuthority = <T,>(read: () => Promise<T>): Promise<T> => retryStartupRead(read, () => null, startupReadRetry);
+const operationalStateIndex = await readOperationalReferenceStateIndex(undefined, readStartupAuthority);
+for (const failure of operationalStateIndex.failures) console.log(`  operational reference state index: ${failure}`);
 
 /* The meeting doors this cycle's meeting work, facts and Ask gaps are read against, straight from the registry. */
 {
@@ -481,40 +477,101 @@ try {
 
 /* ----------------------------------------------------------- the registry --- */
 
-const trackedStates = trackedStatesFromOperationalReference();
-const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
+const planner = await createPlannerSpool();
+let plannerOrderSequence = 0;
+function plannerOrder<T>(label: string, rows: Iterable<T>, rankOf: (row: T) => number | null): DiskRows<T> {
+  const table = planner.table<{ id: string; rank: number; position: number; row: T }>(`${label}:${plannerOrderSequence++}`, row => row.id);
+  let position = 0;
+  for (const row of rows) { table.add({ id: String(position), position: position++, rank: rankOf(row) ?? Number.MAX_SAFE_INTEGER, row }); }
+  return table.rowsBy([["rank"], ["position"]]).map(held => held.row);
+}
+const trackedStates = { read: () => ({ states: operationalStateIndex.states, source: "the promoted operational-reference state index" }) };
+const trackedStateSet = new Set(operationalStateIndex.states);
+const materializedIds = planner.table<string>("materialized", id => id, "key");
+const registryRows = planner.table<JurisdictionRegistry>("state-registries", row => row.stateCode.toLowerCase(), "key");
+const registryView = plannerMap<JurisdictionRegistry>(planner, "state-registry-view");
+const registryRefusals = plannerMap<string>(planner, "state-registry-refusals");
+const hydratedStates = plannerSet(planner, "hydrated-state-identities");
+const ownershipRows = planner.table<{ id: string; bodyId: string | null; owner: "PARTITION" | "NONE" | "UNKNOWN"; reason: string }>("meeting-ownership", row => row.id);
+function retainStateAuthority(state: string, authority: RegistryStateAuthority) {
+  if (authority.registry || authority.failure) hydratedStates.add(state);
+  if (authority.failure) registryRefusals.set(state, authority.failure);
+  if (authority.registry) {
+    registryRows.add(authority.registry); registryView.set(state, authority.registry); registryRefusals.delete(state);
+    for (const row of authority.registry.jurisdictions) ownershipRows.add({ id: row.id,
+      bodyId: authority.ownership.bodyIdFor?.(row.id) ?? null, owner: authority.ownership.ownerOf(row.id),
+      reason: authority.ownership.reasonFor?.(row.id) ?? authority.ownership.source });
+  }
+}
+async function ensureRegistryStates(states: Iterable<string>) {
+  for (const raw of states) {
+    const state = raw.toLowerCase(); if (hydratedStates.has(state)) continue;
+    await withRegistryState({ state, root: ROOT, trackedStates: trackedStateSet, registration: true,
+      readReviewedState: state => readOperationalReferenceState(state, undefined, readStartupAuthority) }, async authority => { retainStateAuthority(state, authority); });
+  }
+}
+const materializedMembership = { get size() { return materializedIds.rows.length; }, has: (id: string) => materializedIds.has(id),
+  [Symbol.iterator]: () => materializedIds.keys[Symbol.iterator]() };
 let materialized: MaterializedReading;
 try {
-  const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
-  materialized = { ids: new Set(rows.map((row) => row.id)) };
+  await forEachAggregate(repos.obligations, row => { if ((row.value as { materializedBy?: string }).materializedBy === OWNER_DISPATCH) materializedIds.add(row.id); }, { materializedBy: true });
+  materialized = { ids: materializedMembership };
 } catch (error) {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
-/* A state with created work and no reviewed registry is read from its registration first, so its providers keep that work. */
-if ("ids" in materialized) {
-  await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => stateOfJurisdictionId(id) ?? []), options: { bypassCache: true } });
-}
-const ownershipStates = trackedStates.read();
-await meetingPartitions.readStates([
-  ...("states" in ownershipStates ? ownershipStates.states : []),
-  ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
-]);
-/* The providers and context are kept so the registry can be built again in the same round when the owner's dispatch has just written new work. */
-const registryProviders = [
-  huntPacketsProvider({ materialized: () => materialized }),
-  campaignFinanceProvider(),
-  localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
-  await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
-  meetingsDiscoveryProvider({ materialized: () => materialized }),
-
-  (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
-    await pending.step("ask-gaps:held-reading", async () =>
-      (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
-  ),
-];
-/* Every unplanned paid route carries the shared coordinator plan. */
 const registryContext = { root: ROOT, nowIso: NOW };
-let registry = buildRegistry(registryProviders, registryContext);
+const observations = planner.table<{ id: string; state: string; value: AskGapObservation }>("ask-observations", row => row.id);
+let observationsUnreadable: string | null = null;
+try {
+  await forEachAggregate(repos.askGapObservations, async row => {
+    let state = /\/(?:state|district|territory):([a-z]{2})(?:[/#]|$)/.exec(row.value.bodyId)?.[1] ?? "us";
+    if (state === "us" && !row.value.bodyId.startsWith("ocd-division/country:us#")) {
+      const query = readerDatabaseQuery();
+      if (query) { const [matched] = await query([{ text: "SELECT state FROM entity WHERE kind='body' AND id=$1", params: [row.value.bodyId] }]);
+        if (matched[0]?.state) state = String(matched[0].state).replace(/^US-/i, "").toLowerCase(); }
+    }
+    observations.add({ id: row.id, state, value: row.value });
+  }, { bodyId: true, code: true, recordClass: true, day: true, count: true });
+} catch (error) { observationsUnreadable = error instanceof Error ? error.message : String(error); }
+const askClocks = await (async () => {
+  try { const clockStore = new PostgresRoutineDataStore(); return carrierClocks(await readRoutineTaskClocks(askGapCarrierTasks(), task => clockStore.clock(task.sourceId, task.recordClass, task.scope)), Date.parse(NOW)); }
+  catch (error) { return new Map(askGapCarrierTasks().map(task => [task.id, { kind: "UNREAD" as const, why: error instanceof Error ? error.message : String(error) }])); }
+})();
+let registryGeneration = 0;
+async function buildPlannerRegistry() {
+  const source = planner.table<RegisteredUnit>(`registry-${registryGeneration++}`, row => row.obligation.id, "key");
+  const reports = new Map<string, ProviderReport>();
+  const states = new Set<string>([...REGISTRY_STATES.map(state => state.toLowerCase()), "us", ...operationalStateIndex.states]);
+  for (const id of materializedIds.keys) { const state = plannerStateOf(id); if (state) states.add(state); }
+  await forEachStateRegistry({ context: registryContext, states: [...states].sort(), trackedStates: trackedStateSet,
+    readReviewedState: state => readOperationalReferenceState(state, undefined, readStartupAuthority),
+    materialized: state => "unreadable" in materialized ? materialized : { ids: new Set(materializedIds.keys.filter(id => plannerStateOf(id) === state)) },
+    askGaps: async state => {
+      const input = await pending.step(`ask-gaps:held-reading:${state}`, () => askGapsInputFromHeld({ now: NOW, states: [state.toUpperCase()], clocks: askClocks,
+        observations: { list: async () => [...observations.rows.filter(row => row.state === state)].map(row => ({ id: row.id, revision: 1, updatedAt: NOW, value: row.value })) } }));
+      return observationsUnreadable ? { ...input, observations: () => ({ unreadable: observationsUnreadable! }) } : input;
+    },
+    visit: async (state, pass, authority) => {
+      retainStateAuthority(state, authority);
+      for (const unit of pass.units) source.add(unit);
+      for (const report of pass.byProvider) {
+        const held = reports.get(report.providerId);
+        if (report.readFailure) console.log(`  provider ${report.providerId} ${state.toUpperCase()} READ FAILURE: ${report.readFailure}`);
+        reports.set(report.providerId, { ...report, records: (held?.records ?? 0) + report.records, units: (held?.units ?? 0) + report.units,
+          readFailure: held?.readFailure ?? (report.readFailure ? `${state.toUpperCase()}: ${report.readFailure}` : null),
+          emptyReason: (held?.units ?? 0) + report.units > 0 ? null : held?.emptyReason ?? report.emptyReason });
+      }
+    },
+  });
+  return { source, units: source.rows, obligations: source.rows.map(row => row.obligation), byProvider: [...reports.values()],
+    routeFor: (id: string) => source.read(id)?.route ?? null, providerOf: (id: string) => source.read(id)?.providerId ?? null };
+}
+let registry = await buildPlannerRegistry();
+const meetingPartitions = { source: "exact state-scoped meeting ownership in the round's temporary planner",
+  ownerOf: (id: string) => ownershipRows.read(id)?.owner ?? "UNKNOWN" as const,
+  bodyIdFor: (id: string) => ownershipRows.read(id)?.bodyId ?? null,
+  reasonFor: (id: string) => ownershipRows.read(id)?.reason ?? `${id}: no exact registered governing-body identity`,
+  readStates: ensureRegistryStates };
 const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
 
@@ -569,14 +626,21 @@ const fecModelRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } :
   repos,
   [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
   NOW,
-  "PDC authority transferred federal acquisition to the FEC_FUNDING / federal-supported production civic-data contract",
+  "PDC authority transferred federal acquisition to the state-scoped FEC_FUNDING production civic-data contracts",
 );
 console.log(
   `  legacy parallel federal campaign-finance clocks: ${fecModelRetirement.retired.length} retired this cycle; ` +
     `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
 );
 
-let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
+const syncSink: SyncPlannerSink = {
+  all: planner.table<StandingObligation>("standing", row => row.id),
+  registered: planner.table<string>("standing-registered", row => row),
+  alreadyDurable: planner.table<string>("standing-durable", row => row),
+  refreshed: planner.table<{ id: string; changed: readonly string[] }>("standing-refreshed", row => row.id),
+  outside: planner.table<StandingObligation>("standing-outside", row => row.id),
+};
+const sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle, sink: syncSink });
 finishPhase("references-and-registration");
 console.log(`  hunt packets: ${sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE)).length} government(s) an order sent agents to`);
 console.log(
@@ -604,7 +668,7 @@ if (sync.refreshed.length > 0) {
 /* ---------------------------------------------- the executor decision --- */
 
 const maturity = await methodMaturityFromManual(repos);
-const decisions = new Map<string, ExecutorDecision>();
+const decisions = plannerMap<ExecutorDecision>(planner, "executor-decisions");
 const decisionFor = (obligationId: string, routeId: string | null): ExecutorDecision => {
   const held = decisions.get(obligationId);
   if (held !== undefined) return held;
@@ -629,36 +693,48 @@ const residueItems = retirementOutside === null ? [] : planRetiredResidue(retire
 const corpusUnits = allUnits.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id }));
 
 const dispatchedDiscoveryIds = sync.all.filter(row => row.materializedBy === OWNER_DISPATCH).map((o) => o.id).filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
-const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 /* A dispatched or mission need's address comes from the promoted jurisdiction reference, or its state's registration; it carries that version (NH330). */
 const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
   ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
-const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
-
-const freeWalkSubjects: readonly FreeWalkSubject[] = [
-  ...new Set(dispatchedDiscoveryIds.flatMap((id) => parseMeetingsDiscoveryId(id)?.jurisdictionId ?? [])),
-].map((jurisdictionId) => {
+    operationalStateIndex.versions.get(e.reg.stateCode.toLowerCase()) ?? null) });
+const dispatchedNeeds = plannerMap<MeetingsDiscoveryNeed>(planner, "dispatched-discovery-needs");
+const discoveryFailureRows = planner.table<string>("discovery-registry-failures", row => row);
+const discoveryStates = new Set<string>(); for (const id of dispatchedDiscoveryIds) { const state = plannerStateOf(id); if (state) discoveryStates.add(state); }
+for (const state of discoveryStates) {
+  const registry = registryView.get(state), own = dispatchedDiscoveryIds.filter(id => plannerStateOf(id) === state);
+  const derived = materializedDiscoveryNeeds(own, () => { if (!registry) throw new Error(registryRefusals.get(state) ?? `${state}: registry not read`); return registry; });
+  for (const entry of derived.entries) dispatchedNeeds.set(entry.need.jurisdictionId, withAddressSource(entry));
+  for (const failure of derived.failures) { discoveryFailureRows.add(failure); console.log(`  dispatched discovery registry: ${failure}`); }
+}
+const dispatchedDiscovery = { failures: discoveryFailureRows.rows };
+const freeWalkSubjectRows = planner.table<FreeWalkSubject>("free-walk-input", row => row.jurisdictionId);
+for (const id of dispatchedDiscoveryIds) {
+  const jurisdictionId = parseMeetingsDiscoveryId(id)?.jurisdictionId; if (!jurisdictionId) continue;
   const need = dispatchedNeeds.get(jurisdictionId);
-  return { jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) };
-});
+  freeWalkSubjectRows.add({ jurisdictionId, walkable: need === undefined ? null : walkableByFreeWalk(need) });
+}
+const freeWalkSubjects = freeWalkSubjectRows.rows;
 let freeWalks: FreeDiscoveryWalks = UNREAD_FREE_DISCOVERY_WALKS;
 
-const corpusIds = new Set(corpusUnits.map((u) => u.obligationId));
-const heldRouteCandidates = retirementOutside === null ? [] : [...new Set(retirementOutside
+const corpusIds = plannerSet(planner, "corpus-identities", corpusUnits.map((u) => u.obligationId));
+const heldRouteCandidates = plannerSet(planner, "held-route-candidates", retirementOutside === null ? [] : retirementOutside
   .filter((row) => row.active && !corpusIds.has(row.id))
-  .flatMap((row) => jurisdictionMeetingsSubject(row.id) ?? []))];
+  .flatMap((row) => jurisdictionMeetingsSubject(row.id) ?? []));
 const heldRouteRead = retirementOutside === null ? null : await (async () => {
   try {
-    if (heldRouteCandidates.length === 0) return { bodyIdFor: () => null, held: new Set<string>() };
-    await meetingPartitions.readStates(heldRouteCandidates.map((id) => id.split(":")[0] ?? ""));
+    if (heldRouteCandidates.size === 0) return { bodyIdFor: () => null, held: new Set<string>() };
     const bodyIdFor = (id: string): string | null => meetingPartitions.bodyIdFor?.(id) ?? null;
-    const divisions = [...new Set(heldRouteCandidates.flatMap((id) => bodyIdFor(id)?.split("#")[0] ?? []))];
-    if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
-    const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
-    const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
-    const held = heldCalendarRouteBodies(rows);
-    console.log(`  retirement evidence: ${heldRouteCandidates.length} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
+    const held = plannerSet(planner, "held-calendar-route-identities");
+    const states = new Set<string>(); for (const id of heldRouteCandidates) states.add(id.split(":")[0] ?? "");
+    for (const state of states) {
+      await meetingPartitions.readStates([state]);
+      const divisions = [...new Set(new DiskRows(() => heldRouteCandidates).filter(id => id.startsWith(`${state}:`)).flatMap(id => bodyIdFor(id)?.split("#")[0] ?? []))];
+      if (!divisions.length) continue;
+      const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
+      const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
+      for (const id of heldCalendarRouteBodies(rows)) held.add(id);
+    }
+    console.log(`  retirement evidence: ${heldRouteCandidates.size} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
     return { bodyIdFor, held };
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
@@ -690,7 +766,7 @@ const retirementHolds = retirementHeldBack.reduce<Record<string, number>>(
 let retirementApplied: Awaited<ReturnType<typeof settleRetirements>> | null = null;
 let retirementError: string | null = null;
 /** Retired obligations, id → reason: their debt stays out of the cycle and is tombstoned as retired. */
-const retiredDebtReasons = new Map<string, string>();
+const retiredDebtReasons = plannerMap<string>(planner, "retired-debt-reasons");
 if (movedPlan !== null && supersededPlan !== null && retirementOutside !== null) {
   const items = [...residueItems, ...supersededPlan.retire, ...movedPlan.retire];
   console.log(
@@ -735,35 +811,34 @@ if (movedIds.size > 0) {
   console.log(`  retirement: ${movedThisCycle} row(s) with a held calendar route retired this cycle, ${movedRemaining} remain`);
 }
 finishPhase("retirement");
-const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
+const occurrenceByObligation = plannerMap<{ id: string; routeTaskId: string }>(planner, "open-occurrence-identities");
 let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
 /** Obligations whose open/resume threw and were isolated. Never silent. */
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
-const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
+const dueTable = planner.table<{ obligation: StandingObligation; nextDueAt: string; cadenceHours: number }>("due", row => row.obligation.id);
+let dueThisCycle = dueTable.rows;
 
 /* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired. */
-const debtsIn = (canary
-  ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
-      .filter((row) => row !== null)
-      .map((row) => row.value)
-  : await loadDebts(repos)
-).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
+const debtRows = planner.table<import("../lib/control-plane/scheduler/debt.ts").FreshnessDebt>("debt-input", row => row.obligationId);
+if (canary) { for (const obligation of corpus) { const row = await repos.debts.read(obligation.id); if (row) debtRows.add(row.value); } }
+else await loadDebts(repos, debtRows);
+const debtsIn = debtRows.rows.filter((debt) => !retiredDebtReasons.has(debt.obligationId));
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
-const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
+const debtAtCycleStart = plannerMap(planner, "debt-at-start", debtsIn.map((d) => [d.obligationId, d] as const));
 
 let settingsConfig: AdminConfig | null = null;
 try {
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await readRuntimeAdminConfig(repos, ["settings"]);
   settingsConfig = row !== null && isAdminConfig(row.value) ? row.value : null;
 } catch (error) {
   runtimeConditions.push(`Admin settings could not be read; code defaults apply this round: ${error instanceof Error ? error.message : String(error)}`);
 }
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
-const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
-const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
-const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
+const debtIds = plannerSet(planner, "open-debt-identities", debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
+const retryNow = plannerSet(planner, "retry-now-identities", debtsIn.filter(debt => retryable([debt], nowMs).length > 0).map(debt => debt.obligationId));
+const backedOff = plannerSet(planner, "backed-off-identities", new DiskRows(() => debtIds).filter(id => !retryNow.has(id)));
 console.log(
   `  freshness debt inherited from earlier processes: ${debtIds.size} open row(s)` +
     (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
@@ -772,32 +847,30 @@ console.log(
 
 
 
-const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
-  const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
-    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS),
-    repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS), repos.workerResults.readAll(),
-  ]);
-  return selectStandingLineages({ occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-    artifacts: artifacts as LineageArtifact[], attempts: attempts.map(row => row.value as LineageAttempt), workerResults });
-})() : [];
-const publicationAnchors = await persistVerifiedPublicationAnchors(repos, { obligations: sync.all, lineages: standingLineages, now: NOW });
-if (publicationAnchors.anchored.length) {
-  sync = { ...sync, all: sync.all.map(o => publicationAnchors.updated.get(o.id) ?? o) };
-  console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
+const lineageRows = planner.table<StandingLineage>("standing-lineages", row => `${row.key}:${row.rootWorkItemId}`);
+let publicationAnchors = 0;
+for (const obligation of sync.all) {
+  if (!obligation.autonomousPlan) continue;
+  const lineages = await readStandingLineages(repos, [obligation.id]);
+  for (const lineage of lineages) lineageRows.add(lineage);
+  const anchored = await persistVerifiedPublicationAnchors(repos, { obligations: [obligation], lineages, now: NOW });
+  for (const next of anchored.updated.values()) syncSink.all.add(next);
+  publicationAnchors += anchored.anchored.length;
 }
+if (publicationAnchors) console.log(`  verified standing publications advanced ${publicationAnchors} source clock(s)`);
 
-const nextDueWrites: string[] = [];
+const nextDueWrites = plannerSet(planner, "next-due-write-identities");
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
   /* Do not pay a round trip to write a value that is already there. */
   if (o.nextDueAt !== row.nextDueAt) {
-    nextDueWrites.push(o.id);
+    nextDueWrites.add(o.id);
   }
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
-  dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
+  dueTable.add({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
 }
 
 
@@ -805,17 +878,16 @@ for (const o of sync.all) {
 
 const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
 if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
-  for (let i = dueThisCycle.length - 1; i >= 0; i--) {
-    const row = dueThisCycle[i]!;
+  for (const row of dueThisCycle) {
     const o = row.obligation;
     if (!plannedForHunters(o.autonomousPlan) || o.openOccurrenceId !== null) continue;
     const key = standingLineageKeyFor({ obligationId: o.id, dueAt: row.nextDueAt, project: FRESHNESS_PROJECT,
       subject: o.subjectId, plan: o.autonomousPlan, instructionReceipts: (o.assignments ?? []).map(mark => mark.ref) });
     if (!key) continue;
-    const held = standingLineageCoversDue({lineages:standingLineages,key,now:NOW,cadenceHours:row.cadenceHours});
+    const held = standingLineageCoversDue({lineages:[...lineageRows.rowsWhere(["obligationId"], o.id)],key,now:NOW,cadenceHours:row.cadenceHours});
     if (!held) continue;
     continuedStandingLineages.push({obligationId:o.id,rootWorkItemId:held.rootWorkItemId});
-    dueThisCycle.splice(i, 1);
+    dueTable.delete(o.id);
   }
 }
 if (continuedStandingLineages.length) console.log(`  standing source periods continued: ${continuedStandingLineages.length}; no duplicate Scout root opened; canonical roots ${continuedStandingLineages.slice(0, 3).map(row=>row.rootWorkItemId).join(", ")}${continuedStandingLineages.length>3?" …":""}`);
@@ -825,14 +897,18 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
   const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
   if (packetRows.length > 0) {
     try {
-      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW);
+      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW, undefined, planner, async governmentId => {
+        if (observationsUnreadable) throw new Error(observationsUnreadable);
+        const own = observations.rows.filter(row => row.value.bodyId.split("#")[0] === governmentId).map(row => row.value);
+        return [...foldAskGapObservations([...own], NOW).asked.values()];
+      });
       const waiting = packetRows.filter(row => due.get(row.obligation.subjectId)?.due !== true);
-      for (const row of waiting) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
+      for (const row of waiting) dueTable.delete(row.obligation.id);
       console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent` +
-        (waiting.length ? `; waiting: ${waiting.slice(0, 3).map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
+        (waiting.length ? `; waiting: ${[...waiting.slice(0, 3)].map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
     } catch (error) {
       runtimeConditions.push(`hunt packets could not be read (${error instanceof Error ? error.message : String(error)}); none is sent this round`);
-      for (const row of packetRows) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
+      for (const row of packetRows) dueTable.delete(row.obligation.id);
     }
   }
 }
@@ -903,9 +979,9 @@ interface OwnerDispatchRecord {
 }
 const ownerDispatches: OwnerDispatchRecord[] = [];
 const honoredDispatch: string[] = [];
-const dispatchPriority = new Set<string>();
+const dispatchPriority = plannerSet(planner, "owner-dispatch-priority");
 /** Obligation id -> the DISPATCH keys this cycle matched it under (the fallback when the dispatch-work plan could not be made). */
-const dispatchMatchReached = new Map<string, string[]>();
+const dispatchMatchReached = plannerMap<string[]>(planner, "dispatch-reached");
 /** The DISPATCH intents this cycle reads, with the matching sentence each HONORED record opens with. */
 const dispatchDetails: { readonly intent: ResearchIntentRequest; readonly detail: string }[] = [];
 for (const pending of intents.pendingDispatch) {
@@ -913,7 +989,7 @@ for (const pending of intents.pendingDispatch) {
   const matched = allUnits.filter((u) =>
     unitMatchesTarget(target, { id: u.obligation.id, subjectId: u.obligation.subjectId }),
   );
-  const matchedIds = new Set(matched.map((u) => u.obligation.id));
+  const matchedIds = plannerSet(planner, `matched-dispatch:${pending.intentId}`, matched.map((u) => u.obligation.id));
   for (const id of matchedIds) dispatchPriority.add(id);
   /* The Send this cycle reached each matched row under, whether or not its record gets written (the budget gate holds the gap). */
   for (const id of matchedIds) dispatchMatchReached.set(id, [...(dispatchMatchReached.get(id) ?? []), `dispatch:${pending.intentId}`]);
@@ -933,40 +1009,36 @@ for (const pending of intents.pendingDispatch) {
   );
 }
 
-const promoted = promotedRegistries();
-/** The registries as read now: the ones above, and every state's registration read since. */
-const registriesNow = (fallback: ReadonlyMap<string, JurisdictionRegistry>): ReadonlyMap<string, JurisdictionRegistry> => {
-  const now = promotedRegistries();
-  return "registries" in now ? now.registries : fallback;
-};
+const promoted = { registries: registryView, refused: registryRefusals };
 if ("refused" in promoted) {
   for (const [state, why] of promoted.refused) {
     runtimeConditions.push(`the promoted ${state.toUpperCase()} jurisdiction registry is not read by this runtime (${why}); nothing it defines is placed or created`);
   }
 }
-const scopeDivisionsByObligation = new Map(allUnits.map(u => [u.obligation.id, u.record.scopeDivisions]));
+const scopeDivisionsByObligation = plannerMap(planner, "scope-divisions", allUnits.map(u => [u.obligation.id, u.record.scopeDivisions] as const));
 const expansionLoad = await loadExpansionPlan({
   repos,
   root: ROOT,
   now: NOW,
+  planner,
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId, scopeDivisions: scopeDivisionsByObligation.get(o.id) })),
   /* Each scope state with no reviewed registry is read from its registration before the territory. */
   beforeTerritory: async (states) => {
-    const registration = await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } });
-    await meetingPartitions.readStates(states);
-    return [...registration.refused].map(
+    await ensureRegistryStates(states);
+    return [...registryRefusals].filter(([state]) => states.some(wanted => wanted.toLowerCase() === state)).map(
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
     );
   },
-  ...("registries" in promoted ? { loadTerritory: (states: readonly string[], zips: ReadonlySet<string>, places: Parameters<typeof readTerritoryIndex>[4]) => readTerritoryIndex(ROOT, [...registriesNow(promoted.registries).values()], [...states], zips, places) } : {}),
+  loadTerritory: (states: readonly string[], zips: ReadonlySet<string>, places: Parameters<typeof readTerritoryIndex>[4]) =>
+    spooledTerritoryIndex(planner, states, state => { const registry = registryView.get(state.toLowerCase()); return readTerritoryIndex(ROOT, registry ? [registry] : [], [state], zips, places); }),
 });
 runtimeConditions.push(...expansionLoad.conditions);
 const expansionPlan = expansionLoad.plan;
-const subjectByObligation = new Map(sync.all.map((o) => [o.id, o.subjectId]));
-const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
-  .filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt !== null && scope.decision.budgetUsd > 0)
-  .flatMap(scope => [...scope.members]));
-const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
+const subjectByObligation = plannerMap(planner, "obligation-subjects", sync.all.map((o) => [o.id, o.subjectId] as const));
+const lifetimeHuntSubjects = plannerSet(planner, "lifetime-hunt-subjects");
+for (const scope of expansionPlan?.scopes ?? []) if (scope.kind === "RESOLVED" && scope.decision.budgetStartedAt !== null && scope.decision.budgetUsd > 0)
+  for (const member of scope.members) lifetimeHuntSubjects.add(member);
+const lifetimeHuntWorkIds = plannerSet(planner, "lifetime-hunt-work", sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
 let placeOrder: readonly string[] = [];
@@ -984,24 +1056,34 @@ async function refreshPlaceOrder(): Promise<void> {
   placeOrderRead = (async () => {
     const scopes = (expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED");
     if (!scopes.length) return;
-    const divisionsByReceipt = new Map(scopes.map(scope => [scope.decision.receiptId,
-      [...new Set([...scope.members].map(subject => subject.split("#")[0]).filter(id => id.startsWith("ocd-division/")))]]));
-    const divisionIds = [...new Set([...divisionsByReceipt.values()].flat())];
-    const [row, capture] = await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),
-      readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
-    const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
-      cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
-    const places = scopes.map(scope => ({
-      key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type] ?? scope.decision.geography.type}.${scope.decision.geography.geoid.toLowerCase()}`,
-      receiptId: scope.decision.receiptId,
-      items: buildPlaceOwedList({ divisions: (divisionsByReceipt.get(scope.decision.receiptId) ?? []).map(id => ({ id, label: id })),
-        subjects: capture.subjects, held: capture.held, now: nowIso() }),
-    }));
-    placeOrder = orderPlaceWork(row?.value, places);
+    const row = await readRuntimeAdminConfig(repos, ["settings", "placeTargets"]);
     const parts = missionPartsOf(row !== null && isAdminConfig(row.value) ? row.value : null);
-    squadReading = { parts, open: new Map(places.map(place => [place.receiptId,
-      new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
-    missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
+    const places: { key: string; receiptId: string; items: []; percent: number | null }[] = [];
+    const openByReceipt = new Map<string, ReadonlyMap<string, number>>(), mapsByReceipt = new Map<string, Omit<MissionMapCount,"before">>();
+    const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd", cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
+    const divisions = plannerSet(planner, "priority-refresh-divisions");
+    const items = planner.table<PlaceOwedItem>("priority-refresh-items", item => item.id);
+    for (const scope of scopes) {
+      divisions.clear(); items.clear();
+      for (const subject of scope.members) { const division = subject.split("#")[0]; if (division.startsWith("ocd-division/")) divisions.add(division); }
+      // A shared subject is counted once even when several governments serve it; full place facts never accumulate across the country.
+      for (const id of divisions) {
+        const capture = await readHeldPlaceCapture([id], { now: nowIso(), bypassCache: true });
+        for (const item of buildPlaceOwedList({ divisions: [{ id, label: id }], subjects: capture.subjects, held: capture.held, now: nowIso() })) items.add(item);
+      }
+      const open = new Map<string, number>(); let captured = 0, owed = 0, unfilled = 0, stale = 0, mapOwed = 0;
+      for (const item of items.rows) {
+        const measure = placeMeasures([item]).completeness; captured += measure.n; owed += measure.of;
+        const map = missionMapCount([item], null); mapOwed += map.owed; unfilled += map.unfilled; stale += map.stale;
+        for (const part of missionPartCounts([item], parts)) open.set(part.part, (open.get(part.part) ?? 0) + part.open);
+      }
+      places.push({ key: `${scope.decision.geography.stateAbbr.toLowerCase()}.${shortType[scope.decision.geography.type] ?? scope.decision.geography.type}.${scope.decision.geography.geoid.toLowerCase()}`,
+        receiptId: scope.decision.receiptId, items: [], percent: percentOf(captured, owed) });
+      openByReceipt.set(scope.decision.receiptId, open); mapsByReceipt.set(scope.decision.receiptId, { owed: mapOwed, unfilled, stale });
+    }
+    divisions.clear(); items.clear();
+    placeOrder = orderPlaceWork(row?.value, places);
+    squadReading = { parts, open: openByReceipt }; missionMaps = mapsByReceipt;
     missionMapUnread = null;
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
@@ -1014,7 +1096,7 @@ async function refreshPlaceOrder(): Promise<void> {
 await refreshPlaceOrder();
 const placeRankFor = (() => {
   let rankedOrder: readonly string[] | null = null;
-  const bySubject = new Map<string, number>();
+  const bySubject = plannerMap<number>(planner, "place-subject-ranks");
   return (subject: string): number | null => {
     if (rankedOrder !== placeOrder) {
       bySubject.clear();
@@ -1043,7 +1125,7 @@ const placementRank = (obligationId: string): number | null => {
 const scopePlaceFirst: Set<string> | null =
   dispatchPriority.size > 0 || expansionPlan === null
     ? null
-    : new Set(sync.all.filter((o) => expansionPlan.placedSubjects.has(o.subjectId)).map((o) => o.id));
+    : plannerSet(planner, "scope-first", sync.all.filter((o) => expansionPlan.placedSubjects.has(o.subjectId)).map((o) => o.id));
 if (expansionPlan !== null) {
   console.log(`  expansion scopes: ${expansionPlan.scopes.length} selected (${expansionPlan.reading.lookup.source} Census geography)`);
   for (const scope of expansionPlan.scopes) {
@@ -1055,32 +1137,30 @@ if (expansionPlan !== null) {
 }
 
 /* Oldest next-due first, behind the owner's dispatch. This order only classifies and counts the rows. The dispatcher orders the plain-code lane by `plainCodeQueueOrder`. */
-dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
-const dueOrdered = expansionPlan === null
-  ? placeFirstRows(dueThisCycle, dispatchPriority)
-  : orderByPlacement(dueThisCycle, (d) => placementRank(d.obligation.id));
-const dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
-const dueDeterministicRows = dueOrdered.filter((d) => !dueModel.includes(d));
+dueThisCycle = dueTable.rowsBy([["nextDueAt"]]);
+let dueOrdered = expansionPlan === null
+  ? plannerOrder("due-dispatch-order", dueThisCycle, row => dispatchPriority.has(row.obligation.id) ? 0 : 1)
+  : plannerOrder("due-place-order", dueThisCycle, (d) => placementRank(d.obligation.id));
+let dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
+let dueDeterministicRows = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind !== "BOUNDED_MODEL_WORKER");
 let dueDeterministic = dueDeterministicRows.length;
 
 const orderingInputs: OrderingInputs = {};
 /* Both the recorded queue and the live pool read each row through `orderableDueRow`, with the debt it carried in: longest wait first within a band. */
-const modelOrder = orderByReaderImpact(
-  dueModel.map((d) => ({
-    ...orderableDueRow(d, registry.providerOf(d.obligation.id), debtAtCycleStart.get(d.obligation.id)),
-    entry: d,
-  })),
-  orderingInputs,
-);
+const modelOrderTable = planner.table<ReturnType<typeof orderByReaderImpact>["ordered"][number]>("model-order", row => row.row.id);
+const modelBands = { 1: 0, 2: 0, 3: 0 };
+for (const row of dueModel) {
+  const [banded] = orderByReaderImpact([orderableDueRow(row, registry.providerOf(row.obligation.id), debtAtCycleStart.get(row.obligation.id))], orderingInputs).ordered;
+  modelOrderTable.add(banded!); modelBands[banded!.band]++;
+}
+const modelOrder = { ordered: modelOrderTable.rowsBy([["band"], ["row", "queuedSince"], ["row", "nextDueAt"], ["row", "id"]]),
+  ordering: { ...orderByReaderImpact([], orderingInputs).ordering, bands: modelBands } };
 const dispatchOrdering: DispatchOrdering | null = dueModel.length === 0 ? null : modelOrder.ordering;
 /* The owner's dispatch goes ahead of the bands; within each group the band order stands. With expansion scopes selected, the same
    DISPATCH-first order continues scope by scope (priority 1 first) before the rest. */
 const scoutOrder = expansionPlan === null
-  ? [
-      ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
-      ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
-    ]
-  : orderByPlacement(modelOrder.ordered, (b) => placementRank(b.row.id));
+  ? plannerOrder("scout-dispatch-order", modelOrder.ordered, row => dispatchPriority.has(row.row.id) ? 0 : 1)
+  : plannerOrder("scout-place-order", modelOrder.ordered, (b) => placementRank(b.row.id));
 
 let roundMethodVersionRead: Promise<number> | null = null;
 const roundMethodVersion = (): Promise<number> => {
@@ -1100,23 +1180,20 @@ if (!dry && !canary && !intents.runnerPause.paused) {
   }
 }
 const recoveryRepos = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
-const allPlannedWork = canary ? [] : (await recoveryRepos.workItems.list()).filter(item =>
-  plannedForHunters(item.value.autonomousPlan) && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
-);
-for (const item of allPlannedWork) if (lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
+if (!canary) await forEachAggregate(recoveryRepos.workItems, item => {
+  if (plannedForHunters(item.value.autonomousPlan) && !isRetiredRoutineMeetingAcquisition(item.value.autonomousPlan.contract)
+    && lifetimeHuntSubjects.has(item.value.subject)) lifetimeHuntWorkIds.add(item.id);
+});
 const [settledTaskIds, neverClaimedTaskIds] = await (async () => {
-  const listing = canary ? [] : await recoveryRepos.routeTasks.list();
-  for (const row of listing) if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
-    lifetimeHuntWorkIds.add(row.id);
-    lifetimeHuntWorkIds.add(row.value.workItemId);
-  }
-  const eligible = listing;
-  return [
-    /* The same read names the settled RouteTasks the pre-dispatch recovery starts from. Only ids outlive it. */
-    settledRouteTaskIds(eligible),
-    /* And the freshness RouteTasks never claimed, which an abandoned occurrence must sit on. */
-    new Set(eligible.filter(row => row.value.state === "PENDING" && !row.value.workerTask).map(row => row.id)),
-  ] as const;
+  const settled = plannerSet(planner, "settled-task-ids"), neverClaimed = plannerSet(planner, "never-claimed-task-ids");
+  if (!canary) await forEachAggregate(recoveryRepos.routeTasks, row => {
+    if (row.value.workerTask && lifetimeHuntSubjects.has(row.value.workerTask.contract.subjectId)) {
+      lifetimeHuntWorkIds.add(row.id); lifetimeHuntWorkIds.add(row.value.workItemId);
+    }
+    for (const id of settledRouteTaskIds([row])) settled.add(id);
+    if (row.value.state === "PENDING" && !row.value.workerTask) neverClaimed.add(row.id);
+  });
+  return [settled, neverClaimed] as const;
 })();
 finishPhase("schedule-and-intents");
 if (dispatchOrdering !== null) {
@@ -1131,7 +1208,7 @@ if (dispatchOrdering !== null) {
   }
 }
 
-const standingById = new Map(sync.all.map((o) => [o.id, o]));
+const standingById = plannerMap(planner, "standing-by-id", sync.all.map((o) => [o.id, o] as const));
 const openOccurrenceInStep = async (
   row: ScheduledObligation,
 ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
@@ -1181,7 +1258,7 @@ let discoverySearchDecision: string = "OFF: the owner has not allowed paid disco
 let configRead: AdminConfigRead;
 let configRevision = 0;
 try {
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await readRuntimeAdminConfig(repos);
   configRead = { row };
   configRevision = row?.revision ?? 0;
 } catch (error) {
@@ -1216,7 +1293,7 @@ let effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-let spendCharges: readonly PricedCharge[] = [];
+let spendCharges: Iterable<PricedCharge> = [];
 let ledgerUnreadable: string | null = null;
 try {
   // Only transient failures are retried, under the existing backoff and circuit.
@@ -1334,7 +1411,7 @@ function refreshOwnerSettings(): Promise<void> {
   if (Date.now() - settingsReadAt < SETTINGS_REFRESH_MIN_MS) return Promise.resolve();
   settingsReadAt = Date.now();
   settingsRead = (async () => {
-    const reread = adminConfigForPaidWork({ row: await repos.adminConfig.read(ADMIN_CONFIG_ID) });
+    const reread = adminConfigForPaidWork({ row: await readRuntimeAdminConfig(repos, ["settings", "fleetSpendCeiling"]) });
     hostConcurrency = readSetting(reread.config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
     if (reread.holdPaidWork !== null) return;
     const next = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(reread.config));
@@ -1441,33 +1518,28 @@ let dispatchWork: DispatchWorkReading | null = null;
 /* The Sends this cycle recorded on rows after they were read, for the assignment budgets below. */
 let dispatchRecorded: NonNullable<DispatchWorkApplied["recorded"]> = [];
 /** Every Send record the dispatch-work plan meant to write this cycle (null: no plan was made). */
-let plannedSendMarks: { readonly obligationId: string; readonly key: string }[] | null = null;
+let plannedSendMarks: Iterable<{ readonly obligationId: string; readonly key: string }> | null = null;
 /** The obligations this cycle's Sends just created or revived, with the Send each belongs to, so they can start in this round. */
 let dispatchWrittenThisCycle: ReadonlyMap<string, string> = new Map();
 if (dispatchTargets.length > 0) {
   try {
-    if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
     /* A DISPATCH's states with no reviewed registry are read from their registration, as a scope's were. */
-    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
-    await meetingPartitions.readStates(dispatchTargets.flatMap(t => t.kind === "DISPATCH" ? t.target.states : []));
-    const current = promotedRegistries();
-    const registries = "registries" in current ? current.registries : promoted.registries;
-    const refusedRegistries = "refused" in current ? current.refused : promoted.refused;
+    await ensureRegistryStates(dispatchTargets.flatMap(t => t.kind === "DISPATCH" ? t.target.states : []));
+    const registries = registryView, refusedRegistries = registryRefusals;
     let censusUnitsByState: Map<string, number> | null = null;
     if (dispatchTargets.some((t) => t.kind === "DISPATCH" && t.target.states.some((s) => !registries.has(s)))) {
       try {
         censusUnitsByState = new Map<string, number>();
         const states = [...new Set(dispatchTargets.flatMap(target => target.kind === "DISPATCH" ? target.target.states : []))];
-        for (const unit of readCensusUnitTerritories(ROOT, states)) {
-          const state = unit.state.toUpperCase();
-          censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
+        for (const ownState of states) for (const unit of readCensusUnitTerritories(ROOT, [ownState])) {
+          const state = unit.state.toUpperCase(); censusUnitsByState.set(state, (censusUnitsByState.get(state) ?? 0) + 1);
         }
       } catch {
         censusUnitsByState = null;
       }
     }
-    const durable = new Map<string, DurableRowFacts>();
-    for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
+    const durable = plannerMap<DurableRowFacts>(planner, "dispatch-durable");
+    for (const rows of [sync.all, sync.outside ?? []]) for (const row of rows) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
     /* Every division each sent place touches gets one hunt packet; a send whose place cannot be read gets its placed governments' packets. */
     const packetDivisions = new Map<string, readonly string[]>();
     for (const target of dispatchTargets) {
@@ -1481,6 +1553,7 @@ if (dispatchTargets.length > 0) {
       } catch (error) { console.warn(`  ${target.label}: the divisions it touches could not be read (${error instanceof Error ? error.message : String(error)})`); }
     }
     const plan = planDispatchWork({
+      planner,
       targets: dispatchTargets,
       world: {
         packetDivisions,
@@ -1500,8 +1573,8 @@ if (dispatchTargets.length > 0) {
       : null;
     dispatchRecorded = applied?.recorded ?? [];
     if (applied !== null) {
-      const targetOf = new Map(plan.writes.map(w => [w.instance.obligation.id, w.target.key] as const));
-      dispatchWrittenThisCycle = new Map(applied.written.flatMap(id => { const key = targetOf.get(id); return key === undefined ? [] : [[id, key] as const]; }));
+      const targetOf = plannerMap(planner, "dispatch-target-of", new DiskRows(() => plan.writes).map(w => [w.instance.obligation.id, w.target.key] as const));
+      dispatchWrittenThisCycle = plannerMap(planner, "dispatch-written", new DiskRows(() => applied.written).flatMap(id => { const key = targetOf.get(id); return key === undefined ? [] : [[id, key] as const]; }));
     }
     dispatchWork = dispatchWorkReading(plan, applied, {
       at: NOW,
@@ -1516,9 +1589,9 @@ if (dispatchTargets.length > 0) {
         `${dispatchWork.deferred} deferred` + (dispatchWork.writes === "PLAN_ONLY" ? ` (plan only: ${dispatchWorkPlanOnlyWhy})` : ""),
     );
     for (const t of dispatchWork.targets) console.log(`      ${dispatchWorkSentence(t)}`);
-    if (dispatchWork.failed.length > 0) {
+    if ((dispatchWork.failedCount ?? dispatchWork.failed.length) > 0) {
       runtimeConditions.push(
-        `${dispatchWork.failed.length} obligation(s) the owner's dispatch owed could not be written (first: ${dispatchWork.failed[0]?.obligationId}: ${dispatchWork.failed[0]?.why}); they are written again next cycle`,
+        `${dispatchWork.failedCount ?? dispatchWork.failed.length} obligation(s) the owner's dispatch owed could not be written (first: ${dispatchWork.failed[0]?.obligationId}: ${dispatchWork.failed[0]?.why}); they are written again next cycle`,
       );
     }
   } catch (error) {
@@ -1530,41 +1603,38 @@ if (dispatchTargets.length > 0) {
 
 if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env)) {
   try {
-    const written = [...dispatchWrittenThisCycle.keys()];
-    const onFile = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
-    materialized = { ids: new Set(onFile.map((row) => row.id)) };
-    const rebuilt = buildRegistry(registryProviders, registryContext);
-    const known = new Set(allUnits.map((u) => u.obligation.id));
-    const wanted = new Set(written);
-    const freshUnits = rebuilt.units.filter((u) => wanted.has(u.obligation.id) && !known.has(u.obligation.id));
-    if (freshUnits.length > 0) {
-      const synced = await syncObligations(repos, freshUnits.map((u) => u.obligation), NOW, { exactReads: true });
-      const freshIds = new Set(synced.all.map((o) => o.id));
-      registry = rebuilt;
-      allUnits = [...allUnits, ...freshUnits];
-      units = [...units, ...freshUnits];
-      sync = { ...sync, all: [...sync.all, ...synced.all], outside: sync.outside === null ? null : sync.outside.filter((o) => !freshIds.has(o.id)) };
-      for (const o of synced.all) {
-        decisionFor(o.id, o.routeId);
-        standingById.set(o.id, o);
-        subjectByObligation.set(o.id, o.subjectId);
-        if (lifetimeHuntSubjects.has(o.subjectId)) lifetimeHuntWorkIds.add(o.id);
-        if (dispatchWrittenThisCycle.get(o.id)?.startsWith("dispatch:")) dispatchPriority.add(o.id);
-        if (scopePlaceFirst !== null) scopePlaceFirst.add(o.id);
-      }
-      const folded = foldNewWorkIntoRound({ rows: synced.all, nowMs });
-      for (const id of folded.nextDueWrites) nextDueWrites.push(id);
-      for (const d of folded.due) {
-        dueThisCycle.push(d);
-        (decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER" ? dueModel : dueDeterministicRows).push(d);
-      }
-      dueDeterministic = dueDeterministicRows.length;
-      console.log(
-        `  first hunt in the same round: ${synced.all.length} new row(s) from this round's Sends joined the corpus; ` +
-          `${folded.due.length} due now (${folded.due.filter((d) => dueModel.includes(d)).length} model-class), ${folded.notYetDue.length} wait for their clock` +
-          (folded.unscheduled.length > 0 ? `, ${folded.unscheduled.length} owe nothing on a clock` : ""),
-      );
+    for (const id of dispatchWrittenThisCycle.keys()) materializedIds.add(id);
+    const rebuilt = await buildPlannerRegistry();
+    const freshUnits = rebuilt.units.filter(unit => dispatchWrittenThisCycle.has(unit.obligation.id) && !registry.source.has(unit.obligation.id));
+    const freshSink: SyncPlannerSink = {
+      all: planner.table<StandingObligation>("same-round-standing", row => row.id),
+      registered: planner.table<string>("same-round-registered", row => row),
+      alreadyDurable: planner.table<string>("same-round-durable", row => row),
+      refreshed: planner.table<{ id: string; changed: readonly string[] }>("same-round-refreshed", row => row.id),
+      outside: planner.table<StandingObligation>("same-round-outside", row => row.id),
+    };
+    const synced = await syncObligations(repos, freshUnits.map(unit => unit.obligation), NOW, { exactReads: true, sink: freshSink });
+    registry = rebuilt; allUnits = registry.units;
+    units = allUnits.filter(unit => (ONLY === null || unit.obligation.id.startsWith(ONLY)) && (IDS === null || IDS.has(unit.obligation.id)));
+    let joinedDue = 0, joinedModel = 0, waitClock = 0, unscheduled = 0;
+    for (const obligation of synced.all) {
+      syncSink.all.add(obligation); syncSink.outside.delete(obligation.id);
+      decisionFor(obligation.id, obligation.routeId);
+      standingById.set(obligation.id, obligation); subjectByObligation.set(obligation.id, obligation.subjectId);
+      if (lifetimeHuntSubjects.has(obligation.subjectId)) lifetimeHuntWorkIds.add(obligation.id);
+      if (dispatchWrittenThisCycle.get(obligation.id)?.startsWith("dispatch:")) dispatchPriority.add(obligation.id);
+      scopePlaceFirst?.add(obligation.id);
+      const folded = foldNewWorkIntoRound({ rows: [obligation], nowMs });
+      for (const id of folded.nextDueWrites) nextDueWrites.add(id);
+      for (const row of folded.due) { dueTable.add(row); joinedDue++; if (decisionFor(row.obligation.id, row.obligation.routeId).kind === "BOUNDED_MODEL_WORKER") joinedModel++; }
+      waitClock += folded.notYetDue.length; unscheduled += folded.unscheduled.length;
     }
+    dueThisCycle = dueTable.rowsBy([["nextDueAt"]]);
+    dueOrdered = plannerOrder("same-round-due-order", dueThisCycle, row => expansionPlan === null ? dispatchPriority.has(row.obligation.id) ? 0 : 1 : placementRank(row.obligation.id));
+    dueModel = dueOrdered.filter(row => decisionFor(row.obligation.id, row.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
+    dueDeterministicRows = dueOrdered.filter(row => decisionFor(row.obligation.id, row.obligation.routeId).kind !== "BOUNDED_MODEL_WORKER");
+    dueDeterministic = dueDeterministicRows.length;
+    if (synced.all.length) console.log(`  first hunt in the same round: ${synced.all.length} new row(s) from this round's Sends joined the corpus; ${joinedDue} due now (${joinedModel} model-class), ${waitClock} wait for their clock${unscheduled ? `, ${unscheduled} owe nothing on a clock` : ""}`);
   } catch (error) {
     runtimeConditions.push(
       `rows this round's Sends created could not start in the same round (${error instanceof Error ? error.message : String(error)}); they join next round`,
@@ -1591,9 +1661,10 @@ for (const { intent, detail } of dispatchDetails) {
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
 
-const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
+const assignmentRows = new DiskRows(function* () { yield* sync.all; yield* sync.outside ?? []; });
+const assignmentMembers = assignmentMembership(assignmentRows, dispatchRecorded, planner);
 
-const sendsReachedThisCycle = new Map<string, readonly string[]>();
+const sendsReachedThisCycle = plannerMap<readonly string[]>(planner, "send-reached");
 if (plannedSendMarks !== null) {
   for (const m of plannedSendMarks) sendsReachedThisCycle.set(m.obligationId, [...(sendsReachedThisCycle.get(m.obligationId) ?? []), m.key]);
 } else {
@@ -1660,10 +1731,10 @@ const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs)
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
 /* Repository calls per lease task this round; their mean is the round's "lease-task-reads" phase (no duration of its own). */
-const leaseTaskCalls: number[] = [];
-const leaseTaskReadsPhase = (): CyclePhase[] => leaseTaskCalls.length === 0 ? [] : [{ name: "lease-task-reads", durationMs: 0,
-  repositoryCalls: Math.round(leaseTaskCalls.reduce((sum, n) => sum + n, 0) / leaseTaskCalls.length) }];
-const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses().catch(error => {
+let leaseTaskCallSum = 0, leaseTaskCallCount = 0;
+const leaseTaskReadsPhase = (): CyclePhase[] => leaseTaskCallCount === 0 ? [] : [{ name: "lease-task-reads", durationMs: 0,
+  repositoryCalls: Math.round(leaseTaskCallSum / leaseTaskCallCount) }];
+const earlyOriginal = autonomousCycleOpen ? runAutonomousProcesses("original hunt early worker").catch(error => {
   runtimeConditions.push(`autonomous worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
   return null;
 }) : null;
@@ -1683,8 +1754,8 @@ const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), a
 
 /* Visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
-const debtByObligation = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
-const assignmentObligations = [...sync.all, ...(sync.outside ?? [])];
+const debtByObligation = plannerMap(planner, "assignment-debts", debtsIn.map((d) => [d.obligationId, d] as const));
+const assignmentObligations = assignmentRows;
 /* A Send over resolved places is Done by its mission map: no unfilled row and every door it opened has a next read. */
 const resolvedReceipts = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
 const priorMapBefore = (key: string, ref: string): number | null => {
@@ -1694,7 +1765,7 @@ const priorMapBefore = (key: string, ref: string): number | null => {
 };
 const assignmentCompletion = (key: string) => {
   const ref = assignmentSpecs.find(spec=>spec.key===key)?.ref;
-  const obligations = memberRecordsForSend(key, assignmentMembers, assignmentObligations, ref);
+  const obligations = memberRecordsForSend(key, assignmentMembers, assignmentObligations, ref, planner);
   const debtFor = (id: string) => debtByObligation.get(id) ?? null;
   if (ref !== undefined && resolvedReceipts.has(ref)) {
     const counted = missionMaps.get(ref);
@@ -1770,7 +1841,7 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
   deferredBy: {},
 };
 /** Obligations started this cycle in either lane, for the in-flight lane reading's oldest waiting row. */
-const startedThisCycle = new Set<string>();
+const startedThisCycle = plannerSet(planner, "started-this-cycle");
 /** The lanes' final accounting, set once the cycle's lanes (and then the coordinator) have run; in-flight until then. */
 let finalQueueLanes: QueueLanes | null = null;
 /** Computed once at cycle end; null on the start-of-cycle state. */
@@ -1911,14 +1982,15 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
 
 finishPhase("worker-context");
 
-let settledOccurrences: readonly SettledOccurrence[] = [];
+let settledOccurrences: readonly SettledOccurrence[] | DiskRows<SettledOccurrence> = [];
 
-let abandonedOccurrences: readonly AbandonedOccurrence[] = [];
+let abandonedOccurrences: readonly AbandonedOccurrence[] | DiskRows<AbandonedOccurrence> = [];
 let abandonedClosed: Awaited<ReturnType<typeof closeAbandonedOccurrences>> | null = null;
 if (!canary) {
   try {
     const scan = await scanOccurrences(repos, {
       obligations: sync.all,
+      planner,
       settledRouteTaskIds: settledTaskIds,
       neverClaimedRouteTaskIds: neverClaimedTaskIds,
     });
@@ -1945,7 +2017,7 @@ if (!canary) {
 finishPhase("settled-occurrence-scan");
 
 if (modelLaneEnabled && freeWalkSubjects.length > 0) {
-  freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects));
+  freeWalks = await pending.step("free-walks:read", () => readFreeDiscoveryWalks(repos, freeWalkSubjects, planner));
 }
 
 // Retained results publish alongside acquisition rather than holding ready leases.
@@ -1970,18 +2042,23 @@ const routeUrl = (obligationId: string): string | null => {
   const open = registry.routeFor(obligationId)?.open;
   return open && (open.kind === "HTTP_GET" || open.kind === "HTTP_POST") ? open.url : null;
 };
+const schedulerMemory = await hostMemoryReading(NOW);
+const deterministicWaiters = Math.max(1, Math.floor((schedulerMemory.totalBytes - schedulerMemory.headroomBytes) / (Math.min(...Object.values(WORKER_ENTRY_PEAK_MIB)) * 1024 * 1024)));
 const cycle = await runCycle({
   repos,
   recoveryRepos,
-  obligations: sync.all,
+  obligationSource: {
+    visit: async visit => { for (const row of sync.all) await visit(row); },
+    read: async id => syncSink.all.read(id) ?? null,
+  },
   debts: debtsIn,
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   maturity,
   executor: executorFor,
-  workerCapacity: Math.max(1, dueDeterministicRows.length),
-  placeComparator: async () => {
+  workerCapacity: deterministicWaiters,
+  placePriority: async () => {
     await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
-    return (a, b) => (placementRank(a.obligation.id) ?? Infinity) - (placementRank(b.obligation.id) ?? Infinity);
+    return { revision: JSON.stringify(placeOrder), rank: placementRank };
   },
   huntFor: row => {
     const rank = placementRank(row.obligation.id);
@@ -2022,13 +2099,14 @@ await retainedProjection;
 finishPhase("dispatch");
 if (expansionReading !== null && expansionBudget !== null) {
   /* The scopes' dispatch outcome: what each budget admitted and held this cycle. */
-  const dispatchedIds = new Set(cycle.dispatched.map(row => row.obligationId));
+  const dispatchedIds = plannerSet(planner, "dispatched-results", cycle.dispatched.map(row => row.obligationId));
   expansionReading = withCycleCounts(expansionReading, {
     dueByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.dueThisCycle ?? 0])),
     dispatchedByScope: new Map(expansionReading.scopes.map((s) => {
       const members = assignmentMembers.byKey.get(s.key);
-      const ids = members === undefined ? [] : [...members.created.keys(), ...members.reordered.keys()];
-      return [s.key, ids.filter(id => dispatchedIds.has(id)).length] as const;
+      let count = 0;
+      if (members) for (const rows of [members.created, members.reordered]) for (const id of rows.keys()) if (dispatchedIds.has(id)) count++;
+      return [s.key, count] as const;
     })),
     scoutPlacedFirstByScope: new Map(expansionReading.scopes.map((s) => [s.key, s.work?.scoutRowsPlacedFirst ?? 0])),
     gate: expansionBudget.gate,
@@ -2047,11 +2125,11 @@ for (const row of cycle.deferred) {
 }
 /* A settled occurrence found before dispatch on an obligation with no schedule stays open, and is named rather than dropped. */
 {
-  const recoveredIds = new Set(cycle.recovered.map((r) => r.obligationId));
-  const leftOpen = settledOccurrences.filter((s) => !recoveredIds.has(s.obligationId));
+  const recoveredIds = plannerSet(planner, "recovered-results", cycle.recovered.map((r) => r.obligationId));
+  const leftOpen = new DiskRows(() => settledOccurrences).filter((s) => !recoveredIds.has(s.obligationId));
   console.log(
     `  settled occurrences: ${settledOccurrences.length} found before dispatch, ${settledOccurrences.length - leftOpen.length} recovered` +
-      (leftOpen.length > 0 ? `; ${leftOpen.length} left open on an unscheduled obligation: ${leftOpen.map((s) => s.obligationId).join(", ")}` : ""),
+      (leftOpen.length > 0 ? `; ${leftOpen.length} left open on an unscheduled obligation: ${[...leftOpen.slice(0, 12)].map((s) => s.obligationId).join(", ")}${leftOpen.length > 12 ? " … (all identities in local diagnostic)" : ""}` : ""),
   );
 }
 
@@ -2061,7 +2139,7 @@ if (!dry && !canary) {
   const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
     get: guardedLeadGet(fleetSafety),
     now: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)),
-    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }, planner),
     deadlineMs: Date.now() + LEADS_PASS_BUDGET_MS })).catch((error: unknown) => {
     runtimeConditions.push(`the owner's research leads were not tested this round: ${error instanceof Error ? error.message : String(error)}`);
     return null;
@@ -2075,8 +2153,8 @@ if (!dry && !canary) {
 /* ------------------------------------------------- spread what started working --- */
 
 if (!dry && !canary) {
-  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
-    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, planner, now: nowIso(),
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }, planner),
     paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
     runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
     return null;
@@ -2104,6 +2182,7 @@ const persisted = await pending.step("debts:persist", () => persistDebts(
   canary ? corpus.map((obligation) => obligation.id) : null,
   retiredDebtReasons,
   CONTROL_PLANE_QUERY_CONCURRENCY,
+  planner,
 ));
 finishPhase("occurrence-and-debt-commit");
 console.log(
@@ -2113,9 +2192,10 @@ console.log(
 
 // Worker processes pull the existing ledger. Their results are joined before
 // finalization, alongside the independent discovery/publication passes.
+let autonomousUpkeep: Promise<void> | undefined;
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
-  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
+  const input: Parameters<typeof autonomousStandingRuntime>[0] = { root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     ...(searchBudget ? { searchBudget } : {}),
@@ -2126,10 +2206,12 @@ async function makeAutonomousFleet() {
       transportFor: autonomousTransportFor(fleetTransport),
       refusedBeforeSending: (error: unknown) => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
-    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
+    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) };
+  await (autonomousUpkeep ??= maintainAutonomousStandingRuntime(input));
+  const runtime = await autonomousStandingRuntime(input);
   return { ...runtime, exaAgentLane: readSetting(config, EXA_AGENT_LANE_SETTING, false) };
 }
-async function runAutonomousWave() {
+async function runAutonomousWave(label: string) {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
@@ -2159,13 +2241,14 @@ async function runAutonomousWave() {
   /* The coordinator's (Send, part) order breaks ties among a Send's pending tasks. */
   const plannedOrder = new Map(planned.decisions.filter(row => row.task).map((row, index) => [row.task!.id, index] as const));
   const failedTaskIds = new Set<string>();
-  const queueFailures: DispatchResult[] = [];
+  let queueFailures = 0;
   const failedQueueRead = (id: string, error: unknown) => {
     if (failedTaskIds.has(id)) return;
     failedTaskIds.add(id);
     const result = workerDispatchFailure(id, error);
-    queueFailures.push(result);
+    queueFailures++;
     runtimeConditions.push(`${id}: ${result.detail}`);
+    console.log(`  ${label}: ${result.worker?.role ?? "UNCLAIMED"} ${result.outcome} ${result.attemptId ?? "none"}: ${result.detail}`);
   };
   // Every child pulls from the same full wave. Capture hunt rounds once;
   // completed/leased tasks disappearing must not reset a hunt to round zero.
@@ -2196,7 +2279,7 @@ async function runAutonomousWave() {
         runtimeConditions.push(`the hunter lane's queue could not be written (${error instanceof Error ? error.message : String(error)}); the planned tasks remain owed`);
       }
     }
-    return { ...planned, dispatches: [...queueFailures], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 };
+    return { ...planned, dispatched: queueFailures, attempted: 0, worked: 0, scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 };
   }
   const workerDispatches = await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
     deadlineMs: dispatchDeadlineMs,
@@ -2204,9 +2287,10 @@ async function runAutonomousWave() {
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
+    isFundedSubject: subject => lifetimeHuntSubjects.has(subject),
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
     ...(searchBudget ? { searchBudget } : {}),
     orderPending: async ids => {
@@ -2228,7 +2312,8 @@ async function runAutonomousWave() {
     onDispatched: result => {
       placeOrderDirty = true;
       roundProgress.note("worker wave");
-      if (typeof result.repositoryCalls === "number") leaseTaskCalls.push(result.repositoryCalls);
+      console.log(`  ${label}: ${result.worker?.role ?? "UNCLAIMED"} ${result.outcome} ${result.attemptId ?? "none"}: ${result.detail}`);
+      if (typeof result.repositoryCalls === "number") { leaseTaskCallSum += result.repositoryCalls; leaseTaskCallCount++; }
       if (result.worker?.role !== "SCOUT") return;
       const outcome = result.disposition === "INGESTED" ? "CAPTURED"
         : result.disposition === "WALKED_NO_YIELD" || result.disposition === "DISCOVERED" ? "NOTHING_FOUND" : "REFUSED";
@@ -2236,18 +2321,18 @@ async function runAutonomousWave() {
     },
     onStarted: pid => console.log(`  lease worker process: pid ${pid}; pulls existing RouteTasks`),
     onExited: (pid, why) => console.log(`  lease worker process ended: pid ${pid}; ${why}`) });
-  const dispatches = [...queueFailures, ...workerDispatches];
-  const scouts = dispatches.filter(row => row.attemptId && row.worker?.role === "SCOUT").length;
-  return { ...planned, dispatches, scoutsAdmitted: scouts, scoutsLimitedAdmitted: scouts };
+  return { ...planned, ...workerDispatches, dispatched: queueFailures + workerDispatches.dispatched,
+    scoutsLimitedAdmitted: workerDispatches.scoutsAdmitted };
 }
-async function runAutonomousProcesses() {
-  let report = await runAutonomousWave();
-  while (!releaseDrainRequested && Date.now() < dispatchDeadlineMs && report.dispatches.some(row => row.outcome === "WORKED")) {
-    const next = await runAutonomousWave();
-    report = { ...next, dispatches: [...report.dispatches, ...next.dispatches],
+async function runAutonomousProcesses(label = "worker fleet") {
+  let report = await runAutonomousWave(label);
+  while (!releaseDrainRequested && Date.now() < dispatchDeadlineMs && report.worked > 0) {
+    const next = await runAutonomousWave(label);
+    report = { ...next, dispatched: report.dispatched + next.dispatched, attempted: report.attempted + next.attempted,
+      worked: report.worked + next.worked,
       scoutsAdmitted: report.scoutsAdmitted + next.scoutsAdmitted,
       scoutsLimitedAdmitted: report.scoutsLimitedAdmitted + next.scoutsLimitedAdmitted };
-    if (!next.dispatches.some(row => row.outcome === "WORKED")) break;
+    if (next.worked === 0) break;
   }
   return report;
 }
@@ -2261,18 +2346,9 @@ const campaignSitesLine = (report: CampaignSitesSummary) => `  campaign sites   
 let campaignSitesState = "not run: the campaign-site pass has not started";
 let candidatePublications = null as CandidatePublicationCycleReport | null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
-let roundVaultRead: Promise<VaultIndex> | undefined;
 let discoveryLaneRun: Promise<readonly IndependentRuntimeOutcome[]> | null = null;
 let discoveryLaneIds: readonly string[] = [];
 const discoveryLanesFinished = new Set<string>();
-/* One full listing per round; later captures join it through includeVaultCapture. The step is timed once in the round's phases. */
-const readRoundVault = (signal?: AbortSignal) => roundVaultRead ??= (async () => {
-  const startedMs = Date.now();
-  const index = await indexVault(join(ROOT, ...VAULT_DIR), undefined, { signal });
-  const phase = cycleObservation.note("vault-index", Date.now() - startedMs);
-  console.log(`  phase ${phase.name}: ${phase.durationMs}ms`);
-  return index;
-})();
 try {
 
 const CAMPAIGN_SITES_SETTLE_MS = 3 * 60_000;
@@ -2375,14 +2451,10 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
   } else {
     const leavePublications = pending.enter("candidate-publications");
     try {
-      const vaultRead = await readRoundVault();
-
-
-
-      const pass = await runCandidatePublicationCycle({
+      const methodVersion = await roundMethodVersion();
+      const pass = await runScopedCandidatePublicationCycle({
         repos, eligibleCandidacyIds: lifetimeHuntSubjects,
-        heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
-        methodVersion: await roundMethodVersion(),
+        vaultRoot: join(ROOT, ...VAULT_DIR), methodVersion,
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
         deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
@@ -2450,10 +2522,9 @@ let autonomousWorked = false;
 if (earlyAutonomous !== null) {
   for (const row of earlyAutonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
   if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(earlyAutonomous) };
-  autonomousDispatchedThisCycle += earlyAutonomous.dispatches.filter(row => row.attemptId !== null).length;
-  autonomousWorked = earlyAutonomous.dispatches.some(row => row.outcome === "WORKED");
+  autonomousDispatchedThisCycle += earlyAutonomous.attempted;
+  autonomousWorked = earlyAutonomous.worked > 0;
   if (autonomousWorked) fleetSafety.recordSuccessfulActivity(nowIso());
-  for (const row of earlyAutonomous.dispatches) console.log(`  original hunt early worker: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
 }
 if (autonomousCycleOpen) {
   const leaveAutonomous = pending.enter("autonomous-workers");
@@ -2467,9 +2538,8 @@ if (autonomousCycleOpen) {
       const autonomous = wave.value;
       for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
       if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
-      autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
-      if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
-      for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+      autonomousDispatchedThisCycle += autonomous.attempted;
+      if (autonomous.worked > 0) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
     }
   } catch (error) {
     runtimeConditions.push(`worker processes failed: ${error instanceof Error ? error.message : String(error)}; work remains owed`);
@@ -2501,7 +2571,7 @@ if (discoveryLaneRun !== null) {
 // These independent final reads share the existing repository transport limit.
 // Join failures too: neither finalization view retries an unchanged failed read.
 const finalizationReads = canary ? null : Promise.allSettled([
-  repos.scoutResults.readAll(),
+  readScoutMetricSummary(repos),
   readSpendWindow(repos, nowIso()),
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
@@ -2511,13 +2581,15 @@ const finalizationReads = canary ? null : Promise.allSettled([
 ] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
   const [resultsRead, costsRead, historyRead, candidatesRead] = (await finalizationReads)!;
+  const summary = resultsRead.status === "fulfilled" ? resultsRead.value : null;
+  try {
   if (resultsRead.status === "rejected" || costsRead.status === "rejected") {
     const error = resultsRead.status === "rejected" ? resultsRead.reason : costsRead.status === "rejected" ? costsRead.reason : null;
     runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
     return null;
   }
-  const results = resultsRead.value;
-  const costsNow = costsRead.value.map(charge => charge.metered);
+  const costsNow = mapCharges(costsRead.value, charge => charge.metered);
+  const results = resultsRead.value.cacheResults(mapCharges(costsRead.value, charge => charge.metered.attemptId));
   const at = nowIso();
   finalSpendWindow = researchSpendInWindow(costsRead.value, at, RESEARCH_BOUNDS.windowHours);
   finalSpendAsOf = at;
@@ -2556,7 +2628,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     capacity: scoutCapacity({ costs: costsNow, nowIso: at, windowHours: RESEARCH_BOUNDS.windowHours, ceilingUsd: effectiveCeilingUsd }),
     ordering: dispatchOrdering,
     funnel: graduationFunnel({
-      results,
+      scoutedCount: resultsRead.value.scoutedCount,
       candidateCounts,
       pipeline,
       pipelineSource: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here",
@@ -2565,9 +2637,10 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     share: modelShareTrend({ thisCycle: { deterministic: laneCounts.deterministicDispatched, model: laneCounts.modelDispatched }, windowCycles }),
     cacheByRole: cacheHitRateByRole({ costs: costsNow, results, sinceIso: windowSince, untilIso: at }),
     cacheWindow: { sinceIso: windowSince, untilIso: at },
-    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts }),
-    cacheDefects: cacheDefectCounts(results),
+    costPerOutcome: costPerUsefulOutcome({ totals: resultsRead.value.outcomes, candidateCounts }),
+    cacheDefects: resultsRead.value.cacheDefects,
   };
+  } finally { await summary?.close(); if (costsRead.status === "fulfilled") costsRead.value.close(); }
 }
 /** This cycle's cache rows, for the run record's COST section (null until computed, or when the ledger could not be re-read). */
 let cacheThisCycle: CacheHitRate[] | null = null;
@@ -2585,16 +2658,14 @@ const finishedAt = nowIso();
 if (!dry && !canary) {
   const leaveProgression = pending.enter("research-progression");
   try {
-    const [scoutsRead, , , candidatesRead, knowledgeRead] = (await finalizationReads)!;
+    const [, , , candidatesRead, knowledgeRead] = (await finalizationReads)!;
     if (candidatesRead.status === "rejected") throw candidatesRead.reason;
     if (knowledgeRead.status === "rejected") throw knowledgeRead.reason;
     if (knowledgeRead.value === null) throw new Error("the final method knowledge snapshot is unavailable");
-    if (scoutsRead.status === "rejected") throw scoutsRead.reason;
     researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt,
       candidates: candidatesRead.value.candidates,
       knowledge: knowledgeRead.value,
-      scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
@@ -2846,7 +2917,7 @@ const runRecord = {
               heldRouteEvidence:
                 "unreadable" in heldRouteRead
                   ? { unreadable: heldRouteRead.unreadable }
-                  : { governmentsRead: heldRouteCandidates.length, bodiesWithHeldRoute: heldRouteRead.held.size },
+                  : { governmentsRead: heldRouteCandidates.size, bodiesWithHeldRoute: heldRouteRead.held.size },
               superseded: supersededPlan.retire.map((item) => item.obligationId),
               residue: residueItems.map((item) => item.obligationId),
               heldBackByCode: retirementHolds,
@@ -2899,7 +2970,7 @@ const runRecord = {
         })),
         metrics,
       },
-      vaulted: [...vault.ledger.values()],
+      vaulted: vault.ledger,
       deferred: cycle.deferred.length,
       deferredReasons: cycle.deferred,
       reclaim: cycle.reclaim,
@@ -2913,6 +2984,9 @@ const runRecord = {
 } as const;
 
 const cycleId = CYCLE_ID;
+const detailCycle = { cycleId, finishedAt, testedSha: RUNNING_CODE_SHA };
+const recordDetails = <T,>(section: string, rows: Iterable<T>) =>
+  finalStep(`digest:details:${section}`, () => appendFreshnessCycleDetails(repos, detailCycle, section, rows));
 const canonicalOutcome: FreshnessCycleOutcome = {
   kind: "FRESHNESS_CYCLE",
   state: "SUCCEEDED",
@@ -2929,33 +3003,35 @@ const canonicalOutcome: FreshnessCycleOutcome = {
   occurrencesOpened: runRecord.occurrencesOpened,
   debtInherited: runRecord.debtInherited,
   debtPersisted: runRecord.debtPersisted,
-  debtCleared: runRecord.debtCleared,
+  debtCleared: runRecord.debtCleared.length,
   scheduled: runRecord.scheduled,
-  unscheduled: runRecord.unscheduled,
+  unscheduled: await recordDetails("unscheduled", runRecord.unscheduled),
   dueCount: runRecord.dueCount,
   dispatched: runRecord.dispatched,
-  worked: runRecord.worked,
-  dispositions: runRecord.dispositions.map((row) => ({
+  worked: await recordDetails("worked", runRecord.worked),
+  dispositions: await recordDetails("dispositions", runRecord.dispositions.map((row) => ({
     obligationId: row.obligationId,
     disposition: row.disposition,
     artifacts: row.artifacts,
-  })),
-  dispatchDetails: runRecord.dispatchDetails.map((row) => ({
+  }))),
+  dispatchDetails: await recordDetails("dispatchDetails", runRecord.dispatchDetails.map((row) => ({
     obligationId: row.obligationId,
     attemptId: row.attemptId,
     outcome: row.outcome,
     disposition: row.disposition,
     detail: row.detail,
-  })),
+  }))),
   research: { lanes: runRecord.research.lanes },
   deferred: runRecord.deferred,
   debts: runRecord.debts,
-  incidents: runRecord.incidents.map((incident) => ({
+  incidents: await recordDetails("incidents", runRecord.incidents.map((incident) => ({
     cause: incident.cause,
     target: incident.target,
     obligationsAffected: incident.obligationsAffected,
     nextRetryAt: incident.nextRetryAt,
-  })),
+    oldestHours: incident.oldestHours,
+  }))),
+  incidentSummary: summarizeFreshnessIncidents(runRecord.incidents),
   risk: runRecord.risk as unknown as Readonly<Record<string, unknown>>,
   health: null,
   promotedToReaderTruth: runRecord.promotedToReaderTruth,
@@ -2994,13 +3070,17 @@ if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
         cursorPath: join(ROOT, "data", "control-plane", "admin-evidence-mirror.cursor.json"),
         deadlineMs: Date.now() + ADMIN_MIRROR_BUDGET_MS });
     console.log(`  private Admin evidence mirror: ${mirror.state}; examined ${mirror.examined}, copied ${mirror.copied}, verified existing ${mirror.alreadyVerified}, refused ${mirror.refused}`);
-    if (mirror.failures.length) console.error(`  private Admin evidence copy remains owed: ${mirror.failures.slice(0, 8).join("; ")}`);
   } catch (error) {
     // A timeout leaves remote-copy status UNKNOWN, never success. A later cycle
     // reads the immutable key first and verifies it before retrying the CAS copy.
     console.error(`  private Admin evidence mirror unavailable or unverified; original vault unchanged: ${error instanceof Error ? error.message : "unknown failure"}`);
   }
 }
+await standaloneWorkerToolsHost?.close();
+await cycle.close();
+await vault.close();
+await planner.close();
+if ("close" in spendCharges && typeof spendCharges.close === "function") spendCharges.close();
 /* Nothing is left to await. A drained loop exits now; anything still holding it open is named, then the cycle exits with its own code instead of waiting for the wall (cycle-exit.ts). */
 exitAfterDrainGrace({
   graceMs: CYCLE_DRAIN_GRACE_MS,

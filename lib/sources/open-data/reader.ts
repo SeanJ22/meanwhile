@@ -1,45 +1,46 @@
-import { readPromotedCivicDataBatch, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
-import { assertOpenDataProjection } from "./publication.ts";
+import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { lookupZcta } from "../../geo/zcta.ts";
-import { nearbyFacilityCells,facilityNear,FACILITY_RADIUS_KM } from "./geography.ts";
-import { openDataScope,divisionPartition, zipPartition, type OpenDataFact,type OpenDataProjection } from "./model.ts";
+import { ocdStateCode } from "../../ocd/state-of.ts";
+import { nearbyFacilityCells, facilityNear, FACILITY_RADIUS_KM } from "./geography.ts";
+import { divisionPartition, zipPartition, type OpenDataFact, type OpenDataSource } from "./model.ts";
 import { readOpenDataPartition } from "./artifacts.ts";
+import { readOpenDataArea, readLegacyOpenDataRecords } from "./area-read.ts";
+import { readOpenDataProjection } from "./publication.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
-export async function readerOpenData(input:{divisionIds?:readonly string[];zip?:string|null;bodyId?:string|null}, options:PromotedCivicDataReadOptions&{vault?:EvidenceStore}={}) {
-  const partitions=[...new Set(input.divisionIds ?? [])].map(id=>({source:"socrata-discovery" as const,partition:divisionPartition(id)}));
-  const point=input.zip?lookupZcta(input.zip):null;
-  const requested=[...partitions,...(input.zip && /^\d{5}$/.test(input.zip)?[zipPartition(input.zip),...(point?nearbyFacilityCells(point):[])].map(partition=>({source:"epa-echo" as const,partition})):[])];
-  const sourceIds=[...new Set(requested.map(r=>r.source))];
-  const manifests=await readPromotedCivicDataBatch<OpenDataProjection>("CURATED_READER_RECORD",sourceIds.map(source=>openDataScope(source)),options);
-  const indexed=new Map(sourceIds.flatMap((source,i)=>{
-    const read=manifests[i];if(read.kind!=="PROMOTED")return [];
-    assertOpenDataProjection(read.value,source);return read.value.partitions?[[source,read] as const]:[];
-  }));
-  const reads=sourceIds.filter(source=>!indexed.has(source)).map(source=>({item:{source,partition:"national"},read:manifests[sourceIds.indexOf(source)]}));
-  for(const item of requested) {
-    const manifest=indexed.get(item.source);if(!manifest)continue;
-    const references=manifest.value.partitions!.filter(p=>p.id===item.partition || /^(?:cell|zip):/.test(item.partition) && p.id.startsWith(`${item.partition}:state:`));
-    for(const reference of references) {
-      try {reads.push({item,read:{...manifest,value:await readOpenDataPartition(item.source,reference,options.vault)}});}
-      catch {reads.push({item,read:{kind:"STORE_UNREACHABLE",value:null,metadata:manifest.metadata,code:"STORE_READ_FAILED",detail:"The source's accepted reader slice could not be read."}});}
-    }
+
+export async function readerOpenData(input: { divisionIds?: readonly string[]; zip?: string | null; bodyId?: string | null }, options: PromotedCivicDataReadOptions & { vault?: EvidenceStore } = {}) {
+  const divisions = [...new Set(input.divisionIds ?? [])], states = [...new Set(divisions.flatMap(id => ocdStateCode(id)?.toUpperCase() ?? []))];
+  if (states.length > 1) throw new Error("OPEN_DATA_STATE_BOUNDARY_MISMATCH");
+  const point = input.zip ? lookupZcta(input.zip) : null, state = states[0] ?? point?.postal?.state?.toUpperCase();
+  const requested = [
+    ...(divisions.length ? [{ source: "socrata-discovery" as const, partitions: divisions.map(divisionPartition) }] : []),
+    ...(input.zip && /^\d{5}$/.test(input.zip) ? [{ source: "epa-echo" as const, partitions: [zipPartition(input.zip), ...(point ? nearbyFacilityCells(point) : [])] }] : []),
+  ];
+  const records = new Map<string, OpenDataFact>(), unavailable: OpenDataSource[] = [], notHeld: OpenDataSource[] = [], checkedAt: Record<string, string> = {};
+  for (const item of requested) {
+    if (!state) continue;
+    const add = (row: OpenDataFact) => {
+      // The state line remains a hard boundary, including nearby-cell and shared-ZIP reads.
+      if (row.state !== state && !(row.sourceId === "socrata-discovery" && divisions.some(id => row.divisionIds.includes(id)))) return;
+      if (row.sourceId === "socrata-discovery" && !divisions.some(id => row.divisionIds.includes(id))) return;
+      if (row.sourceId === "socrata-discovery" && input.bodyId && row.bodyIds.length && !row.bodyIds.includes(input.bodyId)) return;
+      if (row.sourceId === "epa-echo" && row.zip !== input.zip && (!point || !facilityNear(row, point))) return;
+      records.set(row.id, row);
+    };
+    try {
+      const read = await readOpenDataArea(item.source, state, item.partitions, options);
+      if (read.kind === "STORE_UNREACHABLE") { unavailable.push(item.source); continue; }
+      if (read.kind !== "PROMOTED") { notHeld.push(item.source); continue; }
+      const release = await readOpenDataProjection(item.source, "release", options);
+      const clock = release.kind === "PROMOTED" ? release.metadata : read.metadata;
+      const date = clock.checkedAt ?? clock.retrievedAt; if (date) checkedAt[item.source] = date;
+      for (const row of read.value.records) add(row);
+      for (const reference of read.value.partitions ?? []) {
+        try { const value = await readOpenDataPartition(item.source, reference, options.vault); for (const row of value.records) add(row); }
+        catch { unavailable.push(item.source); }
+      }
+      for (const row of await readLegacyOpenDataRecords(item.source, input, options)) add(row);
+    } catch { unavailable.push(item.source); }
   }
-  const records=new Map<string,OpenDataFact>();
-  const unavailable:string[]=[],notHeld:string[]=[];
-  const checkedAt:Record<string,string>={};
-  for(let i=0;i<sourceIds.length;i++)if(manifests[i].kind==="PROMOTED") {
-    const date=manifests[i].metadata.checkedAt??manifests[i].metadata.retrievedAt;if(date)checkedAt[sourceIds[i]]=date;
-  }
-  for(const {item,read}of reads) {
-    if(read.kind==="STORE_UNREACHABLE"){unavailable.push(item.source);continue;}
-    if(read.kind!=="PROMOTED"){if(!item.partition.startsWith("cell:"))notHeld.push(item.source);continue;}
-    assertOpenDataProjection(read.value,item.source);
-    for(const row of read.value.records) {
-      if(row.sourceId==="socrata-discovery" && !(input.divisionIds??[]).some(id=>row.divisionIds.includes(id)))continue;
-      if(row.sourceId==="socrata-discovery" && input.bodyId && row.bodyIds.length && !row.bodyIds.includes(input.bodyId))continue;
-      if(row.sourceId==="epa-echo" && row.zip!==input.zip && (!point || !facilityNear(row,point)))continue;
-      records.set(row.id,row);
-    }
-  }
-  return {records:[...records.values()],unavailable:[...new Set(unavailable)],notHeld:[...new Set(notHeld)],radiusKm:point?FACILITY_RADIUS_KM:null,checkedAt};
+  return { records: [...records.values()], unavailable: [...new Set(unavailable)], notHeld: [...new Set(notHeld)], radiusKm: point ? FACILITY_RADIUS_KM : null, checkedAt };
 }

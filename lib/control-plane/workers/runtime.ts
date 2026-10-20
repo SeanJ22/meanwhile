@@ -12,7 +12,7 @@ import { readCompletedWorkerResult, reconcileWorkerCompletions, type Uncommitted
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
-import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
@@ -24,6 +24,7 @@ import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
 import { readSpendWindow } from "../spend-window.ts";
+import { forEachAggregate } from "./streamed-history.ts";
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
@@ -62,7 +63,6 @@ export interface FleetRuntime {
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly rollingCeilingUsd?: number;
   /** History reads scoped to the task's own work item, subject and lineage (`scoped-history.ts`). Absent: whole-table reads. */
-  readonly scopedReads?: boolean;
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
   readonly parseReasoner?: ReturnType<typeof modelParseReasoner>;
@@ -117,7 +117,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
   const lane = assisted ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC";
   const worker: WorkerRef = { role, provider: parseAssisted ? runtime.parseReasoner!.workerProvider : auditAssisted ? runtime.auditReasoner!.workerProvider : "we-the-people",
     version: parseAssisted ? runtime.parseReasoner!.workerVersion : auditAssisted ? spec.auditEscalation ? MODEL_FOR_CLASS[spec.auditEscalation.to] : runtime.auditReasoner!.workerVersion : FLEET_IMPLEMENTATION_VERSION, instance: holder };
-  return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId, bound }) => {
+  return { lane, workerFor: () => worker, run: async ({ attemptId, workItemId, routeTaskId }) => {
     const started = performance.now();
     const now = runtime.now ?? (() => new Date().toISOString());
     const attemptRow = await runtime.repos.attempts.mustRead(attemptId);
@@ -301,26 +301,26 @@ export async function drainWorkerQueue(
 ): Promise<readonly DispatchResult[]> {
   await reconcileWorkerCompletions(runtime.repos);
   const out: DispatchResult[] = [];
-  const attempts = (await runtime.repos.attempts.list()).map(a => a.value);
-  for (const row of await runtime.repos.routeTasks.list()) {
+  await forEachAggregate(runtime.repos.routeTasks, async row => {
+    if (out.length >= maximum) return;
     let task = row.value;
     if (
       runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
       task.workerTask?.role === "ACQUIRER" &&
       isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
-    ) continue;
-    if (!accepts(task)) continue;
-    if (out.length >= maximum) break;
+    ) return;
+    if (!accepts(task)) return;
+    const attempts = (await runtime.repos.attempts.listWhere(["workItemId"], task.workItemId)).map(a=>a.value);
     const now = (runtime.now ?? (() => new Date().toISOString()))();
     const admission = workerTaskAdmission(task, attempts, now);
-    if (!admission.due) continue;
+    if (!admission.due) return;
     if (admission.requiresPolicyRecheck) {
       const reauthorized = await reauthorizeWorkerTask(runtime, task, now);
-      if (!reauthorized) continue;
+      if (!reauthorized) return;
       task = reauthorized;
     }
-    if (!admitDispatch(task).admit) continue;
+    if (!admitDispatch(task).admit) return;
     out.push(await dispatchWorkerTask(runtime, task));
-  }
+  });
   return out;
 }

@@ -93,9 +93,9 @@ test("two states use one validated archive and keep complete native identity, co
   if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
   assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at,bypassCache:true})).length, 2,
     "native office contacts reach the scoped reader immediately with the core people projection");
-  const offices = await publishMemberOffices({ store: canonical, now: at, jurisdictions: ["US-AZ"] });
+  const offices = await publishMemberOffices({ store: canonical, now: at, state: "AZ" });
   assert.ok(offices.outcome?.promoted, JSON.stringify(offices));
-  await refreshMemberOfficesFromPromoted({ store: canonical, now: at, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ state: "AZ", store: canonical, now: at, bypassCache: true });
   const shown = currentMemberOffices("plural:az:one");
   assert.equal(shown.length, 2); assert.equal(shown[0].office.phone, "555-1000");
   assert.equal(shown[0].collectedAt, at); assert.match(shown[0].sourceUrl, /raw\.githubusercontent\.com\/openstates\/people/);
@@ -165,10 +165,10 @@ test("Open States offices publish outside the official pilot rosters with their 
     fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
   const store = new MemoryRoutineDataStore();
   assert.ok((await publishStatePeople({ vault, store, ...acquired, now: at })).outcome.promoted);
-  const publication = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
+  const publication = await publishMemberOffices({ store, now: at, state: "CA" });
   assert.ok(publication.outcome?.promoted, JSON.stringify(publication));
   assert.equal(publication.records, 2);
-  await refreshMemberOfficesFromPromoted({ store, now: at, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ state: "CA", store, now: at, bypassCache: true });
   const offices = currentMemberOffices("plural:ca:one");
   assert.deepEqual(offices.map(row => row.office.phone), ["555-1000", "555-2000"]);
   assert.ok(offices.every(row => row.official === false && row.sourceOrg === "Open States (Plural, CC-0)"));

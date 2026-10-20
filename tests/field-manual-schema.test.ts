@@ -52,7 +52,7 @@ test("where a method works is read per method, never the whole map", async () =>
   assert.equal(stateOfPlace("ocd-division/country:us/state:tx/county:harris#governing"), "tx");
 });
 
-test("on the runner a slice is the held copy filtered by the slice rule: a later read moves only changed rows; without a copy it is asked of Postgres", async () => {
+test("runner manual slices use scoped SQL projection even when country held copies are configured", async () => {
   const NOW = "2026-10-08T12:00:00.000Z";
   const entries = [
     newFieldManualEntry("t", "playbook-scout", { role: "SCOUT", kind: "PLAYBOOK", title: "Scout playbook", summary: "s", outcome: "YIELDED" }),
@@ -61,11 +61,11 @@ test("on the runner a slice is the held copy filtered by the slice rule: a later
   ];
   const rows = entries.map((value) => ({ id: value.id, revision: 1, updated_at: NOW, value })).sort((a, b) => (a.id < b.id ? -1 : 1));
   const seen: string[] = [];
-  const sql: Sql = { query: async (text) => {
+  const sql: Sql = { query: async (text, params = []) => {
     seen.push(text);
-    if (text.includes("SELECT now() AS read_at")) return [{ read_at: NOW }];
-    if (text.includes("FROM cp_field_manual_entries") && !text.includes("changed_at >=") && !text.includes("id >")) return rows;
-    return [];
+    if (text !== FIELD_MANUAL_SLICE_SQL) throw Error("country manual read forbidden");
+    return rows.filter(row => (params[0] === null || (params[0] as string[]).includes(row.value.role)) &&
+      (params[1] === null || (params[1] as string[]).includes(row.value.kind)));
   } };
   const query: FieldManualQuery = { role: "SCOUT", kinds: ["PLAYBOOK"], everywhere: true };
   const expected = entries.filter((entry) => entryInSlice(entry, query)).map((entry) => entry.id).sort();
@@ -74,11 +74,11 @@ test("on the runner a slice is the held copy filtered by the slice rule: a later
   const copies = openHeldCopies(await mkdtemp(join(tmpdir(), "manual-copies-")), { log: (line) => assert.fail(line) });
   const held = pgFieldManualRepository(sql, { copies });
   assert.deepEqual((await held.slice(query)).map((row) => row.id), expected);
-  assert.ok(seen.every((text) => !text.includes("value->>'role'")), "the copy is filled by the whole read, not the slice SQL");
+  assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL]);
+  assert.match(seen[0], /scopeEvidence/);
   seen.length = 0;
   assert.deepEqual((await held.slice({ role: "PARSER", kinds: ["PLAYBOOK"], everywhere: true })).map((row) => row.value.title), ["Parser playbook"]);
-  assert.equal(seen.length, 2, "the clock and one page of changed rows");
-  assert.match(seen[1]!, /WHERE changed_at >= \$1::timestamptz/);
+  assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL], "every role is selected before its records leave Postgres");
 
   seen.length = 0;
   const plain = pgFieldManualRepository(sql);

@@ -409,14 +409,14 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
     now: T_CROSSWALK,
   });
   assert.deepEqual(review.accepted.map((a) => [a.row.bodyId, a.row.bodyName]), [[COLUMBUS_BODY, "City Council"]], JSON.stringify(review.held));
-  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", derivedCrosswalkCandidate(planDerivedCrosswalk({ previous: [], reviews: [review] }), [], T_CROSSWALK), T_CROSSWALK);
+  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived:OH", derivedCrosswalkCandidate(planDerivedCrosswalk({ previous: [], reviews: [review] }), [], T_CROSSWALK, "OH"), T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
 
-  const automatic = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now: T_WIRING });
+  const automatic = await readDerivedMeetingBodyCrosswalk({ state: "OH", store, bypassCache: true, now: T_WIRING });
   assert.equal(automatic.kind, "PROMOTED");
   if (automatic.kind !== "PROMOTED") return;
   const automaticInput: DerivedInputRef = {
-    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-body-crosswalk-derived",
+    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-body-crosswalk-derived",
     versionId: automatic.metadata.versionId!, readModelSha256: sha(automatic.value), promotedAt: automatic.metadata.promotedAt!,
   };
   const composed = composeCrosswalk(null, automatic.value.records);
@@ -441,10 +441,10 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   });
   assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[derivedWiringKey("ICAL", COLUMBUS_BODY, COLUMBUS_ROUTE), "PROMOTE"]]);
   const wiringPlan = planDerivedVersion([], decisions);
-  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
+  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring:OH", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING, "OH"), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ state: "OH", store, bypassCache: true, now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const members = familyMembers(wiring.value, "US-OH");
@@ -460,7 +460,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   }));
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
   const build = buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
+    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
     members, reads, previous: null, generatedAt: T_FAMILY,
     reconcile: (r) => ({ meetings: r.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
   });

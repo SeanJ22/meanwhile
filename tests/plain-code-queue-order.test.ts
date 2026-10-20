@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle, type RecordedCycleResult as CycleResult } from "./helpers/recorded-cycle.ts";
 /**
  * The plain-code lane runs the longest-waiting row first with a stated bound. A row's next-due advances only on a
  * reading, so ordering by next-due alone lets rows that keep failing return to the head of the queue after every
@@ -19,7 +20,7 @@ import {
   type FreshnessObligation,
   type ScheduledObligation,
 } from "../lib/control-plane/scheduler/obligation.ts";
-import { runCycle, type CycleResult } from "../lib/control-plane/scheduler/shadow-loop.ts";
+
 
 const START_MS = Date.parse("2026-09-25T00:00:00.000Z");
 const HOUR_MS = 3_600_000;

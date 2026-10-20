@@ -6,6 +6,7 @@ import { canonicalJson, readByKeys, type ControlPlaneRepositories } from "./type
 import { recordCost, transitionWorkItem } from "./coordinator.ts";
 import { assertFleetResult, type WorkerResultRecord } from "../workers/types.ts";
 import { costEntryWithModel, type CostEntry } from "../cost.ts";
+import { forEachAggregate } from "../workers/streamed-history.ts";
 
 export type UncommittedWorkerResult = Omit<WorkerResultRecord, "completion">;
 
@@ -81,11 +82,9 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
     await transitionWorkItem(repos, { workItemId: item.id, to, by, why, now });
   }
   if (result.role === "ADVERSARIAL_AUDITOR" && result.verdict === "BROKE") {
-    for (const dependent of await repos.workItems.list()) {
-      if (dependent.value.dependencies.some(d => d.upstreamId === item.id) && !dependent.value.transitions.some(t => t.by === by)) {
-        await transitionWorkItem(repos, { workItemId: dependent.id, to: "REOPENED", by, why, now });
-      }
-    }
+    await visitDependents(repos, item.id, async dependent => {
+      if (!dependent.value.transitions.some(t => t.by === by)) await transitionWorkItem(repos, { workItemId: dependent.id, to: "REOPENED", by, why, now });
+    });
   }
 }
 
@@ -93,7 +92,15 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
 export const RECONCILE_APPEND_SLACK_MS = 10 * 60_000;
 
 /** Per process and store: the first pass reads every result; later passes read what was appended since (with slack) plus those still pending. */
-const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string; pending: Map<string, WorkerResultRecord> }>();
+const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string | null; pending: Map<string, string> }>();
+
+/** Dependency discovery carries identities and transitions, never the country's work payloads. */
+async function visitDependents(repos: ControlPlaneRepositories, upstreamId: string,
+  visit: (row: { readonly id: string; readonly value: { readonly transitions: readonly { readonly by: string }[] } }) => Promise<void>): Promise<void> {
+  await forEachAggregate(repos.workItems, async row => {
+    if (row.value.dependencies.some(dependency => dependency.upstreamId === upstreamId)) await visit(row);
+  }, { dependencies: true, transitions: true });
+}
 
 async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>; read(id: string): Promise<{ id: string; value: T } | null> },
   ids: readonly string[]): Promise<Map<string, T>> {
@@ -104,29 +111,37 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
 }
 
 export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories): Promise<void> {
-  const passStartedAt = new Date().toISOString();
   const state = reconcileState.get(repos);
-  const appended = state === undefined ? await repos.workerResults.readAll()
-    : await repos.workerResults.readSince(new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString());
-  const candidates = new Map(state?.pending ?? []);
-  for (const record of appended) candidates.set(record.id, record);
-  const records = [...candidates.values()];
-  if (records.length === 0) { reconcileState.set(repos, { since: passStartedAt, pending: new Map() }); return; }
+  const pending = new Map<string, string>();
+  for (const [id, key] of state?.pending ?? []) {
+    const records = await repos.workerResults.readWhere(key, ["id"], id);
+    if (records.length !== 1) throw new Error("WORKER_COMPLETION_PENDING_RESULT_MISSING_OR_AMBIGUOUS");
+    await reconcilePage(repos, records, pending);
+  }
+  const appended = await repos.workerResults.readChangedSince(state?.since
+    ? new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString() : null, undefined, {
+    page: async rows => {
+      // Store pages and task batches are bounded even on a fresh process's first recovery pass.
+      for (let at = 0; at < rows.length; at += 32) await reconcilePage(repos, rows.slice(at, at + 32).map(row => row.record), pending);
+    },
+  });
+  reconcileState.set(repos, { since: appended.through, pending });
+}
+
+async function reconcilePage(repos: ControlPlaneRepositories, offered: readonly WorkerResultRecord[],
+  stillPending: Map<string, string>): Promise<void> {
+  const records = [...new Map(offered.map(record => [record.id, record])).values()];
+  if (records.length === 0) return;
   // Only exact, fully applied commits skip replay; incomplete projections use the guarded writer.
   // Only the rows these results name are read.
   const itemIds = [...new Set(records.map(record => record.workItemId))];
-  const needsDependents = records.some(record => record.result.role === "ADVERSARIAL_AUDITOR" && record.result.verdict === "BROKE");
-  const [attempts, tasks, leases, costs, items, dependentRows] = await Promise.all([
+  const [attempts, tasks, leases, costs, items] = await Promise.all([
     readByIds(repos.attempts, records.map(record => record.attemptId)),
     readByIds(repos.routeTasks, records.map(record => record.routeTaskId)),
     readByIds(repos.leases, records.map(record => record.routeTaskId)),
     Promise.all(itemIds.map(id => repos.costs.read(id))).then(rows => rows.flat()),
     readByIds(repos.workItems, itemIds),
-    /* Dependents of a broken audit have no index to find them by; only that rare case lists the work items. */
-    needsDependents ? repos.workItems.list() : Promise.resolve([]),
   ]);
-  const itemRows = dependentRows;
-  const stillPending = new Map<string, WorkerResultRecord>();
   const costsByAttempt = new Map<string, CostEntry[]>();
   for (const cost of costs) {
     const rows = costsByAttempt.get(cost.attemptId) ?? [];
@@ -150,23 +165,28 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
     // Cost annotations were added after these immutable charges: compare under today's shape without rewriting history.
     const costApplied = expectedCost !== null && (costsByAttempt.get(record.attemptId) ?? []).some(cost =>
       canonicalJson(costEntryWithModel(cost, expectedCost.model ?? null)) === canonicalJson(expectedCost));
-    const dependentsApplied = noTransition || result.role !== "ADVERSARIAL_AUDITOR" || result.verdict !== "BROKE" ||
-      itemRows.every(row => !row.value.dependencies.some(d => d.upstreamId === record.workItemId) ||
-        row.value.transitions.some(t => t.by === `worker-result:${record.id}`));
+    let dependentsApplied = true;
+    if (!noTransition && result.role === "ADVERSARIAL_AUDITOR" && result.verdict === "BROKE") {
+      await visitDependents(repos, record.workItemId, async row => {
+        if (!row.value.transitions.some(t => t.by === `worker-result:${record.id}`)) dependentsApplied = false;
+      });
+    }
     if (task && canonicalJson(task) === canonicalJson(record.completion.completedTask) &&
         canonicalJson(attempts.get(record.attemptId) ?? null) === canonicalJson(record.completion.closedAttempt) &&
         (!lease || lease.released || lease.id !== record.completion.closedAttempt.leaseId) &&
-        costApplied && transitioned && dependentsApplied) continue;
+        costApplied && transitioned && dependentsApplied) { stillPending.delete(record.id); continue; }
     /* Applied now; checked again next pass, so a failed apply is retried and never dropped. */
-    stillPending.set(record.id, record);
+    stillPending.set(record.id, record.workItemId);
     await applyWorkerCompletion(repos, record, costApplied);
   }
-  reconcileState.set(repos, { since: passStartedAt, pending: stillPending });
 }
 
 /** Result consumers never accept output from an uncommitted, dead, or mismatched producer. */
 export async function readCompletedWorkerResult(repos: ControlPlaneRepositories, id: string): Promise<{ record: WorkerResultRecord; attempt: Attempt }> {
-  const record = (await repos.workerResults.readAll()).find(r => r.id === id);
+  const keys = await repos.workerResults.keysWhere(["id"], id);
+  const records = (await Promise.all(keys.map(key => repos.workerResults.readWhere(key, ["id"], id)))).flat();
+  if (records.length > 1) throw new Error("WORKER_RESULT_AMBIGUOUS");
+  const record = records[0];
   if (!record) throw new Error("WORKER_RESULT_MISSING");
   const attempt = (await repos.attempts.mustRead(record.attemptId)).value;
   assertCompletedWorkerResult(record, attempt);
@@ -190,16 +210,26 @@ async function readAttemptsById(repos: Pick<ControlPlaneRepositories, "attempts"
 }
 
 /** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
-export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
+export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId: string): Promise<readonly WorkerResultRecord[]> {
   /* One item's results can only have been produced by that item's Attempts
      (`completeWorkerTask` refuses a result whose Attempt belongs to another
      item), so an item-scoped read lists only those Attempts. */
-  /* The unscoped read point-reads each result's own Attempt by id rather than listing all Attempts. */
   const [records, scopedAttempts] = await Promise.all([
-    workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
-    workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
+    repos.workerResults.read(workItemId),
+    repos.attempts.listWhere(["workItemId"], workItemId),
   ]);
-  return committedOf(records, scopedAttempts ?? await readAttemptsById(repos, records.map(record => record.attemptId)));
+  return committedOf(records, scopedAttempts);
+}
+
+/** Lifetime consumers fold committed results a bounded page at a time. */
+export async function visitCompletedWorkerResults(repos: ControlPlaneRepositories,
+  visit: (record: WorkerResultRecord) => Promise<void> | void): Promise<void> {
+  await repos.workerResults.readChangedSince(null, undefined, { page: async rows => {
+    for (let at = 0; at < rows.length; at += 32) {
+      const records = rows.slice(at, at + 32).map(row => row.record);
+      for (const record of await completedWorkerResults(repos, records)) await visit(record);
+    }
+  } });
 }
 
 /** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */

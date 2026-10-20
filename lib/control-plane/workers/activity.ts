@@ -2,12 +2,13 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { CostEntry } from "../cost.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { WorkItem } from "../work-item.ts";
-import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, RecordedTransition } from "../repository/types.ts";
+import type { AppendOnlyRepository, ArtifactRecord, ControlPlaneRepositories, DispositionCommit, RecordedTransition } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { PromotionPipelineRecord } from "../promotion/types.ts";
 import { assertFleetResult, type WorkerResultRecord } from "./types.ts";
 import { assertResearchWalk, type EvidenceWalkStep, type ResearchWalkState } from "./research-types.ts";
 import { canonicalJson } from "../repository/types.ts";
+import { readArtifactsById } from "./scoped-history.ts";
 
 export interface AutonomousActivitySnapshot {
   readonly workItems: readonly WorkItem[];
@@ -190,20 +191,56 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   }).sort((a,b) => a.workItem.id.localeCompare(b.workItem.id));
 }
 
-export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds?: readonly string[], options: {
+/** Indexed predicates are applied before logs cross the connection, including mixed legacy log keys. */
+async function matchingLog<T>(repo: AppendOnlyRepository<T>, path: readonly string[], values: readonly string[]): Promise<T[]> {
+  const keys = new Set<string>(), ids = [...new Set(values)].sort();
+  for (const id of ids) for (const key of await repo.keysWhere(path, id)) keys.add(key);
+  const rows: T[] = [];
+  for (const key of [...keys].sort()) for (const id of ids) rows.push(...await repo.readWhere(key, path, id));
+  return rows;
+}
+
+/** Read explicit obligations only. Country-wide callers visit one ID at a time and retain report counters. */
+export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds: readonly string[], options: {
   readonly observedAt?: string;
-  /** Fresh caller snapshots can serve multiple finalization views without another export. */
-  readonly workItems?: readonly WorkItem[];
-  readonly scouts?: readonly ScoutResult[];
-} = {}) {
-  const [items,tasks,attempts,leases,transitions,dispositions,artifacts,costs,scouts,workers,promotion] = await Promise.all([
-    options.workItems ?? repos.workItems.list().then(rows => rows.map(row => row.value)),
-    repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
-    repos.artifacts.readAll(),repos.costs.readAll(),options.scouts ?? repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
-  ]);
-  // A completed control-plane read supplies the expiry-evaluation clock; source dates stay in the facts.
-  const snapshotReadAt = options.observedAt ?? new Date().toISOString();
-  const selected = workItemIds === undefined ? null : new Set(workItemIds);
-  return projectAutonomousActivity({workItems:items.filter(item => selected === null || selected.has(item.id)),
-    routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:snapshotReadAt});
+} = {}): Promise<readonly AutonomousObligationActivity[]> {
+  const activities: AutonomousObligationActivity[] = [];
+  for (const id of [...new Set(workItemIds)].sort()) {
+    const item = await repos.workItems.read(id);
+    if (!item) throw new Error(`AUTONOMOUS_ACTIVITY_WORK_ITEM_MISSING:${id}`);
+    const [tasks, attempts, transitions, dispositions, artifacts, costs, scouts, workers] = await Promise.all([
+      repos.routeTasks.listWhere(["workItemId"], id), repos.attempts.listWhere(["workItemId"], id),
+      matchingLog(repos.transitions, ["workItemId"], [id]), matchingLog(repos.dispositions, ["workItemId"], [id]),
+      matchingLog(repos.artifacts, ["workItemId"], [id]), matchingLog(repos.costs, ["workItemId"], [id]),
+      matchingLog(repos.scoutResults, ["workItemId"], [id]), matchingLog(repos.workerResults, ["workItemId"], [id]),
+    ]);
+    const leases: ExecutionLease[] = [];
+    for (const task of tasks) leases.push(...(await repos.leases.listWhere(["routeTaskId"], task.id)).map(row => row.value));
+    const referencedIds = new Set(workers.flatMap(record => record.inputArtifactIds));
+    for (const task of tasks) {
+      const spec = task.value.workerTask;
+      if (!spec) continue;
+      referencedIds.add(spec.artifactId);
+      if (spec.acquisition) {
+        referencedIds.add(spec.acquisition.route.observation.artifactId);
+        for (const span of spec.acquisition.route.publisherSubjectEvidence) referencedIds.add(span.artifactId);
+      }
+      if (spec.contract.schemaVersion === 2) for (const artifactId of [...spec.contract.sourceScope.observationArtifactIds,
+        ...spec.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])]) referencedIds.add(artifactId);
+    }
+    const referencedArtifacts: ArtifactRecord[] = [];
+    for (const artifactId of referencedIds) referencedArtifacts.push(...(await readArtifactsById(repos, artifactId)).filter(row => row.workItemId !== id));
+    const referencedAttempts: Attempt[] = [];
+    for (const attemptId of new Set(referencedArtifacts.map(row => row.attemptId))) {
+      const attempt = await repos.attempts.read(attemptId);
+      if (attempt && attempt.value.workItemId !== id) referencedAttempts.push(attempt.value);
+    }
+    const seeds = await matchingLog(repos.promotionPipeline, ["source", "attemptId"], attempts.map(row => row.id));
+    const promotion = await matchingLog(repos.promotionPipeline, ["itemId"], seeds.filter(row => row.stage === "SCOUTED").map(row => row.itemId));
+    activities.push(...projectAutonomousActivity({ workItems: [item.value], routeTasks: tasks.map(row => row.value),
+      attempts: [...attempts.map(row => row.value), ...referencedAttempts], leases, transitions, dispositions,
+      artifacts: [...artifacts, ...referencedArtifacts], costs, scouts, workers, promotion,
+    }, { observedAt: options.observedAt ?? new Date().toISOString() }));
+  }
+  return activities;
 }

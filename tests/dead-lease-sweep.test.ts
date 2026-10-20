@@ -234,7 +234,8 @@ test("SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once,
     const next = await sweepExpiredLeases(observed.repos, { now: T3, observedBy: "sweeper" });
     assert.deepEqual(next, { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }, `${label}: nothing left to walk`);
     assert.deepEqual(observed.calls.filter((call) => call.includes(task.id)), [], `${label}: the settled task was not walked again`);
-    assert.ok(observed.calls.includes("leases.list()"), `${label}: control — the sweep did list the leases it skipped`);
+    assert.ok(observed.calls.includes("leases.listChangedSince()"), `${label}: control — the sweep streamed the lease metadata it skipped`);
+    assert.ok(!observed.calls.includes("leases.list()"),`${label}: full lease history never returns to the sweeper`);
     assert.equal((await repos.leases.mustRead(task.id)).revision, lease.revision, `${label}: released exactly once`);
   }
 });

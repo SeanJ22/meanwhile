@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-10-08T12:00:00.000Z",
+  "rows": [
+    {
+      "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#governing",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+      "agendaSourceType": "CIVICPLUS",
+      "jurisdiction": "Rockaway Township, NJ",
+      "publishingOrg": "Rockaway Township",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "rockaway_township",
+        "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar",
+        "rssUrl": "https://www.rockawaytownship.org/RSSFeed.aspx?ModID=65&CID=All-agendacenter",
+        "summaryMatch": "Township Council",
+        "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+        "agendaCenterCategoryId": "2"
+      },
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+      "agendaSourceType": "CIVICPLUS",
+      "jurisdiction": "Rockaway Township, NJ",
+      "publishingOrg": "Rockaway Township Planning Board",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "rockaway_township_planning_board",
+        "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+        "summaryMatch": "Planning Board Meeting",
+        "bodyName": "Planning Board",
+        "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+        "agendaCenterCategoryId": "4"
+      },
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
+      "agendaSourceType": "CIVICPLUS",
+      "jurisdiction": "Rockaway Township, NJ",
+      "publishingOrg": "Rockaway Township Board of Adjustment",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "rockaway_township_board_of_adjustment",
+        "icalUrl": "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=30&feed=calendar",
+        "summaryMatch": "Board of Adjustment Meeting",
+        "bodyName": "Board of Adjustment",
+        "agendaCenterUrl": "https://www.rockawaytownship.org/AgendaCenter",
+        "agendaCenterCategoryId": "3"
+      },
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:nj/county:morris#governing",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris",
+      "agendaSourceType": "IQM2",
+      "jurisdiction": "Morris County, NJ",
+      "publishingOrg": "Morris County Board of County Commissioners",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "morriscountynj",
+        "base": "https://morriscountynj.iqm2.com",
+        "boardMatch": "Board of County Commissioners"
+      },
+      "verifiedAt": "2026-08-13"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
+      "agendaSourceType": "SCHEDULEPAGE",
+      "jurisdiction": "Morris Hills Regional School District, NJ",
+      "publishingOrg": "Morris Hills Regional District Board of Education",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "mhrd",
+        "schedulePage": "https://www.mhrd.org/administration/board-of-education/boe-meetings",
+        "documentsPage": "https://www.mhrd.org/administration/board-of-education/board-agendas",
+        "bodyName": "Board of Education",
+        "venueMatch": "Board of Education - Board Conference Room"
+      },
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district#board",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
+      "agendaSourceType": "APPTEGY",
+      "jurisdiction": "Rockaway Township School District, NJ",
+      "publishingOrg": "Rockaway Township Public Schools Board of Education",
+      "timeZone": "America/New_York",
+      "config": {
+        "slug": "rocktwp",
+        "apiBase": "https://api.thrillshare.com/api/v4/o/4707",
+        "titleMatch": "Board Meeting"
+      },
+      "verifiedAt": "2026-08-13"
+    }
+  ]
+}

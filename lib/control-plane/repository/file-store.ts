@@ -8,6 +8,10 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
+import { withStreamedFieldManualMerge } from "./streamed-field-manual-merge.ts";
+import { scanAggregateFile,rewriteAggregateFile } from "./streamed-aggregate-array.ts";
+import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
 /** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
 
 import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
@@ -27,7 +31,7 @@ import path from "node:path";
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
-import { fingerprint } from "../ids.ts";
+import { fingerprint,contentHash } from "../ids.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { Escalation, WorkItem } from "../work-item.ts";
 import type {
@@ -57,15 +61,16 @@ import {
   canonicalJson,
   heldSlotKeys,
   jsonTextAtPath,
-  projectAggregate,
   projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
+  type FieldManualRepository,
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
   type ChangedReadOptions,
+  type ChangedLogReadOptions,
   type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
@@ -133,6 +138,20 @@ async function exclusiveCreate(target: string, contents: string): Promise<boolea
   } finally {
     await rm(temp, { force: true });
   }
+}
+
+/** The same exclusive revision commit, with the replacement streamed to its complete temporary file. */
+async function exclusiveStreamCreate(target:string,write:(sink:(text:string)=>Promise<void>)=>Promise<void>):Promise<boolean>{
+  await mkdir(path.dirname(target),{recursive:true});const temporary=tempPath(target);
+  const file=await open(temporary,"wx");
+  try{
+    await write(async text=>{const bytes=Buffer.from(text);let at=0;while(at<bytes.length){const part=await file.write(bytes,at,bytes.length-at);if(!part.bytesWritten)throw new Error("Aggregate stream write made no progress");at+=part.bytesWritten;}});
+    await file.close();
+    try{await link(temporary,target);return true;}
+    catch(error){if(isEexist(error))return false;if(!["EPERM","ENOSYS","EXDEV","EOPNOTSUPP"].includes((error as NodeJS.ErrnoException).code??""))throw error;}
+    let output;try{output=await open(target,"wx");}catch(error){if(isEexist(error))return false;throw error;}
+    try{for await(const chunk of createReadStream(temporary))await output.writeFile(chunk);}finally{await output.close();}return true;
+  }finally{await file.close().catch(()=>{});await rm(temporary,{force:true});}
 }
 
 /** ENOENT is the only absence; every other failure is raised, never returned as null. */
@@ -207,7 +226,7 @@ export function fileAggregateRepository<T>(
   root: string,
   kind: string,
   folder: string,
-): AggregateRepository<T> {
+): AggregateRepository<T> & Pick<FieldManualRepository,"compareAndSetMergedEntry"> {
   const dir = path.join(root, "aggregates", folder);
   const baseFor = (id: string): string => fileNameFor(id);
   const fileForRevision = (id: string, revision: number): string =>
@@ -247,7 +266,17 @@ export function fileAggregateRepository<T>(
     return row;
   };
 
-  const list = async (): Promise<readonly Persisted<T>[]> => {
+  const readStreamMetadata=async(file:string)=>{
+    try{return await scanAggregateFile(file);}
+    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
+  };
+  const readNarrowed=async(id:string,projection:RecordProjection):Promise<Persisted<unknown>|null>=>{
+    const revisions=await revisionsOf(id);if(!revisions.length)return null;const file=fileForRevision(id,revisions.at(-1)!);
+    try{const {values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});return row;}
+    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
+  };
+
+  const latestFiles=async()=>{
     const names = (await listDirectory(root, dir)).filter((n) => n.endsWith(".json"));
     const latestByBase = new Map<string, number>();
     for (const name of names) {
@@ -259,9 +288,23 @@ export function fileAggregateRepository<T>(
         latestByBase.set(base, Number(revision));
       }
     }
+    return [...latestByBase.entries()].sort().map(([base,revision])=>path.join(dir,`${base}.r${revision}.json`));
+  };
+  const filtered=async(jsonPath:readonly string[],wanted:ReadonlySet<string>|string,projection?:RecordProjection)=>{
+    const out:Persisted<unknown>[]=[];
+    for(const file of await latestFiles()){
+      try{
+      let selected:string|null=null;
+      const metadata=await scanAggregateFile(file,{watchRoot:[{path:jsonPath,observe:value=>{selected=value===null||typeof value==='object'?null:String(value);}}]});
+      if(selected===null||!(typeof wanted==="string"?(selected as string).startsWith(wanted):wanted.has(selected)))continue;
+      if(projection){const{values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});out.push(row);}
+      else{const row=await readRevision(metadata.id,metadata.revision);if(!row)throw new CorruptPersistedState(file,"the selected revision disappeared");out.push(row);}
+      }catch(error){if(error instanceof CorruptPersistedState)throw error;throw new CorruptPersistedState(file,(error as Error).message);}
+    }return out.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
+  };
+  const list = async (): Promise<readonly Persisted<T>[]> => {
     const rows: Persisted<T>[] = [];
-    for (const [base, revision] of [...latestByBase.entries()].sort()) {
-      const file = path.join(dir, `${base}.r${revision}.json`);
+    for (const file of await latestFiles()) {
       const row = await readJsonFile<Persisted<T>>(file, (parsed) =>
         validateEnvelope<T>(file, kind, parsed),
       );
@@ -279,11 +322,58 @@ export function fileAggregateRepository<T>(
   return {
     read,
 
-    /* A file holds the whole row, so this reads it and narrows it in process, exactly as the Postgres read narrows it in the database. */
-    readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
-      const row = await read(id);
-      return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
+    compareAndSetMergedEntry:async(id,expectedRevision,entry,now)=>{
+      if(id!==entry.id)throw new Error("FIELD_MANUAL_MERGE_ID_MISMATCH");
+      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
+      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision??0,latest);
+      if(latest===null){
+        const won=await exclusiveStreamCreate(fileForRevision(id,1),async out=>{await out(JSON.stringify({id,revision:1,updatedAt:now,value:entry})+"\n");});
+        if(!won)throw new ConcurrentModification(kind,id,0,(await revisionsOf(id)).at(-1)??null);
+        return{revision:1,changed:true};
+      }
+      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
+      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
+      return withStreamedFieldManualMerge(source,entry,async(write,changed)=>{
+        if(!changed)return{revision:latest,changed:false};
+        const revision=latest+1;
+        const won=await exclusiveStreamCreate(fileForRevision(id,revision),async out=>{
+          await out(`{"id":${JSON.stringify(id)},"revision":${revision},"updatedAt":${JSON.stringify(now)},"value":`);
+          await write(out);await out("}\n");
+        });
+        if(!won)throw new ConcurrentModification(kind,id,latest,(await revisionsOf(id)).at(-1)??null);
+        return{revision,changed:true};
+      });
     },
+
+    readArrayPage:async(id,field,query={})=>{
+      const revisions=await revisionsOf(id);if(!revisions.length)return null;
+      const file=fileForRevision(id,revisions.at(-1)!);
+      try{const row=await scanAggregateFile(file,{field,query});if(row.id!==id||row.revision!==revisions.at(-1))throw new Error("aggregate identity or revision disagrees with its filename");return{id:row.id,revision:row.revision,updatedAt:row.updatedAt,values:row.values,next:row.next,...row.nextKey!==undefined?{nextKey:row.nextKey}:{}};}
+      catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
+    },
+    compareAndSetFields:async(id,expectedRevision,fields,now)=>{
+      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
+      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision,latest);
+      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
+      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
+      const next={id,revision:expectedRevision+1,updatedAt:now};
+      const won=await exclusiveStreamCreate(fileForRevision(id,next.revision),out=>rewriteAggregateFile(source,out,next,fields));
+      if(!won)throw new ConcurrentModification(kind,id,expectedRevision,(await revisionsOf(id)).at(-1)??null);
+      return{...next,value:fields};
+    },
+    compareAndSetArrayItem:async(id,expectedRevision,field,keyPath,key,value,now,retention,fields)=>{
+      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
+      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision,latest);
+      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
+      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
+      const next={id,revision:expectedRevision+1,updatedAt:now};
+      const won=await exclusiveStreamCreate(fileForRevision(id,next.revision),out=>rewriteAggregateFile(source,out,next,{},
+        {field,keyPath,key,next:value,retention,fields}));
+      if(!won)throw new ConcurrentModification(kind,id,expectedRevision,(await revisionsOf(id)).at(-1)??null);
+      return{...next,value};
+    },
+
+    readNarrowed,
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);
@@ -337,32 +427,45 @@ export function fileAggregateRepository<T>(
     },
 
     list,
-    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
-      (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
+      const out:Persisted<unknown>[]=[];
+      for(const file of await latestFiles()){
+        try{const{values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});out.push(row);}
+        catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
+      }return out.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
+    },
 
-    /* `list()` filtered, so the two can never disagree on rows or order. A
-       directory has no index to ask, so this reads what `list()` reads. */
+    /* Scan the exact match path before returning only its selected record. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
-      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
+      await filtered(jsonPath,new Set([value])) as Persisted<T>[],
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
-      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+      filtered(jsonPath,new Set([value]),projection),
+    listWherePrefix:(jsonPath,prefix,projection)=>filtered(jsonPath,prefix,projection),
     readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
-      const wanted = new Set(ids);
-      return (await list()).filter((row) => wanted.has(row.id)).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
+      const out:Persisted<unknown>[]=[];
+      for(const id of [...new Set(ids)].sort()){const row=await readNarrowed(id,projection);if(row)out.push(row);}
+      return out;
     },
     listWhereIn: async (jsonPath: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
-      const wanted = new Set(values);
-      return (await list()).filter((row) => wanted.has(jsonTextAtPath(row.value, jsonPath) ?? "")).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
+      return filtered(jsonPath,new Set(values),projection);
     },
     /* A directory has no database clock; a revision's own time stands in for it. */
     listChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}) => {
       const through = new Date().toISOString();
       const skip = heldSlotKeys(held);
-      const rows = (await list()).filter((row) => (since === null || Date.parse(row.updatedAt) >= Date.parse(since)) && !skip.has(`${row.id}\n${row.revision}`))
-        .map(row => read.projection ? { ...row, value: projectAggregate(row.value, read.projection) as T } : row);
-      if (!read.page) return { through, rows };
-      await read.page(rows);
-      return { through, rows: [] };
+      const rows:Persisted<T>[]=[];
+      const slots:{file:string;row:Persisted<unknown>}[]=[];
+      for(const file of await latestFiles())slots.push({file,row:await readStreamMetadata(file)});
+      slots.sort((a,b)=>a.row.id<b.row.id?-1:a.row.id>b.row.id?1:0);
+      for(const{file,row}of slots){
+        if((since!==null&&Date.parse(row.updatedAt)<Date.parse(since))||skip.has(`${row.id}\n${row.revision}`))continue;
+        let selected:Persisted<T>|null;
+        if(read.projection){const{values:_values,next:_next,...narrowed}=await scanAggregateFile(file,{valueProjection:read.projection});selected=narrowed as Persisted<T>;}
+        else selected=await readRevision(row.id,row.revision);
+        if(!selected)throw new CorruptPersistedState(file,"the listed revision disappeared");
+        if(read.page)await read.page([selected]);else rows.push(selected);
+      }
+      return { through, rows };
     },
   };
 }
@@ -423,6 +526,25 @@ export function fileAppendOnlyRepository<T>(
   const dir = path.join(root, "logs", log);
   const fileFor = (key: string): string => path.join(dir, `${fileNameFor(key)}.jsonl`);
 
+  async function* fileLines(file:string):AsyncGenerator<LogLine<T>>{
+    let handle;try{handle=await open(file,"r");}catch(error){if(isEnoent(error))return;throw new CorruptPersistedState(file,`read failed: ${(error as Error).message}`);}
+    const input=handle.createReadStream({encoding:"utf8",highWaterMark:64*1024,autoClose:false});
+    const lines=createInterface({input,crlfDelay:Infinity});const seen=new Map<string,string>();let lineNumber=0;
+    try{for await(const raw of lines){lineNumber++;if(!raw.trim())continue;const row=parseLogLine<T>(file,raw.trim(),lineNumber);
+      const hash=contentHash(canonicalJson(row.record)),prior=seen.get(row.recordId);
+      if(prior!==undefined){if(prior!==hash)throw new AppendOnlyViolation(`${log} (${file})`,row.recordId,prior,hash);continue;}
+      seen.set(row.recordId,hash);yield row;
+    }}catch(error){if(error instanceof CorruptPersistedState||error instanceof AppendOnlyViolation)throw error;throw new CorruptPersistedState(file,`read failed: ${(error as Error).message}`);}finally{lines.close();input.destroy();await handle.close();}
+  }
+  async function* coordinateLines(keys?:readonly string[]):AsyncGenerator<ChangedRecord<T>>{
+    const positions=new Map<string,number>();
+    const names=keys===undefined?(await listDirectory(root,dir)).filter(name=>name.endsWith(".jsonl")):[...new Set(keys)].map(key=>`${fileNameFor(key)}.jsonl`);
+    for(const name of names.sort())for await(const line of fileLines(path.join(dir,name))){
+      const position=positions.get(line.key)??0;positions.set(line.key,position+1);
+      yield{key:line.key,recordId:line.recordId,position,record:line.record,changedAt:line.at,stampedAt:line.at};
+    }
+  }
+
   const readLines = async (key: string): Promise<LogLine<T>[]> => {
     const file = fileFor(key);
     let raw: string;
@@ -473,15 +595,13 @@ export function fileAppendOnlyRepository<T>(
       key: string,
       jsonPath: readonly string[],
       value: string,
-    ): Promise<readonly T[]> =>
-      (await readLines(key))
-        .map((line) => line.record)
-        .filter((record) => jsonTextAtPath(record, jsonPath) === value),
+    ): Promise<readonly T[]> => {
+      const out:T[]=[];for await(const line of fileLines(fileFor(key)))if(jsonTextAtPath(line.record,jsonPath)===value)out.push(line.record);return out;
+    },
 
     readRecent: async (key: string, limit: number): Promise<readonly T[]> => {
-      const records = (await readLines(key)).map((line) => line.record);
       const bounded = Math.max(0, Math.trunc(limit));
-      return records.slice(Math.max(0, records.length - bounded)).reverse();
+      const records:T[]=[];for await(const line of fileLines(fileFor(key))){records.push(line.record);if(records.length>bounded)records.shift();}return records.reverse();
     },
 
     readRecentWhere: async (
@@ -493,22 +613,16 @@ export function fileAppendOnlyRepository<T>(
       recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
       const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
-      const matches = (await readLines(key))
-        .filter(line => since === null || Date.parse(line.at) >= since)
-        .map((line) => line.record)
-        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
       const bounded = Math.max(0, Math.trunc(limit));
-      return matches
-        .slice(Math.max(0, matches.length - bounded))
-        .reverse()
-        .map((record) => projectRecord(record, projection));
+      const matches:unknown[]=[];
+      for await(const line of fileLines(fileFor(key)))if((since===null||Date.parse(line.at)>=since)&&jsonTextAtPath(line.record,jsonPath)===value){matches.push(projectRecord(line.record,projection));if(matches.length>bounded)matches.shift();}
+      return matches.reverse();
     },
 
     readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
       const out = new Map<string, unknown>();
       for (const key of new Set(keys)) {
-        const lines = await readLines(key);
-        const newest = lines[lines.length - 1];
+        let newest:LogLine<T>|undefined;for await(const line of fileLines(fileFor(key)))newest=line;
         if (newest !== undefined) out.set(key, projectRecord(newest.record, projection));
       }
       return out;
@@ -523,43 +637,33 @@ export function fileAppendOnlyRepository<T>(
     readSince: async (since: string): Promise<readonly T[]> =>
       (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedLogReadOptions<T> = {}) => {
       const through = new Date().toISOString();
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      const records = (await coordinates()).filter(({ changed, line }) => !((from !== null && Date.parse(line.at) < from) || skip.has(`${changed.key}\n${changed.position}`)))
-        .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
-      if (!read.page) return { through, records };
-      await read.page(records);
-      return { through, records: [] };
+      const records:ChangedRecord<T>[]=[];
+      for await(const changed of coordinateLines(read.keys)){
+        if((from!==null&&Date.parse(changed.stampedAt!)<from)||skip.has(`${changed.key}\n${changed.position}`))continue;
+        const selected=read.projection?{...changed,record:projectRecord(changed.record,read.projection)as T}:changed;
+        if(read.page)await read.page([selected]);else records.push(selected);
+      }
+      return { through, records };
     },
 
     readStampedBetween: async (from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void) => {
-      await page((await coordinates()).filter(({ line }) => Date.parse(line.at) >= Date.parse(from) && Date.parse(line.at) < Date.parse(until))
-        .map(({ changed }) => changed));
+      for await(const changed of coordinateLines())if(Date.parse(changed.stampedAt!)>=Date.parse(from)&&Date.parse(changed.stampedAt!)<Date.parse(until))await page([changed]);
     },
 
     keys: async (): Promise<readonly string[]> => {
-      const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
+      const keys=new Set<string>();for await(const row of coordinateLines())keys.add(row.key);
       return [...keys].sort();
     },
 
     keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> => {
-      const keys = new Set<string>((await readEveryPartition())
-        .filter((line) => jsonTextAtPath(line.record, jsonPath) === value).map((line) => line.key));
+      const keys=new Set<string>();for await(const row of coordinateLines())if(jsonTextAtPath(row.record,jsonPath)===value)keys.add(row.key);
       return [...keys].sort();
     },
   };
-
-  /** Every line with the coordinates and clocks a changed-since read answers with; the line's own time stands in for both clocks. */
-  async function coordinates() {
-    const positions = new Map<string, number>();
-    return (await readEveryPartition()).map((line) => {
-      const position = positions.get(line.key) ?? 0;
-      positions.set(line.key, position + 1);
-      return { line, changed: { key: line.key, recordId: line.recordId, position, record: line.record, changedAt: line.at, stampedAt: line.at } };
-    });
-  }
 
   /** Every line in every partition, in filename then append order. */
   async function readEveryPartition(): Promise<LogLine<T>[]> {
@@ -669,7 +773,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
     ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
-    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
+    fieldManual: (() => { const base = fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"); return fieldManualRows(base, base); })(),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(

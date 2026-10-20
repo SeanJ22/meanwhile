@@ -4,6 +4,7 @@ import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "@/lib/civic-data/automatic-refresh.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "@/lib/civic-data/contracts.ts";
+import { FEC_STATES, fecFundingContractId, fecFundingScope } from "@/lib/civic-data/fec-state-scope.ts";
 import { feedDoorDrafts, keyRefFor, seedFeedDoors } from "@/lib/doors/seed-feeds.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 
@@ -26,11 +27,17 @@ test("every routine contract and every daily automatic refresh task has a door",
 });
 
 test("feed doors name their key and never hold one", () => {
-  const fec = feedDoorDrafts().find((d) => d.doorId === "feed:fec-funding")!;
-  assert.equal(fec.config?.keyRef, "FEC_API_KEY");
-  assert.deepEqual(fec.hosts, ["api.open.fec.gov", "www.fec.gov"]);
+  const drafts = feedDoorDrafts();
+  const fecDoors = drafts.filter((draft) => draft.doorId.startsWith("feed:fec-funding"));
+  assert.deepEqual(fecDoors.map((draft) => draft.doorId).sort(), FEC_STATES.map((state) => `feed:${fecFundingContractId(state)}`).sort());
+  for (const state of FEC_STATES) {
+    const fec = fecDoors.find((draft) => draft.doorId === `feed:${fecFundingContractId(state)}`)!;
+    assert.equal(fec.config?.keyRef, "FEC_API_KEY");
+    assert.equal(fec.config?.scope, fecFundingScope(state));
+    assert.deepEqual(fec.hosts, ["api.open.fec.gov", "www.fec.gov"]);
+  }
   assert.equal(keyRefFor("dotgov", "cisa-dotgov-registry"), null);
-  for (const draft of feedDoorDrafts()) {
+  for (const draft of drafts) {
     for (const [key, value] of Object.entries(draft.config ?? {})) {
       if (/key/i.test(key)) assert.match(String(value), /^[A-Z][A-Z0-9_]+$/, `${draft.doorId} ${key} is a name, not a secret`);
     }

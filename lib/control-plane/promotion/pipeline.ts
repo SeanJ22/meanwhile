@@ -199,27 +199,7 @@ export async function appendTransition(
   return { accepted: decided.ok, appended: outcome.appended, record: decided.record, state: after };
 }
 
-/** Keys holding no pipeline record are not items. */
-export async function readPipelineStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
-  const [keys, records] = await Promise.all([repos.promotionPipeline.keys(), repos.promotionPipeline.readAll()]);
-  const byItem = new Map<string, PromotionPipelineRecord[]>();
-  for (const record of records) {
-    /* A foreign row under this log (the conformance suite writes one per run) is not a transition. */
-    if (!isPipelineRecord(record)) continue;
-    const itemRecords = byItem.get(record.itemId);
-    if (itemRecords) itemRecords.push(record);
-    else byItem.set(record.itemId, [record]);
-  }
-  const out: PipelineItemState[] = [];
-  for (const key of keys) {
-    const itemRecords = byItem.get(key);
-    if (itemRecords === undefined || itemRecords.length === 0) continue;
-    out.push(deriveItemState(key, itemRecords));
-  }
-  return out;
-}
-
-/** The same states `readPipelineStates` derives for the matching items, read by key in batches. */
+/** The matching items' states, read by key in batches. */
 export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   matches: readonly { readonly path: readonly string[]; readonly value: string }[]): Promise<PipelineItemState[]> {
   const log = repos.promotionPipeline;
@@ -250,11 +230,6 @@ export function contextFromRecords(artifactRows: readonly ArtifactRecord[], atte
       catch { return null; }
     },
   };
-}
-
-export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
-  const [artifacts, attempts, results] = await Promise.all([repos.artifacts.readAll(), repos.attempts.list(), repos.workerResults.readAll()]);
-  return contextFromRecords(artifacts, attempts.map(row => row.value), results);
 }
 
 export const SCOUTED_OUTCOMES = ["ROUTE_CANDIDATE", "EVIDENCE_FOUND"] as const;

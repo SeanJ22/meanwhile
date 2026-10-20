@@ -1,16 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
-import { dispatchWorkerTask, enqueueWorkerTask } from "../lib/control-plane/workers/runtime.ts";
+import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectAutonomousActivity, readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
-import type { EvidenceWalkStep } from "../lib/control-plane/workers/research-types.ts";
 
 test("uncommitted or mismatched worker output never enters the proved event chain", async () => {
   const h=await autonomousHarness(); await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.deepEqual(activity.evidenceGaps,[]);
+  const activity=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:h.now()}))[0]; assert.deepEqual(activity.evidenceGaps,[]);
   const record=activity.facts.workers[0];
   const uncommitted={...activity.facts,attempts:activity.facts.attempts.map(attempt=>attempt.id===record.attemptId?{...attempt,outcome:null,endedAt:null}:attempt)};
   const projection=projectAutonomousActivity(uncommitted,{observedAt:h.now()})[0]; assert.ok(projection.evidenceGaps.includes(`WORKER_RESULT_UNPROVEN:${record.id}`));
@@ -22,7 +19,7 @@ test("uncommitted or mismatched worker output never enters the proved event chai
 
 test("cross-obligation source evidence retains original artifact/Attempt ownership without polluting local accounting",async()=>{
   const h=await autonomousHarness(); await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const original=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0];
+  const original=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:h.now()}))[0];
   const observation=original.facts.artifacts.find(artifact=>artifact.canonicalUrl!==FIXTURE_URL&&artifact.contentType==="text/html")!;
   const seedAttempt=original.facts.attempts.find(attempt=>attempt.id===observation.attemptId)!;
   const sourceItem=createWorkItem({project:h.item.project,subject:"fixture:source-discovery",obligation:"Previously observed publisher source",why:"Cross-obligation source provenance fixture",now:seedAttempt.startedAt});

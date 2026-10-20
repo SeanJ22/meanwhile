@@ -3,10 +3,10 @@
  * more than once, one lesson names the pattern and the fix that worked last time. Writes nothing without enough history.
  */
 import { fixEpisodes, type FixEpisode, type FixItemWithHistory } from "../control-plane/fix-history.ts";
-import { fixItems } from "../control-plane/fix-list.ts";
 import { newFieldManualEntry, writeFieldManual, type FieldManualEntry, type FieldManualRepos } from "../control-plane/field-manual.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { withHistoryIndex } from "../control-plane/workers/streamed-history.ts";
 
 export const BREAK_PATTERN_SOURCE = "break-patterns";
 export const BREAK_PATTERN_KIND = "BREAK_PATTERN";
@@ -93,10 +93,29 @@ export function patternLesson(p: BreakPattern, now: string): FieldManualEntry {
  */
 export async function runBreakPatternPass(repos: Pick<ControlPlaneRepositories, "adminConfig"> & FieldManualRepos, now: string,
   events: readonly KnownEvent[] = []): Promise<{ readonly patterns: number; readonly written: number; readonly error?: string }> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  const items = held && isAdminConfig(held.value) ? fixItems(held.value) : [];
-  const patterns = breakPatterns(items, now, events);
-  if (patterns.length === 0) return { patterns: 0, written: 0 };
-  const wrote = await writeFieldManual(repos, patterns.map((p) => patternLesson(p, now)), now);
-  return { patterns: patterns.length, ...wrote };
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  if (!read) throw new Error("BREAK_PATTERN_SCOPED_ARRAY_STORE_REQUIRED");
+  return withHistoryIndex(async db => {
+    db.exec("CREATE TABLE episodes(sequence INTEGER PRIMARY KEY,place TEXT NOT NULL,at TEXT NOT NULL,body TEXT NOT NULL); CREATE INDEX episodes_by_place ON episodes(place,at,sequence)");
+    const insert = db.prepare("INSERT INTO episodes VALUES(?,?,?,?)"); let sequence = 0, after = 0;
+    for (;;) {
+      const page = await read(ADMIN_CONFIG_ID, "fixList", {after, projection: {where: true, earlier: true, cameBackAt: true, addedAt: true,
+        state: true, fixedAt: true, whatChanged: true, changedBy: true}});
+      if (!page) break;
+      for (const item of page.values as FixItemWithHistory[]) for (const episode of fixEpisodes(item, now))
+        insert.run(sequence++, item.where, episode.brokeAt, JSON.stringify(episode));
+      if (page.next === null) break; after = page.next;
+    }
+    let patterns = 0, written = 0; let error: string | undefined;
+    const histories = db.prepare("SELECT body FROM episodes WHERE place=? ORDER BY at,sequence");
+    for (const row of db.prepare("SELECT place FROM episodes GROUP BY place ORDER BY MIN(sequence)").iterate()) {
+      const episodes = [...histories.iterate(row.place)].map(held => JSON.parse(held.body) as FixEpisode);
+      for (const pattern of patternsOf(row.place, episodes, events)) {
+        patterns++;
+        const wrote = await writeFieldManual(repos, [patternLesson(pattern, now)], now);
+        written += wrote.written; if (wrote.error) error ??= wrote.error;
+      }
+    }
+    return {patterns, written, ...(error ? {error} : {})};
+  });
 }

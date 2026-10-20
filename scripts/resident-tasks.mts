@@ -25,15 +25,16 @@ import { dirname, join } from "node:path";
 
 import type { Page } from "playwright";
 
-import { readTaskZips, recordTaskPass } from "../lib/control-plane/live-audit-log.ts";
+import { recordTaskPass } from "../lib/control-plane/live-audit-log.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { collectPageObservation, LAYOUT_SHIFT_INIT_SCRIPT, measurePage } from "../lib/health/page-metrics.ts";
 import {
-  chooseTaskZips, judgeTask, readySelector, shotKey, startPath, TASK_PROFILES, TASK_SCRIPTS, taskPass, taskTargets, WORDS,
+  judgeTask, readySelector, shotKey, startPath, TASK_PROFILES, TASK_SCRIPTS, WORDS,
   type Finder, type ResidentTask, type ResidentTaskFile, type TaskCheck, type TaskProfile, type TaskRun, type TaskStepRecord,
 } from "../lib/health/resident-tasks.ts";
+import { runTaskPlaces } from "../lib/health/resident-task-run.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
+import { withResidentZipSelection } from "../lib/ops/published-zip-selection.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
 import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
@@ -61,19 +62,18 @@ if (!url && !DRY) {
   process.exit(1);
 }
 const file = JSON.parse(readFileSync(join(process.cwd(), "data/health/resident-tasks.json"), "utf8")) as ResidentTaskFile;
-const places = ONLY_ZIP ? [{ zip: ONLY_ZIP }] : await publishedPlaces(BASE, fetch, 15_000).catch(() => []);
-if (places.length === 0) {
-  console.error("resident tasks: no published place could be read from the live site");
-  process.exit(1);
-}
 const repos = url && !DRY ? await createPgRepositories(url, now, { skipBootstrap: true }) : null;
-const everRun = repos && !ONLY_ZIP ? await readTaskZips(repos) : new Set<string>();
-const { zips, queued } = ONLY_ZIP ? { zips: [ONLY_ZIP], queued: [] as string[] } : chooseTaskZips(places.map((p) => p.zip), everRun, ZIP_COUNT, now);
-if (IF_QUEUED && queued.length === 0) {
-  console.log("resident tasks: no newly published ZIP is waiting for its first run");
-  process.exit(0);
+await withResidentZipSelection({origin: BASE, onlyZip: ONLY_ZIP, count: ZIP_COUNT, now, repos, queuedOnly: IF_QUEUED},
+async ({zips: selectedZips, queued, selected, published, queuedCount}) => {
+if (published === 0) {
+  console.error("resident tasks: no published place could be read from the live site");
+  process.exitCode = 1;
+  return;
 }
-const targets = taskTargets(file.tasks, IF_QUEUED ? queued : zips, ASK_ZIPS);
+if (IF_QUEUED && queuedCount === 0) {
+  console.log("resident tasks: no newly published ZIP is waiting for its first run");
+  return;
+}
 
 /* ------------------------------------------------------- inside the page */
 
@@ -266,22 +266,24 @@ async function runTask(browser: GuardedBrowser, task: ResidentTask, zip: string,
 /* ------------------------------------------------------------------ pass */
 
 const reader = await launchGuarded({ label: "resident-tasks", headless: true, blockWrites: true, args: BROWSER_ARGS });
-const asker = targets.some((t) => t.task.start === "ask") ? await launchGuarded({ label: "resident-tasks-ask", headless: true, args: BROWSER_ARGS }) : null;
-const runs: TaskRun[] = [];
+const asker = ASK_ZIPS > 0 && selected > 0 && file.tasks.some(task => task.start === "ask")
+  ? await launchGuarded({ label: "resident-tasks-ask", headless: true, args: BROWSER_ARGS }) : null;
+let totals: Awaited<ReturnType<typeof runTaskPlaces>>;
 try {
-  for (const t of targets) runs.push(await runTask(t.task.start === "ask" ? asker! : reader, t.task, t.zip, t.profile));
+  totals = await runTaskPlaces({zips: selectedZips, queued, tasks: file.tasks, askZips: ASK_ZIPS, runId: reader.runId,
+    now: () => new Date().toISOString(), run: (task, zip, profile) => runTask(task.start === "ask" ? asker! : reader, task, zip, profile),
+    record: async pass => {
+      if (DRY) for (const run of pass.runs) {
+        console.log(`  ${run.verdict}  ${run.says}`);
+        for (const s of run.steps) console.log(`          ${s.says} · ${s.ms === null ? "—" : `${s.ms} ms`} · ${s.shot ?? "no screenshot"}${Object.keys(s.issues).length ? ` · ${JSON.stringify(s.issues)}` : ""}`);
+      }
+      else await recordTaskPass(repos!, pass);
+      console.log(`resident tasks: ${pass.passed} passed, ${pass.failed} failed, at ${pass.zips.join(", ")}${pass.queued.length ? " (first run)" : ""} (run ${reader.runId})`);
+    }});
 } finally {
   await reader.close();
   await asker?.close();
 }
 
-const pass = taskPass(runs, now, reader.runId, IF_QUEUED ? queued : queued.filter((z) => zips.includes(z)));
-if (DRY) {
-  for (const run of pass.runs) {
-    console.log(`  ${run.verdict}  ${run.says}`);
-    for (const s of run.steps) console.log(`          ${s.says} · ${s.ms === null ? "—" : `${s.ms} ms`} · ${s.shot ?? "no screenshot"}${Object.keys(s.issues).length ? ` · ${JSON.stringify(s.issues)}` : ""}`);
-  }
-} else {
-  await recordTaskPass(repos!, pass);
-}
-console.log(`resident tasks: ${pass.passed} passed, ${pass.failed} failed, at ${pass.zips.join(", ")}${pass.queued.length ? ` (first run for ${pass.queued.join(", ")})` : ""} (run ${reader.runId})`);
+console.log(`resident tasks: ${totals.passed} passed, ${totals.failed} failed across ${totals.places} ZIPs (run ${reader.runId})`);
+});

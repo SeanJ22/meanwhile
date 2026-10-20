@@ -128,8 +128,8 @@ test("a registry publication failure leaves its fields open while later election
       assert.equal(fields[0].kind, "registration_deadline");
       return { candidateId: "election-candidate", promotedVersionId: "election-version", fields: ["deadline"], gaps: [] };
     } });
-  assert.equal(offers, 2, "later publication batches survive the earlier rejected call");
-  assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }, { error: "Registry temporarily unavailable" }]);
+  assert.equal(offers, 1, "an election-only batch does not re-offer unchanged registry geography after the first refusal");
+  assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }]);
   assert.equal(result.electionPublications.length, 1);
 });
 
@@ -142,8 +142,8 @@ test("a place inherits other jobs' published fields before national acquisition"
   const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
   const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
   const seen: string[] = [];
-  const bank = repos.fieldManual.slice.bind(repos.fieldManual);
-  repos.fieldManual.slice = async query => { seen.push("knowledge"); return bank(query); };
+  const bank = repos.fieldManual.visitSlice.bind(repos.fieldManual);
+  repos.fieldManual.visitSlice = async (query, visit) => { seen.push("knowledge"); return bank(query, visit); };
   const result = await planPlaceHunt({ repos, divisions: [division], now,
     readHeld: async ids => {
       seen.push("held"); assert.deepEqual(ids, [division.id]);

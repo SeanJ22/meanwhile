@@ -180,8 +180,8 @@ function interleaved(): { repos: FieldManualRepos; gate: () => void } {
   const base = createMemoryRepositories();
   let waiting: (() => void)[] = [];
   let reads = 0;
-  const fieldManual = { ...base.fieldManual, readMany: async (ids: readonly string[]) => {
-    const rows = await base.fieldManual.readMany(ids);
+  const fieldManual = { ...base.fieldManual, readNarrowed: async (...args: Parameters<typeof base.fieldManual.readNarrowed>) => {
+    const rows = await base.fieldManual.readNarrowed(...args);
     reads += 1;
     if (reads <= 2) await new Promise<void>((resolve) => { waiting.push(resolve); if (waiting.length === 2) { waiting.forEach((go) => go()); waiting = []; } });
     return rows;
@@ -220,7 +220,7 @@ test("many concurrent writers each keep their own lesson and their reach", async
 
 test("a failed read is returned as an error with an empty projection, not thrown", async () => {
   const repos = createMemoryRepositories();
-  const broken = { fieldManual: { ...repos.fieldManual, slice: async () => { throw new Error("store down"); } } };
+  const broken = { fieldManual: { ...repos.fieldManual, visitSlice: async () => { throw new Error("store down"); } } };
   const read = await readFieldManual(broken, { role: "SCOUT" });
   assert.equal(read.error, "store down");
   assert.equal(read.projection.entryIds.length, 0);

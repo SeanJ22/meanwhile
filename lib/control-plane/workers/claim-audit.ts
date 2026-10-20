@@ -130,22 +130,27 @@ export interface ClaimAuditInput {
   readonly now: string;
   readonly synthetic?: boolean;
   readonly k?: number;
+  readonly claims?: readonly Claim[];
+  readonly readFixItem?: (id: string) => Promise<FixItem | null>;
 }
 
 /** Draws the week's sample and recomputes each claim. Reads only; the caller records the pass and answers red flags. */
 export async function auditClaims(input: ClaimAuditInput): Promise<ClaimPass> {
   const week = weekOf(input.now);
-  const maps = new Map<string, readonly FixMapRow[]>();
+  let heldMethod: string | null = null, heldMap: readonly FixMapRow[] = [];
   const mapOf = async (methodId: string) => {
-    if (!maps.has(methodId)) maps.set(methodId, await input.fixMap.forMethod(methodId, 1000));
-    return maps.get(methodId)!;
+    if (heldMethod !== methodId) { heldMap = await input.fixMap.forMethod(methodId, 1000); heldMethod = methodId; }
+    return heldMap;
   };
   const checks: ClaimCheck[] = [];
-  for (const claim of sampleClaims(claimsOf(input.config, input.now), week, input.k)) {
+  for (const claim of sampleClaims(input.claims ?? claimsOf(input.config, input.now), week, input.k)) {
     try {
       if (claim.type === "PROVEN_LABEL") checks.push(checkProvenLabel(claim.standing, await mapOf(claim.standing.methodId), input.config));
       else if (claim.update.claim?.kind === "FIX_PROVEN") checks.push(checkProvenCount(claim.update, await mapOf(claim.update.claim.methodId)));
-      else checks.push(checkFixDone(claim.update, fixItems(input.config)));
+      else {
+        const exact = input.readFixItem ? await input.readFixItem(fixItemIdOf(claim.update)!) : null;
+        checks.push(checkFixDone(claim.update, input.readFixItem ? exact ? [exact] : [] : fixItems(input.config)));
+      }
     } catch {
       // Records that cannot be read confirm nothing.
       checks.push({ claimId: idOf(claim), claimed: claim.type === "UPDATE" ? claim.update.what : `${claim.standing.title} is Proven.`,
@@ -202,10 +207,21 @@ export async function runClaimAuditWeek(repos: ClaimAuditRepos, fixMap: Pick<Fix
   Promise<{ readonly ran: boolean; readonly pass: ClaimPass | null; readonly lessonErrors: readonly string[] }> {
   const week = weekOf(now);
   if ((await readRecentClaimPasses(repos, [week])).length > 0) return { ran: false, pass: null, lessonErrors: [] };
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, settings: true, updates: true});
   const config = held && isAdminConfig(held.value) ? held.value : null;
   if (!config) return { ran: false, pass: null, lessonErrors: [] };
-  const pass = await auditClaims({ config, fixMap, now });
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  if (!read) throw new Error("CLAIM_AUDIT_SCOPED_ARRAY_STORE_REQUIRED");
+  let claims = sampleClaims(claimsOf(config, now), week);
+  let after = 0;
+  for (;;) {
+    const page = await read(ADMIN_CONFIG_ID, "methodStandings", {after, match: {path: ["status"], value: "PROVEN"}});
+    if (!page) break;
+    for (const standing of page.values as MethodStanding[]) claims = sampleClaims([...claims, {type: "PROVEN_LABEL", standing}], week);
+    if (page.next === null) break; after = page.next;
+  }
+  const pass = await auditClaims({ config, claims, fixMap, now, readFixItem: async id =>
+    (await read(ADMIN_CONFIG_ID, "fixList", {match: {path: ["id"], value: id}, limit: 1}))?.values[0] as FixItem | undefined ?? null });
   await recordClaimPass(repos, pass);
   const lessonErrors: string[] = [];
   for (const check of pass.checks.filter((c) => c.verdict === "WRONG")) {

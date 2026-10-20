@@ -7,6 +7,7 @@ import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import { waitingSince, type QueueDebt } from "./scheduler/obligation.ts";
+import { spendScratch } from "./spend-scratch.ts";
 
 export interface ScoutCapacity {
   /** Mean measured usd per Scout Attempt over the window. Null when none measured. */
@@ -22,7 +23,7 @@ export interface ScoutCapacity {
 
 /** The mean is over measured Scout entries in the window; an unmeasured Attempt is counted beside it, never as zero. */
 export function scoutCapacity(input: {
-  readonly costs: readonly MeteredCharge[];
+  readonly costs: Iterable<MeteredCharge>;
   readonly nowIso: string;
   readonly windowHours: number;
   readonly ceilingUsd: number;
@@ -195,13 +196,16 @@ export interface GraduationFunnel {
 
 /** SCOUTED counts distinct obligations with a non-refused Scout result. */
 export function graduationFunnel(input: {
-  readonly results: readonly ScoutResult[];
+  readonly results?: readonly ScoutResult[];
+  /** A streamed lifetime count; distinct obligations remain distinct across every log page. */
+  readonly scoutedCount?: number;
   readonly candidateCounts: { readonly validated: number; readonly admitted: number; readonly rejected: number; readonly proposed: number } | null;
   readonly pipeline: readonly { readonly stage: string; readonly count: number }[];
   readonly pipelineSource: string;
   readonly deterministicReplays: number;
 }): GraduationFunnel {
-  const scouted = new Set(input.results.filter((r) => r.refusal === null).map((r) => r.obligationId)).size;
+  if (input.scoutedCount === undefined && input.results === undefined) throw new Error("SCOUT_FUNNEL_INPUT_MISSING");
+  const scouted = input.scoutedCount ?? new Set(input.results!.filter((r) => r.refusal === null).map((r) => r.obligationId)).size;
   const byStage = new Map(input.pipeline.map((p) => [p.stage, p.count]));
   const stages: FunnelStage[] = [
     { stage: "SCOUTED", count: scouted, source: "distinct obligations with a non-refused Scout result in repos.scoutResults" },
@@ -318,10 +322,16 @@ export interface CacheHitRate {
   readonly aggregatePricedRows?: number;
 }
 
+export interface ScoutCacheMetricResult {
+  readonly attemptId: string;
+  readonly steps?: readonly Pick<ScoutStep, "step" | "kind" | "turn" | "tokens">[];
+  readonly cacheDefect?: Pick<NonNullable<ScoutResult["cacheDefect"]>, "turns" | "stationaryTurns" | "zeroReadTurns"> | null;
+}
+
 /** Computed from the cost ledger. */
 export function cacheHitRateByRole(input: {
-  readonly costs: readonly MeteredCharge[];
-  readonly results: readonly ScoutResult[];
+  readonly costs: Iterable<MeteredCharge>;
+  readonly results: Iterable<ScoutCacheMetricResult>;
   /** Rows recorded at or after this instant. Omit for every row. */
   readonly sinceIso?: string;
   readonly untilIso?: string;
@@ -330,12 +340,15 @@ export function cacheHitRateByRole(input: {
   const until = input.untilIso === undefined ? Infinity : Date.parse(input.untilIso);
   interface Acc {
     read: number; write: number; uncached: number; attempts: number; measured: number; predating: number; unreported: number;
-    uncachedPerRow: number[]; batched: number; requests: number; aggregatePriced: number;
+    uncachedSum: number; uncachedMax: number; batched: number; requests: number; aggregatePriced: number;
     turns: number | null; misses: number | null; stationary: number | null; saved: number | null;
   }
   const byRole = new Map<string, Acc>();
-  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null, saved: 0 });
-  const inWindow = new Set<string>();
+  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedSum: 0, uncachedMax: 0, batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null, saved: 0 });
+  const scratch = spendScratch(), {db, owner} = scratch;
+  const addWindow = db.prepare("INSERT OR IGNORE INTO members(owner,id) VALUES(?,?)");
+  const inWindow = db.prepare("SELECT id FROM members WHERE owner=? AND id=?");
+  try {
   for (const c of input.costs) {
     const at = Date.parse(c.recordedAt);
     if (at < since || at > until) continue;
@@ -345,7 +358,7 @@ export function cacheHitRateByRole(input: {
     if (!LEGACY_MODEL_CACHE_ROLES.has(c.role) && !c.model && (!c.tier || c.tier === "none") && !c.byModel?.length) continue;
     const acc = byRole.get(c.role) ?? fresh();
     acc.attempts += 1;
-    inWindow.add(c.attemptId);
+    addWindow.run(owner, c.attemptId);
     const saving = recordedCacheSaving(c);
     acc.saved = acc.saved === null || saving === null ? null : acc.saved + saving;
     const m = cacheMeteringOf(c.cost);
@@ -356,7 +369,8 @@ export function cacheHitRateByRole(input: {
       acc.read += m.cacheReadInputTokens;
       acc.write += m.cacheCreationInputTokens;
       acc.uncached += m.uncachedInputTokens;
-      acc.uncachedPerRow.push(m.uncachedInputTokens);
+      acc.uncachedSum += m.uncachedInputTokens;
+      acc.uncachedMax = Math.max(acc.uncachedMax, m.uncachedInputTokens);
       const requests = c.cost.requestCount ?? 1;
       acc.requests += requests;
       if (m.batch) acc.batched += requests;
@@ -365,9 +379,9 @@ export function cacheHitRateByRole(input: {
     byRole.set(c.role, acc);
   }
   /* Per-turn columns: the Scout results' steps, for the Attempts the window holds. */
-  const roleOf = (step: ScoutStep): string => (step.step === "scout-research-loop" ? "SCOUT" : "SUB_STEP");
+  const roleOf = (step: Pick<ScoutStep, "step">): string => (step.step === "scout-research-loop" ? "SCOUT" : "SUB_STEP");
   for (const r of input.results) {
-    if (!inWindow.has(r.attemptId)) continue;
+    if (!inWindow.get(owner, r.attemptId)) continue;
     const modelSteps = (r.steps ?? []).filter((s) => s.kind === "MODEL");
     if (modelSteps.length === 0) continue;
     for (const role of new Set(modelSteps.map(roleOf))) {
@@ -382,7 +396,7 @@ export function cacheHitRateByRole(input: {
   }
   return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
     const total = a.read + a.write + a.uncached;
-    const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
+    const mean = a.measured === 0 ? null : a.uncachedSum / a.measured;
     return {
       role,
       cacheRead: a.read,
@@ -396,7 +410,7 @@ export function cacheHitRateByRole(input: {
       measuredRows: a.measured,
       predatingRows: a.predating,
       unreportedRows: a.unreported,
-      uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
+      uncachedPerAttempt: mean === null ? null : { mean, max: a.uncachedMax },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
       savedUsd: a.measured === 0 ? null : a.saved,
       aggregatePricedRows: a.aggregatePriced,
@@ -407,6 +421,7 @@ export function cacheHitRateByRole(input: {
         "; per-turn columns from Scout steps where recorded",
     };
   });
+  } finally { scratch.release(); }
 }
 
 export interface CostPerOutcome {
@@ -417,25 +432,36 @@ export interface CostPerOutcome {
   readonly denominator: string;
 }
 
+export interface ScoutOutcomeTotals {
+  readonly measured: number;
+  readonly unmeasured: number;
+  readonly spend: number;
+  readonly routeCandidates: number;
+  readonly evidenceFound: number;
+}
+
 /** The whole measured spend in scope over each useful outcome's count, so a NO_PROGRESS Attempt's cost is not hidden. */
 export function costPerUsefulOutcome(input: {
-  readonly results: readonly ScoutResult[];
+  readonly results?: readonly ScoutResult[];
+  readonly totals?: ScoutOutcomeTotals;
   readonly candidateCounts: { readonly validated: number; readonly admitted: number } | null;
 }): CostPerOutcome[] {
-  const measured = input.results.filter((r) => r.usd !== null);
-  const spend = measured.reduce((n, r) => n + (r.usd ?? 0), 0);
-  const unmeasured = input.results.length - measured.length;
-  const accepted = input.results.filter((r) => r.refusal === null);
-  const denominator = `total measured Scout spend $${spend.toFixed(4)} over ${measured.length} measured Attempt(s) (${unmeasured} unmeasured), divided by the outcome count`;
+  if (input.totals === undefined && input.results === undefined) throw new Error("SCOUT_OUTCOME_INPUT_MISSING");
+  const measured = input.results?.filter((r) => r.usd !== null);
+  const spend = input.totals?.spend ?? measured!.reduce((n, r) => n + (r.usd ?? 0), 0);
+  const measuredCount = input.totals?.measured ?? measured!.length;
+  const unmeasured = input.totals?.unmeasured ?? input.results!.length - measuredCount;
+  const accepted = input.results?.filter((r) => r.refusal === null);
+  const denominator = `total measured Scout spend $${spend.toFixed(4)} over ${measuredCount} measured Attempt(s) (${unmeasured} unmeasured), divided by the outcome count`;
   const per = (outcome: string, count: number | null): CostPerOutcome => ({
     outcome,
     count: count ?? 0,
-    usdPerOutcome: count === null || count === 0 || measured.length === 0 ? null : spend / count,
+    usdPerOutcome: count === null || count === 0 || measuredCount === 0 ? null : spend / count,
     denominator: count === null ? `${outcome}: not recorded by any pipeline yet` : denominator,
   });
   return [
-    per("ROUTE_CANDIDATE", accepted.filter((r) => r.outcome === "ROUTE_CANDIDATE").length),
-    per("EVIDENCE_FOUND", accepted.filter((r) => r.outcome === "EVIDENCE_FOUND").length),
+    per("ROUTE_CANDIDATE", input.totals?.routeCandidates ?? accepted!.filter((r) => r.outcome === "ROUTE_CANDIDATE").length),
+    per("EVIDENCE_FOUND", input.totals?.evidenceFound ?? accepted!.filter((r) => r.outcome === "EVIDENCE_FOUND").length),
     per("GRADUATED_ROUTE", input.candidateCounts === null ? null : input.candidateCounts.admitted),
   ];
 }

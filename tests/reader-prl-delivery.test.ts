@@ -22,9 +22,9 @@ const snapshot: PrlSnapshot = {
   attribution: PRL_RHETORIC_ATTRIBUTION,
 };
 
-test("PRL is exact official identity only, never a display-name or wrong-tier join", () => {
-  assert.equal(prlProfileForSubject("Mark Kelly"), null);
-  assert.equal(prlProfileForSubject("statewide:az/governor"), null);
+test("PRL is exact official identity only, never a display-name or wrong-tier join", async () => {
+  assert.equal(await prlProfileForSubject("Mark Kelly"), null);
+  assert.equal(await prlProfileForSubject("statewide:az/governor"), null);
 });
 
 test("reader projection preserves the counts/shares allowlist and refuses an uncited measurement", () => {

@@ -166,7 +166,7 @@ export function standingLineageCoversDue(input: {
  * Keep the old occurrences and all unsettled WorkItems; only advance the
  * source's next freshness clock under its exact current instruction. */
 export async function persistVerifiedPublicationAnchors(repos:ControlPlaneRepositories,input:{
-  readonly obligations:readonly StandingObligation[];readonly lineages:readonly StandingLineage[];readonly now:string;
+  readonly obligations:Iterable<StandingObligation>;readonly lineages:readonly StandingLineage[];readonly now:string;
 }):Promise<{readonly updated:ReadonlyMap<string,StandingObligation>;readonly anchored:readonly string[]}> {
   const updated=new Map<string,StandingObligation>(),anchored:string[]=[];
   const nowMs=Date.parse(input.now);

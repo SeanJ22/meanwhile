@@ -366,14 +366,14 @@ function checkCycleHonorsDispatch(src: string): void {
   assert.match(src, /describeDispatchMatch\(target, matched\.length, allUnits\.length, trackedStateCodes\)/, "the HONORED detail is not the shared sentence, over the tracked states read as data");
   assert.match(src, /honorIntent\(intent, work === null \? detail : `\$\{detail\} \$\{dispatchWorkSentence\(work\)\}`\)/, "the HONORED detail does not carry what the dispatch created");
   assert.ok(src.indexOf("await applyDispatchWork(") < src.indexOf("honorIntent(intent, work === null"), "a DISPATCH is honored before its missing work is created");
-  assert.match(src, /placeFirstRows\(dueThisCycle, dispatchPriority\)/, "the deterministic lane is not reordered behind the dispatch");
-  assert.match(src, /modelOrder\.ordered\.filter\(\(b\) => dispatchPriority\.has\(b\.row\.id\)\)/, "the Scout lane is not reordered behind the dispatch");
+  assert.match(src, /plannerOrder\("due-dispatch-order", dueThisCycle, row => dispatchPriority\.has\(row\.obligation\.id\) \? 0 : 1\)/, "the deterministic lane is not reordered behind the dispatch");
+  assert.match(src, /plannerOrder\("scout-dispatch-order", modelOrder\.ordered, row => dispatchPriority\.has\(row\.row\.id\) \? 0 : 1\)/, "the Scout lane is not reordered behind the dispatch");
   assert.match(src, /placeFirst: dispatchPriority,/, "the dispatcher itself is not told to place the dispatch first");
   assert.match(src, /owner dispatch: \$\{detail\}/, "the dispatch line is not printed");
   assert.match(src, /ownerDispatch: ownerDispatches\.at\(-1\) \?\? null/, "the research state does not carry ownerDispatch");
 
   const read = src.indexOf("const intents = readIntents(intentLog);");
-  const sort = src.indexOf("dueThisCycle.sort(");
+  const sort = src.indexOf("let dueOrdered = ");
   const bands = src.indexOf("orderByReaderImpact(");
   assert.ok(read >= 0 && sort >= 0 && bands >= 0, "an anchor moved");
   assert.ok(read < sort, "the intent log is read AFTER the deterministic sort, so a dispatch cannot reorder it");
@@ -386,7 +386,7 @@ function checkCycleHonorsDispatch(src: string): void {
 test("freshness-shadow.mts honors DISPATCH before ordering both lanes and acknowledges the lane PAUSE / RESUME", () => {
   checkCycleHonorsDispatch(source("scripts/freshness-shadow.mts"));
   const loop = source("lib/control-plane/scheduler/shadow-loop.ts");
-  assert.match(loop, /placeFirstRows\(\[\.\.\.due, \.\.\.alsoDue\], input\.placeFirst\)/, "runCycle does not apply placeFirst to its own due order");
+  assert.match(source("lib/control-plane/scheduler/streamed-cycle.ts"), /workset\.add\(row,input\.placeFirst\?\.has\(obligation\.id\)\?\?false,nowMs\)/, "runCycle does not apply placeFirst to its own disk due order");
   assert.match(loop, /readonly placeFirst\?: ReadonlySet<string>;/, "CycleInput has no optional placeFirst");
 });
 
@@ -396,7 +396,7 @@ test("POSITIVE CONTROL: a cycle that reads intents after the sort, or drops the 
   assert.notEqual(noPlace, src);
   assert.ok(fails(() => checkCycleHonorsDispatch(noPlace)), "a cycle whose dispatcher ignores the dispatch passed");
 
-  const late = src.replace("const intents = readIntents(intentLog);", "").replace("const dueOrdered = ", "const intents = readIntents(intentLog);\nconst dueOrdered = ");
+  const late = src.replace("const intents = readIntents(intentLog);", "").replace("let dueModel = ", "const intents = readIntents(intentLog);\nlet dueModel = ");
   assert.notEqual(late, src);
   assert.ok(fails(() => checkCycleHonorsDispatch(late)), "a cycle that reads intents after the sort passed");
 });

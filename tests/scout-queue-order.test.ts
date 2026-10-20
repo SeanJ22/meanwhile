@@ -1,3 +1,4 @@
+import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 /**
  * The Scout lane orders due rows by reader-impact band, and within a band by
  * longest wait, so a row whose Scouts keep failing cannot return to the head of
@@ -25,7 +26,7 @@ test("standing place ranks reuse one order version and rebuild overlapping membe
   const snippet = transpileModule(source.slice(start, end), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None },
   }).outputText;
-  const make = new Function("expansionPlan", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
+  const make = new Function("expansionPlan", "plannerMap", "planner", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
     return { rank: placeRankFor, replace: value => { placeOrder = value; } };`);
   let scopeReads = 0;
   const scopes = [
@@ -33,7 +34,7 @@ test("standing place ranks reuse one order version and rebuild overlapping membe
     { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:b" }, members: new Set(["b", "shared"]) },
     { kind: "UNRESOLVED", decision: { receiptId: "receipt:missing" }, members: new Set(["unresolved"]) },
   ];
-  const ranks = make({ scopes });
+  const ranks = make({ scopes }, () => new Map(), {});
   for (let query = 0; query < 1000; query++) {
     assert.equal(ranks.rank("shared"), 0);
     assert.equal(ranks.rank("b"), 1);
@@ -57,10 +58,10 @@ test("a failed priority refresh is not re-read until work changes its order vers
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let reads = 0;
   const plan = { scopes: [{ kind: "RESOLVED", members: new Set(["ocd-division/example"]), decision: { receiptId: "receipt" } }] };
-  const repos = { adminConfig: { read: async () => { reads++; throw new Error("forced one priority read failure"); } } };
-  const make = new Function("expansionPlan", "repos", "ADMIN_CONFIG_ID", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", `${snippet}
+  const repos = { adminConfig: { readNarrowed: async () => { reads++; throw new Error("forced one priority read failure"); } } };
+  const make = new Function("expansionPlan", "repos", "readRuntimeAdminConfig", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", `${snippet}
     return { refresh: refreshPlaceOrder, changed: () => { placeOrderDirty = true; } };`);
-  const priority = make(plan, repos, "admin", async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} });
+  const priority = make(plan, repos, async (repo: typeof repos) => repo.adminConfig.readNarrowed(), async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} });
   for (let selection = 0; selection < 20; selection++) await priority.refresh();
   assert.equal(reads, 1, "one refused refresh keeps the last order without twenty repeated store reads");
   priority.changed();
@@ -73,7 +74,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { compareReaderImpact, orderableDueRow, orderByReaderImpact, TIE_BREAK, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import { recordFailure, retryable, type FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import { dueNow, scheduleAll, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { runCycle, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 test("place-order read failure keeps the last priority and does not poison sibling selection", async () => {
   const ran: string[] = [];
@@ -282,6 +283,6 @@ test("NOT SLOWED: a row with no failing debt never has more rows ahead of it tha
 
 test("the standing runner builds the recorded queue through orderableDueRow with the debt it carried in", () => {
   const src = readFileSync(join(import.meta.dirname, "..", "scripts", "freshness-shadow.mts"), "utf8");
-  assert.match(src, /\.\.\.orderableDueRow\(d, registry\.providerOf\(d\.obligation\.id\), debtAtCycleStart\.get\(d\.obligation\.id\)\)/, "the recorded queue");
-  assert.ok(src.indexOf("const debtAtCycleStart") < src.indexOf("const modelOrder = orderByReaderImpact("), "the debt map is built before the order reads it");
+  assert.match(src, /orderableDueRow\(row, registry\.providerOf\(row\.obligation\.id\), debtAtCycleStart\.get\(row\.obligation\.id\)\)/, "the recorded queue");
+  assert.ok(src.indexOf("const debtAtCycleStart") < src.indexOf("const modelOrderTable = "), "the debt map is built before the order reads it");
 });

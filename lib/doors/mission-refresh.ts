@@ -14,7 +14,8 @@
  * of the caller's divisions or a child of one.
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
-import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { forEachAggregate } from "../control-plane/workers/streamed-history.ts";
 
 /** An OCD id is inside a division when it is that division or a child of it (`/` for a child, `#` for a body). */
 export function ocdInside(ocdId: string, division: string): boolean {
@@ -49,19 +50,22 @@ export async function markDoorsReadNow(
   const wanted = divisions.filter((division) => division.startsWith("ocd-division/"));
   const counts = { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 };
   if (wanted.length === 0) return counts;
-  for (const row of await repo.list()) {
-    const door = row.value;
-    if (!isDoorRecord(door) || !doorInDivisions(door, wanted)) continue;
+  await forEachAggregate(repo, async slot => {
+    const metadata = { ocdId: typeof slot.value.ocdId === "string" ? slot.value.ocdId : null,
+      bodyIds: Array.isArray(slot.value.bodyIds) ? slot.value.bodyIds.filter(id => typeof id === "string") : [] };
+    if (!doorInDivisions(metadata, wanted)) return;
+    const row = await repo.read(slot.id), door = row?.value;
+    if (!row || !door || !isDoorRecord(door)) return;
     counts.inPlace += 1;
-    if (door.status !== "OPEN") { counts.notRead += 1; continue; }
-    if (door.readNow) { counts.alreadyMarked += 1; continue; }
+    if (door.status !== "OPEN") { counts.notRead += 1; return; }
+    if (door.readNow) { counts.alreadyMarked += 1; return; }
     try {
       await repo.compareAndSet(door.doorId, row.revision, { ...door, readNow: true, updatedAt: at }, at);
       counts.marked += 1;
     } catch {
       counts.raced += 1;
     }
-  }
+  }, { ocdId: true, bodyIds: true });
   return counts;
 }
 
@@ -113,20 +117,20 @@ export function readNowDueRequests(
 export async function settleReadNow(repo: DoorRepository, now: string): Promise<number> {
   let cleared = 0;
   const nowMs = Date.parse(now);
-  for (const door of (await listDoors(repo)).doors) {
-    if (!door.readNow) continue;
+  await forEachAggregate(repo, async ({value: door}) => {
+    if (!door.readNow) return;
     const markedMs = Date.parse(door.updatedAt);
     const expired = !Number.isFinite(markedMs) || nowMs - markedMs >= ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS;
     const outcomeSince = [door.lastSuccessAt, door.lastFailureAt].some((at) => at !== null && Date.parse(at) >= markedMs);
-    if (!expired && !outcomeSince) continue;
+    if (!expired && !outcomeSince) return;
     const row = await repo.read(door.doorId);
-    if (row === null || !isDoorRecord(row.value) || !row.value.readNow) continue;
+    if (row === null || !isDoorRecord(row.value) || !row.value.readNow) return;
     try {
       await repo.compareAndSet(door.doorId, row.revision, { ...row.value, readNow: false, updatedAt: row.value.updatedAt }, now);
       cleared += 1;
     } catch {
       // Lost a race: the next pass settles it.
     }
-  }
+  }, { doorId: true, readNow: true, updatedAt: true, lastSuccessAt: true, lastFailureAt: true });
   return cleared;
 }

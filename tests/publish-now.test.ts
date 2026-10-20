@@ -133,7 +133,11 @@ test("BX-12: the executable selects only publication work and never holds the ro
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
-  assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
+  const publicationSelection = runner.slice(runner.indexOf("const publication = await readPublishNowWorkerTasks"), runner.indexOf("  const row = await readRuntimeAdminConfig"));
+  assert.match(publicationSelection, /if \(!PUBLISH_NOW\) return publication;/);
+  assert.match(publicationSelection, /await visitDoorRecords\(repos\.doors, async door => \{\s+for \(const task of publishNowDoorTasks\(\[door\], MEETING_PARTITION_CONTRACTS\.map\(routineTaskFromContract\), RUN_STARTED_AT\)\)/);
+  assert.match(publicationSelection, /const prior = changed\.get\(task\.id\);[\s\S]*requestedAt[^\n]*>[^\n]*requestedAt[^\n]*changed\.set\(task\.id, task\)/);
+  assert.match(publicationSelection, /return \[\.\.\.publication, \.\.\.changed\.values\(\)\];/);
   assert.doesNotMatch(runner, /publishChangedReaderEdge|publishNowEdgeChecks/);
 });
 

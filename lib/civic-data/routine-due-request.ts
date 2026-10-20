@@ -1,4 +1,5 @@
-import { parseStateBallotContractId } from "./state-scopes.ts";
+import { parseStateBallotContractId, REGISTRY_STATES } from "./state-scopes.ts";
+import { MEETING_DERIVATION_FAMILIES, meetingDerivationContractId } from "./meeting-derivation-scope.ts";
 import { randomUUID } from "node:crypto";
 
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";
@@ -23,7 +24,7 @@ export const ROUTINE_DUE_REQUEST_HISTORY = 20;
 const REASON_MAX = 200;
 const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-09-25)";
 
-export const DOOR_DERIVE_CONTRACT_IDS = ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const;
+export const DOOR_DERIVE_CONTRACT_IDS = REGISTRY_STATES.flatMap(state => MEETING_DERIVATION_FAMILIES.map(family => meetingDerivationContractId(family, state)));
 
 function requestableContract(contractId: string): boolean {
   return parseStateBallotContractId(contractId)?.family === "ballot-contests" || MEETING_PARTITION_CONTRACTS.some((contract) =>

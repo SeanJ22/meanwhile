@@ -127,5 +127,12 @@ export interface PrlSnapshot {
   profiles: PrlMemberProfile[];
   /** Exact source Bioguide rows with no positive measurement. Named, never implied. */
   rosterMisses: string[];
+  /** A completed immutable release; each person is read from their own profile object. */
+  releases?: readonly {
+    readonly kind: "prl-profiles";
+    readonly objectRoot: string;
+    readonly subjectCount: number;
+    readonly sourceSha256: string;
+  }[];
   attribution: typeof PRL_RHETORIC_ATTRIBUTION;
 }

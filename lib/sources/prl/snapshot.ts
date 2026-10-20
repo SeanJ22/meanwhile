@@ -1,12 +1,14 @@
 import {
-  civicDataReadNotInitialized,
-  promotedVersionOrThrow,
   readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../../civic-data/read-model.ts";
 import { PRL_CONTRACT } from "./data-plane.ts";
 import { shareSentence } from "./index.ts";
+import { readPublishedArraySlice } from "../../civic-data/published-array-slice.ts";
+import { readPrlProfileObject } from "./reader.ts";
+import { resolveS3ArchiveStore, type PrlArchiveStore } from "./archive-store.ts";
+import { requiredPrlDataset } from "./inventory.ts";
 import {
   PRL_CATEGORIES,
   PRL_RHETORIC_ATTRIBUTION,
@@ -73,13 +75,6 @@ export function projectPrlProfile(
   };
 }
 
-let cache: PrlSnapshot | null = null;
-let readState: CivicDataReadResult<PrlSnapshot> = civicDataReadNotInitialized(
-  PRL_CONTRACT.recordClass,
-  PRL_CONTRACT.scope,
-  "The PRL canonical pointer has not been read for this process.",
-);
-
 function validatePrlSnapshot(value: PrlSnapshot, version: string): void {
   if (
     value.formatVersion !== 1 ||
@@ -106,46 +101,45 @@ export async function readPrlProjection(
       throw new Error(`PRL pointer names ${result.metadata.sourceId}, not ${PRL_CONTRACT.sourceId}.`);
     }
     validatePrlSnapshot(result.value, result.metadata.versionId ?? "unknown");
-    cache = result.value;
-  } else {
-    cache = null;
   }
-  readState = result;
   return result;
 }
 
-export async function refreshPrlFromPromoted(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<string | null> {
-  return promotedVersionOrThrow(await readPrlProjection(options));
-}
-
-export function prlReadState(): CivicDataReadResult<PrlSnapshot> {
-  return readState;
-}
-
-function snapshot(): PrlSnapshot {
-  if (cache) return cache;
-  throw new Error(
-    `PRL holding is ${readState.kind}; call refreshPrlFromPromoted before reading the projection.`,
-  );
-}
-
-export function prlProfileForSubject(subjectId: string): PrlReaderProfile | null {
+/** Exact native person lookup; a process never retains a country's profiles. */
+export async function prlProfileForSubject(subjectId: string, options: PromotedCivicDataReadOptions & { archive?: PrlArchiveStore } = {}): Promise<PrlReaderProfile | null> {
   const bioguide = /^congress:([A-Z]\d{6})$/.exec(subjectId)?.[1];
   if (!bioguide) return null;
-  const held = snapshot();
-  const matches = held.profiles.filter((profile) => profile.bioguideId === bioguide);
-  if (matches.length > 1) throw new Error(`Ambiguous normalized PRL identity ${bioguide}`);
-  return matches[0] ? projectPrlProfile(matches[0], held) : null;
-}
-
-/** Test seam. Never called by a production render path. */
-export function resetPrlCache(): void {
-  cache = null;
-  readState = civicDataReadNotInitialized(
-    PRL_CONTRACT.recordClass,
-    PRL_CONTRACT.scope,
-    "The PRL canonical pointer has not been read for this process.",
-  );
+  const url = requiredPrlDataset("profiles-national").url;
+  let release: NonNullable<PrlSnapshot["releases"]>[number] | undefined;
+  let fetchedAt: string;
+  if (options.store) {
+    const held = await readPrlProjection(options);
+    if (held.kind !== "PROMOTED") return null;
+    release = held.value.releases?.[0];
+    fetchedAt = held.value.fetchedAt;
+    if (!release) {
+      const matches = held.value.profiles.filter(profile => profile.bioguideId === bioguide);
+      if (matches.length > 1) throw new Error(`Ambiguous normalized PRL identity ${bioguide}`);
+      return matches[0] ? projectPrlProfile(matches[0], held.value) : null;
+    }
+  } else {
+    const current = await readPublishedArraySlice<NonNullable<PrlSnapshot["releases"]>[number]>({ recordClass: "PRL_PROFILE", scope: PRL_CONTRACT.scope,
+      path: ["releases"], statePath: ["kind"], statePattern: "^prl-profiles$" });
+    if (current && current.sourceId !== "prl") throw new Error("PRL_PROFILE_SOURCE_MISMATCH");
+    release = current?.records[0];
+    fetchedAt = current?.retrievedAt ?? "";
+    if (!release) {
+      const legacy = await readPublishedArraySlice<PrlMemberProfile>({ recordClass: "PRL_PROFILE", scope: "US:congressional-rhetoric:attributed-profiles",
+        path: ["profiles"], statePath: ["bioguideId"], statePattern: `^${bioguide}$` });
+      if (!legacy || legacy.records.length === 0) return null;
+      if (legacy.sourceId !== "prl") throw new Error("PRL_PROFILE_SOURCE_MISMATCH");
+      if (legacy.records.length > 1) throw new Error(`Ambiguous normalized PRL identity ${bioguide}`);
+      return projectPrlProfile(legacy.records[0], { fetchedAt: legacy.retrievedAt, sourceUrl: url, attribution: PRL_RHETORIC_ATTRIBUTION });
+    }
+  }
+  if (release.kind !== "prl-profiles" || !Number.isSafeInteger(release.subjectCount) || release.subjectCount <= 0 ||
+      release.objectRoot !== `profiles-national/${release.sourceSha256}/prl-ingest-3`) throw new Error("PRL_PROFILE_RELEASE_INVALID");
+  const profile = await readPrlProfileObject(options.archive ?? resolveS3ArchiveStore(), release.objectRoot, bioguide);
+  if (profile && profile.bioguideId !== bioguide) throw new Error("PRL_PROFILE_IDENTITY_MISMATCH");
+  return profile ? projectPrlProfile(profile as unknown as PrlMemberProfile, { fetchedAt, sourceUrl: url, attribution: PRL_RHETORIC_ATTRIBUTION }) : null;
 }

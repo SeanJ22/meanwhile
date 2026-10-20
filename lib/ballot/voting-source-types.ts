@@ -1,3 +1,4 @@
+import type { VotingCapture } from "./voting-source-fetch.ts";
 import type { SiteKind, VotingOfficeContact, VotingRule, VotingSite, VotingSource, VotingModel, VotingPublication, VotingBoundary } from "./voting-sites.ts";
 
 export type VotingDoorShape = "file" | "list-page" | "address-lookup" | "identity-locked-lookup" | "county-directory" | "vendor-platform" | "map-service" | "json";
@@ -95,18 +96,19 @@ export interface VotingSourceRead {
   sources: VotingSource[];
   blanks: VotingSourceBlank[];
   attempts: VotingSourceAttempt[];
-  rawBodies: { url: string; contentType: string; bytes: Uint8Array }[];
+  rawBodies: VotingCapture[];
   fileTitle?: string;
   fileUpdatedAt?: string;
   publicationMessage?: string;
 }
 export interface VotingAddressInput { address: string; streetNumber?: string; street?: string; city?: string; state?: string; zip?: string; }
 export interface VotingSourceRuntime {
-  captureCache?: Map<string, Promise<import("./voting-source-fetch.ts").VotingCapture[]>>;
+  /** Pass-local replay descriptors; completed response bytes stay on verified disk files. */
+  captureCache?: Map<string, Promise<VotingCapture[]>>;
   discoverySeen?: Set<string>;
   fetch: typeof fetch;
   deadlineMs?: number;
-  onDiscoveredDoor?: (door: VotingSourceDoor, captures: { url: string; contentType: string; bytes: Uint8Array }[]) => Promise<void>;
+  onDiscoveredDoor?: (door: VotingSourceDoor, captures: VotingCapture[]) => Promise<void>;
   onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void>;
   resolveAiannhGeoid?: (tribalNation: string, reservation: string, state: string) => string | null;
   resolveCountyFips?: (countyName: string, state: string) => string | null;

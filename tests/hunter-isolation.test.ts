@@ -1,3 +1,4 @@
+import { runLeaseWorkerProcesses } from "./helpers/worker-pool-results.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ChildProcess } from "node:child_process";
@@ -5,12 +6,12 @@ import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { runLeaseWorkerProcesses, STANDING_STARTUP_FAILURES, type StuckWorker } from "../lib/control-plane/workers/process-pool.ts";
+import { STANDING_STARTUP_FAILURES, type StuckWorker } from "../lib/control-plane/workers/process-pool.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_LANE_PROGRESS_EVERY_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress,
   stuckWorkerLine, type HunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import type { ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { RUNTIME_NO_PROGRESS_MS } from "../scripts/pilot-runtime-child.mts";
-import { hostMemoryReading, memoryReading } from "../lib/control-plane/workers/worker-slots.ts";
+import { hostMemoryReading, memoryReading, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 
 const config = (root: string, taskIds: string[]) => ({ root, postgres: false, taskIds, modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] });
@@ -188,13 +189,13 @@ test("isolation: a worker past its retirement age takes no further task, and a f
       setTimeout(() => {
         const replies = new Map();
         process.on('message', m => replies.get(m.id)?.(m.body));
-        replies.set('o1', order => {
-          if (!order.length) { appendFileSync('retired', String(process.pid) + '\\n'); process.send({ kind: 'finished', id: '', body: config.taskIds }); process.disconnect(); return; }
+        replies.set('o1', accepted => {
+          if (!accepted) { appendFileSync('retired', String(process.pid) + '\\n'); process.send({ kind: 'finished', id: '', body: [] }); process.disconnect(); return; }
           writeFileSync('worked', String(process.pid));
-          process.send({ kind: 'task-start', id: '', taskId: order[0], body: order[0] });
-          done(config, order[0]);
+          process.send({ kind: 'task-start', id: '', taskId: config.taskIds[0], body: config.taskIds[0] });
+          done(config, config.taskIds[0]);
         });
-        process.send({ kind: 'pending-order', id: 'o1', taskId: '', body: config.taskIds });
+        process.send({ kind: 'accept-task', id: 'o1', taskId: '', body: config.taskIds[0] });
       }, first ? 400 : 0);
     });`);
   try {
@@ -255,12 +256,12 @@ test("isolation: the lane says it is working only while workers move, with new t
 test("isolation: the lane hands a running wave the round's newer queue once, and never re-runs it as a wave", async () => {
   const T0 = Date.parse("2026-10-06T05:00:00.000Z");
   let now = T0;
-  const q1: HunterQueue = { format: 1, writtenAt: "q1", taskIds: ["a"], plainTaskIds: [] };
-  const q2: HunterQueue = { format: 1, writtenAt: "q2", taskIds: ["b"], plainTaskIds: [] };
+  const q1: HunterQueue = { format: 2, writtenAt: "q1", taskIds: ["a"], plainTaskIds: [], rank: () => 0, isPlain: () => false, close: () => {} };
+  const q2: HunterQueue = { format: 2, writtenAt: "q2", taskIds: ["b"], plainTaskIds: [], rank: () => 0, isPlain: () => false, close: () => {} };
   let written: HunterQueue = q1;
   const waves: string[] = [];
   const absorbed: (string | null)[] = [];
-  const armed = { closed: null, armedAt: new Date(T0).toISOString(), fleetSafety: null, guards: { openJobs: () => [] } as never,
+  const armed = { closed: null, armedAt: new Date(T0).toISOString(), fleetSafety: null, guards: { openJobs: () => [], pendingJobs: new Set() } as never,
     arming: null, spendHolds: { settle: async () => null } as never, ceilingUsd: 5, discoverySearchOn: false } as ArmedHunterLane;
   const log: string[] = [];
   const lane = hunterLane({
@@ -277,7 +278,7 @@ test("isolation: the lane hands a running wave the round's newer queue once, and
       absorbed.push(absorb()?.writtenAt ?? null);
       now += 31_000;
       absorbed.push(absorb()?.writtenAt ?? null);
-      return [];
+      return { dispatched: 0, attempted: 0, worked: 0, scoutsAdmitted: 0 };
     },
     stopRequested: () => false,
     log: line => log.push(line),
@@ -291,17 +292,20 @@ test("isolation: the lane hands a running wave the round's newer queue once, and
 
 test("isolation: the runner's heartbeat carries the host's memory, its process tree, the reservations and how many workers fit", async () => {
   const MIB = 1024 * 1024;
+  const leasePeak = WORKER_ENTRY_PEAK_MIB.lease!;
   const reading = memoryReading({ at: "2026-10-06T05:30:00.000Z", totalBytes: 8192 * MIB, availableBytes: 3000 * MIB, rootPid: 10,
     rows: [{ pid: 10, parentPid: 1, rss: 100 * MIB }, { pid: 11, parentPid: 10, rss: 900 * MIB }, { pid: 12, parentPid: 11, rss: 200 * MIB },
       { pid: 13, parentPid: 12, rss: 50 * MIB }, { pid: 99, parentPid: 1, rss: 500 * MIB }],
-    state: { parents: [{ pid: 11, peak: 1000 * MIB }], reservations: [{ pid: 12, peak: 342 * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
+    state: { parents: [{ pid: 11, peak: 1000 * MIB }], reservations: [{ pid: 12, peak: leasePeak * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
   assert.equal(reading.runnerTreeRssBytes, 1250 * MIB, "the runner and everything under it, not other host processes");
   assert.equal(reading.runnerTreeProcesses, 4);
   assert.deepEqual(reading.parents, [{ pid: 11, peakBytes: 1000 * MIB, rssBytes: 900 * MIB }]);
-  assert.deepEqual(reading.reservations, [{ entry: "lease-worker.ts", peakBytes: 342 * MIB, rssBytes: 250 * MIB }], "a worker's tree, grandchildren included");
-  assert.equal(reading.reservedGrowthBytes, (100 + 92) * MIB);
+  assert.deepEqual(reading.reservations, [{ entry: "lease-worker.ts", peakBytes: leasePeak * MIB, rssBytes: 250 * MIB }], "a worker's tree, grandchildren included");
+  const reservedGrowth = 100 + Math.max(0, leasePeak - 250);
+  assert.equal(reading.reservedGrowthBytes, reservedGrowth * MIB);
   assert.equal(reading.headroomBytes, 768 * MIB);
-  assert.equal(reading.fitLeaseWorkers, Math.floor((3000 - 768 - 192) / 342), "admission's own arithmetic at the 0.75 GiB margin");
+  assert.equal(reading.leaseWorkerPeakBytes, leasePeak * MIB);
+  assert.equal(reading.fitLeaseWorkers, Math.floor((3000 - 768 - reservedGrowth) / leasePeak), "admission's own arithmetic at the 0.75 GiB margin");
   assert.equal(memoryReading({ ...reading, rootPid: 10, rows: [], state: null, availableBytes: 500 * MIB }).fitLeaseWorkers, 0, "never negative");
   const live = await hostMemoryReading();
   assert.ok(live.totalBytes > 0 && live.availableBytes > 0 && live.runnerTreeProcesses >= 1);

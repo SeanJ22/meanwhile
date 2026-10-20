@@ -5,6 +5,8 @@ import {
   OWNER_SURFACE_FORMAT_VERSION,
   assertAggregateOnly,
   type FreshnessCycleOutcome,
+  type FreshnessIncidentSummary,
+  type FreshnessDetailReference,
   intakeRuntimeObservationOutcomeIssue,
   type IntakeRuntimeObservationOutcome,
   type MapTilerUsageCollectionOutcome,
@@ -15,6 +17,7 @@ import {
   type RoutineCivicDataTaskReceiptReference,
 } from "./owner-surface.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "./repository/types.ts";
+import { readFreshnessIncidentReference } from "./admin-view/freshness-report-read.ts";
 import type { MapTilerUsageSnapshot } from "./maptiler/types.ts";
 import {
   intakeRuntimeObservationCycleId,
@@ -340,17 +343,31 @@ export function routineSupervisorCycleIsolationIssue(
 }
 
 /** The fields of the newest cycle outcome that the owner snapshot shows. */
-export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
+export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk"> & {
+  readonly incidents: readonly FreshnessIncidentSummary[];
+  readonly incidentDetails?: FreshnessDetailReference;
+};
 
 /** The newest freshness cycle only, narrowed by the store; on the runner a held copy answers it. */
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
 ): Promise<{ readonly digestId: string; readonly outcome: LatestFreshnessCycle } | null> {
   const [digest] = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE", 1,
-    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidents"] }) as
-    readonly { readonly digestId?: string; readonly runtimeOutcome?: LatestFreshnessCycle }[];
+    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidentSummary"] }) as
+    readonly { readonly digestId?: string; readonly runtimeOutcome?: Omit<LatestFreshnessCycle, "incidents"> & {
+      readonly incidentSummary?: readonly FreshnessIncidentSummary[];
+    } }[];
   const outcome = digest?.runtimeOutcome;
-  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") return { digestId: digest.digestId, outcome };
+  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") {
+    const { incidentSummary, ...summary } = outcome;
+    const count = Number(outcome.risk?.incidents ?? 0);
+    const incidents = incidentSummary ?? (count > 0 ? [{
+      cause: "DETAILS_NOT_SUMMARIZED", target: "Recorded in the earlier cycle report", incidents: count,
+      obligationsAffected: Number(outcome.risk?.debtRows ?? 0),
+    }] : []);
+    const incidentDetails = await readFreshnessIncidentReference(repos, outcome.cycleId);
+    return { digestId: digest.digestId, outcome: { ...summary, incidents, ...(incidentDetails ? { incidentDetails } : {}) } };
+  }
   return null;
 }
 

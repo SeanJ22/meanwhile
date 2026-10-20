@@ -17,7 +17,7 @@
  *    hosts the CRS summary the surface links to)
  *
  * The Senate keys members by LIS id, not bioguide, so the public-domain
- * legislators-current.json provides the lis→bioguide bridge — and the run
+ * commit-pinned legislators-current.yaml provides the lis→bioguide bridge — and the run
  * PRINTS the identifier match rates with denominators; a zero-match join must
  * be loud.
  *
@@ -26,17 +26,13 @@
  * scheduler and never changes a tracked file or invokes a software release.
  */
 import type {
-  MemberVote,
   RollCallVote,
   VotePosition,
-  VotesSnapshot,
 } from "../lib/votes/types.ts";
-import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
-  type OfficialAcquisition } from "../lib/votes/data-plane.ts";
-import {
-  billSummariesForRollCallAcquisition,
-  readFederalRollCallsProjection,
-} from "../lib/votes/snapshot.ts";
+import { federalMemberVotesCandidate, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
+  type HeldAcquisition, type FederalRollCallWindow, type FederalRollCallsReadModel } from "../lib/votes/data-plane.ts";
+import { loadVoteIdentityBridge, withVoteWorkingSet } from "../lib/votes/working-set.ts";
+import { partyBreakdownFor } from "../lib/votes/party-breakdown.ts";
 import { windowStart } from "../lib/votes/catch-up.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -54,10 +50,13 @@ const WINDOW = windowArg === -1 ? 20 : Number(process.argv[windowArg + 1]);
 if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this command has no tracked-output mode");
 prepareProductionCivicDataWrite();
 
+await withVoteWorkingSet(async working => {
 const store = new PostgresRoutineDataStore();
-const previous = await readFederalRollCallsProjection({ store, bypassCache: true });
-const billSummaries = billSummariesForRollCallAcquisition(previous);
-const acquisitions: OfficialAcquisition[] = [];
+const previous = await store.readFederalRollCallPublicationBase();
+if (!previous.current) throw new Error("FEDERAL_ROLL_CALL_HOLDING_NOT_RECORDED");
+const heldRolls = previous.current.payload as FederalRollCallsReadModel;
+const billSummaries = heldRolls.billSummaries;
+const acquisitions: HeldAcquisition[] = [];
 let failureRecorded = false;
 
 async function recordFailure(url: string, detail: string): Promise<void> {
@@ -90,7 +89,7 @@ async function get(url: string, proveOfficial: boolean = true): Promise<string> 
     throw new Error(`${url} -> HTTP ${response.status}`);
   }
   const body = await response.text();
-  if (proveOfficial) acquisitions.push({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body });
+  if (proveOfficial) acquisitions.push(...heldAcquisitions([{ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body }]));
   return body;
 }
 
@@ -109,19 +108,9 @@ function mapPosition(raw: string): VotePosition | null {
 }
 
 // ---- The wired federal members and the LIS bridge --------------------------
-const legislators = JSON.parse(
-  await get(
-    "https://unitedstates.github.io/congress-legislators/legislators-current.json",
-    false,
-  ),
-) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
-const lisToBioguide = new Map<string, string>();
-const bioguides = new Set<string>();
-const parties = new Map<string, string | null>();
-for (const person of legislators) {
-  bioguides.add(person.id.bioguide);
-  parties.set(`congress:${person.id.bioguide}`, person.terms?.at(-1)?.party ?? null);
-  if (person.id.lis) lisToBioguide.set(person.id.lis, person.id.bioguide);
+try { await loadVoteIdentityBridge(working); } catch(error) {
+  await recordFailure("https://www.senate.gov/legislative/", `Current federal identity bridge failed: ${String(error)}`);
+  throw error;
 }
 
 // ---- House ---------------------------------------------------------------
@@ -147,13 +136,13 @@ async function latestHouseRoll(): Promise<number> {
 }
 
 const votes: RollCallVote[] = [];
-const positions: MemberVote[] = [];
+
 const billNums = new Set<string>();
 let houseMatched = 0;
 let houseTotal = 0;
 
 // Each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
-const heldWindow = previous.kind === "PROMOTED" || previous.kind === "BOOTSTRAP" ? previous.value.snapshot.window : null;
+const heldWindow = heldRolls.snapshot.window;
 const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
 const houseWindow = windowStart({ latest: latestHouse, previousNewest: newestHeld(heldWindow?.houseRolls), window: WINDOW });
@@ -208,11 +197,11 @@ for (const n of houseRolls) {
     /<recorded-vote>\s*<legislator name-id="([^"]+)"[^>]*>[^<]*<\/legislator>\s*<vote>([^<]+)<\/vote>\s*<\/recorded-vote>/g,
   )) {
     houseTotal++;
-    if (!bioguides.has(m[1])) continue;
+    if (!working.hasBioguide(m[1])) continue;
     houseMatched++;
     const position = mapPosition(m[2]);
     if (!position) continue;
-    positions.push({ officeholderId: `congress:${m[1]}`, voteId: id, position });
+    working.position(`congress:${m[1]}`, id, position);
   }
 }
 
@@ -274,16 +263,12 @@ for (const entry of senateWindow) {
     /<member>[\s\S]*?<vote_cast>([^<]+)<\/vote_cast>\s*<lis_member_id>([^<]+)<\/lis_member_id>[\s\S]*?<\/member>/g,
   )) {
     senateTotal++;
-    const bioguide = lisToBioguide.get(m[2]);
+    const bioguide = working.bioguideForLis(m[2]);
     if (!bioguide) continue;
     senateMatched++;
     const position = mapPosition(m[1]);
     if (!position) continue;
-    positions.push({
-      officeholderId: `congress:${bioguide}`,
-      voteId: id,
-      position,
-    });
+    working.position(`congress:${bioguide}`, id, position);
   }
 }
 
@@ -324,7 +309,7 @@ if (apiKey) {
       );
       if (!response.ok) continue;
       const raw = await response.text();
-      acquisitions.push({ requestedUrl, finalUrl: requestedUrl, httpStatus: response.status, body: raw });
+      acquisitions.push(...heldAcquisitions([{ requestedUrl, finalUrl: requestedUrl, httpStatus: response.status, body: raw }]));
       const data = JSON.parse(raw) as {
         bill?: { title?: string };
       };
@@ -367,7 +352,7 @@ if (apiKey) {
   console.warn("CONGRESS_API_KEY not set — titles stay on the chambers' own wording");
 }
 
-const snapshot: VotesSnapshot = {
+const window: FederalRollCallWindow = {
   generatedAt: new Date().toISOString(),
   congress: CONGRESS,
   session: SESSION,
@@ -377,16 +362,18 @@ const snapshot: VotesSnapshot = {
   },
   identifierMatch: { houseMatched, houseTotal, senateMatched, senateTotal },
   votes,
-  positions,
 };
 
-const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
-const { positions: _positions, ...window } = snapshot;
+if (houseTotal > 0 && houseMatched / houseTotal < 0.95 || senateTotal > 0 && senateMatched / senateTotal < 0.95 || working.positionCount===0) {
+  const detail=`Federal vote identity join incomplete: house ${houseMatched}/${houseTotal}, Senate ${senateMatched}/${senateTotal}, ${working.positionCount} positions`;
+  await recordFailure(acquisitions[0]?.requestedUrl??"https://www.senate.gov/legislative/",detail);
+  throw new Error(detail);
+}
+const attemptedAt = new Date().toISOString(), held = acquisitions;
 // A member no roll in this window records keeps the record from the last window that did.
-const byMember = new Map<string, MemberVote[]>();
-for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
 const refused: string[] = [];
-for (const [officeholderId, recorded] of byMember) {
+for (const officeholderId of working.members()) {
+  const recorded = working.positionsForMember(officeholderId);
   const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
   const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
   if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
@@ -395,13 +382,17 @@ if (refused.length) {
   await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
   throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
 }
+const partyBreakdowns: FederalRollCallsReadModel["partyBreakdowns"] = Object.fromEntries(votes.map(vote=>{
+  const positions=working.positionsForRoll(vote.id), parties=new Map(positions.map(row=>[row.officeholderId,working.party(row.officeholderId)]));
+  return [vote.id,partyBreakdownFor(vote.id,vote.result,positions,parties)];
+}));
 const candidate = federalRollCallsCandidate({
   acquisitions: held,
   retrievedAt: attemptedAt,
   expectedCongress: CONGRESS,
   expectedSession: SESSION,
   snapshot: window,
-  partyBreakdowns: federalPartyBreakdowns(snapshot, parties),
+  partyBreakdowns,
   billSummaries,
 });
 const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);
@@ -414,21 +405,11 @@ console.log(
   `senate: ${senateWindow.length} votes (${senateWindow[0]?.number}–${senateWindow[senateWindow.length - 1]?.number}), identifier match ${senateMatched}/${senateTotal}`,
 );
 console.log(
-  `${votes.length} votes, ${positions.length} member positions, ${titled} title assignments from Congress.gov → ${outcome.candidate.state} ${candidate.id}`,
+  `${votes.length} votes, ${working.positionCount} member positions, ${titled} title assignments from Congress.gov → ${outcome.candidate.state} ${candidate.id}`,
 );
 
-if (houseTotal > 0 && houseMatched / houseTotal < 0.95) {
-  console.error("house identifier match below 95% — the join is broken, not clipped");
-  process.exit(1);
-}
-if (senateTotal > 0 && senateMatched / senateTotal < 0.95) {
-  console.error("senate identifier match below 95% — the join is broken, not clipped");
-  process.exit(1);
-}
-if (positions.length === 0) {
-  console.error("zero positions extracted — that is a finding, not a success");
-  process.exit(1);
-}
 if (outcome.candidate.state !== "PROMOTED") {
   throw new Error(`FEDERAL_ROLLCALL_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
 }
+
+});

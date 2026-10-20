@@ -1,6 +1,7 @@
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
+import { MEMBER_OFFICE_STATES, memberOfficeContractId, memberOfficeScope } from "../officials/member-office-scope.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 
@@ -10,6 +11,7 @@ export interface ManualProductionSourceContract {
   readonly sourceId: SourceAuthorityId;
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
+  readonly fanOut?: boolean;
   readonly command: readonly string[];
   readonly parserNormalizerVersion: string;
   readonly authorityConstraint: {
@@ -127,6 +129,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   })),
   {
     id: "congress-rollcalls",
+    fanOut: true,
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "federal-legislative-records",
     recordClass: "FEDERAL_ROLL_CALL",
@@ -143,6 +146,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
   },
   {
     id: "federal-key-votes",
+    fanOut: true,
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "federal-legislative-records",
     recordClass: "FEDERAL_KEY_VOTE",
@@ -326,9 +330,9 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "prl",
     recordClass: "PRL_PROFILE",
-    scope: "US:congressional-rhetoric:attributed-profiles",
+    scope: "US:prl:profiles-release",
     command: ["scripts/prl-refresh.mts", "--promote", "--dataset=profiles-national"],
-    parserNormalizerVersion: "prl-rhetoric/2",
+    parserNormalizerVersion: "prl-rhetoric/3",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "prl" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
@@ -342,9 +346,9 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "prl",
     recordClass: "PRL_ARCHIVE",
-    scope: "US:prl:known-archives",
+    scope: "US:prl:archive-releases",
     command: ["scripts/prl-refresh.mts", "--promote", "--archives"],
-    parserNormalizerVersion: "prl-ingest/2",
+    parserNormalizerVersion: "prl-rhetoric/3",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "prl" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
@@ -433,29 +437,30 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     bootstrapFixturePaths: ["lib/officials/campaign-sites.ts"],
     lkgBehavior: "A failed site verification, retired identity, or missing exact source receipt holds only campaign-site bindings and leaves their prior GOOD version live.",
   },
-  {
+  ...MEMBER_OFFICE_STATES.map(state => ({
     // Open States may supply a legislator's offices; official values win, and an office no official page states carries `official: false`.
-    id: "member-offices",
+    id: memberOfficeContractId(state),
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US:state-legislator-member-offices",
-    command: ["scripts/publish-member-offices.mts", "--promote"],
+    scope: memberOfficeScope(state),
+    command: ["scripts/publish-member-offices.mts", "--promote", `--state=${state}`],
     parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: "state-legislator-member-offices", consumers: ["directory", "ballot", "map"] },
+    readerProjection: { id: memberOfficeContractId(state), consumers: ["directory", "ballot", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
     lkgBehavior: "A state whose official roster or Open States file cannot be read is a gap and keeps its prior GOOD offices; an office with no exact roster member, address or phone is never published; a refused pass leaves the prior GOOD version live.",
-  },
+  } as const)),
   {
     id: "venue-resolutions",
+    fanOut: true,
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
     sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US-AZ+US-NH+US-NJ:reviewed-venue-resolutions",
+    scope: "venue-resolutions:release",
     command: ["scripts/promote-manual-civic-projection.mts", "--contract=venue-resolutions"],
     parserNormalizerVersion: "curated-reader-records/2",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },

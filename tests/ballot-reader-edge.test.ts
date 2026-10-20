@@ -1,3 +1,4 @@
+import { fundingFixtureEntries } from "./helpers/funding-fixture.ts";
 import { currentStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -31,7 +32,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import {
   candidateProfilesReadState,
 } from "../lib/civic-data/manual-read-models.ts";
-import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { fundingReadState } from "../lib/funding/snapshot.ts";
 import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
@@ -99,7 +100,6 @@ const corpus = syntheticCandidateCorpus();
 const federal = syntheticFederalDirectory();
 const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
   provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
-const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
 const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
 const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
 // The published Census edge resolves 07960 into both NJ congressional districts.
@@ -128,7 +128,6 @@ const navigation = {
 };
 
 const manual = manualEdgeEntry;
-const fec = requiredRoutineContract("fec-funding");
 const nhRoster = requiredRoutineContract("nh-members");
 const EDGE = {
   ballots: "edge-test:ballot:national",
@@ -144,7 +143,7 @@ const PROMOTED_BALLOT_FAMILIES: Partial<Record<GlobalPromotedAuthorityFamily, { 
   "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
   "federal-funding": promotedFamily([
-    provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding }),
+    ...fundingFixtureEntries(EDGE.funding),
     manual("campaign-finance", { kind: "campaign-finance", records: [] }, EDGE.campaignFinance),
   ], EDGE.funding),
   "state-money": promotedFamily(stateMoneyFixtureEntries(EDGE.stateMoney), "edge-test:ballot:money"),
@@ -343,7 +342,7 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
   for (const [what, state, version] of withReaderSelection(readerSelection, () => [
     ["the candidate profiles", candidateProfilesReadState("AZ"), EDGE.profiles],
     ["the candidate publications", currentStateAuthorityProjection("candidate-publications", "AZ")!.result, EDGE.corpus],
-    ["FEC funding", fundingReadState(), EDGE.funding],
+    ["FEC funding", fundingReadState(), `${EDGE.funding}:AZ`],
     ["Arizona money", stateMoneyReadState("AZ"), EDGE.stateMoney("AZ")],
   ] as const)) {
     assert.equal(state.kind, "PROMOTED", `${what} was not read as the promoted version`);

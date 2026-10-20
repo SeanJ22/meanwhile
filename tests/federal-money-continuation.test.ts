@@ -34,7 +34,7 @@ test("verified partial national acquisition resumes on the next admission while 
   const pending = { lastAttemptedAt: AT, lastSucceededObservedAt: AT, continuationPending: true };
   assert.equal(routineTaskDue({ ...task, scope: "openfema:AR" }, pending, Date.parse(AT) + 1), false, "state pointers never own source admission");
   assert.equal(routineTaskDue({ ...task, contract: { ...task.contract, fanOut: undefined } }, pending, Date.parse(AT) + 1), false);
-  const fec = routineTaskFromContract(requiredRoutineContract("fec-funding"));
+  const fec = routineTaskFromContract(requiredRoutineContract("fec-funding:AZ"));
   assert.equal(routineTaskDue(fec, pending, Date.parse(AT) + 5 * 60_000), false, "unrelated schedules ignore continuation metadata");
 });
 
@@ -72,5 +72,5 @@ test("Postgres computes only the marker's continuation flag inside the normal ba
   assert.match(query, /'BACKFILL'/);
   assert.match(query, /'cursor'/);
   assert.doesNotMatch(query, /"payload"\s*,/, "the complete marker payload never leaves Postgres for admission");
-  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql, /jsonb_array_elements/);
+  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "US-AZ:fec-funding:v1").toSQL().sql, /jsonb_array_elements/);
 });

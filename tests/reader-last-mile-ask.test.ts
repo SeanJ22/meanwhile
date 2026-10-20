@@ -47,6 +47,11 @@ import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import type { CandidacyRemoval } from "../lib/ballot/types.ts";
 import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { PGlite } from "@electric-sql/pglite";
+import { PUBLISHED_ARRAY_SLICE_SQL } from "../lib/civic-data/published-array-slice.ts";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
+import { fundingFixtureForState } from "./helpers/funding-fixture.ts";
+import { insertPublishedSliceFixture, PUBLISHED_SLICE_FIXTURE_SCHEMA } from "./helpers/published-slice-fixture.ts";
 
 function withAzMeasures(value: BallotSet, races: readonly TestRace[], records: readonly MeasureRecord[] = []): BallotSet {
   const raw = rawBallot("AZ", races);
@@ -420,13 +425,40 @@ test("Hobbs ballot and map Ask answers share canonical candidacy and values; Big
 });
 
 test("a direct held federal official remains answerable without a ballot candidacy", async () => {
-  const body = await ask("How much campaign money has Mark Kelly raised?");
-  assert.equal(body.subject?.id, "congress:K000377");
-  const record = body.records.find((record) => record.id.startsWith("fec:"));
-  assert.ok(record?.sourceUrl, JSON.stringify({ gaps: body.gaps, denominators: body.denominators, preloads: body.trace.preloadSources }));
-  assert.equal(body.denominators.federalFinanceRecordsReturned, 1);
-  assert.equal(body.denominators.governorLettersIndexedAtCollection, undefined);
-  assert.ok(body.gaps.every((gap) => !/letters about individual bills|bills she signed|executive orders we indexed/.test(gap.statement)), "another office's collection gaps must not attach to this person");
+  const pg = new PGlite(), previousQuery = readerDatabaseQuery(), funding = fundingFixtureForState("AZ");
+  const expected = funding.candidates.find(candidate => candidate.targetKeys.includes("congress:K000377"))!;
+  assert.ok(expected, "the state FEC holding contains this exact native member identity");
+  assert.equal(resolvedCandidacyForOfficial("congress:K000377"), null);
+  try {
+    await pg.exec(PUBLISHED_SLICE_FIXTURE_SCHEMA);
+    await insertPublishedSliceFixture(pg, { id: "test:ask-fec:AZ", sourceId: "fec-open-api", recordClass: "FEC_FUNDING",
+      scope: "US-AZ:fec-funding:v1", readModel: funding, at: funding.fetchedAt });
+    installReaderDatabaseQuery(async statements => {
+      const results = [];
+      for (const statement of statements) {
+        if (statement.text === PUBLISHED_ARRAY_SLICE_SQL && statement.params[0] === "FEC_FUNDING") {
+          assert.equal(statement.params[1], "US-AZ:fec-funding:v1", "this official needs only the AZ funding pointer");
+          results.push((await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows);
+        } else {
+          assert.ok(previousQuery);
+          results.push((await previousQuery([statement]))[0]);
+        }
+      }
+      return results;
+    });
+    const body = await ask("How much campaign money has Mark Kelly raised?");
+    assert.equal(body.subject?.id, "congress:K000377");
+    const record = body.records.find((record) => record.id.startsWith("fec:"));
+    assert.ok(record?.sourceUrl, JSON.stringify({ gaps: body.gaps, denominators: body.denominators, preloads: body.trace.preloadSources }));
+    assert.equal(record.id, `fec:${expected.fecCandidateId}`);
+    assert.deepEqual(record.fecProfile, { candidateId: expected.fecCandidateId, name: "Mark Kelly", personId: "congress:K000377" });
+    assert.equal(body.denominators.federalFinanceRecordsReturned, 1);
+    assert.equal(body.denominators.governorLettersIndexedAtCollection, undefined);
+    assert.ok(body.gaps.every((gap) => !/letters about individual bills|bills she signed|executive orders we indexed/.test(gap.statement)), "another office's collection gaps must not attach to this person");
+  } finally {
+    installReaderDatabaseQuery(previousQuery);
+    await pg.close();
+  }
 });
 
 test("Ask retains Positions' exact page passages in AZ, NJ, and NH without inventing speaker attribution", async () => {

@@ -6,12 +6,13 @@ import {
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
   CENSUS_GEO_SCHEMA_VERSION,
-  CENSUS_GEO_SCOPE,
   CENSUS_GEO_SOURCE_ID,
   CENSUS_GEO_SOURCE_ROUTE,
+  censusGeographyScope,
 } from "./publication.ts";
 
-export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidate {
+export function censusGeographyCandidate(dataset: BuiltDataset, state: string): RoutineCandidate {
+  const scope = censusGeographyScope(state);
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
@@ -25,22 +26,21 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
   const violations: string[] = [];
   if (dataset.scopes.length === 0) violations.push("The census-geography dataset has no scopes.");
   for (const s of dataset.scopes) {
-    if (s.instanceCount === 0) violations.push(`Scope ${s.version} has no groupings.`);
-    if (s.zctaEdgeCount === 0) violations.push(`Scope ${s.version} has no ZCTA overlaps.`);
+    if (s.versionMeta.retrievalComplete === false) violations.push(`Scope ${s.version} has an incomplete source retrieval.`);
   }
 
   // One identity per grouping: an official Census GEOID, never invented.
   const identities = dataset.scopes.flatMap((s) =>
     s.groupings.map((g) => ({
       subjectId: `${s.type}:${g.geoid}:${s.version}`,
-      jurisdiction: "US",
+      jurisdiction: `US-${state.toUpperCase()}`,
       identifiers: { type: s.type, geoid: g.geoid, version: s.version, state_fips: g.stateFips },
       matchBasis: "OFFICIAL_ID" as const,
       ambiguous: false,
     })),
   );
 
-  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
+  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${scope}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
   const readModelHash = sha256(canonicalCivicDataJson(dataset));
   // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
@@ -63,8 +63,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     id,
     sourceId: CENSUS_GEO_SOURCE_ID,
     recordClass: CENSUS_GEO_RECORD_CLASS,
-    scope: CENSUS_GEO_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, scope),
     retrieval: {
       succeeded: true,
       requestedUrl: CENSUS_GEO_SOURCE_ROUTE,

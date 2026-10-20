@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 import test from "node:test";
 
-import { MemoryRoutineDataStore, pdcV2CanonicalMeetingFactEvidence } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 
@@ -81,7 +81,7 @@ test("a proven read in a fresh process still runs the full proof; later reads sh
   }
   const promotedStore = async (): Promise<CountingStore> => {
     const store = new CountingStore();
-    const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", provenFundingCandidate(), PROVEN_AT);
+    const outcome = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", provenFundingCandidate(), PROVEN_AT);
     assert.ok(outcome.promoted);
     Object.assign(store.reads, { promotion: 0, candidate: 0 });
     return store;
@@ -91,21 +91,21 @@ test("a proven read in a fresh process still runs the full proof; later reads sh
   // candidate does not back is refused exactly as a bypassing read refuses it.
   const tampered = await promotedStore();
   tampered.tamper = true;
-  await assert.rejects(refreshFundingFromPromoted({ store: tampered }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
-  await assert.rejects(refreshFundingFromPromoted({ store: tampered, bypassCache: true }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
+  await assert.rejects(refreshFundingFromPromoted({ state: "AZ", store: tampered }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
+  await assert.rejects(refreshFundingFromPromoted({ state: "AZ", store: tampered, bypassCache: true }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
 
   // Concurrent loaders share one read and one proof; a later read of the
   // unmoved pointer asks its identity only.
   const store = await promotedStore();
-  const [first, second] = await Promise.all([refreshFundingFromPromoted({ store }), refreshFundingFromPromoted({ store })]);
+  const [first, second] = await Promise.all([refreshFundingFromPromoted({ state: "AZ", store }), refreshFundingFromPromoted({ state: "AZ", store })]);
   assert.equal(first, second);
   assert.deepEqual(store.reads, { promotion: 1, candidate: 1 }, "one read and one proof for concurrent loaders");
-  assert.equal(await refreshFundingFromPromoted({ store }), first);
+  assert.equal(await refreshFundingFromPromoted({ state: "AZ", store }), first);
   assert.deepEqual(store.reads, { promotion: 1, candidate: 1 }, "an unmoved pointer is served from this process's proof");
 
   // Bypassing skipped both: every loader downloaded and proved the family again.
   const bypassing = await promotedStore();
-  await Promise.all([refreshFundingFromPromoted({ store: bypassing, bypassCache: true }), refreshFundingFromPromoted({ store: bypassing, bypassCache: true })]);
-  await refreshFundingFromPromoted({ store: bypassing, bypassCache: true });
+  await Promise.all([refreshFundingFromPromoted({ state: "AZ", store: bypassing, bypassCache: true }), refreshFundingFromPromoted({ state: "AZ", store: bypassing, bypassCache: true })]);
+  await refreshFundingFromPromoted({ state: "AZ", store: bypassing, bypassCache: true });
   assert.deepEqual(bypassing.reads, { promotion: 3, candidate: 3 });
 });

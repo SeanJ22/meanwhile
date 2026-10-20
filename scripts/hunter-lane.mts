@@ -85,8 +85,10 @@ const lane = hunterLane({
   },
   runWave: async ({ queue, paidOpen, deadlineMs, absorb }) => {
     const armed = lane.current();
-    const plain = new Set(queue.plainTaskIds);
-    const funded = new Set(armed.arming?.lifetimeHuntSubjects ?? []);
+    const queues = [queue];
+    let latestQueue = queue;
+    const isPlain = (id: string): boolean => queues.some(held => held.isPlain(id));
+    const isFundedSubject = (subject: string): boolean => lane.current().arming?.lifetimeHuntSubjects.has(subject) ?? false;
     /* Paid search, under the owner's switch and the same durable budget the round uses; admitted by the lane's current Fleet controller. */
     const search = (() => {
       if (!paidOpen || !armed.discoverySearchOn || armed.fleetSafety === null) return null;
@@ -101,16 +103,13 @@ const lane = hunterLane({
     })();
     const slots = reportingWorkerSlots(workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
       { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !drain && Date.now() < deadlineMs }));
-    const taskIds = paidOpen ? queue.taskIds : queue.taskIds.filter(id => plain.has(id));
-    const order = new Map(queue.taskIds.map((id, index) => [id, index] as const));
+    const taskIds = paidOpen ? queue.taskIds : queue.plainTaskIds;
     /* A queue the round writes while this wave runs joins it: its tasks go to fresh workers, in its order, and nothing waits for the slowest worker. */
-    const moreTasks = (): readonly string[] => {
+    const moreTasks = (): Iterable<string> => {
       const next = absorb();
       if (next === null) return [];
-      for (const id of next.plainTaskIds) plain.add(id);
-      order.clear();
-      next.taskIds.forEach((id, index) => order.set(id, index));
-      return paidOpen ? next.taskIds : next.taskIds.filter(id => plain.has(id));
+      queues.push(next); latestQueue = next;
+      return paidOpen ? next.taskIds : next.plainTaskIds;
     };
     const progress = hunterLaneProgress({ log: say });
     /* No dispatch deadline: a worker is never ended mid-task by the lane's life. At the end of its life, or on a release drain,
@@ -124,17 +123,18 @@ const lane = hunterLane({
         onStuck: worker => { progress.stuck(); say(stuckWorkerLine(worker)); } },
       slots,
       config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
-        get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [...funded] },
-      capacity: () => {
+        get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [] },
+      isFundedSubject,
+      capacity: count => {
         const current = lane.current();
-        const paid = current.guards === null ? 0 : current.guards.paidWorkerCapacity(taskIds.length);
-        return Math.min(taskIds.length, taskIds.filter(id => plain.has(id)).length + paid);
+        const paid = current.guards === null ? 0 : current.guards.paidWorkerCapacity(count);
+        return Math.min(count, queues.reduce((sum, held) => sum + held.plainTaskIds.length, 0) + paid);
       },
       transportFor: laneWorkerTransport(lane.current, ownSpend, nowIso),
-      ...(search === null ? {} : { searchFor: (subject: string) => funded.has(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
+      ...(search === null ? {} : { searchFor: (subject: string) => isFundedSubject(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
       /* While paid work is held, only plain-code tasks are handed out; the round's order otherwise. */
-      orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || plain.has(id))
-        .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
+      orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || isPlain(id))
+        .sort((a, b) => latestQueue.rank(a) - latestQueue.rank(b)),
       onDispatched: result => {
         progress.taskDone();
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }

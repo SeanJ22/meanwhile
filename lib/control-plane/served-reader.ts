@@ -1,5 +1,6 @@
 /** Public delivery evidence belongs to an exact approval and Reader key, never a fleet counter. */
 export interface ServedReaderWitness {
+  readonly stateCode?: string;
   readonly itemId: string;
   readonly approvalId: string;
   readonly versionId: string;
@@ -15,6 +16,9 @@ export interface ServedReaderReadback {
   readonly syntheticRunId?: string;
   readonly witnesses: readonly ServedReaderWitness[];
   readonly errors: readonly string[];
+  /** The detailed witnesses live in these existing per-state snapshot rows. */
+  readonly stateScopes?: readonly string[];
+  readonly witnessCount?: number;
 }
 export const SERVED_READER_MAX_AGE_MS = 3 * 60 * 60 * 1000;
 /** Preserve a failed readback's exact reason without counting it as delivery. */

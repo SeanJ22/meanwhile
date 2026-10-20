@@ -370,7 +370,7 @@ test("the shared pacing store takes a request under one row lock and says when t
     calls.push({ text, params });
     if (text === WEBSITE_TAKE_SQL) return full ? [] : [{ site: params[0] }];
     if (text.startsWith("SELECT min(t)")) return [{ oldest: new Date("2026-10-07T15:20:00.000Z") }];
-    if (text.startsWith("SELECT site, hold_until")) return [{ site: "busy.example.gov", hold_until: "2026-10-07T16:30:00.000Z" }];
+    if (text.startsWith("SELECT hold_until")) return params[0] === "busy.example.gov" ? [{ hold_until: "2026-10-07T16:30:00.000Z" }] : [];
     return [];
   });
   assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: true });
@@ -379,7 +379,10 @@ test("the shared pacing store takes a request under one row lock and says when t
   assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: false, until: Date.parse("2026-10-07T16:20:00.000Z") });
   await pacing.hold("busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z"), Date.parse(NOW));
   assert.match(calls.at(-1)!.text, /hold_until = GREATEST\(COALESCE\(p\.hold_until, \$2::timestamptz\), \$2::timestamptz\)/);
-  assert.deepEqual([...await pacing.heldUntil(Date.parse(NOW))], [["busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z")]]);
+  assert.equal(await pacing.heldUntil("busy.example.gov", Date.parse(NOW)), Date.parse("2026-10-07T16:30:00.000Z"));
+  assert.equal(await pacing.heldUntil("other.example.gov", Date.parse(NOW)), null);
+  assert.deepEqual(calls.at(-1)!.params, ["other.example.gov", NOW]);
+  assert.match(calls.at(-1)!.text, /WHERE site=\$1 AND hold_until>\$2::timestamptz$/);
   assert.equal(websiteOf("https://WWW.SmallTown.example.gov/x"), "smalltown.example.gov", "one website however it is addressed");
 });
 

@@ -16,9 +16,9 @@ test("owner refresh accepts one exact registered partition and at most two attem
 });
 
 test("owner refresh also takes one exact registered routine source contract, never an unregistered id", async () => {
-  const sourceContract = "census-geography-overlaps";
+  const sourceContract = "census-geography-overlaps-az";
   assert.deepEqual(routineRefreshSelection([`--contract=${sourceContract}`]), { contractId: sourceContract, maximumAttempts: 1 });
-  for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
+  for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
     assert.throws(() => routineRefreshSelection(args), /OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED/);
   }
   const repos = await fixtureRepositories();

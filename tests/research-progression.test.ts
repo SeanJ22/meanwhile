@@ -5,6 +5,7 @@ import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinat
 import { readAutonomousActivity, projectAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { projectResearchProgression, readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { emptyKnowledge, unknownApplicability } from "../lib/method/knowledge.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import type { MethodCandidate } from "../lib/method/candidate.ts";
 import type { ConclusionRecord } from "../lib/method/conclusions.ts";
 
@@ -16,7 +17,7 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
     const run = await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
     assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
   }
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const result=projectResearchProgression({...window,activities});
   assert.equal(result.scope.obligations,1);
   assert.equal(result.milestones.discovered.newlyReached,1);
@@ -40,7 +41,7 @@ test("actual worker results are counted once; extraction and legacy PASS do not 
 
 test("uncommitted output and later evidence never manufacture earlier-window progress",async()=>{
   const h=await autonomousHarness(); await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:window.through}))[0];
+  const activity=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through}))[0];
   const record=activity.facts.workers[0];
   const broken=projectAutonomousActivity({...activity.facts,attempts:activity.facts.attempts.map(a=>a.id===record.attemptId?{...a,outcome:null,endedAt:null}:a)},{observedAt:window.through});
   const refused=projectResearchProgression({...window,activities:broken});
@@ -57,7 +58,7 @@ test("uncommitted output and later evidence never manufacture earlier-window pro
 test("a real worker wall remains a reusable bottleneck with its obligation and history retained",async()=>{
   const h=await autonomousHarness({response:{transportError:"timeout"}});
   await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const report=projectResearchProgression({...window,activities});
   assert.equal(report.milestones.acquired.newlyReached,0);
   const wall=report.bottlenecks.find(b=>b.code==="SOURCE_CURRENTLY_WALLED");
@@ -71,7 +72,7 @@ test("a real worker wall remains a reusable bottleneck with its obligation and h
 
 test("reopening is interval-scoped, and promoted or reader-visible counts are never invented",async()=>{
   const h=await autonomousHarness();
-  const activities=await readAutonomousActivity(h.repos,undefined,{observedAt:window.through});
+  const activities=await readAutonomousActivity(h.repos,[h.item.id],{observedAt:window.through});
   const at="2026-09-03T18:30:00.000Z";
   const changed=activities.map(a=>({...a,workItem:{...a.workItem,transitions:[...a.workItem.transitions,{from:"VERIFIED_COMPLETE" as const,to:"REOPENED" as const,at,by:"method-reopening",why:"New applicable method; prior proof preserved"}]}}));
   const report=projectResearchProgression({...window,activities:changed});
@@ -108,22 +109,42 @@ test("method admission, repeated inheritance, candidates and date-only reopening
 test("completed research cycles use their own previous boundary without opening a promotion window",async()=>{
   const h=await autonomousHarness();
   await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
-  const scouts=await h.repos.scoutResults.readAll();
-  const listItems=h.repos.workItems.list.bind(h.repos.workItems);
-  let itemExports=0;
-  h.repos.workItems.list=async()=>{itemExports++;return listItems();};
-  h.repos.scoutResults.readAll=async()=>{throw new Error("the final Scout snapshot must not be exported twice");};
-  const first=await readResearchProgression(h.repos,{...window,scouts,researchBoundary:{since:FIXTURE_NOW,previousCompletedWindowId:null}});
-  assert.equal(itemExports,1,"progression reuses the same work-item snapshot in activity");
+  const pageItems=h.repos.workItems.listChangedSince!.bind(h.repos.workItems);
+  let metadataPages=0;
+  h.repos.workItems.listChangedSince=async(since,held,options)=>{
+    metadataPages++;
+    assert.deepEqual(options?.projection,{createdAt:true,autonomousPlan:["version"]});
+    return pageItems(since,held,options);
+  };
+  h.repos.workItems.list=async()=>{throw new Error("country-wide work-item export forbidden");};
+  h.repos.scoutResults.readAll=async()=>{throw new Error("country-wide Scout export forbidden");};
+  const first=await readResearchProgression(h.repos,{...window,researchBoundary:{since:FIXTURE_NOW,previousCompletedWindowId:null}});
+  assert.equal(metadataPages,2,"only narrow metadata crosses the two country-wide passes");
   assert.equal(first.windowKind,"RESEARCH_CYCLE");
   assert.equal(first.milestones.acquired.newlyReached,1);
   assert.equal((await h.repos.windowRuns.readAll()).length,0,"projection cannot invent a nightly window");
-  const next=await readResearchProgression(h.repos,{...window,scouts,windowId:"next-research-window",through:"2026-09-03T20:00:00.000Z",researchBoundary:{since:first.through,previousCompletedWindowId:first.windowId}});
-  assert.equal(itemExports,2,"each completed read gets one fresh work-item snapshot");
+  const next=await readResearchProgression(h.repos,{...window,windowId:"next-research-window",through:"2026-09-03T20:00:00.000Z",researchBoundary:{since:first.through,previousCompletedWindowId:first.windowId}});
+  assert.equal(metadataPages,4);
   assert.equal(next.previousCompletedWindowId,first.windowId);
   assert.equal(next.milestones.acquired.newlyReached,0);
   assert.equal(next.milestones.acquired.reachedByWindowEnd,1);
-  h.repos.workItems.list=async()=>{throw new Error("fresh work-item snapshot unavailable");};
-  await assert.rejects(readResearchProgression(h.repos,{...window,scouts}),/fresh work-item snapshot unavailable/,
+  h.repos.workItems.listChangedSince=async()=>{throw new Error("fresh work-item metadata unavailable");};
+  await assert.rejects(readResearchProgression(h.repos,{...window}),/fresh work-item metadata unavailable/,
     "snapshot failures propagate rather than manufacture zero progress");
+});
+
+
+test("one-obligation replay matches a combined snapshot and never exports country history",async()=>{
+  const h=await autonomousHarness();
+  for(let stage=0;stage<3;stage++) await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
+  const second={...createWorkItem({project:h.item.project,subject:"fixture:second-body",obligation:"Retain the second registered obligation",why:"Two-obligation report fixture",now:FIXTURE_NOW}),autonomousPlan:h.item.autonomousPlan};
+  await h.repos.workItems.put(second.id,second,FIXTURE_NOW);
+  const unclassified=createWorkItem({project:h.item.project,subject:"fixture:unclassified",obligation:"Non civic system work",why:"Excluded metadata fixture",now:FIXTURE_NOW});
+  await h.repos.workItems.put(unclassified.id,unclassified,FIXTURE_NOW);
+  const activities=await readAutonomousActivity(h.repos,[h.item.id,second.id],{observedAt:window.through});
+  const expected=projectResearchProgression({...window,windowKind:"RESEARCH_CYCLE",activities,excludedUnclassifiedWorkItems:1});
+  for(const repo of [h.repos.workItems,h.repos.routeTasks,h.repos.attempts,h.repos.leases]) repo.list=async()=>{throw new Error("country aggregate export forbidden");};
+  for(const log of [h.repos.transitions,h.repos.dispositions,h.repos.artifacts,h.repos.costs,h.repos.scoutResults,h.repos.workerResults,h.repos.promotionPipeline]) log.readAll=async()=>{throw new Error("country log export forbidden");};
+  const actual=await readResearchProgression(h.repos,{...window,researchBoundary:{since:window.since,previousCompletedWindowId:null}});
+  assert.deepEqual(actual,expected,"every lifetime milestone, result, evidence gap and bottleneck stays exact");
 });

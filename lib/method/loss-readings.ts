@@ -1,10 +1,9 @@
 /**
- * Adapters from what the control plane holds to the readings `studyAllLosses` takes, and the place traits it compares
+ * Adapters from native control-plane observations to loss-study readings and the place traits compared
  * on. A place we hold nothing about states no trait.
  */
 import type { LookPass } from "../frontend/look-pass.ts";
 import type { LossReading } from "./study-all-losses.ts";
-import type { PlaceTraits } from "./study-losses.ts";
 
 export interface DoorLike {
   readonly kind: string;
@@ -78,22 +77,4 @@ export function lookReadings(passes: readonly LookPass[]): LossReading[] {
     kind: "front-end" as const, subject: `${s.surface}|${s.profile}|${(s.element ?? "the screen").toLowerCase()}`,
     subjectWords: `${s.element ?? "the screen"} on the ${s.label}`, placeId: `zip:${s.zip}`, failed: true, at: p.at,
   }])));
-}
-
-/** The traits we hold for each place: a door's adapter as its platform (when its doors agree), and the state its id or plan names. */
-export function placeTraitsFrom(input: { readonly doors: readonly DoorLike[]; readonly items: readonly WorkItemLike[]; readonly places: readonly string[] }): Map<string, PlaceTraits> {
-  const out = new Map<string, PlaceTraits>();
-  const platforms = new Map<string, Set<string>>();
-  for (const d of input.doors) if (d.ocdId) platforms.set(d.ocdId, (platforms.get(d.ocdId) ?? new Set()).add(d.kind.toLowerCase()));
-  const planState = new Map<string, string>();
-  for (const i of input.items) if (i.autonomousPlan?.jurisdiction && /^[a-z]{2}$/i.test(i.autonomousPlan.jurisdiction)) planState.set(i.subject, i.autonomousPlan.jurisdiction.toLowerCase());
-  for (const place of new Set([...input.places, ...platforms.keys()])) {
-    const kinds = platforms.get(place);
-    const traits: PlaceTraits = {
-      ...(kinds && kinds.size === 1 ? { platform: [...kinds][0] } : {}),
-      ...((stateOf(place) ?? planState.get(place)) ? { state: stateOf(place) ?? planState.get(place)! } : {}),
-    };
-    if (Object.keys(traits).length) out.set(place, traits);
-  }
-  return out;
 }

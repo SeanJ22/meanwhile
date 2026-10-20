@@ -112,15 +112,16 @@ export async function fetch(
   key: string | undefined,
   fetcher: typeof globalThis.fetch = globalThis.fetch,
   signal?: AbortSignal,
-  options: { readonly vintage?: number; readonly stateFips?: string; readonly publishedAt?: string | null; readonly publicationUrl?: string } = {},
+  options: { readonly vintage?: number; readonly stateFips?: string; readonly codes?: readonly string[]; readonly publishedAt?: string | null; readonly publicationUrl?: string } = {},
 ): Promise<AcsFetch> {
   const trimmed = (key ?? "").trim();
   if (trimmed === "") throw new Error(`${KEY_VAR} is not set; the Census Data API redirects a keyless call to missing_key.html, so nothing can be acquired without it`);
   const vintage = options.vintage ?? VINTAGE_YEAR;
   const route = new URL(`https://api.census.gov/data/${vintage}/acs/acs5`);
   route.searchParams.set("get", `NAME,GEO_ID,${VARIABLE},${MARGIN_VARIABLE}`);
-  route.searchParams.set("for", geography(scope));
-  if (options.stateFips) route.searchParams.set("in", `state:${options.stateFips}${scope === "county_subdivision" ? " county:*" : ""}`);
+  route.searchParams.set("for", options.codes?.length ? `${ACS_GEOGRAPHIES[scope]}:${options.codes.join(",")}`
+    : scope === "state" && options.stateFips ? `state:${options.stateFips}` : geography(scope));
+  if (options.stateFips && !["state","nation","zcta"].includes(scope)) route.searchParams.set("in", `state:${options.stateFips}${scope === "county_subdivision" ? " county:*" : ""}`);
   const sourceUrl = route.toString();
   route.searchParams.set("key", trimmed);
   const url = route.toString();

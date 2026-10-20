@@ -1,10 +1,10 @@
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import { installFederalVotes, installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 await installRegistryAuthority();
 await installFederalVotes();
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -12,8 +12,8 @@ delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("@/app/api/ask/grounded/route");
 
 test("normal Ask detail requests fetch every registered FEC page and deliver each filed PAC row and source", async () => {
-  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
-  const contract = requiredRoutineContract("fec-funding");
+  await installFundingFixture("AZ");
+  const contract = requiredRoutineContract("fec-funding:AZ");
   installPromotedValue({ recordClass: "FEC_FUNDING", scope: contract.scope, sourceId: contract.sourceId,
     versionId: "test:ask-finance-detail", value: getFundingSnapshot() });
   const candidate = getFundingSnapshot().candidates.find(c => c.name.toLowerCase().includes("ciscomani"))!;

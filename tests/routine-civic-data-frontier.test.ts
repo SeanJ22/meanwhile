@@ -255,7 +255,7 @@ function supervisorHistoryRow(input: {
 }
 
 test("a parser upgrade ignores an older implementation's supervisor failure but keeps current-code retry evidence", () => {
-  const upgraded = "registration-nh", unchanged = "fec-funding";
+  const upgraded = "registration-nh", unchanged = "fec-funding:AZ";
   const row = supervisorHistoryRow({ finishedAt: "2026-10-09T12:00:00.000Z", failures: [upgraded, unchanged] }) as {
     runtimeOutcome: Record<string, unknown>;
   };
@@ -272,7 +272,7 @@ test("a parser upgrade ignores an older implementation's supervisor failure but 
 
 test("a repaired never-published OpenStates baseline bypasses an old-code boot failure while current failures and steady refreshes keep backoff", () => {
   const people = ROUTINE_SOURCE_TASKS.find(task => task.id === "openstates-people-az")!;
-  const ordinary = ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding")!;
+  const ordinary = ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding:AZ")!;
   const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
   const owner = { ...people, id: "owner-request", ownerInvocation: { requestedAt: "2026-10-09T12:00:00.000Z", instructions: ["saved-send"] } };
   const failedAt = "2026-10-09T12:00:00.000Z", now = Date.parse(failedAt) + 60_000;

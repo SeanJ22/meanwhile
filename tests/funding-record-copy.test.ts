@@ -1,16 +1,15 @@
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { FundingDisplay } from "../components/funding/funding-section.tsx";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { concentrationOf } from "../lib/funding/concentration.ts";
 import type { ContributionRow } from "../lib/funding/types.ts";
 
 test("the rendered funding origin and categories contain dollars without percentages or disclaimers", async () => {
-  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
+  await installFundingFixture("NJ");
   const answer = fundingAnswerForTarget("congress:B001288");
   assert.equal(answer.kind, "funding"); if (answer.kind !== "funding") return;
   const html = renderToStaticMarkup(createElement(FundingDisplay, { data: answer.data, context: null }));

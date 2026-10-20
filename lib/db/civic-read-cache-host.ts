@@ -1,18 +1,19 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { mkdir, open, rename, unlink, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { join } from "node:path";
+import { pipeline } from "node:stream/promises";
 
 /** Only the supervisor touches disposable files; source doors stay off disk,
  * as required by the existing civic-data release firewall. */
-export async function saveCivicReadCopy(root: string, key: string, saved: string): Promise<void> {
+export async function saveCivicReadCopy(root: string, key: string, saved: string | AsyncIterable<Uint8Array>): Promise<void> {
   const destination = join(root, key + ".json");
   const temporary = destination + "." + randomUUID() + ".tmp";
   try {
     await mkdir(root, { recursive: true });
     await writeFile(temporary, saved);
     await rename(temporary, destination);
-  } catch { await unlink(temporary).catch(() => {}); }
+  } catch (error) { await unlink(temporary).catch(() => {}); throw error; }
 }
 
 /** Host-local copy sink, inherited by every child; a process that inherited one keeps using it.
@@ -29,14 +30,16 @@ export async function startCivicReadCacheHost(): Promise<{ close: () => Promise<
     }
     try {
       if (request.method === "GET") {
-        const saved = await readFile(join(root, request.url!.slice(1) + ".json"), "utf8");
-        response.writeHead(200, { "content-type": "application/json" }).end(saved); return;
+        const saved = await open(join(root, request.url!.slice(1) + ".json"), "r");
+        response.writeHead(200, { "content-type": "application/json" });
+        await pipeline(saved.createReadStream(), response); return;
       }
-      const chunks: Buffer[] = [];
-      for await (const chunk of request) chunks.push(Buffer.from(chunk));
-      await saveCivicReadCopy(root, request.url!.slice(1), Buffer.concat(chunks).toString("utf8"));
+      await saveCivicReadCopy(root, request.url!.slice(1), request);
       response.writeHead(204).end();
-    } catch { response.writeHead(request.method === "GET" ? 404 : 503).end(); }
+    } catch {
+      if (!response.headersSent) response.writeHead(request.method === "GET" ? 404 : 503).end();
+      else response.destroy();
+    }
   });
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);

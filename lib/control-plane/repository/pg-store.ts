@@ -1,3 +1,4 @@
+import { forEachAggregate } from "../workers/streamed-history.ts";
 import type { BoxFinding, BoxRepository } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -13,6 +14,8 @@ import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
+import { arrayPageLimit } from "./aggregate-array.ts";
+import { manualSliceProjectionSql } from "./manual-slice-projection.ts";
 
 import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
@@ -25,7 +28,7 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
-import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { coveringPlaces, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
@@ -111,6 +114,7 @@ import {
   type AppendOutcome,
   type ArtifactRecord,
   type ChangedReadOptions,
+  type ChangedLogReadOptions,
   type ChangedRecord,
   type ChangedRecords,
   type ChangedRows,
@@ -270,20 +274,19 @@ function recordProjectionSql(table: string, projection: RecordProjection, column
     }
     return `'${key}'`;
   };
-  const kept = Object.keys(projection);
-  if (kept.length === 0) throw new Error(`${table}: an empty projection cannot select a field`);
-  const narrowed = kept.flatMap((key) => {
-    const keep = projection[key];
-    return keep === true ? [] : [
-      `WHEN t.key = ${literal(key)} AND jsonb_typeof(t.value) = 'object' THEN ` +
-        `(SELECT coalesce(jsonb_object_agg(f.key, f.value), '{}'::jsonb) FROM jsonb_each(t.value) AS f ` +
-        `WHERE f.key IN (${keep.length === 0 ? "NULL" : keep.map(literal).join(", ")}))`,
-    ];
-  });
-  const value = narrowed.length === 0 ? "t.value" : `CASE ${narrowed.join(" ")} ELSE t.value END`;
-  return `CASE WHEN jsonb_typeof(${source}) = 'object' THEN ` +
-    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(${source}) AS t ` +
-    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE ${source} END`;
+  if(Object.keys(projection).length===0)throw new Error(`${table}: an empty projection cannot select a field`);
+  const project=(source:string,projection:RecordProjection,depth:number):string=>{
+    const kept=Object.keys(projection),t=depth?`t${depth}`:"t",f=depth?`f${depth}`:"f";
+    const narrowed=kept.flatMap(key=>{
+      const keep=projection[key];if(keep===true)return[];
+      const value=Array.isArray(keep)?`(SELECT coalesce(jsonb_object_agg(${f}.key, ${f}.value), '{}'::jsonb) FROM jsonb_each(${t}.value) AS ${f} WHERE ${f}.key IN (${keep.length===0?"NULL":keep.map(literal).join(", ")}))`:
+        project(`${t}.value`,keep as RecordProjection,depth+1);
+      return[`WHEN ${t}.key = ${literal(key)} AND jsonb_typeof(${t}.value) = 'object' THEN ${value}`];
+    });
+    const value=narrowed.length===0?`${t}.value`:`CASE ${narrowed.join(" ")} ELSE ${t}.value END`;
+    return`CASE WHEN jsonb_typeof(${source}) = 'object' THEN (SELECT coalesce(jsonb_object_agg(${t}.key, ${value}), '{}'::jsonb) FROM jsonb_each(${source}) AS ${t} WHERE ${t}.key IN (${kept.length?kept.map(literal).join(", "):"NULL"})) ELSE ${source} END`;
+  };
+  return project(source,projection,0);
 }
 
 /** Rows per `list()` page: the HTTP driver caps a response at 64 MiB, so aggregate reads are keyset-paged by id. */
@@ -298,6 +301,10 @@ export function pgAggregateRepository<T>(
   const where = `${table} in the control-plane database`;
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rowClass = options.rowClass ?? (DOCUMENT_ROW_TABLES.has(table) ? "DOCUMENT" : "POINT");
+  async function stale(id: string, revision: number): Promise<never> {
+    const rows = await run("readNarrowed", "POINT", `SELECT revision FROM ${table} WHERE id=$1`, [id]) as Record<string, unknown>[];
+    throw new ConcurrentModification(kind, id, revision, rows.length ? Number(rows[0].revision) : null);
+  }
 
   async function read(id: string): Promise<Persisted<T> | null> {
     const rows = (await run(
@@ -377,8 +384,10 @@ export function pgAggregateRepository<T>(
     : copies.aggregateList(table, listChangedSince, out);
 
   /* `list()` filtered in the database with the same order and paging, so the result equals `list()` filtered; `selected` is the value or its projection. */
-  async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
+  async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string, prefix=false): Promise<Persisted<O>[]> {
     const jsonPath = jsonPathLiteral(table, path);
+    const predicate=prefix?"LIKE $1 ESCAPE '!'":"= $1";
+    if(prefix)value=value.replace(/[!%_]/g,"!$&")+"%";
     const out: Persisted<O>[] = [];
     let afterId: string | null = null;
     for (;;) {
@@ -387,7 +396,7 @@ export function pgAggregateRepository<T>(
             caller,
             "PAGE",
             `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
-             WHERE value #>> '${jsonPath}' = $1
+             WHERE value #>> '${jsonPath}' ${predicate}
              ORDER BY id ASC
              LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
             [value],
@@ -396,7 +405,7 @@ export function pgAggregateRepository<T>(
             caller,
             "PAGE",
             `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
-             WHERE value #>> '${jsonPath}' = $1 AND id > $2
+             WHERE value #>> '${jsonPath}' ${predicate} AND id > $2
              ORDER BY id ASC
              LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
             [value, afterId],
@@ -417,6 +426,69 @@ export function pgAggregateRepository<T>(
 
   return callerPinned({
     read,
+
+    async readArrayPage(id, field, query = {}) {
+      const limit = arrayPageLimit(query);
+      const selected = query.projection ? Object.keys(query.projection).length ? recordProjectionSql("member", query.projection, "value")
+        : "CASE WHEN jsonb_typeof(member.value)='object' THEN '{}'::jsonb ELSE member.value END" : "member.value";
+      const rows = await run("readArrayPage", "PAGE", `SELECT a.id,a.revision,a.updated_at,selected.position,selected.member,selected.order_key
+        FROM ${table} a LEFT JOIN LATERAL (
+          SELECT member.position,${selected} AS member,CASE WHEN $7::text[] IS NOT NULL THEN member.value#>>$7::text[] END AS order_key FROM jsonb_array_elements(
+            CASE WHEN jsonb_typeof(a.value#>$2::text[])='array' THEN a.value#>$2::text[] ELSE '[]'::jsonb END) WITH ORDINALITY member(value,position)
+          WHERE (($7::text[] IS NULL AND member.position>$3) OR ($7::text[] IS NOT NULL AND member.value#>>$7::text[] IS NOT NULL
+            AND ($8::text IS NULL OR (member.value#>>$7::text[]) COLLATE "C">$8::text COLLATE "C")))
+            AND ($4::text[] IS NULL OR member.value#>>$4::text[]=$5)
+          ORDER BY (CASE WHEN $7::text[] IS NOT NULL THEN member.value#>>$7::text[] END) COLLATE "C" NULLS FIRST,member.position LIMIT $6
+        ) selected ON true WHERE a.id=$1 ORDER BY selected.order_key COLLATE "C" NULLS FIRST,selected.position`,
+      [id, typeof field === "string" ? [field] : [...field], query.after ?? 0, query.match?.path ?? null, query.match?.value ?? null, limit, query.order?.path ?? null,
+        query.order?.after ?? null]) as Record<string, unknown>[];
+      if (!rows.length) return null;
+      const members = rows.filter(row => row.position !== null);
+      return {id, revision: Number(rows[0].revision), updatedAt: new Date(rows[0].updated_at as string).toISOString(),
+        values: members.map(row => parseValue<unknown>(row.member, `${where} array ${field}`)),
+        next: query.order ? null : members.length === limit ? Number(members.at(-1)!.position) : null,
+        ...(query.order ? {nextKey: members.length === limit ? String(members.at(-1)!.order_key) : null} : {})};
+    },
+
+    async compareAndSetFields(id, revision, fields, now) {
+      const submitted = JSON.stringify(fields);
+      const rows = await run("compareAndSetFields", "POINT", `UPDATE ${table} SET value=value||$3::jsonb,revision=revision+1,
+        updated_at=$4::timestamptz,changed_at=now() WHERE id=$1 AND revision=$2 RETURNING id,revision,updated_at`,
+      [id, revision, submitted, now]) as Record<string, unknown>[];
+      if (!rows.length) return stale(id, revision);
+      return {id, revision: Number(rows[0].revision), updatedAt: new Date(rows[0].updated_at as string).toISOString(), value: JSON.parse(submitted)};
+    },
+
+    async compareAndSetArrayItem(id, revision, field, keyPath, key, next, now, retention, fields) {
+      const rows = await run("compareAndSetArrayItem", "POINT", `WITH current AS MATERIALIZED (
+          SELECT value FROM ${table} WHERE id=$1 AND revision=$2
+        ), original AS MATERIALIZED (
+          SELECT member.value,member.position FROM current CROSS JOIN LATERAL jsonb_array_elements(
+            CASE WHEN jsonb_typeof(current.value->$3)='array' THEN current.value->$3 ELSE '[]'::jsonb END)
+            WITH ORDINALITY member(value,position)
+        ), raw_offered AS MATERIALIZED (
+          SELECT CASE WHEN value#>>$4::text[]=$5 THEN $6::jsonb ELSE value END AS value,position FROM original
+            WHERE value#>>$4::text[] IS DISTINCT FROM $5 OR $6::jsonb IS NOT NULL
+          UNION ALL SELECT $6::jsonb,COALESCE((SELECT MAX(position) FROM original),0)+1
+            WHERE $6::jsonb IS NOT NULL AND NOT EXISTS(SELECT 1 FROM original WHERE value#>>$4::text[]=$5)
+        ), offered AS MATERIALIZED (
+          SELECT * FROM raw_offered WHERE $15::text[] IS NULL OR ((value#>>$15::text[])::timestamptz<$16::timestamptz) IS NOT TRUE
+        ), discarded AS (
+          SELECT position FROM offered WHERE value#>>$9::text[]=$10
+            AND ($13::text[] IS NULL OR value#>>$13::text[] IS NOT DISTINCT FROM $14::text) ORDER BY value#>>$11::text[],position
+          LIMIT CASE WHEN $8::integer IS NULL THEN 0 ELSE GREATEST(0,(SELECT COUNT(*) FROM offered)-$8::integer) END
+        ), replacement AS (
+          SELECT COALESCE(jsonb_agg(value ORDER BY position),'[]'::jsonb) AS members FROM offered
+          WHERE position NOT IN(SELECT position FROM discarded)
+        ) UPDATE ${table} SET value=jsonb_set(value,ARRAY[$3],(SELECT members FROM replacement),true)||$12::jsonb||jsonb_build_object('updatedAt',$7::text),
+          revision=revision+1,updated_at=$7::timestamptz,changed_at=now() WHERE id=$1 AND revision=$2 RETURNING id,revision,updated_at`,
+      [id, revision, field, keyPath, key, next === null ? null : JSON.stringify(next), now, retention?.limit ?? null,
+        retention?.discardPath ?? [], retention?.discardValue ?? null, retention?.oldestPath ?? [], JSON.stringify(fields ?? {}),
+        retention?.discardAlso?.path ?? null, retention?.discardAlso?.value ?? null, retention?.pruneBefore?.path ?? null,
+        retention?.pruneBefore?.at ?? null]) as Record<string, unknown>[];
+      if (!rows.length) return stale(id, revision);
+      return {id, revision: Number(rows[0].revision), updatedAt: new Date(rows[0].updated_at as string).toISOString(), value: next};
+    },
 
     async readNarrowed(id, projection) {
       /* Postgres narrows the row, so only kept fields cross the wire; an empty projection skips the value entirely. */
@@ -548,6 +620,8 @@ export function pgAggregateRepository<T>(
     listWhere: (path, value) => listWhereAs<T>(path, value, "value", "listWhere"),
     listWhereNarrowed: (path, value, projection) => listWhereAs<unknown>(path, value,
       Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "listWhereNarrowed"),
+    listWherePrefix:(path,prefix,projection)=>listWhereAs<unknown>(path,prefix,
+      Object.keys(projection).length===0?"'{}'::jsonb":recordProjectionSql(table,projection,"value"),"listWherePrefix",true),
   });
 }
 
@@ -594,13 +668,13 @@ export function pgAppendOnlyRepository<T>(
     }
   }
 
-  async function readChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}): Promise<ChangedRecords<T>> {
+  async function readChangedSince(since: string | null, held?: HeldSlots, read: ChangedLogReadOptions<T> = {}): Promise<ChangedRecords<T>> {
     /* `readAll()` narrowed to records the database stamped at or after `since`, less the held ones; `through` is the database clock before the first page. */
     const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const out: ChangedRecord<T>[] = [];
     await pagedRecords("readChangedSince",
-      at => [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position")],
+      at => [since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, read.keys === undefined ? "" : `log_key = ANY(${at(read.keys)}::text[])`, heldFilter(held, at, "log_key", "position")],
       read.projection ? recordProjectionSql(table, read.projection) : "record",
       async records => { if (read.page) await read.page(records); else out.push(...records); });
     return { records: out, through };
@@ -1070,7 +1144,7 @@ async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
 }
 
 /** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
-export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FROM cp_field_manual_entries
+const FIELD_MANUAL_SLICE_WHERE = `
   WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
     AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
@@ -1084,6 +1158,7 @@ export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FR
     AND ($9::text IS NULL OR value->'states' ? $9::text)
     AND ($10::text IS NULL OR id > $10::text)
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
+export const FIELD_MANUAL_SLICE_SQL = `${manualSliceProjectionSql()}${FIELD_MANUAL_SLICE_WHERE}`;
 
 /** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
 export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
@@ -1103,10 +1178,16 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const copies = options.copies ?? null;
   return {
     ...base,
     readMany: base.readMany!,
+    async compareAndSetMergedEntry(id,revision,entry,now) {
+      if(id!==entry.id)throw new Error("FIELD_MANUAL_MERGE_ID_MISMATCH");
+      const {FIELD_MANUAL_MERGE_SQL}=await import("./field-manual-merge-sql.ts");
+      const rows=await run("compareAndSetMergedEntry","DOCUMENT",FIELD_MANUAL_MERGE_SQL,[id,revision,JSON.stringify(entry),now]) as Record<string,unknown>[];
+      if(!rows.length){const current=await base.readNarrowed(id,{});throw new ConcurrentModification("FieldManualEntry",id,revision??0,current?.revision??null);}
+      return{revision:Number(rows[0].revision),changed:rows[0].changed===true};
+    },
     async retireInstructions() {
       await run("retireInstructions", "DOCUMENT", retireInstructionsSql(), []);
     },
@@ -1122,21 +1203,21 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
       return inserted;
     },
     async slice(query) {
-      if (copies !== null && query.withinState === undefined) {
-        const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
-          (row) => (entryInSlice(row.value, query) ? row : null));
-        return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
-      }
+      const rows: Persisted<FieldManualEntry>[] = [];
+      await this.visitSlice(query, row => { rows.push(row); });
+      return rows;
+    },
+    async visitSlice(query, visit, projection) {
       const params = fieldManualSliceParams(query);
-      const out: Persisted<FieldManualEntry>[] = [];
+      const selected = projection ? `SELECT id,revision,updated_at,${Object.keys(projection).length ? recordProjectionSql("cp_field_manual_entries",projection,"value") : "'{}'::jsonb"} AS value FROM cp_field_manual_entries${FIELD_MANUAL_SLICE_WHERE}` : FIELD_MANUAL_SLICE_SQL;
       let afterId: string | null = null;
       for (;;) {
-        const rows = (await run("slice", "PAGE", FIELD_MANUAL_SLICE_SQL, [...params, afterId])) as Record<string, unknown>[];
+        const rows = (await run("slice", "PAGE", selected, [...params, afterId])) as Record<string, unknown>[];
         for (const row of rows) {
-          out.push({ id: String(row.id), revision: Number(row.revision), updatedAt: new Date(row.updated_at as string).toISOString(),
+          await visit({ id: String(row.id), revision: Number(row.revision), updatedAt: new Date(row.updated_at as string).toISOString(),
             value: parseValue<FieldManualEntry>(row.value, `cp_field_manual_entries id ${String(row.id)}`) });
         }
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) return out;
+        if (rows.length < AGGREGATE_LIST_READ_PAGE) return;
         afterId = String(rows[rows.length - 1]!.id);
       }
     },
@@ -1249,6 +1330,27 @@ export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: s
 
 /** Declared work for the place/ring's exact divisions, including the portable
  * national and relevant state sources. No country-wide work objects are read. */
+/** Visit projected scheduling identities for one place, without transferring the country's standing plans. */
+export async function visitPlaceStandingWork(repos: ControlPlaneRepositories, divisionIds: readonly string[],
+  visit: (row: { readonly id: string; readonly subjectId: string; readonly scopeDivisions?: readonly string[] }) => void | Promise<void>): Promise<void> {
+  const sql = placeReadConnections.get(repos);
+  if (!sql) {
+    await forEachAggregate(repos.obligations, async row => {
+      if (row.value.active && row.value.scopeDivisions?.some(id => divisionIds.includes(id))) await visit({ id: row.id, subjectId: row.value.subjectId, scopeDivisions: row.value.scopeDivisions });
+    }, { active: true, subjectId: true, scopeDivisions: true });
+    return;
+  }
+  const run = boundedRunner(sql, "cp_obligations", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  let after = "";
+  for (;;) {
+    const rows = await run("placeWork", "PAGE", `SELECT id,value->>'subjectId' AS subject_id,value->'scopeDivisions' AS divisions FROM cp_obligations
+      WHERE id>$2 AND value->>'active'='true' AND value->'scopeDivisions' ?| $1::text[] ORDER BY id LIMIT 32`, [[...divisionIds],after]) as Record<string,unknown>[];
+    for (const row of rows) await visit({ id:String(row.id),subjectId:String(row.subject_id),scopeDivisions:row.divisions as string[] });
+    if (rows.length<32) return;
+    after=String(rows.at(-1)!.id);
+  }
+}
+
 export async function readPlaceStandingWork(repos: ControlPlaneRepositories, divisionIds: readonly string[]) {
   const sql = placeReadConnections.get(repos);
   if (!sql) return (await repos.obligations.listWhere(["active"], "true")).map(row => row.value)

@@ -179,7 +179,8 @@ test("the census reads all state governments independently; research retirement 
   assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}\)/);
   assert.match(census, /runCensusState\(\{ repos, state, needs: reading\.needs/);
   assert.doesNotMatch(runner, /runMeetingsDiscovery|MEETINGS_DISCOVERY_MAX_WALKS|missionMeetingsDiscoveryNeeds/);
-  assert.match(runner, /const held = heldCalendarRouteBodies\(rows\)/);
+  assert.match(runner, /for \(const state of states\) \{\s*await meetingPartitions\.readStates\(\[state\]\)/, "retirement reads one state's government routes at a time");
+  assert.match(runner, /for \(const id of heldCalendarRouteBodies\(rows\)\) held\.add\(id\)/);
   assert.match(runner, /: planHeldRouteRetirement\(\{/, "old meetings rows retire on held routes");
   assert.doesNotMatch(runner, /gapLedger|GAP_LEDGER|gap-ledger/, "the runner no longer reads the ledger");
   for (const path of ["scripts/build-gap-ledger.mts", "docs/gap-ledger.md", "data/derived/gap-ledger.json"]) {

@@ -1,5 +1,6 @@
+import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import assert from "node:assert/strict";
-import { afterEach, describe, it } from "node:test";
+import { beforeEach, afterEach, describe, it } from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
@@ -13,6 +14,7 @@ const code = FIXTURE_DOOR_ROWS.slice();
 const AT = "2026-10-04T12:00:00.000Z";
 
 describe("DB-15: reader-side coverage follows the doors in use", () => {
+  beforeEach(() => installFixtureDoors());
   afterEach(() => installFixtureDoors());
 
   it("with the installed doors, curated status is unchanged", () => {
@@ -42,7 +44,7 @@ describe("DB-15: reader-side coverage follows the doors in use", () => {
     };
     await seedMeetingDoors({ repo: repos.doors, wiring: [...code, added], derived: [], deriveInputAt: AT, at: AT });
     assert.equal(isWiredNoticePage(added.noticeUrl!), false);
-    const pass = await refreshDoorsForPass(repos.doors);
+    const pass = await refreshDoorsForPass(repos.doors, { state: ocdStateCode(added.ocdId)! });
     assert.equal(pass.reason, null);
     assert.equal(isWiredNoticePage(added.noticeUrl!), true);
     assert.ok(allHistoryGaps().some((gap) => gap.bodyId === added.bodyId));

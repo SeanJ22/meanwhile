@@ -164,6 +164,7 @@ export interface StateTotals {
   readonly places: Readonly<Record<string, PlaceTotals>>;
   /** The list rows of the state's ranked assignments, each until the instant it could next change on the clock alone. */
   readonly lists: Readonly<Record<string, TimedList>>;
+  readonly servedReader?: ServedReaderReadback;
 }
 
 interface TimedList {
@@ -176,7 +177,7 @@ interface TimedList {
 export interface StatePart {
   readonly builtAt: string;
   readonly assignments: AssignmentPart;
-  readonly publications: readonly WorkItem[];
+  readonly publicationIds: readonly string[];
   /** The subjects of the standing obligations each instruction marks, by `<assignment key>\n<receipt>`: the hunts' members. */
   readonly marks: Readonly<Record<string, readonly string[]>>;
   /** Standing obligations by the state name their id and subject carry, "other" for none. */
@@ -635,6 +636,7 @@ export interface OwnerSnapshotFoldInput {
   readonly slackMs?: number;
   /** The public readbacks the published rows were derived with. */
   readonly servedReader: ServedReaderReadback | null;
+  readonly servedReaderForState?: (state:string)=>Promise<ServedReaderReadback|null>;
   readonly askGapObservations: AssignmentSubsetBase["askGapObservations"];
   readonly scopes: readonly ExpansionScopeDecision[] | null;
   /** The periods of the readings the last snapshot published. */
@@ -657,6 +659,7 @@ export class OwnerSnapshotFold {
   readonly #rebuild: boolean;
   readonly #inboxes: Inboxes;
   #servedReader: ServedReaderReadback | null;
+  #currentReadback:{state:string;read:ServedReaderReadback|null}|null=null;
   readonly #priorCosts: CostTotals | null;
   costs!: CostTotals;
   readonly #states: Record<string, StatePart>;
@@ -690,7 +693,10 @@ export class OwnerSnapshotFold {
     this.#rebuild = a === null || prior?.costs === null;
     this.#inboxes = new Inboxes(repos, input.nowIso, `${input.nowIso} ${this.#rebuild ? "rebuild" : "fold"}`, input.write, input.heldRows ?? INBOX_HELD);
     this.#priorCosts = this.#rebuild ? null : prior!.costs;
-    this.#states = this.#rebuild ? {} : { ...a!.states };
+    this.#states = this.#rebuild ? {} : Object.fromEntries(Object.entries(a!.states).map(([state,part])=>{
+      const {publications,...metadata}=part as StatePart&{publications?:readonly WorkItem[]};
+      return[state,{...metadata,publicationIds:metadata.publicationIds??publications?.map(item=>item.id)??[]}];
+    }));
     this.#crossings = this.#rebuild ? {} : { ...a!.crossings };
     this.#links = this.#rebuild ? {} : { ...a!.links };
     this.#dependencies = this.#rebuild ? {} : { ...a!.dependencies };
@@ -748,9 +754,13 @@ export class OwnerSnapshotFold {
     return { items: this.#pipeline.items, linked: this.#pipeline.items - Object.keys(this.#pipeline.unlinked).length, verified: this.#pipeline.verified };
   }
 
-  /** Every work item with a publication outcome, as the public readbacks read it. */
-  publications(): WorkItem[] {
-    return Object.values(this.#states).flatMap((s) => s.publications);
+  /** Only this state's published items; the national totals carry scheduling identities. */
+  publicationStates():readonly string[]{return Object.keys(this.#states).sort();}
+  async publications(state:string): Promise<WorkItem[]> {
+    const ids=this.#states[state.toLowerCase()]?.publicationIds??[];
+    const out:WorkItem[]=[];
+    for(const batch of chunks(ids,ASSIGNMENT_BATCH))for(const row of await needs(this.#repos.workItems.readManyNarrowed,"publication work read")(batch,{id:true,autonomousPlan:["publication","contract"],publicationOutcome:true}))out.push(narrowPublication(row.value as WorkItem));
+    return out;
   }
 
   /** Standing obligations by the state name each carries. */
@@ -767,8 +777,8 @@ export class OwnerSnapshotFold {
   }
 
   /** Re-derives the assignments whose public readback changed between the carried readback and `next`. */
-  async readBack(next: ServedReaderReadback | null): Promise<void> {
-    const previous = this.#servedReader;
+  async readBack(next: ServedReaderReadback | null,state?:string): Promise<void> {
+    const previous = state&&this.#input.servedReaderForState?await this.#input.servedReaderForState(state):this.#servedReader;
     this.#servedReader = next;
     const valid = (read: ServedReaderReadback | null) => new Set((read?.witnesses ?? [])
       .filter((w) => servedWitness(read, w.itemId, w.approvalId, this.#input.nowIso) !== null).map((w) => `${w.itemId}\n${w.approvalId}`));
@@ -776,6 +786,8 @@ export class OwnerSnapshotFold {
     const after = valid(next);
     const items = unique([...before].filter((k) => !after.has(k)).concat([...after].filter((k) => !before.has(k))).map((k) => k.split("\n")[0]!));
     if (items.length === 0) return;
+    if(state)this.#currentReadback={state:state.toLowerCase(),read:next};
+    try {
     const sources = await readByKeys(this.#repos.promotionPipeline, items);
     const attempts: string[] = [];
     const workItems = [...items];
@@ -791,6 +803,7 @@ export class OwnerSnapshotFold {
     }
     await this.#routeItems(await heldWorkItems(this.#repos, workItems));
     await this.#drain();
+    } finally {this.#currentReadback=null;}
   }
 
   /** The national view from every state's part, as of each state's last fold. */
@@ -991,6 +1004,7 @@ export class OwnerSnapshotFold {
 
   async #load(state: string): Promise<void> {
     if (this.#loaded.has(state)) return;
+    if(this.#input.servedReaderForState)this.#servedReader=this.#currentReadback?.state===state?this.#currentReadback.read:await this.#input.servedReaderForState(state);
     const [totals, snapshot] = await Promise.all([this.#repos.ownerSnapshotStateTotals.read(stateTotalsId(state)), this.#repos.ownerSnapshotStates.read(ownerSnapshotStateId(state))]);
     const part = this.#states[state];
     const carried = part !== undefined && (!this.#rebuild || this.#written.has(state));
@@ -1038,7 +1052,7 @@ export class OwnerSnapshotFold {
         for (const a of g.obligation?.assignments ?? []) (marks[`${a.assignmentKey}\n${a.ref}`] ??= []).push(g.obligation!.subjectId);
       }
       this.#states[state] = { builtAt: now, assignments: assignmentPartOf(entries, now), obligations, spend: placeSumOf(loaded.places),
-        publications: entries.flatMap(([, g]) => g.publications), marks };
+        publicationIds: entries.flatMap(([, g]) => g.publications.map(item=>item.id)), marks };
     }
     /* List rows are kept for the rows the national ranking reaches as far as the states folded so far show it. */
     const ranked = new Set(this.#part().candidates.map((c) => c.id));

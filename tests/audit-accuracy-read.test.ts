@@ -2,7 +2,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { coverageLineFrom, weeklyAuditAccuracy, type AuditCorrection } from "../lib/control-plane/admin-view/v6-audit-read.ts";
+import { coverageLineFrom, type AuditCorrection } from "../lib/control-plane/admin-view/v6-audit-read.ts";
+import { weeklyAuditAccuracy } from "./helpers/live-audit.ts";
 import type { LiveAuditResult } from "../lib/control-plane/workers/live-audit.ts";
 
 const NOW = "2026-10-05T12:00:00.000Z";

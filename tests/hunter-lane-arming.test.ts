@@ -8,9 +8,10 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, writeFileSync } from "node:fs";
+import { DatabaseSync } from "node:sqlite";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -34,6 +35,7 @@ import {
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS } from "../lib/models.ts";
+import { ScopeBudgetGate } from "../lib/control-plane/expansion/membership.ts";
 
 const NOW = "2026-10-06T03:00:00.000Z";
 const request = { model: MODELS.haiku.model, max_tokens: 1_024, system: [], tools: [], messages: [{ role: "user", content: "x" }] } as unknown as ModelRequest;
@@ -85,7 +87,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
     providerQueue: new ModelProviderQueue(), ownSpend, circuits: null, onCondition: sentence => { conditions.push(sentence); } });
   let armed: ArmedHunterLane = await arm();
   const send = laneWorkerTransport(() => armed, ownSpend, () => NOW)(jurisdiction, task.id);
-  return { repos, path, sent, ownSpend, conditions, task, send, get armed() { return armed; }, rearm: async () => { armed = await arm(); return armed; } };
+  return { repos, path, sent, ownSpend, conditions, task, send, get armed() { return armed; }, rearm: async () => { const previous = armed; armed = await arm(); previous.arming?.close(); return armed; } };
 }
 
 const spent = (usd: number, routeTaskId: string | null = "other-task"): CostEntry => ({ attemptId: `spent-${usd}-${routeTaskId}`, workItemId: "wi-x", routeTaskId, routeId: null,
@@ -97,13 +99,91 @@ test("CH-24 lane: the round's reading round-trips, and a missing, malformed or s
   const path = hunterLaneArmingPath(dir, {});
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /no research round has written its budget reading yet/);
   writeLaneArming(path, reading());
-  assert.deepEqual((readLaneArming(path, NOW) as { arming: unknown }).arming, reading());
+  const saved = readLaneArming(path, NOW); assert.ok("arming" in saved);
+  try { assert.deepEqual(saved.arming.sends.specs, reading().sends.specs); assert.deepEqual([...saved.arming.sends.knownKeys], [SEND]);
+    assert.deepEqual([...saved.arming.sends.reached], []); assert.equal(saved.arming.readAt, NOW); assert.equal(saved.arming.worstCaseUsd, 1); }
+  finally { saved.arming.close(); }
   writeFileSync(path, JSON.stringify({ ...reading(), worstCaseUsd: null }));
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /not in the expected form/, "a Scout with no stated worst case is not armed");
   const old = new Date(Date.parse(NOW) - HUNTER_LANE_ARMING_MAX_AGE_MS - 60_000).toISOString();
   writeLaneArming(path, reading({ readAt: old }));
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /61 minutes old/);
   assert.equal(hunterLaneArmingPath(dir, { WTP_HUNTER_LANE_ARMING: "/srv/x.json" }), "/srv/x.json", "the parent names one path for every staged checkout");
+});
+
+test("hunter arming holds large membership inventories on disk and lets an in-flight request finish on its original reading", context => {
+  const dir = mkdtempSync(join(tmpdir(), "hunter-arming-members-"));
+  const path = join(dir, "arming.sqlite");
+  const members = new Set(Array.from({ length: 20_000 }, (_, i) => `NH:body:${i}`));
+  const expected = { ...reading(), sends: { ...reading().sends, reached: new Map(Array.from({ length: 20_000 }, (_, i) => [`ob:${i}`, [SEND]])) },
+    areas: { malformedScopes: 0, scopes: [{ key: SEND, label: "Hillsborough", budgetUsd: 5, resolved: true,
+      members, states: ["NH"], historicalUsd: 1 }] }, lifetimeHuntSubjects: members };
+  writeLaneArming(path, expected);
+  const opened = new Set<string>();
+  let headerBytes = 0;
+  const prepare = DatabaseSync.prototype.prepare;
+  context.mock.method(DatabaseSync.prototype, "prepare", function(this: DatabaseSync, sql: string) {
+    opened.add(String(prepare.call(this, "PRAGMA database_list").get()?.file));
+    const statement = prepare.call(this, sql);
+    if (sql === "SELECT body FROM metadata") headerBytes = Buffer.byteLength(String(statement.get()?.body));
+    return statement;
+  });
+  const read = readLaneArming(path, NOW); assert.ok("arming" in read);
+  const saved = read.arming;
+  const snapshots = [...opened];
+  let finishRequest: (() => void) | undefined;
+  try {
+    assert.equal(opened.has(path), false, "the public arming file stays replaceable while a Windows worker uses an older reading");
+    assert.ok(snapshots.length && snapshots.every(file => basename(dirname(file)).startsWith("meanwhile-hunter-arming-")));
+    assert.ok(headerBytes < 8_192, "country memberships never enter the metadata payload");
+    assert.equal(saved.lifetimeHuntSubjects instanceof Set, false);
+    assert.equal(saved.lifetimeHuntSubjects.size, 20_000);
+    assert.equal(saved.lifetimeHuntSubjects.has("NH:body:19999"), true);
+    assert.equal(saved.lifetimeHuntSubjects.has("AZ:body:19999"), false);
+    assert.deepEqual(saved.sends.reached.get("ob:19999"), [SEND]);
+    assert.equal(saved.sends.reached.get("foreign:ob"), undefined);
+    assert.equal(saved.areas!.scopes[0].members instanceof Set, false);
+    const gate = new ScopeBudgetGate({ ...saved.areas!, worstCaseUsd: 1, historyReadAt: saved.readAt });
+    const own = gate.linesFor("NH:body:19999"); assert.ok("lines" in own);
+    assert.equal(own.lines.length, 1); assert.equal(own.lines[0].historicalUsd, 1);
+    assert.deepEqual(gate.linesFor("AZ:body:19999"), { lines: [] });
+    finishRequest = saved.retain();
+    saved.close();
+    writeLaneArming(path, reading());
+    assert.equal(saved.lifetimeHuntSubjects.has("NH:body:19999"), true, "the original request keeps its exact budget reading after replacement");
+    finishRequest();
+    assert.throws(() => saved.lifetimeHuntSubjects.has("NH:body:19999"), /not open|closed|finalized/);
+  } finally { finishRequest?.(); saved.close(); }
+  for (const snapshot of snapshots) { assert.equal(existsSync(snapshot), false); assert.equal(existsSync(dirname(snapshot)), false); }
+});
+
+test("the exact obligation's unwritten Send mark still holds paid work when reached membership lives on disk", async () => {
+  const h = await lane({ marks: [], arming: { ...reading(), sends: { ...reading().sends, reached: new Map([["ob-1", [SEND]]]) } } });
+  await assert.rejects(h.send(request), /record.*not written|membership mark/);
+  assert.equal(h.sent.length, 0);
+  h.armed.arming?.close();
+});
+
+test("concurrent requests on one obligation each consume their own prepared Send reading", async () => {
+  const h = await lane();
+  await Promise.all([h.send(request), h.send(request)]);
+  assert.equal(h.sent.length, 2);
+  h.armed.arming?.close();
+});
+
+test("hunter refresh reads spend policy without transferring owner histories or geographic inventories", async () => {
+  const h = await lane();
+  const narrow = h.repos.adminConfig.readNarrowed.bind(h.repos.adminConfig);
+  h.repos.adminConfig.read = async () => { throw new Error("whole config is not needed for admission"); };
+  h.repos.adminConfig.readNarrowed = async (id, projection) => {
+    assert.equal(projection.fleetSpendCeiling, true); assert.equal(projection.discoverySearch, true);
+    assert.equal(projection.expansionScopes, undefined); assert.equal(projection.settings, undefined); assert.equal(projection.fixList, undefined);
+    return narrow(id, projection);
+  };
+  await h.rearm();
+  await h.send(request);
+  assert.equal(h.sent.length, 1);
+  h.armed.arming?.close();
 });
 
 test("CH-24 lane: open with room, a request is held on its Send from the task's own marks, sent once and settled", async () => {

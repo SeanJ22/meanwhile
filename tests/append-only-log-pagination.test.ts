@@ -19,7 +19,7 @@ import type { CostEntry } from "../lib/control-plane/cost.ts";
 test("rolling cost reads exclude old rows before transfer, page every recent charge, and count unknown spend at worst case", async () => {
   const since = "2026-10-01T01:00:00.000Z";
   const rows = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 1 }, (_, position) => ({
-    log_key: "costs", position, record: { role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
+    log_key: "costs", position, record: { attemptId: `scout-${position}`, role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
   }));
   let pages = 0;
   const sql = { async query(text: string, params: readonly unknown[]) {

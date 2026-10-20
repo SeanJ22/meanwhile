@@ -13,7 +13,7 @@ import {
 import { heldBodyGaps, type HeldAskGap } from "../../ask/held-gaps.ts";
 import { readMeetingBodies, type StateMeetingBody } from "../../meetings/edge-serving.ts";
 import type { MeetingsSnapshot } from "../../meetings/snapshot.ts";
-import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../../outcomes/store.ts";
+import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted, readStateMeetingOutcomes } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
 import { foldAskGapObservations, readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
 import type { AggregateRepository } from "../repository/types.ts";
@@ -27,8 +27,8 @@ export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
 /** Every body Ask reads, one state at a time from each state's index. */
-function readHeldBodies(): AsyncGenerator<StateMeetingBody> {
-  return readMeetingBodies({ window: "HELD" });
+function readHeldBodies(states?: readonly string[]): AsyncGenerator<StateMeetingBody> {
+  return readMeetingBodies({ window: "HELD", states });
 }
 
 /** The recorded outcomes Ask reads, and whether they could be read (Ask's own test: an empty store is unreadable). */
@@ -76,6 +76,9 @@ export const ASK_GAP_READING_BOUND_MS = 90_000;
 
 interface ReadingOptions {
   readonly now: string;
+  /** The planner hydrates one state before asking its providers for work. */
+  readonly states?: readonly string[];
+  readonly clocks?: ReadonlyMap<string, CarrierClock>;
   readonly readBodies?: () => AsyncIterable<{ readonly bodyId: string; readonly load: () => Promise<{ readonly snapshot: MeetingsSnapshot } | null> }>;
   /** Bodies readers were told we hold no meeting of; their meeting counts are kept. */
   readonly toldNoMeetings?: ReadonlySet<string>;
@@ -103,14 +106,16 @@ export async function readAskGapHoldings(options: ReadingOptions): Promise<AskGa
 
 async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReading> {
   const nowMs = Date.parse(options.now);
-  const outcomes = await (options.readOutcomes ?? readHeldOutcomes)().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
+  const outcomes = await (options.readOutcomes ?? (options.states ? async () => {
+    const read = await readStateMeetingOutcomes(options.states!); return { sittings: read.sittings, unreadable: null };
+  } : readHeldOutcomes))().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
   const sittingsByBody = new Map<string, PersistedSittingOutcomes[]>();
   for (const sitting of outcomes.sittings) if (sitting.bodyId) sittingsByBody.set(sitting.bodyId, [...sittingsByBody.get(sitting.bodyId) ?? [], sitting]);
 
   const bodies: { readonly bodyId: string; readonly gaps: readonly HeldAskGap[] }[] = [];
   const counts = new Map<string, number>();
   try {
-    for await (const body of (options.readBodies ?? readHeldBodies)()) {
+    for await (const body of (options.readBodies ?? (() => readHeldBodies(options.states)))()) {
       const read = await body.load();
       if (read === null) return { unreadable: `the meetings of ${body.bodyId} could not be read, so no gap is decided on this cycle` };
       const { meetings, agendaDocuments } = read.snapshot;
@@ -123,6 +128,8 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
   }
 
   let clocks: ReadonlyMap<string, CarrierClock>;
+  if (options.clocks) clocks = options.clocks;
+  else {
   try {
     const readClock = options.readClock ?? (() => {
       // Constructed here: the store binds its connection on construction, which throws when none is configured.
@@ -133,6 +140,7 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
   } catch (error) {
     const why = `the routine clocks could not be read (${message(error)})`;
     clocks = new Map(askGapCarrierTasks().map((task) => [task.id, { kind: "UNREAD", why } as const]));
+  }
   }
 
   return {

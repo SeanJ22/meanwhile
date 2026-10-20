@@ -11,7 +11,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
+import { censusGeographyContractId, CENSUS_GEO_RECORD_CLASS, censusGeographyScope } from "../lib/census-geography/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
@@ -82,9 +82,9 @@ test("the routine discovers and acquires all three TIGER-only successor plans fr
   assert.deepEqual(edge.scopes.find(scope => scope.version === "cd:121")!.states, ["AZ"]);
 
   const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredRoutineCandidate(store, CENSUS_GEO_CONTRACT_ID, censusGeographyCandidate(dataset), dataset.builtAt);
+  const outcome = await processRegisteredRoutineCandidate(store, censusGeographyContractId("AZ"), censusGeographyCandidate(dataset,"AZ"), dataset.builtAt);
   assert.ok(outcome.promoted, `TIGER memberships must pass the routine publication door: ${outcome.candidate.state}`);
-  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, { store, now: dataset.builtAt, bypassCache: true });
+  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, censusGeographyScope("AZ"), { store, now: dataset.builtAt, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const lookup = createLookup(read.value, read.projection.versionId);

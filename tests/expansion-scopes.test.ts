@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -530,7 +529,7 @@ test("the runner's load: nothing selected changes nothing; a bootstrap lookup re
   assert.match(lookupDown.conditions.join(" "), /could not be read/);
 
   const broken = createMemoryRepositories();
-  const failing = { ...broken, adminConfig: { ...broken.adminConfig, read: async () => { throw new Error("boom"); } } } as typeof broken;
+  const failing = { ...broken, adminConfig: { ...broken.adminConfig, readNarrowed: async () => { throw new Error("boom"); } } } as typeof broken;
   const unreadable = await loadExpansionPlan({ repos: failing, root: ".", now: NOW, obligations });
   assert.equal(unreadable.plan?.malformedScopes, 1, "an unreadable policy row holds paid work rather than dropping a budget");
 });

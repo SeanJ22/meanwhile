@@ -8,6 +8,8 @@ import test from "node:test";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
+  assertRegisteredRuntimeContract,
+  isRegisteredRuntimeDerivation,
   GIT_READ_ATTEMPTS,
   inspectRuntimeCheckout,
   runtimeAuthorityEnvelope,
@@ -30,13 +32,15 @@ test("staging ordinary child carries readable exact mutation authority and keeps
     WTP_SANCTIONED_WRITE: "routine-civic-data-promotion" };
   for (const [capability, contract, sourceId, recordClass, scope] of [
     ["MANUAL_CONTRACT", "voting-sites:AZ", "voting-sites", "VOTING_SITE", "US-AZ:voting-sites"],
-    ["ROUTINE_CONTRACT", "fec-funding", "fec-open-api", "FEC_FUNDING", "federal-supported"],
+    ["ROUTINE_CONTRACT", "fec-funding:AZ", "fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"],
   ] as const) {
     const child = admittedRuntimeChildEnvironment({ parentEnv, capability, contract });
     const authority = assertRoutineDataStoreMutationAuthority(child);
     assert.equal(authority.capability, capability);
     assert.equal(authority.contract, contract);
     assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "staging-child", sourceId, recordClass, scope }, authority, "candidate"), null);
+    if (recordClass === "FEC_FUNDING") assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "other-state", sourceId, recordClass,
+      scope: "US-NH:fec-funding:v1" }, authority, "candidate"), "authority for fec-funding:AZ cannot mutate fec-funding:NH");
     assert.throws(() => assertRuntimeAuthority({ capabilities: [capability], contract: "wrong-contract" }, child), /does not match/);
   }
   assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_DB_ROLE: "production" }, capability: "ROUTINE_SUPERVISOR" }), /local/);
@@ -47,7 +51,7 @@ const envelope = (overrides: Partial<RuntimeAuthorityEnvelope> = {}): RuntimeAut
   repo: ROOT,
   sha: SHA,
   capability: "ROUTINE_CONTRACT",
-  contract: "fec-funding",
+  contract: "fec-funding:AZ",
   parentPid: PID,
   nonce: "b".repeat(64),
   ...overrides,
@@ -66,7 +70,7 @@ const checkout = (overrides: Partial<RuntimeCheckoutFacts> = {}): RuntimeCheckou
 function issue(
   admitted: RuntimeAuthorityEnvelope | null,
   facts: RuntimeCheckoutFacts = checkout(),
-  contract: string | null = "fec-funding",
+  contract: string | null = "fec-funding:AZ",
 ): string | null {
   return runtimeAuthorityIssue({
     envelope: admitted,
@@ -85,7 +89,7 @@ test("branch, dirty tree, wrong SHA, wrong parent and wrong contract each fail c
   assert.match(issue(envelope(), checkout({ clean: false })) ?? "", /not clean/);
   assert.match(issue(envelope(), checkout({ headSha: "c".repeat(40) })) ?? "", /not admitted SHA/);
   assert.match(issue(envelope({ parentPid: PID + 1 })) ?? "", /not immediate parent/);
-  assert.match(issue(envelope({ contract: "nh-members" })) ?? "", /not fec-funding/);
+  assert.match(issue(envelope({ contract: "nh-members" })) ?? "", /not fec-funding:AZ/);
   assert.match(issue(envelope({ capability: "MANUAL_CONTRACT" })) ?? "", /not one of/);
   assert.match(issue(null) ?? "", /absent or malformed/);
 });
@@ -102,13 +106,13 @@ test("child delegation rotates nonce and narrows capability/contract to one pare
   const child = admittedRuntimeChildEnvironment({
     parentEnv,
     capability: "ROUTINE_CONTRACT",
-    contract: "fec-funding",
+    contract: "fec-funding:AZ",
     parentPid: PID,
     nonce: "e".repeat(64),
   });
   const parsed = runtimeAuthorityEnvelope(child);
   assert.equal(parsed?.capability, "ROUTINE_CONTRACT");
-  assert.equal(parsed?.contract, "fec-funding");
+  assert.equal(parsed?.contract, "fec-funding:AZ");
   assert.equal(parsed?.parentPid, PID);
   assert.equal(parsed?.nonce, "e".repeat(64));
   assert.notEqual(parsed?.nonce, parentEnv.WTP_RUNTIME_AUTHORITY_NONCE);
@@ -246,11 +250,40 @@ test("the federal people split child writes place directories and member positio
   ] as const) assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "split", sourceId, recordClass, scope }, authority, "candidate"), null, scope);
   for (const [sourceId, recordClass, scope] of [
     ["official-state-people", "STATE_LEGISLATOR", "US-NJ:people:official-state-people:v1"],
-    ["fec-open-api", "FEC_FUNDING", "federal-supported"],
+    ["fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"],
   ] as const) assert.match(routineDataStoreCandidateAuthorityIssue({ id: "split", sourceId, recordClass, scope }, authority, "candidate") ?? "", /the federal people split cannot mutate/);
   const split = (contract: string | null) => runtimeAuthorityIssue({ envelope: { ...envelope(), capability: "FEDERAL_PEOPLE_SPLIT", contract },
     expectation: { capabilities: ["FEDERAL_PEOPLE_SPLIT"], immediateParentPid: PID }, checkout: checkout(), cwd: ROOT });
   assert.equal(split(null), null);
-  assert.match(split("fec-funding") ?? "", /may not carry a source contract/);
+  assert.match(split("fec-funding:AZ") ?? "", /may not carry a source contract/);
   assert.match(issue({ ...envelope(), capability: "FEDERAL_PEOPLE_SPLIT", contract: null }) ?? "", /not one of/, "it never satisfies a source child's expectation");
+});
+
+
+test("official people and ballot publishers keep their exact admission for only their same-state registry derivation",async()=>{
+  const {routineDataStoreCandidateAuthorityIssue}=await import("../lib/civic-data/store.ts");
+  const {REGISTRY_STATES,stateRegistryRuntimeContractId,stateRegistryRuntimeScope}=await import("../lib/civic-data/state-scopes.ts");
+  const {PLURAL_STATES}=await import("../lib/sources/plural/targets.ts");
+  const parentEnv:NodeJS.ProcessEnv={NODE_ENV:"development",WTP_RUNTIME_MODE:"staging",WTP_DB_ROLE:"local",DATABASE_URL:"postgresql://local:local@staging.invalid/reader",WTP_CONTROL_PLANE_DATABASE_URL:"postgresql://local:local@staging.invalid/control"};
+  for(const state of REGISTRY_STATES) for(const [capability,contract] of [["ROUTINE_CONTRACT",`openstates-people-${state.toLowerCase()}`],["MANUAL_CONTRACT",`ballot-contests:${state}`]] as const) {
+    const child=admittedRuntimeChildEnvironment({parentEnv,capability,contract}),authority=runtimeAuthorityEnvelope(child)!;
+    const target=stateRegistryRuntimeContractId(state),scope=stateRegistryRuntimeScope(state);
+    if(capability==="ROUTINE_CONTRACT"&&!PLURAL_STATES.includes(state.toLowerCase())) {
+      assert.throws(()=>assertRegisteredRuntimeContract(target,"manual",child),/REFUSED/);
+      continue;
+    }
+    assertRegisteredRuntimeContract(target,"manual",child);
+    assert.equal(runtimeAuthorityEnvelope(child)?.contract,contract,"the parent contract is never replaced by a manual child envelope");
+    const candidate={id:`derived-${state}`,sourceId:"registry-reviewed-bindings",recordClass:"REGISTRY_RUNTIME_BINDING" as const,scope};
+    for(const operation of ["candidate","reader-evidence"] as const) assert.equal(routineDataStoreCandidateAuthorityIssue(candidate,authority,operation),null);
+    const sibling=state==="NH"?"AZ":"NH";
+    assert.throws(()=>assertRegisteredRuntimeContract(stateRegistryRuntimeContractId(sibling),"manual",child),/REFUSED/);
+    assert.notEqual(routineDataStoreCandidateAuthorityIssue({...candidate,scope:stateRegistryRuntimeScope(sibling)},authority,"candidate"),null);
+    assert.throws(()=>assertRegisteredRuntimeContract(`candidate-profiles:${state}`,"manual",child),/REFUSED/);
+    assert.equal(isRegisteredRuntimeDerivation(authority,target,"routine"),false);
+    assert.equal(isRegisteredRuntimeDerivation({...authority,capability:capability==="ROUTINE_CONTRACT"?"MANUAL_CONTRACT":"ROUTINE_CONTRACT"},target,"manual"),false);
+    assert.notEqual(routineDataStoreCandidateAuthorityIssue({...candidate,sourceId:"plural-openstates"},authority,"candidate"),null);
+    assert.notEqual(routineDataStoreCandidateAuthorityIssue({...candidate,bootstrapImport:null} as unknown as Parameters<typeof routineDataStoreCandidateAuthorityIssue>[0],authority,"candidate"),null);
+    for(const other of ["candidate-profiles:NH","openstates-people-zz","statewide-people-nh","nh-members",null]) assert.equal(isRegisteredRuntimeDerivation({...authority,contract:other},target,"manual"),false);
+  }
 });

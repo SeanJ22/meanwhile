@@ -1,6 +1,6 @@
-import { acquireKnownRelease, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
-import { readZipEntries } from "../sources/archive.ts";
-import { parseCsv } from "../reference/index.ts";
+import { acquireKnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
+import { acquireKnownReleaseFile, KnownReleaseFileUnavailable, type KnownReleaseFile } from "../sources/known-release-file.ts";
+import { registrationSourceTables } from "./source-file.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { LoadedReference } from "./reference.ts";
 import { governmentNativeId, schoolDistrictSourceAssociations, type RegistrationGovernmentListing } from "./listings.ts";
@@ -39,26 +39,27 @@ export function schoolReleaseLinks(json: string, kind: SchoolReleaseKind): strin
   return [...new Set(files.map(file => file.url))];
 }
 
-function table(release: Pick<KnownRelease, "bytes">): { header: string[]; rows: string[][] } {
-  let bytes = release.bytes;
-  if (bytes[0] === 0x50 && bytes[1] === 0x4b) {
-    const entries = readZipEntries(bytes, { maxEntries: 64, maxMemberBytes: 96 * 1024 * 1024, maxTotalBytes: 192 * 1024 * 1024 });
-    const tables = entries.filter(entry => /\.(?:csv|txt)$/i.test(entry.name));
-    if (tables.length !== 1) throw new Error("NCES_RELEASE_TABLE_AMBIGUOUS");
-    bytes = tables[0].data;
+async function* tableRows(path: string): AsyncGenerator<string[]> {
+  let tables = 0;
+  for await (const table of registrationSourceTables(path)) {
+    if (++tables > 1) throw new Error("NCES_RELEASE_TABLE_AMBIGUOUS");
+    yield* table.rows;
   }
-  const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-  const [header = [], ...rows] = text.split(/\r?\n/, 1)[0].includes("\t") ? text.trimEnd().split(/\r?\n/).map(line => line.split("\t")) : parseCsv(text);
-  return { header: header.map(value => value.replace(/^\uFEFF/, "").trim().toUpperCase()), rows };
+  if (tables !== 1) throw new Error("NCES_RELEASE_TABLE_AMBIGUOUS");
 }
+const cleanHeader = (row: readonly string[]) => row.map(value => value.replace(/^\uFEFF/, "").trim().toUpperCase());
 
-export function schoolListingsFromRelease(prior: LoadedReference, release: KnownRelease): RegistrationGovernmentListing[] {
-  const { header, rows } = table(release);
-  const at = (...fields: string[]) => fields.map(field => header.indexOf(field)).find(index => index >= 0) ?? -1;
-  if (at("LEAID", "NCES_LEAID") < 0 || at("LEA_NAME", "LEANM") < 0) throw new Error("NCES_DIRECTORY_HEADER_INVALID");
+export async function schoolListingsFromRelease(prior: LoadedReference, release: KnownReleaseFile): Promise<RegistrationGovernmentListing[]> {
+  let header: string[] | null = null;
+  const at = (...fields: string[]) => fields.map(field => header?.indexOf(field) ?? -1).find(index => index >= 0) ?? -1;
   const out: RegistrationGovernmentListing[] = [];
   const seen = new Set<string>();
-  for (const row of rows) {
+  for await (const row of tableRows(release.path)) {
+    if (header === null) {
+      header = cleanHeader(row);
+      if (at("LEAID", "NCES_LEAID") < 0 || at("LEA_NAME", "LEANM") < 0) throw new Error("NCES_DIRECTORY_HEADER_INVALID");
+      continue;
+    }
     const value = (...fields: string[]) => (row[at(...fields)] ?? "").trim();
     const sourceState = value("ST", "STATE").toUpperCase();
     const fips = value("FIPST", "FIPS_STATE").padStart(2, "0");
@@ -88,30 +89,46 @@ export function schoolListingsFromRelease(prior: LoadedReference, release: Known
 }
 
 /** F-33 can supply a native crosswalk; ambiguity never becomes a name match. */
-export function applyF33NativeCrosswalk(listings: readonly RegistrationGovernmentListing[], release: KnownRelease): RegistrationGovernmentListing[] {
-  const { header, rows } = table(release);
-  const leaAt = header.indexOf("LEAID"), pidAt = header.findIndex(key => ["PID6", "CENSUS_ID_PID6"].includes(key));
-  if (leaAt < 0 || pidAt < 0) throw new Error("NCES_F33_NATIVE_CROSSWALK_UNAVAILABLE");
-  const pairs = new Map<string, Set<string>>();
-  for (const row of rows) {
+export async function applyF33NativeCrosswalk(listings: readonly RegistrationGovernmentListing[], release: KnownReleaseFile): Promise<RegistrationGovernmentListing[]> {
+  let header: string[] | null = null, leaAt = -1, pidAt = -1;
+  const wanted = new Set(listings.flatMap(row => row.nativeIds.census_pid6 ? [row.nativeIds.census_pid6] : []));
+  const pairs = new Map<string, string | null>();
+  for await (const row of tableRows(release.path)) {
+    if (header === null) {
+      header = cleanHeader(row); leaAt = header.indexOf("LEAID"); pidAt = header.findIndex(key => ["PID6", "CENSUS_ID_PID6"].includes(key));
+      if (leaAt < 0 || pidAt < 0) throw new Error("NCES_F33_NATIVE_CROSSWALK_UNAVAILABLE");
+      continue;
+    }
     const lea = row[leaAt]?.trim(), native = row[pidAt]?.trim();
+    if (!native || !wanted.has(native)) continue;
     if (!lea || !/^\d{7}$/.test(lea) || !native || !/^\d+$/.test(native)) continue;
     const key = `census_pid6:${native}`;
-    const values = pairs.get(key) ?? new Set<string>(); values.add(lea); pairs.set(key, values);
+    const prior = pairs.get(key);
+    pairs.set(key, prior === undefined || prior === lea ? lea : null);
   }
-  const reverse = new Map<string, Set<string>>();
-  for (const [key, values] of pairs) for (const lea of values) { const keys = reverse.get(lea) ?? new Set<string>(); keys.add(key); reverse.set(lea, keys); }
+  // A second disk pass checks the reverse identity even when the conflicting
+  // Census government was not requested. Only this state's candidate LEAs stay held.
+  const wantedLeas = new Set([...pairs.values()].filter((value): value is string => value !== null));
+  const reverse = new Map<string, string | null>();
+  let first = true;
+  for await (const row of tableRows(release.path)) {
+    if (first) { first = false; continue; }
+    const lea = row[leaAt]?.trim(), native = row[pidAt]?.trim();
+    if (!lea || !wantedLeas.has(lea) || !native || !/^\d+$/.test(native)) continue;
+    const prior = reverse.get(lea);
+    reverse.set(lea, prior === undefined || prior === native ? native : null);
+  }
   return listings.map(listing => {
-    const values = pairs.get(`census_pid6:${listing.nativeIds.census_pid6}`);
-    const lea = values?.size === 1 ? [...values][0] : undefined;
-    return lea && reverse.get(lea)?.size === 1 ? { ...listing, nativeIds: { ...listing.nativeIds, nces_leaid: lea,
+    const native = listing.nativeIds.census_pid6;
+    const lea = pairs.get(`census_pid6:${native}`);
+    return lea && reverse.get(lea) === native ? { ...listing, nativeIds: { ...listing.nativeIds, nces_leaid: lea,
       f33_release: release.releaseId, f33_sha256: release.sha256, f33_source_url: release.requestedUrl, f33_observed_at: release.sourceObservedAt } } : listing;
   });
 }
 
 export async function acquireSchoolRelease(kind: SchoolReleaseKind, options: Pick<KnownReleaseOptions, "signal" | "fetchImpl" | "store" | "locks" | "now"> & {
   readonly onSourceUrl?: (url: string) => void;
-}): Promise<KnownRelease> {
+}): Promise<KnownReleaseFile> {
   const catalogUrl = NCES_SCHOOL_CATALOG[kind];
   options.onSourceUrl?.(catalogUrl);
   const directory = await acquireKnownRelease({ ...options, sourceId: "nces-ccd", releaseId: `${kind}-catalog`, url: catalogUrl,
@@ -121,7 +138,14 @@ export async function acquireSchoolRelease(kind: SchoolReleaseKind, options: Pic
   if (!links.length) throw new Error(`NCES_${kind.toUpperCase()}_DOWNLOAD_LINK_UNAVAILABLE:${catalogUrl}`);
   const url = links[0];
   options.onSourceUrl?.(url);
-  return acquireKnownRelease({ ...options, sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url,
+  try { return await acquireKnownReleaseFile({ ...options, sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url,
     parserVersion: kind === "f33" ? "nces-f33/2" : "nces-lea/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 64 * 1024 * 1024, checkAfterMs: 30 * 24 * 60 * 60 * 1000,
-    validate: bytes => { const parsed = table({ bytes }); if (!parsed.rows.length || !parsed.header.includes("LEAID")) throw new Error("NCES_RELEASE_INVALID"); } });
+    validate: async path => {
+      let header: string[] | null = null, rows = 0;
+      for await (const row of tableRows(path)) { if (header === null) header = cleanHeader(row); else rows++; }
+      if (!rows || !header?.includes("LEAID")) throw new Error("NCES_RELEASE_INVALID");
+    } }); } catch (error) {
+    if (error instanceof KnownReleaseFileUnavailable) await error.held.dispose();
+    throw error;
+  }
 }

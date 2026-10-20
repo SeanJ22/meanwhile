@@ -68,14 +68,14 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
 export async function collectPublishedWorkerReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
-  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  let destinations: {state:string;lowest:Awaited<ReturnType<typeof lowestZipByDivision>>}|null=null;
   try {
     const result = await collectWorkerRosterReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
       zipForDivision: async division => {
         const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
         if (!state) return null;
-        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
-        return destinations.get(state)?.get(division) ?? null;
+        if (destinations?.state!==state) destinations={state,lowest:await lowestZipByDivision(state)};
+        return destinations.lowest?.get(division) ?? null;
       },
       observe: async input => {
         if (!browser) {
@@ -100,14 +100,14 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
 export async function collectPublishedManualReaderReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
-  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  let destinations: {state:string;lowest:Awaited<ReturnType<typeof lowestZipByDivision>>}|null=null;
   try {
     const result = await collectWorkerManualReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
       zipForDivision: async division => {
         const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
         if (!state) return null;
-        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
-        const held = destinations.get(state);
+        if (destinations?.state!==state) destinations={state,lowest:await lowestZipByDivision(state)};
+        const held = destinations.lowest;
         const exact = held?.get(division);
         if (exact) return exact;
         const stateDivision = `ocd-division/country:us/state:${state.toLowerCase()}`;

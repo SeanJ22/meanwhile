@@ -45,12 +45,12 @@ test("the daily recheck re-measures Proven labels; one that still holds writes n
   const map = memoryFixMap();
   await recordAttemptsKeepingHistory(map, repos, Array.from({ length: 6 }, (_, i) => attempt(i, "SUCCEEDED", OLD)), () => "the agenda route");
   const before = updateRecords(await config(repos)).length;
-  assert.deepEqual(await recheckProvenFixes(map, repos, NOW), []);
+  assert.equal(await recheckProvenFixes(map, repos, NOW), 0);
   assert.equal(updateRecords(await config(repos)).length, before);
   // A recent failure recorded straight into the map (no attempt pass ran) is caught by the daily recheck.
   for (const i of [0, 1, 2]) await map.put({ methodId: "m-1", placeId: place(i), state: "FAILS", triedAt: NOW, attemptId: `x${i}`, cause: "moved", updatedAt: NOW });
   const told = await recheckProvenFixes(map, repos, NOW);
-  assert.deepEqual(told.map((u) => u.kind), ["BROKE"]);
+  assert.equal(told, 1);
   assert.equal(fixesInTesting(await config(repos)).length, 1);
 });
 

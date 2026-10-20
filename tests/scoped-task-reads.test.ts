@@ -16,7 +16,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { selectStandingLineages } from "../lib/control-plane/workers/standing-lineage.ts";
-import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
+import { visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
@@ -70,14 +70,11 @@ function counted(repos: ControlPlaneRepositories) {
 const scout = (obligationId: string, subjectId: string, at: string): ScoutResult => ({ attemptId: `${obligationId}-a`, obligationId, subjectId,
   recordClass: "OFFICIAL_ROSTER", recordedAt: at, refusal: null, candidates: [], findings: [], rungs: [], nextRungs: [], artifactIds: [] }) as unknown as ScoutResult;
 
-test("CH-26: with the switch off, the old whole-table reads still run", async () => {
+test("RH-01: the task always reads only its work item; no whole-country restore path remains", async () => {
   const counter = counted(createMemoryRepositories());
   const h = await autonomousHarness({ repos: counter.repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   counter.reset();
   await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.ok(counter.whole().some(call => call.startsWith("attempts.list")), "the old path is the default");
-  counter.reset();
-  await nextAutonomousOperation({ ...h.runtime, scopedReads: true }, h.item.id);
   assert.deepEqual(counter.whole(), []);
 });
 
@@ -89,7 +86,7 @@ test("CH-26: scoped reads return what the whole-table reads returned, after the 
     await repos.scoutResults.append(key, `${key}-${at}`, { ...scout(key, subject, at), attemptId: `${key}-${at}` }, at);
   }
   const all = await repos.scoutResults.readAll();
-  const scoped = await readScoutResultsForSubjects(repos, ["s:1"], true);
+  const scoped = await readScoutResultsForSubjects(repos, ["s:1"]);
   assert.deepEqual(scoped.filter(row => row.subjectId === "s:1"), all.filter(row => row.subjectId === "s:1"));
   assert.deepEqual(await repos.scoutResults.keysWhere(["subjectId"], "s:1"), ["a", "c"]);
 });
@@ -139,9 +136,11 @@ test("CH-26: a task's lineage, read through the lineage index, is the lineage th
   const history = await readLineageHistory(h.repos, child.id);
   assert.deepEqual(new Set(history.workItems.map(item => item.id)), new Set([first.id, second.id, child.id]), "the lineage and its repair family, nothing else");
   assert.deepEqual(history.occurrences.map(row => row.id), ["round-1", "round-2"]);
+  const workerResults: import("../lib/control-plane/workers/types.ts").WorkerResultRecord[] = [];
+  await visitCompletedWorkerResults(h.repos, record => { workerResults.push(record); });
   const whole = selectStandingLineages({ occurrences: (await h.repos.occurrences.list()).map(row => row.value),
     workItems: (await h.repos.workItems.list()).map(row => row.value), artifacts: await h.repos.artifacts.readAll(),
-    attempts: (await h.repos.attempts.list()).map(row => row.value), workerResults: await readCompletedWorkerResults(h.repos) });
+    attempts: (await h.repos.attempts.list()).map(row => row.value), workerResults });
   const mine = whole.filter(lineage => lineage.siblingRootIds.includes(first.id));
   assert.deepEqual(mine.map(lineage => new Set(lineage.siblingRootIds)), [new Set([first.id, second.id])], "a real two-root lineage");
   assert.deepEqual(selectStandingLineages(history), mine);
@@ -157,7 +156,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   await installRegistryAuthority();
   const registry = promotedFixtureBundle();
-  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test" } }));
+  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();
@@ -166,7 +165,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   }
   counter.reset();
   await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
-  assert.ok(counter.whole().length > 0, "the round's unscoped build still does the whole-store upkeep");
+  assert.deepEqual(counter.whole(), [], "all runtime builds leave upkeep to the streaming round pass");
 });
 
 test("CH-26: each lease task reports its repository calls, and the round records their mean as a phase", async () => {
@@ -175,9 +174,19 @@ test("CH-26: each lease task reports its repository calls, and the round records
   assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
   assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task, item\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
-  assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
+  assert.doesNotMatch(worker, /WTP_SCOPED_TASK_READS|scopedReads/, "the whole-country restore switch is deleted");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
+  const counters = round.match(/let leaseTaskCallSum = 0, leaseTaskCallCount = 0;/);
+  const recorded = round.match(/if \(typeof result\.repositoryCalls === "number"\) \{ leaseTaskCallSum \+= result\.repositoryCalls; leaseTaskCallCount\+\+; \}/);
+  const phase = round.match(/const leaseTaskReadsPhase = \(\): CyclePhase\[\] => ([\s\S]*?);\n/);
+  assert.ok(counters); assert.ok(recorded); assert.ok(phase);
+  const reading = new Function("results", `${counters[0]}\nfor (const result of results) { ${recorded[0]} }\nreturn (${phase[1]});`);
+  assert.deepEqual(reading([]), [], "no task reports means no invented zero phase");
+  assert.deepEqual(reading([{ repositoryCalls: 3 }, {}, { repositoryCalls: "8" }, { repositoryCalls: 4 }]),
+    [{ name: "lease-task-reads", durationMs: 0, repositoryCalls: 4 }], "the phase is the rounded mean of the tasks that actually reported calls");
+  assert.deepEqual(reading([{ repositoryCalls: 0 }, { repositoryCalls: 10 }]),
+    [{ name: "lease-task-reads", durationMs: 0, repositoryCalls: 5 }], "a genuine zero-call task counts in the denominator");
+  assert.doesNotMatch(round, /leaseTaskCalls(?:\.push|\s*[:=])/, "per-task metric samples never accumulate for the whole country");
   assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);
-  assert.ok(round.indexOf("const leaseTaskCalls") < round.indexOf("const earlyOriginal"), "declared before the first wave can report");
+  assert.ok(round.indexOf(counters[0]) < round.indexOf("const earlyOriginal"), "declared before the first wave can report");
 });

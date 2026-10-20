@@ -57,6 +57,12 @@ export function federalMemberOfScope(scope: string): string | null {
   return /^congress:[A-Z]\d{6}$/.test(id) ? id : null;
 }
 
+export const federalKeyVoteMemberScope = (officeholderId: string) => `${FEDERAL_KEY_VOTE_SCOPE}:${officeholderId}`;
+export function federalKeyVoteMemberOfScope(scope: string): string | null {
+  const id = scope.startsWith(`${FEDERAL_KEY_VOTE_SCOPE}:`) ? scope.slice(FEDERAL_KEY_VOTE_SCOPE.length + 1) : "";
+  return /^congress:[A-Z]\d{6}$/.test(id) ? id : null;
+}
+
 export interface FederalKeyVotePositions {
   readonly formatVersion: 1;
   readonly fetchedAt: string;
@@ -78,6 +84,8 @@ export interface FederalKeyVotesSnapshot {
 export interface FederalKeyVotesReadModel {
   readonly formatVersion: 1;
   readonly selectionVersion: "v1";
+  /** Absent on the shared question selection; present only on one member's position pointer. */
+  readonly officeholderId?: string;
   readonly snapshot: FederalKeyVotesSnapshot;
   readonly positions: FederalKeyVotePositions;
 }
@@ -310,12 +318,14 @@ function physicalRef(entryId: string, chamber: "house" | "senate", ref: KeyVoteE
 }
 
 export function federalKeyVotesCandidate(input: {
-  readonly acquisitions: readonly OfficialAcquisition[];
+  readonly acquisitions: readonly (OfficialAcquisition | HeldAcquisition)[];
+  readonly officeholderId?: string;
   readonly retrievedAt: string;
   readonly snapshot: FederalKeyVotesSnapshot;
   readonly positions: FederalKeyVotePositions;
 }): RoutineCandidate {
-  const acquisitions = heldAcquisitions(input.acquisitions);
+  const acquisitions = input.acquisitions.map(acquisition => "body" in acquisition ? heldAcquisitions([acquisition])[0] : acquisition);
+  const scope = input.officeholderId ? federalKeyVoteMemberScope(input.officeholderId) : FEDERAL_KEY_VOTE_SCOPE;
   const refs = input.snapshot.entries.flatMap((entry) => ([
     ...entry.house.map((ref) => ({ entryId: entry.id, chamber: "house" as const, ref })),
     ...entry.senate.map((ref) => ({ entryId: entry.id, chamber: "senate" as const, ref })),
@@ -323,6 +333,8 @@ export function federalKeyVotesCandidate(input: {
   const refKeys = refs.map(({ entryId, chamber, ref }) => physicalRef(entryId, chamber, ref));
   const held = new Set(Object.keys(input.positions.positions));
   const issues = acquisitionIssues("FEDERAL_KEY_VOTE", acquisitions);
+  if (input.officeholderId && federalKeyVoteMemberOfScope(scope) !== input.officeholderId) issues.push("KEY_VOTE_MEMBER_ID_INVALID");
+  if (input.officeholderId && Object.values(input.positions.positions).some(positions => Object.keys(positions).some(member => member !== input.officeholderId))) issues.push("KEY_VOTE_POSITION_UNDER_ANOTHER_MEMBER");
   const selectionIssue = federalKeyVoteSelectionV1Issue(input.snapshot);
   if (selectionIssue) issues.push(selectionIssue);
   if (new Set(input.snapshot.entries.map((entry) => entry.id)).size !== input.snapshot.entries.length) issues.push("DUPLICATE_KEY_QUESTION_ID");
@@ -344,6 +356,7 @@ export function federalKeyVotesCandidate(input: {
   const readModel: FederalKeyVotesReadModel = {
     formatVersion: 1,
     selectionVersion: "v1",
+    ...(input.officeholderId ? {officeholderId:input.officeholderId} : {}),
     snapshot: input.snapshot,
     positions: input.positions,
   };
@@ -353,10 +366,10 @@ export function federalKeyVotesCandidate(input: {
   };
   const rawHash = acquisitionRawHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
+    id: candidateId(scope, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_KEY_VOTE",
-    scope: FEDERAL_KEY_VOTE_SCOPE,
+    scope,
     retrieval: {
       succeeded: acquisitions.length > 0 && issues.every((issue) => !/^(?:FINAL_|SOURCE_|HTTP_|EMPTY_BODY)/.test(issue)),
       requestedUrl: acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/",
@@ -403,7 +416,7 @@ export function federalKeyVotesCandidate(input: {
       claimsComplete: true,
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_VOTES_SOURCE_ID, "FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE),
+    sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_VOTES_SOURCE_ID, "FEDERAL_KEY_VOTE", scope),
     dependentChecks: [
       { consumer: "lib/votes/key-votes-reader.ts", passed: input.snapshot.entries.length > 0 && refs.length > 0, detail: `${input.snapshot.entries.length} questions and ${refs.length} selected chamber rolls.` },
       { consumer: "lib/ask/key-votes.ts", passed: refKeys.every((key) => held.has(key)), detail: `${held.size}/${refKeys.length} selected rolls carry official position maps.` },

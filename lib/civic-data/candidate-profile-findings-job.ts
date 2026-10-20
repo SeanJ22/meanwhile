@@ -1,7 +1,7 @@
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { requireBallotState, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { canonicalCandidacyId, canonicalContestId } from "../hunt/candidate-universe.ts";
-import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { factClocks } from "../facts/clocks.ts";
 import { CANDIDATE_PROFILE_LEAD } from "../facts/finding-slots.ts";
@@ -43,7 +43,7 @@ export async function runCandidateProfileFindingsJob(input: {
   for (const row of approved) campaignHosts.set(row.candidacy_id, [...campaignHosts.get(row.candidacy_id) ?? [], row.host]);
   let receipt: RoutineRunnerReceipt | null = null;
   const report = await publishCandidateFindings({ boxFindings: input.repos.boxFindings, held, store: input.store, subjects, findings,
-    campaignHosts, clocks: factClocks((await input.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now: input.now, portrait: input.portrait,
+    campaignHosts, clocks: factClocks((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null), now: input.now, portrait: input.portrait,
     onPublished: (candidate, outcome) => { receipt = { source: contractId, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; } });
   return { report, receipt };
 

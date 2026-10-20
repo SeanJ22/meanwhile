@@ -75,6 +75,37 @@ test("govinfo reads the current directory, opens only its state granules and use
   assert.equal(release.roster.officeholders[0].phone,"202-224-1234");assert.equal(release.roster.officeholders[0].websiteUrl,"https://doe.senate.gov/");
   assert.equal(release.roster.officeholders[0].fieldSources?.phone.sourceUrl,"https://www.govinfo.gov/content/pkg/CDIR-2026/html/AZ.htm");
   assert.ok(!requests.some(path=>path.includes("/CA/")));assert.equal(release.acquisitions.length,4);assert.ok(release.acquisitions.every(row=>!row.requestedUrl.includes("api_key")));
+  const indexes = release.acquisitions.filter(row => row.indexOnly);
+  assert.equal(indexes.length, 2);
+  assert.ok(indexes.every(row => row.body === "" && row.heldCapture?.ref.byteLength));
+  assert.ok(release.acquisitions.filter(row => !row.indexOnly).every(row => !row.body.includes("California")));
+});
+
+test("govinfo folds collection pages to one current package and holds national index bodies outside state work", async () => {
+  let collectionPages = 0;
+  const fetchImpl: typeof fetch = async resource => {
+    const parsed = new URL(String(resource));
+    if (parsed.pathname.startsWith("/collections/CDIR/")) {
+      const page = parsed.searchParams.get("offsetMark") === "*" ? 0 : Number(parsed.searchParams.get("offsetMark"));
+      collectionPages++;
+      const packages: unknown[] = Array.from({ length: 100 }, (_, id) => ({ packageId: `OLD-${page}-${id}`, congress: 118, title: "Unrelated directory " + "x".repeat(1000) }));
+      if (page === 0 || page === 9) packages.push({ packageId: `CURRENT-${page}`, congress: 119, dateIssued: page === 0 ? "2026-01-01" : "2026-02-01" });
+      parsed.searchParams.delete("api_key"); parsed.searchParams.set("offsetMark", String(page + 1));
+      return json({ packages, ...(page < 9 ? { nextPage: parsed.href } : {}) });
+    }
+    if (parsed.pathname === "/packages/CURRENT-9/granules") return json({ granules: [
+      { state: "CA", title: "California", granuleLink: "https://api.govinfo.gov/packages/CURRENT-9/granules/CA/summary" },
+      { state: "AZ", title: "Arizona", granuleLink: "https://api.govinfo.gov/packages/CURRENT-9/granules/AZ/summary" },
+    ] });
+    if (parsed.pathname.endsWith("/AZ/summary")) return json({ congress: "119", members: [{ bioGuideId: "A000001", memberName: "Jane Doe", state: "AZ", chamber: "Senate" }] });
+    throw new Error(`unexpected state source ${parsed.pathname}`);
+  };
+  const release = await acquirePeopleSource(options("govinfo", fetchImpl));
+  assert.equal(collectionPages, 10);
+  assert.deepEqual(release.gaps, []);
+  assert.equal(release.roster.officeholders.length, 1);
+  assert.ok(release.acquisitions.filter(row => row.indexOnly).every(row => row.body === "" && row.heldCapture));
+  assert.ok(release.acquisitions.filter(row => !row.indexOnly).every(row => !row.body.includes("Unrelated directory")));
 });
 
 test("Data.gov govinfo transport cannot escape its provider and retains existing College Scorecard behavior",async()=>{

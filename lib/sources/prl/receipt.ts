@@ -4,9 +4,8 @@ import { PRL_RHETORIC_ATTRIBUTION } from "./types.ts";
 /**
  * The per-dataset ingest receipt, written to the object store as
  * `<id>/state.json` beside its rows. Its high-water mark (capped at now) is
- * coverage metadata, never a row exclusion cursor. Profile datasets carry their precomputed
- * percentages; archives name their object keys. Completed releases enter the canonical PRL_ARCHIVE manifest through the
- * existing civic-data promotion plane.
+ * coverage metadata, never a row exclusion cursor. Completed source roots identify
+ * immutable native-person objects through the existing civic-data promotion plane.
  */
 
 export type PrlProfileKind = "federal" | "state" | "primary";
@@ -41,7 +40,7 @@ export interface PrlIngestReceipt {
   readonly objectKeys: readonly string[];
   /** Object keys written by this run only. */
   readonly newObjectKeys: readonly string[];
-  /** Precomputed per-official percentages (profile datasets); null for archives. */
+  /** Retained source versions may carry profiles here; new releases store native-person objects. */
   readonly profileKind: PrlProfileKind | null;
   readonly profiles: readonly unknown[] | null;
   readonly attribution: typeof PRL_RHETORIC_ATTRIBUTION;
@@ -61,5 +60,8 @@ export function prlReceiptViolations(receipt: PrlIngestReceipt): string[] {
   if ([receipt.rowsWritten, receipt.rowsSeen, receipt.rowsAfterNow].some(count => !Number.isSafeInteger(count) || count < 0)) problems.push("PRL ingest receipt carries an invalid row count.");
   if (receipt.rowsWritten > receipt.rowsSeen) problems.push("PRL ingest receipt wrote more rows than it saw.");
   if (receipt.profiles !== null && !Array.isArray(receipt.profiles)) problems.push("PRL ingest receipt carries a non-array precomputed profiles payload.");
+  if (receipt.parserVersion === "prl-ingest/3" && (receipt.profiles !== null || receipt.objectKeys.length || receipt.newObjectKeys.length ||
+    !receipt.objectRoot || !receipt.objectRoot.startsWith(`${receipt.datasetId}/${receipt.sourceSha256}/`) ||
+    !Number.isSafeInteger(receipt.subjectCount) || (receipt.subjectCount ?? 0) <= 0)) problems.push("PRL release lacks its bounded native-person object roots.");
   return [...new Set(problems)];
 }

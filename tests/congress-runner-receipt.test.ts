@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { stringify } from "yaml";
+import { holdRawCaptureFile } from "../lib/civic-data/raw-capture-vault.ts";
+import type { acquireCongressSourceFile } from "../lib/officials/congress-source-file.ts";
 import test from "node:test";
 import { refreshCongressDirectory } from "../scripts/fetch-congress-legislators.mts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -8,7 +13,6 @@ import { readStateFederalDirectory } from "../lib/officials/federal-directory-re
 import { durableRoutineRunnerReceiptIssue, parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
-import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-release.ts";
 
 const NOW = "2026-10-09T21:30:00.000Z", SHA = "a".repeat(40);
 const files: Record<string, unknown> = {
@@ -26,14 +30,15 @@ const revision = async () => ({ sha: SHA, sourceCheck: {
   finalUrl: "https://api.github.com/repos/unitedstates/congress-legislators/commits?per_page=1",
   httpStatus: 200 as const, rawHash: "b".repeat(64), checkedAt: NOW,
 } });
-function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
-  const name = options.releaseId.split("/").at(-1)!;
-  const bytes = new TextEncoder().encode(JSON.stringify(files[name]));
-  return { sourceId: options.sourceId, releaseId: options.releaseId, requestedUrl: options.url, finalUrl: options.url,
-    bytes, sha256: createHash("sha256").update(bytes).digest("hex"), httpStatus: 200, retrievedAt: NOW,
-    sourceObservedAt: NOW, checkedAt: NOW, lastCheckStatus: 200, etag: null, lastModified: null,
-    contentType: "text/plain", reused: false, vaultKey: `fixture/congress/${name}` };
+async function fixtureFile(options: Parameters<typeof acquireCongressSourceFile>[0]) {
+  const name = options.url.split("/").at(-1)!.replace(/\.yaml$/, "");
+  const root = await mkdtemp(join(tmpdir(), "rh01-congress-fixture-")), path = join(root, "source.yaml");
+  await writeFile(path, stringify(files[name]));
+  return { path, requestedUrl: options.url, finalUrl: options.url, httpStatus: 200, retrievedAt: NOW,
+    raw: await holdRawCaptureFile(options.vault, "congress-directory-project", path, "text/plain"),
+    dispose: () => rm(root, { recursive: true, force: true }) };
 }
+
 const expected = { id: "congress-bulk-roster:AZ", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY" as const,
   scope: "US-AZ:current-congress-directory", contract: requiredManualProductionContract("congress-bulk-roster:AZ") };
 
@@ -51,7 +56,7 @@ test("the Congress roster runner keeps each publication and emits one supervisor
         const held = await readStateFederalDirectory("AZ", { store, now: NOW, bypassCache: true });
         assert.equal(held.kind, "PROMOTED", "accepted people publish before the next optional acquisition starts");
       }
-      const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
+      return fixtureFile(options);
     },
   });
   assert.equal(acquired, 5);
@@ -82,8 +87,8 @@ test("an unavailable optional Congress file keeps accepted people and a single d
   t.mock.method(console, "error", (line: string) => { diagnostics.push(line); });
   await refreshCongressDirectory({ state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
-      if (options.releaseId.endsWith("legislators-social-media")) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture optional file unavailable");
-      const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
+      if (options.url.endsWith("legislators-social-media.yaml")) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture optional file unavailable");
+      return fixtureFile(options);
     },
   });
   const parsed = parseRoutineRunnerReceipt(lines.join("\n"));

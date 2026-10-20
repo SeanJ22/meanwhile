@@ -1,37 +1,35 @@
 import { normalizedHash, sha256 } from "../../civic-data/candidate-builders.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
-import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
+import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { processRegisteredFanOutCandidate } from "../../civic-data/promotion.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, federalScope, type FederalSourceId } from "./targets.ts";
 import { normalizeFederalCaptureWithRoster } from "./normalize.ts";
 import type { FederalCapture, FederalCounts, FederalFact, FederalProjection, HeldFederalCapture, LdaRoster } from "./types.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
-import { readLdaRosterVersion } from "./lda-roster.ts";
+import { federalCaptureHonorees, readLdaRosterVersion } from "./lda-roster.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { holdRawCapture, readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
+import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
+import { readPublishedArraySlice } from "../../civic-data/published-array-slice.ts";
+import { federalProjectionIssues, readFederalSourceProjection } from "./read-projection.ts";
+export { federalProjectionIssues, readFederalSourceProjection } from "./read-projection.ts";
 
 const factHash = ({ checkedAt: _checkedAt, ...fact }: FederalFact) => normalizedHash(fact);
-export function federalProjectionIssues(value: FederalProjection): string[] {
-  if (!value || value.formatVersion !== 1 || !Array.isArray(value.records)) return ["Federal source projection has an invalid shape."];
-  const issues: string[] = [];
-  if (new Set(value.records.map(row => row.id)).size !== value.records.length) issues.push("Duplicate source-native row IDs.");
-  if (value.records.some(row => !row.id || !row.nativeId || row.source !== value.source || row.official !== true ||
-    !row.publisher || !/^https:\/\//.test(row.sourceUrl) || !Number.isFinite(Date.parse(row.checkedAt)) ||
-    (row.publishedAt !== null && !Number.isFinite(Date.parse(row.publishedAt))))) issues.push("A fact lacks native identity, official source attribution or valid source dates.");
-  if (value.source === "senate-lda" && value.records.some(row => row.bioguideId &&
-    (row.honoreeJoin?.status !== "JOINED" || row.state !== row.honoreeJoin.state || !row.honoreeName))) {
-    issues.push("An LDA member link lacks its unique honoree/roster join evidence.");
+/** Migrate one document without opening the retained national rules publication. */
+export async function readLegacyFederalRule(source: "regulations-gov" | "federal-register", nativeId: string,
+  options: PromotedCivicDataReadOptions = {}): Promise<readonly FederalFact[]> {
+  if (!options.store || options.store instanceof PostgresRoutineDataStore) {
+    const slice = await readPublishedArraySlice<FederalFact>({ recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(source, "rules"),
+      path: ["records"], statePath: ["nativeId"], statePattern: `^${nativeId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$` });
+    if (slice && slice.records.some(row => row.source !== source || row.nativeId !== nativeId)) throw new Error("FEDERAL_RULE_LEGACY_IDENTITY_MISMATCH");
+    return slice?.records ?? [];
   }
-  return issues;
-}
-export async function readFederalSourceProjection(source: FederalSourceId, partition = "national", options: PromotedCivicDataReadOptions = {}) {
-  const result = await readPromotedCivicData<FederalProjection>(FEDERAL_RECORD_CLASS, federalScope(source, partition), options);
-  if (result.kind === "PROMOTED" && (result.value.source !== source || federalProjectionIssues(result.value).length)) {
-    return { ...result, kind: "STORE_UNREACHABLE" as const, value: null, code: "PROMOTION_PROOF_INVALID" as const, detail: "Federal source projection failed its typed reader contract." };
-  }
-  return result;
+  // An injected in-memory fixture has no SQL payload store.
+  const held = await readFederalSourceProjection(source, "rules", options);
+  if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
+  return held.kind === "PROMOTED" ? held.value.records.filter(row => row.nativeId === nativeId) : [];
 }
 
 type VaultedCapture = FederalCapture & HeldFederalCapture;
@@ -45,6 +43,8 @@ export function federalCandidate(input: { source: FederalSourceId; partition: st
   replaceFilingId?: string; rosters?: ReadonlyMap<string, LdaRoster> }): RoutineCandidate {
   const { source, projection, captures, now } = input, scope = federalScope(source, input.partition);
   const issues = federalProjectionIssues(projection);
+  if (input.partition.startsWith("rule:") && (projection.records.length !== 1 ||
+    projection.records.some(row => row.nativeId !== input.partition.slice(5)))) issues.push("A rule partition must hold its one exact source-native document.");
   const normalize = (capture: FederalCapture) => normalizeFederalCaptureWithRoster(capture, input.rosters?.get(capture.context?.honoreeRosterVersionId ?? ""));
   if ((input.completePartition || input.replaceFilingId) && source === "senate-lda") {
     const filingId = input.replaceFilingId ?? input.partition.replace(/^filing:/, "");
@@ -91,7 +91,7 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
     // The refresh keeps adding to its running total, so the projection holds this moment's copy.
     ...(input.counts ? { counts: structuredClone(input.counts) } : held?.counts ? { counts: held.counts } : {}) };
   const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
-  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
+  const previousCaptures = input.completePartition ? [] : (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
   const fresh = await Promise.all(input.captures.map(capture => holdFederalCapture(input.vault, capture)));
   const evidence = new Map(fresh.map(row => [row.url, row.raw.rawHash]));
   // Replaced pages can retain records absent from the latest partial response. Keep their original bytes.
@@ -102,7 +102,7 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
   const captures = [...fresh, ...reads.flatMap(read => read.ok ? [read.value] : [])];
   const rosters = new Map<string, LdaRoster>();
   for (const version of new Set(captures.flatMap(capture => capture.context?.honoreeRosterVersionId ? [capture.context.honoreeRosterVersionId] : []))) {
-    const roster = await readLdaRosterVersion(input.store, input.vault, version);
+    const roster = await readLdaRosterVersion(input.store, input.vault, version, { honoreeNames: captures.filter(capture => capture.context?.honoreeRosterVersionId === version).flatMap(federalCaptureHonorees) });
     if (roster) rosters.set(version, roster);
   }
   // Retain only captures which reproduce an extant fact, plus the current listing for cursor evidence.

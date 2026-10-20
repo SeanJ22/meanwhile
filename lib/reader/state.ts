@@ -24,6 +24,8 @@ import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../rout
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import { readNationalPresident } from "./national.ts";
 import type { MemberOfficeRecord } from "../officials/member-offices.ts";
+import { memberOfficeScope } from "../officials/member-office-scope.ts";
+import { readMemberOfficeRecords } from "../officials/member-office-projection.ts";
 import type { Division } from "../registry/types.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { primeReaderCanonicalStore } from "./canonical-context.ts";
@@ -77,7 +79,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     { recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) },
     { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
     { recordClass: "CURATED_READER_RECORD", scope: "US:verified-officeholder-campaign-sites" },
-    { recordClass: "CURATED_READER_RECORD", scope: "US:state-legislator-member-offices" },
+    { recordClass: "CURATED_READER_RECORD", scope: memberOfficeScope(state) },
     EVERYDAY_ROUTING_POINTER,
     { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
     ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
@@ -101,7 +103,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readCuratedReaderProjection("campaign-sites", options),
     readEverydayRoutingProjection(options),
     presidentRead,
-    readCuratedReaderProjection("member-offices", options),
+    readMemberOfficeRecords(state, options),
   ]);
   if (runtime.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(runtime);
   if (runtime.kind !== "PROMOTED" && runtime.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);
@@ -122,8 +124,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
       campaignUrl: holder.campaignUrl ?? [...personIdentityKeys(holder)].flatMap(key => campaignsByPerson.get(key) ?? []).at(0) ?? null,
     })),
   } } : null;
-  const memberOffices = offices.kind === "PROMOTED" || offices.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
-  const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices.metadata.versionId,
+  const memberOffices = offices;
+  const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, JSON.stringify(offices),
     districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
   const result: ReaderStatePackage = {
     state, version, districts, localDivisions,

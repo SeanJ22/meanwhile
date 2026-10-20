@@ -1,4 +1,3 @@
-import { statesForRegistryDivisions } from "../../civic-data/state-scopes.ts";
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
@@ -29,22 +28,40 @@ import { createWorkItem } from "../work-item.ts";
 import { registerWorkItem } from "../repository/coordinator.ts";
 import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
-import { placePercent } from "../../coverage/place-measures.ts";
+import { placePercent, placeMeasures } from "../../coverage/place-measures.ts";
+import { percentOf } from "../../coverage/place-percent.ts";
+import { loadPublishedScopeLookupState } from "../../census-geography/scope-lookup.ts";
+import type { CensusGeographyLookup } from "../../census-geography/contract.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { setActiveOwedOverlay } from "../../coverage/owed-overlay.ts";
 import { expansionScopesOf, VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
 import { resolveScopes } from "./runner-load.ts";
-import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
+import { loadPublishedAreaLookupState, readPublishedPlaceMemberships } from "../../census-geography/area-lookup.ts";
 import { declaredWorkMembers } from "./declared-work-scope.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
-import { readPlaceStandingWork } from "../repository/pg-store.ts";
+import { visitPlaceStandingWork } from "../repository/pg-store.ts";
+import { DiskRows } from "../scheduler/disk-rows.ts";
+import { createPlannerSpool, plannerMap, plannerSet, type PlannerSpool } from "../scheduler/planner-spool.ts";
+
+export type PlanRows<T> = readonly T[] | DiskRows<T>;
+let nextDispatchPlan = 0;
+
+/** Fixture callers keep small arrays; the runner streams the same rows through its round index. */
+function planRows<T>(planner: PlannerSpool | undefined, name: string, encode: (row: T) => unknown = row => row, decode: (row: unknown) => T = row => row as T): { rows: PlanRows<T>; add(row: T): void } {
+  if (!planner) { const rows: T[] = []; return { rows, add: row => rows.push(row) }; }
+  let position = 0;
+  const table = planner.table<unknown>(name, () => String(position++));
+  return { rows: table.rows.map(decode), add: row => table.add(encode(row)) };
+}
 
 export interface PlaceWorkReading {
   readonly key: string;
   readonly receiptId: string;
   readonly items: readonly Pick<PlaceOwedItem, "state" | "checklistId">[];
+  /** A caller that folded a place's held capture can release its rows before ordering Sends. */
+  readonly percent?: number | null;
 }
 
 /** Order the existing place capture rows; this creates no score or policy store. */
@@ -69,7 +86,7 @@ export function placeWorkReadings(config: unknown, places: readonly PlaceWorkRea
   }
   const readings = places.map(place => {
     // The same percent Admin and the national list show, so the runner's order matches what the owner reads.
-    const percent = placePercent(place.items) ?? 0;
+    const percent = place.percent ?? placePercent(place.items) ?? 0;
     const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
   });
@@ -91,102 +108,105 @@ export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zi
 
 const READING_MEMO_MS = 5 * 60_000;
 const READING_MEMO_MAX = 32;
-const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
+const readingMemo = new Map<string, { readonly at: number; readonly percent: number | null }>();
 const memoKeyOf = (decision: ExpansionScopeDecision): string =>
   [decision.receiptId, decision.latestDecisionReceiptId ?? "", decision.decidedAt, decision.geography.type, decision.geography.geoid].join("|");
 export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
 
 /** Due admission and process ordering share the owner's target and held facts. */
 export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, zips: readonly string[], now: string) {
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, { formatVersion: true, apiFallback: true, updatedAt: true,
+    expansionScopes: true, placeTargets: true, settings: true, owedOverlay: ["additions", "declines", "updatedAt"] });
   // What the owner added to, or declined from, what places are owed counts in the order the runner works in.
   setActiveOwedOverlay(row !== null && isAdminConfig(row.value) ? row.value.owedOverlay : null);
   const decisions = expansionScopesOf(row?.value ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   if (!decisions.scopes.length) return { ordered: [...zips], belowTarget: new Set<string>() };
-  let lookup = await loadPublishedAreaLookupState(zips);
-  const resolved = await resolveScopes(decisions.scopes, lookup, null);
-  const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
-    scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
-  const selectedZips = new Set(zips);
-  const nowMs = Date.parse(now);
-  const remembered = (scope: (typeof scopes)[number]) => {
-    const hit = readingMemo.get(memoKeyOf(scope.decision));
-    return hit !== undefined && nowMs - hit.at >= 0 && nowMs - hit.at < READING_MEMO_MS ? hit : null;
-  };
-  // Only scopes without a fresh owed list are read again; a changed decision has a new key and so rebuilds alone.
-  const rebuilt = scopes.filter(scope => remembered(scope) === null);
-  const scopeZips = [...new Set([...zips, ...rebuilt.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : [])])];
-  // A selected ZIP can name a whole district. Keep that district's denominator
-  // and read its actual ZIPs before resolving shared standing work and facts.
-  if (scopeZips.some(zip => !selectedZips.has(zip))) lookup = await loadPublishedAreaLookupState(scopeZips);
-  const wanted = new Set<string>(["ocd-division/country:us"]);
-  for (const zip of scopeZips) {
-    const grouping = await lookup.lookup.groupingsForZcta(zip);
-    for (const membership of grouping.memberships) {
-      const id = censusWorkDivision(membership.geography);
-      if (id) wanted.add(id);
-      wanted.add(`ocd-division/country:us/state:${membership.geography.stateAbbr.toLowerCase()}`);
-    }
-  }
-  const work = await readPlaceStandingWork(repos, [...wanted]);
-  const members = await declaredWorkMembers(scopes, work, lookup.lookup);
-  const bySubject = new Map(work.map(item => [item.subjectId, item]));
-  const divisionsByReceipt = new Map<string, Set<string>>();
-  const inScope = new Map<string, ReadonlySet<string>>();
-  for (const scope of scopes) {
-    const receiptId = scope.decision.receiptId;
-    const selected = scope.kind === "RESOLVED" ? scope.zctas :
-      scope.decision.geography.type === "zcta" ? new Set([scope.decision.geography.geoid]) : new Set<string>();
-    inScope.set(receiptId, selected);
-    if (remembered(scope) !== null) continue;
-    const divisions = new Set<string>();
-    for (const subject of members.get(scope.decision.key) ?? []) {
-      for (const id of bySubject.get(subject)?.scopeDivisions ?? []) if (id.startsWith("ocd-division/")) divisions.add(id);
-      if (subject.startsWith("ocd-division/")) divisions.add(subject.split("#")[0]);
-    }
-    for (const zip of selected) {
-      const grouping = await lookup.lookup.groupingsForZcta(zip);
-      if (grouping.status.kind !== "OK") continue;
-      for (const membership of grouping.memberships) {
-        const division = censusWorkDivision(membership.geography);
-        if (division) divisions.add(division);
-        divisions.add(`ocd-division/country:us/state:${membership.geography.stateAbbr.toLowerCase()}`);
+  const planner = await createPlannerSpool();
+  try {
+    const selected = plannerSet(planner, "priority-selected-zips", zips);
+    const inScope = planner.table<{ id:string;receipt:string;zip:string }>("priority-scope-zips", row => row.id);
+    const rankOf = plannerMap<number>(planner, "priority-zip-ranks");
+    const readings: PlaceWorkReading[] = [];
+    const nowMs = Date.parse(now);
+    const applicable = plannerSet(planner,"priority-applicable-instructions");
+    for (const decision of decisions.scopes) if(decision.geography.type==="zcta"&&selected.has(decision.geography.geoid))applicable.add(decision.key);
+    for(let start=0;start<zips.length;start+=128){
+      const memberships=await readPublishedPlaceMemberships(zips.slice(start,start+128));
+      for(const decision of decisions.scopes){const g=decision.geography;
+        if(g.type!=="zcta"&&memberships.some(member=>g.type==="state"?member.type==="county"&&member.state===g.stateAbbr&&g.version===`state:${member.version.split(":")[1]}`:
+          member.type===g.type&&member.geoid===g.geoid&&member.version===g.version))applicable.add(decision.key);
       }
     }
-    if (divisions.size) divisions.add("ocd-division/country:us");
-    divisionsByReceipt.set(receiptId, divisions);
-  }
-  const readingGroups = new Map<string, typeof scopes>();
-  for (const scope of rebuilt) {
-    const ids = [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])];
-    const key = statesForRegistryDivisions(ids).join();
-    readingGroups.set(key, [...(readingGroups.get(key) ?? []), scope]);
-  }
-  const rebuiltItems = new Map<string, PlaceOwedItem[]>();
-  for (const group of readingGroups.values()) {
-    const ids = [...new Set(group.flatMap(scope => [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])]))];
-    const capture = ids.length ? await readHeldPlaceCapture(ids, { now, bypassCache: true }) : { subjects: [], held: [] };
-    for (const scope of group) {
-      const items = buildPlaceOwedList({ divisions: [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])].map(id => ({ id, label: id })),
-        subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
-      rebuiltItems.set(scope.decision.receiptId, items);
-      readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
-      while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
+    for (const decision of decisions.scopes) {
+      if(!applicable.has(decision.key))continue;
+      let lookup: Awaited<ReturnType<typeof loadPublishedScopeLookupState>> | null = await loadPublishedScopeLookupState([decision.geography]);
+      const [scope] = (await resolveScopes([decision], lookup, null)).scopes;
+      lookup = null;
+      const ownZips = scope.kind === "RESOLVED" ? scope.zctas : decision.geography.type === "zcta" ? new Set([decision.geography.geoid]) : new Set<string>();
+      if (![...ownZips].some(zip => selected.has(zip))) continue;
+      for (const zip of ownZips) inScope.add({ id: `${decision.receiptId}\0${zip}`, receipt: decision.receiptId, zip });
+      const remembered = readingMemo.get(memoKeyOf(decision));
+      let percent = remembered && nowMs - remembered.at >= 0 && nowMs - remembered.at < READING_MEMO_MS ? remembered.percent : undefined;
+      if (percent === undefined) {
+        const wanted = plannerSet(planner, "priority-wanted"); wanted.clear();
+        const memberships = plannerMap<Awaited<ReturnType<CensusGeographyLookup["groupingsForZcta"]>>>(planner, "priority-memberships"); memberships.clear();
+        const work = planner.table<{ id:string;subjectId:string;scopeDivisions?:readonly string[] }>("priority-work", item => item.id); work.clear();
+        const divisions = plannerSet(planner, "priority-divisions"); divisions.clear();
+        const items = planner.table<PlaceOwedItem>("priority-items", item => item.id); items.clear();
+        for (const state of scope.states) {
+          // Current pointers and legacy blobs are restricted by state in SQL before any source rows cross the connection.
+          const area = await loadPublishedAreaLookupState([...ownZips], undefined, state.toUpperCase());
+          for (const zip of ownZips) {
+            const found = await area.lookup.groupingsForZcta(zip);
+            if (found.status.kind !== "OK" || !found.memberships.some(item => item.geography.type === "county" && item.geography.stateAbbr.toUpperCase() === state.toUpperCase())) continue;
+            const old = memberships.get(zip);
+            const merged = new Map((old?.memberships ?? []).map(item => [`${item.geography.type}:${item.geography.version}:${item.geography.geoid}`,item]));
+            for (const item of found.memberships) merged.set(`${item.geography.type}:${item.geography.version}:${item.geography.geoid}`,item);
+            memberships.set(zip,{...found,memberships:[...merged.values()]});
+            for (const item of found.memberships) {
+              const id = censusWorkDivision(item.geography); if (id) wanted.add(id);
+              wanted.add(`ocd-division/country:us/state:${item.geography.stateAbbr.toLowerCase()}`);
+            }
+          }
+        }
+        if (wanted.size) wanted.add("ocd-division/country:us");
+        await visitPlaceStandingWork(repos,[...wanted], row => { work.add(row); });
+        const lookupView = { groupingsForZcta: async (zip:string) => memberships.get(zip) ?? {
+          publishedVersion:"NOT_RECORDED",zcta5:zip,status:{kind:"UNKNOWN" as const,note:"The selected place's state geography could not be read"},memberships:[],
+        } };
+        const members = await declaredWorkMembers([scope],work.rows,lookupView,undefined,planner);
+        const memberSubjects = members.get(decision.key);
+        for (const item of work.rows) if (memberSubjects?.has(item.subjectId)) {
+          for (const id of item.scopeDivisions ?? []) if (wanted.has(id)) divisions.add(id);
+          if (item.subjectId.startsWith("ocd-division/") && wanted.has(item.subjectId.split("#")[0])) divisions.add(item.subjectId.split("#")[0]);
+        }
+        for (const id of wanted) divisions.add(id);
+        for (const id of divisions) {
+          const capture = await readHeldPlaceCapture([id],{now,bypassCache:true});
+          for (const item of buildPlaceOwedList({divisions:[{id,label:id}],subjects:capture.subjects,held:capture.held,now})) items.add(item);
+        }
+        for (const zip of ownZips) for (const item of buildPlaceOwedList({divisions:[],subjects:[],held:[],now,zips:[zip]})) items.add(item);
+        let captured=0,owed=0;
+        for (const item of items.rows) { const measured=placeMeasures([item]).completeness;captured+=measured.n;owed+=measured.of; }
+        percent=percentOf(captured,owed);
+        readingMemo.set(memoKeyOf(decision),{at:nowMs,percent});
+        while(readingMemo.size>READING_MEMO_MAX)readingMemo.delete(readingMemo.keys().next().value as string);
+        items.clear();work.clear();wanted.clear();divisions.clear();memberships.clear();
+      }
+      readings.push({key:decision.geography.type==="state"?`st:${decision.geography.stateAbbr.toLowerCase()}`:
+        `${decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[decision.geography.type]}.${decision.geography.geoid.toLowerCase()}`,
+        receiptId:decision.receiptId,items:[],percent});
     }
-  }
-  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] =>
-    rebuiltItems.get(scope.decision.receiptId) ?? remembered(scope)?.items ?? [];
-  const readings = placeWorkReadings(row?.value, scopes.map(scope => ({
-    // A whole-state mission is ordered and targeted under the state's own place key.
-    key: scope.decision.geography.type === "state" ? `st:${scope.decision.geography.stateAbbr.toLowerCase()}`
-      : `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
-    receiptId: scope.decision.receiptId,
-    items: itemsOf(scope),
-  })));
-  const rank = (zip: string) => readings.findIndex(place => inScope.get(place.receiptId)?.has(zip));
-  return { ordered: [...zips].sort((a, b) => (rank(a) < 0 ? Infinity : rank(a)) - (rank(b) < 0 ? Infinity : rank(b))),
-    belowTarget: new Set(zips.filter(zip => readings.some(place => place.target && inScope.get(place.receiptId)?.has(zip)))) };
+    const orderedReadings=placeWorkReadings(row?.value,readings),belowTarget=new Set<string>();
+    for(const [rank,reading]of orderedReadings.entries())for(const member of inScope.rowsWhere(["receipt"],reading.receiptId)) {
+      if(!selected.has(member.zip))continue;
+      rankOf.set(member.zip,Math.min(rankOf.get(member.zip)??Infinity,rank));
+      if(reading.target)belowTarget.add(member.zip);
+    }
+    return{ordered:[...zips].sort((a,b)=>(rankOf.get(a)??Infinity)-(rankOf.get(b)??Infinity)),belowTarget};
+  }finally{await planner.close();}
+
 }
 
 /** A Send creates every missing requirement; shared governments keep one row. */
@@ -202,7 +222,6 @@ export async function applyManualSourceGaps(
   let created = 0, carried = 0;
   const deferred = 0;
   if (applicable.length === 0) return { created, carried, deferred };
-  const heldIds = new Set((await repos.workItems.list()).map(row => row.id));
   for (const row of manualProducerInvocationMatrix(applicable, input.now)) {
     if (row.mode !== "SCOPED_ADAPTER_OWED") continue;
     for (const receipt of row.instructionIds) {
@@ -211,12 +230,11 @@ export async function applyManualSourceGaps(
       const work = createWorkItem({ project: "freshness", subject: `manual-source:${scope.decision.key}`,
         obligation: `source capability ${row.id} for instruction ${receipt}`,
         why: row.reason, priority: "P1", now: input.now });
-      if (heldIds.has(work.id)) { carried += 1; continue; }
+      if (await repos.workItems.read(work.id)) { carried += 1; continue; }
       await registerWorkItem(repos, { ...work, manualSourceGap: {
         contractId: row.id, mode: row.mode, reason: row.reason, instructionReceipt: receipt,
         assignmentKey: scope.decision.key,
       } }, input.now);
-      heldIds.add(work.id);
       created += 1;
     }
   }
@@ -284,7 +302,7 @@ export interface DispatchWorkWorld {
   readonly territory: TerritoryIndex | null;
   readonly territoryDetail: string | null;
   /** This cycle's registry corpus: every obligation any provider emitted. */
-  readonly corpus: readonly { readonly id: string; readonly subjectId: string }[];
+  readonly corpus: PlanRows<{ readonly id: string; readonly subjectId: string }>;
   /** Every durable obligation row, in the corpus or outside it, active or retired. */
   readonly durable: ReadonlyMap<string, DurableRowFacts>;
   readonly meetingPartitions: MeetingPartitionOwnership;
@@ -356,12 +374,6 @@ export function requirementsFor(
   return out.sort((a, b) => (a.obligation.id < b.obligation.id ? -1 : a.obligation.id > b.obligation.id ? 1 : 0));
 }
 
-/** One hunt packet per division: the government's open blanks, hunted as one job. */
-function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
-  return [...new Set(divisions)].sort().map(id => ({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET" as const,
-    executor: "BOUNDED_MODEL_WORKER" as const, carriage: "OWED" as const }));
-}
-
 /* ------------------------------------------------------------------- units */
 
 export type BlockedCode =
@@ -391,7 +403,7 @@ interface PlacedUnit {
 }
 
 interface TargetUnits {
-  readonly placed: readonly PlacedUnit[];
+  readonly placed: PlanRows<PlacedUnit>;
   readonly blocked: readonly BlockedUnits[];
   /** Governments of the target's states no territory can place in or out: registry rows the join cannot place, and Census units with no ZCTA territory. */
   readonly unplaced: number;
@@ -399,7 +411,12 @@ interface TargetUnits {
 
 const byName = (a: CensusUnitTerritory, b: CensusUnitTerritory): number => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
 
-function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits {
+/** A placed row owns only its own routes. The state's full registry is released before the next state. */
+function placedUnit(reg: JurisdictionRegistry, jurisdiction: Jurisdiction): PlacedUnit {
+  return { jurisdiction, reg: { ...reg, jurisdictions: [jurisdiction], sourceCatalog: Object.fromEntries(jurisdiction.sourceIds.map(id => [id, reg.sourceCatalog[id]])) } };
+}
+
+function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld, planner?: PlannerSpool, prefix = "scope-units"): TargetUnits {
   if (scope.kind !== "RESOLVED") {
     return {
       placed: [],
@@ -424,28 +441,17 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
       unplaced: 0,
     };
   }
-  const placed: PlacedUnit[] = [];
-  const rowsByState = new Map<string, ReadonlyMap<string, Jurisdiction>>();
-  for (const state of scope.states) {
+  const placed = planRows<PlacedUnit>(planner, `${prefix}-placed`);
+  for (const state of [...scope.states].sort()) {
     const reg = world.registries.get(state.toLowerCase());
     // A bare state row is an ancestor, not an identified meeting body. Include its declared shared sources;
     // do not invent a find-own-site meeting obligation for a synthetic registration ancestor.
-    if (reg) for (const jurisdiction of reg.jurisdictions) if (index.statewide.has(jurisdiction.id) && jurisdiction.sourceIds.length > 0) placed.push({ reg, jurisdiction });
-  }
-  for (const territory of index.bySubject.values()) {
-    if (!certainlyOverlaps(territory, scope)) continue;
-    const state = territory.stateCode.toLowerCase();
-    const reg = world.registries.get(state);
-    if (reg === undefined) continue;
-    let rows = rowsByState.get(state);
-    if (rows === undefined) {
-      rows = new Map(reg.jurisdictions.map((row) => [row.id, row]));
-      rowsByState.set(state, rows);
+    if (reg) for (const jurisdiction of [...reg.jurisdictions].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)) {
+      const territory = index.bySubject.get(jurisdiction.id);
+      if ((index.statewide.has(jurisdiction.id) && jurisdiction.sourceIds.length > 0) ||
+        (territory !== undefined && certainlyOverlaps(territory, scope))) placed.add(placedUnit(reg, jurisdiction));
     }
-    const j = rows.get(territory.subjectId);
-    if (j !== undefined) placed.push({ reg, jurisdiction: j });
   }
-  placed.sort((a, b) => (a.jurisdiction.id < b.jurisdiction.id ? -1 : a.jurisdiction.id > b.jurisdiction.id ? 1 : 0));
 
   const blocked: BlockedUnits[] = [];
   const sharesOf = index.unitShares ?? (() => undefined);
@@ -492,14 +498,15 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
   }
   /* Governments of the scope's states no territory can place in or out: registry rows the join could not place, and Census units with no ZCTA territory. */
   const scopeStates = new Set(scope.states.map((s) => s.toLowerCase()));
-  const unplacedRegistered = [...index.unplaced.keys()].filter((id) => scopeStates.has(id.split(":")[0] ?? "")).length;
+  let unplacedRegistered = 0;
+  for (const id of index.unplaced.keys()) if (scopeStates.has(id.split(":")[0] ?? "")) unplacedRegistered += 1;
   const unplacedCensus = scope.states.reduce(
     (n, state) => n + (index.unregisteredUnitsByState.get(state) ?? []).filter((u) => u.zips.length === 0).length,
     0,
   );
   const unplaced = unplacedRegistered + unplacedCensus;
   /* A zero where the territory should have named governments is a gap in the data, never an empty geography. */
-  if (placed.length === 0 && blocked.length === 0) {
+  if (placed.rows.length === 0 && blocked.length === 0) {
     blocked.push({
       code: "NO_GOVERNMENT_PLACED",
       dataset: DATASET.territory,
@@ -511,10 +518,10 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
       sample: [],
     });
   }
-  return { placed, blocked, unplaced };
+  return { placed: placed.rows, blocked, unplaced };
 }
 
-function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): TargetUnits {
+function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld, planner?: PlannerSpool, prefix = "dispatch-units"): TargetUnits {
   if (target.states.length === 0) {
     return {
       placed: [],
@@ -533,9 +540,9 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
       unplaced: 0,
     };
   }
-  const placed: PlacedUnit[] = [];
+  const placed = planRows<PlacedUnit>(planner, `${prefix}-placed`);
   const blocked: BlockedUnits[] = [];
-  for (const code of target.states) {
+  for (const code of [...target.states].sort()) {
     const reg = world.registries.get(code);
     if (reg === undefined) {
       const count = world.censusUnitsByState?.get(code.toUpperCase()) ?? null;
@@ -566,12 +573,11 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
       });
       continue;
     }
-    for (const j of reg.jurisdictions) {
-      if (unitMatchesTarget({ ...target, states: [code] }, { id: j.id, subjectId: j.id })) placed.push({ reg, jurisdiction: j });
+    for (const j of [...reg.jurisdictions].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)) {
+      if (unitMatchesTarget({ ...target, states: [code] }, { id: j.id, subjectId: j.id })) placed.add(placedUnit(reg, j));
     }
   }
-  placed.sort((a, b) => (a.jurisdiction.id < b.jurisdiction.id ? -1 : a.jurisdiction.id > b.jurisdiction.id ? 1 : 0));
-  return { placed, blocked, unplaced: 0 };
+  return { placed: placed.rows, blocked, unplaced: 0 };
 }
 
 /* -------------------------------------------------------------------- plan */
@@ -588,7 +594,7 @@ export interface PlannedInstance {
 export interface TargetPlan {
   readonly target: DispatchWorkTarget;
   readonly units: TargetUnits;
-  readonly instances: readonly PlannedInstance[];
+  readonly instances: PlanRows<PlannedInstance>;
   /** Obligations in this cycle's corpus about the target (not materialized): the work a Send reorders. */
   readonly reordered: number;
 }
@@ -600,14 +606,16 @@ export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarg
 export interface PlannedMark {
   readonly obligationId: string;
   readonly target: DispatchWorkTarget;
+  readonly autonomousPlan?: FreshnessObligation["autonomousPlan"];
 }
 
 export interface DispatchWorkPlan {
+  readonly planner?: PlannerSpool;
   readonly targets: readonly TargetPlan[];
   /** Every MISSING instance, in write order, each once. */
-  readonly writes: readonly PlannedWrite[];
+  readonly writes: PlanRows<PlannedWrite>;
 
-  readonly marks: readonly PlannedMark[];
+  readonly marks: PlanRows<PlannedMark>;
   readonly corpusSize: number;
 }
 
@@ -627,124 +635,111 @@ export function assignmentEntry(target: DispatchWorkTarget, relation: Obligation
 export function planDispatchWork(input: {
   readonly targets: readonly DispatchWorkTarget[];
   readonly world: DispatchWorkWorld;
+  readonly planner?: PlannerSpool;
 }): DispatchWorkPlan {
-  const world = input.world;
-  const corpusIds = new Set(world.corpus.map((o) => o.id));
-  const needsByState = new Map<string, Map<string, MeetingsDiscoveryNeed>>();
-  const needOf = (reg: JurisdictionRegistry, id: string): MeetingsDiscoveryNeed | null => {
-    const key = reg.stateCode.toLowerCase();
-    let needs = needsByState.get(key);
-    if (needs === undefined) {
-      needs = new Map(meetingsDiscoveryNeeds([reg]).map((n) => [n.jurisdictionId, n]));
-      needsByState.set(key, needs);
-    }
-    return needs.get(id) ?? null;
-  };
-
+  const world = input.world, planner = input.planner, prefix = `dispatch-${nextDispatchPlan++}`;
+  const set = (name: string) => planner ? plannerSet(planner, `${prefix}-${name}`) : new Set<string>();
+  const corpusIds = set("corpus");
+  for (const row of world.corpus) corpusIds.add(row.id);
   const ordered = [
     ...input.targets.filter((t) => t.kind === "DISPATCH").sort((a, b) => (a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0)),
     ...input.targets.filter((t) => t.kind === "SCOPE"),
   ];
-
-  const targets: TargetPlan[] = [];
-  const writes: PlannedWrite[] = [];
-  const marks: PlannedMark[] = [];
-  const queued = new Set<string>();
-  for (const target of ordered) {
-    const units = target.kind === "SCOPE" ? scopeUnits(target.scope, world) : dispatchUnits(target.target, world);
-    const instances: RequirementInstance[] = [];
-    for (const { reg, jurisdiction } of units.placed) {
-      instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions));
-    }
-    const packetDivisions = world.packetDivisions?.get(target.key) ??
-      (target.kind === "DISPATCH" ? units.placed.flatMap(({ jurisdiction }) => jurisdiction.ocdId ? [jurisdiction.ocdId] : []) : []);
-    instances.push(...packetRequirements(packetDivisions));
-    /* Does the row already record this Send, in any relation? */
+  const targetByKey = new Map(ordered.map(target => [target.key, target]));
+  // Scope membership is an indexed view, not JSON. Spool only the target key.
+  type StoredWrite = Omit<PlannedWrite, "target"> & { targetKey: string };
+  type StoredMark = Omit<PlannedMark, "target"> & { targetKey: string };
+  const writes = planRows<PlannedWrite>(planner, `${prefix}-writes`, row => {
+    const { target, ...rest } = row; return { ...rest, targetKey: target.key };
+  }, stored => { const { targetKey, ...rest } = stored as StoredWrite; return { ...rest, target: targetByKey.get(targetKey)! }; });
+  const marks = planRows<PlannedMark>(planner, `${prefix}-marks`, row => {
+    const { target, ...rest } = row; return { ...rest, targetKey: target.key };
+  }, stored => { const { targetKey, ...rest } = stored as StoredMark; return { ...rest, target: targetByKey.get(targetKey)! }; });
+  const targets: TargetPlan[] = [], queued = set("queued"), marked = set("marked");
+  const mark = (target: DispatchWorkTarget, obligationId: string, autonomousPlan?: FreshnessObligation["autonomousPlan"]) => {
+    const key = JSON.stringify([target.key, obligationId]);
+    if (marked.has(key)) return;
+    marked.add(key); marks.add({ obligationId, target, ...(autonomousPlan ? { autonomousPlan } : {}) });
+  };
+  for (const [at, target] of ordered.entries()) {
+    const units = target.kind === "SCOPE" ? scopeUnits(target.scope, world, planner, `${prefix}-${at}`) : dispatchUnits(target.target, world, planner, `${prefix}-${at}`);
+    const planned = planRows<PlannedInstance>(planner, `${prefix}-${at}-instances`);
+    const packetDivisions = set(`${at}-packet-divisions`), members = set(`${at}-members`);
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
-
-    const planned: PlannedInstance[] = [];
-    for (const instance of instances) {
-      const id = instance.obligation.id;
-      const row = world.durable.get(id);
-      if (instance.carriage === "HELD_UNREAD_WIRING") {
-        planned.push({ instance, state: "HELD", existsUnmarked: false });
-        continue;
-      }
-      if (instance.carriage === "MEETING_PARTITION") {
-        /* A production meeting partition carries it: there is no obligation row to record the Send on. */
-        planned.push({ instance, state: "CARRIED", existsUnmarked: false });
-        continue;
-      }
+    const add = (instance: RequirementInstance): void => {
+      const id = instance.obligation.id, row = world.durable.get(id);
+      if (instance.carriage === "HELD_UNREAD_WIRING") { planned.add({ instance, state: "HELD", existsUnmarked: false }); return; }
+      if (instance.carriage === "MEETING_PARTITION") { planned.add({ instance, state: "CARRIED", existsUnmarked: false }); return; }
       if (row?.materializedBy === OWNER_DISPATCH) {
-        planned.push({ instance, state: "CREATED", existsUnmarked: false });
-        /* Another Send created it: this one found it on a clock. A creator not on record is never guessed. */
-        if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
-        continue;
+        planned.add({ instance, state: "CREATED", existsUnmarked: false });
+        if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) mark(target, id, instance.obligation.autonomousPlan);
+        return;
       }
       if (corpusIds.has(id) && row?.active !== false) {
-        planned.push({ instance, state: "CARRIED", existsUnmarked: false });
-        if (row !== undefined && !recorded(row)) marks.push({ obligationId: id, target });
-        continue;
+        planned.add({ instance, state: "CARRIED", existsUnmarked: false });
+        if (row !== undefined && !recorded(row)) mark(target, id, instance.obligation.autonomousPlan);
+        return;
       }
       const entry: PlannedInstance = { instance, state: "MISSING", existsUnmarked: row !== undefined };
-      planned.push(entry);
-      if (!queued.has(id)) {
-        queued.add(id);
-        writes.push({ ...entry, target });
-      }
+      planned.add(entry);
+      if (!queued.has(id)) { queued.add(id); writes.add({ ...entry, target }); }
+    };
+    for (const { reg, jurisdiction } of units.placed) {
+      members.add(jurisdiction.id);
+      for (const instance of requirementsFor(reg, jurisdiction, meetingsDiscoveryNeeds([reg])[0] ?? null, world.meetingPartitions)) add(instance);
+      if (target.kind === "DISPATCH" && !world.packetDivisions?.has(target.key) && jurisdiction.ocdId) packetDivisions.add(jurisdiction.ocdId);
     }
-
-    const members = new Set([...units.placed.map((u) => u.jurisdiction.id), ...(target.kind === "SCOPE" ? target.scope.members : [])]);
-
-
-
-    if (target.kind === "SCOPE") for (const obligation of world.corpus) {
+    for (const id of world.packetDivisions?.get(target.key) ?? []) packetDivisions.add(id);
+    // Disk sets enumerate keys in order. Native callers contain one place and
+    // sort just these division identities, not the whole country's records.
+    const divisions = planner ? packetDivisions : [...packetDivisions].sort();
+    for (const id of divisions) add({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET", executor: "BOUNDED_MODEL_WORKER", carriage: "OWED" });
+    if (target.kind === "SCOPE") for (const id of target.scope.members) members.add(id);
+    let reordered = 0;
+    for (const obligation of world.corpus) {
+      const matches = target.kind === "SCOPE" ? members.has(obligation.subjectId) :
+        (target.target.states.length > 0 || target.target.terms.length > 0) && unitMatchesTarget(target.target, obligation);
+      if (!matches) continue;
       const row = world.durable.get(obligation.id);
-      if (members.has(obligation.subjectId) && row?.active !== false && row !== undefined && !recorded(row) && !marks.some(m => m.obligationId === obligation.id && m.target.key === target.key)) {
-        marks.push({ obligationId: obligation.id, target });
-      }
+      if (row?.materializedBy !== OWNER_DISPATCH) reordered += 1;
+      if (target.kind === "SCOPE" && row !== undefined && row.active !== false && !recorded(row)) mark(target, obligation.id);
     }
-    const reordered =
-      target.kind === "SCOPE"
-        ? world.corpus.filter((o) => members.has(o.subjectId) && world.durable.get(o.id)?.materializedBy !== OWNER_DISPATCH).length
-        : target.target.states.length === 0 && target.target.terms.length === 0
-          ? 0
-          : world.corpus.filter((o) => unitMatchesTarget(target.target, o) && world.durable.get(o.id)?.materializedBy !== OWNER_DISPATCH).length;
-    targets.push({ target, units, instances: planned, reordered });
+    targets.push({ target, units, instances: planned.rows, reordered });
   }
-  return { targets, writes, marks, corpusSize: world.corpus.length };
+  return { planner, targets, writes: writes.rows, marks: marks.rows, corpusSize: world.corpus.length };
 }
 
 /* ------------------------------------------------------------------- apply */
 
 export interface DispatchWorkApplied {
-  readonly written: readonly string[];
-  readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
+  readonly written: PlanRows<string>;
+  readonly failed: PlanRows<{ readonly obligationId: string; readonly why: string }>;
   /** Planned writes not reached this cycle: the budget or the wall ran out first. */
-  readonly deferred: readonly string[];
+  readonly deferred: PlanRows<string>;
   readonly stoppedBy: "DONE";
   /** REORDERED records written this cycle. */
-  readonly marked?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
-  readonly markFailed?: readonly { readonly obligationId: string; readonly assignmentKey: string; readonly why: string }[];
+  readonly marked?: PlanRows<{ readonly obligationId: string; readonly assignmentKey: string }>;
+  readonly markFailed?: PlanRows<{ readonly obligationId: string; readonly assignmentKey: string; readonly why: string }>;
 
-  readonly marksDeferred?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
+  readonly marksDeferred?: PlanRows<{ readonly obligationId: string; readonly assignmentKey: string }>;
   /** Every Send recorded on a row this cycle — created or reordered — for the runner's assignment budgets. */
-  readonly recorded?: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[];
+  readonly recorded?: PlanRows<{ readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }>;
 }
 
 
 export async function applyDispatchWork(
   repos: ControlPlaneRepositories,
   plan: DispatchWorkPlan,
-  input: { readonly now: string },
+  input: { readonly now: string; readonly planner?: PlannerSpool },
 ): Promise<DispatchWorkApplied> {
-  const written: string[] = [];
-  const failed: { obligationId: string; why: string }[] = [];
-  const deferred: string[] = [];
-  const marked: { obligationId: string; assignmentKey: string }[] = [];
-  const markFailed: { obligationId: string; assignmentKey: string; why: string }[] = [];
-  const marksDeferred: { obligationId: string; assignmentKey: string }[] = [];
-  const recorded: { obligationId: string; subjectId: string; entry: ObligationAssignment }[] = [];
+  const planner = input.planner ?? plan.planner, prefix = `dispatch-applied-${nextDispatchPlan++}`;
+  const written = planRows<string>(planner, `${prefix}-written`);
+  const failed = planRows<{ obligationId: string; why: string }>(planner, `${prefix}-failed`);
+  const deferred = planRows<string>(planner, `${prefix}-deferred`);
+  const marked = planRows<{ obligationId: string; assignmentKey: string }>(planner, `${prefix}-marked`);
+  const markFailed = planRows<{ obligationId: string; assignmentKey: string; why: string }>(planner, `${prefix}-mark-failed`);
+  const marksDeferred = planRows<{ obligationId: string; assignmentKey: string }>(planner, `${prefix}-marks-deferred`);
+  const recorded = planRows<{ obligationId: string; subjectId: string; entry: ObligationAssignment }>(planner, `${prefix}-recorded`);
   const stoppedBy = "DONE" as const;
   for (const entry of plan.writes) {
     const id = entry.instance.obligation.id;
@@ -777,34 +772,32 @@ export async function applyDispatchWork(
           );
         }
       }
-      written.push(id);
-      if (recordedHere) recorded.push({ obligationId: id, subjectId: entry.instance.obligation.subjectId, entry: created });
+      written.add(id);
+      if (recordedHere) recorded.add({ obligationId: id, subjectId: entry.instance.obligation.subjectId, entry: created });
     } catch (error) {
-      failed.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
+      failed.add({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     }
   }
-  // Existing Sends share one held read; CAS still arbitrates every actual change.
-  // Keep each successful revision so overlapping hunts update the same row in order.
-  const heldMarks = new Map((plan.marks.length ? await repos.obligations.list() : []).map(row => [row.id, row]));
+  // Read only this obligation. A later Send sees the revision written by the
+  // preceding Send without retaining a country-sized held-row cache.
   for (const mark of plan.marks) {
     const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
     const reordered = assignmentEntry(mark.target, "REORDERED", input.now);
     try {
-      const held = heldMarks.get(mark.obligationId) ?? await repos.obligations.mustRead(mark.obligationId);
+      const held = await repos.obligations.mustRead(mark.obligationId);
       const next = withAssignment(held.value.assignments, reordered);
-      const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
-        .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
+      const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, mark.autonomousPlan);
       if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
-        heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now));
+        await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
+          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now);
       }
-      marked.push(key);
-      recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });
+      marked.add(key);
+      recorded.add({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });
     } catch (error) {
-      markFailed.push({ ...key, why: error instanceof Error ? error.message : String(error) });
+      markFailed.add({ ...key, why: error instanceof Error ? error.message : String(error) });
     }
   }
-  return { written, failed, deferred, stoppedBy, marked, markFailed, marksDeferred, recorded };
+  return { written: written.rows, failed: failed.rows, deferred: deferred.rows, stoppedBy, marked: marked.rows, markFailed: markFailed.rows, marksDeferred: marksDeferred.rows, recorded: recorded.rows };
 }
 
 /* ----------------------------------------------------------------- reading */
@@ -869,6 +862,8 @@ export interface DispatchWorkReading {
   readonly written: number;
   readonly deferred: number;
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
+  /** Full count; `failed` is a bounded receipt sample. */
+  readonly failedCount?: number;
   readonly stoppedBy: DispatchWorkApplied["stoppedBy"] | null;
   /** REORDERED records written this cycle, and those left for the next. Absent on older readings. */
   readonly marked?: number;
@@ -896,9 +891,13 @@ export function dispatchWorkReading(
   applied: DispatchWorkApplied | null,
   context: DispatchWorkContext,
 ): DispatchWorkReading {
-  const written = new Set(applied?.written ?? []);
-  const failed = new Set((applied?.failed ?? []).map((f) => f.obligationId));
-  const countFor = (rows: readonly { readonly assignmentKey: string }[] | undefined, key: string): number => (rows ?? []).filter((r) => r.assignmentKey === key).length;
+  const prefix = `dispatch-reading-${nextDispatchPlan++}`;
+  const written = plan.planner ? plannerSet(plan.planner, `${prefix}-written`, applied?.written ?? []) : new Set(applied?.written ?? []);
+  const failed = plan.planner ? plannerSet(plan.planner, `${prefix}-failed`) : new Set<string>();
+  for (const row of applied?.failed ?? []) failed.add(row.obligationId);
+  const countFor = (rows: PlanRows<{ readonly assignmentKey: string }> | undefined, key: string): number => {
+    let count = 0; for (const row of rows ?? []) if (row.assignmentKey === key) count += 1; return count;
+  };
   const targets = plan.targets.map((t): DispatchWorkTargetReading => {
     let carried = 0;
     let created = 0;
@@ -932,7 +931,7 @@ export function dispatchWorkReading(
     /* Where the governments came from: the reviewed registries, or a state's registration. */
     const fromRegistration = t.units.placed.filter((u) => registrySourceOf(u.reg) === "REGISTRATION");
     if (fromRegistration.length > 0) {
-      const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""])).entries()]
+      const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""] as const)).entries()]
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([st, v]) => `${st.toUpperCase()} version ${v}`);
       says.push(
@@ -969,8 +968,12 @@ export function dispatchWorkReading(
       );
     }
     if (held > 0) {
-      const reasons = [...new Set(t.instances.filter(p => p.state === "HELD").map(p => p.instance.heldReason).filter((reason): reason is string => Boolean(reason)))];
-      says.push(`${held} machine-openable meetings route(s) are held: ${reasons.length ? reasons.join("; ") : `${DATASET.wiring} could not be read`}; a second meetings clock is never risked.`);
+      const reasons = plan.planner ? plannerSet(plan.planner, `${prefix}-held-reasons-${t.target.key}`) : new Set<string>();
+      for (const row of t.instances) if (row.state === "HELD" && row.instance.heldReason) reasons.add(row.instance.heldReason);
+      const sample: string[] = [];
+      for (const reason of reasons) { if (sample.length === READING_LIST_CAP) break; sample.push(reason); }
+      const detail = sample.length ? sample.join("; ") + (reasons.size > sample.length ? `; ${reasons.size - sample.length} further distinct reasons` : "") : `${DATASET.wiring} could not be read`;
+      says.push(`${held} machine-openable meetings route(s) are held: ${detail}; a second meetings clock is never risked.`);
     }
     for (const b of t.units.blocked) says.push(`Blocked (${b.dataset}): ${b.why}.`);
     if (t.target.kind === "DISPATCH" && t.units.placed.length === 0 && t.units.blocked.length === 0) {
@@ -1006,7 +1009,7 @@ export function dispatchWorkReading(
         fromRegistration: fromRegistration.length,
         blocked,
         unplaced: t.units.unplaced,
-        placedSample: t.units.placed.slice(0, READING_LIST_CAP).map((u) => u.jurisdiction.name),
+        placedSample: Array.from(t.units.placed.slice(0, READING_LIST_CAP).map((u) => u.jurisdiction.name)),
       },
       blocked: t.units.blocked,
       requirements: {
@@ -1034,7 +1037,8 @@ export function dispatchWorkReading(
     planOnlyWhy: context.planOnlyWhy,
     written: applied?.written.length ?? 0,
     deferred: applied?.deferred.length ?? (context.writes === "PLAN_ONLY" ? plan.writes.length : 0),
-    failed: applied?.failed ?? [],
+    failed: Array.from(applied?.failed.slice(0, READING_LIST_CAP) ?? []),
+    failedCount: applied?.failed.length ?? 0,
     stoppedBy: applied?.stoppedBy ?? null,
     marked: applied?.marked?.length ?? 0,
     marksDeferred: applied === null ? plan.marks.length : (applied.marksDeferred?.length ?? 0),

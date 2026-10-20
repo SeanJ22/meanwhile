@@ -59,7 +59,9 @@ test("corrupt imported proof and tampered inherited authority are refused", asyn
   const corruptStore = { readPromotion: store.readPromotion.bind(store), readCandidate: async () => ({
     ...record, candidate: { ...record.candidate, bootstrapImport: { ...record.candidate.bootstrapImport!, candidateEnvelopeSha256: "0".repeat(64) } },
   }) };
-  await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptStore, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
+  const independent = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptStore, T1);
+  assert.equal(independent.expectedBaseVersionId, null, "a new state pointer does not load a national imported base");
+  assert.equal(independent.candidate.manualPriorAuthority, undefined);
   const corruptPointer = { readCandidate: store.readCandidate.bind(store), readPromotion: async <T>() => ({ ...projection, payload: { kind: "venue-resolutions", records: [] } as T }) };
   await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptPointer, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
   const ordinaryStore = new MemoryRoutineDataStore();
@@ -96,12 +98,12 @@ test("receiptless bases contribute no inherited members to a fresh sourced publi
   }
 });
 
-test("a receiptless trusted bootstrap is fully replaced by fresh source-reviewed records", async () => {
-  const { store, record } = importedVenueFixture();
+test("a state venue pointer publishes fresh sourced records independently of the legacy imported pointer", async () => {
+  const { store } = importedVenueFixture();
   assert.equal(await readManualProjectionPrior("venue-resolutions", store, T1), null);
   const input = packageFor("venue-resolutions", T1, "new", false, true);
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
-  assert.equal(expectedBaseVersionId, record.candidate.id);
+  assert.equal(expectedBaseVersionId, null);
   assert.equal(candidate.manualPriorAuthority, undefined);
   assert.deepEqual(candidate.readModel, input.payload);
   const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", candidate, T1, expectedBaseVersionId);

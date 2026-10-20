@@ -1,9 +1,7 @@
 /** The source release is acquired once. State consumers parse only their own
  * native records, and keep the archive and member identity in every receipt. */
-import { mkdtemp, writeFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { acquireKnownRelease, KnownReleaseUnavailable, knownReleaseSourceCheck, type KnownReleaseOptions } from "../known-release.ts";
+import { acquireKnownReleaseFile, KnownReleaseFileUnavailable, type KnownReleaseFileOptions } from "../known-release-file.ts";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { indexDivisions, normalize, yamlToPeople, type PluralPerson, type RegistryDivisionLite } from "./index.ts";
 import { PLURAL_REVISION_URL, PLURAL_SOURCE_ID, PLURAL_STATES } from "./targets.ts";
@@ -32,13 +30,6 @@ export interface StatePeopleRelease {
   readonly roster: OfficeholderSet;
   readonly acquisitions: readonly StatePeopleAcquisition[];
   readonly gaps: readonly { sourceUrl: string; detail: string }[];
-}
-async function staged<T>(bytes: Uint8Array, read: (entries: readonly FileArchiveMember[]) => Promise<T>): Promise<T> {
-  const root = await mkdtemp(join(tmpdir(), "meanwhile-openstates-"));
-  try {
-    const path = join(root, "people.zip"); await writeFile(path, bytes);
-    return await read(await openZipFile(path, ARCHIVE_LIMITS));
-  } finally { await rm(root, { recursive: true, force: true }); }
 }
 async function memberText(entry: FileArchiveMember): Promise<string> {
   const chunks: Uint8Array[] = [];
@@ -85,19 +76,25 @@ export async function acquireStatePeople(input: SharedOptions & {
     const sourceCheck = knownReleaseSourceCheck(current);
     if (current.outage) gaps.push({ sourceUrl: current.requestedUrl, detail: current.outage });
     const sha = revision(current.bytes), url = `https://codeload.github.com/openstates/people/zip/${sha}`;
-    const release = await acquirePeopleRelease({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
+    const acquireArchive = async (options: KnownReleaseFileOptions) => {
+      try { return await acquireKnownReleaseFile(options); }
+      catch (error) { if (error instanceof KnownReleaseFileUnavailable) return error.held; throw error; }
+    };
+    const release = await acquireArchive({ ...shared, sourceId: PLURAL_SOURCE_ID, releaseId: `people:${sha}`, url,
       parserVersion: "openstates-archive/2", signal: input.signal, maxBytes: 96 * 1024 * 1024, checkAfterMs: Number.MAX_SAFE_INTEGER,
       // Central directory, every local header, member size and CRC are checked
       // before this immutable release can become a reuse candidate.
-      validate: bytes => staged(bytes, async entries => {
+      validate: async path => {
+        const entries = await openZipFile(path, ARCHIVE_LIMITS);
         if (entries.some(entry => !entry.name.startsWith(`people-${sha}/`))) throw new Error("PLURAL_ARCHIVE_REVISION_MISMATCH");
         if (!entries.some(entry => /^people-[^/]+\/data\/[a-z]{2}\/legislature\/[^/]+\.ya?ml$/.test(entry.name))) throw new Error("PLURAL_ARCHIVE_LAYOUT_INVALID");
         for (const entry of entries) { input.signal.throwIfAborted(); for await (const chunk of entry.stream()) void chunk; }
-      }),
+      },
     });
     if (release.outage) gaps.push({ sourceUrl: release.requestedUrl, detail: release.outage });
     releaseId = sha;
-    await staged(release.bytes, async entries => {
+    try {
+      const entries = await openZipFile(release.path, ARCHIVE_LIMITS);
       const selected = entries.filter(entry => new RegExp(`^people-[^/]+/data/${state}/(?:legislature|executive|municipal|municipalities)/.+\\.ya?ml$`).test(entry.name))
         .sort((left,right)=>left.name.localeCompare(right.name));
       if (!selected.length) throw new Error(`PLURAL_STATE_DIRECTORY_MISSING:${state}`);
@@ -124,7 +121,7 @@ export async function acquireStatePeople(input: SharedOptions & {
           sourceCheck,
           extractedFrom: { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, sha256: release.sha256, member } });
       }
-    });
+    } finally { await release.dispose(); }
     const byNativeId = new Map<string, PluralPerson>();
     for (const person of people) {
       const prior = byNativeId.get(person.id);

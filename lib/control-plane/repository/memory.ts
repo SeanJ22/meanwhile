@@ -8,6 +8,7 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
+import { aggregateArrayPage, replaceAggregateArrayItem } from "./aggregate-array.ts";
 import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
 /** In-process double with the same rules as `file-store.ts`. Never durable. */
 
@@ -36,7 +37,7 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
-import type { FieldManualEntry } from "../field-manual.ts";
+import { mergeEntry,type FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
@@ -49,6 +50,7 @@ import {
   ConcurrentModification,
   RepositoryLockHeld,
   UnknownAggregate,
+  canonicalJson,
   heldSlotKeys,
   jsonTextAtPath,
   projectAggregate,
@@ -60,6 +62,7 @@ import {
   type AppendOutcome,
   type ArtifactRecord,
   type ChangedReadOptions,
+  type ChangedLogReadOptions,
   type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
@@ -97,6 +100,26 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
 
   return {
     read,
+
+    readArrayPage: async (id, field, query = {}) => {
+      const row = rows.get(id);
+      return row ? {id, revision: row.revision, updatedAt: row.updatedAt, ...jsonCopy(aggregateArrayPage(row.value, field, query))} : null;
+    },
+    compareAndSetFields: async (id, revision, fields, now) => {
+      const row = rows.get(id);
+      if (!row || row.revision !== revision) throw new ConcurrentModification(kind, id, revision, row?.revision ?? null);
+      rows.set(id, {...row, revision: revision + 1, updatedAt: now, value: {...row.value, ...jsonCopy(fields)} as T});
+      changedAt.set(id, changeClock.tick());
+      return {id, revision: revision + 1, updatedAt: now, value: jsonCopy(fields)};
+    },
+    compareAndSetArrayItem: async (id, revision, field, keyPath, key, next, now, retention, fields) => {
+      const row = rows.get(id);
+      if (!row || row.revision !== revision) throw new ConcurrentModification(kind, id, revision, row?.revision ?? null);
+      const value = {...replaceAggregateArrayItem(row.value as Record<string, unknown>, field, keyPath, key, jsonCopy(next), now, retention), ...jsonCopy(fields ?? {}), updatedAt: now} as T;
+      rows.set(id, {...row, revision: revision + 1, updatedAt: now, value});
+      changedAt.set(id, changeClock.tick());
+      return {id, revision: revision + 1, updatedAt: now, value: jsonCopy(next)};
+    },
 
     /* `AggregateRepository.readMany`: the named rows that exist, in id order, as Postgres answers it. */
     readMany: async (ids: readonly string[]): Promise<readonly Persisted<T>[]> =>
@@ -161,6 +184,11 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    listWherePrefix:async(jsonPath,prefix,projection)=>{
+      const selected:Persisted<unknown>[]=[];
+      for(const row of rows.values())if(jsonTextAtPath(row.value,jsonPath)?.startsWith(prefix))selected.push({...row,value:projectAggregate(jsonCopy(row.value),projection)});
+      return selected.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
+    },
 
     readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: projectAggregate(jsonCopy(row.value), projection) }]; }),
@@ -194,7 +222,9 @@ interface LoggedRecord<T> {
 export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository<T> {
   const partitions = new Map<string, LoggedRecord<T>[]>();
   /** Every record in `readAll()` order with the coordinates and clocks a changed-since read answers with. */
-  const coordinates = () => [...partitions.entries()]
+  const coordinates = (keys?: readonly string[]) => [...(keys === undefined ? partitions.entries() : [...new Set(keys)].flatMap(key => {
+    const entries = partitions.get(key); return entries === undefined ? [] : [[key, entries] as const];
+  }))]
     .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
     .flatMap(([key, entries]) => entries.map((entry, position) => ({ key, position, entry,
       changed: { key, recordId: entry.recordId, position, record: jsonCopy(entry.record), changedAt: changeIso(entry.changedAt), stampedAt: entry.at } })));
@@ -294,11 +324,11 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedLogReadOptions<T> = {}) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      const records = coordinates().filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
+      const records = coordinates(read.keys).filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
         .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
       if (!read.page) return { through, records };
       await read.page(records);
@@ -385,7 +415,18 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
     ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
-    fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
+    fieldManual: (()=>{
+      const base=memoryAggregateRepository<FieldManualEntry>("FieldManualEntry");
+      return fieldManualRows(base,{async compareAndSetMergedEntry(id,revision,entry,now){
+        if(id!==entry.id)throw new Error("FIELD_MANUAL_MERGE_ID_MISMATCH");
+        const prior=await base.read(id);
+        if((prior?.revision??null)!==revision)throw new ConcurrentModification("FieldManualEntry",id,revision??0,prior?.revision??null);
+        const next=mergeEntry(prior?.value??null,entry);
+        if(prior&&canonicalJson(next)===canonicalJson(prior.value))return{revision:prior.revision,changed:false};
+        const saved=prior?await base.compareAndSet(id,prior.revision,next,now):(await base.put(id,next,now)).persisted;
+        return{revision:saved.revision,changed:true};
+      }});
+    })(),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),

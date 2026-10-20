@@ -95,6 +95,12 @@ export function routeParse(store: FieldManualStore, key: { readonly recordClass:
   const knownFieldNames = names ? ((names.payload as { fieldNames?: unknown }).fieldNames as string[] | undefined) ?? [] : [];
   const ruledOut: { tier: ModelClass; id: string; why: string }[] = [];
   for (const tier of PARSE_TIERS) {
+    const learned = store.parserEvidence?.recordClass === key.recordClass && store.parserEvidence.host === key.host ? store.parserEvidence.tiers[tier] : undefined;
+    if (learned) {
+      if (learned.here) { if (learned.here.outcome === "FAILED") ruledOut.push({ tier, id: learned.here.id, why: `${tier} failed to confirm quotes on ${key.host} before` }); }
+      else if (learned.count > 0 && learned.nonFailed === 0) ruledOut.push({ tier, id: learned.firstId, why: `${tier} failed to confirm quotes on ${learned.count} other publisher(s) of ${key.recordClass} and yielded on none` });
+      continue;
+    }
     const here = entries.find((e) => (e.payload as OutcomePayload).host === key.host && (e.payload as OutcomePayload).tier === tier);
     if (here) {
       if (here.outcome === "FAILED") ruledOut.push({ tier, id: here.id, why: `${tier} failed to confirm quotes on ${key.host} before` });
@@ -243,8 +249,7 @@ export function modelParseReasoner(
   options: {
     readonly ceilingUsd?: number;
     /** Read only the cost rows the rolling window can count. */
-    readonly scopedReads?: boolean;
-    readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
+      readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {},
 ): { readonly workerProvider: string; readonly workerVersion: string; readonly parse: (input: ParserWorkerInput, worker: WorkerRef) => Promise<ModelParseOutcome> } {
@@ -261,7 +266,7 @@ export function modelParseReasoner(
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
     const playbook = await readRolePlaybook(repos, "PARSER");
-    const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass });
+    const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass, parserHost: host });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });
     const { windows, unreadFrom } = documentWindows(input.evidence.text);
     const send = options.transportFor === undefined ? transport

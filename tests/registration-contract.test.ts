@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";
-import { zip } from "../scripts/xlsx.mjs";
+import { zip, buildWorkbook } from "../scripts/xlsx.mjs";
+import { createHash } from "node:crypto";
+import { knownReleaseFileFixture } from "./helpers/known-release-file-fixture.ts";
 import { requiredRoutineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { routineBaselineOwed, routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
@@ -18,7 +20,7 @@ import { composeRegistration } from "../lib/registration/compose.ts";
 import { REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { registrationReferenceFromRelease } from "../lib/registration/source-reference.ts";
+import { registrationReferenceFromRelease, validateGovernmentRelease } from "../lib/registration/source-reference.ts";
 import { referenceGovernmentListings } from "../lib/registration/listings.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -213,22 +215,46 @@ test("changed valid release bytes are parsed and a failed update preserves the e
   const options = { signal: AbortSignal.timeout(10000), store, locks, now: () => now,
     readHeld: async () => null, fetchImpl: (async () => { calls++; return new Response(new Uint8Array(body), { headers: { "content-type": "application/zip", etag: `"${calls}"` } }); }) as typeof fetch };
   const first = await acquireRegistrationSource(options);
-  await acquireRegistrationSource(options);
+  const second = await acquireRegistrationSource(options);
+  await second.release?.dispose();
   assert.equal(calls, 1, "state consumers share the national release");
   now = new Date("2026-05-01T00:00:00Z"); body = archive("NEW NAME");
   const changed = await acquireRegistrationSource(options);
   assert.notEqual(changed.sha256, first.sha256);
-  const updated = registrationReferenceFromRelease(input("OH").reference, changed.release!);
+  const updated = await registrationReferenceFromRelease(input("OH").reference, changed.release!);
+  await first.release?.dispose(); await changed.release?.dispose();
   assert.equal(updated.listings?.find(row => row.nativeIds.census_pid6 === government[0])?.name, "NEW NAME");
   assert.ok(updated.reference.governments.length > 1000, "missing source classes retain their prior evidence");
   now = new Date("2026-09-01T00:00:00Z"); body = Buffer.from("truncated");
   await assert.rejects(acquireRegistrationSource(options), /could not be acquired or decoded/);
   now = new Date("2026-05-02T00:00:00Z");
-  assert.equal((await acquireRegistrationSource(options)).sha256, changed.sha256);
+  const replayed = await acquireRegistrationSource(options);
+  assert.equal(replayed.sha256, changed.sha256);
+  await replayed.release?.dispose();
 });
 
 test("a raw 304 cannot be used as civic source bytes", () => {
   const args = input("NH");
   const candidate = registrationCandidate({ ...args, receipt: { ...args.receipt, httpStatus: 304 } });
   assert.equal(validateRoutineCandidate(candidate, null, observed).state, "SOURCE_BLOCKED");
+});
+
+test("a national nested workbook streams every named table and retains only the requested state's governments", async () => {
+  const prior = input("OH").reference;
+  const county = prior.reference.governments.find(row => row[3] === "COUNTY")!;
+  const header = ["PID6", "UNIT_NAME", "GOV_TYPE", "FIPS_STATE", "FIPS_COUNTY", "STATE"];
+  const workbook = buildWorkbook([
+    { name: "General Purpose", header, rows: [[county[0], "OWN COUNTY", "COUNTY", "39", "001", "OH"], ["999999", "OTHER STATE COUNTY", "COUNTY", "04", "001", "AZ"]], widths: [10, 30, 20, 10, 10, 10] },
+    { name: "DEP School Dist", header, rows: [["990001", "OWN DEPENDENT SYSTEM", "DEPENDENT SCHOOL SYSTEM", "39", "001", "OH"]], widths: [10, 30, 20, 10, 10, 10] },
+  ], "2026-10-01");
+  const bytes = zip([{ name: "government.xlsx", data: workbook }], "2026-10-01");
+  const release = knownReleaseFileFixture({ sourceId: "census-governments-registration", releaseId: "cog-2022", bytes,
+    sha256: createHash("sha256").update(bytes).digest("hex"), requestedUrl: REGISTRATION_SOURCE_URL, finalUrl: REGISTRATION_SOURCE_URL, httpStatus: 200,
+    retrievedAt: observed, sourceObservedAt: observed, checkedAt: observed, lastCheckStatus: 200, etag: null, lastModified: null, contentType: "application/zip", reused: false });
+  await validateGovernmentRelease(release.path);
+  const read = await registrationReferenceFromRelease(prior, release);
+  assert.ok(read.listings?.some(row => row.name === "OWN COUNTY"));
+  assert.ok(read.listings?.some(row => row.name === "OWN DEPENDENT SYSTEM"));
+  assert.ok(!read.listings?.some(row => row.name === "OTHER STATE COUNTY"));
+  assert.ok(read.listings?.every(row => row.state === "OH"));
 });

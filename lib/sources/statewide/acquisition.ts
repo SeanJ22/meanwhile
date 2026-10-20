@@ -1,11 +1,14 @@
 import { createHash } from "node:crypto";
+import { acquireKnownReleaseFile, KnownReleaseFileUnavailable } from "../known-release-file.ts";
+import { resolveKnownReleaseCache } from "../known-release.ts";
+import { readHtmlEvidenceFile } from "../html-evidence-file.ts";
 import type { Officeholder, OfficeholderSet } from "../../officials/types.ts";
 import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownReleaseOptions, type KnownRelease } from "../known-release.ts";
 import { pacedPortraitAcquire } from "../../photos/portrait-work.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION, STATEWIDE_REFERENCE_SOURCES, statewideJurisdiction, type StatewideReferenceSource } from "./reference.ts";
-import { parseStatewideAssociation, parseWikidataStatewide, statewideOfficeTitle, statewidePageLinks, statewideRoster, verifyStatewideOfficialPage, type StatewideLead, type StatewideGap } from "./parse.ts";
+import { parseStatewideAssociationBlock, parseWikidataStatewide, statewideOfficeTitle, statewidePageLinks, statewideRoster, verifyStatewideOfficialPage, type StatewideLead, type StatewideGap } from "./parse.ts";
 import { acquireWikidataPortraitLicense, discoverWikidataIdentifierProperties, WIKIDATA_IDENTIFIER_PROPERTIES } from "../people/wikidata.ts";
 export { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION } from "./reference.ts";
 
@@ -90,41 +93,59 @@ function mergeLeads(leads:readonly StatewideLead[]):StatewideLead[]{
 }
 /** Saved release identity shares national directory downloads across state
  * consumers. All requested national sources run; a failure leaves its gap. */
-export async function acquireNationalStatewideLeads(options:SharedOptions&{readonly asOf?:string;readonly state?:string}):Promise<NationalStatewideLeads>{
+export async function acquireNationalStatewideLeads(options:SharedOptions&{readonly asOf?:string;readonly state:string}):Promise<NationalStatewideLeads>{
   const asOf=options.asOf??options.now?.()??new Date().toISOString(),acquire=options.acquire??pacedPortraitAcquire;
+  statewideJurisdiction(options.state);
+  const {store:sourceStore}=await resolveKnownReleaseCache(options);
   const results=await Promise.all(STATEWIDE_REFERENCE_SOURCES.map(async source=>{
+    const referenceUrl=new URL(source.url);
     const acquisitions:StatePeopleAcquisition[]=[],leads:StatewideLead[]=[],gaps:StatewideGap[]=[];
-    const properties=source.format==="wikidata"?await discoverWikidataIdentifierProperties({...shared(options),sourceId:"wikidata-people",state:"",asOf,acquire},acquisitions,gaps):undefined;
+    const properties=source.format==="wikidata"?await discoverWikidataIdentifierProperties({...shared(options),sourceId:"wikidata-people",state:options.state,asOf,acquire},acquisitions,gaps):undefined;
     const pending=[sourceUrl(source,asOf,properties,options.state)],seen=new Set<string>();
     while(pending.length){
       options.signal.throwIfAborted();const url=pending.shift()!;if(seen.has(url))continue;seen.add(url);
       try{
         const host=new URL(url).hostname.replace(/^www\./,"");
-        const release=await acquire({...shared(options),sourceId:STATEWIDE_SOURCE_ID,releaseId:`national:${source.id}:${url}`,url,
-          parserVersion:STATEWIDE_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:DAY,allowedHosts:[host,`www.${host}`],
-          headers:{accept:source.format==="wikidata"?"application/sparql-results+json":"text/html"},validate:bytes=>{if(!bytes.length)throw new Error("STATEWIDE_SOURCE_EMPTY");}});
-        acquisitions.push(acquisition(release));const html=text(release);
-        const parsed=source.format==="wikidata"?parseWikidataStatewide(html,release.finalUrl,release.retrievedAt,options.state):parseStatewideAssociation(html,source,release.finalUrl,release.retrievedAt,options.state);
-        gaps.push(...parsed.gaps);
-        for(const lead of parsed.leads){
-          const portraitCandidate=source.format==="wikidata"&&lead.portraitCandidate?await acquireWikidataPortraitLicense(lead.portraitCandidate,
-            {...shared(options),sourceId:"wikidata-people",state:options.state??"",asOf,acquire},acquisitions,gaps):lead.portraitCandidate;
-          leads.push({...lead,...(portraitCandidate?{portraitCandidate}:{})});
+        if(source.format==="wikidata"){
+          // The query's ISO state predicate bounds these records to this job's place.
+          const release=await acquire({...shared(options),sourceId:STATEWIDE_SOURCE_ID,releaseId:`national:${source.id}:${url}`,url,
+            parserVersion:STATEWIDE_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:DAY,allowedHosts:[host,`www.${host}`],
+            headers:{accept:"application/sparql-results+json"},validate:bytes=>{if(!bytes.length)throw new Error("STATEWIDE_SOURCE_EMPTY");}});
+          acquisitions.push(acquisition(release));
+          const parsed=parseWikidataStatewide(text(release),release.finalUrl,release.retrievedAt,options.state);gaps.push(...parsed.gaps);
+          for(const lead of parsed.leads){
+            const portraitCandidate=lead.portraitCandidate?await acquireWikidataPortraitLicense(lead.portraitCandidate,
+              {...shared(options),sourceId:"wikidata-people",state:options.state,asOf,acquire},acquisitions,gaps):undefined;
+            leads.push({...lead,...(portraitCandidate?{portraitCandidate}:{})});
+          }
+          continue;
         }
-        if(source.format==="html"){
-          for(const link of statewidePageLinks(html,release.finalUrl)){
+        let release;
+        try { release=await acquireKnownReleaseFile({...shared(options),sourceId:STATEWIDE_SOURCE_ID,releaseId:`national:${source.id}:${url}`,url,
+          parserVersion:STATEWIDE_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:DAY,allowedHosts:[host,`www.${host}`],headers:{accept:"text/html"}}); }
+        catch(error){if(!(error instanceof KnownReleaseFileUnavailable))throw error;release=error.held;gaps.push({sourceUrl:url,detail:`STATEWIDE_SOURCE_READ_FAILED:${error.message}`});}
+        try{
+          acquisitions.push({requestedUrl:release.requestedUrl,finalUrl:release.finalUrl,httpStatus:release.httpStatus,retrievedAt:release.retrievedAt,
+            rawHash:release.sha256,sourceCheck:knownReleaseSourceCheck(release),body:"",indexOnly:true,heldCapture:{ref:release.raw,store:sourceStore}});
+          let pageLeads=0;
+          const enqueue=(link:{url:string;label:string},profile=false)=>{
             const target=new URL(link.url);
-            if(target.protocol!=="https:"||target.hostname.replace(/^www\./,"")!==host||seen.has(link.url))continue;
-            // Follow actual directory subsections and individual profiles, never
-            // arbitrary article archives, login, or a source's whole website.
-            const sourceRoute=new URL(source.url),path=target.pathname,sourcePath=sourceRoute.pathname;
+            if(target.protocol!=="https:"||target.hostname.replace(/^www\./,"")!==host||seen.has(link.url))return;
+            const sourcePath=referenceUrl.pathname,path=target.pathname;
             const subsection=/\b(?:auditors?|comptrollers?|treasurers?|members?|governors?|commissioners?|departments?)\b/i.test(link.label)&&
               /(?:membership|member|governor|auditor|comptroller|treasurer|department|state)/i.test(path);
-            const profile=parsed.leads.some(lead=>lead.profileUrls.includes(link.url));
             if((subsection||profile)&&path!=="/"&&!/\/(?:news|events|publications|blog|login|search)(?:\/|$)/i.test(path)&&!pending.includes(link.url)&&
               (subsection||path.startsWith(sourcePath)||profile))pending.push(link.url);
+          };
+          for await(const fragment of readHtmlEvidenceFile(release.path)){
+            options.signal.throwIfAborted();
+            if(fragment.kind==="LINK"){for(const link of statewidePageLinks(fragment.html,release.finalUrl))enqueue(link);continue;}
+            const parsed=parseStatewideAssociationBlock(fragment.html,source,release.finalUrl,release.retrievedAt,options.state);
+            gaps.push(...parsed.gaps.filter(gap=>!gap.detail.startsWith("STATEWIDE_DIRECTORY_NO_PARSED_LEADS:")));
+            for(const lead of parsed.leads){pageLeads++;leads.push(lead);for(const url of lead.profileUrls)enqueue({url,label:""},true);}
           }
-        }
+          if(!pageLeads)gaps.push({sourceUrl:release.finalUrl,detail:`STATEWIDE_DIRECTORY_NO_PARSED_LEADS:${options.state}:Directory evidence remains held for a standing reader; no absence is inferred.`});
+        }finally{await release.dispose();}
       }catch(error){options.signal.throwIfAborted();gaps.push({sourceUrl:url,detail:`STATEWIDE_SOURCE_READ_FAILED:${error instanceof Error?error.message:String(error)}`});}
     }
     return {sourceId:source.id,leads:mergeLeads(leads),acquisitions,gaps};
@@ -132,6 +153,7 @@ export async function acquireNationalStatewideLeads(options:SharedOptions&{reado
   return {leads:results.flatMap(row=>row.leads),acquisitions:results.flatMap(row=>row.acquisitions),gaps:results.flatMap(row=>row.gaps),
     coverage:results.map(row=>({sourceId:row.sourceId,leads:row.leads.length}))};
 }
+
 function heldPeopleLeads(roster:OfficeholderSet|undefined,state:string):StatewideLead[]{
   return roster?.officeholders.filter(person=>person.state?.toLowerCase()===state&&person.level==="STATE"&&!person.chamber&&person.name&&person.officeTitle)
     .map(person=>({sourceId:"held",sourceOrg:person.provenance.sourceOrg,sourceUrl:person.provenance.sourceUrl??person.websiteUrl??"",collectedAt:person.provenance.collectedAt,

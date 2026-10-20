@@ -1,7 +1,8 @@
+import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { neon } from "@neondatabase/serverless";
 import { join } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { FleetSafetyController } from "../lib/control-plane/fleet-safety.ts";
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
@@ -10,7 +11,9 @@ import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-sup
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { censusDivisionPrefix, censusStateNotDue, censusStateCoverage, runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
-import { readPlatformCensusNeeds, refreshDotgovCensusLeads, DOTGOV_CENSUS_URL } from "../lib/control-plane/discovery/platform-census.ts";
+import { readPlatformCensusNeeds, refreshDotgovCensusLeads } from "../lib/control-plane/discovery/platform-census.ts";
+import { acquireDotGov, dotGovArchiveCache, type DotGovAcquisition } from "../lib/civic-data/dotgov-acquisition.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { fieldManualEntryId, newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { acquireProcessSingleton } from "../lib/civic-data/process-singleton.ts";
@@ -27,24 +30,30 @@ const now = () => new Date().toISOString();
 let stopped = false;
 process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
 const vault = cycleVault(join(root, ...VAULT_DIR));
-let sizeFor = websiteSizeFromHoldings([], root);
-const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
-  websiteSize: target => sizeFor(target) });
-const spaceOut = hostSpacer();
-let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;
-const runtime: DiscoveryRuntime = {
-  now, spaceOut, vault: vault.put, budget: { spent: () => stopped }, websiteSize: target => sizeFor(target),
-  open: input => {
-    const read = async () => {
-      const got = await fleet.guardedOpenBytes("discovery-web", "platform-census",
-        (target, init) => fetch(target, { ...init, signal: AbortSignal.timeout(input.timeoutMs), redirect: "manual" }),
-        { followRedirects: false })(input);
-      return { status: got.status, body: new TextDecoder().decode(got.bytes), bytes: got.bytes.byteLength,
-        contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
-    };
-    return input.url === DOTGOV_CENSUS_URL ? dotgov ??= read() : read();
-  },
-};
+let dotgov: Promise<DotGovAcquisition> | undefined;
+const dotgovSource = () => dotgov ??= acquireDotGov(undefined, { archive: dotGovArchiveCache(rawCaptureVault()) });
+function stateRuntime(state: string): DiscoveryRuntime {
+  const sizeFor = websiteSizeFromHoldings([state], root);
+  const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
+    websiteSize: sizeFor });
+  return {
+    now, spaceOut: hostSpacer(), vault: vault.put, budget: { spent: () => stopped }, websiteSize: sizeFor,
+    open: input => {
+      const read = async () => {
+        const got = await fleet.guardedOpenBytes("discovery-web", "platform-census",
+          (target, init) => {
+            // Probes visit many publishers; release each connection after its body is read.
+            const headers = new Headers(init?.headers); headers.set("connection", "close");
+            return fetch(target, { ...init, headers, signal: AbortSignal.timeout(input.timeoutMs), redirect: "manual" });
+          },
+          { followRedirects: false })(input);
+        return { status: got.status, body: new TextDecoder().decode(got.bytes), bytes: got.bytes.byteLength,
+          contentType: got.contentType, location: got.location ?? null, transportError: got.transportError };
+      };
+      return read();
+    },
+  };
+}
 const states = REGISTRATION_TARGETS.map(target => target.state.toLowerCase());
 const controlQuery = neon(url);
 const stateDoors = async (state: string) => {
@@ -58,14 +67,14 @@ const stateDoors = async (state: string) => {
 try {
   for (const state of states) {
     if (stopped || readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).runnerPause.paused) break;
-    sizeFor = websiteSizeFromHoldings([state], root);
+    const runtime = stateRuntime(state);
     console.log(`CENSUS_SHUT ${state}: ${JSON.stringify(await recheckShutDoors(repos, runtime, await stateDoors(state)))}`);
   }
   for (const state of states) {
     if (stopped) break;
     const intents = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
     if (intents.runnerPause.paused) break;
-    sizeFor = websiteSizeFromHoldings([state], root);
+    const runtime = stateRuntime(state);
     const query = neon(url);
     const coverage = async () => {
       try {
@@ -89,7 +98,7 @@ try {
       continue;
     }
     const coverageBefore = await coverage();
-    try { await refreshDotgovCensusLeads(repos, runtime, state); }
+    try { await refreshDotgovCensusLeads(repos, runtime, state, dotgovSource); }
     catch (error) { console.error(`CENSUS_SOURCE ${state}: ${error instanceof Error ? error.message : String(error)}`); }
     const schoolSites = (reference.listings ?? []).filter(row => row.nativeIds.nces_leaid && row.website).map(row =>
       newFieldManualEntry("nces-website", row.id, { role: "SHARED", kind: "NCES_WEBSITE", title: row.name,
@@ -100,17 +109,17 @@ try {
     if (saved.error) throw new Error(saved.error);
     const reading = await readPlatformCensusNeeds(state, null, { repos, root });
     for (const failure of reading.failures) console.error(`CENSUS_SOURCE ${state}: ${failure}`);
-    const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value;
+    const config = (await readRuntimeAdminConfig(repos, ["discoverySearch"]))?.value;
     const search = config && isAdminConfig(config) && config.discoverySearch?.enabled ? makeDiscoverySearch({
       braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY,
       budget: durableSearchBudget({ repos, perCycle: DEFAULT_SEARCH_BUDGET.perCycle, perDay: DEFAULT_SEARCH_BUDGET.perDay,
         admit: () => null, now }),
     }) : null;
-    const stateRuntime = { ...runtime, ...(search ? { search } : {}),
+    const discoveryRuntime = { ...runtime, ...(search ? { search } : {}),
       recordCost: async (entry: Parameters<NonNullable<DiscoveryRuntime["recordCost"]>>[0]) => {
         await repos.costs.append(entry.workItemId, entry.attemptId, entry, now());
       } };
-    const report = await runCensusState({ repos, state, needs: reading.needs, runtime: stateRuntime,
+    const report = await runCensusState({ repos, state, needs: reading.needs, runtime: discoveryRuntime,
       onProgress: report => { if (report.checked % 25 === 0) console.log(`CENSUS_PROGRESS ${state}: ${report.checked} checked, ${report.walked} walked`); } });
     console.log(`CENSUS_STATE ${JSON.stringify(report)}`);
     const coverageAfter = await coverage();
@@ -121,4 +130,7 @@ try {
       states: [state], observedAt: now(), outcome: report.failures.length ? "FAILED" : "YIELDED", payload: { ...report, referenceSha256: reference.sha256, baseline, current: coverageAfter } })], now());
     if (written.error) throw new Error(written.error);
   }
-} finally { await singleton.release(); }
+} finally {
+  await dotgov?.then(source => source.dispose()).catch(() => {});
+  await singleton.release();
+}

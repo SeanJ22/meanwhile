@@ -1,3 +1,4 @@
+import { VerifiedReplayFiles } from "../../sources/verified-replay.ts";
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /** The hunter's research tools. robots.txt is read and recorded, never a refusal;
@@ -38,7 +39,8 @@ import {
 import { decodeEntities, visibleText } from "../../extract/visible-text.ts";
 
 /** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
-export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
+export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number;replayFiles?:VerifiedReplayFiles}={}) {
+  const files=options.replayFiles??new VerifiedReplayFiles();
   const fresh=(at:string)=>{
     const age=Date.parse(context.now())-Date.parse(at);
     return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
@@ -49,9 +51,9 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
     const saved=await context.vault(artifact,text);
     if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
-      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
+      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,files.text({artifact,text},'text',artifact.contentHash));
     return saved;
-  }});
+  }}, {replayFiles:files});
   return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
     for(const saved of captured.values()) {
       if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
@@ -442,7 +444,8 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
   }
 }
 
-export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
+export function buildScoutToolkit(ctx: ScoutToolContext, options: { readonly replayFiles?: VerifiedReplayFiles } = {}): ScoutToolkit {
+  const files = options.replayFiles ?? new VerifiedReplayFiles();
   const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
@@ -577,8 +580,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const held=saved.artifact;
     if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
       held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation')) {
-      savedPages.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
-        retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId});
+      savedPages.set(held.id,files.text({artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
+        retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId},"text",held.contentHash));
     }
     return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
@@ -1135,6 +1138,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         if (held.artifactId !== raw.artifactId || contentHash(held.text) !== held.contentHash) return refusal("the saved copy did not match its fingerprint.");
         page = { artifactId: held.artifactId, contentHash: held.contentHash, text: held.text, canonicalUrl: held.canonicalUrl,
           retrievalUrl: held.provenance?.retrievalUrl ?? held.canonicalUrl, retrievedAt: held.retrievedAt, methodRouteId: held.methodRouteId };
+        page = files.text(page, "text", page.contentHash);
         savedPages.set(page.artifactId, page);
       } catch (error) { return refusal(`the saved page could not be read: ${error instanceof Error ? error.message : String(error)}`); }
     }

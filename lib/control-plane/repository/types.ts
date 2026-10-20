@@ -219,6 +219,13 @@ export interface AggregateRepository<T> {
   read(id: string): Promise<Persisted<T> | null>;
   /** Narrowed to `projection` by the store before it leaves; null when absent. */
   readNarrowed(id: string, projection: RecordProjection): Promise<Persisted<unknown> | null>;
+  /** Members of one JSON array, filtered and narrowed before transfer; `next` is its last original ordinal. */
+  readArrayPage?(id: string, field: string | readonly string[], query?: AggregateArrayQuery): Promise<AggregateArrayPage | null>;
+  /** Revision-fenced top-level field merge. Returns only the submitted fields. */
+  compareAndSetFields?(id: string, expectedRevision: number, fields: Readonly<Record<string, unknown>>, now: string): Promise<Persisted<unknown>>;
+  /** Change one exact array identity in the store; unselected members never leave it. Null removes that identity. */
+  compareAndSetArrayItem?(id: string, expectedRevision: number, field: string, keyPath: readonly string[], key: string,
+    next: unknown | null, now: string, retention?: AggregateArrayRetention, fields?: Readonly<Record<string, unknown>>): Promise<Persisted<unknown>>;
   /** The aggregate, or `UnknownAggregate`. For callers that cannot proceed without it. */
   mustRead(id: string): Promise<Persisted<T>>;
   /** Idempotent create. Identical re-put is a no-op success; a different value refuses. */
@@ -244,6 +251,8 @@ export interface AggregateRepository<T> {
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
   /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
   listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
+  /** Literal text prefix at `path`, selected and narrowed by the store before transfer. */
+  listWherePrefix(path: readonly string[], prefix: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /**
    * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
    * names at its current revision; `through` is the store's clock when the read began.
@@ -251,10 +260,39 @@ export interface AggregateRepository<T> {
   listChangedSince?(since: string | null, held?: HeldSlots, options?: ChangedReadOptions<Persisted<T>>): Promise<ChangedRows<T>>;
 }
 
+export interface AggregateArrayQuery {
+  readonly after?: number;
+  readonly limit?: number;
+  readonly match?: {readonly path: readonly string[]; readonly value: string};
+  readonly projection?: RecordProjection;
+  /** Stable keyset traversal; order path must identify unique scalar keys. Replaces ordinal after/next. */
+  readonly order?: {readonly path: readonly string[]; readonly after?: string};
+}
+export interface AggregateArrayPage {
+  readonly id: string; readonly revision: number; readonly updatedAt: string;
+  readonly values: readonly unknown[];
+  readonly next: number | null;
+  readonly nextKey?: string | null;
+}
+export interface AggregateArrayRetention {
+  readonly limit: number;
+  readonly discardPath: readonly string[];
+  readonly discardValue: string;
+  readonly oldestPath: readonly string[];
+  readonly discardAlso?: {readonly path: readonly string[]; readonly value: string|null};
+  /** Remove expired members before count retention; preserves timestamps equal to the boundary. */
+  readonly pruneBefore?: {readonly path: readonly string[]; readonly at: string};
+}
+
 /** `page` takes each page as it is read and the answer then holds no rows; `projection` narrows each one in the store. */
 export interface ChangedReadOptions<R> {
   readonly page?: (rows: readonly R[]) => Promise<void> | void;
   readonly projection?: RecordProjection;
+}
+
+/** Append-only partition selection is applied by the store before records are decoded or transferred. */
+export interface ChangedLogReadOptions<T> extends ChangedReadOptions<ChangedRecord<T>> {
+  readonly keys?: readonly string[];
 }
 
 /** Slots a reader already holds, left out of a changed-since read: an aggregate's [id, revision], a log record's [key, position]. */
@@ -267,9 +305,13 @@ export function heldSlotKeys(held: HeldSlots | undefined): ReadonlySet<string> {
 
 /** The field manual's rows, one aggregate per entry. */
 export interface FieldManualRepository extends AggregateRepository<FieldManualEntry> {
+  /** Merge one normalized observation inside the provider; prior country histories never leave it. Null revision creates only when absent. */
+  compareAndSetMergedEntry(id: string, expectedRevision: number | null, entry: FieldManualEntry, now: string): Promise<{readonly revision:number;readonly changed:boolean}>;
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /** Project this job's evidence before transfer, visiting one page rather than retaining the country's manual. */
+  visitSlice(query: FieldManualQuery, visit: (row: Persisted<FieldManualEntry>) => void | Promise<void>, projection?: RecordProjection): Promise<void>;
   /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
   /**
@@ -335,7 +377,7 @@ export interface AppendOnlyRepository<T> {
   /** Exactly `read(key)` for each key, in one batched read; a key with no record is absent. */
   readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
   /** Records whose `changed_at` is at or after `since` (all when null), less any `held` names, in `readAll()` order, with coordinates. */
-  readChangedSince(since: string | null, held?: HeldSlots, options?: ChangedReadOptions<ChangedRecord<T>>): Promise<ChangedRecords<T>>;
+  readChangedSince(since: string | null, held?: HeldSlots, options?: ChangedLogReadOptions<T>): Promise<ChangedRecords<T>>;
   /** Records the appender stamped at or after `from` and before `until`, handed over page by page with both clocks. */
   readStampedBetween?(from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void): Promise<void>;
 }
@@ -354,7 +396,7 @@ export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly
 }
 
 /** `true` keeps a top-level key whole; an object keeps only its named keys. Every other key is dropped. */
-export type RecordProjection = Readonly<Record<string, true | readonly string[]>>;
+export type RecordProjection = {readonly [key:string]:true|readonly string[]|RecordProjection};
 
 /** The in-process mirror of the Postgres projection, so every provider returns the same narrowed record. */
 export function projectRecord(record: unknown, projection: RecordProjection): unknown {
@@ -367,9 +409,9 @@ export function projectRecord(record: unknown, projection: RecordProjection): un
       out[key] = value;
       continue;
     }
-    out[key] = Object.fromEntries(
+    out[key] = Array.isArray(keep)?Object.fromEntries(
       Object.entries(value as Record<string, unknown>).filter(([inner]) => keep.includes(inner)),
-    );
+    ):projectRecord(value,keep as RecordProjection);
   }
   return out;
 }

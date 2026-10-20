@@ -1,9 +1,10 @@
+import { runLeaseWorkerProcesses } from "./helpers/worker-pool-results.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
-import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { MODELS } from "../lib/models.ts";
 

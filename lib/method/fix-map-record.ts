@@ -75,6 +75,7 @@ export function memoryFixMap(): FixMapRepository & { readonly rows: () => readon
     rows: () => [...rows.values()],
     forPlace: async (placeId) => [...rows.values()].filter((r) => r.placeId === placeId).sort((a, b) => (a.methodId < b.methodId ? -1 : 1)),
     forMethod: async (methodId) => [...rows.values()].filter((r) => r.methodId === methodId).sort((a, b) => (a.placeId < b.placeId ? -1 : 1)),
+    forMethodPage: async (methodId, after, limit = 200) => [...rows.values()].filter(row => row.methodId === methodId && (after === null || row.placeId > after)).sort((a, b) => a.placeId < b.placeId ? -1 : a.placeId > b.placeId ? 1 : 0).slice(0, limit),
     worksFor: async (methodIds) => methodWorksOf([...rows.values()], methodIds),
     workingMethods: async (limit = 200) => latestWorking([...rows.values()], limit),
     put: async (row) => { rows.set(key(row), applyFixResult(rows.get(key(row)) ?? null, row)); },

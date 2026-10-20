@@ -16,7 +16,7 @@
  * Pure functions over the config plus two small async writers that
  * compare-and-set the row (retried once on a concurrent write).
  */
-import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import { RESEARCH_INTENT_LOG_KEY } from "./scheduler/research-policy.ts";
 import { fixSubjectId } from "./fix-queue.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -102,16 +102,20 @@ export function withFixCompleted(config: AdminConfig, id: string, done: FixCompl
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
-async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<AdminConfig> {
+async function mutateItem(repos: Repos, id: string, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  const write = repos.adminConfig.compareAndSetArrayItem?.bind(repos.adminConfig);
+  if (!read || !write) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
   for (let attempt = 0; ; attempt++) {
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-    const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
+    const held = await read(ADMIN_CONFIG_ID, "fixList", {match: {path: ["id"], value: id}, limit: 1});
+    if (!held) { await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(at), at); continue; }
+    const current = {...defaultAdminConfig(at), fixList: held.values as readonly FixItem[]};
     const next = change(current);
-    if (next === current) return current;
+    if (next === current) return;
     try {
-      if (held) await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
-      else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-      return next;
+      await write(ADMIN_CONFIG_ID, held.revision, "fixList", ["id"], id, fixItems(next).find(item => item.id === id) ?? null, at,
+        {limit: FIX_LIST_CAP, discardPath: ["state"], discardValue: "FIXED", oldestPath: ["addedAt"]});
+      return;
     } catch (error) {
       if (attempt >= 1) throw error;
     }
@@ -123,22 +127,23 @@ async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => Admi
  * the factory in plain words. Returns the item id.
  */
 export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string; sourceKey?: string; technical?: readonly string[] }): Promise<string> {
-  await mutate(repos, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
-  return fixSubjectId(add.where, add.sourceKey ?? add.says);
+  const id = fixSubjectId(add.where, add.sourceKey ?? add.says);
+  await mutateItem(repos, id, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
+  return id;
 }
 
 
 export async function startFixItem(repos: Repos, id: string, at: string): Promise<void> {
-  await mutate(repos, at, (c) => withFixStarted(c, id, at));
+  await mutateItem(repos, id, at, (c) => withFixStarted(c, id, at));
 }
 
 export async function completeFixItem(repos: Repos, id: string, done: FixCompletion, at: string): Promise<void> {
-  await mutate(repos, at, (c) => withFixCompleted(c, id, done, at));
+  await mutateItem(repos, id, at, (c) => withFixCompleted(c, id, done, at));
 }
 
 /** Attach the fleet's durable dispatch to a data repair; engineering stays owned by the team. */
 export async function recordFixDispatch(repos: Repos, id: string, dispatch: NonNullable<FixItem["dispatch"]>): Promise<void> {
-  await mutate(repos, dispatch.at, c => put(c, fixItems(c).map(item => item.id === id
+  await mutateItem(repos, id, dispatch.at, c => put(c, fixItems(c).map(item => item.id === id
     ? { ...item, state: "FIXING" as const, startedAt: dispatch.at, dispatch } : item), dispatch.at));
 }
 
@@ -152,23 +157,37 @@ export function fixDispatchNote(where: string, says: string, kind?: unknown, pla
 }
 
 export async function markFixQueueImported(repos: Repos, at: string): Promise<void> {
-  await mutate(repos, at, c => ({ ...c, legacyFixQueueImportedAt: at, updatedAt: at }));
+  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {});
+  if (!held) { await repos.adminConfig.put(ADMIN_CONFIG_ID, {...defaultAdminConfig(at), legacyFixQueueImportedAt: at}, at); return; }
+  if (!repos.adminConfig.compareAndSetFields) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
+  await repos.adminConfig.compareAndSetFields(ADMIN_CONFIG_ID, held.revision, {legacyFixQueueImportedAt: at, updatedAt: at}, at);
 }
 
 let honorCursor = 0;
 /** BR-04: the standing timer reads a bounded part of pending dispatches on each tick. */
 export async function refreshFixDispatchHonors(repos: Pick<ControlPlaneRepositories,"adminConfig"|"researchIntents">, at: string): Promise<void> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  const pending = held && isAdminConfig(held.value) ? fixItems(held.value).filter(i=>i.dispatch && !i.dispatch.honoredAt) : [];
-  if (!pending.length) { honorCursor=0; return; }
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  if (!read) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
+  const pending: FixItem[] = [];
+  let cursor = honorCursor, wrapped = false;
+  while (pending.length < 16) {
+    const page = await read(ADMIN_CONFIG_ID, "fixList", {after: cursor, limit: 16, projection: {id: true, dispatch: true}});
+    if (!page) break;
+    for (const item of page.values as FixItem[]) if (item.dispatch && !item.dispatch.honoredAt) pending.push(item);
+    if (page.next === null) {
+      if (wrapped || honorCursor === 0) { cursor = 0; break; }
+      wrapped = true; cursor = 0;
+    } else cursor = page.next;
+    if (wrapped && cursor >= honorCursor) break;
+  }
+  honorCursor = cursor;
+  if (!pending.length) return;
   const changes = new Map<string, { intentId:string; honoredAt:string; honoredDetail:string }>();
-  for (let n=0;n<Math.min(16,pending.length);n++) {
-    const item=pending[(honorCursor+n)%pending.length];
+  for (const item of pending.slice(0,16)) {
     const rows=await repos.researchIntents.readRecentWhere(RESEARCH_INTENT_LOG_KEY,["honors"],item.dispatch!.intentId,1,{kind:true,honoredAt:true,detail:true});
     const honored=rows[0] as {kind?:unknown;honoredAt?:unknown;detail?:unknown}|undefined;
     if (honored?.kind === "HONORED" && typeof honored.honoredAt === "string") changes.set(item.id,{intentId:item.dispatch!.intentId,honoredAt:honored.honoredAt,honoredDetail:typeof honored.detail === "string" ? honored.detail : ""});
   }
-  honorCursor=(honorCursor+16)%pending.length;
-  if (changes.size) await mutate(repos,at,c=>put(c,fixItems(c).map(item=>item.dispatch && changes.get(item.id)?.intentId === item.dispatch.intentId
+  for (const [id] of changes) await mutateItem(repos,id,at,c=>put(c,fixItems(c).map(item=>item.dispatch && changes.get(item.id)?.intentId === item.dispatch.intentId
     ? {...item,dispatch:{...item.dispatch,...changes.get(item.id)!}} : item),at));
 }

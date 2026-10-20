@@ -21,6 +21,7 @@ import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pa
 import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./scheduler/provider-limits.ts";
 import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
+import { spendScratch } from "./spend-scratch.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
@@ -233,61 +234,63 @@ function answeredModelPrice(entry: CostEntry): { usd: number | null; knownUsd: n
  * tokenless Scout. Known prices remain visible beside unbounded historical
  * charges; only exact model-backed job identities may consume a hold. */
 export function aggregateModelSpend(
-  costs: readonly CostEntry[],
+  costs: Iterable<CostEntry>,
   since: string,
   until: string,
-  spendHolds: readonly SpendHold[] = [],
+  spendHolds: Iterable<SpendHold> = [],
 ): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
-  return aggregatePricedSpend(costs.flatMap(entry => pricedModelCharge(entry, entry.attemptId) ?? []), since, until, spendHolds);
+  return aggregatePricedSpend({[Symbol.iterator]: function* () {
+    for (const entry of costs) { const charge = pricedModelCharge(entry, entry.attemptId); if (charge) yield charge; }
+  }}, since, until, spendHolds);
 }
 
 /** The spend of the charges recorded in [since, until], holds standing in where they are tighter. */
 export function aggregatePricedSpend(
-  charges: readonly PricedCharge[],
+  charges: Iterable<PricedCharge>,
   since: string,
   until: string,
-  spendHolds: readonly SpendHold[] = [],
+  spendHolds: Iterable<SpendHold> = [],
 ): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
   let usd = 0;
   let knownUsd = 0;
   let measured = 0;
   let unmeasured = 0;
   let worstCaseCharges = 0;
-  const jobs = new Map<string, { usd: number; worstCaseUsd: number }>();
+  const scratch = spendScratch(), {db, owner} = scratch;
+  const addJob = db.prepare(`INSERT INTO jobs(owner,id,usd,worst) VALUES(?,?,?,?)
+    ON CONFLICT(owner,id) DO UPDATE SET usd=jobs.usd+excluded.usd,worst=jobs.worst+excluded.worst`);
+  const addHold = db.prepare("INSERT OR IGNORE INTO holds VALUES(?,?)");
+  const addHeldJob = db.prepare(`INSERT INTO held_jobs VALUES(?,?,?,?)
+    ON CONFLICT(owner,id) DO UPDATE SET worst=held_jobs.worst+excluded.worst,held=held_jobs.held+excluded.held`);
+  const heldJob = db.prepare("SELECT worst,held FROM held_jobs WHERE owner=? AND id=?");
   const start = Date.parse(since), end = Date.parse(until);
+  try {
   for (const charge of charges) {
     const at = Date.parse(charge.at);
     if (!(at >= start && at <= end)) continue;
-    const job = jobs.get(charge.jobId) ?? { usd: 0, worstCaseUsd: 0 };
     knownUsd += charge.knownUsd;
     if (charge.measured) measured += 1;
     else unmeasured += 1;
     if (charge.bounded) worstCaseCharges += 1;
-    job.usd += charge.usd;
-    if (charge.bounded) job.worstCaseUsd += charge.usd;
-    jobs.set(charge.jobId, job);
+    addJob.run(owner, charge.jobId, charge.usd, charge.bounded ? charge.usd : 0);
   }
-  const held = new Map<string, number>();
-  const worstCase = new Map<string, number>();
-  const seen = new Set<string>();
   for (const hold of spendHolds) {
     const at = Date.parse(hold.heldAt);
-    if (seen.has(hold.holdId) || !(at >= start && at <= end) || !amount(hold.usd)) continue;
-    seen.add(hold.holdId);
-    worstCase.set(hold.jobId, (worstCase.get(hold.jobId) ?? 0) + hold.usd);
-    if (hold.settled === null) held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
+    if (!(at >= start && at <= end) || !amount(hold.usd) || !addHold.run(owner, hold.holdId).changes) continue;
+    addHeldJob.run(owner, hold.jobId, hold.usd, hold.settled === null ? hold.usd : 0);
   }
-  for (const [id, job] of jobs) {
+  for (const job of db.prepare("SELECT id,usd,worst FROM jobs WHERE owner=? ORDER BY sequence").iterate(owner)) {
     // Only an exact job identity can stand in for a bounded charge: its hold is the job's actual maximum.
     // Obligation-only attribution can reuse one hold for several failed attempts, so it never does.
-    const known = job.usd - job.worstCaseUsd;
-    const exact = job.worstCaseUsd > 0 ? worstCase.get(id) : undefined;
-    usd += exact !== undefined && exact >= known ? Math.min(exact, job.usd) : Math.max(job.usd, held.get(id) ?? 0);
-    held.delete(id);
+    const held = heldJob.get(owner, job.id), actual = Number(job.usd), worst = Number(job.worst);
+    const known = actual - worst;
+    const exact = worst > 0 && held ? Number(held.worst) : undefined;
+    usd += exact !== undefined && exact >= known ? Math.min(exact, actual) : Math.max(actual, Number(held?.held ?? 0));
   }
   // A hold carries no provider or model. Unmatched holds may reserve a paid
   // API/search job, so they cannot be added to Anthropic spend by inference.
   return { usd, knownUsd, measured, unmeasured, worstCaseCharges };
+  } finally { scratch.release(); }
 }
 
 export type ProviderFailureClass = "HARD" | "TRANSIENT" | "OTHER";
@@ -414,8 +417,8 @@ export class FleetSafetyController {
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
   private readonly localPacing = memoryWebsitePacing();
-  /** The held websites as last read, refreshed every `HELD_REFRESH_MS`, and every hold this process recorded since. */
-  private held: { readonly at: number; readonly until: ReadonlyMap<string, number> } | null = null;
+  /** Only the current site's hold is cached; other active holds stay in the shared store or local scratch fallback. */
+  private held: { readonly at: number; readonly site: string; readonly until: number | null } | null = null;
   private readonly websiteSize?: WebsiteSizeForUrl;
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
@@ -427,8 +430,8 @@ export class FleetSafetyController {
 
   constructor(input: {
     readonly now: string;
-    readonly charges: readonly PricedCharge[];
-    readonly spendHolds?: readonly SpendHold[];
+    readonly charges: Iterable<PricedCharge>;
+    readonly spendHolds?: Iterable<SpendHold>;
     /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
     /**
@@ -788,18 +791,21 @@ export class FleetSafetyController {
   private async admitWebsiteRequest(url: string, work: string): Promise<void> {
     const site = websiteOf(url);
     const now = this.clock();
-    const until = (await this.heldWebsites(now)).get(site);
-    if (until !== undefined && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
+    const until = await this.heldWebsite(site, now);
+    if (until !== null && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
     const limit = websiteRequestLimit(this.websiteSize?.(url));
     if (limit === null) return;
     const took = await this.pacing.take(site, limit, now).catch(() => this.localPacing.take(site, limit, now));
     if (!took.ok) this.refuse(work, "WEBSITE_REQUEST_CAP", `${site} has had its ${limit} requests in the last hour; small-publisher allowance exhausted until ${new Date(took.until).toISOString()}`);
   }
 
-  private async heldWebsites(now: number): Promise<ReadonlyMap<string, number>> {
-    if (this.held === null || now - this.held.at >= HELD_REFRESH_MS) {
-      const read = await this.pacing.heldUntil(now).catch(() => null);
-      this.held = { at: now, until: read ?? this.held?.until ?? new Map() };
+  private async heldWebsite(site: string, now: number): Promise<number | null> {
+    if (this.held === null || this.held.site !== site || now - this.held.at >= HELD_REFRESH_MS) {
+      const local = await this.localPacing.heldUntil(site, now);
+      const read = await this.pacing.heldUntil(site, now).catch(() => local);
+      const until = Math.max(local ?? 0, read ?? 0);
+      if (until > now) await this.localPacing.hold(site, until, now);
+      this.held = {at: now, site, until: until > now ? until : null};
     }
     return this.held.until;
   }
@@ -810,10 +816,10 @@ export class FleetSafetyController {
     const now = this.clock();
     const site = websiteOf(url);
     const until = now + Math.max(RATE_LIMIT_BACKOFF_MS, this.retryAfterMs(response) ?? 0);
-    const held = new Map(this.held?.until ?? []);
-    held.set(site, Math.max(until, held.get(site) ?? 0));
-    this.held = { at: this.held?.at ?? now, until: held };
-    await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
+    const prior = this.held?.site === site ? this.held.until ?? 0 : 0;
+    this.held = {at: now, site, until: Math.max(until, prior)};
+    await this.localPacing.hold(site, until, now);
+    if (this.pacing !== this.localPacing) await this.pacing.hold(site, until, now).catch(() => {});
   }
 
   /** One request's place at its provider: under the in-flight cap (one while half-open), at its published pace, never while open. */

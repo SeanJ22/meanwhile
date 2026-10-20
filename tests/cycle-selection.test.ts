@@ -18,14 +18,22 @@ test("a filtered recovery reads only selected occurrence histories without a glo
     attempts: { ...repos.attempts, list: noGlobalScan },
     routeTasks: { ...repos.routeTasks, list: noGlobalScan },
     workItems: { ...repos.workItems, list: noGlobalScan },
-    leases: { ...repos.leases, list: noGlobalScan },
-    workerResults: { ...repos.workerResults, readAll: noGlobalScan },
+    leases: { ...repos.leases, list: noGlobalScan, listChangedSince:noGlobalScan },
+    workerResults: { ...repos.workerResults, readAll: noGlobalScan,readChangedSince:async(since,held,options)=>{
+      assert.deepEqual(options?.keys,[selected.workItem.id],"completion recovery must name an exact selected partition before transfer");
+      return repos.workerResults.readChangedSince(since,held,options);
+    } },
     costs: { ...repos.costs, readAll: noGlobalScan },
   }, ["selected"]);
   assert.deepEqual((await scoped.workItems.list()).map(row => row.id), [selected.workItem.id]);
   assert.deepEqual((await scoped.routeTasks.list()).map(row => row.id), [selected.routeTask.id]);
   assert.deepEqual(await scoped.attempts.list(), []);
   assert.deepEqual(await scoped.costs.readAll(), []);
+  const occurrenceIds:string[]=[];
+  const page=await scoped.occurrences.listChangedSince!(null,undefined,{projection:{obligationId:true},page:rows=>{
+    for(const row of rows){assert.deepEqual(row.value,{obligationId:"selected"});occurrenceIds.push(row.id);}
+  }});
+  assert.deepEqual(page.rows,[]);assert.deepEqual(occurrenceIds,[selected.occurrence.id]);
   assert.deepEqual(await sweepExpiredLeases(scoped, { now, observedBy: "filtered-run" }),
     { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] });
   assert.equal((await repos.workItems.list()).length, 2);

@@ -87,8 +87,15 @@ function congressName(person: RawLegislator): string | null {
     ? `${person.name.first.trim()} ${person.name.last.trim()}` : null;
 }
 
+export function congressLegislatorIsComplete(value: unknown): boolean {
+  const row = value as RawLegislator | null;
+  return Boolean(row && /^[A-Z]\d{6}$/.test(row.id?.bioguide ?? "") && congressName(row) && Array.isArray(row.terms) && row.terms.length && row.terms.every(term =>
+    term && ["sen", "rep"].includes(term.type) && term.state && termDate(term.start) && termDate(term.end)));
+}
+
 export function normalizeCongressDirectory(raw: Readonly<Record<string,unknown>>, SHA: string, collectedAt: string,
-  prior?: FederalDirectoryReadModel | null, sourceDates: Readonly<Record<string,string>> = {}, asOf: string = collectedAt): FederalDirectoryReadModel {
+  prior?: FederalDirectoryReadModel | null, sourceDates: Readonly<Record<string,string>> = {}, asOf: string = collectedAt,
+  sourceMembershipComplete?: boolean): FederalDirectoryReadModel {
   const legislators = (raw["legislators-current"] ?? []) as RawLegislator[];
   const socials = ((raw["legislators-social-media"] ?? []) as RawSocial[]).filter(row=>row?.id?.bioguide);
   const officeSets = ((raw["legislators-district-offices"] ?? []) as RawOfficeSet[]).filter(row=>row?.id?.bioguide);
@@ -328,7 +335,7 @@ export function normalizeCongressDirectory(raw: Readonly<Record<string,unknown>>
     };
   }
   if (prior && (!raw["committees-current"] || !raw["committee-membership-current"])) directory.committees = {...prior.directory.committees,...directory.committees};
-  const currentMembershipComplete = legislators.length > 0 && legislators.every(row=>row && /^[A-Z]\d{6}$/.test(row.id?.bioguide ?? "") && congressName(row) && Array.isArray(row.terms) && row.terms.length && row.terms.every(term=>term && ["sen","rep"].includes(term.type) && term.state && termDate(term.start) && termDate(term.end)));
+  const currentMembershipComplete = sourceMembershipComplete ?? (legislators.length > 0 && legislators.every(congressLegislatorIsComplete));
   if (prior && !currentMembershipComplete) {
     const missing=prior.roster.officeholders.filter(row=>!roster.officeholders.some(current=>current.id===row.id));
     roster.officeholders.push(...missing);

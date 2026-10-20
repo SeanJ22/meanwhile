@@ -14,7 +14,8 @@ import { randomUUID } from "node:crypto";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { costEntryWithModel, modelRequestBoundFor } from "../control-plane/cost.ts";
 import { resolveRollingCeiling } from "../control-plane/fleet-safety.ts";
-import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
+import { adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { batchEnabledForJob, MESSAGE_BATCHES_ENDPOINT, readMessageBatchResults, retrieveMessageBatch, submitMessageBatch, type MessageBatch } from "../control-plane/model-batch.ts";
 import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
@@ -59,7 +60,7 @@ export function lookSpendDecision(facts: LookSpendFacts, screens: number): { rea
 type Repos = Pick<ControlPlaneRepositories, "adminConfig" | "researchIntents" | "costs">;
 
 export async function reserveLookSpend(repos: Repos, now: string, screens: number): Promise<{ readonly ok: boolean; readonly why: string }> {
-  const adminConfigRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
+  const adminConfigRow = await readRuntimeAdminConfig(repos, ["fleetSpendCeiling"]).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
   const intentLog = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY).then((rows) => [...rows], () => null);
   const windowUsd = await readSpendWindow(repos as ControlPlaneRepositories, now)
     .then((charges) => researchSpendInWindow(charges, now).windowUsd, () => null);

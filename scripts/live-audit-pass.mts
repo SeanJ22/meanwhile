@@ -21,11 +21,11 @@
  */
 import { createHash, randomUUID } from "node:crypto";
 
-import { CURATED_READER_CONTRACT_IDS, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { readReaderDemand } from "../lib/control-plane/reader-demand.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { curatedReaderCatalog, demandRanker, type LiveFactCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
-import { combinedCatalog, runLiveAuditCycle, workItemTrace } from "../lib/control-plane/workers/live-audit-run.ts";
+import { demandRanker, type LiveFactCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
+import { runLiveAuditCycle, workItemTrace } from "../lib/control-plane/workers/live-audit-run.ts";
+import { withLiveAuditCatalog } from "../lib/control-plane/workers/live-audit-catalog.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
@@ -39,22 +39,6 @@ if (!url) {
 }
 const repos = await createPgRepositories(url, now, { skipBootstrap: true });
 
-const catalogs: LiveFactCatalog[] = [];
-const unread: string[] = [];
-for (const id of CURATED_READER_CONTRACT_IDS) {
-  try {
-    const read = await readCuratedReaderProjection(id, { bypassCache: true });
-    if (read.kind === "PROMOTED") catalogs.push(curatedReaderCatalog(id, read.value.records));
-    else unread.push(`${id} (${read.kind})`);
-  } catch (error) {
-    unread.push(`${id} (${error instanceof Error ? error.name : "error"})`);
-  }
-}
-if (catalogs.length === 0) {
-  console.error(`live audit: no Reader family could be read: ${unread.join(", ")}`);
-  process.exit(1);
-}
-
 const demand = await readReaderDemand(now).catch(() => null);
 const demandRankFor = demand?.kind === "READ"
   ? demandRanker([demand.zips.rows, demand.districts.rows, demand.meetings.rows, demand.officials.rows])
@@ -67,10 +51,15 @@ const fetchPage = async (pageUrl: string): Promise<PageRead | null> => {
 };
 
 /* The fact's page host, for the lesson a red flag writes; remembered as the catalog hands facts over. */
+await withLiveAuditCatalog(async ({catalog: published, readable, unread}) => {
+if (readable === 0) {
+  console.error(`live audit: no Reader family could be read: ${unread.join(", ")}`);
+  process.exitCode = 1;
+  return;
+}
 const hosts = new Map<string, string>();
-const combined = combinedCatalog(catalogs);
-const catalog: LiveFactCatalog = { areas: combined.areas, factsInArea: async (area, limit) => {
-  const facts = await combined.factsInArea(area, limit);
+const catalog: LiveFactCatalog = { ...published, factsInArea: async (area, limit) => {
+  const facts = await published.factsInArea(area, limit);
   for (const fact of facts) { try { hosts.set(fact.id, new URL(fact.sourceUrl).host); } catch { /* not a URL: no host */ } }
   return facts;
 } };
@@ -84,3 +73,4 @@ console.log(`live audit: ${s.sampled} sampled in ${s.areas} areas; ${s.green} gr
   (unread.length ? `; not read: ${unread.join(", ")}` : "") +
   (outcome.lessonErrors.length ? `; lessons not kept: ${outcome.lessonErrors.length}` : ""));
 for (const flag of outcome.redFlags) console.log(`  red: ${flag.factId} -> ${flag.status}`);
+});

@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { stateRegistryRuntimeContractId, stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
@@ -181,7 +182,7 @@ export async function publishOwedRosterFacts(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<PublicationReport> {
   if (!input.workItemIds.length) return [];
-  const clocks = factClocks((await input.repos.adminConfig.read("current"))?.value ?? null);
+  const clocks = factClocks((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
@@ -253,7 +254,7 @@ export async function publishWorkerDirectoryResults(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<PublicationReport> {
   if (!input.workItemIds.length) return [];
-  const config = (await input.repos.adminConfig.read("current"))?.value ?? null;
+  const config = (await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null;
   const kinds = runtimeKinds(config), clocks = factClocks(config);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;

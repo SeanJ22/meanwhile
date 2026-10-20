@@ -9,6 +9,7 @@ import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { withUpdateAdded } from "./updates.ts";
 import type { FixMapRepository } from "../method/fix-map.ts";
 import { capStandings, currentFixProof, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
+import { withHistoryIndex } from "./workers/streamed-history.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
@@ -31,15 +32,23 @@ export function withStanding(config: AdminConfig, standing: MethodStanding, upda
     ...(update.claim ? { claim: update.claim } : {}) });
 }
 
-async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
+async function mutate(repos: Repos, methodId: string, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  const write = repos.adminConfig.compareAndSetArrayItem?.bind(repos.adminConfig);
+  if (!read || !write) throw new Error("METHOD_STANDING_SCOPED_ARRAY_STORE_REQUIRED");
   for (let attempt = 0; ; attempt++) {
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-    const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
+    const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, updates: true, settings: true, updatedAt: true});
+    if (!held) { await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(at), at); continue; }
+    const page = await read(ADMIN_CONFIG_ID, "methodStandings", {match: {path: ["methodId"], value: methodId}, limit: 1});
+    if (!page || page.revision !== held.revision) { if (attempt >= 1) throw new Error("METHOD_STANDING_READ_MOVED"); continue; }
+    const current = {...(isAdminConfig(held.value) ? held.value : defaultAdminConfig(at)), methodStandings: page.values as MethodStanding[]};
     const next = change(current);
     if (next === current) return;
     try {
-      if (held) await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
-      else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+      await write(ADMIN_CONFIG_ID, held.revision, "methodStandings", ["methodId"], methodId,
+        next.methodStandings?.find(row => row.methodId === methodId) ?? null, at,
+        {limit: 1000, discardPath: ["status"], discardValue: "PROVEN", oldestPath: ["since"], discardAlso: {path: ["brokeAt"], value: null}},
+        {updates: next.updates ?? [], updatedAt: next.updatedAt});
       return;
     } catch (error) {
       if (attempt >= 1) throw error;
@@ -61,7 +70,7 @@ export interface MethodTouch {
 export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, touched: readonly MethodTouch[], at: string,
   titleOf: (methodId: string) => string | null = () => null): Promise<readonly StandingUpdate[]> {
   if (touched.length === 0) return [];
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, settings: true});
   const config = held && isAdminConfig(held.value) ? held.value : null;
   const bar = readFixProofBar(config);
   const recentDays = readFixProofRecentDays(config);
@@ -73,7 +82,7 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
     if (map.length === 0) continue;
     const proof = currentFixProof(map, bar, at, recentDays);
     let told: StandingUpdate | null = null;
-    await mutate(repos, at, (c) => {
+    await mutate(repos, methodId, at, (c) => {
       const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
       const { standing, update } = nextStanding(methodId, prior, proof, titleOf(methodId) ?? "", at, { brokeIn });
       told = update;
@@ -87,12 +96,12 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "forMet
 /** A loss study changed a method: it goes back into Testing and says so once. */
 export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, methodId: string, lesson: string, at: string,
   title: string | null = null): Promise<StandingUpdate | null> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, settings: true});
   const config = held && isAdminConfig(held.value) ? held.value : null;
   const proof = currentFixProof(await fixMap.forMethod(methodId, 1000), readFixProofBar(config), at, readFixProofRecentDays(config));
   let told: StandingUpdate | null = null;
   const event: StandingEvent = { lesson };
-  await mutate(repos, at, (c) => {
+  await mutate(repos, methodId, at, (c) => {
     const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
     const { standing, update } = nextStanding(methodId, prior, proof, title ?? "", at, event);
     told = update;
@@ -105,10 +114,23 @@ export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "forMethod
  * Re-measure each Proven label on today's results. One that no longer holds says "Proven, broke since", writes
  * its one update, and is back in the Queue. Run daily.
  */
-export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  const proven = methodStandings(held && isAdminConfig(held.value) ? held.value : null).filter((s) => s.status === "PROVEN");
-  return noteMethodStandings(fixMap, repos, proven.map((s) => ({ methodId: s.methodId })), now, (id) => proven.find((s) => s.methodId === id)?.title ?? null);
+export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "forMethod">, repos: Repos, now: string): Promise<number> {
+  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
+  if (!read) throw new Error("METHOD_STANDING_SCOPED_ARRAY_STORE_REQUIRED");
+  return withHistoryIndex(async db => {
+    db.exec("CREATE TABLE methods(sequence INTEGER PRIMARY KEY,id TEXT NOT NULL,title TEXT NOT NULL)");
+    const insert = db.prepare("INSERT INTO methods VALUES(?,?,?)"); let after = 0, sequence = 0;
+    for (;;) {
+      const page = await read(ADMIN_CONFIG_ID, "methodStandings", {after, match: {path: ["status"], value: "PROVEN"}, projection: {methodId: true, title: true}});
+      if (!page) break;
+      for (const method of page.values as MethodStanding[]) insert.run(sequence++, method.methodId, method.title);
+      if (page.next === null) break; after = page.next;
+    }
+    let changed = 0;
+    for (const method of db.prepare("SELECT * FROM methods ORDER BY sequence").iterate())
+      changed += (await noteMethodStandings(fixMap, repos, [{methodId: method.id}], now, () => method.title)).length;
+    return changed;
+  });
 }
 
 /** "Proven, broke since <day>" for a fix that was proven and no longer is; null otherwise. */

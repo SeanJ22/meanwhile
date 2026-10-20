@@ -144,11 +144,15 @@ test("Netlify vault preserves oversized metadata atomically with original bytes"
   await remote.put("large-note", bytes, meta);
   assert.equal(metadata.format, "evidence-envelope@1");
   assert.deepEqual((await remote.get("large-note"))?.bytes, bytes);
+  const streamed:Uint8Array[]=[];
+  for await(const chunk of (await remote.stream("large-note"))!)streamed.push(chunk);
+  assert.deepEqual(new Uint8Array(Buffer.concat(streamed)),bytes,"streaming strips the atomic metadata envelope and verifies the original body");
   assert.deepEqual(await remote.head("large-note"), meta);
   assert.equal((await remote.describe("large-note"))?.bodySha256, contentHash(bytes));
   await remote.put("large-note", bytes, meta);
   assert.equal(writes, 1, "healthy oversized immutable reuse is still a no-op");
   new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
+  await assert.rejects(async()=>{for await(const chunk of (await remote.stream("large-note"))!)void chunk;},/Stored evidence is corrupt/);
   await assert.rejects(remote.get("large-note"), /Stored evidence is corrupt/);
   await assert.rejects(remote.put("large-note", bytes, meta), /Stored evidence is corrupt/);
   assert.equal(writes, 1);

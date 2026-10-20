@@ -1,3 +1,4 @@
+import { VerifiedReplayFiles, replayPropertyAs } from "../sources/verified-replay.ts";
 import { savedPageReader, realOpenBytes } from "../control-plane/scheduler/scout-tools.ts";
 import type { ArtifactProvenance, ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
@@ -28,6 +29,11 @@ export async function placeSourceReader(input: {
   websiteSize?: WebsiteSizeForUrl;
 }) {
   const { tools, context, project } = input;
+  const files = new VerifiedReplayFiles();
+  const heldEvidence = (input: Parameters<typeof evidenceProjection>[0]) => {
+    const evidence = evidenceProjection(input);
+    return files.text(evidence, "text", evidence.contentHash);
+  };
   const artifacts = new Map<string, WorkArtifact>();
   const captures = new Map<string, WorkerPublicationCapture>();
   const geographyCaptures: WorkerPublicationCapture[] = [];
@@ -55,7 +61,7 @@ export async function placeSourceReader(input: {
       partial: artifact.httpStatus === 206 || artifact.extraction?.complete === false, recordedAt: artifact.retrievedAt });
     if (result.stored && artifact.tier !== "RESTRICTED_RAW" && artifact.retentionPolicy !== "DIAGNOSTIC") {
       const parsed = await readForParser(tools.store, project, artifact);
-      captures.set(artifact.id, { evidence: evidenceProjection(parsed.input), observedAt: artifact.retrievedAt,
+      captures.set(artifact.id, { evidence: heldEvidence(parsed.input), observedAt: artifact.retrievedAt,
         httpStatus: artifact.httpStatus, transport: artifact.transport, partial: artifact.httpStatus === 206 });
     }
     return result;
@@ -86,7 +92,7 @@ export async function placeSourceReader(input: {
         const { artifact } = await readObject(row.artifactId);
         if (artifact.httpStatus !== 200 || artifact.retentionPolicy === "DIAGNOSTIC" || Date.parse(artifact.retrievedAt) < cutoff) continue;
         const parsed = await readForParser(tools.store, project, artifact);
-        const capture = { evidence: evidenceProjection(parsed.input), observedAt: artifact.retrievedAt,
+        const capture = { evidence: heldEvidence(parsed.input), observedAt: artifact.retrievedAt,
           httpStatus: artifact.httpStatus, transport: artifact.transport, partial: false };
         inherited.set(row.artifactId, capture);
         inheritedIds.push(row.artifactId);
@@ -130,9 +136,10 @@ export async function placeSourceReader(input: {
       if (!held) throw new Error("Held source needs refresh");
       captures.set(id, held);
       return held.evidence;
-    } }, { maxAgeMs: Date.parse(at) - cutoff });
+    } }, { maxAgeMs: Date.parse(at) - cutoff, replayFiles: files });
   return {
     artifacts,
+    dispose: () => files.dispose(),
     cost,
     get deferred() { return deferred; },
     fetchGeography: (async (url, options) => {
@@ -164,8 +171,8 @@ export async function placeSourceReader(input: {
       }
       const capture = captures.get(page.artifactId);
       if (!capture) throw new Error("Saved source has no capture metadata");
-      return { url: capture.evidence.canonicalUrl, baseUrl: page.url,
-        text: capture.evidence.text, collectedAt: capture.observedAt, capture };
+      return replayPropertyAs(capture.evidence, "text", "text", { url: capture.evidence.canonicalUrl, baseUrl: page.url,
+        collectedAt: capture.observedAt, capture }) as unknown as HeldSourcePage;
     },
     captureGeography: async (url: string, text: string) => {
       cost.bytesFetched += Buffer.byteLength(text);

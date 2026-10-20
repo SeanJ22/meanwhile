@@ -1,6 +1,5 @@
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { readFieldManual } from "../control-plane/field-manual.ts";
 import { jurisdictionFromOcdId } from "./states.ts";
 import { createHash } from "node:crypto";
 
@@ -32,7 +31,13 @@ export function publicKindOwedForDivisions(entries: readonly FieldManualEntry[],
   return [...first.values()].sort((a,b) => a.id.localeCompare(b.id));
 }
 export async function readPublicKindOwed(repos: Pick<ControlPlaneRepositories,"fieldManual">, divisions: readonly string[]) {
-  const read = await readFieldManual(repos,{role:"SHARED",recordClass:"PUBLIC_RECORD",kinds:["PUBLIC_RECORD_PLACE_KIND"],ocdIds:divisions});
-  if (read.error) throw new Error(read.error);
-  return publicKindOwedForDivisions(read.store.entries,divisions);
+  const first = new Map<string, PublicKindOwed>();
+  if (!divisions.length) return [];
+  await repos.fieldManual.visitSlice({role:"SHARED",recordClass:"PUBLIC_RECORD",kinds:["PUBLIC_RECORD_PLACE_KIND"],ocdIds:divisions}, row => {
+    for (const owed of publicKindOwedForDivisions([row.value], divisions)) {
+      const prior = first.get(owed.id);
+      if (!prior || Date.parse(owed.owedSince) < Date.parse(prior.owedSince)) first.set(owed.id, owed);
+    }
+  }, {kind:true,payload:["divisionId","kindLabel","owedSince","sourceUrl","firstRecordId"]});
+  return [...first.values()].sort((a,b) => a.id.localeCompare(b.id));
 }

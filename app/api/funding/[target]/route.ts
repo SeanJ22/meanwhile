@@ -1,3 +1,6 @@
+import { currentReaderSelection } from "@/lib/db/reader-route.ts";
+import { registryJurisdictions } from "@/lib/civic-data/state-scopes.ts";
+import { US_JURISDICTIONS } from "@/lib/coverage/states.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
@@ -18,7 +21,17 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
 
   const timings: Record<string, number> = {};
   const startedAt = Date.now();
-  const divisions = await ballotPlaceFromRequest(request);
+  let divisions = await ballotPlaceFromRequest(request);
+  if (/^(?:congress:[A-Z]\d{6}|fec:[HS]\d[A-Z]{2}\d{5})$/.test(target)) {
+    const states = currentReaderSelection()?.states ?? [];
+    if (states.length === 1) {
+      const state = US_JURISDICTIONS.find(row => row.usps === states[0]);
+      if (state) {
+        divisions = divisions.filter(id => registryJurisdictions(id).includes(states[0]));
+        if (!divisions.length) divisions = [`ocd-division/country:us/${state.prefix}:${state.slug}`];
+      }
+    }
+  }
   const direct = directFundingTargetPlan(target);
   const readers = fundingHoldingReaders(divisions, timings);
   const pending = startDirectFundingReads(direct, readers);

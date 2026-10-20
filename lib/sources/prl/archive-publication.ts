@@ -5,8 +5,9 @@ import { prlDataset } from "./inventory.ts";
 import { prlReceiptViolations, type PrlIngestReceipt } from "./receipt.ts";
 import { readPromotedEdgeFirst } from "../../registry/runtime-edge.ts";
 import { authorityFor } from "../../civic-data/source-authority.ts";
+import { PRL_CONTRACT } from "./data-plane.ts";
 
-export const PRL_ARCHIVE_SCOPE = "US:prl:known-archives";
+export const PRL_ARCHIVE_SCOPE = "US:prl:archive-releases";
 export interface PrlArchiveProjection { formatVersion: 1; datasets: Record<string, PrlIngestReceipt> }
 export function prlArchiveProblems(value: PrlArchiveProjection): string[] {
   if (value?.formatVersion !== 1 || !value.datasets || !Object.keys(value.datasets).length) return ["No completed PRL release is held."];
@@ -29,7 +30,7 @@ export function prlArchiveCandidate(input: { projection: PrlArchiveProjection; r
     sourceProjectionEvidence: sourceProjectionEvidence("prl", "PRL_ARCHIVE", PRL_ARCHIVE_SCOPE),
     retrieval: { succeeded: true, requestedUrl: newestSource.sourceUrl, finalUrl: newestSource.sourceFinalUrl ?? newestSource.sourceUrl, httpStatus: 200,
       retrievedAt: newestSource.fetchedAt, rawHash: sha256(records.map(row => row.record.sourceSha256).sort().join("\n")) },
-    normalization: { succeeded: !violations.length, parserVersion: "prl-ingest/2", schemaVersion: "prl-archives/1",
+    normalization: { succeeded: !violations.length, parserVersion: PRL_CONTRACT.parserVersion, schemaVersion: "prl-archives/1",
       normalizedHash: normalizedHash(projection), normalizedPayloadHash: normalizedHash(projection),
       inputRecords: records.length, outputRecords: records.length, droppedRecords: 0, missingRequiredFields: [] },
     identities: records.map(({ record }) => ({ subjectId: `prl:${record.datasetId}`, jurisdiction: "US",

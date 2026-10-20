@@ -5,6 +5,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { recordDoorOutcome } from "../lib/doors/outcome.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
+import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import {
   doorInDivisions,
   doorPartitionIds,
@@ -27,6 +28,10 @@ const LATER = "2026-10-04T13:20:00.000Z";
 async function seeded() {
   const repos = createMemoryRepositories();
   await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: SEEDED, at: SEEDED });
+  const installed = await refreshDoorsForPass(repos.doors);
+  assert.equal(installed.reason, null);
+  assert.ok(installed.partitions?.refreshed);
+  assert.ok(installed.partitions.partitions > 0, "the seeded registry installs its executable state schedules");
   return repos;
 }
 

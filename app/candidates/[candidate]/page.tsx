@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default readerRoute("/candidates/[candidate]", async function FecCandidateProfile({ params }: { params: Promise<{ candidate: string }> }) {
   const { candidate } = await params;
   if (!/^[HS]\d[A-Z]{2}\d{5}$/.test(candidate)) notFound();
-  try { await settleFundingRead(); }
+  try { await settleFundingRead(candidate.slice(2, 4)); }
   catch {
     // An unread profile is one counted gap with the standing request, never a field placeholder.
     return <main className="mw-page min-h-dvh p-5"><Card title="Candidate profile" sources={[]} independent

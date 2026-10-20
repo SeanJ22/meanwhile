@@ -1,7 +1,7 @@
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { campaignMoneyApiAnswer } from "../lib/funding/campaign-money.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { publicStateMoneyRecord } from "../lib/funding/state-money-reader.ts";
@@ -15,7 +15,7 @@ const org = { dataClass: "FEC_CONTRIBUTOR", kind: "COMMITTEE_OR_ORGANIZATION", c
 const individual: ContributionRow = { ...org, kind: "INDIVIDUAL", entityType: "IND", contributorName: privateName };
 
 test("API/card DTO and Ask strip donor identities and all extra address fields at both finance hops", async () => {
-  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore(), bypassCache: true });
+  await installFundingFixture("AZ");
   const snapshot = getFundingSnapshot(), candidate = snapshot.candidates[0];
   candidate.topContributions = [org, individual, { ...individual, kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN" }];
   snapshot.secondHop = [{ dataClass: "FEC_CONTRIBUTOR", committeeId: "C00000001", name: "Filed PAC", committeeType: "N",

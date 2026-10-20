@@ -305,7 +305,7 @@ export function scoutSpendInWindow(
 }
 
 /** Both model lanes consume the existing rolling research ceiling, read from the spend window's priced charges. */
-export function researchSpendInWindow(charges: readonly PricedCharge[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: readonly SpendHold[] = []) {
+export function researchSpendInWindow(charges: Iterable<PricedCharge>, nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: Iterable<SpendHold> = []) {
   const spend = aggregatePricedSpend(charges,
     new Date(Date.parse(nowIso) - windowHours * 3_600_000).toISOString(), nowIso, spendHolds);
   return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };

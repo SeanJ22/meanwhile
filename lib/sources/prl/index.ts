@@ -12,7 +12,7 @@ import {
  *
  * Seventeen of the source's columns are ranks, percentiles or an ideology
  * score, and none may enter our records. The filter is an ALLOWLIST checked
- * against the file's own header: `normalizeProfiles` reads only the columns
+ * against the file's own header: `normalizeProfileRows` reads only the columns
  * named in `PRL_CATEGORIES` plus the count, sources and stamp, and
  * `assertNoForbiddenColumns` refuses the run if any column it reads matches the
  * forbidden pattern.
@@ -87,23 +87,6 @@ export function assertNoForbiddenColumns(columns: string[]): void {
   }
 }
 
-/**
- * Derives the acquisition denominator from PRL's own national file. Exact
- * Bioguide ids are the source's stable identities; malformed non-empty ids
- * stay out of this list, so the candidate fails its row-count reconciliation
- * rather than losing them silently.
- */
-export function sourceBioguides(csv: string): string[] {
-  const rows = parseCsv(csv).filter((row) => row.length > 1);
-  const idColumn = rows[0]?.indexOf("bioguide_id") ?? -1;
-  if (idColumn < 0) throw new Error('PRL: the file has no column "bioguide_id"');
-  return [...new Set(
-    rows.slice(1)
-      .map((row) => row[idColumn]?.trim() ?? "")
-      .filter((id) => /^[A-Z]\d{6}$/.test(id)),
-  )].sort();
-}
-
 export interface NormalizeResult {
   profiles: PrlMemberProfile[];
   /** Every count this run must state. */
@@ -117,12 +100,9 @@ export interface NormalizeResult {
   rosterMisses: string[];
 }
 
-/** Reads the profiles CSV into records for the roster bioguides asked for, with every count stated. */
-export function normalizeProfiles(
-  csv: string,
-  rosterBioguides: readonly string[],
-): NormalizeResult {
-  const rows = parseCsv(csv).filter((r) => r.length > 1);
+/** The ingest stream normalizes one native person's row without joining the national CSV. */
+export function normalizeProfileRows(source: readonly (readonly string[])[], rosterBioguides: readonly string[]): NormalizeResult {
+  const rows = source.filter((r) => r.length > 1);
   if (rows.length === 0) {
     throw new Error("PRL: the profiles file parsed to zero rows");
   }

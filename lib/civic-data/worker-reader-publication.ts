@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
@@ -33,7 +34,7 @@ import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from 
 import { stanceRowFrom } from "./stance-rows.ts";
 import { DEFAULT_STANCE_TOPICS, STANCE_TOPICS_SETTING, validStanceTopics } from "../stances/topics.ts";
 import { readSetting, type SettingValue } from "../control-plane/settings.ts";
-import { ADMIN_CONFIG_ID, type AdminConfig } from "../control-plane/gateway/admin-config.ts";
+import { type AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { campaignSiteFor } from "../officials/campaign-sites.ts";
 import { currentDerivedCampaignSiteRecords } from "./derived-campaign-sites.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
@@ -218,7 +219,7 @@ export async function publishWorkerReaderResults(input: {
   let stanceTopicIds: readonly string[] | null = null;
   const readStanceTopicIds = async (): Promise<readonly string[]> => {
     if (stanceTopicIds) return stanceTopicIds;
-    const config = ((await input.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null) as AdminConfig | null;
+    const config = ((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null) as AdminConfig | null;
     const topics = readSetting<SettingValue>(config, STANCE_TOPICS_SETTING, DEFAULT_STANCE_TOPICS as unknown as SettingValue);
     stanceTopicIds = (validStanceTopics(topics) ? topics : DEFAULT_STANCE_TOPICS).map(topic => topic.id);
     return stanceTopicIds;

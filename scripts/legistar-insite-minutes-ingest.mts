@@ -449,7 +449,7 @@ async function main(): Promise<void> {
     tenant = inSiteTenantsFromWiring([partition.wiring])[0];
   } else {
     // Mesa's own contract: its tenant is read off the published meeting doors.
-    const doors = await ensureMeetingDoors();
+    const doors = await ensureMeetingDoors({ state: "AZ" });
     if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
     tenant = findTenant(args.slug);
   }

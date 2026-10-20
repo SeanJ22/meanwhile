@@ -230,7 +230,7 @@ export function buildRegistry(
 }
 
 /** The registry's digest lines. Every provider is named, and a read failure prints as a failure, not a zero. */
-export function registryLines(pass: RegistryPass): string[] {
+export function registryLines(pass: { readonly byProvider: RegistryPass["byProvider"]; readonly units: { readonly length: number } }): string[] {
   const out: string[] = [];
   out.push(
     `  registry           ${pass.byProvider.length} provider(s), ${pass.units.length} scheduled ` +

@@ -154,7 +154,7 @@ function freeDiscoveryRoute(reg: JurisdictionRegistry, need: MeetingsDiscoveryNe
     executorReason: "the standing discovery walk reads this government's recorded website without a model or a Send",
     open: {
       kind: "ROUTINE_READ",
-      contractIds: ["meeting-body-crosswalk-derived", "meeting-source-wiring"],
+      contractIds: [`meeting-body-crosswalk-derived:${reg.stateCode.toUpperCase()}`, `meeting-source-wiring:${reg.stateCode.toUpperCase()}`],
       target: need.ownWebAddress!,
       reason: "The standing free walk records discovered meeting routes; automatic crosswalk review and source wiring carry them into ordinary meeting acquisition.",
       cadenceFailure: null,

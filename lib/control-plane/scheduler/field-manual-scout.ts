@@ -66,8 +66,10 @@ function scoutPlaces(subjectId: string | null | undefined, divisions: readonly s
 export function scoutFieldManualQuery(opts: ScoutManualOptions): FieldManualQuery {
   const states = scoutStateHint(opts.subjectId, opts.obligationId);
   const places = scoutPlaces(opts.subjectId, opts.divisions);
+  const classes = [...new Set((opts.recordClasses ?? []).map(value => value.toLowerCase()))];
   return {
     role: "SCOUT", subjectId: opts.subjectId ?? undefined,
+    ...(classes.length ? { recordClasses: classes, preferredRecordClasses: [...new Set(classes.flatMap(value => [value, ...(RELATED[value] ?? [])]))] } : {}),
     ...(states[0] ? { state: states[0] } : {}),
     ...(places.length > 0 ? { ocdIds: places } : {}),
   };

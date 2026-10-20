@@ -186,6 +186,24 @@ export function clearOperationalReferenceBundle(): void {
   installReviewedRegistryStates([]);
 }
 
+/** A planner installs one reviewed state while enumerating it, retaining only the reviewed state names globally. */
+export function installOperationalReferenceState(registry: JurisdictionRegistry, reviewedStates: readonly string[]): void {
+  const state = registry.stateCode.toLowerCase(), issues = registryIssues({ [state]: registry }, [state]);
+  if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_STATE_INVALID:${issues.join(",")}`);
+  installedBundle = { formatVersion: 1, sourceVersion: JURISDICTION_REFERENCE_VERSION,
+    registries: { [state]: structuredClone(registry) } as OperationalReferenceBundle["registries"] };
+  installedAzBundle = null;
+  installReviewedRegistryStates(reviewedStates);
+  installedRegistration.delete(state); refusedRegistration.delete(state);
+}
+
+/** Release native rows after the state's pass; reviewed-state metadata still prevents a registration fallback. */
+export function releaseOperationalReferenceState(): void { installedBundle = null; installedAzBundle = null; }
+
+export function installedOperationalReferenceStateCodes(): readonly string[] {
+  return [...new Set([...Object.keys(installedBundle?.registries ?? {}), ...Object.keys(installedAzBundle?.registries ?? {})])].sort();
+}
+
 export function installAzOperationalReferenceBundle(bundle: AzOperationalReferenceBundle): void {
   const issues = registryIssues(bundle.registries, ["az"]);
   if (bundle.formatVersion !== 1 || bundle.sourceVersion !== JURISDICTION_REFERENCE_VERSION ||

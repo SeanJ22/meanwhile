@@ -35,6 +35,16 @@ test("civic-data firewall accepts one release-free adapter and clock per contrac
   assert.deepEqual(audit(minimalFiles()), []);
 });
 
+test("every executable in a large cyclic source closure is classified", () => {
+  const files = minimalFiles();
+  const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
+  files[command] = 'import "../lib/closure-0.ts"; import "../lib/closure-0.ts";';
+  for (let at = 0; at < 520; at++) files[`lib/closure-${at}.ts`] = `import "./closure-${(at + 1) % 520}.ts"; import "./closure-${(at + 1) % 520}.ts";`;
+  assert.deepEqual(audit(files), []);
+  files["lib/closure-519.ts"] += '\nimport { execFileSync } from "node:child_process"; execFileSync("git", ["push", "origin", "main"]);';
+  assert.ok(audit(files).some(finding => finding.code === "ROUTINE_PATH_INVOKES_RELEASE"));
+});
+
 test("filesystem writers prove runtime temporary confinement across module boundaries", () => {
   const files = minimalFiles();
   const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
@@ -638,18 +648,4 @@ test("publication closure follows runtime imports but not erased TypeScript inte
     files["lib/fixture-writer.ts"] = 'import { writeFileSync } from "node:fs"; export function write() { writeFileSync("data/held.json", "bad"); } export interface CandidateStore { read(): void; }';
     assert.equal(audit(files).some(row => row.code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && row.path === "lib/fixture-writer.ts"), reachable, declaration);
   }
-});
-
-test("executable closure permits its exact bound with duplicate pending imports and rejects the next module", () => {
-  const files = minimalFiles();
-  const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
-  const first = '../lib/closure/0.ts';
-  files[command] = `import "${first}"; import "${first}";`;
-  for (let i = 0; i < 511; i++) {
-    files[`lib/closure/${i}.ts`] = i === 510 ? 'export const last = true;' : `import "./${i + 1}.ts"; import "./${i + 1}.ts";`;
-  }
-  assert.equal(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"), false);
-  files['lib/closure/510.ts'] = 'import "./511.ts";';
-  files['lib/closure/511.ts'] = 'export const last = true;';
-  assert.ok(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"));
 });

@@ -115,10 +115,10 @@ test("a Send records itself on what it created and on what it found already on a
   const second = dispatchWorkTarget({ intentId: "i-2", note: "Pima Arizona again", requestedAt: T1 });
   const a2 = await applyDispatchWork(repos, planDispatchWork({ targets: [second], world: await cycleWorld(repos, T1) }), { now: T1 });
   assert.equal(a2.written.length, 0, "nothing is created twice");
-  const created = (await repos.obligations.mustRead(a1.written[0])).value.assignments!;
+  const created = (await repos.obligations.mustRead(Array.from(a1.written)[0])).value.assignments!;
   assert.deepEqual(created[0], { assignmentKey: "dispatch:i-1", ref: "i-1", relation: "CREATED", at: T0 }, "never overwritten");
   assert.deepEqual(created[1], { assignmentKey: "dispatch:i-2", ref: "i-2", relation: "REORDERED", at: T1 }, "another Send created it: this one found it on a clock");
-  assert.equal((await repos.obligations.mustRead(carried[0])).value.assignments?.length, 2, "one obligation serves both Sends");
+  assert.equal((await repos.obligations.mustRead(Array.from(carried)[0])).value.assignments?.length, 2, "one obligation serves both Sends");
 
   /* The same Send again records nothing new. */
   const again = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T2) });
@@ -152,10 +152,6 @@ test("all REORDERED records persist alongside all creations in one pass", async 
   assert.doesNotMatch(reading.targets[0].says.join(" "), /do not record it yet|write budget/);
 });
 
-function plan0Writes(world: DispatchWorkWorld, target: DispatchWorkTarget): number {
-  return planDispatchWork({ targets: [target], world }).writes.length;
-}
-
 test("a created row whose creator is not on record is never guessed into a Send", () => {
   const world: DispatchWorkWorld = {
     registries: new Map(Object.entries(REGISTRIES)),
@@ -167,7 +163,7 @@ test("a created row whose creator is not on record is never guessed into a Send"
   };
   const target = dispatchWorkTarget({ intentId: "i-3", note: "Pima Arizona", requestedAt: T0 });
   const plan = planDispatchWork({ targets: [target], world });
-  const id = plan.writes[0].instance.obligation.id;
+  const id = Array.from(plan.writes)[0].instance.obligation.id;
   /* The same row, created by a Send before Sends were kept on the row: materialized, no record. */
   const legacy = planDispatchWork({
     targets: [target],

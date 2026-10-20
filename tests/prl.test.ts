@@ -6,7 +6,7 @@ import test from "node:test";
 import {
   allowedColumns,
   assertNoForbiddenColumns,
-  normalizeProfiles,
+  normalizeProfileRows,
   parseCsv,
   shareSentence,
 } from "../lib/sources/prl/index.ts";
@@ -29,7 +29,7 @@ const FIXTURE_CSV = [
 ].join("\n");
 
 function snapshot(): PrlSnapshot {
-  const { profiles, rosterMisses } = normalizeProfiles(FIXTURE_CSV, ["A000001", "B000002"]);
+  const { profiles, rosterMisses } = normalizeProfileRows(parseCsv(FIXTURE_CSV), ["A000001", "B000002"]);
   return {
     formatVersion: 1,
     fetchedAt: "2026-08-16T00:00:00.000Z",
@@ -122,7 +122,7 @@ test("D62: a member with no classified statements is a gap, never a silent drop"
     "A000001,Somebody A,100,all,2026-08-16,50,10,10,10,1",
     "B000002,Somebody B,0,all,2026-08-16,0,0,0,0,0",
   ].join("\n");
-  const result = normalizeProfiles(csv, ["A000001", "B000002", "C000003"]);
+  const result = normalizeProfileRows(parseCsv(csv), ["A000001", "B000002", "C000003"]);
 
   assert.equal(result.profiles.length, 1);
   // Every count stated.
@@ -137,11 +137,11 @@ test("D62: a member with no classified statements is a gap, never a silent drop"
 test("D62: a moved schema fails loudly rather than guessing which column replaced it", () => {
   const csv = ["bioguide_id,full_name", "A000001,Somebody"].join("\n");
   assert.throws(
-    () => normalizeProfiles(csv, ["A000001"]),
+    () => normalizeProfileRows(parseCsv(csv), ["A000001"]),
     /has no column/,
     "a missing column must stop the run",
   );
-  assert.throws(() => normalizeProfiles("", []), /zero rows/);
+  assert.throws(() => normalizeProfileRows([], []), /zero rows/);
 });
 
 test("D62: the CSV reader survives a quoted field full of commas", () => {

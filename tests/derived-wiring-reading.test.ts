@@ -151,7 +151,7 @@ test("C16: the derive reads venue resolutions before any adapter reading, with n
    * The promotion's own readback read the projection into this process. A derive child starts with it unread, so
    * forget it here: read an empty store, which leaves the selector with nothing it may answer from in production.
    */
-  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
+  await readCuratedReaderProjection("venue-resolutions", { state: "AZ", store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
   assert.throws(() => asProductionSync(() => currentVenueResolutionRecords()), /venue-resolutions projection is NOT_RECORDED/);
   const read = await asProduction(() => readHeldCalendars({
     options: { store, bypassCache: true, now: NOW },
@@ -215,7 +215,7 @@ async function decisionFor(verification: WiringVerification) {
 
 test("C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: the unread-projection throw itself", async () => {
   /* The venue selector asked before its projection was read. */
-  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
+  await readCuratedReaderProjection("venue-resolutions", { state: "AZ", store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
   let thrown: unknown = null;
   try {
     asProductionSync(() => currentVenueResolutionRecords());

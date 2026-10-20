@@ -6,17 +6,20 @@
  *
  * The standing runner's child, run at the start of every routine pass after the
  * registry is brought up to date and before any meeting door is read. It reads
- * the registry and promotes through the registered routine door; an unchanged
- * registry re-confirms the version already pointed at. A registry that cannot
- * be read, or holds no meeting door in use, refuses and the last good doors
- * stay in use.
+ * the registry one state at a time and promotes through the registered routine
+ * door; an unchanged state re-confirms its version. States without a hand-wired
+ * door still have their derived routes and standing work.
  */
 
-import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
+import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
+import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { neon } from "@neondatabase/serverless";
+import { requireRegistryState } from "../lib/civic-data/state-scopes.ts";
+import { assignment } from "./cli-args.mts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate } from "../lib/doors/meeting-doors.ts";
+import { controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
+import { MEETING_DOORS_CONTRACT_ID, MEETING_DOOR_STATES_SQL, MEETING_DOORS_STATE_SQL, meetingDoorsCandidate } from "../lib/doors/meeting-doors.ts";
 import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
@@ -29,7 +32,18 @@ prepareProductionCivicDataWrite();
 const connection = controlPlaneUrlFromEnv();
 if (connection === null) throw new Error("MEETING_DOORS_REGISTRY_UNCONFIGURED: the door registry's database is not configured, so no doors were published");
 const now = new Date().toISOString();
-const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
-const rows = (await repos.doors.list()).flatMap((row) => isDoorRecord(row.value) ? [{ revision: row.revision, updatedAt: row.updatedAt, value: row.value as DoorRecord }] : []);
-const outcome = await promoteDerivedCandidate(new PostgresRoutineDataStore(), MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(rows, now), now);
-console.log(`meeting doors: ${outcome.promoted ? "published" : "not published"} from ${rows.length} registry rows`);
+const sql = neon(connection);
+const wanted = assignment(process.argv, "state");
+const states = wanted ? [requireRegistryState(wanted)] : (await sql.query(MEETING_DOOR_STATES_SQL)).flatMap(row => typeof row.state === "string" ? [requireRegistryState(row.state)] : []);
+const store = new PostgresRoutineDataStore();
+for (const state of states) {
+  const found = await sql.query(MEETING_DOORS_STATE_SQL,
+    [`/(state|district|territory):${state.toLowerCase()}(/|$)`, `^curated:${state.toLowerCase()}/`]);
+  const rows = found.flatMap(row => isDoorRecord(row.value) ? [{ revision: Number(row.revision), updatedAt: String(row.updated_at), value: row.value as DoorRecord }] : []);
+  if (rows.length === 0) continue;
+  const candidate = meetingDoorsCandidate(rows, now, state);
+  const outcome = await processRegisteredFanOutCandidate(store, MEETING_DOORS_CONTRACT_ID, candidate, now, undefined, { confirmUnchanged: true });
+  printSourceRunnerReceipt(MEETING_DOORS_CONTRACT_ID, candidate, outcome);
+  if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
+  console.log(`meeting doors ${state}: ${outcome.promoted || outcome.confirmed ? "published" : "not published"} from ${rows.length} registry rows`);
+}

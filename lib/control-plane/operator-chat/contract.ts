@@ -131,6 +131,7 @@ export interface ChatAnswer {
   readonly usedModel: boolean;
   readonly readBackAt: string | null;
   readonly detail: readonly string[];
+  readonly incidentCycleId?: string;
 }
 
 export interface ActionProposal {

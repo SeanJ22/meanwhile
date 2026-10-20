@@ -26,8 +26,9 @@ export function placesOf(entry: Pick<FieldManualEntry, "ocdIds" | "bodyIds" | "s
 }
 
 /** An entry's own result in every place it names (what one observation says). */
-export function placeResultsOf(entry: Pick<FieldManualEntry, "ocdIds" | "bodyIds" | "states" | "outcome" | "observedAt" | "placeResults">): PlaceResult[] {
-  return entry.placeResults !== undefined ? [...entry.placeResults] : placesOf(entry).map((place) => ({ place, outcome: entry.outcome, observedAt: entry.observedAt }));
+export function placeResultsOf(entry: Pick<FieldManualEntry, "ocdIds" | "bodyIds" | "states" | "outcome" | "observedAt" | "placeResults" | "placeResultsPartial">): PlaceResult[] {
+  const implicit = () => placesOf(entry).map(place => ({ place, outcome: entry.outcome, observedAt: entry.observedAt }));
+  return entry.placeResults === undefined ? implicit() : entry.placeResultsPartial ? mergePlaceResults(implicit(), entry.placeResults) : [...entry.placeResults];
 }
 
 const at = (value: string | null | undefined): string => value ?? "";

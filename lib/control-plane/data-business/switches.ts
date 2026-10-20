@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../runtime-admin-config.ts";
 /**
  * A switch per recipe per audience: Admin, the dashboard, one named customer. The switches live on the owner's config row (`dataSwitches`, set through the
  * gateway's `config.setDataSwitch` with the receipt that set each), and `readRecipe` asks `switchOn` before it reads any data.
@@ -6,7 +7,7 @@
  *
  * Read at each read, not at a runner's cycle start, so a flip takes effect on the next read and no runner has to pick it up.
  */
-import { ADMIN_CONFIG_ID, dataSwitchOf, isAdminConfig, type AdminConfig } from "../gateway/admin-config.ts";
+import { dataSwitchOf, isAdminConfig, type AdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { Audience } from "./types.ts";
 import { isAudience } from "./types.ts";
@@ -58,7 +59,7 @@ export function switchTable(config: AdminConfig | null, book: readonly Recipe[] 
 /** The config row as `switchOn` may use it: a row never written is the defaults; one that cannot be read or is not a config is none. */
 export async function readSwitchConfig(repos: ControlPlaneRepositories): Promise<AdminConfig | null> {
   try {
-    const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const row = await readRuntimeAdminConfig(repos, ["dataSwitches"]);
     return row !== null && isAdminConfig(row.value) ? row.value : null;
   } catch {
     return null;

@@ -82,7 +82,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
   const spec = task.workerTask;
   if (!spec || spec.role !== "ACQUIRER") throw new Error("RESEARCH_ROLE_SPEC_MISSING");
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
-  return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId,bound}) => {
+  return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId}) => {
     const started = performance.now();
     const item = (await tools.repos.workItems.mustRead(workItemId)).value;
     const attempt = await tools.repos.attempts.mustRead(attemptId);
@@ -104,7 +104,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
         }});
       measuredToolkit = toolkit;
       result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},
-        {toolkit,sourceReliability:await readSourceReliability(tools.repos),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
+        {toolkit,sourceReliability:await readSourceReliability(tools.repos,spec.acquisition.route.url),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
           authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited,tools.siblingHeldRootFor)});
       requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
       assertFleetResult(result,spec.role,attemptId);

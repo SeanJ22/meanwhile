@@ -5,7 +5,7 @@ import { parsePeoplePortraitArguments, refreshPeoplePortraits } from "../scripts
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
-import { readPeopleSourceProjection } from "../lib/civic-data/people-source-publication.ts";
+import { publishPeopleSource, readPeopleSourceProjection } from "../lib/civic-data/people-source-publication.ts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
@@ -76,4 +76,28 @@ test("a place's portrait run also enriches its members of Congress, on the place
   assert.equal(reader.value.roster.officeholders[0].phone,"202-225-1000");
   const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW,bypassCache:true});
   assert.equal(marker.kind,"PROMOTED");
+});
+
+test("a missing optional held linking page is recorded while fresh own-page portrait work still publishes",async t=>{
+  const store=new MemoryRoutineDataStore(),own=new MemoryEvidenceStore(),url="https://legislature.example.gov/jane";
+  const yaml="id: ocd-person/jane\nname: Jane Example\nroles:\n- type: upper\n  district: '7'\nlinks:\n- url: https://legislature.example.gov/jane\n";
+  const base=normalize(yamlToPeople(yaml,"az",url,NOW),new Map(),NOW,"US-AZ");
+  const provenance={sourceUrl:url,sourceOrg:"Official state legislature",collectedAt:NOW,verifiedAt:NOW,quote:"Jane Example State Senator"};
+  const roster={...base,officeholders:base.officeholders.map(person=>({...person,provenance}))};
+  const body='<h1>Jane Example State Senator</h1><img alt="Portrait of Jane Example" src="/jane.png">';
+  const seed=await publishPeopleSource({store,vault:own,state:"az",sourceId:"official-state-people",roster,
+    acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,retrievedAt:NOW,body}],releaseId:"fixture",now:NOW});
+  assert.ok(seed.outcome.promoted,seed.outcome.candidate.failureDetail ?? "People source fixture held");
+  const missing=(seed.candidate.normalizedPayload as {captures:{capture:{vaultKey:string}}[]}).captures[0].capture.vaultKey;
+  const broken={put:own.put.bind(own),head:own.head.bind(own),list:own.list.bind(own),
+    get:async(key:string)=>key===missing?null:own.get(key),stream:async(key:string)=>key===missing?null:own.stream(key)};
+  t.mock.method(console,"log",()=>{});
+  let acquired=0;
+  const refreshed=await refreshPeoplePortraits({store,vault:broken,state:"az",options:{now:()=>NOW,storePortrait:await images(),
+    acquire:async options=>{acquired++;return page(options,body);}}});
+  assert.equal(acquired,1);
+  assert.ok(refreshed.outcome.promoted);
+  assert.ok(refreshed.candidate.excludedFacts?.some(fact=>fact.code==="PEOPLE_PORTRAIT_HELD_SOURCE_UNAVAILABLE"));
+  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW,bypassCache:true});
+  assert.equal(reader.kind,"PROMOTED");if(reader.kind==="PROMOTED")assert.ok(reader.value.roster.officeholders[0].photo);
 });

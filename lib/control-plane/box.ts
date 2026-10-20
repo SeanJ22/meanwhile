@@ -259,13 +259,14 @@ async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutR
 /** Indexes the Scout and Detective results recorded since the last pass. The first pass replays every result once, one log key at a time. */
 export async function backfillBox(repos: BackfillRepositories, now: string): Promise<number> {
   const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
-  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : now;
-  const [scouts, workers] = await Promise.all([repos.scoutResults.readChangedSince(since), repos.workerResults.readChangedSince(since)]);
-  let indexed = await indexResults(repos, scouts.records.map(({ record }) => record), workers.records.map(({ record }) => record), now);
-  if (!cursor) {
-    for (const key of await repos.scoutResults.keys()) indexed += await indexResults(repos, await repos.scoutResults.read(key), [], now);
-    for (const key of await repos.workerResults.keys()) indexed += await indexResults(repos, [], await repos.workerResults.read(key), now);
-  }
+  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : null;
+  let indexed = 0;
+  const scouts = await repos.scoutResults.readChangedSince(since, undefined, { page: async rows => {
+    for (const {record} of rows) indexed += await indexResults(repos, [record], [], now);
+  } });
+  const workers = await repos.workerResults.readChangedSince(since, undefined, { page: async rows => {
+    for (const {record} of rows) indexed += await indexResults(repos, [], [record], now);
+  } });
   const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
   if (through) {
     if (cursor) await repos.passCursors.compareAndSet(BACKFILL_CURSOR, cursor.revision, { through }, now);

@@ -41,6 +41,29 @@ import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
 import { installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 
+/** The real reader now returns bounded grouping rows, rather than a national dataset blob. */
+function geographyResponse(dataset: BuiltDataset) {
+  const names = ["row_kind", "type", "version", "plan", "geoid", "ocd_id", "label", "state_fips", "state_abbr", "cbsa_class", "member_states", "overlaps", "version_meta", "fraction_basis"];
+  const json = new Set(["member_states", "overlaps", "version_meta"]);
+  const records = dataset.scopes.flatMap(scope => [{ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.versionMeta.plan,
+    version_meta: scope.versionMeta, fraction_basis: scope.fractionBasis }, ...scope.groupings.map(group => ({ row_kind: "grouping", type: scope.type,
+      version: scope.version, plan: scope.versionMeta.plan, geoid: group.geoid, ocd_id: group.ocdId, label: group.label, state_fips: group.stateFips,
+      state_abbr: group.stateAbbr, cbsa_class: group.cbsaClass ?? null, member_states: group.memberStates, overlaps: group.overlaps,
+      fraction_basis: scope.fractionBasis }))]);
+  return { command: "SELECT", rowCount: records.length, rowAsArray: true,
+    fields: names.map(name => ({ name, dataTypeID: json.has(name) ? 3802 : 25 })),
+    rows: records.map(record => names.map(name => { const value = (record as Record<string, unknown>)[name] ?? null;
+      return value === null ? null : json.has(name) ? JSON.stringify(value) : value; })) };
+}
+function membershipResponse(dataset:BuiltDataset,zips:readonly string[]){
+  const names=["zip","type","geoid","version","state","zcta_tabulation"];
+  const rows=dataset.scopes.flatMap(scope=>scope.groupings.flatMap(group=>group.overlaps.filter(overlap=>zips.includes(overlap.zcta5)).map(overlap=>
+    [overlap.zcta5,scope.type,group.geoid,scope.version,group.stateAbbr,scope.versionMeta.zctaTabulation])));
+  return{command:"SELECT",rowCount:rows.length,rowAsArray:true,fields:names.map(name=>({name,dataTypeID:25})),rows};
+}
+
+const isAreaGroupingRead = (sql: string): boolean => sql.includes("'scope' AS row_kind") && sql.includes("place_states AS") && sql.includes("ANY($4::text[])");
+
 function placeTasks(zips: readonly string[], state = "NH") {
   return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, zip, state }));
 }
@@ -235,10 +258,13 @@ test("the admitted worker rereads the saved Send and publishes once through its 
   let lookupReads = 0;
   neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
-    assert.ok(body.queries.every(statement => statement.query.includes("Selected places and in-state touching districts")), "only the existing area lookup is read");
+    assert.ok(body.queries.every(statement => isAreaGroupingRead(statement.query)), "only scoped place geography and projected membership identities are read");
     lookupReads += body.queries.length;
-    return Response.json({ results: body.queries.map(() => ({ command: "SELECT", rowCount: 1, rowAsArray: true,
-      fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(dataset)]] })) });
+    return Response.json({ results: body.queries.map(statement => {
+      const selected=String(statement.params[3]).match(/\d{5}/g)??[];
+      assert.ok(selected.length>0&&selected.every(zip=>["03060","03101"].includes(zip)),"only the job's own ZIPs are bound as SQL values");
+      return statement.query.includes("zip_source_memberships")?membershipResponse(dataset,selected):geographyResponse(dataset);
+    }) });
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
   assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), ["03060"], "process admission reads the actual saved Send");
@@ -287,7 +313,9 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
   const repos = createMemoryRepositories(), now = "2026-10-01T03:00:00.000Z";
   const send: ExpansionScopeDecision = { ...placeSend("03060", now, "send:district"), key: "cd:119/3302",
     geography: { type: "congressional_district", geoid: "3302", version: "cd:119", label: "NH Congressional District 2", stateAbbr: "NH" } };
-  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send],
+  const foreignSend: ExpansionScopeDecision = { ...send, key: "cd:119/0401", receiptId: "send:arizona",
+    geography: { ...send.geography, geoid: "0401", label: "AZ Congressional District 1", stateAbbr: "AZ" } };
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [foreignSend, send],
     placeTargets: [{ key: "nh.cd.3302", goalPercent: 75, setAt: now, receiptId: "target:district", decidedBy: "test-owner" }] }, now);
   const work = standing({ id: "shared:nh", subjectId: "shared:nh", recordClass: "OFFICIAL_ROSTER", routeId: "fixture",
     active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null, scopeDivisions: ["ocd-division/country:us/state:nh"] }, now);
@@ -305,14 +333,17 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
   const originalNodeEnv = process.env.NODE_ENV;
   t.after(() => { if (originalNodeEnv === undefined) Reflect.deleteProperty(process.env, "NODE_ENV"); else Object.assign(process.env, { NODE_ENV: originalNodeEnv }); });
   Object.assign(process.env, { NODE_ENV: "production" });
-  const lookupSelections: string[][] = [], captureScopes: string[] = [];
+  const lookupSelections: string[][] = [], scopeSelections: unknown[][] = [], membershipSelections:string[][]=[], captureScopes: string[] = [];
   neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as { queries?: { query: string; params: unknown[] }[]; query?: string; params?: unknown[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
     const results = statements.map(statement => {
-      if (statement.query.includes("Selected places and in-state touching districts")) {
-        const selected = ["03060", "03101"].filter(zip => String(statement.params[2]).includes(zip));
-        lookupSelections.push(selected);
+      const scopeRead = statement.query.includes("jsonb_array_elements($4::jsonb) wanted");
+      if (isAreaGroupingRead(statement.query) || scopeRead) {
+        const selected = scopeRead ? ["03060", "03101"] : ["03060", "03101"].filter(zip => String(statement.params[3]).includes(zip));
+        if (scopeRead) scopeSelections.push(JSON.parse(String(statement.params[3])) as unknown[]);
+        else if(statement.query.includes("zip_source_memberships"))membershipSelections.push(selected);
+        else { lookupSelections.push(selected); assert.equal(statement.params[4], "NH", "native area rows are restricted to the source state's pointer and SQL predicate"); }
         const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: "Fixture district", zctaUniverse: selected,
           scopes: [{ type: "congressional_district", version: "cd:119", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
             versionMeta: { key: "cd:119", type: "congressional_district", plan: "119th Congress", zctaTabulation: "2020", effectiveFor: "current", provenance },
@@ -322,8 +353,12 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
             versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "current", provenance },
             groupings: counties.filter(county => selected.includes(county.zip)).map(({ zip, ...county }) => ({ ...county, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
               overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) }] };
-        return { command: "SELECT", rowCount: 1, rowAsArray: true,
-          fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:district", JSON.stringify(dataset)]] };
+        if(statement.query.includes("zip_source_memberships"))return membershipResponse(dataset,selected);
+        if (scopeRead) {
+          assert.ok(statement.query.includes("g->>'geoid'=wanted->>'geoid'"));
+          return geographyResponse({ ...dataset, scopes: dataset.scopes.filter(scope => scope.type === "congressional_district") });
+        }
+        return geographyResponse(dataset);
       }
       if (statement.query.includes("civic_data_promotions")) captureScopes.push(JSON.stringify(statement.params));
       return { command: "SELECT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
@@ -332,11 +367,13 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("scope ranking fetches no external source"); });
   const reading = await nationalPlaceWorkReading(repos, ["03060"], now);
-  assert.deepEqual(lookupSelections, [["03060"], ["03060", "03101"]], "the saved district's other ZIP is loaded before declared-work membership");
+  assert.deepEqual(lookupSelections, [["03060", "03101"]], "the complete saved district is read once, within its state, before declared-work membership");
+  assert.deepEqual(scopeSelections, [[send.geography]], "unrelated saved Sends are excluded before any native geography is loaded");
+  assert.deepEqual(membershipSelections, [["03060"]], "the applicability check reads only this job's ZIP identity before loading its Send");
   assert.deepEqual(reading.ordered, ["03060"], "the scope's full denominator does not widen this pass's selected workers");
   assert.deepEqual([...reading.belowTarget], ["03060"]);
-  assert.ok(captureScopes.some(ids => counties.every(county => ids.includes(county.ocdId))),
-    "the held capture and its owed-field denominator include both counties in the saved district");
+  assert.ok(counties.every(county => captureScopes.some(ids => ids.includes(county.ocdId))),
+    "the held captures and deduplicated owed-field denominator include both counties, each read by its own government");
 });
 
 test("hunt progress uses new reader facts and official unpublished findings, ignoring timestamp churn", () => {
@@ -519,6 +556,8 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   const first = await reader("2026-09-30T00:00:00.000Z", "job:first");
   const acquired = await first.read(url);
   assert.equal(acquired.text, body);
+  assert.equal(typeof Object.getOwnPropertyDescriptor(acquired, "text")?.get, "function", "completed pages retain a verified disk reference");
+  assert.equal(typeof Object.getOwnPropertyDescriptor(acquired.capture!.evidence, "text")?.get, "function", "the capture metadata retains no page string");
   assert.equal(acquired.capture?.evidence.acquiredByAttemptId, (await repos.attempts.list())[0].id);
   assert.equal(fetched, 1);
   const geographyUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/1/query?where=STATE%3D39";
@@ -553,6 +592,7 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
   assert.equal((await third.read("https://federal.gov/official")).text, "https://federal.gov/official",
     "a small publisher's bound does not stop another national source");
+  first.dispose(); second.dispose(); third.dispose(); fourth.dispose();
 });
 
 test("official profile headings produce officeholders; news headlines do not", async () => {

@@ -1,7 +1,6 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import {
   prlProfileForSubject,
-  refreshPrlFromPromoted,
 } from "@/lib/sources/prl/snapshot";
 import { readPrlForSubject } from "@/lib/sources/prl/person";
 
@@ -11,7 +10,7 @@ export const GET = readerRoute("/api/profile/[subject]", async function GET(_req
   if (!subject || subject.length > 128) return Response.json({ error: "subject required" }, { status: 400 });
   try {
       const [profile, archive] = await Promise.allSettled([
-        /^congress:[A-Z]\d{6}$/.test(subject) ? refreshPrlFromPromoted().then(() => prlProfileForSubject(subject)) : Promise.resolve(null),
+        prlProfileForSubject(subject),
         readPrlForSubject(subject),
       ]);
       if (profile.status === "rejected" && archive.status === "rejected") throw new Error("Statement sources unavailable");

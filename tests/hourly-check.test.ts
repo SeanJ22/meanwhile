@@ -77,7 +77,7 @@ test("DB-26: a larger government is looked at in full, and a 503 holds the websi
   const down = pacedSite(pacing, () => false, 503);
   const report = await runHourlyProbes(repos.doors, doors.slice(0, 3), new Set(["hot-0", "hot-1", "hot-2"]), down.fetchFn, down.at(0));
   assert.deepEqual([report.failed, report.waiting, down.asked.length], [1, 2, 1], "after the 503 the website is left alone");
-  assert.ok((await pacing.heldUntil(Date.parse(AT(0)))).has("clerks.example.gov"));
+  assert.ok((await pacing.heldUntil("clerks.example.gov", Date.parse(AT(0))))! > Date.parse(AT(0)));
 });
 
 test("DB-26: a change the look sees is stored and the publish-now lane reads that door at once", async () => {

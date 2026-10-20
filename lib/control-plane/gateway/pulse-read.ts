@@ -1,5 +1,5 @@
 import { RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
-import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, type OwnerSnapshot } from "../owner-surface.ts";
+import { HUNT_SOURCE_PROGRESS_LOG_KEY, livenessOf, ownerIncidentCount, type OwnerSnapshot } from "../owner-surface.ts";
 import { pulseRevision, type LivePulse } from "../live-pulse.ts";
 import { ADMIN_CAPABILITIES } from "../admin-view/capabilities.ts";
 import { adminV6ReadCapabilities, ADMIN_V6_CAPABILITY_REVISION } from "../admin-view/v6-capabilities.ts";
@@ -50,7 +50,7 @@ function countsFrom(snapshot: PulseSnapshot | null): {
   if (debt === null) unread.push("how much freshness debt is outstanding (the last publish could not measure it)");
   return {
     freshnessDebtRows: debt,
-    incidents: snapshot.incidents.length,
+    incidents: ownerIncidentCount(snapshot.incidents),
     obligations: snapshot.obligationsByState.reduce((sum, row) => sum + row.count.value, 0),
     unread,
   };

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { normalize, fetch as fetchAcs, ACS_GEOGRAPHIES, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
-import { latestAcsRelease, joinAcsRows, acsLoadCounts, acquireNationalAcs, acsPublicationDate } from "../lib/sources/census-acs-population/national.ts";
+import { latestAcsRelease, joinAcsRows, acsLoadCounts, acquireStateAcs, acsPublicationDate, type AcsStateLoad } from "../lib/sources/census-acs-population/national.ts";
 import { censusAcsCandidate, normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { acsPayloadHash } from "../lib/sources/census-acs-population/hash.ts";
 import { civicRecordFacts, civicRecordsFor } from "../lib/civic-data/changes.ts";
@@ -84,29 +84,29 @@ test("synthetic catalog cases discover a new five-year vintage without selecting
   assert.throws(() => latestAcsRelease({ dataset: [] }), /no ACS/);
 });
 
-test("bulk protocol double enumerates every returned state and every geography, keeping empty successful tables", async () => {
+test("one state source never requests another state's table or a national ZCTA wildcard", async () => {
   const requests: URL[] = [];
   const states = saved("state"), zctas = saved("zcta");
+  const selectedZips = ["85633","85654","85701"];
   const fetcher: typeof globalThis.fetch = async input => {
     const url = new URL(String(input)); requests.push(url);
     if (url.pathname === "/data.json") return Response.json({ dataset: [{ c_dataset: ["acs", "acs5"], c_vintage: 2024 }] });
     if (url.pathname.endsWith("release-schedule.html")) return new Response('<table><tr><td>January 29, 2026</td><td>5-Year Data Release</td></tr></table>');
-    const scope = Object.entries(ACS_GEOGRAPHIES).find(([, name]) => url.searchParams.get("for") === `${name}:*`)?.[0];
-    if (scope === "state") return Response.json(states.rows);
-    if (scope === "zcta") return Response.json(zctas.rows);
-    // Synthetic nation field exercises the protocol only; no production population is asserted.
+    const scope = Object.entries(ACS_GEOGRAPHIES).find(([, name]) => url.searchParams.get("for")?.startsWith(`${name}:`))?.[0];
+    if (scope === "state") return Response.json([states.rows[0],...states.rows.slice(1).filter(row=>row.at(-1)==="04")]);
+    if (scope === "zcta") return Response.json([zctas.rows[0],...zctas.rows.slice(1).filter(row=>selectedZips.includes(String(row.at(-1))))]);
     if (scope === "nation") return Response.json([["NAME", "B01003_001E", "B01003_001M", "us"], ["Synthetic nation", "1", null, "1"]]);
     return new Response(null, { status: 204 });
   };
-  const load = await acquireNationalAcs({ key: "synthetic-secret", fetcher, targets: async () => [] });
-  assert.equal(load.rows.length, 59);
-  assert.equal(requests.length, 5 + 52 * (Object.keys(ACS_GEOGRAPHIES).length - 3));
-  assert.equal(load.counts.reduce((sum, row) => sum + row.loaded, 0), load.rows.length);
-  assert.equal(load.counts.reduce((sum, row) => sum + row.joined + row.unjoined, 0), load.rows.length);
-  assert.ok(load.captures.every(capture => !capture.url.includes("synthetic-secret")));
-  const stateRequest = requests.find(url => url.searchParams.get("for") === "state:*")!;
-  assert.equal(stateRequest.searchParams.get("key"), "synthetic-secret");
-  assert.ok(requests.some(url => url.searchParams.get("in") === "state:04 county:*"));
+  const load = await acquireStateAcs({ state:"AZ", key: "synthetic-secret", fetcher, targets: async () => selectedZips.map(geoid=>({geography:"zcta",geoid,divisionId:`zcta:${geoid}`})) });
+  assert.equal(load.rows.length,5);
+  assert.equal(requests.length,2+Object.keys(ACS_GEOGRAPHIES).length);
+  assert.equal(load.counts.reduce((sum,row)=>sum+row.loaded,0),load.rows.length);
+  assert.ok(load.captures.every(capture=>!capture.url.includes("synthetic-secret")));
+  assert.ok(requests.some(url=>url.searchParams.get("for")==="state:04"));
+  assert.ok(requests.some(url=>url.searchParams.get("for")==="zip code tabulation area:85633,85654,85701"));
+  assert.ok(!requests.some(url=>["state:*","zip code tabulation area:*"].includes(url.searchParams.get("for")??"")));
+  assert.ok(requests.every(url=>!url.searchParams.has("in") || url.searchParams.get("in")!.startsWith("state:04")));
 });
 
 test("an unreachable source yields a classified outage and does not leak credentials", async () => {
@@ -118,13 +118,23 @@ test("an unreachable source yields a classified outage and does not leak credent
   assert.equal(keyRefFor("census-acs-population"), "CENSUS_API_KEY");
 });
 
-test("a second successful unchanged check ignores capture stamps but retains source dates and exact population facts", () => {
-  const candidate = censusAcsCandidate(saved("zcta"), saved("state"));
-  assert.equal(acsPayloadHash(candidate.readModel), normalizedHash(candidate.readModel), "incremental fingerprint uses the existing canonical JSON contract");
-  const changed = censusAcsCandidate({ ...saved("zcta"), fetchedAt: "2026-10-12T00:00:00.000Z" }, { ...saved("state"), fetchedAt: "2026-10-12T00:00:00.000Z" });
+test("a second successful unchanged state check ignores capture stamps but retains source dates and exact population facts", () => {
+  const capture=(scope:"zcta"|"state",at:string)=>{
+    const fetched=saved(scope);
+    return {...fetched,fetchedAt:at,rows:[fetched.rows[0],...fetched.rows.slice(1).filter(row=>scope==="state"?row.at(-1)==="04":["85633","85654","85701"].includes(String(row.at(-1))))]};
+  };
+  const load=(at:string):AcsStateLoad=>{
+    const captures=[capture("zcta",at),capture("state",at)];
+    const rows=captures.flatMap(normalize).map(row=>({...row,stateFips:"04"}));
+    return {state:"AZ",release:{vintage:2024,publishedAt:null},captures,rows,counts:acsLoadCounts(rows)};
+  };
+  const candidate = censusAcsCandidate(load(CAPTURED_AT));
+  assert.equal(acsPayloadHash(candidate.readModel), normalizedHash(candidate.readModel));
+  const changed = censusAcsCandidate(load("2026-10-12T00:00:00.000Z"));
   const facts = (value: typeof candidate) => civicRecordsFor(value.recordClass, value.readModel).map(member => civicRecordFacts(value.recordClass, member));
   assert.deepEqual(facts(candidate), facts(changed));
   assert.equal(candidate.normalization.droppedRecords, 0);
+  assert.equal(candidate.scope,"US-AZ:acs-population");
   assert.equal(candidate.retrieval.requestedUrl, saved("zcta").url);
 });
 
@@ -132,7 +142,7 @@ test("scoped promoted facts feed Ask with the actual estimate, period, margin an
   const fact = normalize(saved("zcta")).find(row => row.code === "85701") as PopulationFact;
   const ids = ["zcta:85701"];
   const read = await readPopulationFacts(ids, async statements => {
-    if (statements[0].text.startsWith("SELECT current_version_id")) return [[{ current_version_id: "saved-version" }]];
+    if (statements[0].text.startsWith("SELECT scope,current_version_id")) return [[{ scope: "acs-population", current_version_id: "saved-version" }]];
     assert.deepEqual(statements[0].params[2], ids);
     assert.match(statements[0].text, /WITH RECURSIVE/);
     assert.match(statements[0].text, /divisionIds.*\?\|/);

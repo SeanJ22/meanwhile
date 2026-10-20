@@ -8,6 +8,8 @@ import {
 } from "./reader-readback.ts";
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
+import { registryJurisdictions } from "./state-scopes.ts";
+import type { FanOutReaderRepairSummary } from "./fanout-reader-repair.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
@@ -30,6 +32,7 @@ export interface RoutineReaderRepairDomain {
   readonly mode: "SINGLE" | "MEETING_AGGREGATE";
   readonly contracts: readonly ReaderRepairContract[];
   readonly timeoutMs: number;
+  readonly state?: string;
 }
 
 export function routineReaderRepairDomains(
@@ -50,12 +53,20 @@ export function routineReaderRepairDomains(
     contracts: [contract],
     timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
   }));
-  if (meetingContracts.length > 0) {
+  const byState = new Map<string, ReaderRepairContract[]>();
+  for (const contract of meetingContracts) {
+    const partition = MEETING_PARTITION_CONTRACTS.find(row => row.id === contract.id)!;
+    const state = registryJurisdictions(partition.derivedFamily ?? partition.ocdId ?? partition.bodyId)[0];
+    if (!state) throw new Error(`READER_REPAIR_MEETING_STATE_REQUIRED:${contract.id}`);
+    const rows = byState.get(state) ?? []; rows.push(contract); byState.set(state, rows);
+  }
+  for (const [state, rows] of byState) {
     domains.push({
-      id: "reader-readback:meetings-aggregate",
+      id: `reader-readback:meetings:${state}`,
       mode: "MEETING_AGGREGATE",
-      contracts: meetingContracts,
+      contracts: rows,
       timeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
+      state,
     });
   }
   const planned = domains.flatMap(({ contracts: rows }) => rows.map(({ id }) => id));
@@ -72,9 +83,10 @@ export interface RoutineReaderRepairRecord {
   readonly recordClass: ReaderRepairContract["recordClass"];
   readonly scope: string;
   readonly projectionId: string;
-  readonly disposition: Exclude<ReaderReadbackRepairOutcome["kind"], "NOT_APPLICABLE"> | "REPAIR_FAILED";
+  readonly disposition: Exclude<ReaderReadbackRepairOutcome["kind"], "NOT_APPLICABLE"> | "REPAIR_FAILED" | "PARTITIONS";
   readonly receipt: ReaderProjectionReadbackReceipt | null;
   readonly error: string | null;
+  readonly partitions?: Omit<FanOutReaderRepairSummary, "errors">;
 }
 
 export function routineReaderRepairRecord(
@@ -115,6 +127,15 @@ export function routineReaderRepairRecord(
 
 export function serializeRoutineReaderRepairRecord(record: RoutineReaderRepairRecord): string {
   return ROUTINE_READER_REPAIR_PREFIX + JSON.stringify(record);
+}
+
+export function fanOutReaderRepairRecord(contract: ReaderRepairContract, summary: FanOutReaderRepairSummary): RoutineReaderRepairRecord {
+  if (contract.readerProjection === null) throw new Error(`ROUTINE_READER_REPAIR_NOT_APPLICABLE:${contract.id}`);
+  const { errors, ...partitions } = summary;
+  return { kind: "ROUTINE_READER_REPAIR", contractId: contract.id, sourceId: contract.sourceId,
+    recordClass: contract.recordClass, scope: contract.scope, projectionId: contract.readerProjection.id,
+    disposition: summary.failed > 0 ? "REPAIR_FAILED" : "PARTITIONS", receipt: null,
+    error: summary.failed > 0 ? errors.join(" | ").slice(0, 4000) : null, partitions };
 }
 
 export interface RoutineReaderRepairParseIssue {
@@ -194,7 +215,12 @@ export function parseRoutineReaderRepairRecords(
       });
       continue;
     }
-    const allowed = ["NO_PROMOTION", "CURRENT", "BACKOFF", "FAILED_BACKOFF", "RECORDED", "REPAIR_FAILED"];
+    const allowed = ["NO_PROMOTION", "CURRENT", "BACKOFF", "FAILED_BACKOFF", "RECORDED", "REPAIR_FAILED", "PARTITIONS"];
+    const partitions = object(row.partitions);
+    const partitionValid = partitions !== null && "fanOut" in contract && contract.fanOut === true &&
+      [partitions.total, partitions.passed, partitions.failed, partitions.deferred].every(value => Number.isSafeInteger(value) && (value as number) >= 0) &&
+      partitions.total === (partitions.passed as number) + (partitions.failed as number) + (partitions.deferred as number) &&
+      (row.disposition === "PARTITIONS" ? partitions.failed === 0 : row.disposition === "REPAIR_FAILED" && (partitions.failed as number) > 0);
     const receiptRequired = row.disposition === "CURRENT" || row.disposition === "FAILED_BACKOFF" || row.disposition === "RECORDED";
     const receipt = receiptRequired ? validReceipt(row.receipt, contract) : null;
     const valid = row.kind === "ROUTINE_READER_REPAIR" &&
@@ -203,6 +229,7 @@ export function parseRoutineReaderRepairRecords(
       row.scope === contract.scope &&
       row.projectionId === contract.readerProjection.id &&
       typeof row.disposition === "string" && allowed.includes(row.disposition) &&
+      (row.disposition === "PARTITIONS" || row.partitions !== undefined ? partitionValid : true) &&
       (receiptRequired ? receipt !== null : row.receipt === null) &&
       (row.disposition === "CURRENT" ? receipt?.status === "PASS" : true) &&
       (row.disposition === "FAILED_BACKOFF" ? receipt?.status === "FAIL" : true) &&
@@ -232,6 +259,7 @@ export function parseRoutineReaderRepairRecords(
       recordClass: contract.recordClass,
       scope: contract.scope,
       projectionId: contract.readerProjection.id,
+      ...(partitionValid ? { partitions: partitions as unknown as NonNullable<RoutineReaderRepairRecord["partitions"]> } : {}),
       disposition: row.disposition as RoutineReaderRepairRecord["disposition"],
       receipt,
       error: row.disposition === "REPAIR_FAILED" ? String(row.error) : null,
@@ -304,6 +332,7 @@ export function reconcileRoutineReaderRepairDomain(
       projectionId: record.projectionId,
       disposition: record.disposition,
       receipt: record.receipt,
+      ...(record.partitions ? { partitions: record.partitions } : {}),
     };
   });
   return { references, failures };

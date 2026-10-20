@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { divisionsFromCensusGeographies, censusVintageFor } from "../lib/geo/census-geographies.ts";
@@ -32,11 +33,11 @@ const at = "2026-10-13T12:00:00.000Z";
 test("R2B money: second-hop facts and cursor-only progress survive the unchanged confirmation path", async () => {
   await installRegistryAuthority();
   const master = fixture("fec-national/cn-2026.txt"), summary = fixture("fec-national/weball-2026.txt");
-  const candidates = projectFecDiscovery(parseFecBulk(master, summary, 2026, at), 2026).slice(0, 2);
+  const candidates = projectFecDiscovery(await parseFecBulk(fileURLToPath(new URL("./fixtures/fec-national/cn-2026.txt",import.meta.url)), fileURLToPath(new URL("./fixtures/fec-national/weball-2026.txt",import.meta.url)), 2026, at, "AL"), 2026).slice(0, 2);
   let snapshot: FundingSnapshot = { formatVersion: 1, fetchedAt: at, cycle: 2026, candidates, absences: [], secondHop: [],
     matchReport: { rosterMatched: 0, rosterTotal: 0, ballotMatched: 0, ballotTotal: 0 } };
   const store = new MemoryRoutineDataStore();
-  const publish = async (time: string) => processRegisteredRoutineCandidate(store, "fec-funding", fecFundingCandidate({ snapshot,
+  const publish = async (time: string) => processRegisteredRoutineCandidate(store, "fec-funding:AL", fecFundingCandidate({ snapshot,
     rawBodies: [master, summary], finalUrl: "https://www.fec.gov/files/bulk-downloads/2026/cn26.zip", retrievedAt: time, excludedFacts: [] }), time);
   assert.ok((await publish(at)).promoted);
   const hop = JSON.parse(fixture("fec-national/second-hop.json")) as SecondHopCommittee;

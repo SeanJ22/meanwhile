@@ -1,3 +1,4 @@
+import { fundingFixtureEntries } from "./helpers/funding-fixture.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
@@ -9,6 +10,9 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { build } from "esbuild";
 import sharp from "sharp";
+import { PGlite } from "@electric-sql/pglite";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
+import { insertPublishedSliceFixture, PUBLISHED_SLICE_FIXTURE_SCHEMA } from "./helpers/published-slice-fixture.ts";
 
 import { launchGuarded } from "../scripts/browser.mts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -20,7 +24,6 @@ import type { PortraitVerification } from "../lib/photos/binding.ts";
 import { installReaderValues, installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };
 import type { GlobalAuthorityFamily, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
-import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { PRL_CONTRACT } from "../lib/sources/prl/data-plane.ts";
 import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
@@ -190,16 +193,14 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const prl: PrlSnapshot = { formatVersion: 1, fetchedAt: checkedAt, sourceFile: "profiles-all-national.zip", sourceUrl: "https://americaspoliticalpulse.com/data/elite/profiles-all-national.zip",
     rowsInFile: 2, rowsWithStatements: 2, attribution: PRL_RHETORIC_ATTRIBUTION, rosterMisses: [], profiles: cases.map(item => ({ bioguideId: item.incumbent.slice(9), prlName: item.name,
       statementCount: 100, shares: { policy: 60, bipartisanship: 10, creditclaiming: 20, "attack-policy": 15, "attack-personal": 5 }, sources: ["all"], measuredAt: "2026-09-30" })) };
-  const fec = requiredRoutineContract("fec-funding");
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),
-    "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: "BL-20:fec", value: funding }), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
+    "federal-funding": promotedFamily([...fundingFixtureEntries("BL-20:fec", funding), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
     "state-money": promotedFamily((Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map(state => provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", ...STATE_CAMPAIGN_FINANCE_SOURCES[state], versionId: `BL-20:state-money:${state}`, value: stateMoneyFixture(state) })), "BL-20:state-money"),
     "federal-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:votes", value: syntheticFederalRollCalls(federal, 2).window })], "BL-20:votes"),
     "federal-key-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:key-votes", value: syntheticFederalKeyVotes(federal) })], "BL-20:key-votes"),
     "officeholder-statements": promotedFamily([manualEdgeEntry("officeholder-statements", syntheticOfficeholderStatements(cases.map(item => item.incumbent)), "BL-20:statements")], "BL-20:statements"),
-    "prl-archives": promotedFamily([provenEdgeEntry({ recordClass: PRL_CONTRACT.recordClass, scope: PRL_CONTRACT.scope, sourceId: PRL_CONTRACT.sourceId, versionId: "BL-20:prl", value: prl })], "BL-20:prl"),
   };
   const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>> = {
     "registry-runtime": stateRegistryArtifacts("BL-20:registry", ["AZ", "OH", "MI"], linkedRegistry),
@@ -233,6 +234,15 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(record.officeholderId), sourceId: FEDERAL_VOTES_SOURCE_ID,
     versionId: `BL-20:votes:${record.officeholderId}`, value: record })), dir);
   activateCanonicalFixture(dir);
+  const canonicalQuery = readerDatabaseQuery()!, prlDatabase = new PGlite();
+  after(() => prlDatabase.close());
+  await prlDatabase.exec(PUBLISHED_SLICE_FIXTURE_SCHEMA);
+  await insertPublishedSliceFixture(prlDatabase, { id: "BL-20:legacy-prl", sourceId: PRL_CONTRACT.sourceId, recordClass: PRL_CONTRACT.recordClass,
+    scope: "US:congressional-rhetoric:attributed-profiles", readModel: prl, at: checkedAt, finalUrl: prl.sourceUrl });
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement =>
+    statement.params[0] === "PRL_PROFILE" && statement.text.includes("WITH RECURSIVE publication AS MATERIALIZED")
+      ? (await prlDatabase.query<Record<string, unknown>>(statement.text, [...statement.params])).rows
+      : (await canonicalQuery([statement]))[0])));
   const browserCards: Record<string, unknown>[] = [];
   for (const [index, item] of cases.entries()) {
     const rendered = await renderBallot(item.zip);

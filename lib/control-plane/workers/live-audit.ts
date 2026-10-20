@@ -33,6 +33,8 @@ export interface LiveFact {
 export interface LiveFactCatalog {
   /** Every area that has published facts. Small: names only. */
   areas(): Promise<readonly string[]>;
+  /** A disk-backed catalog can choose the bounded rotation without returning every area's name. */
+  areasForPass?(passId: string, policy: LiveAuditPolicy): Promise<readonly string[]>;
   /** Up to `limit` facts of one area. Never the whole read model. */
   factsInArea(area: string, limit: number): Promise<readonly LiveFact[]>;
 }
@@ -307,7 +309,7 @@ export interface LiveAuditPassSummary {
 /** One live-audit pass: sample by area, prefer a routine refresh, re-read the rest, record green or red. */
 export async function runLiveAuditPass(deps: LiveAuditPassDeps): Promise<LiveAuditPassSummary> {
   const policy = deps.policy ?? LIVE_AUDIT_DEFAULT_POLICY;
-  const areas = areasForPass(await deps.catalog.areas(), deps.passId, policy);
+  const areas = deps.catalog.areasForPass ? await deps.catalog.areasForPass(deps.passId, policy) : areasForPass(await deps.catalog.areas(), deps.passId, policy);
   const byReason: Record<PickReason, number> = { PAST_REFRESH: 0, DEMAND: 0, SINGLE_SOURCE: 0, ROUTINE: 0 };
   const summary = { areas: areas.length, sampled: 0, green: 0, red: 0, inconclusive: 0, fetches: 0, fromRefresh: 0, deferred: 0, byReason };
   const count = (result: LiveAuditResult) => {

@@ -11,7 +11,9 @@ import { dispatchOne, hunterWallLimitMs, proofChargeOf, sweepExpiredLeases, type
 import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
-import { LINEAGE_ARTIFACT_FIELDS, selectStandingLineages, type LineageArtifact } from "./standing-lineage.ts";
+import { readStandingLineages } from "./standing-lineage-read.ts";
+import { forEachAggregate } from "./streamed-history.ts";
+import { taskIdentity, type TaskIdentity } from "./task-identity.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { FIRST_BACKOFF_MINUTES, recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
@@ -44,6 +46,13 @@ export interface AutonomousDecision {
   readonly action: "SCOUT" | "WORKER" | "BLOCKED" | "STAGED";
   readonly task: RouteTask | null;
   readonly reason: string;
+}
+
+/** Queue reporting needs identities and roles; the lease owner reads the complete task by id. */
+type SelectedDecision = Omit<AutonomousDecision,"task"> & {readonly task: TaskIdentity|null};
+function selectedDecision(decision: AutonomousDecision): SelectedDecision {
+  const task = decision.task;
+  return {...decision, task: task ? taskIdentity(task) : null};
 }
 
 /** A filtered or paused cycle cannot start either autonomous entry point. */
@@ -140,7 +149,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
   if (isHuntPacketPlan(plan)) return huntOperation(runtime, item, knownHistory);
   type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
-  const children = (knownItems ?? (await (runtime.scopedReads ? repos.workItems.listWhere(["planRepair", "parentWorkItemId"], item.id) : repos.workItems.list()))
+  const children = (knownItems ?? (await repos.workItems.listWhere(["planRepair", "parentWorkItemId"], item.id))
     .map(row => row.value)).filter(row => (row as LinkedItem).planRepair?.parentWorkItemId === item.id);
   const linkedId = (item as LinkedItem).planRepairObservation?.successorWorkItemId;
   if (children.length || linkedId) {
@@ -168,12 +177,17 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   }
   const now = (runtime.now ?? (()=>new Date().toISOString()))();
   const records = [...(knownHistory?.completedRecords ?? await readCompletedWorkerResults(repos, item.id))];
-  /* The held-artifact set is read once per decision when scoped, not once per parsed artifact. */
-  const readHeldArtifactIds = async () => new Set((await repos.artifacts.readAll()).map(artifact => artifact.artifactId));
+  const readHeldArtifactIds = async () => {
+    const required = plan.contract.schemaVersion === 2 ? plan.contract.verification.authorities.flatMap(authority =>
+      [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds]) : [];
+    const held = new Set<string>();
+    for (const id of new Set(required)) if ((await repos.artifacts.keysWhere(["artifactId"], id)).length) held.add(id);
+    return held;
+  };
   let heldArtifactIdsRead: Promise<Set<string>> | null = null;
-  const heldArtifactIds = () => runtime.scopedReads ? (heldArtifactIdsRead ??= readHeldArtifactIds()) : readHeldArtifactIds();
+  const heldArtifactIds = () => heldArtifactIdsRead ??= readHeldArtifactIds();
   records.sort((a,b) => b.endedAt.localeCompare(a.endedAt) || b.id.localeCompare(a.id));
-  const attempts = knownHistory?.attempts ?? (await (runtime.scopedReads ? repos.attempts.listWhere(["workItemId"], item.id) : repos.attempts.list())).map(a=>a.value);
+  const attempts = knownHistory?.attempts ?? (await repos.attempts.listWhere(["workItemId"], item.id)).map(a=>a.value);
   const taskFor = async (input:Parameters<typeof enqueueWorkerTask>[1]) => {
     let task = await enqueueWorkerTask(repos,input);
     const admission = workerTaskAdmission(task,attempts,now);
@@ -436,30 +450,30 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
-  const allItems=(await runtime.repos.workItems.list()).map(row=>row.value);
+  // Only scheduling identities survive the scan. Each selection opens its own full place and history.
+  const allItems: WorkItem[] = [], candidates: WorkItem[] = [];
+  await forEachAggregate(runtime.repos.workItems, row => {
+    const item = row.value, plan = item.autonomousPlan;
+    const summary = { id: item.id, project: item.project, subject: item.subject, createdAt: item.createdAt,
+      ...("planRepair" in item ? { planRepair: {parentWorkItemId:(item as WorkItem & {planRepair:{parentWorkItemId:string}}).planRepair.parentWorkItemId} } : {}),
+      ...(plan ? { autonomousPlan: { capability: plan.capability, subjectPopulation: plan.subjectPopulation,
+        jurisdiction: plan.jurisdiction, ownerInstructions: plan.ownerInstructions, missionPart: plan.missionPart,
+        contract: { recordClass: plan.contract.recordClass } } } : {}) } as WorkItem;
+    allItems.push(summary);
+    if (plan && (options.acceptsWorkItem?.(item) ?? true)) candidates.push(summary);
+  });
   options.onSelectionSnapshot?.(allItems);
-  const candidates=allItems.filter(item=>item.autonomousPlan && (options.acceptsWorkItem?.(item) ?? true));
-  const attemptRows=await runtime.repos.attempts.list();
-  const attempts=attemptRows.map(row=>row.value);
-  // A cycle's candidate set is fixed before dispatch. Join immutable Scout
-  // results and existing route tasks once, then hand each item only its own
-  // history. Re-reading both entire logs for every owed item made selection
-  // quadratic and exhausted the original hunt's early worker wall.
-  const [routeTaskRows, workerRecords] = await Promise.all([
-    runtime.repos.routeTasks.list(), runtime.repos.workerResults.readAll(),
-  ]);
-  const routeTasksByWork=new Map<string,RouteTask[]>();
-  for(const row of routeTaskRows) {
-    const rows=routeTasksByWork.get(row.value.workItemId)??[]; rows.push(row.value); routeTasksByWork.set(row.value.workItemId,rows);
-  }
-  const attemptsByWork=new Map<string,Attempt[]>();
-  for(const attempt of attempts) {
-    const rows=attemptsByWork.get(attempt.workItemId)??[]; rows.push(attempt); attemptsByWork.set(attempt.workItemId,rows);
-  }
-  const occurrenceRows=(await runtime.repos.occurrences.list()).map(row=>row.value);
-  const lineages=selectStandingLineages({occurrences:occurrenceRows,
-    workItems:allItems,artifacts:await runtime.repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS) as LineageArtifact[],attempts,
-    workerResults:workerRecords});
+  const lastServed = new Map<string,string>();
+  await forEachAggregate(runtime.repos.attempts, row => {
+    const attempt = row.value;
+    if (attempt.startedAt > (lastServed.get(attempt.workItemId) ?? "")) lastServed.set(attempt.workItemId, attempt.startedAt);
+  }, {workItemId:true,startedAt:true});
+  const obligationIds = new Set<string>(), workByObligation = new Map<string,string>();
+  await forEachAggregate(runtime.repos.occurrences, row => {
+    obligationIds.add(row.value.obligationId);
+    if (row.value.workItemId) workByObligation.set(row.value.obligationId,row.value.workItemId);
+  }, {obligationId:true,workItemId:true});
+  const lineages = await readStandingLineages(runtime.repos, [...obligationIds]);
   const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
   const byItem=new Map(allItems.map(item=>[item.id,item] as const));
   const lineageRoot=(item:WorkItem):string|null=>{
@@ -484,38 +498,25 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
   }).map(value=>({id:value.id,value}));
   const itemSubjectById=new Map(items.map(row=>[row.id,row.value.subject] as const));
   const knownItems=items.map(row=>row.value);
-  // Repository id order is stable, not fair. Reconstruct service order from
-  // canonical Attempts each cycle; no cursor or parallel task ledger is needed.
-  const lastServed=new Map<string,string>();
-  for (const attempt of attempts) {
-    if (attempt.startedAt>(lastServed.get(attempt.workItemId)??"")) lastServed.set(attempt.workItemId,attempt.startedAt);
-  }
-  // Weights read this wave from the open blanks handed in, the recent detective turns and the open failure debts.
+  // Weights retain only the role/time/owner metadata of recent turns and open debts.
   let weights:ReadonlyMap<string,SquadWeight>|null=null;
   if(options.squads) {
-    const workByObligation=new Map(occurrenceRows.filter(row=>row.workItemId).map(row=>[row.obligationId,row.workItemId!] as const));
+    const routeTasks: RouteTask[] = [];
+    const since = Date.parse(now()) - 24 * 3_600_000;
+    await forEachAggregate(runtime.repos.routeTasks, row => {
+      if (row.value.workerTask?.role === "DETECTIVE" && Date.parse(row.value.createdAt) >= since) routeTasks.push(row.value);
+    }, {workItemId:true,createdAt:true,workerTask:["role"]});
+    const debts: {debt: FreshnessDebt;workItemId:string|null}[] = [];
+    await forEachAggregate(runtime.repos.debts, row => {
+      debts.push({debt:row.value,workItemId:workByObligation.get(row.value.obligationId)??null});
+    }, {obligationId:true});
     weights=squadWeights({items:knownItems,priority:new Map((options.prioritizedInstructions??[]).map(row=>[row.receiptId,row.priority] as const)),
-      reading:options.squads,routeTasks:routeTaskRows.map(row=>row.value),now:now(),
-      debts:(await runtime.repos.debts.list()).map(row=>({debt:row.value,workItemId:workByObligation.get(row.value.obligationId)??null}))});
+      reading:options.squads,routeTasks,now:now(),debts});
   }
   const squadParts=options.squads?.parts;
   const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions,
     weights?{partOf:item=>partOfItem(item,squadParts),weightOf:(send,part)=>weights!.get(squadKey(send,part))?.weight??1}:undefined);
-  // Validate this invocation's already loaded history through the same shared
-  // completion path. Independent calls still read current repository state;
-  // leases, capabilities and budget admission are never frozen by this join.
-  const candidateIds=new Set(ids);
-  const attemptById=new Map(attemptRows.map(row=>[row.id,row] as const));
-  const completedRecords=await readCompletedWorkerResults({...runtime.repos,
-    workerResults:{...runtime.repos.workerResults,readAll:async()=>workerRecords.filter(record=>candidateIds.has(record.workItemId))},
-    attempts:{...runtime.repos.attempts,list:async()=>attemptRows,read:async id=>attemptById.get(id)??null,
-      readMany:async wanted=>[...new Set(wanted)].sort().flatMap(id=>attemptById.get(id)??[])},
-  });
-  const recordsByWork=new Map<string,WorkerResultRecord[]>();
-  for(const record of completedRecords) {
-    const rows=recordsByWork.get(record.workItemId)??[]; rows.push(record); recordsByWork.set(record.workItemId,rows);
-  }
-  const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
+  const decisions:SelectedDecision[]=[]; const dispatches:DispatchResult[]=[];
   const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
   const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??Math.max(1,ids.length),Math.max(1,ids.length));
   // A caller may still pass a finite diagnostic
@@ -533,10 +534,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       try {
       let d: AutonomousDecision;
       try {
-        d=await nextAutonomousOperation(runtime,id,knownItems,{
-          attempts:attemptsByWork.get(id)??[],routeTasks:routeTasksByWork.get(id)??[],
-          completedRecords:recordsByWork.get(id)??[],
-        });
+        d=await nextAutonomousOperation(runtime,id);
       } catch (error) {
         // Only a bounded, pre-dispatch selection can be deferred as unpaid
         // work. A timeout after dispatch may carry unknown provider exposure
@@ -549,7 +547,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
           break;
         } else throw error;
       }
-      decisions.push(d);
+      decisions.push(selectedDecision(d));
       if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
       if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const lifetimeScout = runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "") === true;

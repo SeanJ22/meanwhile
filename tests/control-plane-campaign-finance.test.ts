@@ -31,9 +31,9 @@ import {
   AZ_LOCAL_ROUTES,
   campaignFinanceObligations,
 } from "../lib/control-plane/campaign-finance/obligations.ts";
-import { installFundingFirstSeed } from "./helpers/registry-runtime-first-seed.ts";
+import { installFundingFixture } from "./helpers/funding-fixture.ts";
 
-await installFundingFirstSeed();
+await installFundingFixture();
 
 const ROOT = resolve(import.meta.dirname, "..");
 const NOW = "2026-08-28T00:00:00.000Z";

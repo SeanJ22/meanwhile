@@ -60,15 +60,18 @@ export async function runPlaceSource(input: {
       // A ready official never waits behind the state's election-page walk.
       let publicationQueue = Promise.resolve();
       let publishedBatches = 0;
+      let geographyOffered=false;
       const publish = (ready: NationalPlaceSources) => {
         publicationQueue = publicationQueue.then(async () => {
-          try {
+          const publishRegistry=!geographyOffered||ready.officials.length>0;
+          if(publishRegistry)try {
+            geographyOffered=true;
             publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
               geographyCaptures: input.geographyCaptures, sources: ready });
           } catch (error) {
             publication = { error: error instanceof Error ? error.message : String(error) };
           }
-          publications.push(publication);
+          if(publishRegistry)publications.push(publication);
           if (ready.electionFields.length) {
             try {
               const now = input.clock?.() ?? input.now;

@@ -74,6 +74,7 @@ const MESA_CHAMBERS: MeetingLocation = {
 
 /** Promote through the registered manual door, then read through the canonical read; the door leaves out any row with no review time. */
 async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly string[]> {
+  rows = rows.filter(row => row.bodyOcdId === null || row.bodyOcdId.includes("/state:az/"));
   const store = new MemoryRoutineDataStore();
   // Every row cites its address page and its geocoder call; the door admits a
   // row only when each URL it cites is in the reviewed receipt.
@@ -103,6 +104,7 @@ async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly 
     },
     payload: {
       kind: "venue-resolutions",
+      state: "AZ",
       records: rows.map((row) => ({ id: venueResolutionRecordId(row), ...row })),
     },
   };
@@ -113,7 +115,7 @@ async function promoteVenueTable(rows: readonly VenueEntry[]): Promise<readonly 
     AT,
   );
   assert.equal(outcome.candidate.state, "PROMOTED", "the venue table promoted");
-  const read = await readCuratedReaderProjection("venue-resolutions", { store, bypassCache: true, now: AT });
+  const read = await readCuratedReaderProjection("venue-resolutions", { state: "AZ", store, bypassCache: true, now: AT });
   assert.equal(read.kind, "PROMOTED", "the canonical read answered");
   return read.kind === "PROMOTED" ? read.value.records.map((record) => record.id) : [];
 }
@@ -226,7 +228,7 @@ test("production's table: the three Legistar rooms cannot pass the door, and an 
   for (const room of LEGISTAR_ROOMS) {
     assert.ok(!ids.includes(venueResolutionRecordId(room)), `${room.match} reached the promoted table`);
   }
-  assert.equal(ids.length, VENUE_CACHE.length - LEGISTAR_ROOMS.length, "every reviewed row did");
+  assert.equal(ids.length, VENUE_CACHE.filter(row => row.bodyOcdId === null || row.bodyOcdId.includes("/state:az/")).length - LEGISTAR_ROOMS.length, "every reviewed row in Arizona did");
   assert.equal(currentVenueCache().length, ids.length, "the canonical read serves the promoted table");
 
   assert.deepEqual(reviewedVenueEntries("legistar", PIMA), []);

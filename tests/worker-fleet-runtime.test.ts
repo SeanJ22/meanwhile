@@ -10,7 +10,6 @@ import { requireCapability } from "../lib/control-plane/capability.ts";
 import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { MemoryEvidenceStore, putArtifact, readForParser, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { contentHash } from "../lib/control-plane/ids.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import {
@@ -19,7 +18,7 @@ import {
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, reconcileWorkerCompletions } from "../lib/control-plane/repository/worker-completion.ts";
+import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
@@ -126,7 +125,14 @@ test("completed worker history recovers with bulk reads and no per-result replay
   const records = await h.repos.workerResults.readAll();
   const fail = async (): Promise<never> => { throw new Error("historical result caused a point read or write"); };
   const observed: ControlPlaneRepositories = { ...h.repos,
-    workerResults: { ...h.repos.workerResults, readAll: async () => Array.from({ length: 1500 }, () => records[0]) },
+    workerResults: { ...h.repos.workerResults, readAll: fail, readSince: fail,
+      readChangedSince: async (_since, _held, options) => {
+        assert.ok(options?.page, "Recovery must consume bounded store pages.");
+        for (let page = 0; page < 30; page++) await options.page(Array.from({ length: 50 }, (_, position) => ({
+          key: records[0].workItemId, recordId: records[0].id, position, record: records[0],
+        })));
+        return { records: [], through: START };
+      } },
     attempts: { ...h.repos.attempts, read: fail, mustRead: fail, compareAndSet: fail },
     routeTasks: { ...h.repos.routeTasks, read: fail, mustRead: fail, compareAndSet: fail },
     leases: { ...h.repos.leases, read: fail, compareAndSet: fail },
@@ -149,29 +155,34 @@ test("completed worker history recovers with bulk reads and no per-result replay
   assert.equal((await h.repos.attempts.mustRead(parser.attemptId)).value.outcome, "COMPLETED");
 });
 
-test("inherited worker history reads only its producers' Attempts for 1500 results and rejects missing or divergent producers", async () => {
+test("lifetime worker history validates 1500 producers in bounded pages and rejects missing or divergent producers", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
   const attempts = await h.repos.attempts.list();
   let calls = 0;
   const observed: ControlPlaneRepositories = { ...h.repos,
-    workerResults: { ...h.repos.workerResults, readAll: async () => {
-      calls += 1;
-      return [...Array.from({ length: 1500 }, () => parser),
+    workerResults: { ...h.repos.workerResults, readAll: async () => { throw new Error("whole cp_worker_results read"); },
+      readChangedSince: async (_since, _held, options) => {
+        assert.ok(options?.page);
+        const records = [...Array.from({ length: 1500 }, () => parser),
         { ...parser, id: "missing-producer", attemptId: "absent" },
         { ...parser, id: "divergent-producer", completion: { ...parser.completion,
           closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
-    } },
+        for (let at = 0; at < records.length; at += 64) await options.page(records.slice(at, at + 64).map((record, position) => ({
+          key: record.workItemId, recordId: record.id, position, record,
+        })));
+        return { records: [], through: START };
+      } },
     attempts: { ...h.repos.attempts, list: async () => { throw new Error("whole cp_attempts listed"); },
-      readMany: async (ids: readonly string[]) => { calls += 1; return attempts.filter(row => ids.includes(row.id)); },
+      readMany: async (ids: readonly string[]) => { calls += 1; assert.ok(ids.length <= 32); return attempts.filter(row => ids.includes(row.id)); },
       read: async () => { throw new Error("N+1 point read"); },
       mustRead: async () => { throw new Error("N+1 point read"); } },
   };
-  const inherited = await readCompletedWorkerResults(observed);
-  assert.equal(inherited.length, 1500);
-  assert.ok(inherited.every(record => record.id === parser.id));
-  assert.equal(calls, 2);
+  let inherited = 0;
+  await visitCompletedWorkerResults(observed, record => { inherited += 1; assert.equal(record.id, parser.id); });
+  assert.equal(inherited, 1500);
+  assert.equal(calls, 47);
 });
 
 test("every runtime grant denies promotion/restricted reads, and Parser/Validator deny network", () => {
@@ -226,7 +237,8 @@ test("stale producer contract and prior Validator Attempt cannot certify a diffe
   let batchReads = 0;
   const observedRuntime = { ...h.runtime, repos: { ...h.repos, workerResults: { ...h.repos.workerResults,
     read: async (id: string) => { batchReads++; return h.repos.workerResults.read(id); },
-    readAll: async () => { fallbackReads++; return h.repos.workerResults.readAll(); },
+    readAll: async () => { throw new Error("country worker results read"); },
+    keysWhere: async (path: readonly string[], value: string) => { fallbackReads++; return h.repos.workerResults.keysWhere(path, value); },
   } } };
   const foreignTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
     role: "VALIDATOR", contract: CONTRACT, producerResultId: foreignParser.id, now: h.now() });

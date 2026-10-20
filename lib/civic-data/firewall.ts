@@ -526,8 +526,6 @@ interface ExecutableDependencyClosure {
   readonly problems: readonly string[];
 }
 
-const EXECUTABLE_CLOSURE_NODE_LIMIT = 512;
-
 function repositoryLocalExecutableReferences(
   files: Readonly<Record<string, string>>,
   executable: string,
@@ -570,18 +568,14 @@ function executableDependencyClosure(
   expandExecutable: (path: string) => WorkflowExecutableClosure = (path) =>
     workflowExecutableClosure(files, path),
 ): ExecutableDependencyClosure {
-  const seen = new Set<string>();
+  const scheduled = new Set<string>([entry]);
   const pending = [entry];
   const nodes: ExecutableDependencyNode[] = [];
   const problems = new Set<string>();
-  while (pending.length > 0) {
-    const path = pending.shift()!;
-    if (seen.has(path)) continue;
-    if (seen.size >= EXECUTABLE_CLOSURE_NODE_LIMIT) {
-      problems.add(`registered executable closure exceeded ${EXECUTABLE_CLOSURE_NODE_LIMIT} files`);
-      break;
-    }
-    seen.add(path);
+  // Each resolved repository file enters the queue once, including cyclic imports.
+  // The input inventory bounds this walk; every reachable executable is classified.
+  for (let index = 0; index < pending.length; index++) {
+    const path = pending[index]!;
     const source = stripExecutableComments(files[path] ?? "");
     const packageClosure = expandExecutable(path);
     for (const problem of packageClosure.problems) problems.add(problem);
@@ -599,8 +593,9 @@ function executableDependencyClosure(
       if (
         dependency !== null
         && /\.[cm]?[jt]sx?$/.test(dependency)
-        && !seen.has(dependency)
+        && !scheduled.has(dependency)
       ) {
+        scheduled.add(dependency);
         pending.push(dependency);
       }
     }
@@ -610,7 +605,7 @@ function executableDependencyClosure(
       ...packageClosure.packageCommands,
     ].join("\n");
     for (const dependency of repositoryLocalExecutableReferences(files, executedText)) {
-      if (!seen.has(dependency)) pending.push(dependency);
+      if (!scheduled.has(dependency)) { scheduled.add(dependency); pending.push(dependency); }
     }
   }
   return { nodes, problems: [...problems].sort() };

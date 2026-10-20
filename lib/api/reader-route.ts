@@ -90,7 +90,11 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   }
   const { registryJurisdictions } = await import("../civic-data/state-scopes.ts");
   const { governmentStateOf } = await import("../registration/listings.ts");
-  const states = namedStates.length ? namedStates : [...new Set([...keys].flatMap(key => {
+  const congressionalKeys = [...keys].filter(key => /^congress:[A-Z]\d{6}$/.test(key));
+  const nativeFecStates = [...new Set([...keys].flatMap(key => /^(?:fec:)?[HS]\d([A-Z]{2})\d{5}$/.exec(key)?.[1] ?? []))];
+  const nativeState = nativeFecStates.length === 1 ? nativeFecStates[0] : congressionalKeys.length === 1
+    ? await (await import("../civic-data/federal-person-state.ts")).publishedFederalPersonState(congressionalKeys[0]) : null;
+  const states = namedStates.length ? namedStates : nativeState ? [nativeState] : [...new Set([...keys].flatMap(key => {
     const explicit = /^(?:state:|statewide:)([a-z]{2})(?:\/|$)/i.exec(key)?.[1];
     return explicit ? [explicit.toUpperCase()] : registryJurisdictions(key).length ? registryJurisdictions(key) : governmentStateOf(key) ? [governmentStateOf(key)!] : [];
   }))];

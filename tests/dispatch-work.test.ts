@@ -196,7 +196,7 @@ test("sending the fleet to Pima County creates what the registry defines there a
   assert.equal(applied.failed.length, 0);
 
   const tucson = meetingsDiscoveryObligationId({ jurisdictionId: "az:city:city-of-tucson", basis: "SOURCE_DISCOVERY_OWED" });
-  assert.ok(applied.written.includes(tucson), "Tucson's meetings discovery is created");
+  assert.ok(applied.written.some(id => id === tucson), "Tucson's meetings discovery is created");
   assert.ok(!applied.written.some((id) => id.includes("az:city:city-of-phoenix")), "Phoenix is not in Pima County and gets nothing");
 
   for (const id of applied.written) {
@@ -229,14 +229,14 @@ test("created work joins the corpus through its providers next cycle: scheduled,
   const next = await cycleWorld(repos, T1);
   const corpus = new Set(next.registry.obligations.map((o) => o.id));
   for (const id of applied.written) assert.ok(corpus.has(id), `${id} is emitted by its provider next cycle`);
-  assert.equal(next.sync.registered.filter((id) => applied.written.includes(id)).length, 0, "a created row is never registered a second time");
+  assert.equal(next.sync.registered.filter((id) => applied.written.some(written => written === id)).length, 0, "a created row is never registered a second time");
   assert.equal((next.sync.outside ?? []).filter((row) => row.materializedBy === OWNER_DISPATCH).length, 0, "no created row falls outside the corpus");
   const retirement = planSupersededRetirement({
     outside: next.sync.outside ?? [],
     corpus: next.registry.units.map((u) => ({ providerId: u.providerId, obligationId: u.obligation.id })),
     providers: next.registry.byProvider,
   });
-  assert.equal(retirement.retire.filter((r) => applied.written.includes(r.obligationId)).length, 0, "the retirement planners never see the owner's work as superseded");
+  assert.equal(retirement.retire.filter((r) => applied.written.some(id => id === r.obligationId)).length, 0, "the retirement planners never see the owner's work as superseded");
   const discovery = next.registry.byProvider.find((p) => p.providerId === "meetings-discovery");
   assert.equal(discovery?.readFailure, null);
   assert.equal(discovery?.units, applied.written.filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE)).length);
@@ -244,7 +244,7 @@ test("created work joins the corpus through its providers next cycle: scheduled,
   /* Removing the scope (it is simply no longer a target) undoes nothing: the rows stay owed. */
   const after = await cycleWorld(repos, T2);
   for (const id of applied.written) assert.equal((await repos.obligations.mustRead(id)).value.active, true, `${id} stays owed after the scope is gone`);
-  assert.ok(after.registry.obligations.some((o) => o.id === applied.written[0]));
+  assert.ok(after.registry.obligations.some((o) => o.id === Array.from(applied.written)[0]));
 });
 
 test("sending the same scope twice creates nothing new, and overlapping geographies share one row per requirement", async () => {

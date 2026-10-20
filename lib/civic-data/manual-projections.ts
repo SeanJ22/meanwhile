@@ -1,4 +1,5 @@
 import { statePublicationScope } from "./state-publication.ts";
+import { MEMBER_OFFICE_STATES, memberOfficeContractId, memberOfficeStateOf, type MemberOfficeContractId } from "../officials/member-office-scope.ts";
 import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication.ts";
 import { REGISTRY_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "./state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
@@ -66,15 +67,15 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "ballot-navigation",
   "stances",
   "campaign-sites",
-  "member-offices",
+  ...MEMBER_OFFICE_STATES.map(memberOfficeContractId),
   "venue-resolutions",
   "everyday-routing",
   "meeting-body-crosswalk",
 ] as const;
 export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)[number];
-type ManualProjectionFamily = Exclude<ManualProjectionContractId, StateBallotContractId> | "ballot-contests" | "candidate-profiles" | "candidate-corpus";
-const projectionFamily = (id: ManualProjectionContractId): ManualProjectionFamily =>
-  (parseStateBallotContractId(id)?.family ?? id) as ManualProjectionFamily;
+type ManualProjectionFamily = Exclude<ManualProjectionContractId, StateBallotContractId | MemberOfficeContractId> | "ballot-contests" | "candidate-profiles" | "candidate-corpus" | "member-offices";
+const projectionFamily = (id: string): ManualProjectionFamily =>
+  (memberOfficeStateOf(id) ? "member-offices" : parseStateBallotContractId(id)?.family ?? id) as ManualProjectionFamily;
 
 export interface CandidateProfilesProjection {
   readonly cards: {
@@ -92,6 +93,8 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
+  /** Explicit state binding for reviewed tenant venues without a Census division. */
+  readonly state?: string;
   readonly kind: "official-filings" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
@@ -297,7 +300,7 @@ function curatedRecordIssue(
       ? `${string(row.id)} lacks an eligible exact identity, verified HTTPS site, or attempt date.`
       : null;
   }
-  if (contractId === "member-offices") {
+  if (projectionFamily(contractId) === "member-offices") {
     const office = object(row.office);
     return row.kind !== "MEMBER_OFFICE" ||
         !string(row.officeholderId) ||
@@ -357,7 +360,7 @@ function sourceScopedMembers(
   if (projectionFamily(contractId) === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
   if (contractId === "official-filings" || contractId === "ballot-navigation" ||
-      contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
+      contractId === "stances" || contractId === "campaign-sites" || projectionFamily(contractId) === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     return curatedMembers(payload);
   }
@@ -441,11 +444,11 @@ function sourceScopedMemberIssue(
     return null;
   }
   if (contractId === "official-filings" || contractId === "ballot-navigation" ||
-      contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
+      contractId === "stances" || contractId === "campaign-sites" || projectionFamily(contractId) === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     const row = object(member.record);
     if (!row) return `${member.key} is not a curated Reader record.`;
-    const issue = curatedRecordIssue(contractId, row);
+    const issue = curatedRecordIssue(projectionFamily(contractId) as CuratedReaderProjection["kind"], row);
     // A crosswalk row cites exactly the receipted bytes of the pages it rests on.
     return issue ?? (contractId === "meeting-body-crosswalk" ? crosswalkReceiptIssue(row as unknown as MeetingBodyCrosswalkRow, receipt.sources) : null);
   }
@@ -515,6 +518,7 @@ function rebuildSourceScopedPayload(
   }
   return {
     kind: string(current.kind) || contractId,
+    ...(contractId === "venue-resolutions" && typeof current.state === "string" ? { state: current.state } : {}),
     records: members.map((member) => member.record),
   } as CuratedReaderProjection;
 }
@@ -815,7 +819,7 @@ function curatedReaderProjection(
   if (held?.kind !== contractId) shapeProblems.push(`The projection kind does not match ${contractId}.`);
 
   const referenceSources = sourceReceipt.sources.filter((source) => source.sourceClass === "REFERENCE_PUBLISHER");
-  if (referenceSources.length > 0 && contractId === "member-offices") {
+  if (referenceSources.length > 0 && projectionFamily(contractId) === "member-offices") {
     if (records.some((row) => row.official !== false && referenceSources.some((source) => manualSourceUrls(source).includes(string(row.sourceUrl))))) {
       shapeProblems.push("A member office read from a reference publisher cannot be marked official.");
     }
@@ -831,7 +835,7 @@ function curatedReaderProjection(
   }
 
   for (const row of records) {
-    const issue = curatedRecordIssue(contractId, row);
+    const issue = curatedRecordIssue(projectionFamily(contractId) as CuratedReaderProjection["kind"], row);
     if (issue) shapeProblems.push(issue);
   }
   if (contractId === "everyday-routing") {
@@ -852,7 +856,7 @@ function curatedReaderProjection(
       ? string(row.bodyId)
       : contractId === "stances"
         ? string(row.personId)
-        : contractId === "campaign-sites" || contractId === "member-offices"
+        : contractId === "campaign-sites" || projectionFamily(contractId) === "member-offices"
         ? string(row.officeholderId)
         : contractId === "venue-resolutions"
           ? `${string(row.sourceId)}:${string(row.bodyOcdId) || string(row.tenant)}:${string(row.match)}`
@@ -884,7 +888,7 @@ function curatedReaderProjection(
           ? "ballot and where-to-vote official navigation"
           : contractId === "campaign-sites"
             ? "directory/map/ballot campaign-site binding"
-            : contractId === "member-offices"
+            : projectionFamily(contractId) === "member-offices"
               ? "directory/ballot/map state legislator capitol and district offices"
             : contractId === "venue-resolutions"
               ? "meeting acquisition venue-resolution dependency"

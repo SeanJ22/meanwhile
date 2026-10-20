@@ -42,6 +42,9 @@ export interface OpenDataProjection {
   readonly reports: readonly OpenDataReport[];
   /** Immutable reader slices become canonical through this source's promoted manifest. */
   readonly partitions?: readonly OpenDataPartitionRef[];
+  /** The release clock names state manifests, never every native partition. */
+  readonly stateScopes?: readonly string[];
+  readonly archive?: { readonly sha256: string; readonly member: string; readonly publishedAt: string | null };
 }
 export interface OpenDataPartitionRef {
   readonly id:string;
@@ -49,7 +52,7 @@ export interface OpenDataPartitionRef {
   readonly sha256:string;
   readonly count:number;
 }
-export const openDataScope = (source: OpenDataSource, partition = "national") => `${source}:${partition}`;
+export const openDataScope = (source: OpenDataSource, partition = "release") => `${source}:${partition}`;
 export const divisionPartition = (id: string) => `division:${id}`;
 export const zipPartition = (zip: string) => `zip:${zip}`;
 

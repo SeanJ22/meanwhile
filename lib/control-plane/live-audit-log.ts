@@ -6,6 +6,7 @@ import type { TaskPass } from "../health/resident-tasks.ts";
 import type { SpeedPass } from "../health/worst-case-speed.ts";
 import type { ClaimPass } from "./workers/claim-audit.ts";
 import type { LookPass } from "../frontend/look-pass.ts";
+import { withHistoryIndex } from "./workers/streamed-history.ts";
 
 export interface LiveAuditPull {
   readonly workItemId: string;
@@ -58,23 +59,8 @@ export async function recordLiveAuditPull(repos: LiveAuditRepos, pull: LiveAudit
   await repos.liveAudits.append(PULLS_KEY, `${pull.workItemId}:${pull.factId}@${pull.at}`, { kind: "PULL", pull }, pull.at);
 }
 
-export async function readAllLiveAuditPulls(repos: LiveAuditRepos): Promise<readonly LiveAuditPull[]> {
-  return (await repos.liveAudits.read(PULLS_KEY)).flatMap((row) => (row.kind === "PULL" ? [row.pull] : []));
-}
-
 export async function readLiveAuditPulls(repos: LiveAuditRepos, workItemId: string): Promise<readonly LiveAuditPull[]> {
-  return (await readAllLiveAuditPulls(repos)).filter((pull) => pull.workItemId === workItemId);
-}
-
-export async function readAuditWeek(repos: LiveAuditRepos, now: string): Promise<{ results: LiveAuditResult[]; corrections: AuditCorrection[] }> {
-  const [days, corrections] = await Promise.all([
-    Promise.all(weekDayKeys(now).map((key) => repos.liveAudits.read(key))),
-    repos.liveAudits.read(CORRECTIONS_KEY),
-  ]);
-  return {
-    results: days.flat().flatMap((row) => (row.kind === "RESULT" ? [row.result] : [])),
-    corrections: corrections.flatMap((row) => (row.kind === "CORRECTION" ? [row.correction] : [])),
-  };
+  return (await repos.liveAudits.readWhere(PULLS_KEY, ["pull", "workItemId"], workItemId)).flatMap(row => row.kind === "PULL" ? [row.pull] : []);
 }
 
 /** Keep one worst-case speed pass, by the day it ran. */
@@ -95,10 +81,6 @@ export async function readLatestSpeedPass(repos: LiveAuditRepos, now: string): P
 export async function recordTaskPass(repos: LiveAuditRepos, pass: TaskPass): Promise<void> {
   await repos.liveAudits.append(tasksDayKey(pass.at), `tasks@${pass.at}`, { kind: "TASKS", pass }, pass.at);
   for (const zip of pass.zips) await repos.liveAudits.append(TASK_ZIPS_KEY, `${zip}@${pass.at}`, { kind: "TASK_ZIP", zip, at: pass.at }, pass.at);
-}
-
-export async function readTaskZips(repos: LiveAuditRepos): Promise<Set<string>> {
-  return new Set((await repos.liveAudits.read(TASK_ZIPS_KEY)).flatMap((row) => (row.kind === "TASK_ZIP" ? [row.zip] : [])));
 }
 
 export async function readLatestTaskPass(repos: LiveAuditRepos, now: string): Promise<TaskPass | null> {
@@ -127,13 +109,22 @@ export async function recordLookPass(repos: LiveAuditRepos, pass: LookPass): Pro
   await repos.liveAudits.append(LOOKED_KEY, `${pass.sha}@${pass.at}`, { kind: "LOOKED", sha: pass.sha, at: pass.at, verdict: pass.verdict }, pass.at);
 }
 
-export async function readLookedCommits(repos: LiveAuditRepos): Promise<readonly { sha: string; at: string; verdict: LookPass["verdict"] }[]> {
-  return (await repos.liveAudits.read(LOOKED_KEY)).flatMap((row) => (row.kind === "LOOKED" ? [{ sha: row.sha, at: row.at, verdict: row.verdict }] : []));
+export async function readLatestLookPasses(repos: LiveAuditRepos, count = 1): Promise<LookPass[]> {
+  return withHistoryIndex(async db => {
+    db.exec("CREATE TABLE looked(sha TEXT PRIMARY KEY,at TEXT NOT NULL,sequence INTEGER NOT NULL)");
+    const insert = db.prepare(`INSERT INTO looked VALUES(?,?,?) ON CONFLICT(sha) DO UPDATE SET
+      sequence=CASE WHEN excluded.at>looked.at THEN excluded.sequence ELSE looked.sequence END,at=MAX(looked.at,excluded.at)`);
+    let sequence = 0;
+    await repos.liveAudits.readChangedSince(null, undefined, {projection: {kind: true, sha: true, at: true}, page: rows => {
+      for (const {key, record} of rows) if (key === LOOKED_KEY && record.kind === "LOOKED") insert.run(record.sha, record.at, sequence++);
+    }});
+    const passes: LookPass[] = [];
+    for (const row of db.prepare("SELECT sha FROM looked ORDER BY at DESC,sequence LIMIT ?").iterate(Math.max(0, count)))
+      for (const record of await repos.liveAudits.read(lookKey(row.sha))) if (record.kind === "LOOK") passes.push(record.pass);
+    return passes.sort((a, b) => b.at.localeCompare(a.at));
+  });
 }
 
-export async function readLatestLookPasses(repos: LiveAuditRepos, count = 1): Promise<LookPass[]> {
-  const looked = [...(await readLookedCommits(repos))].sort((a, b) => b.at.localeCompare(a.at));
-  const shas = [...new Set(looked.map((l) => l.sha))].slice(0, count);
-  const rows = (await Promise.all(shas.map((sha) => repos.liveAudits.read(lookKey(sha))))).flat();
-  return rows.flatMap((row) => (row.kind === "LOOK" ? [row.pass] : [])).sort((a, b) => b.at.localeCompare(a.at));
+export async function hasLookedCommit(repos: LiveAuditRepos, sha: string): Promise<boolean> {
+  return (await repos.liveAudits.readWhere(LOOKED_KEY, ["sha"], sha)).some(row => row.kind === "LOOKED");
 }

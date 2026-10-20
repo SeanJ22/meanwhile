@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { canonicalModelId } from "../models.ts";
 import { randomUUID } from "node:crypto";
 import { costEntryWithModel } from "../control-plane/cost.ts";
@@ -183,7 +184,7 @@ export async function translateMeasure(input: {
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
-  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
+  const kinds = runtimeKinds((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
   const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
     sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
     partKinds: kinds.measurePart }));

@@ -4,6 +4,16 @@ import type { AssignmentMembership as SendMembership } from "./expansion/assignm
 import type { WorkItemState } from "./work-item.ts";
 import { instructionReceiptKey } from "./scheduler/obligation.ts";
 import type { PlaceOwedItem } from "../coverage/place-owed.ts";
+import { DiskRows } from "./scheduler/disk-rows.ts";
+import { plannerMap, type PlannerSpool } from "./scheduler/planner-spool.ts";
+
+let nextCompletion = 0;
+function* assigned<T extends MemberCandidate>(rows: Iterable<T>, key: string): IterableIterator<T> {
+  for (const row of rows) if ((row.assignments ?? []).some(mark => mark.assignmentKey === key)) yield row;
+}
+function sample<T extends { readonly obligationId: string }>(rows: T[], value: T): void {
+  rows.push(value); rows.sort((a, b) => a.obligationId.localeCompare(b.obligationId)); if (rows.length > COMPLETION_EXCEPTION_CAP) rows.pop();
+}
 
 export interface AssignmentMembership {
   readonly assignmentKey: string;
@@ -60,47 +70,30 @@ export function memberObligations<T extends MemberCandidate>(obligations: readon
 
 export function evaluateAssignmentCompletion(input: {
   readonly assignmentKey: string;
-  readonly obligations: readonly MemberCandidate[];
+  readonly obligations: Iterable<MemberCandidate>;
   readonly snapshotFor: (obligationId: string) => CompletionSnapshot | null;
   readonly proposedState?: WorkItemState;
 }): AssignmentCompletion {
-  const members = memberObligations(input.obligations, input.assignmentKey);
-  if (members.length === 0) {
-    return {
-      kind: "NO_MEMBERS",
-      assignmentKey: input.assignmentKey,
-      says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done.",
-    };
-  }
   const proposed = input.proposedState ?? "VERIFIED_COMPLETE";
-  const exceptions: CompletionException[] = [];
-  const satisfied: { obligationId: string; clauses: readonly string[] }[] = [];
-  for (const member of members) {
+  const exceptions: CompletionException[] = [], satisfied: { obligationId: string; clauses: readonly string[] }[] = [];
+  let members = 0, settled = 0, refusedCount = 0, unsettledCount = 0;
+  for (const member of assigned(input.obligations, input.assignmentKey)) {
+    members += 1;
     const snapshot = input.snapshotFor(member.id);
     if (snapshot === null) {
-      exceptions.push({
-        obligationId: member.id,
-        kind: "UNSETTLED",
-        codes: [],
-        says: "No work item was read for this obligation, so whether it is finished cannot be evaluated.",
-      });
+      unsettledCount += 1;
+      sample(exceptions, { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "No work item was read for this obligation, so whether it is finished cannot be evaluated." });
       continue;
     }
     const verdict = evaluateCompletion(snapshot, proposed);
-    if (verdict.mayComplete) {
-      satisfied.push({ obligationId: member.id, clauses: verdict.satisfied });
-      continue;
-    }
-    exceptions.push({
-      obligationId: member.id,
-      kind: "REFUSED",
-      codes: [...new Set(verdict.refusals.map((r) => r.code))],
-      says: verdict.refusals.map((r) => `${r.code} (${r.subject})`).join("; "),
-    });
+    if (verdict.mayComplete) { settled += 1; sample(satisfied, { obligationId: member.id, clauses: verdict.satisfied }); continue; }
+    refusedCount += 1;
+    sample(exceptions, { obligationId: member.id, kind: "REFUSED", codes: [...new Set(verdict.refusals.map(r => r.code))], says: verdict.refusals.map(r => `${r.code} (${r.subject})`).join("; ") });
   }
-  return exceptions.length === 0
-    ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied }
-    : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length, settled: satisfied.length, exceptions };
+  if (members === 0) return { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done." };
+  return refusedCount + unsettledCount === 0
+    ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members, satisfied }
+    : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled, exceptions, refusedCount, unsettledCount };
 }
 
 export function assignmentCompletionWords(c: AssignmentCompletion): string {
@@ -126,25 +119,22 @@ export interface MemberRecord {
 }
 
 /** A newly created obligation may be missing from the cycle's earlier snapshot; it is still an unsettled member. */
-export function memberRecordsForSend(
-  key: string,
-  membership: SendMembership,
-  records: readonly MemberRecord[],
-  ref?: string,
-): MemberRecord[] {
-  const slot = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key,ref));
-  if (!slot) return [];
-  const byId = new Map(records.map((record) => [record.id, record]));
-  return [...slot.created.values(), ...slot.reordered.values()].map((member) => {
-    const held = byId.get(member.obligationId);
-    const relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
-    return {
-      ...held,
-      id: member.obligationId,
-      ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
-      assignments: [...(held?.assignments ?? []), { assignmentKey: key, relation, at: member.joinedAt }],
-    };
-  });
+export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref: string | undefined, planner: PlannerSpool): DiskRows<MemberRecord>;
+export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref?: string): MemberRecord[];
+export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref?: string, planner?: PlannerSpool): MemberRecord[] | DiskRows<MemberRecord> {
+  const slot = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key, ref));
+  const prefix = `completion-${nextCompletion++}`;
+  if (!slot) return planner ? new DiskRows(() => [], () => 0) : [];
+  const byId = planner ? plannerMap<MemberRecord>(planner, `${prefix}-records`) : new Map<string, MemberRecord>();
+  for (const row of records) byId.set(row.id, row);
+  const out = planner?.table<MemberRecord>(`${prefix}-members`, row => row.id), native: MemberRecord[] = [];
+  for (const member of (function* () { yield* slot.created.values(); yield* slot.reordered.values(); })()) {
+    const held = byId.get(member.obligationId), relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
+    const row = { ...held, id: member.obligationId, ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
+      assignments: [...(held?.assignments ?? []), { assignmentKey: key, relation, at: member.joinedAt }] };
+    if (out) out.add(row); else native.push(row);
+  }
+  return out ? out.rows : native;
 }
 
 export interface MemberDebt {
@@ -158,52 +148,28 @@ export const COMPLETION_EXCEPTION_CAP = 12;
 
 export function evaluateAssignmentFromRecords(input: {
   readonly assignmentKey: string;
-  readonly obligations: readonly MemberRecord[];
+  readonly obligations: Iterable<MemberRecord>;
   readonly debtFor: (obligationId: string) => MemberDebt | null;
   readonly now: string;
 }): AssignmentCompletion {
-  const members = memberObligations(input.obligations, input.assignmentKey);
-  if (members.length === 0) {
-    return {
-      kind: "NO_MEMBERS",
-      assignmentKey: input.assignmentKey,
-      says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done.",
-    };
-  }
   const exceptions: CompletionException[] = [];
-  let settled = 0;
-  for (const member of members) {
+  let members = 0, settled = 0, refusedCount = 0, unsettledCount = 0;
+  for (const member of assigned(input.obligations, input.assignmentKey)) {
+    members += 1;
     const debt = input.debtFor(member.id);
-    if (debt !== null && debt.consecutiveFailures > 0) {
-      exceptions.push({
-        obligationId: member.id,
-        kind: "REFUSED",
-        codes: [],
-        says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}`,
-      });
-    } else if (member.absentUntil && Date.parse(member.absentUntil) > Date.parse(input.now)) {
-      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: `recorded as absent until ${member.absentUntil}; an argued absence is not a record held` });
-    } else if (!member.lastWorkedAt) {
-      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "not worked yet" });
-    } else if (member.instructionJoinedAt && Date.parse(member.lastWorkedAt) < Date.parse(member.instructionJoinedAt)) {
-      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "the last completed source round predates this instruction; no new completion or explicit reuse receipt is recorded" });
-    } else if (member.openOccurrenceId) {
-      exceptions.push({ obligationId: member.id, kind: "UNSETTLED", codes: [], says: "a round of work is open on it now" });
-    } else {
-      settled += 1;
-    }
+    let exception: CompletionException | null = null;
+    if (debt !== null && debt.consecutiveFailures > 0) exception = { obligationId: member.id, kind: "REFUSED", codes: [],
+      says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}` };
+    else if (member.absentUntil && Date.parse(member.absentUntil) > Date.parse(input.now)) exception = { obligationId: member.id, kind: "UNSETTLED", codes: [], says: `recorded as absent until ${member.absentUntil}; an argued absence is not a record held` };
+    else if (!member.lastWorkedAt) exception = { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "not worked yet" };
+    else if (member.instructionJoinedAt && Date.parse(member.lastWorkedAt) < Date.parse(member.instructionJoinedAt)) exception = { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "the last completed source round predates this instruction; no new completion or explicit reuse receipt is recorded" };
+    else if (member.openOccurrenceId) exception = { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "a round of work is open on it now" };
+    if (exception) { if (exception.kind === "REFUSED") refusedCount += 1; else unsettledCount += 1; sample(exceptions, exception); }
+    else settled += 1;
   }
-  return exceptions.length === 0
-    ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied: [] }
-    : {
-        kind: "NOT_COMPLETE",
-        assignmentKey: input.assignmentKey,
-        members: members.length,
-        settled,
-        exceptions: exceptions.slice(0, COMPLETION_EXCEPTION_CAP),
-        refusedCount: exceptions.filter((e) => e.kind === "REFUSED").length,
-        unsettledCount: exceptions.filter((e) => e.kind === "UNSETTLED").length,
-      };
+  if (members === 0) return { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done." };
+  return refusedCount + unsettledCount === 0 ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members, satisfied: [] }
+    : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled, exceptions, refusedCount, unsettledCount };
 }
 
 export function isUnfilledRow(item: PlaceOwedItem): boolean {
@@ -213,48 +179,37 @@ export function isUnfilledRow(item: PlaceOwedItem): boolean {
   return item.statuses.published !== "awaiting-publication" && item.statuses.published !== "not-published";
 }
 
-export function missionMapCount(items: readonly PlaceOwedItem[], before: number | null): MissionMapCount {
-  const unfilled = items.filter(isUnfilledRow);
-  return { owed: items.length, unfilled: unfilled.length, stale: unfilled.filter((item) => item.state === "stale").length,
-    before: before ?? unfilled.length };
+export function missionMapCount(items: Iterable<PlaceOwedItem>, before: number | null): MissionMapCount {
+  let owed = 0, unfilled = 0, stale = 0;
+  for (const item of items) { owed += 1; if (isUnfilledRow(item)) { unfilled += 1; if (item.state === "stale") stale += 1; } }
+  return { owed, unfilled, stale, before: before ?? unfilled };
 }
 
 /** Done only when the map has no unfilled row and every door it opened has a next read; a map that was not read is never Done. */
 export function evaluateMissionDone(input: {
   readonly assignmentKey: string;
-  readonly obligations: readonly MemberRecord[];
+  readonly obligations: Iterable<MemberRecord>;
   readonly debtFor: (obligationId: string) => MemberDebt | null;
   readonly map: MissionMapCount | { readonly unreadable: string };
 }): AssignmentCompletion {
-  const members = memberObligations(input.obligations, input.assignmentKey);
-  if ("unreadable" in input.map) {
-    const why = input.map.unreadable;
-    return members.length === 0
-      ? { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: `The mission map was not read (${why}), so nothing can be shown finished.` }
-      : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length, settled: 0, refusedCount: 0, unsettledCount: members.length,
-        exceptions: members.slice(0, COMPLETION_EXCEPTION_CAP).map((member) => ({ obligationId: member.id, kind: "UNSETTLED" as const, codes: [],
-          says: `the mission map was not read (${why.slice(0, 160)})` })) };
+  let members = 0, unscheduled = 0, failing = 0;
+  const missing: CompletionException[] = [], failures: CompletionException[] = [];
+  for (const member of assigned(input.obligations, input.assignmentKey)) {
+    members += 1;
+    if ("unreadable" in input.map) { sample(missing, { obligationId: member.id, kind: "UNSETTLED", codes: [], says: `the mission map was not read (${input.map.unreadable.slice(0, 160)})` }); continue; }
+    if (!member.nextDueAt && !member.openOccurrenceId) { unscheduled += 1; sample(missing, { obligationId: member.id, kind: "UNSETTLED", codes: [], says: "no next read is scheduled for this door" }); }
+    const debt = input.debtFor(member.id);
+    if (debt && debt.consecutiveFailures > 0) { failing += 1; sample(failures, { obligationId: member.id, kind: "REFUSED", codes: [],
+      says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}` }); }
   }
+  if ("unreadable" in input.map) return members === 0
+    ? { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: `The mission map was not read (${input.map.unreadable}), so nothing can be shown finished.` }
+    : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled: 0, refusedCount: 0, unsettledCount: members, exceptions: missing };
   const map = input.map;
-  if (members.length === 0 && map.owed === 0) {
-    return { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: "Nothing is owed or assigned yet, so nothing can be shown finished. An empty set of work is not evidence that the work is done." };
-  }
-  const unscheduled = members.filter((member) => !member.nextDueAt && !member.openOccurrenceId);
-  const failing = members.filter((member) => (input.debtFor(member.id)?.consecutiveFailures ?? 0) > 0);
-  if (map.unfilled === 0 && unscheduled.length === 0) {
-    return { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied: [], map };
-  }
-  const exceptions: CompletionException[] = [
-    ...unscheduled.map((member) => ({ obligationId: member.id, kind: "UNSETTLED" as const, codes: [], says: "no next read is scheduled for this door" })),
-    ...failing.map((member) => {
-      const debt = input.debtFor(member.id)!;
-      return { obligationId: member.id, kind: "REFUSED" as const, codes: [],
-        says: `its last ${debt.consecutiveFailures} ${debt.consecutiveFailures === 1 ? "attempt" : "attempts"} failed (${debt.detail.slice(0, 160)}); the next try is at ${debt.retryAt}` };
-    }),
-  ];
-  return { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length,
-    settled: members.length - unscheduled.length, exceptions: exceptions.slice(0, COMPLETION_EXCEPTION_CAP),
-    refusedCount: failing.length, unsettledCount: map.unfilled + unscheduled.length, map };
+  if (members === 0 && map.owed === 0) return { kind: "NO_MEMBERS", assignmentKey: input.assignmentKey, says: "Nothing is owed or assigned yet, so nothing can be shown finished. An empty set of work is not evidence that the work is done." };
+  if (map.unfilled === 0 && unscheduled === 0) return { kind: "COMPLETE", assignmentKey: input.assignmentKey, members, satisfied: [], map };
+  return { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members, settled: members - unscheduled,
+    exceptions: [...missing, ...failures].slice(0, COMPLETION_EXCEPTION_CAP), refusedCount: failing, unsettledCount: map.unfilled + unscheduled, map };
 }
 
 export function missionDoneWords(c: AssignmentCompletion): string {

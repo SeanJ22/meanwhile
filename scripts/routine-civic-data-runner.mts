@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { FEDERAL_PEOPLE_SPLIT_LOG_KEY, federalPeopleSplitRecord, federalPeopleSplitRecorded } from "../lib/civic-data/federal-people-split.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.ts";
@@ -62,19 +63,18 @@ import {
   MEETING_PARTITION_CONTRACTS,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
+import { RUNTIME_ROUTINE_CONTRACTS } from "../lib/civic-data/runtime-routine-contracts.ts";
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
-import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
-import { isDoorRecord } from "../lib/doors/registry.ts";
+import { withObservedDoorRates } from "../lib/doors/observed-rate.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
 import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
-import { listDoors } from "../lib/doors/registry.ts";
+import { visitDoorRecords } from "../lib/doors/streamed-read.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -88,6 +88,7 @@ import {
 } from "../lib/civic-data/bounded-child-pass.ts";
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
+  createHotReadRepairGuard,
   hotReadCatchUpAdmission,
   repairDomainRacesHotReads,
   routinePassSourceCatchUpDeadlineMs,
@@ -114,7 +115,7 @@ import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
-import { stateOfPlace } from "../lib/method/fix-map.ts";
+import { parseMeetingDerivationContractId } from "../lib/civic-data/meeting-derivation-scope.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
@@ -214,7 +215,7 @@ if (controlPlaneUrlFromEnv() === null) {
 if (controlPlaneUrlFromEnv() !== null) {
   try {
     const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
+    const owner = await withControlPlaneConnectRetry(() => readRuntimeAdminConfig(clockRepos, ["settings"]));
     installMeetingClockFrom(owner !== null && isAdminConfig(owner.value) ? owner.value : null);
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the meeting check clock could not be read, so this pass uses the last installed one — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
@@ -223,7 +224,7 @@ if (controlPlaneUrlFromEnv() !== null) {
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
   // The installed doors' meeting partitions are already among the routine tasks: installing doors rebuilds that list.
   ...ROUTINE_SOURCE_TASKS.filter((task) => task.id !== MEETING_DOORS_CONTRACT_ID),
-  ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
+  ...RUNTIME_ROUTINE_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
 ], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
@@ -276,31 +277,6 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   }
 })() : null;
 
-const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
-if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
-  try {
-    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
-    if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
-      const [published] = await runBoundedChildPass([{
-        id: MEETING_DOORS_CONTRACT_ID,
-        failureDomain: "derived:meeting-doors",
-        executable: process.execPath,
-        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
-        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
-      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
-      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
-    }
-    await refreshDoorsForPass(doorRepos.doors);
-  } catch (error) {
-    console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
-  }
-}
-
-const sharedBrowser = sharedScoutBrowser();
-const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
-  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
-    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
@@ -321,17 +297,45 @@ function releaseChildMemory(id: string): void {
   startedSourceChildren.delete(id);
 }
 
-async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
+const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+    if (!PUBLISH_NOW) {
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
+      const [published] = await runBoundedChildPass([{
+        id: MEETING_DOORS_CONTRACT_ID,
+        failureDomain: "derived:meeting-doors",
+        executable: process.execPath,
+        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
+        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
+      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+        onStarting: acquireChildMemory, onSettled: run => releaseChildMemory(run.id) });
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
+    }
+    await refreshDoorsForPass(doorRepos.doors);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
+  }
+}
+
+const sharedBrowser = sharedScoutBrowser();
+const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
+  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
+
+async function observedChangeRateRepository() {
   const connection = controlPlaneUrlFromEnv();
-  if (connection === null) return new Map();
+  if (connection === null) return null;
   try {
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    const rows = await (await doorOutcomeRepos).doors.list();
-    return observedChangeMinutesByDoor(rows.map((row) => row.value).filter(isDoorRecord));
+    return (await doorOutcomeRepos).doors;
   } catch (error) {
-    console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
-    return new Map();
+    observedRatesUnreadable(error); return null;
   }
+}
+function observedRatesUnreadable(error: unknown): void {
+  console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
 }
 
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
@@ -444,8 +448,8 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) throw new Error(`${CONTROL_PLANE_URL_VAR} is not configured`);
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-  const row = await withControlPlaneConnectRetry(() => repos.adminConfig.read(ADMIN_CONFIG_ID));
-  return parseRoutineDueRequests(row?.value.routineDueRequests);
+  const row = await withControlPlaneConnectRetry(() => repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, { routineDueRequests: true }));
+  return parseRoutineDueRequests((row?.value as { routineDueRequests?: unknown } | undefined)?.routineDueRequests);
 }
 
 /** The publish-now outbox's cursor, and where this pass started reading; a process failure keeps it, so that window is read again. */
@@ -500,7 +504,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     if (PUBLISH_NOW) publishNowPassStartedAt = startedAt;
     try {
       const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
-        fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
+        fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await readRuntimeAdminConfig(repos, ["settings"]))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS });
       if (box.looked) console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);
     } catch (error) {
@@ -522,11 +526,15 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
     // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
     try {
-      const listed = (await listDoors(repos.doors)).doors;
       const clockStore = new PostgresRoutineDataStore();
-      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
-      const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()),
-        pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString());
+      const hot = await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now());
+      const report = { looked: 0, changed: 0, unchanged: 0, failed: 0, waiting: 0, deferred: 0, requests: 0 };
+      let fetchProbe = pacedProbeFetch({ pacing: repos.websitePacing });
+      const checkedAt = new Date().toISOString();
+      await visitDoorRecords(repos.doors, async (door, cache) => {
+        const part = await runHourlyProbes(repos.doors, [door], hot, fetchProbe, checkedAt, cache);
+        for (const key of Object.keys(report) as (keyof typeof report)[]) report[key] += part[key];
+      }, "CHECKED", states => { fetchProbe = pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSizeFromHoldings(states) }); });
       if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
         console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
           `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
@@ -534,10 +542,16 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     } catch (error) {
       console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
-    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
-      MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+    const changed = new Map<string, RoutineSourceTask>();
+    await visitDoorRecords(repos.doors, async door => {
+      for (const task of publishNowDoorTasks([door], MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)) {
+        const prior = changed.get(task.id);
+        if (!prior || (task.ownerInvocation?.requestedAt ?? "") > (prior.ownerInvocation?.requestedAt ?? "")) changed.set(task.id, task);
+      }
+    });
+    return [...publication, ...changed.values()];
   }
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await readRuntimeAdminConfig(repos, ["expansionScopes"]);
   if (row === null) return [];
   if (!isAdminConfig(row.value)) throw new Error("the owner's policy row is unreadable");
   const held = expansionScopesOf(row.value);
@@ -704,7 +718,8 @@ if (!PUBLISH_NOW) {
         const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, failureDomain: "derived:federal-people-split",
           executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
           env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
-        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+          onStarting: acquireChildMemory, onSettled: run => releaseChildMemory(run.id) });
         const at = new Date().toISOString(), record = run ? federalPeopleSplitRecord(run, at, RUNNING_CODE_SHA) : null;
         if (record) {
           await splitRepos.ownerDigests.append(FEDERAL_PEOPLE_SPLIT_LOG_KEY, record.digestId, record, at);
@@ -722,7 +737,7 @@ if (!PUBLISH_NOW) {
     const connection = controlPlaneUrlFromEnv();
     if (connection) {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-      const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
+      const common = { facts, clocks: factClocks((await readRuntimeAdminConfig(repos, ["settings"]))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT };
       const report = (label: string, value: Awaited<ReturnType<typeof importCartonRosters>>) => {
         console.log(`fact store ${label}: ${value.live} facts live, ${value.confirmed} confirmed, ${value.blanks} blanks, ${value.unreadable.length} pages unreadable`);
@@ -837,9 +852,13 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
-    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id)), settledAt);
+    const marked: RoutineDueRequest[] = [], derive: RoutineDueRequest[] = [];
+    const known = new Set(MEETING_PARTITION_CONTRACTS.map(contract => contract.id)), knownDerive = new Set(DOOR_DERIVE_CONTRACT_IDS);
     // A door edited in Admin asks for the two derive steps now, not on their six-hour clock.
-    const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
+    await visitDoorRecords(doorRepos.doors, async door => {
+      marked.push(...readNowDueRequests([door], known, settledAt));
+      derive.push(...editDeriveDueRequests([door], knownDerive, settledAt));
+    });
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
   } catch (error) {
@@ -848,7 +867,7 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
 }
 const honouredDueRequests = new Map<string, RoutineDueRequest>();
 let meetingDiscoveryInputs: MeetingDiscoveryInputs | null = null;
-if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-derived" || task.id === "meeting-source-wiring")) {
+if (!FORCE && selectedTasks.some(task => parseMeetingDerivationContractId(task.id) !== null)) {
   try {
     const connection = controlPlaneUrlFromEnv();
     if (connection) {
@@ -928,7 +947,7 @@ if (selectedTasks.length > 0) try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
-const observedChangeRates = await readObservedChangeRates();
+await withObservedDoorRates(await observedChangeRateRepository(), async observedChangeRate => {
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -947,7 +966,7 @@ for (const read of clockReads) {
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
-  const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
+  const observedChange = observedChangeRate(task.id) ?? observedChangeRate(`feed:${task.id}`);
   const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs.get(task.id) ?? null);
   const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
@@ -991,6 +1010,7 @@ for (const read of clockReads) {
     },
   });
 }
+}, observedRatesUnreadable);
 
 // A meeting lane is read earliest deadline first, up to three a pass; a requested partition's
 // deadline is the earlier of its own and the request's.
@@ -1256,8 +1276,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
 }
 
-// Reader delivery is its own OS-killable evidence domain: one child per non-meeting Reader, one shared
-// child for all meeting partitions (the Reader composes them together once).
+// Reader delivery is its own OS-killable evidence domain: one child per non-meeting Reader,
+// and one child per state's meeting partitions.
 const readerContracts = selectedReaderRepairContracts([
   ...observableRoutineContracts(),
   ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
@@ -1323,22 +1343,19 @@ const hotReadTasks = FORCE || PUBLISH_NOW
   ? []
   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
 const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
+const hotReadRepairGuard = createHotReadRepairGuard(hotReadTasks);
 const readerLaunch = [
   ...readerDomains.filter((domain) => repairDomainRacesHotReads(domain, hotReadTaskIds)),
   ...readerDomains.filter((domain) => !repairDomainRacesHotReads(domain, hotReadTaskIds)),
 ];
 
-/** Once the source reads have settled: launch the Reader readbacks, racing repairs first; the gate opens when those settle. */
+/** Repair each Reader while unrelated places continue their due source reads. */
 function startReaderRepair(
   sourceRuns: readonly BoundedChildResult[],
-): { readonly repair: Promise<readonly BoundedChildResult[]>; readonly unblocked: Promise<void> } {
+): { readonly repair: Promise<readonly BoundedChildResult[]>; readonly unblocked: Promise<void>; readonly changed: () => Promise<void> } {
   recordSourceSettlementFailures(sourceRuns);
   step = "running the Reader readbacks";
   const readerObservedAt = new Date().toISOString();
-  let racingRepairs = readerLaunch.filter((domain) => repairDomainRacesHotReads(domain, hotReadTaskIds)).length;
-  let openHotReadCatchUp: () => void = () => undefined;
-  const hotReadCatchUpOpen = new Promise<void>((resolve) => { openHotReadCatchUp = resolve; });
-  if (racingRepairs === 0) openHotReadCatchUp();
   const readerPass = runBoundedChildPass(
     readerLaunch.map((domain) => ({
       id: domain.id,
@@ -1348,6 +1365,7 @@ function startReaderRepair(
         "scripts/routine-civic-data-reader-repair.mts",
         domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
         ...(domain.mode === "MEETING_AGGREGATE" ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
+        ...(domain.state ? [`--state=${domain.state}`] : []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
@@ -1364,7 +1382,9 @@ function startReaderRepair(
       deadlineMs: PASS_REPAIR_DEADLINE_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-      onStarting: async (command) => {
+      onStarting: async (command, index) => {
+        if (Date.now() >= PASS_REPAIR_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent; the next pass repairs this reader");
+        await hotReadRepairGuard.beforeRepair(readerLaunch[index]!);
         if (Date.now() >= PASS_REPAIR_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent; the next pass repairs this reader");
         await acquireChildMemory(command);
       },
@@ -1374,13 +1394,13 @@ function startReaderRepair(
           settleReaderDomain(domain, run);
         } finally {
           releaseChildMemory(run.id);
-          if (repairDomainRacesHotReads(domain, hotReadTaskIds) && --racingRepairs === 0) openHotReadCatchUp();
+          hotReadRepairGuard.finishRepair(domain);
         }
       },
       discardOutputAfterSettlement: true,
     },
   );
-  return { repair: readerPass, unblocked: hotReadCatchUpOpen };
+  return { repair: readerPass, unblocked: Promise.resolve(), changed: hotReadRepairGuard.changed };
 }
 
 const hotReadClocks = new Map(clockReads.flatMap((read) => read.ok ? [[read.task.id, read.clock] as const] : []));
@@ -1396,7 +1416,7 @@ function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number,
   const plan = hotReadCatchUpAdmission({
     nowMs,
     candidates: hotReadTasks
-      .filter(({ id }) => !launchedTaskIds.has(id))
+      .filter((task) => !launchedTaskIds.has(task.id) && hotReadRepairGuard.canRead(task))
       .map((task) => ({
         task,
         clock: routineAdmissionClock(hotReadClocks.get(task.id), supervisorAttempts.get(task.id), nowMs),
@@ -1422,29 +1442,34 @@ function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number,
 
 /** One catch-up read: launched and settled exactly as the pass's own. */
 async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> {
-  const run: PendingRun = {
-    kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",
-    id: task.id,
-    command: task.command,
-    task,
-  };
-  launchedTaskIds.add(run.id);
-  attempted += 1;
-  console.log(
-    `RCD_PASS catch-up at ${new Date(atMs).toISOString()}: launching 1 due meeting read(s) while the pass is held open; ` +
-      `concurrency=${HOT_READ_CATCH_UP_CONCURRENCY}`,
-  );
-  recordSourceSettlementFailures(await runBoundedChildPass([sourceChildCommand(run)], {
-    cwd: ROOT,
-    env: process.env,
-    timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
-    deadlineMs: hotReadLimitsMs.REPAIR,
-    maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
-    concurrency: 1,
-    onStarting: acquireChildMemory,
-    onSettled: async (result) => settlePendingRun(run, result),
-    discardOutputAfterSettlement: true,
-  }));
+  const endRead = hotReadRepairGuard.beginRead(task);
+  try {
+    const run: PendingRun = {
+      kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",
+      id: task.id,
+      command: task.command,
+      task,
+    };
+    launchedTaskIds.add(run.id);
+    attempted += 1;
+    console.log(
+      `RCD_PASS catch-up at ${new Date(atMs).toISOString()}: launching 1 due meeting read(s) while the pass is held open; ` +
+        `concurrency=${HOT_READ_CATCH_UP_CONCURRENCY}`,
+    );
+    recordSourceSettlementFailures(await runBoundedChildPass([sourceChildCommand(run)], {
+      cwd: ROOT,
+      env: process.env,
+      timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+      deadlineMs: hotReadLimitsMs.REPAIR,
+      maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
+      concurrency: 1,
+      onStarting: acquireChildMemory,
+      onSettled: async (result) => settlePendingRun(run, result),
+      discardOutputAfterSettlement: true,
+    }));
+  } finally {
+    endRead();
+  }
 }
 
 const pass = await runRoutinePassWithHotReadCatchUp({

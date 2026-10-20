@@ -8,7 +8,8 @@ import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/cam
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { appendTransition, contextFromRepositories, readPipelineStates, scoutResultItemId } from "../lib/control-plane/promotion/pipeline.ts";
+import { appendTransition, scoutResultItemId } from "../lib/control-plane/promotion/pipeline.ts";
+import { contextFromRepositories, readPipelineStates } from "./helpers/pipeline.ts";
 import { PROMOTION_PIPELINE_FORMAT_VERSION, type ScoutedRecord } from "../lib/control-plane/promotion/types.ts";
 import { CAMPAIGN_SITE_RECORD_CLASS, discoveryPointerItemId, profileCampaignSiteLeads, type CampaignSiteApprovedRecord } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -22,6 +23,7 @@ import {
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
 import { findHeldCapture, heldVaultIndex, indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { runCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
+import { readCandidatePublicationVault, runScopedCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-vault.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureIssue, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
 import { campaignSiteReadRecorder } from "../lib/control-plane/promotion/campaign-site-reads.ts";
@@ -667,14 +669,16 @@ test("already captured linked pages from another job reach the corpus without a 
   }
   const vault = await indexVault(p.vaultRoot);
   const before = (await p.repos.artifacts.readAll()).length;
+  const scopedVault = await readCandidatePublicationVault(p.repos, p.vaultRoot, TANG_WILLIAMS);
+  assert.deepEqual(candidatePublicationCaptureUrls(links, scopedVault), candidatePublicationCaptureUrls(links, vault));
   const sourceUrls: string[] = [];
   const cycleRepos = { ...p.repos, artifacts: { ...p.repos.artifacts,
     readAll: async () => { throw new Error("No artifact history scan is allowed"); } },
     artifactsByCanonicalUrl: async (url: string, limit: number) => {
       sourceUrls.push(url); return p.repos.artifactsByCanonicalUrl!(url, limit);
     } };
-  const reused = await runCandidatePublicationCycle({ repos: cycleRepos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
-    heldVault: vault, vaultRoot: p.vaultRoot, methodVersion: 1, clock: () => Date.parse(PUBLISH), sleep: async () => {},
+  const reused = await runScopedCandidatePublicationCycle({ repos: cycleRepos, eligibleCandidacyIds: new Set([TANG_WILLIAMS]),
+    vaultRoot: p.vaultRoot, methodVersion: 1, clock: () => Date.parse(PUBLISH), sleep: async () => {},
     openFor: () => { throw new Error("Valid held pages must not start a new HTTP acquisition"); } });
   assert.equal(reused.acquired, 0);
   assert.equal(reused.due, 0);
@@ -729,6 +733,31 @@ test("already captured linked pages from another job reach the corpus without a 
     assert.equal(refused.plan!.records.some(row => row.publications?.some(publication => publication.evidence.artifactId === bad.record.artifactId)), false);
   }
   assert.notEqual(candidatePublicationCaptureIssue({ ...link, source: { ...link.source, quote: "forged href" } }, primary, capture), null);
+});
+
+test("separate candidacy vault reads preserve the global oldest-link order and the pass read bound", async t => {
+  const p = await plane(t);
+  await captureProfile(p);
+  const pages = { ...served(),
+    [LILY]: { status: 200, body: fixture("lilytangwilliams-endorsements.live.html").replaceAll('href="', 'data-prior="') + '<a href="/issues">Issues</a>' },
+    [KAPNER_ROOT]: { status: 200, body: fixture("kapner4mendhamtwp-root.live.html").replaceAll('href="', 'data-prior="') + '<p>Gary Kapner for Mendham Township Committee in the 2026 election, New Jersey.</p><a href="/issues">Issues</a>' },
+    "https://www.lilytangwilliams.com/issues": { status: 200, body: "<main>Campaign priorities and public statements.</main>" },
+    "https://www.kapner4mendhamtwp.com/issues": { status: 200, body: "<main>Campaign priorities and public statements.</main>" },
+  };
+  await cycle(p, T1, {}, pages); await cycle(p, T2, {}, pages);
+  const loaded: string[] = [], opened: string[] = [], web = servedRuntime(pages, PUBLISH);
+  const report = await runScopedCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([KAPNER, TANG_WILLIAMS]),
+    vaultRoot: p.vaultRoot, methodVersion: 1, clock: () => Date.parse(PUBLISH), sleep: async () => {}, maxReads: 1,
+    readVault: async id => { loaded.push(id); return readCandidatePublicationVault(p.repos, p.vaultRoot, id); },
+    openFor: () => async request => { if (!request.url.endsWith("robots.txt")) opened.push(request.url); return web.get(request); } });
+  assert.equal(report.due, 2); assert.equal(report.acquired, 1); assert.equal(report.deferred, 1);
+  assert.deepEqual(opened, ["https://www.lilytangwilliams.com/issues"], "the oldest tie is resolved globally even when its candidacy was inventoried second");
+  assert.deepEqual(loaded, [KAPNER, TANG_WILLIAMS, TANG_WILLIAMS], "inventory releases one place before loading the next, then reopens only the selected place");
+  const later = await runScopedCandidatePublicationCycle({ repos: p.repos, eligibleCandidacyIds: new Set([TANG_WILLIAMS, KAPNER]),
+    vaultRoot: p.vaultRoot, methodVersion: 1, clock: () => Date.parse(PUBLISH) + 8 * 24 * 60 * 60_000, sleep: async () => {}, maxReads: 1,
+    openFor: () => async request => { if (!request.url.endsWith("robots.txt")) opened.push(request.url); return web.get(request); } });
+  assert.equal(later.acquired, 1); assert.equal(later.deferred, 1);
+  assert.deepEqual(opened.at(-1), "https://www.kapner4mendhamtwp.com/issues", "an unattempted link wins ahead of a different candidacy's expired prior read");
 });
 
 test("a blocked first linked page records a route Attempt and yields the next page on the next bounded pass", async (t) => {
@@ -1037,6 +1066,7 @@ test("the linked-publication pass reads rows in proportion to its candidacies, n
       target: "https://example.org/", attemptIds: [`at-noise-${i}`] } as never, at);
     await p.repos.attempts.put(`at-noise-${i}`, { id: `at-noise-${i}`, startedAt: at, worker: { role: "SCOUT" }, outcome: "ABORTED", artifactIds: [] } as never, at);
     await p.repos.promotionPipeline.append(`pp-noise-${i}`, `pp-noise-${i}:approved`, { itemId: `pp-noise-${i}`,
+      formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, subjectId: `other-${i}`, campaignSite: { field: "campaignSite" },
       recordId: `pp-noise-${i}:approved`, stage: "APPROVED_FOR_PROMOTION", recordClass: "official-fact" } as never, at);
   }
   const large = await pass();

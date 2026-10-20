@@ -265,8 +265,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
 
   /* 5a. The automatic crosswalk promotes through the routine door. */
   const crosswalkPlan = planDerivedCrosswalk({ previous: [], reviews });
-  const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK);
-  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", crosswalkCandidate, T_CROSSWALK);
+  const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK, "OH");
+  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived:OH", crosswalkCandidate, T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
   assert.equal(crosswalkOutcome.readerReadback?.status, "PASS", JSON.stringify(crosswalkOutcome.readerReadback));
   /* The held city is on the version's durable record, with its dead end: what Admin's held records show. */
@@ -276,11 +276,11 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal((heldFact?.record as { whoMovesNext?: string } | undefined)?.whoMovesNext, "a reviewing agent session");
 
   /* 5b. The wiring derives from the automatic rows, no reviewed crosswalk promoted at all. */
-  const automatic = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now: T_WIRING });
+  const automatic = await readDerivedMeetingBodyCrosswalk({ state: "OH", store, bypassCache: true, now: T_WIRING });
   assert.equal(automatic.kind, "PROMOTED");
   if (automatic.kind !== "PROMOTED") return;
   const automaticInput: DerivedInputRef = {
-    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-body-crosswalk-derived",
+    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-body-crosswalk-derived",
     versionId: automatic.metadata.versionId!, readModelSha256: sha(automatic.value), promotedAt: automatic.metadata.promotedAt!,
   };
   const composed = composeCrosswalk(null, automatic.value.records);
@@ -311,11 +311,11 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "PROMOTE"]]);
   const wiringPlan = planDerivedVersion([], decisions);
   assert.deepEqual(wiringPlan.refusals, []);
-  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
+  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring:OH", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING, "OH"), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
   /* 5c. Ohio's derived family reads the member on its own attested host and promotes. */
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ state: "OH", store, bypassCache: true, now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
@@ -331,7 +331,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     };
   });
   const build = buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
+    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
     members, reads, previous: null, generatedAt: T_FAMILY,
     reconcile: (r) => ({ meetings: r.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
   });

@@ -1,10 +1,8 @@
 /**
  * A task's reads of its own work item, subject and lineage, scoped instead of
- * listing whole tables. Each returns exactly what the whole-table read returned
- * after the caller's filter. Opt in with `scopedReads` (runner switch
- * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
+ * listing whole tables. Filters apply in the store before records reach the worker.
  */
-import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { Attempt } from "../attempt.ts";
@@ -19,12 +17,20 @@ async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonl
   return [...keys].sort();
 }
 
-/** Every Scout result in the logs that hold these subjects, in the whole log's key-then-append order; the whole log when not scoped. */
-export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[],
-  scoped: boolean): Promise<readonly ScoutResult[]> {
-  if (!scoped) return repos.scoutResults.readAll();
+/** Only Scout results about these subjects, with log keys in canonical order. */
+export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly ScoutResult[]> {
   const out: ScoutResult[] = [];
-  for (const key of await scoutKeysFor(repos, subjectIds)) out.push(...await repos.scoutResults.read(key));
+  const subjects = [...new Set(subjectIds)].sort();
+  for (const key of await scoutKeysFor(repos, subjects)) {
+    for (const subject of subjects) out.push(...await repos.scoutResults.readWhere(key, ["subjectId"], subject));
+  }
+  return out;
+}
+
+/** Exact artifact identity, even when a legacy log key contains other places. */
+export async function readArtifactsById(repos: Pick<ControlPlaneRepositories, "artifacts">, id: string): Promise<readonly ArtifactRecord[]> {
+  const out: ArtifactRecord[] = [];
+  for (const key of await repos.artifacts.keysWhere(["artifactId"], id)) out.push(...await repos.artifacts.readWhere(key, ["artifactId"], id));
   return out;
 }
 
@@ -47,7 +53,12 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
   for (const id of itemIds) for (const key of await repos.artifacts.keysWhere(["workItemId"], id)) keys.add(key);
   for (const id of new Set(input.requiredArtifactIds)) for (const key of await repos.artifacts.keysWhere(["artifactId"], id)) keys.add(key);
   const artifacts: ArtifactRecord[] = [];
-  for (const key of [...keys].sort()) artifacts.push(...await repos.artifacts.read(key));
+  for (const key of [...keys].sort()) {
+    const selected = new Map<string, ArtifactRecord>();
+    for (const id of itemIds) for (const row of await repos.artifacts.readWhere(key, ["workItemId"], id)) selected.set(canonicalJson(row), row);
+    for (const id of new Set(input.requiredArtifactIds)) for (const row of await repos.artifacts.readWhere(key, ["artifactId"], id)) selected.set(canonicalJson(row), row);
+    artifacts.push(...selected.values());
+  }
   return { artifacts, items };
 }
 
@@ -60,7 +71,8 @@ type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkIt
  * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
  * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
  */
-export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
+export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string,
+  options: { readonly obligationId?: string; readonly scouts?: boolean } = {}) {
   const items = new Map<string, WorkItem>();
   const readItem = async (id: string) => {
     if (!items.has(id)) { const row = await repos.workItems.read(id); if (row) items.set(id, row.value); }
@@ -72,7 +84,7 @@ export async function readLineageHistory(repos: ControlPlaneRepositories, workIt
     const parent = (cursor as LinkedWorkItem).planRepair?.parentWorkItemId;
     cursor = parent ? await readItem(parent) : null;
   }
-  const obligationIds = new Set<string>();
+  const obligationIds = new Set<string>(options.obligationId ? [options.obligationId] : []);
   for (const id of ancestors) for (const row of await repos.occurrences.listWhere(["workItemId"], id)) obligationIds.add(row.value.obligationId);
   const occurrences = new Map<string, FreshnessOccurrence>();
   for (const id of obligationIds) for (const row of await repos.occurrences.listWhere(["obligationId"], id)) occurrences.set(row.id, row.value);
@@ -96,10 +108,10 @@ export async function readLineageHistory(repos: ControlPlaneRepositories, workIt
     workerResults.push(...await readCompletedWorkerResults(repos, id));
   }
   const artifacts: ArtifactRecord[] = [];
-  for (const key of [...artifactKeys].sort()) artifacts.push(...await repos.artifacts.read(key));
+  for (const key of [...artifactKeys].sort()) for (const id of [...items.keys()].sort()) artifacts.push(...await repos.artifacts.readWhere(key, ["workItemId"], id));
   return {
     occurrences: [...occurrences.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, value]) => value),
     workItems: byId(items.values()), artifacts, attempts: byId(attempts.values()), workerResults,
-    scouts: await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))], true),
+    scouts: options.scouts === false ? [] : await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))]),
   };
 }

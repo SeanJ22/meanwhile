@@ -1,3 +1,4 @@
+import { readRuntimeAdminConfig } from "../runtime-admin-config.ts";
 /**
  * Durable scheduler state. A standing obligation recurs; each due occurrence owns its own WorkItem and
  * RouteTask. Identity is derived from the obligation id and the occurrence sequence, so no RouteTask is
@@ -16,7 +17,10 @@ import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import { runPool } from "./shadow-loop.ts";
 import { absenceHold } from "./absence-hold.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
+import { isAdminConfig } from "../gateway/admin-config.ts";
+import { forEachAggregate } from "../workers/streamed-history.ts";
+import { createPlannerSpool, plannerMap, type PlannerTable, type PlannerSpool } from "./planner-spool.ts";
+import { DiskRows } from "./disk-rows.ts";
 
 export const FRESHNESS_PROJECT = "freshness";
 
@@ -97,49 +101,64 @@ const RUNTIME_OWNED = [
 ] as const;
 
 /** Register what is new and refresh provider-derived signals on what is not, without touching runtime state. `refreshed` names every row whose signals moved. */
-export async function syncObligations(
-  repos: ControlPlaneRepositories,
-  corpus: readonly FreshnessObligation[],
-  now: string,
-  options: { readonly exactReads?: boolean } = {},
-): Promise<{
+interface SyncArrayResult {
   readonly all: readonly StandingObligation[];
   readonly registered: readonly string[];
   readonly alreadyDurable: readonly string[];
-  /** Durable rows whose provider-derived signals changed this pass. */
   readonly refreshed: readonly { readonly id: string; readonly changed: readonly string[] }[];
-  /** Durable rows read that the corpus did not name (input to `planSupersededRetirement`). Null under `exactReads`. */
   readonly outside: readonly StandingObligation[] | null;
-}> {
-  const registered: string[] = [];
-  const alreadyDurable: string[] = [];
-  const refreshed: { id: string; changed: string[] }[] = [];
-  const all: StandingObligation[] = [];
-
-  /* One read of the whole table, not one per obligation. */
-  const existingById = new Map<string, { id: string; revision: number; value: StandingObligation }>();
-  if (options.exactReads) {
-    for (const obligation of corpus) {
-      const row = await repos.obligations.read(obligation.id);
-      if (row !== null) existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
-    }
-  } else {
-    for (const row of await repos.obligations.list()) {
-      existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
-    }
-  }
+}
+export interface SyncPlannerSink {
+  readonly all: PlannerTable<StandingObligation>;
+  readonly registered: PlannerTable<string>;
+  readonly alreadyDurable: PlannerTable<string>;
+  readonly refreshed: PlannerTable<{ readonly id: string; readonly changed: readonly string[] }>;
+  readonly outside: PlannerTable<StandingObligation>;
+}
+export interface SyncPlannerResult {
+  readonly all: DiskRows<StandingObligation>;
+  readonly registered: DiskRows<string>;
+  readonly alreadyDurable: DiskRows<string>;
+  readonly refreshed: DiskRows<{ readonly id: string; readonly changed: readonly string[] }>;
+  readonly outside: DiskRows<StandingObligation> | null;
+}
+export function syncObligations(repos: ControlPlaneRepositories, corpus: Iterable<FreshnessObligation>, now: string,
+  options: { readonly exactReads?: boolean; readonly sink: SyncPlannerSink }): Promise<SyncPlannerResult>;
+export function syncObligations(repos: ControlPlaneRepositories, corpus: Iterable<FreshnessObligation>, now: string,
+  options?: { readonly exactReads?: boolean }): Promise<SyncArrayResult>;
+export async function syncObligations(
+  repos: ControlPlaneRepositories,
+  corpus: Iterable<FreshnessObligation>,
+  now: string,
+  options: { readonly exactReads?: boolean; readonly sink?: SyncPlannerSink } = {},
+): Promise<SyncArrayResult | SyncPlannerResult> {
+  const collected = <T>(keyOf: (row: T) => string) => {
+    const rows: T[] = [];
+    return { rows, add: (row: T) => { rows.push(row); }, has: (key: string) => rows.some(row => keyOf(row) === key),
+      delete: (key: string) => { const at = rows.findIndex(row => keyOf(row) === key); if (at >= 0) rows.splice(at, 1); } };
+  };
+  const registered = options.sink?.registered ?? collected<string>(row => row);
+  const alreadyDurable = options.sink?.alreadyDurable ?? collected<string>(row => row);
+  const refreshed = options.sink?.refreshed ?? collected<{ id: string; changed: readonly string[] }>(row => row.id);
+  const all = options.sink?.all ?? collected<StandingObligation>(row => row.id);
+  const outside = options.sink?.outside ?? collected<StandingObligation>(row => row.id);
+  const snapshot = await createPlannerSpool();
+  const existingRows = snapshot.table<import("../repository/types.ts").Persisted<StandingObligation>>("existing", row => row.id);
+  try {
+  if (!options.exactReads) await forEachAggregate(repos.obligations, row => { outside.add(row.value); existingRows.add(row); });
 
   for (const o of corpus) {
-    const existing = existingById.get(o.id) ?? null;
+    outside.delete(o.id);
+    const existing = options.exactReads ? await repos.obligations.read(o.id) : existingRows.read(o.id) ?? null;
     if (existing === null) {
       const row = standing(o, now);
       await repos.obligations.put(o.id, row, now);
-      registered.push(o.id);
-      all.push(row);
+      registered.add(o.id);
+      all.add(row);
       continue;
     }
 
-    alreadyDurable.push(o.id);
+    alreadyDurable.add(o.id);
     const held = existing.value;
     /* A provider can connect a plan (or a reader door) to a row that lacks one; the held plan is never replaced. */
     const plan = inheritPublicationConnection(held.autonomousPlan, o.autonomousPlan);
@@ -175,7 +194,7 @@ export async function syncObligations(
     }
 
     if (changed.length === 0) {
-      all.push(held);
+      all.add(held);
       continue;
     }
     const written = await repos.obligations.compareAndSet(
@@ -184,14 +203,12 @@ export async function syncObligations(
       next,
       now,
     );
-    refreshed.push({ id: o.id, changed });
-    all.push(written.value);
+    refreshed.add({ id: o.id, changed });
+    all.add(written.value);
   }
-  const named = new Set(corpus.map((o) => o.id));
-  const outside = options.exactReads
-    ? null
-    : [...existingById.values()].filter((row) => !named.has(row.id)).map((row) => row.value);
-  return { all, registered, alreadyDurable, refreshed, outside };
+  return { all: all.rows, registered: registered.rows, alreadyDurable: alreadyDurable.rows, refreshed: refreshed.rows,
+    outside: options.exactReads ? null : outside.rows } as SyncArrayResult | SyncPlannerResult;
+  } finally { await snapshot.close(); }
 }
 
 /** Permanently stop clocks whose provider was retired: inactive, no next due, with a reason. Idempotent; nothing is deleted. */
@@ -208,8 +225,9 @@ export async function retireObligationsByPrefix(
   const alreadyRetired: string[] = [];
   if (prefixes.length === 0) return { retired, alreadyRetired };
 
-  for (const row of await repos.obligations.list()) {
-    if (!prefixes.some((prefix) => row.id.startsWith(prefix))) continue;
+  await forEachAggregate(repos.obligations, async slot => {
+    if (!prefixes.some((prefix) => slot.id.startsWith(prefix))) return;
+    const row = await repos.obligations.mustRead(slot.id);
     const held = row.value;
     if (
       held.active === false &&
@@ -217,7 +235,7 @@ export async function retireObligationsByPrefix(
       held.retirementReason === reason
     ) {
       alreadyRetired.push(row.id);
-      continue;
+      return;
     }
     await repos.obligations.compareAndSet(
       row.id,
@@ -233,7 +251,7 @@ export async function retireObligationsByPrefix(
       now,
     );
     retired.push(row.id);
-  }
+  }, {});
   return { retired, alreadyRetired };
 }
 
@@ -293,7 +311,7 @@ export function supersededRetirementReason(providerId: string): string {
  * or the named reason there is none. Both retirement planners ask this.
  */
 function cleanOwnerOf(
-  corpus: readonly { readonly providerId: string; readonly obligationId: string }[],
+  corpus: Iterable<{ readonly providerId: string; readonly obligationId: string }>,
   providers: readonly ProviderReading[],
 ): (id: string) => { readonly providerId: string } | { readonly code: SupersededHold; readonly why: string } {
   const owners = new Map<string, Set<string>>();
@@ -343,13 +361,13 @@ function cleanOwnerOf(
  * cycle's FULL, unfiltered registry units, and the provider reports.
  */
 export function planSupersededRetirement(input: {
-  readonly outside: readonly StandingObligation[];
-  readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
+  readonly outside: Iterable<StandingObligation>;
+  readonly corpus: Iterable<{ readonly providerId: string; readonly obligationId: string }>;
   readonly providers: readonly ProviderReading[];
   readonly bound?: number;
 }): SupersededRetirementPlan {
   const bound = input.bound ?? SUPERSEDED_RETIREMENT_BOUND;
-  const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
+  const inCorpus = new Set(new DiskRows(() => input.corpus).map((u) => u.obligationId));
   const unitsBy = new Map<string, number>();
   for (const u of input.corpus) unitsBy.set(u.providerId, (unitsBy.get(u.providerId) ?? 0) + 1);
   const ownerOf = cleanOwnerOf(input.corpus, input.providers);
@@ -414,8 +432,8 @@ export function heldCalendarRouteReason(jurisdictionId: string, bodyId: string):
 }
 
 export function planHeldRouteRetirement(input: {
-  readonly outside: readonly StandingObligation[];
-  readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
+  readonly outside: Iterable<StandingObligation>;
+  readonly corpus: Iterable<{ readonly providerId: string; readonly obligationId: string }>;
   readonly providers: readonly ProviderReading[];
   /** The exact government/body join, and the bodies whose calendar route the owed rows hold, or why they were not read. */
   readonly routes:
@@ -427,7 +445,7 @@ export function planHeldRouteRetirement(input: {
   readonly retire: readonly RetirementItem[];
   readonly heldBack: readonly { readonly obligationId: string; readonly code: HeldRouteHold; readonly why: string }[];
 } {
-  const inCorpus = new Set(input.corpus.map((u) => u.obligationId));
+  const inCorpus = new Set(new DiskRows(() => input.corpus).map((u) => u.obligationId));
   const ownerOf = cleanOwnerOf(input.corpus, input.providers);
   const { routes } = input;
   const owned = new Set<string>();
@@ -474,10 +492,10 @@ export function planHeldRouteRetirement(input: {
 }
 
 /** A retired row holds no open occurrence: any inactive row still pointing at one is settled under its retirement reason. */
-export function planRetiredResidue(outside: readonly StandingObligation[]): readonly RetirementItem[] {
-  return outside
+export function planRetiredResidue(outside: Iterable<StandingObligation>): readonly RetirementItem[] {
+  return [...new DiskRows(() => outside)
     .filter((row) => !row.active && row.openOccurrenceId !== null)
-    .map((row) => ({ obligationId: row.id, reason: row.retirementReason ?? "RETIRED: this obligation was retired" }))
+    .map((row) => ({ obligationId: row.id, reason: row.retirementReason ?? "RETIRED: this obligation was retired" }))]
     .sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
 }
 
@@ -625,12 +643,12 @@ export type ResumedOccurrence =
 export async function findSettledOccurrences(
   repos: ControlPlaneRepositories,
   input: {
-    readonly obligations: readonly StandingObligation[];
+    readonly obligations: Iterable<StandingObligation>;
     readonly settledRouteTaskIds: ReadonlySet<string>;
   },
 ): Promise<readonly SettledOccurrence[]> {
-  if (!input.obligations.some((o) => o.openOccurrenceId !== null) || input.settledRouteTaskIds.size === 0) return [];
-  return (await scanOccurrences(repos, { ...input, neverClaimedRouteTaskIds: new Set() })).settled;
+  if (!new DiskRows(() => input.obligations).some((o) => o.openOccurrenceId !== null) || input.settledRouteTaskIds.size === 0) return [];
+  return [...(await scanOccurrences(repos, { ...input, neverClaimedRouteTaskIds: new Set() })).settled];
 }
 
 /**
@@ -649,50 +667,56 @@ export interface AbandonedOccurrence {
  * One pass over the occurrences, two findings: settled (pointed at, on a disposed RouteTask) and abandoned
  * (open, not pointed at, its obligation already opened a later sequence, and its RouteTask never claimed).
  */
+interface OccurrenceScanInput {
+  readonly obligations: Iterable<StandingObligation>;
+  readonly settledRouteTaskIds: ReadonlySet<string>;
+  readonly neverClaimedRouteTaskIds: ReadonlySet<string>;
+}
+export function scanOccurrences(repos: ControlPlaneRepositories, input: OccurrenceScanInput & { readonly planner: PlannerSpool }): Promise<{ readonly settled: DiskRows<SettledOccurrence>; readonly abandoned: DiskRows<AbandonedOccurrence> }>;
+export function scanOccurrences(repos: ControlPlaneRepositories, input: OccurrenceScanInput): Promise<{ readonly settled: readonly SettledOccurrence[]; readonly abandoned: readonly AbandonedOccurrence[] }>;
 export async function scanOccurrences(
   repos: ControlPlaneRepositories,
-  input: {
-    readonly obligations: readonly StandingObligation[];
-    readonly settledRouteTaskIds: ReadonlySet<string>;
-    readonly neverClaimedRouteTaskIds: ReadonlySet<string>;
-  },
-): Promise<{ readonly settled: readonly SettledOccurrence[]; readonly abandoned: readonly AbandonedOccurrence[] }> {
-  const byId = new Map<string, StandingObligation>();
-  const byOpenOccurrence = new Map<string, StandingObligation>();
+  input: OccurrenceScanInput & { readonly planner?: PlannerSpool },
+): Promise<{ readonly settled: readonly SettledOccurrence[] | DiskRows<SettledOccurrence>; readonly abandoned: readonly AbandonedOccurrence[] | DiskRows<AbandonedOccurrence> }> {
+  const spool = input.planner ?? await createPlannerSpool();
+  try {
+  const byId = plannerMap<StandingObligation>(spool, "scan-standing");
+  const byOpenOccurrence = plannerMap<string>(spool, "scan-open-occurrence");
   for (const o of input.obligations) {
     byId.set(o.id, o);
-    if (o.openOccurrenceId !== null) byOpenOccurrence.set(o.openOccurrenceId, o);
+    if (o.openOccurrenceId !== null) byOpenOccurrence.set(o.openOccurrenceId, o.id);
   }
-  const settled: SettledOccurrence[] = [];
-  const abandoned: AbandonedOccurrence[] = [];
-  if (byId.size === 0) return { settled, abandoned };
-  for (const occurrence of await repos.occurrences.list()) {
-    if (occurrence.value.closedAt !== null) continue;
-    const pointedBy = byOpenOccurrence.get(occurrence.id);
+  const settled = spool.table<SettledOccurrence>("scan-settled", row => row.occurrenceId), abandoned = spool.table<AbandonedOccurrence>("scan-abandoned", row => row.occurrenceId);
+  if (byId.size === 0) return { settled: input.planner ? settled.rows : [], abandoned: input.planner ? abandoned.rows : [] };
+  await forEachAggregate(repos.occurrences, async occurrence => {
+    if (occurrence.value.closedAt !== null) return;
+    const pointedId = byOpenOccurrence.get(occurrence.id);
+    const pointedBy = pointedId === undefined ? undefined : byId.get(pointedId);
     if (pointedBy !== undefined) {
-      if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
+      if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) return;
       const resumed = await resumeOpenOccurrence(repos, pointedBy);
-      if (resumed?.kind === "SETTLED") settled.push(resumed.settled);
-      continue;
+      if (resumed?.kind === "SETTLED") settled.add(resumed.settled);
+      return;
     }
     const owner = byId.get(occurrence.value.obligationId);
-    if (owner === undefined || owner.openOccurrenceId === occurrence.id) continue;
-    if (occurrence.value.sequence >= owner.occurrenceCount) continue;
-    if (!input.neverClaimedRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
-    abandoned.push({
+    if (owner === undefined || owner.openOccurrenceId === occurrence.id) return;
+    if (occurrence.value.sequence >= owner.occurrenceCount) return;
+    if (!input.neverClaimedRouteTaskIds.has(occurrence.value.routeTaskId)) return;
+    abandoned.add({
       occurrenceId: occurrence.id,
       obligationId: owner.id,
       sequence: occurrence.value.sequence,
       movedOnTo: owner.occurrenceCount,
     });
-  }
-  return { settled, abandoned };
+  }, { closedAt: true, routeTaskId: true, obligationId: true, sequence: true });
+  return { settled: input.planner ? settled.rows : [...settled.rows], abandoned: input.planner ? abandoned.rows : [...abandoned.rows] };
+  } finally { if (!input.planner) await spool.close(); }
 }
 
 /** Close an abandoned occurrence UNRESOLVED after re-checking every condition at write time. Writes only the occurrence row. */
 export async function closeAbandonedOccurrences(
   repos: ControlPlaneRepositories,
-  input: { readonly abandoned: readonly AbandonedOccurrence[]; readonly now: string },
+  input: { readonly abandoned: Iterable<AbandonedOccurrence>; readonly now: string },
 ): Promise<{
   readonly closed: readonly string[];
   readonly skipped: readonly { readonly occurrenceId: string; readonly why: string }[];
@@ -939,7 +963,7 @@ export async function recordArguedAbsence(
 ): Promise<void> {
   const row = await repos.obligations.mustRead(input.obligationId);
   /* The hold is the owner's setting tied to the source's pace, never longer than the caller's own expiry. */
-  const configRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null);
+  const configRow = await readRuntimeAdminConfig(repos, ["settings"]).catch(() => null);
   const hold = absenceHold(row.value, input.now, configRow && isAdminConfig(configRow.value) ? configRow.value : null);
   const absentUntil = hold.until < input.absentUntil ? hold.until : input.absentUntil;
   if (row.value.absentUntil === absentUntil && row.value.nextDueAt === absentUntil) return;
@@ -959,103 +983,74 @@ export async function recordArguedAbsence(
 
 
 /** Every debt row this control plane holds. */
-export async function loadDebts(
-  repos: ControlPlaneRepositories,
-): Promise<readonly FreshnessDebt[]> {
-  const rows = await repos.debts.list();
-  return rows.map((r) => r.value);
+export function loadDebts(repos: ControlPlaneRepositories, sink: PlannerTable<FreshnessDebt>): Promise<DiskRows<FreshnessDebt>>;
+export function loadDebts(repos: ControlPlaneRepositories): Promise<readonly FreshnessDebt[]>;
+export async function loadDebts(repos: ControlPlaneRepositories, sink?: PlannerTable<FreshnessDebt>): Promise<readonly FreshnessDebt[] | DiskRows<FreshnessDebt>> {
+  const rows: FreshnessDebt[] = [];
+  await forEachAggregate(repos.debts, row => { if (sink) sink.add(row.value); else rows.push(row.value); });
+  return sink?.rows ?? rows;
 }
 
-/** Persist this cycle's debt set: write what is owed, clear what is discharged. */
+/** Persist the cycle from a disk snapshot; only one stored debt and one operation per active writer are decoded. */
 export async function persistDebts(
   repos: ControlPlaneRepositories,
-  next: readonly FreshnessDebt[],
+  next: Iterable<FreshnessDebt>,
   now: string,
-  scope: readonly string[] | null = null,
-  /** Retired obligations, id to reason: their debt is kept out of `next` and tombstoned naming the retirement, never as a discharge. */
+  scope: Iterable<string> | null = null,
   retired: ReadonlyMap<string, string> = new Map(),
-  /** Independent stored debt IDs can share the caller's repository concurrency. */
   concurrency = 1,
-): Promise<{
-  readonly written: number;
-  readonly cleared: readonly string[];
-  readonly clearedAsRetired: readonly string[];
-}> {
-  const byId = new Map(next.map((d) => [d.obligationId, d]));
-  const existing = scope === null
-    ? await repos.debts.list()
-    : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
-  const existingById = new Map(existing.map(row => [row.id, row]));
-  const operations: {
-    id: string;
-    obligationId: string;
-    kind: "WRITTEN" | "CLEARED" | "RETIRED";
-    run: () => Promise<unknown>;
-  }[] = [];
-
-  for (const row of existing) {
-    if (byId.has(row.value.obligationId)) continue;
-    const retiredFor = retired.get(row.value.obligationId);
-    if (retiredFor !== undefined) {
-      if (row.value.consecutiveFailures === 0) continue;
-      operations.push({ id: row.id, obligationId: row.value.obligationId, kind: "RETIRED", run: () => repos.debts.compareAndSet(
-        row.id,
-        row.revision,
-        {
-          ...row.value,
-          consecutiveFailures: 0,
-          detail: `cleared at ${now}: the obligation was retired (${retiredFor}). Not a reading: nothing was refreshed`,
-        },
-        now,
-      ) });
-      continue;
-    }
-    /* A cleared debt is a tombstone, not a delete: the store has no delete. `retryable` ignores a zero-failure row. */
-    if (row.value.consecutiveFailures === 0) continue;
-    operations.push({ id: row.id, obligationId: row.value.obligationId, kind: "CLEARED", run: () => repos.debts.compareAndSet(
-      row.id,
-      row.revision,
-      { ...row.value, consecutiveFailures: 0, detail: `cleared at ${now}: the obligation was discharged` },
-      now,
-    ) });
-  }
-
-  for (const debt of next) {
-    const row = existingById.get(debt.obligationId) ?? null;
-    if (row === null) {
-      operations.push({ id: debt.obligationId, obligationId: debt.obligationId, kind: "WRITTEN",
-        run: () => repos.debts.put(debt.obligationId, debt, now) });
-    } else {
-      if (canonicalJson(row.value) === canonicalJson(debt)) continue;
-      operations.push({ id: row.id, obligationId: debt.obligationId, kind: "WRITTEN",
-        run: () => repos.debts.compareAndSet(row.id, row.revision, debt, now) });
-    }
-  }
-  const groups = new Map<string, { index: number; run: () => Promise<unknown> }[]>();
-  operations.forEach((operation, index) => {
-    const group = groups.get(operation.id) ?? [];
-    group.push({ index, run: operation.run });
-    groups.set(operation.id, group);
-  });
-  const failures: { index: number; error: unknown }[] = [];
-  await runPool([...groups.values()], concurrency, async group => {
-    for (const operation of group) {
-      try {
-        await operation.run();
-      } catch (error) {
-        // A failed write is not retried by a later operation on the same row.
-        failures.push({ index: operation.index, error });
-        break;
-      }
-    }
-  });
-  if (failures.length > 0) throw failures.sort((a, b) => a.index - b.index)[0].error;
-  return {
-    written: operations.filter(operation => operation.kind === "WRITTEN").length,
-    cleared: operations.filter(operation => operation.kind === "CLEARED").map(operation => operation.obligationId),
-    clearedAsRetired: operations.filter(operation => operation.kind === "RETIRED").map(operation => operation.obligationId),
+  planner?: PlannerSpool,
+): Promise<{ readonly written: number; readonly cleared: readonly string[] | DiskRows<string>; readonly clearedAsRetired: readonly string[] | DiskRows<string> }> {
+  const spool = planner ?? await createPlannerSpool();
+  const prefix = `persist-debts:${debtPersistenceSequence++}`;
+  const nextRows = spool.table<FreshnessDebt>(`${prefix}:next`, debt => debt.obligationId);
+  const existing = spool.table<import("../repository/types.ts").Persisted<FreshnessDebt>>(`${prefix}:existing`, row => row.id);
+  type Operation = { readonly sequence: number; readonly id: string; readonly obligationId: string; readonly kind: "WRITTEN" | "CLEARED" | "RETIRED"; readonly revision: number | null; readonly value: FreshnessDebt };
+  const operations = spool.table<Operation>(`${prefix}:operations`, operation => String(operation.sequence));
+  const groups = spool.table<string>(`${prefix}:groups`, id => id);
+  const cleared = spool.table<string>(`${prefix}:cleared`, id => id), clearedAsRetired = spool.table<string>(`${prefix}:retired`, id => id);
+  let sequence = 0, written = 0;
+  const add = (operation: Omit<Operation,"sequence">) => {
+    operations.add({ ...operation, sequence: sequence++ }); groups.add(operation.id);
+    if (operation.kind === "WRITTEN") written++;
+    else if (operation.kind === "CLEARED") cleared.add(operation.obligationId);
+    else clearedAsRetired.add(operation.obligationId);
   };
+  try {
+    for (const debt of next) nextRows.add(debt);
+    if (scope === null) await forEachAggregate(repos.debts, row => { existing.add(row); });
+    else for (const id of scope) { const row = await repos.debts.read(id); if (row) existing.add(row); }
+    for (const row of existing.rows) {
+      if (nextRows.has(row.value.obligationId) || row.value.consecutiveFailures === 0) continue;
+      const reason = retired.get(row.value.obligationId);
+      add({ id: row.id, obligationId: row.value.obligationId, kind: reason === undefined ? "CLEARED" : "RETIRED", revision: row.revision,
+        value: { ...row.value, consecutiveFailures: 0, detail: reason === undefined
+          ? `cleared at ${now}: the obligation was discharged`
+          : `cleared at ${now}: the obligation was retired (${reason}). Not a reading: nothing was refreshed` } });
+    }
+    // Keep each submitted operation, including duplicates, so a stale second CAS still refuses as before.
+    for (const debt of next) {
+      const row = existing.read(debt.obligationId);
+      if (row && canonicalJson(row.value) === canonicalJson(debt)) continue;
+      add({ id: row?.id ?? debt.obligationId, obligationId: debt.obligationId, kind: "WRITTEN", revision: row?.revision ?? null, value: debt });
+    }
+    let earliestFailure: { sequence: number; error: unknown } | null = null;
+    await runPool(groups.rows, concurrency, async id => {
+      for (const operation of operations.rowsWhere(["id"], id)) {
+        try {
+          if (operation.revision === null) await repos.debts.put(operation.id, operation.value, now);
+          else await repos.debts.compareAndSet(operation.id, operation.revision, operation.value, now);
+        } catch (error) {
+          if (earliestFailure === null || operation.sequence < earliestFailure.sequence) earliestFailure = { sequence: operation.sequence, error };
+          break;
+        }
+      }
+    });
+    if (earliestFailure !== null) throw (earliestFailure as { error: unknown }).error;
+    return { written, cleared: planner ? cleared.rows : [...cleared.rows], clearedAsRetired: planner ? clearedAsRetired.rows : [...clearedAsRetired.rows] };
+  } finally { if (!planner) await spool.close(); }
 }
+let debtPersistenceSequence = 0;
 
 /** The obligations whose stored next-due has passed. */
 export async function dueByStoredTime(

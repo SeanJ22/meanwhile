@@ -174,7 +174,7 @@ test("shared token charges are reported once but consume every exact beneficiary
 test("all work ignores blackout while every hunt obeys the Admin spend dial", () => {
   const blackout = "2026-09-27T02:00:00.000Z"; // Saturday 19:00 Arizona.
   const controller = new FleetSafetyController({ now: blackout, charges: chargesOf([{
-    source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
+    attemptId: "spent-scout", source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
     cost: { usd: 105, inputTokens: 1, outputTokens: 1 },
   }] as never), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
   lifetimeHuntWork: work => work === member.id });

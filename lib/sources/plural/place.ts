@@ -5,6 +5,7 @@ import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/sou
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
 import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
 import { fieldManualForSource, type FieldManualRead } from "../../control-plane/field-manual.ts";
+import { replayPropertyAs } from "../verified-replay.ts";
 
 export interface HeldSourcePage {
   readonly url: string;
@@ -51,6 +52,10 @@ export interface NationalPlaceSources {
   readonly electionFields: readonly ElectionFieldCandidate[];
   readonly documents: readonly HeldSourcePage[];
   readonly gaps: readonly { sourceUrl: string; detail: string }[];
+}
+
+function pageLinkingEvidence(page:HeldSourcePage,linkingPage:OfficialLinkingPage):OfficialLinkingPage {
+  return replayPropertyAs(page,"text","html",{url:page.url,linkingPage}) as unknown as OfficialLinkingPage;
 }
 
 function links(page: HeldSourcePage): { url: string; label: string }[] {
@@ -175,7 +180,7 @@ export async function collectNationalPlaceSources(input: {
       await flush();
     }
     const directoryProvenance = stateOfficeLinkingPage(primary);
-    const stateProvenance = { url: statePage.url, html: statePage.text, linkingPage: directoryProvenance };
+    const stateProvenance = pageLinkingEvidence(statePage,directoryProvenance);
     // Office landing pages often name the office but link a separate biography.
     // Read that profile rather than trying to infer a person from a URL slug.
     const officeLinks = stateLinks.flatMap(link => {
@@ -187,7 +192,7 @@ export async function collectNationalPlaceSources(input: {
       if (!page) return;
       addOfficials(page, link.office, parent);
       await flush();
-      const provenance = { url: page.url, html: page.text, linkingPage: parent };
+      const provenance = pageLinkingEvidence(page,parent);
       await Promise.all(links(page).filter(l => new RegExp(`^(?:About (?:the )?)?${link.office}$`, "i").test(l.label)).map(async l => {
         const profile = await attempt(l.url);
         if (profile) { addOfficials(profile, link.office, provenance); await flush(); }
@@ -216,12 +221,12 @@ export async function collectNationalPlaceSources(input: {
         await Promise.all(offices.map(async url => {
           const found = await attempt(url);
           if (!found) return;
-          const parent = { url: page.url, html: page.text, linkingPage: stateProvenance };
+          const parent = pageLinkingEvidence(page,stateProvenance);
           addOfficials(found, undefined, parent);
           await flush();
           await Promise.all(links(found).flatMap(l => {
             const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})(?:\\s+[A-Z][\\p{L}.'’ -]+)?$`, "u").exec(l.label)?.[1];
-            return office ? [followOffice({ url: l.url, office }, { url: found.url, html: found.text, linkingPage: parent })] : [];
+            return office ? [followOffice({ url: l.url, office },pageLinkingEvidence(found,parent))] : [];
           }));
         }));
       }
@@ -239,7 +244,7 @@ export async function collectNationalPlaceSources(input: {
       electionFields.push(...electionPageFields(page, divisionId, parent));
       if (families.officials && page.url !== statePage.url) addOfficials(page, undefined, parent);
       await flush();
-      const provenance = { url: page.url, html: page.text, linkingPage: parent };
+      const provenance = pageLinkingEvidence(page,parent);
       if (families.officials && page.url !== statePage.url) await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
@@ -258,7 +263,7 @@ export async function collectNationalPlaceSources(input: {
           const accessible = await attempt(l.url);
           if (accessible) {
             electionDocuments.push(accessible);
-            electionFields.push(...electionPageFields(accessible, divisionId, { url: document.url, html: document.text, linkingPage: provenance }));
+            electionFields.push(...electionPageFields(accessible, divisionId,pageLinkingEvidence(document,provenance)));
             await flush();
           }
         }));

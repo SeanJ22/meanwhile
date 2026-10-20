@@ -4,7 +4,8 @@ import test from "node:test";
 
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { readAuditWeek, readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
+import { readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
+import { readAuditWeek } from "./helpers/live-audit.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { curatedReaderCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
 import { combinedCatalog, runLiveAuditCycle } from "../lib/control-plane/workers/live-audit-run.ts";

@@ -14,8 +14,9 @@ const option = (name: string) => process.argv.find(value => value.startsWith(`--
 const root = resolve(option("store") ?? ".scratch/rh01/held-legistar-control");
 const codeRoot = process.env.WTP_RH01_CODE_ROOT ?? process.cwd();
 const code = (path: string) => import(pathToFileURL(join(codeRoot, path)).href);
-const [{ createFileRepositories }, { readCompletedWorkerResult }, { enqueueWorkerTask }] = await Promise.all([
+const [{ createFileRepositories }, { readCompletedWorkerResult }, { enqueueWorkerTask }, { canonicalJson }] = await Promise.all([
   code("lib/control-plane/repository/file-store.ts"), code("lib/control-plane/repository/worker-completion.ts"), code("lib/control-plane/workers/runtime.ts"),
+  code("lib/control-plane/repository/types.ts"),
 ]);
 const seedRoot = option("prepare-from") ? resolve(option("prepare-from")!) : null;
 if (seedRoot) {
@@ -64,10 +65,17 @@ if (seedRoot) {
   await mkdir(root, { recursive: true }); await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
   console.log(`RH01_HELD_PREPARED ${JSON.stringify(manifest)}`);
 } else {
-  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   const role = option("role") ?? "PARSER";
-  let taskId = manifest.parserTaskId;
-  if (role === "VALIDATOR") {
+  const manifest = JSON.parse(await readFile(role === "ACQUIRER" ? join(root, "rh01-model-replay.json") : manifestPath, "utf8"));
+  let taskId = role === "ACQUIRER" ? manifest.nativeHandoff?.acquirerTaskId : manifest.parserTaskId;
+  if (role === "ACQUIRER") {
+    if (manifest.format !== 2 || manifest.phase !== "after" || manifest.nativeHandoff?.plan.contract.schemaVersion !== 2 || !taskId)
+      throw Error("RH01 generalized acquisition requires the genuine prepared v2 source instructions");
+    const task = (await repos.routeTasks.mustRead(taskId)).value;
+    if (task.state !== "PENDING" || task.attemptIds.length || task.workerTask?.role !== role ||
+        task.workItemId !== manifest.nativeHandoff.workItemId || canonicalJson(task.workerTask.contract) !== canonicalJson(manifest.nativeHandoff.plan.contract))
+      throw Error("RH01 prepared generalized acquisition is not an untouched native task");
+  } else if (role === "VALIDATOR") {
     const until = Date.now() + Number(option("predecessor-ms") ?? 120_000);
     let producer;
     while (!producer && Date.now() < until) {
@@ -83,7 +91,7 @@ if (seedRoot) {
     const task = (await repos.routeTasks.mustRead(manifest.parserTaskId)).value;
     taskId = (await enqueueWorkerTask(repos, { workItemId: manifest.workItemId, artifactId: manifest.artifactId, contract: task.workerTask.contract,
       role, producerResultId: producer.id, now: now() })).id;
-  } else if (role !== "PARSER") throw Error("RH01 held deterministic replay supports only PARSER and VALIDATOR");
+  } else if (role !== "PARSER") throw Error("RH01 held deterministic replay supports only ACQUIRER, PARSER and VALIDATOR");
   process.env.WTP_RH01_HELD_VAULT_DIRECTORY = join(root, "vault");
   const { runLeaseWorkerProcesses } = await code("lib/control-plane/workers/process-pool.ts");
   const reports: DispatchResult[] = [];
@@ -93,10 +101,15 @@ if (seedRoot) {
   const report = reports[0], committed = report?.attemptId && report.outcome === "WORKED"
     ? await readCompletedWorkerResult(repos, `wr-${fingerprint([report.attemptId])}`) : null;
   const result = committed?.record;
+  const acquired = role === "ACQUIRER" && result?.result.role === role && result.result.verdict === "ACQUIRED" &&
+    result.completion.completedTask.workerTask?.contract.schemaVersion === 2 &&
+    canonicalJson(result.completion.completedTask.workerTask.contract) === canonicalJson(manifest.nativeHandoff.plan.contract) &&
+    result.result.artifacts.some((artifact: { completeness: string; canonicalUrl: string }) => artifact.completeness === "COMPLETE" &&
+      manifest.nativeHandoff.plan.contract.sourceScope.canonicalUrls.includes(artifact.canonicalUrl));
   const complete = reports.length === 1 && report.claimed && report.outcome === "WORKED" && result?.routeTaskId === taskId &&
     result.completion.closedAttempt.outcome === "COMPLETED" && result.result.role === role &&
-    (role === "PARSER" ? result.result.verdict === "EXTRACTED" : result.result.verdict === "PASS");
-  console.log(`RH01_REPLAY ${JSON.stringify({ complete, role, taskId, source: manifest.source, committedResultId: result?.id ?? null,
+    (role === "ACQUIRER" ? acquired : role === "PARSER" ? result.result.verdict === "EXTRACTED" : result.result.verdict === "PASS");
+  console.log(`RH01_REPLAY ${JSON.stringify({ complete, role, taskId, source: manifest.source ?? manifest.nativeHandoff?.note, committedResultId: result?.id ?? null,
     result: result ? { role: result.result.role, verdict: result.result.verdict } : null, reports })}`);
   if (!complete) process.exitCode = 1;
 }

@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
+import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 
 const option = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const phase = option("phase"); if (phase !== "before" && phase !== "after") throw Error("RH01 overlay phase is invalid");
@@ -18,63 +19,98 @@ const codeRoot = process.env.WTP_RH01_CODE_ROOT;
 if (!codeRoot) throw Error("RH01 active setup requires the immutable native code root");
 const code = (file: string) => import(pathToFileURL(join(codeRoot, file)).href);
 const [{ createFileRepositories }, { createPgRepositories }, { submit }, { readIntents, RESEARCH_INTENT_LOG_KEY },
-  { DurableEvidenceStore }, { extensionFor }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint }, { findReceipt }, { canonicalJson }] = await Promise.all([
+  { DurableEvidenceStore }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint, contentHash }, { findReceipt }, { canonicalJson },
+  { registerAutonomousPlan }, { openRuntimeMethod }, { standingFleetRuntime }] = await Promise.all([
   code("lib/control-plane/repository/file-store.ts"), code("lib/control-plane/repository/pg-store.ts"),
   code("lib/control-plane/gateway/gateway.ts"), code("lib/control-plane/scheduler/research-policy.ts"),
-  code("lib/control-plane/evidence/durable-store.ts"), code("lib/control-plane/evidence/store.ts"), code("lib/control-plane/workers/runtime.ts"),
+  code("lib/control-plane/evidence/durable-store.ts"), code("lib/control-plane/workers/runtime.ts"),
   code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/repository/worker-completion.ts"), code("lib/control-plane/ids.ts"),
   code("lib/control-plane/gateway/receipts.ts"), code("lib/control-plane/repository/types.ts"),
+  code("lib/control-plane/workers/coordinator.ts"), code("lib/method/runtime-manual.ts"), code("lib/control-plane/workers/standing.ts"),
 ]);
-const manifest = JSON.parse(await readFile(join(prepared, "rh01-model-replay.json"), "utf8"));
+interface PreparedHandoff {
+  format: number; phase: string;
+  nativeHandoff: { workItemId: string; acquirerTaskId: string; plan: AutonomousWorkPlan; sourceWorkItemIds: string[];
+    sourceRouteTaskIds: string[]; sourceAttemptIds: string[]; sourceArtifacts: { record: ArtifactRecord; key: string }[] };
+}
+const manifest = JSON.parse(await readFile(join(prepared, "rh01-model-replay.json"), "utf8")) as PreparedHandoff;
 if (manifest.phase !== phase) throw Error("RH01 prepared source phase differs");
+if (manifest.format !== 2 || manifest.nativeHandoff?.plan.contract.schemaVersion !== 2)
+  throw Error("RH01 active setup requires genuine native v2 source instructions; legacy v1 audit is unsupported");
 const at = new Date().toISOString(), repos = await createPgRepositories(connection, at, { skipBootstrap: true });
-const held = await createFileRepositories(prepared), workItemId = "wi-50b053705662f68e44998333";
-await repos.workItems.mustRead(workItemId); // Preserve the actual production work item and its history.
-const heldResults = await held.workerResults.read(workItemId) as readonly WorkerResultRecord[];
-const selected = heldResults.find(row => row.result.role === "PARSER" && row.result.verdict === "EXTRACTED");
-if (!selected) throw Error("RH01 prepared source has no actual parser handoff");
-const originalTask = (await held.routeTasks.mustRead(selected.routeTaskId)).value, contract = originalTask.workerTask?.contract;
-if (!contract) throw Error("RH01 actual parser contract is absent");
+const held = await createFileRepositories(prepared), handoff = manifest.nativeHandoff, { workItemId } = handoff, contract = handoff.plan.contract;
+for (const id of handoff.sourceWorkItemIds) {
+  const source = await held.workItems.mustRead(id), existing = await repos.workItems.read(id);
+  if (existing) {
+    if (existing.value.subject !== source.value.subject || existing.value.project !== source.value.project)
+      throw Error("RH01 genuine source work item identity conflicts with its production row");
+  } else {
+    const { autonomousPlan: _plan, ...value } = source.value;
+    await repos.workItems.put(id, value, source.updatedAt);
+  }
+}
+for (const id of handoff.sourceRouteTaskIds) {
+  const source = await held.routeTasks.mustRead(id), existing = await repos.routeTasks.read(id);
+  if (!existing) await repos.routeTasks.put(id, source.value, source.updatedAt);
+  else if (canonicalJson(existing.value) !== canonicalJson(source.value)) throw Error("RH01 source task changed; no immutable lineage is overwritten");
+}
+for (const id of handoff.sourceAttemptIds) {
+  const source = await held.attempts.mustRead(id), existing = await repos.attempts.read(id);
+  if (!existing) await repos.attempts.put(id, source.value, source.updatedAt);
+  else if (canonicalJson(existing.value) !== canonicalJson(source.value)) throw Error("RH01 source Attempt changed; no immutable lineage is overwritten");
+}
 await mkdir(join(shared, "vault"), { recursive: true });
 const vault = new DurableEvidenceStore(join(shared, "vault"), { remote: null });
 let restored = 0;
-for (const source of await held.artifacts.read(workItemId) as readonly ArtifactRecord[]) {
-  const found = await repos.artifacts.readWhere(workItemId, ["artifactId"], source.artifactId) as readonly ArtifactRecord[];
-  if (found.length !== 1) throw Error("RH01 immutable production source identity is missing or ambiguous");
-  const original = found[0];
-  if (original.contentHash !== source.contentHash || original.byteLength !== source.byteLength || original.canonicalUrl !== source.canonicalUrl || original.recordedAt !== source.recordedAt)
-    throw Error("RH01 retained bytes do not match the original production source");
-  const acquisition = (await repos.attempts.mustRead(original.attemptId)).value;
-  const route = (await repos.routeTasks.mustRead(original.routeTaskId)).value;
-  if (acquisition.workItemId !== workItemId || acquisition.routeTaskId !== route.id || acquisition.outcome !== "COMPLETED" || acquisition.worker.role !== "ACQUIRER")
-    throw Error("RH01 original acquisition lineage is not a completed source receipt");
-  const day = original.recordedAt.slice(0, 10).replaceAll("-", "/");
-  const key = `project/freshness/source/legistar/${day}/${workItemId}/${original.contentHash}.${extensionFor(original.contentType)}`;
+for (const { record: source, key } of handoff.sourceArtifacts) {
+  const found = await repos.artifacts.readWhere(source.workItemId, ["artifactId"], source.artifactId) as readonly ArtifactRecord[];
+  if (found.length > 1 || found.some(original => canonicalJson(original) !== canonicalJson(source))) throw Error("RH01 source metadata changed; no immutable artifact is overwritten");
+  if (!found.length) await repos.artifacts.append(source.workItemId, source.artifactId, source, source.recordedAt);
+  const acquisition = (await repos.attempts.mustRead(source.attemptId)).value;
+  if (acquisition.workItemId !== source.workItemId || acquisition.routeTaskId !== source.routeTaskId || acquisition.outcome !== "COMPLETED" || !["ACQUIRER", "SCOUT"].includes(acquisition.worker.role))
+    throw Error("RH01 original source lineage has no completed acquisition or SCOUT receipt");
   const bytes = await readFile(join(prepared, "vault", key));
   const sidecar = JSON.parse(await readFile(join(prepared, "vault", key + ".meta.json"), "utf8"));
   const meta = sidecar.meta;
-  if (meta.contentHash !== original.contentHash || meta.byteLength !== original.byteLength || meta.custom?.canonicalUrl !== original.canonicalUrl ||
-      meta.custom?.retrievedAt !== original.recordedAt || meta.custom?.workItemId !== workItemId || meta.custom?.methodRouteId !== route.routeId)
+  if (contentHash(bytes) !== source.contentHash || bytes.byteLength !== source.byteLength || meta.contentHash !== source.contentHash ||
+      meta.byteLength !== source.byteLength || meta.custom?.canonicalUrl !== source.canonicalUrl || meta.custom?.retrievedAt !== source.recordedAt ||
+      meta.custom?.workItemId !== source.workItemId || meta.custom?.attemptId !== source.attemptId)
     throw Error("RH01 held source sidecar does not identify the original acquisition");
-  // Restore the original recorded acquisition identity; never alter an existing CP artifact or completed result.
-  await vault.put(key, bytes, { ...meta, custom: { ...meta.custom, attemptId: original.attemptId } }); restored++;
+  await vault.put(key, bytes, meta); restored++;
 }
-async function execute(role: "PARSER" | "VALIDATOR", producer?: WorkerResultRecord): Promise<WorkerResultRecord> {
-  const task = await enqueueWorkerTask(repos, { workItemId, role, artifactId: originalTask.workerTask.artifactId, contract, now: at,
-    purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}`,
-    ...(producer ? { producerResultId: producer.id } : {}) });
+await registerAutonomousPlan(repos, workItemId, handoff.plan, at);
+async function execute(taskId: string, role: "ACQUIRER" | "PARSER" | "VALIDATOR", verdict: string): Promise<WorkerResultRecord> {
   const reports: DispatchResult[] = [];
   await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", config: { root: codeRoot, postgres: true,
-    taskIds: [task.id], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 1,
+    taskIds: [taskId], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 1,
     transportFor: () => async () => { throw Error("RH01 preparation cannot send a model request"); }, onDispatched: (row: DispatchResult) => { reports.push(row); } });
   const report = reports[0];
   if (reports.length !== 1 || report.outcome !== "WORKED" || !report.claimed || !report.attemptId) throw Error(`RH01 native ${role} preparation did not complete: ${JSON.stringify(reports)}`);
   const completed = await readCompletedWorkerResult(repos, `wr-${fingerprint([report.attemptId])}`);
-  if (completed.record.result.role !== role || completed.record.result.verdict !== (role === "PARSER" ? "EXTRACTED" : "PASS")) throw Error(`RH01 native ${role} preparation did not validate the original source`);
+  if (completed.record.routeTaskId !== taskId || completed.record.result.role !== role || completed.record.result.verdict !== verdict)
+    throw Error(`RH01 native ${role} preparation did not complete its exact source handoff`);
   return completed.record;
 }
-const parser = await execute("PARSER"), validator = await execute("VALIDATOR", parser);
-const audit = await enqueueWorkerTask(repos, { workItemId, role: "ADVERSARIAL_AUDITOR", artifactId: originalTask.workerTask.artifactId,
+const acquired = await execute(handoff.acquirerTaskId, "ACQUIRER", "ACQUIRED");
+if (acquired.result.role !== "ACQUIRER") throw Error("RH01 actual source acquisition result is absent");
+const primary = acquired.result.artifacts.filter(row => row.completeness === "COMPLETE" && contract.schemaVersion === 2 && contract.sourceScope.canonicalUrls.includes(row.canonicalUrl));
+if (primary.length !== 1) throw Error("RH01 actual acquisition did not retain exactly its declared API representation");
+const artifactId = primary[0].artifactId;
+const parserTask = await enqueueWorkerTask(repos, { workItemId, role: "PARSER", artifactId, contract, now: at,
+  purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
+const parser = await execute(parserTask.id, "PARSER", "EXTRACTED");
+if (parser.result.role !== "PARSER" || !parser.result.records.length || parser.result.records.some(row => row.fields.EventBodyId !== 138 || row.fields.EventBodyName !== "Board of Supervisors"))
+  throw Error("RH01 new source does not bind only the genuine declared Pima body");
+const validatorTask = await enqueueWorkerTask(repos, { workItemId, role: "VALIDATOR", artifactId, contract, now: at,
+  producerResultId: parser.id, purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
+const validator = await execute(validatorTask.id, "VALIDATOR", "PASS");
+// Fail on canonical/first-party context before making the one allowed paid after-audit request.
+const method = await openRuntimeMethod(repos);
+try {
+  const runtime = standingFleetRuntime({ root: codeRoot, repos, vaultRoot: join(shared, "vault"), method, now: () => new Date().toISOString() });
+  await runtime.independentContext({ artifactId, contract, auditScope: handoff.plan.auditScope, methodVersion: method.version, workItemId });
+} finally { await method.close(); }
+const audit = await enqueueWorkerTask(repos, { workItemId, role: "ADVERSARIAL_AUDITOR", artifactId,
   contract, now: at, producerResultId: parser.id, validatorResultId: validator.id, purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
 const receipts = [];
 for (const [type, input] of [
@@ -89,7 +125,7 @@ for (const [type, input] of [
 }
 const controls = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
 if (controls.paused || !controls.pendingDispatch.length) throw Error("RH01 local Resume/Send did not read back");
-const result = { phase, at, source: prepared, restored, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
-  note: "Original production source identities and native PG reads are preserved. Free native parser/validator preparation created the pending independent audit. All writes used the disposable local overlay." };
+const result = { phase, at, source: prepared, restored, acquisitionResultId: acquired.id, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
+  note: "Exact saved source observations grounded a new native v2 ACQUIRER/parser/validator chain. Canonical independent context passed without a provider call. The audit is pending and no old v1 task or result was relabeled. All writes used the disposable local overlay." };
 await writeFile(join(shared, "active-overlay-preparation.json"), JSON.stringify(result, null, 2) + "\n");
 console.log(`RH01_ACTIVE_OVERLAY_PREPARED ${JSON.stringify(result)}`);

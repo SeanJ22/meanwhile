@@ -24,6 +24,8 @@ const harnessRoot = process.cwd(), codeRoot = resolve(arg("code-root") ?? harnes
 const phase = arg("phase") ?? "after", directory = resolve(arg("out") ?? `.scratch/rh01/${phase}`);
 const activePima = process.argv.includes("--active-pima-diagnostic");
 let activePreparation: { status: "NOT_REQUESTED" | "SUCCEEDED" | "FAILED"; code?: number | null; detail?: string } = { status: "NOT_REQUESTED" };
+const exerciseNationalPlaces = process.argv.includes("--exercise-national-places");
+let nationalPreparation: { status: "NOT_REQUESTED" | "SUCCEEDED" | "FAILED"; code?: number | null; detail?: string } = { status: "NOT_REQUESTED" };
 const only = arg("only")?.split(",");
 const hostBytes = Number(arg("host-bytes") ?? 8326938624);
 const admissionCode = await import(pathToFileURL(join(codeRoot, "lib/control-plane/workers/worker-slots.ts")).href);
@@ -203,6 +205,8 @@ if (process.argv.includes("--runtime-controlled")) {
   environment.WTP_RUNTIME_MODE = "staging"; environment.WTP_DB_ROLE = "local";
   environment.WTP_RUNTIME_AUTHORITY_SHA = codeRevision;
 }
+if (exerciseNationalPlaces && (!process.argv.includes("--runtime-controlled") || !savedInventory))
+  throw Error("RH01 national exercise requires controlled authority and the saved exact command inventory");
 if (activePima) {
   if (!process.argv.includes("--runtime-controlled") || !savedInventory) throw Error("RH01 active diagnostic requires controlled authority and the saved exact inventory");
   const descriptor = environment.WTP_RH01_MODEL_BROKER;
@@ -258,6 +262,29 @@ if (activePima) {
     detail: detail.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted database connection]") };
   await writeFile(join(directory, "active-preparation-result.json"), JSON.stringify(activePreparation, null, 2));
   if (status !== 0) process.stderr.write("RH01_ACTIVE_PREPARATION_FAILED: native preparation remains incomplete; all exact inventory offers still proceed under native controls\n");
+}
+if (exerciseNationalPlaces) {
+  const commands = join(directory, "national-preparation-commands.json");
+  await writeFile(commands, JSON.stringify(selection.filter(job => job.script === "scripts/promote-registry-runtime.mts" && job.command.some(argument => argument.startsWith("--national-zips=")))));
+  const preparation = spawn(process.execPath, ["--experimental-strip-types", "--import", join(harnessRoot, "scripts/register-test-loader.mjs"),
+    join(harnessRoot, "scripts/rh01-national-overlay-prepare.mts"), `--phase=${phase}`, `--commands=${commands}`,
+    ...(activePima ? ["--active-pima"] : [])], { cwd: harnessRoot, env: environment, stdio: ["ignore", "pipe", "pipe"] });
+  let detail = "";
+  const stdout = createWriteStream(join(directory, "national-preparation.stdout.log")), stderr = createWriteStream(join(directory, "national-preparation.stderr.log"));
+  preparation.stdout.on("data", chunk => { detail = (detail + chunk).slice(-4096); stdout.write(chunk); process.stdout.write(chunk); });
+  preparation.stderr.on("data", chunk => { detail = (detail + chunk).slice(-4096); stderr.write(chunk); process.stderr.write(chunk); });
+  const [status] = await once(preparation, "close"); stdout.end(); stderr.end();
+  nationalPreparation = status === 0 ? { status: "SUCCEEDED", code: 0 } : { status: "FAILED", code: typeof status === "number" ? status : null,
+    detail: detail.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted database connection]") };
+  await writeFile(join(directory, "national-preparation-result.json"), JSON.stringify(nationalPreparation, null, 2));
+  if (status !== 0) {
+    if (facts.exitCode === null && facts.signalCode === null) {
+      const ended = once(facts, "close"); facts.kill("SIGTERM");
+      const force = setTimeout(() => { facts.kill("SIGKILL"); }, 5000); force.unref();
+      try { await ended; } finally { clearTimeout(force); }
+    }
+    throw Error("RH01_NATIONAL_PREPARATION_FAILED: no workload was launched; the exact native due request remains unproved");
+  }
 }
 const active = new Map<number, { readonly job: Job; peak: number; ownPeak: number; readonly startedAt: number; readonly nested: Map<number, NestedPeak> }>();
 const observed = new Map<string, ObservedChild>(), observedMemory = new Map<number, MemorySample>();
@@ -598,6 +625,7 @@ for (const result of results) {
 const headroomBytes = 768 * 1024 * 1024;
 const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).toISOString(), elapsedMs, headroomBytes, comparisonLeaseWorkerBytes: leaseBytes,
   activePreparation,
+  nationalPreparation,
   requiredWorkerRoleCoverage: { required: allRoleCoverageRequired, roles: roleCoverage, missing: roleCoverage.filter(row => !row.complete).map(row => row.role),
     definition: "Actual native committed results produced during the workload. Preparation is excluded. SCOUT must finish its model loop; Auditor must commit a model review; ACQUIRER must complete a genuine generalized acquisition. Paid-role native usage is checked against the authorized phase broker's recorded provider usage." },
   modelDiagnosticSpend: diagnosticModelSpend(modelDiagnosticCalls),

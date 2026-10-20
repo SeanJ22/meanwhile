@@ -10,6 +10,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { MapPin } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
+import { recordVotingFailure } from "@/lib/ballot/voting-errors";
 import {
   directionsUrl,
   isPinnable,
@@ -83,14 +84,18 @@ export function VotingSitesPanel({
         });
         if (controller.signal.aborted) return;
         if (!res.ok) {
+          recordVotingFailure({ stage: "reader-response" }, new Error(`Voting lookup returned HTTP ${res.status}`));
           setState({ kind: "failed" });
           return;
         }
         const answer = (await res.json()) as VotingSitesAnswer;
         if (controller.signal.aborted) return;
         setState({ kind: "answered", answer });
-      } catch {
-        if (!controller.signal.aborted) setState({ kind: "failed" });
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          recordVotingFailure({ stage: "reader-request" }, error, value);
+          setState({ kind: "failed" });
+        }
       }
     },
     [address],

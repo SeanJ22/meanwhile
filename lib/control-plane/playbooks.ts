@@ -36,5 +36,8 @@ export async function readRolePlaybook(repos: FieldManualRepos, role: FieldManua
 
 export function workerSystemPrompt(role: FieldManualRole, text: string): string {
   if (!text.trim()) throw new Error("Worker instructions are missing. Restore them in Admin Settings.");
+  // This role answers from general knowledge after the sourced reader has
+  // declined. The acquisition frame requires saved bytes for every fact.
+  if (role === "ASK_FALLBACK") return `${role} PLAYBOOK\n${text}`;
   return `${WORKER_SAFETY_FRAME}\n\n${role} PLAYBOOK\n${text}`;
 }

@@ -106,6 +106,7 @@ export interface EvidenceRecord {
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
   fecProfile?: { candidateId: string; name: string; personId: string };
+  fecTotals?: { receipts: number | null; disbursements: number | null; cashOnHand: number | null; cycle: string; through: string | null };
   officeholder?: { officialId: string; termNote: string | null };
   rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
   /** A source-listing group is not a verified count of distinct meetings. */
@@ -215,6 +216,8 @@ export interface EvidencePack {
   denominators: Record<string, number>;
   /** `YYYY-MM-DD`, supplied. This module is not a clock. */
   today: string;
+  /** The exact instant used to select past and future records. */
+  asOf?: string;
 }
 
 /** Every source URL the pack actually contains — the allow-list for the answer. */

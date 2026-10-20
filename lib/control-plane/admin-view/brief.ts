@@ -17,6 +17,22 @@ import { listDoors } from "../../doors/registry.ts";
 import { projectDoors } from "./v6-doors-read.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
+import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
+
+/** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
+export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "workItems">): Promise<readonly QueueRow[]> {
+  const rows = await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK",
+    { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] });
+  return rows.flatMap(row => {
+    const item = row.value as Pick<WorkItem, "id" | "state" | "createdAt" | "autonomousPlan">;
+    const question = item.autonomousPlan?.readerQuestion;
+    if (!question || TERMINAL_WORK_ITEM_STATES.includes(item.state)) return [];
+    return [{ key: `ask-question:${item.id}`, kind: "hunt" as const,
+      what: `${question.place ? `ZIP ${question.place}: ` : ""}${question.text}`, chip: "Answer owed", tone: "warn" as const,
+      filter: "waiting" as const, owner: "Hunters", due: null, next: "Find and publish a sourced answer.",
+      progress: null, actions: [], open: null, at: item.createdAt, receipt: null, sendId: null }];
+  });
+}
 
 export interface BriefSnapshot {
   readonly day: string; readonly createdAt: string;
@@ -50,18 +66,19 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 }, fixList: { activeAndRecent: 500 } });
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
-  const [history,stuck,reports,doors]=await Promise.all([
+  const [history,stuck,reports,doors,questions]=await Promise.all([
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
     listDoors(repos.doors).then(d=>{if(d.unreadable)unread.push("some doors");const view=projectDoors({...d,saves:[],observedAt:at});if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
+    readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
   ]);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
   if(reports?.sites.some(s=>s.kind==="UNREADABLE"))unread.push("reader problems from an unread site");
   const fixes=v6FixesView(fixQueueView(collapseDecisionLog([])),fixItems(config));
   const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,fixes,sends:null,hunts:null,doors,scheduled:scheduledView(config,at).rows});
   if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
-  const fresh=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[])],at,unread);
+  const fresh=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
   return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
 /** Runs in BR-37's existing parent timer, even with the owner's PC off. Restart and competing ticks cannot save twice. */

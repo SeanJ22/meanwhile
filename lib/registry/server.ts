@@ -49,7 +49,9 @@ import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
-import { readRegistrationProjection } from "../registration/reader.ts";
+import { readRegistrationProjection, readRegistrationDivision, type DivisionMetadata } from "../registration/reader.ts";
+import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
+import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { stateOf } from "./wording.ts";
 import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
@@ -501,6 +503,20 @@ export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { z
     if (division) out.push(division);
   }
   return out;
+}
+
+/** Representation needs identity metadata, not a composed registration or resolver geometry. */
+export async function representationDivisionMetadata(ocdId: string): Promise<DivisionMetadata | undefined> {
+  const root = stateOcdIdFrom(ocdId);
+  const state = root?.split(":").at(-1);
+  // State divisions are deliberately absent from the registration inventory: the state is its scope.
+  if (root === ocdId) {
+    const label = jurisdictionLabels.jurisdictions.find(row => row.postal.toLowerCase() === state)?.name;
+    return label ? { ocdId, label, divisionType: root.split("/").at(-1)!.split(":")[0], tier: "state" } : undefined;
+  }
+  await settleRegistryRuntimeRead(statesForRegistryDivisions([ocdId]));
+  const known = getRegistryRuntimeReadModel().registry.divisions.find(row => row.ocdId === ocdId);
+  return known ?? (state ? readRegistrationDivision(state, ocdId) : undefined);
 }
 
 export async function seatHolderById(id: string, stateHint?: string): Promise<SeatHolder | null> {

@@ -68,7 +68,8 @@ test("the answer lists the next few with their bodies and their own times, count
 
 test("a window with nothing in it is a gap of ours, never 'none are held'", () => {
   const empty = composeAreaMeetings({ ask: { window: "TOMORROW" }, sittings: [], now: NOW });
-  assert.equal(empty.answer, "We have not recorded a meeting tomorrow for the governments in your area. That is what we hold, not a statement that none are held.");
+  assert.equal(empty.answer, "We don't have meeting information tomorrow for your area yet.");
+  assert.equal(empty.missingAnswer, true);
   assert.deepEqual(empty.gaps.map((gap) => gap.whose), ["OURS"]);
   assert.deepEqual(empty.records, []);
 });

@@ -1,11 +1,14 @@
-import { stateCampaignEvidence, stateCampaignQuestion } from "@/lib/ask/state-campaign";
+import { stateCampaignEvidence, stateCampaignQuestion, resolveStateCampaignRecordsAsk } from "@/lib/ask/state-campaign";
+import { requestedStateMoneySubjects, selectStateMoneyNames } from "@/lib/ask/state-money-subjects";
 import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerRoute } from "@/lib/api/reader-route";
-import { readRegistryRuntimeProjection } from "@/lib/reader/authority-reads";
+import { readRegistryRuntimeProjection, readStateRegistryAuthority } from "@/lib/reader/authority-reads";
 import { currentStateAuthorityProjection } from "@/lib/civic-data/state-reader";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
+import { recordQuestionWork } from "@/lib/ask/question-work";
+import { districtQuestion, composeDistrictAnswer } from "@/lib/ask/districts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
@@ -20,7 +23,7 @@ import { type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { divisionsByOcdIds, seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
@@ -68,7 +71,7 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion, type LexicalReading } from "@/lib/ask/lexical-reading";
+import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, requestedSchoolBoardSittings, shapeForBoundBody, unheldNamedBodyQuestion, type LexicalReading } from "@/lib/ask/lexical-reading";
 import { composePersonVotes, personVotesQuestionShape, readerPersonVotesQuestion, readerPersonVoteOfficials } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion, statesNamedInQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
@@ -122,10 +125,10 @@ import {
   type BallotSubjectRecord,
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
-import { captureAskInteraction } from "@/lib/db/ask-signal";
+import { captureAskInteraction, writeAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
-import { askUnsourced, shouldFallBack } from "@/lib/routing/unsourced-fallback";
+import { askUnsourced } from "@/lib/routing/unsourced-fallback";
 import {
   interpretationCacheKey,
   synthesisCacheKey,
@@ -156,7 +159,7 @@ import { afterResponse } from "@/lib/log/after-response";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
-import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders } from "@/lib/ask/server-sources";
+import { loadBallotForDivisions, namedFederalOfficeholder, namedOfficeholders, readerOfficeholders } from "@/lib/ask/server-sources";
 import { heldFilingSubjects, requestedHeldFilings, type HeldFilingSubject } from "@/lib/ask/held-filing-subjects";
 import {
   askAnswer,
@@ -404,13 +407,42 @@ async function answerWithSettings(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
+  let preparedGeneral: ReturnType<typeof askUnsourced> | null = null;
+  const generalAbort = new AbortController();
+  const prepareGeneralAfterRecentMiss = () => {
+    // Retained records still win. Prepare the separate AI answer while the
+    // exact older vote is checked, and display it only if that check is empty.
+    preparedGeneral ??= askUnsourced(question, { place: null, signal: generalAbort.signal });
+  };
+  const completeMissingAnswer = async (payload: AskAnswerPayload, replaceAnswer = false): Promise<AskAnswerPayload> => {
+    if (replaceAnswer || !payload.answer) payload.answer = "We don't have that answer yet.";
+    const general = await (preparedGeneral ?? askUnsourced(question, { place: /^(?:congress(?:-api)?|bioguide):/.test(payload.subject?.id ?? "")
+      ? null : [...new Set([typeof body.approximateLocation === "string" ? body.approximateLocation : "",
+        ...placeNamesOf(ocdIds), ...statesOf(ocdIds)].filter(Boolean))].join(", ") || null }));
+    if (general.kind === "UNSOURCED") payload.aiAnswer = general.answer.text;
+    await afterResponse(async () => {
+      try { await recordQuestionWork({ question, divisions: ocdIds,
+        place: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+        subjectId: payload.subject?.id, runClass: markerFromRequest(request).runClass, now: new Date().toISOString() }); }
+      catch (error) { console.error("Ask acquisition work was not saved:", error instanceof Error ? error.message : "unknown"); }
+    });
+    payload.trace.totalMs = Date.now() - started;
+    return payload;
+  };
   const namedStates = statesNamedInQuestion(question);
+  const statewideOffice = readerOfficialsQuestion(question, namedStates.map(state => state.toLowerCase()));
+  const stateExecutiveOnly = Boolean(statewideOffice?.keys.length && statewideOffice.keys.every(key =>
+    ["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"].includes(key)));
+  // Statewide officeholders live in this canonical authority. District shapes,
+  // Congress, campaign sites and member offices do not supply these positions.
+  const readAskRegistry = stateExecutiveOnly || lexicalQuestionShape(question)?.shape === "MEETING_TIME"
+    ? readStateRegistryAuthority : readRegistryRuntimeProjection;
   const ballotZip = !namedStates.length && typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
   const namedStateDivisions = namedStates.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
   let ocdIds = namedStates.length ? namedStateDivisions : await ballotPlaceDivisions({ divisions: Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40) : [], zip: ballotZip });
   if (namedStates.length) {
-    const registry = await readRegistryRuntimeProjection(namedStates);
+    const registry = await readAskRegistry(namedStates);
     if (registry.kind === "PROMOTED" || registry.kind === "BOOTSTRAP") {
       const words = ` ${question.toLowerCase().replace(/[^a-z0-9]+/g, " ")} `;
       const namedDivisions = registry.value.registry.divisions.filter(division => {
@@ -438,6 +470,10 @@ async function answerWithSettings(request: Request) {
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
   const readerVoteAsk = readerPersonVotesQuestion(question);
+  const requestedVoteTopic = readerVoteAsk ? readerVoteAsk.topic : personVotesQuestionShape(question)?.topic;
+  const votingOnly = Boolean(readerVoteAsk || personVotesQuestionShape(question));
+  const billVote = votingOnly && Boolean(requestedVoteTopic && /\b(?:h\s*r|hr|s)\s*\d+\b/i.test(requestedVoteTopic));
+  const exactVote = billVote || votingOnly && Boolean(requestedVoteTopic && /^(?:confirmation|nomination)\b/i.test(requestedVoteTopic));
   const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
 
   const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase()), placeNamesOf(ocdIds)) : null;
@@ -445,18 +481,22 @@ async function answerWithSettings(request: Request) {
   const areaMeetingsAsk = !topicRoute && !officialsAsk && ocdIds.length > 0 &&
     readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused)
     ? areaMeetingsQuestion(question) : null;
-
-  const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
+  const districtAsk = districtQuestion(question);
+  const campaignRecordsAsk = !topicRoute ? await resolveStateCampaignRecordsAsk(question, ocdIds) : null;
+  const leanAsk = Boolean(officialsAsk || areaMeetingsAsk || districtAsk || campaignRecordsAsk);
   const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
-    readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
-    readSubjectRefs(body.priorSubjects, 8).length === 0 &&
-    (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
+    readSubjectRefs(body.activeSubjects).every(ref => !ref.focused);
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
 
   const noPersonRecordShapes = new Set([...sittingShapes, "BODY_ROSTER", "BODY_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
   const deferShape = !topicRoute && !financeQuestionAsked(question) && noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? "");
-
+  const deferSittingIdentity = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
+  const governmentMoneyAsk = !topicRoute && lexicalQuestionShape(question)?.shape === "GOVERNMENT_MONEY";
+  const deferSittingOutcomes = !topicRoute && lexicalQuestionShape(question)?.shape === "MEETING_TIME";
   const deferPersonRecords = !topicRoute && !deferShape && asksOnlyMoney(question);
+  if (deferPersonRecords) selectStateMoneyNames(question);
+  const federalMoneyOnly = deferPersonRecords && !moneyQuestionShape(question)?.raceWords;
+  const needsOutcomePreload = !deferSittingOutcomes && !governmentMoneyAsk && !deferPersonRecords && !readerVoteAsk && !personVotesQuestionShape(question);
   /* Every read inside the stage is timed under its own name; the preloads run in parallel, so theirs overlap rather than sum. */
   const preloadMs: Record<string, number> = {};
   const timed = <T,>(name: string, read: () => Promise<T>) => async (): Promise<T> => {
@@ -468,9 +508,11 @@ async function answerWithSettings(request: Request) {
     }
   };
   const production = process.env.NODE_ENV === "production";
-  const outcomesFromDatabase = leanAsk || ballotOnlyHint ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || ballotOnlyHint || !needsOutcomePreload ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint
+  const needsCommentAccess = production && !leanAsk && !deferSittingOutcomes && !governmentMoneyAsk && !votingOnly && !deferPersonRecords;
+  const commentAccessFromDatabase = needsCommentAccess && !ballotOnlyHint
+
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   if (fecRaceMoneyQuestion(question)) {
@@ -534,24 +576,43 @@ async function answerWithSettings(request: Request) {
   }
 
   const registryStates = [...new Set([...statesOf(ocdIds), ...currentReaderSelection()?.states ?? []])];
-  await readRegistryRuntimeProjection(registryStates);
+  const earlyFederalDirectory = !campaignRecordsAsk && (votingOnly || federalMoneyOnly)
+    ? timed("federalDirectory", () => settleFederalDirectoryRead(registryStates))() : null;
+  earlyFederalDirectory?.catch(() => undefined);
+  await readAskRegistry(registryStates);
   const registrySource = registryStates.every(state => currentStateAuthorityProjection("registry-runtime", state)?.source === "EDGE") ? "EDGE" : "DATABASE";
+  const registryBodies = snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity);
+  const calendarReading = deferSittingIdentity || governmentMoneyAsk ? lexicalReading({ question, inventory: registryBodies, namedBodies: registryBodies,
+    confirmation: body.confirmation, activeSubjects: readSubjectRefs(body.activeSubjects), priorSubjects: readSubjectRefs(body.priorSubjects, 8),
+    readerGoverning: registryBodies.filter(entity => entity.ocdId && ocdIds.includes(entity.ocdId)) }) : null;
   const questionShape = lexicalQuestionShape(question);
-  const needsMeetings = ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
+  const needsMeetings = !districtAsk && !campaignRecordsAsk && ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
+  const calendarTime = calendarReading?.interpretation.temporal.kind;
+  const nearbyCalendar = deferSittingOutcomes && calendarReading && (calendarTime === "LAST" || calendarTime === "NEXT");
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
-    window: "HELD",
+    window: nearbyCalendar ? "SHOWN" : "HELD",
+    includeAgenda: !deferSittingOutcomes,
     states: statesOf(ocdIds),
-    ocdIds,
+    ocdIds: calendarReading ? [] : ocdIds,
+    ...(calendarReading ? { bodyIds: [calendarReading.subjectId] } : {}),
+  }).then(async read => {
+    if (!nearbyCalendar || (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP")) return read;
+    const sittings = requestedSchoolBoardSittings(question, calendarReading.subjectId, read.value.meetings, { requireBoardTitle: true })
+      .filter(meeting => meeting.bodyId === calendarReading.subjectId);
+    if (selectSitting(calendarTime, sittings, Date.now())) return read;
+    // A recent held sitting is necessarily the latest; an empty nearby window
+    // says nothing about retained history. Keep the complete calendar on a miss.
+    return readReaderEdgeMeetings({ window: "HELD", includeAgenda: false, states: statesOf(ocdIds), bodyIds: [calendarReading.subjectId] });
   }) : null;
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    timed("federalDirectory", () => settleFederalDirectoryRead()),
-    outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead),
+    ...(stateExecutiveOnly ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
+    ...(needsOutcomePreload ? [outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead)] : []),
     ...(commentAccessFromDatabase
       ? [() => commentAccessFromDatabase]
-      : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
+      : needsCommentAccess ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
   const promotedSource = (_family: PromotedAuthorityFamily | "federal-directory" | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "DATABASE" => "DATABASE";
   trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
@@ -570,7 +631,20 @@ async function answerWithSettings(request: Request) {
     officeholderStatements: promotedSource("officeholder-statements"),
     executiveActions: promotedSource("executive-actions"),
   };
-
+  if (!needsCommentAccess) delete trace.preloadSources.commentAccess;
+  if (!needsOutcomePreload) delete trace.preloadSources.outcomes;
+  if (areaMeetingsAsk || stateExecutiveOnly) delete trace.preloadSources.federalDirectory;
+  const moneyStates = ballotStatesForDivisions(ocdIds).filter((state): state is StateCampaignFinanceJurisdiction => state in STATE_CAMPAIGN_FINANCE_SOURCES);
+  let moneyRead: Promise<unknown> | null = null;
+  const stateMoneyPreload = () => moneyRead ??= timed("stateMoney", () => Promise.all(moneyStates.map(state => settleStateMoneyRead(state))))();
+  let stateMoneyFilers: ReturnType<typeof requestedStateMoneySubjects> = [];
+  if (deferPersonRecords && readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)) {
+    await earlyFederalDirectory?.catch(() => undefined);
+    if (!namedFederalOfficeholder(question)) {
+      await settleGroundedSourcePreloads([stateMoneyPreload]);
+      stateMoneyFilers = requestedStateMoneySubjects(question, moneyStates);
+    }
+  }
   let stateVotesRead: Promise<unknown> | null = null;
   let deferrableSourcesLoaded = false;
   const personStateVotes = () => {
@@ -588,19 +662,31 @@ async function answerWithSettings(request: Request) {
   const unrelatedPreloads = [pimaFinancePreload, ...personRecordPreloads];
 
   const skippedPreloads = deferShape ? unrelatedPreloads : deferPersonRecords ? personRecordPreloads : [];
+  const markDeferrableLoaded = () => { deferrableSourcesLoaded = true; return Promise.resolve(); };
+  const fundingPreload = timed("funding", settleFundingRead);
+  const campaignFinancePreload = timed("campaignFinance", () => settleCampaignFinanceReads(ocdIds));
   const deferrablePreloads = [
-    () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
-    timed("funding", settleFundingRead),
-    timed("campaignFinance", () => settleCampaignFinanceReads(ocdIds)),
-    timed("stateMoney", () => Promise.all(ballotStatesForDivisions(ocdIds).filter(state => state in STATE_CAMPAIGN_FINANCE_SOURCES).map(state => settleStateMoneyRead(state as StateCampaignFinanceJurisdiction)))),
+    markDeferrableLoaded,
+    ...(stateMoneyFilers.length ? [campaignFinancePreload] : votingOnly ? personRecordPreloads.slice(0, exactVote && !billVote ? 1 : 2) : [
+    fundingPreload,
+    campaignFinancePreload,
+    stateMoneyPreload,
     timed("candidateProfiles", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state)))),
     timed("candidateCorpus", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state)))),
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
+    ]),
   ];
-
-  const identityReady = settleGroundedSourcePreloads(essentialPreloads.slice(0, officialsAsk?.unresolvedPlace ? 1 : 2));
-  await settleGroundedSourcePreloads(topicRoute ? [() => identityReady, ...essentialPreloads.slice(2)] : leanAsk ? [() => identityReady]
-    : [() => identityReady, ...essentialPreloads.slice(2), ...deferrablePreloads.map(preload => async () => { await identityReady; return preload(); })]);
+  // These holdings remain available on the sitting path; settle them beside
+  // its canonical calendar read rather than after the calendar has arrived.
+  const sittingSources = deferSittingIdentity && calendarReading ? settleGroundedSourcePreloads(deferrablePreloads) : null;
+  sittingSources?.catch(() => undefined);
+  const identityReady = settleGroundedSourcePreloads(essentialPreloads.slice(0, officialsAsk?.unresolvedPlace || calendarReading || areaMeetingsAsk || districtAsk || campaignRecordsAsk ? 1 : 2));
+  await settleGroundedSourcePreloads(topicRoute || deferSittingIdentity || governmentMoneyAsk && calendarReading ? [() => identityReady, ...essentialPreloads.slice(2)] : leanAsk ? [() => identityReady]
+    : [() => identityReady, ...essentialPreloads.slice(2), ...deferrablePreloads.map(preload => async () => {
+      await identityReady;
+      if (federalMoneyOnly && namedFederalOfficeholder(question) && preload !== fundingPreload && preload !== markDeferrableLoaded) return;
+      return preload();
+    })]);
   if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
     await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
     if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
@@ -613,6 +699,75 @@ async function answerWithSettings(request: Request) {
   }
   lap("sourcePreloads");
   trace.preloads = preloadMs;
+  if (campaignRecordsAsk) {
+    const campaign = await timed("campaignRecords", () => stateCampaignEvidence(campaignRecordsAsk))();
+    const answer = campaign.records.length ? `Held campaign records include ${campaign.filers.length
+      ? campaign.filers.slice(0, 2).map(name => `“${name}”`).join(" and ") : "the published filings for this place"}.` : "We don't have that answer yet.";
+    const pack: EvidencePack = { question, intent: "CIVICS", temporal: { kind: "NONE" }, subject: null,
+      records: campaign.records, gaps: campaign.records.length || campaign.gaps.length ? campaign.gaps : [{ whose: "OURS", statement: "We don't have campaign records for that place yet." }], denominators: campaign.denominators, today: new Date().toISOString().slice(0, 10) };
+    const verdict = validateAnswer(answer, [...new Set(campaign.records.flatMap(row => row.sourceUrl ? [row.sourceUrl] : []))], pack);
+    trace.interpretation = { ran: false, why: "place-campaign-records", intent: "CIVICS", temporal: { kind: "NONE" }, fellBackToDeterministic: true };
+    trace.resolution = { state: "NONE", basis: "READER_PLACE" };
+    trace.retrieval = { selection: "READER_PLACE", recordCount: pack.records.length, sourceCount: new Set(pack.records.map(row => row.sourceUrl)).size,
+      gapCount: pack.gaps.length, denominators: pack.denominators };
+    trace.synthesis = { ran: false, why: "place-campaign-records" };
+    trace.preloadSources = { registry: registrySource };
+    trace.validation = { ran: true, passed: verdict.kind === "PASSED", checked: verdict.kind === "PASSED" ? verdict.checked : [] };
+    const mode = campaign.records.length && verdict.kind === "PASSED" ? "GROUNDED_COMPOSED" : "NO_EVIDENCE";
+    trace.answerMode = mode;
+    const payload = askAnswer({ mode, pack, answer: mode === "GROUNDED_COMPOSED" ? answer : "We don't have that answer yet.", contacts: [], trace });
+    if (mode === "NO_EVIDENCE") await completeMissingAnswer(payload);
+    await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
+      resolutionState: "NONE", mode, subjectIds: [], answer: payload.answer, answerModel: null,
+      validationPassed: verdict.kind === "PASSED", records: pack.records, gaps: pack.gaps, surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
+      approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+      continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+    trace.totalMs = Date.now() - started;
+    return Response.json(payload);
+  }
+  if (districtAsk) {
+    const districtIds = ocdIds.filter(id => {
+      const kind = /\/(cd|sldl|sldu|school_district):[^/]+$/.exec(id)?.[1];
+      return kind && (districtAsk === "ALL" || kind === districtAsk);
+    });
+    const composed = composeDistrictAnswer(districtAsk, districtIds.length ? await divisionsByOcdIds(districtIds) : [], ballotZip ?? null);
+    if (composed) {
+      const pack: EvidencePack = { question, intent: "CIVICS", temporal: { kind: "NONE" }, subject: null,
+        records: composed.records, gaps: [], denominators: { districts: composed.records.length }, today: new Date().toISOString().slice(0, 10) };
+      const verdict = validateAnswer(composed.answer, composed.citedUrls, pack);
+      if (verdict.kind === "PASSED") {
+        trace.interpretation = { ran: false, why: "place-districts", intent: "CIVICS", temporal: { kind: "NONE" }, fellBackToDeterministic: true };
+        trace.resolution = { state: "NONE", basis: "READER_PLACE" };
+        trace.retrieval = { selection: "READER_PLACE", recordCount: pack.records.length, sourceCount: composed.citedUrls.length,
+          gapCount: 0, denominators: pack.denominators };
+        trace.answerMode = "GROUNDED_COMPOSED";
+        trace.totalMs = Date.now() - started;
+        trace.synthesis = { ran: false, why: "place-districts" };
+        trace.validation = { ran: true, passed: true, checked: verdict.checked };
+        await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
+          resolutionState: "NONE", mode: "GROUNDED_COMPOSED", subjectIds: [], answer: composed.answer, answerModel: null,
+          validationPassed: true, records: composed.records, gaps: [], surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
+          approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+          continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        return Response.json(askAnswer({ mode: "GROUNDED_COMPOSED", pack, answer: composed.answer, contacts: [], trace }));
+      }
+    }
+    const gap: EvidenceGap = { whose: "OURS", statement: "We don't have that answer yet." };
+    const pack: EvidencePack = { question, intent: "CIVICS", temporal: { kind: "NONE" }, subject: null,
+      records: [], gaps: [gap], denominators: { districts: 0 }, today: new Date().toISOString().slice(0, 10) };
+    trace.interpretation = { ran: false, why: "place-districts", intent: "CIVICS", temporal: { kind: "NONE" }, fellBackToDeterministic: true };
+    trace.resolution = { state: "NONE", basis: "READER_PLACE" };
+    trace.retrieval = { selection: "READER_PLACE", recordCount: 0, sourceCount: 0, gapCount: 1, denominators: pack.denominators };
+    trace.synthesis = { ran: false, why: "place-district-not-held" };
+    trace.answerMode = "NO_EVIDENCE";
+    const payload = await completeMissingAnswer(askAnswer({ mode: "NO_EVIDENCE", pack, answer: gap.statement, contacts: [], trace }));
+    await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
+      resolutionState: "NONE", mode: "NO_EVIDENCE", subjectIds: [], answer: payload.answer, answerModel: null,
+      validationPassed: null, records: [], gaps: [gap], surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
+      approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+      continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+    return Response.json(payload);
+  }
   let snapshot: MeetingsSnapshot | null = null;
   let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" | "NOT_NEEDED" =
     needsMeetings ? "STORE_UNREACHABLE" : "NOT_NEEDED";
@@ -655,13 +810,31 @@ async function answerWithSettings(request: Request) {
   const surface: "MAP" | "BALLOT" | "UNKNOWN" =
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
+  const canonicalBodies = snapshotEntities([...meetings, ...bodyIdentityIndex().values()], canonicalBodyIdentity);
+  const sittingReading = calendarReading ?? (deferSittingIdentity ? lexicalReading({ question, inventory: canonicalBodies, namedBodies: canonicalBodies,
+    confirmation: body.confirmation, activeSubjects: readSubjectRefs(body.activeSubjects), priorSubjects: readSubjectRefs(body.priorSubjects, 8),
+    readerGoverning: canonicalBodies.filter(entity => entity.ocdId && ocdIds.includes(entity.ocdId)) }) : null);
+  meetings = requestedSchoolBoardSittings(question, sittingReading?.subjectId, meetings);
+  if (deferSittingOutcomes) {
+    const temporal = sittingReading?.interpretation.temporal.kind;
+    const heldTime = sittingReading && (temporal === "NEXT" || temporal === "LAST") &&
+      selectSitting(temporal, meetings.filter(meeting => meeting.bodyId === sittingReading.subjectId), Date.now());
+    if (!heldTime) await settleGroundedSourcePreloads([timed("outcomes", settleOutcomeRead)]);
+  }
+  if (deferSittingIdentity) await (sittingSources ?? settleGroundedSourcePreloads(deferrablePreloads));
   const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
-  const governmentListings = officialsAsk?.unresolvedPlace ? { records: [], unavailableStates: [] }
-    : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
-  const listedGovernments = governmentListings.records.map(governmentListingEntity);
+  const governmentListings = leanAsk || sittingReading || deferPersonRecords || personVotesQuestionShape(question) ? { records: [], unavailableStates: [] }
+    : await timed("governmentListings", () => readerGovernmentListings(question, ocdIds, [...explicitBodyIds]))().catch(() => ({ records: [], unavailableStates: [] }));
+  const listedGovernments = governmentListings.records.map(row => {
+    const entity = governmentListingEntity(row);
+    const canonical = row.bodyIds.flatMap(id => canonicalBodyIdentity(id) ?? []);
+    return canonical.length === 1 ? { ...entity, id: canonical[0].bodyId, ocdId: canonical[0].ocdId,
+      divisionType: canonical[0].divisionType } : entity;
+  });
   /* A body named in the reader's state may be guessed from a typo; the state's index says which bodies hold meetings. */
-  const heldBodyIds = needsMeetings ? await readHeldBodyIds({ states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
+  const heldBodyIds = needsMeetings && !calendarReading ? await readHeldBodyIds({ states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
+
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId) || heldBodyIds.has(entry.bodyId));
   const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
@@ -689,13 +862,15 @@ async function answerWithSettings(request: Request) {
     if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
   trace.sourcesLoaded = leanAsk ? "ESSENTIAL" : !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
-  const officeholders: Awaited<ReturnType<typeof readerOfficeholders>> = officialsAsk?.unresolvedPlace
-    ? { seats: [], loaderFailures: 0, held: [] } : await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  const federalPerson = deferPersonRecords || personVotesQuestionShape(question) ? namedFederalOfficeholder(question) : null;
+  const officeholders: Awaited<ReturnType<typeof readerOfficeholders>> = officialsAsk?.unresolvedPlace || sittingReading || areaMeetingsAsk || stateMoneyFilers.length > 0
+    ? { seats: [], loaderFailures: 0, held: [] } : await timed("officeholders", () => readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId),
+      officialsAsk?.keys ?? (federalPerson ? ["us_senator", "us_representative"] : undefined)))();
   let namedPeople = 0;
-  if (!officialsAsk?.unresolvedPlace) try {
+  if (!officialsAsk && !areaMeetingsAsk && !sittingReading && !stateMoneyFilers.length) try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
-      .flatMap((ref) => ref.id ? [ref.id] : []);
-    const named = await namedOfficeholders(question, explicitIds, ocdIds);
+      .flatMap(ref => ref.id ? [ref.id] : []);
+    const named = federalPerson ? [federalPerson] : await timed("namedOfficeholders", () => namedOfficeholders(question, explicitIds, ocdIds))();
     namedPeople = named.length;
     for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
   } catch {
@@ -709,9 +884,10 @@ async function answerWithSettings(request: Request) {
   }
   const people = personEntities(officeholders.seats);
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
-  const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
+  const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds, officeholders.seats);
 
-  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
+
+  const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || sittingReading || stateMoneyFilers.length > 0 || (votingOnly || federalMoneyOnly) && federalPerson ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
     ? [{ whose: "OURS", statement: `We couldn't load our meeting records. Please try again in a moment.` }]
@@ -745,7 +921,7 @@ async function answerWithSettings(request: Request) {
     for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
   }
   let fecSubjects: ReturnType<typeof requestedFecSubjects> = [];
-  if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
+  if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk && !votingOnly) {
     try { fecSubjects = requestedFecSubjects(question, preferredOfficialIds).map(row => {
       const id = officialToBallot.get(row.entity.id) ?? officialAliases.get(row.entity.id) ?? row.entity.id;
       return { entity: { ...row.entity, id }, record: { ...row.record, subjectId: id } };
@@ -755,7 +931,7 @@ async function answerWithSettings(request: Request) {
   const partyConflictFilings = new Map<string, PartyConflictFiling>();
 
   const surfaceIds = new Set(preferredOfficialIds);
-  const inventory = [
+  const inventory = stateMoneyFilers.length ? stateMoneyFilers : [
     ...bodies,
     ...heldFilings.map(row => row.entity),
     ...fecSubjects.map(row => row.entity),
@@ -777,8 +953,7 @@ async function answerWithSettings(request: Request) {
   const focusedVoteChoices = readerVoteChoices.filter(entity => focusedVoteIds.has(entity.id) ||
     [...focusedVoteIds].some(id => (officialToBallot.get(id) ?? officialAliases.get(id) ?? id) === entity.id));
   if (focusedVoteChoices.length === 1) readerVoteChoices = focusedVoteChoices;
-
-  const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
+  const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? stateMoneyFilers.find(row => row.id === id)?.officeTitle ?? null;
 
   const suppliedToday =
     typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today);
@@ -849,7 +1024,8 @@ async function answerWithSettings(request: Request) {
   let interpretation: AskInterpretation = unavailableInterpretation();
   const interpretationStarted = Date.now();
   const interpretContext = {
-    inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType })),
+    inventory: inventory.map((e) => ({ name: titleCaseName(e.name), divisionType: e.divisionType,
+      local: Boolean(e.ocdId && ocdIds.includes(e.ocdId)) })),
     today,
     approximateLocation:
       typeof body.approximateLocation === "string" ? body.approximateLocation : null,
@@ -866,7 +1042,7 @@ async function answerWithSettings(request: Request) {
   const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
     interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
     subjectId: readerVoteChoices.length === 1 ? readerVoteChoices[0]!.id : "" } : null;
-  const lexical = modelFreeTopicRoute ? null : readerVoteReading ?? lexicalReading({
+  const lexical = modelFreeTopicRoute ? null : sittingReading ?? readerVoteReading ?? lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
     readerGoverning: scopedBodies.filter((entry) => entry.ocdId && (entry.bodyId === `${entry.ocdId}#governing` || entry.bodyId === `${entry.ocdId}#board`))
       .flatMap((entry) => inventory.filter((entity) => entity.id === entry.bodyId)),
@@ -874,12 +1050,15 @@ async function answerWithSettings(request: Request) {
   if (deferPersonRecords) {
     trace.sourcesLoaded = "WITHOUT_PERSON_RECORDS";
     for (const key of ["federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) delete trace.preloadSources![key];
+    if (federalMoneyOnly && federalPerson) for (const key of ["stateMoney", "azPimaFinance", "ballots", "candidateProfiles", "candidateCorpus"]) delete trace.preloadSources![key];
+    if (stateMoneyFilers.length) for (const key of ["funding", "azPimaFinance", "ballots", "candidateProfiles", "candidateCorpus"]) delete trace.preloadSources![key];
   } else if (deferShape) {
     if (lexical && noPersonRecordShapes.has(lexical.shape)) {
       trace.sourcesLoaded = sittingShapes.has(lexical.shape) ? "IDENTITY_AND_MEETINGS" : "WITHOUT_PERSON_RECORDS";
       for (const key of ["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]) {
         delete trace.preloadSources![key];
       }
+      if (calendarReading) delete trace.preloadSources!.federalDirectory;
     } else {
       // Enter in this async scope, not inside a preload helper: otherwise the
       // AsyncLocalStorage context would not reach the subsequent readers.
@@ -892,6 +1071,9 @@ async function answerWithSettings(request: Request) {
       await settleGroundedSourcePreloads(unrelatedPreloads);
       trace.sourcesLoaded = "ALL";
     }
+  }
+  if (votingOnly) for (const key of ["funding", "stateMoney", "azPimaFinance", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions", ...(exactVote && !billVote ? ["federalKeyVotes"] : [])]) {
+    delete trace.preloadSources![key];
   }
   const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, `${resolveAskRoleModel("READER")}:${askPlaybookVersion("ASK_READER")}`);
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
@@ -962,6 +1144,7 @@ async function answerWithSettings(request: Request) {
       trace.interpretation.temporal = interpretation.temporal;
     }
 
+    const voteActor = lexical?.shape === "PERSON_VOTES" ? inventory.find(entity => entity.id === lexical.subjectId && entity.nameClass === "person") : null;
     const initialResolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
       ? { binding: readerVoteChoices.length === 1
           ? { kind: "BOUND", entity: readerVoteChoices[0]!, matchedOn: readerVoteAsk.office.phrase }
@@ -969,17 +1152,20 @@ async function answerWithSettings(request: Request) {
         basis: "READER_WORDS", boundOn: question }
       : (officialsAsk?.place || officialsAsk?.unresolvedPlace)
       ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
+      : voteActor ? { binding: { kind: "BOUND", entity: voteActor, matchedOn: question }, basis: "READER_WORDS", boundOn: question }
       : resolveInterpretation(interpretation, question, inventory, {
         activeSubjects,
         priorSubjects,
       });
     let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place || officialsAsk?.unresolvedPlace || readerVoteReading ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
-        ? interpretation.entityMentions : []);
+        ? interpretation.entityMentions : [], ocdIds);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
-
+    const modelBoundToPlace = initialResolution.binding.kind === "BOUND" && initialResolution.basis.startsWith("MODEL_EXPANSION") &&
+      Boolean(initialResolution.binding.entity.ocdId && ocdIds.includes(initialResolution.binding.entity.ocdId));
+    if ((bodyDecision.kind === "CLARIFY" || bodyDecision.kind === "CONFIRM") && modelBoundToPlace) bodyDecision = { kind: "NONE" };
     if (bodyDecision.kind === "NONE" && initialResolution.binding.kind === "BOUND" &&
-      initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
+      initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION") && !modelBoundToPlace) bodyDecision = { kind: "CLARIFY" };
     const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
 
     const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
@@ -1032,6 +1218,7 @@ async function answerWithSettings(request: Request) {
           : unheldBody.shape === "BODY_AGENDA" ? "agendas"
           : unheldBody.shape === "PUBLIC_COMMENT" ? "public-comment rules" : "calendar";
         const answer = unheldBodyAnswer(titleCaseName(unheldBody.name), information, trace);
+        await completeMissingAnswer(answer);
         await capture("NO_EVIDENCE", [], answer.answer, null, null, [], answer.gaps);
         return Response.json(answer);
       } };
@@ -1044,11 +1231,18 @@ async function answerWithSettings(request: Request) {
         const answer = clarifyAnswer(question, [], trace);
 
         delete answer.candidates;
-        if (decision.kind === "CONFIRM") answer.confirmation = {
-          bodyId: decision.candidate.id, name: titleCaseName(decision.candidate.name), question,
-        };
-        else answer.clarification = "Which government do you mean? A city or state can help me identify it.";
-        await capture("CLARIFY", [], null, null, null, [], []);
+        if (decision.kind === "CONFIRM") {
+          answer.bodyChoices = [decision.candidate, ...decision.alternatives].map(candidate => ({
+            bodyId: candidate.id, name: titleCaseName(candidate.name), question,
+          }));
+          answer.confirmation = answer.bodyChoices[0];
+        }
+        else {
+          answer.mode = "NO_EVIDENCE";
+          answer.trace.answerMode = "NO_EVIDENCE";
+          await completeMissingAnswer(answer);
+        }
+        await capture(answer.mode, [], answer.answer, null, null, [], []);
         return Response.json(answer);
       } };
     }
@@ -1085,6 +1279,7 @@ async function answerWithSettings(request: Request) {
         trace.totalMs = Date.now() - started;
         await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
         const answer = unresolvedAnswer(binding.mention, trace);
+        await completeMissingAnswer(answer);
         if (resolution.unresolvedCanonicalId) {
           answer.denominators.identityUnresolved = 1;
           answer.gaps.push({ whose: "OURS", statement: `We couldn't match ${binding.mention} to a person in our records. We haven't shown another person's information.` });
@@ -1231,7 +1426,7 @@ async function answerWithSettings(request: Request) {
         denominators.candidateContactLoaderFailures = 1;
       }
     }
-    denominators.meetingLoaderFailures = snapshot ? 0 : 1;
+    denominators.meetingLoaderFailures = snapshot || meetingDataState === "NOT_NEEDED" ? 0 : 1;
     denominators.officeholderLoaderFailures = officeholders.loaderFailures;
 
     if (ballotRecord && ballot.set) {
@@ -1279,7 +1474,7 @@ async function answerWithSettings(request: Request) {
           records.push(officeholderEvidence(seat, `office:${seat.id}`));
           denominators.officeholderRecords = (denominators.officeholderRecords ?? 0) + 1;
           contacts.push(contactForOfficeholder(seat));
-          await addMemberOfficeContacts(seat);
+          if (!votingOnly) await addMemberOfficeContacts(seat);
           if (!moneyOnly) officeholderActionEvidence(
             seat.id,
             seat.name,
@@ -1297,7 +1492,8 @@ async function answerWithSettings(request: Request) {
       if (ballotRecord.kind === "PERSON" && !moneyOnly) {
         if (candidateSeats.some((seat) => voteEvidenceReadsStateRollCalls(ballotRecord.name, { officeholderId: seat.id }))) await personStateVotes();
         const candidates = await Promise.all(candidateSeats.map((seat) =>
-          voteEvidenceForIncludingHistory(ballotRecord.name, { officeholderId: seat.id })));
+          voteEvidenceForIncludingHistory(ballotRecord.name, { officeholderId: seat.id, topic: requestedVoteTopic,
+            ...(exactVote ? { onRecentMiss: prepareGeneralAfterRecentMiss } : {}) })));
         const joined = candidates.filter((votes) => votes.identity.kind === "JOINED");
         for (const votes of joined) {
           records.push(...votes.records);
@@ -1315,7 +1511,7 @@ async function answerWithSettings(request: Request) {
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
       const federalDivision = financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
-      if (federalDivision) {
+      if (federalDivision && federalMoneyQuestion(question)) {
         const federal = await federalMoneyEvidence([{ divisionId: federalDivision, ...(bound?.level === "BODY" ? { bodyId: subject.id } : {}) }], subject.id, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
         records.push(...federal.records);
         Object.assign(denominators, federal.denominators);
@@ -1377,8 +1573,7 @@ async function answerWithSettings(request: Request) {
         records.push(...topicTimeline.records);
         gaps.push(...topicTimeline.gaps);
         Object.assign(denominators, topicTimeline.denominators);
-      } else if (!chosen && archivedOutcomes.length === 0) {
-
+      } else if (meetingDataState !== "NOT_NEEDED" && !chosen && archivedOutcomes.length === 0) {
         const notHeld = snapshot && !requestedMeetingDate ? meetingsNotHeldGap(subject.id, forBody.length) : null;
         attachSittingGaps("NO_SITTING", [{
           ...(notHeld ? { code: notHeld.code, bodyId: notHeld.bodyId, recordClass: notHeld.recordClass } : {}),
@@ -1564,7 +1759,7 @@ async function answerWithSettings(request: Request) {
         denominators.officeholderRecords = 1;
         subject.office = seat.officeTitle;
         contacts.push(contactForOfficeholder(seat));
-        await addMemberOfficeContacts(seat);
+        if (!votingOnly) await addMemberOfficeContacts(seat);
       }
 
       if (moneyOnly) {
@@ -1590,7 +1785,8 @@ async function answerWithSettings(request: Request) {
       if (!moneyOnly) {
         if (voteEvidenceReadsStateRollCalls(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id })) await personStateVotes();
         const votes = await voteEvidenceForIncludingHistory(subject.name,
-          { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+          { withinStates: statesOf(ocdIds), officeholderId: seat?.id, topic: requestedVoteTopic,
+            ...(exactVote ? { onRecentMiss: prepareGeneralAfterRecentMiss } : {}) });
         if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
         records.push(...votes.records);
         gaps.push(...votes.gaps);
@@ -1598,7 +1794,7 @@ async function answerWithSettings(request: Request) {
       }
     }
 
-    if (subject?.kind === "PERSON" && !moneyOnly) {
+    if (subject?.kind === "PERSON" && !moneyOnly && !votingOnly) {
       const statements = statementEvidenceFor(ballotStatesForDivisions(ocdIds), subject, question, [...canonicalSubjectKeys]);
       records.push(...statements.records);
       gaps.push(...statements.gaps);
@@ -1610,7 +1806,7 @@ async function answerWithSettings(request: Request) {
       }
     }
 
-    if (subject?.kind === "PERSON" && !moneyOnly) {
+    if (subject?.kind === "PERSON" && !moneyOnly && !exactVote) {
       const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
       records.push(...keyVotes.records);
       gaps.push(...keyVotes.gaps);
@@ -1618,7 +1814,7 @@ async function answerWithSettings(request: Request) {
     }
 
     const federalMember = subject?.kind === "PERSON" ? [...canonicalSubjectKeys].find(id => /^congress:[A-Z]\d{6}$/.test(id)) ?? subject.id : null;
-    const federal = await federalAskEvidence(federalMember, question);
+    const federal = votingOnly ? { records: [], gaps: [], denominators: {} } : await federalAskEvidence(federalMember, question);
     records.push(...federal.records.map(record => subject?.kind === "PERSON" ? { ...record, subjectId: subject.id } : record));
     gaps.push(...federal.gaps);
     Object.assign(denominators, federal.denominators);
@@ -1873,6 +2069,7 @@ async function answerWithSettings(request: Request) {
       gaps: packGaps,
       denominators,
       today,
+      asOf: new Date(selectionNow).toISOString(),
     };
 
     trace.retrieval = {
@@ -1889,13 +2086,15 @@ async function answerWithSettings(request: Request) {
       : areaTimelines.length > 0 ? composeAreaTopicAnswer(areaTimelines, selectionNow) : null;
 
     const candidateSittingShape = !topicComposed && !topicFocus && snapshot && subject?.kind === "BODY"
-      ? (lexical && sittingShapes.has(lexical.shape) && lexical.subjectId === subject.id ? lexical.shape as "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | "PUBLIC_COMMENT" : shapeForBoundBody(question, inventory, subject.id)) : null;
-
+      ? (lexical && sittingShapes.has(lexical.shape) && lexical.subjectId === subject.id ? lexical.shape as "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | "PUBLIC_COMMENT"
+        : shapeForBoundBody(question, inventory, subject.id) ?? (interpretation.intent === "MEETING_TIME" ? "MEETING_TIME" : null)) : null;
+    // An explicit outcome date uses its quoted actions or its named outcome
+    // gap. Tell the composer this is the requested date, never next/latest.
     const sittingShape = !requestedMeetingDate || (requestedMeetingDate.date && candidateSittingShape === "MEETING_OUTCOME")
       ? candidateSittingShape : null;
 
     const sittingComposition = sittingShape && subject
-      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: subject.name, sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
+      ? composeSittingAnswerWithBasis({ shape: sittingShape, subjectName: titleCaseName(bodyNameFromQuestion(question, namedBodies, subject.id) ?? subject.name), sittings: resolvedSittings, records: packRecords, sittingGaps, now: selectionNow, includeLocation: /\bwhere\b/i.test(question), requestedLocalDate: requestedMeetingDate?.date, questionClass: outcomeQuestionClass(question),
         actions: heldActions, admissible: (text) => validateAnswer(text, [], pack, bodies).kind === "PASSED" })
       : null;
     const sittingSettled = settleSittingComposition(
@@ -1965,7 +2164,7 @@ async function answerWithSettings(request: Request) {
     }
 
     const officialsSettled = settleSittingComposition(
-      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls } : null,
+      officials && !topicComposed ? { answer: officials.answer, citedUrls: officials.citedUrls, missingAnswer: officials.missingAnswer } : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
     if (officialsAsk) {
@@ -2016,7 +2215,7 @@ async function answerWithSettings(request: Request) {
     }
 
     const calendarSettled = settleSittingComposition(
-      areaMeetings && !topicComposed ? { answer: areaMeetings.answer, citedUrls: areaMeetings.citedUrls } : null,
+      areaMeetings && !topicComposed ? { answer: areaMeetings.answer, citedUrls: areaMeetings.citedUrls, missingAnswer: areaMeetings.missingAnswer } : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
     );
     if (areaMeetingsAsk) {
@@ -2056,8 +2255,13 @@ async function answerWithSettings(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = federalMoneySettled.composed ?? populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const heldComposition = federalMoneySettled.composed ?? populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    // Only after every held-data composer has had its turn: an empty finance
+    // holding needs the separate AI answer, not another model to write a gap.
+    const financeNotHeld = !heldComposition && governmentMoneyAsk && subject?.kind === "BODY" &&
+      governmentFinanceQuestion(question) && !packRecords.some(row => row.kind === "GOVERNMENT_FINANCE" || row.kind === "FEDERAL_MONEY");
+    const composed = heldComposition ?? (financeNotHeld ? { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true } : null);
+    const composedWhy = financeNotHeld ? "government-finance-not-held" : federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
 
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
@@ -2069,6 +2273,11 @@ async function answerWithSettings(request: Request) {
     return {
       kind: "PACK" as const, retrievedAt, pack, packRecords, packGaps, subject, selection, composed, topicComposed, topicTimeline, areaTimelines,
       shownContacts, resolvedSittings, agendaQuestion, capture,
+      requestedEvidenceMissing: Boolean(sittingShape && (
+        sittingShape === "MEETING_TIME" ? resolvedSittings.length === 0
+        : sittingShape === "BODY_AGENDA" ? !packRecords.some(row => row.kind === "AGENDA_ITEM" || row.kind === "AGENDA_DOCUMENT")
+        : sittingShape === "MEETING_OUTCOME" ? !packRecords.some(row => ["MEETING_ACTION", "MEETING_MEMBER_VOTE", "MEETING_MINUTES_SUMMARY"].includes(row.kind))
+        : !packRecords.some(row => row.kind === "PUBLIC_COMMENT_ACCESS"))),
       composedWhy,
     };
   }
@@ -2212,19 +2421,6 @@ async function answerWithSettings(request: Request) {
   trace.answerMode = mode;
   trace.totalMs = Date.now() - started;
 
-  if (
-    mode === "NO_EVIDENCE" &&
-    answer === null &&
-    packRecords.length === 0 &&
-    shouldFallBack({ routerAnswered: false, routerDeclined: true })
-  ) {
-    const general = await askUnsourced(question);
-    if (general.kind === "UNSOURCED") {
-      answer = `${general.answer.text} ${general.answer.sourceLine}`;
-      answerModel = resolveAskRoleModel("UNSOURCED");
-    }
-  }
-
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 
   const gapObservations = planAskGapObservations({
@@ -2238,13 +2434,19 @@ async function answerWithSettings(request: Request) {
     pack,
     answer,
     contacts: shownContacts,
-
     meetings: resolvedSittings
-      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i)
-      .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
+      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i),
     trace,
   });
   payload.agendaLead = Boolean(agendaQuestion);
+  if (mode === "NO_EVIDENCE" || missingMeasureMeaning || path.requestedEvidenceMissing && synthesis?.kind !== "WROTE" ||
+    synthesis?.kind === "WROTE" && synthesis.missingAnswer ||
+    composed && "missingAnswer" in composed && composed.missingAnswer === true) {
+    await completeMissingAnswer(payload, synthesis?.kind === "WROTE" && synthesis.missingAnswer === true);
+    payload.agendaLead = false;
+  }
+  else generalAbort.abort();
+  trace.totalMs = Date.now() - started;
   payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return Response.json(payload);
 }
@@ -2267,37 +2469,40 @@ async function captureDelivered(input: {
   residency: ReturnType<typeof stampResidency>;
   continuityKey: string;
 }): Promise<void> {
-  try {
-    const marker = markerFromRequest(input.request);
-    await captureAskInteraction({
-      question: input.question,
-      intent: input.interpretation.intent,
-      temporalKind: input.interpretation.temporal.kind,
-      subjectIds: input.subjectIds,
-      resolutionState: input.resolutionState,
-      answerMode: input.mode,
-      answerText: input.answer,
-      answerModel: input.answerModel,
-      validationPassed: input.validationPassed,
-      evidenceRecordCount: input.records.length,
-      evidenceSourceCount: new Set(
-        input.records.map((r) => r.sourceUrl).filter(Boolean),
-      ).size,
-      namedGapCount: input.gaps.length,
-      evidenceProvenance: evidenceProvenance(input.records),
-      surface: input.surface,
-      approximateLocation: input.approximateLocation,
-      ocdIds: input.ocdIds,
-      divisionVintage: DIVISION_VINTAGE,
-      residencyRelation: input.residency.relation,
-      locationConfidence: input.residency.confidence,
-
-      continuityKey: input.continuityKey,
-      runClass: marker.runClass,
-      runId: marker.runId,
-      occurredAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error("ask signal capture failed", error);
-  }
+  if (markerFromRequest(input.request).runClass !== "ORGANIC") return;
+  await afterResponse(async () => {
+    try {
+      const marker = markerFromRequest(input.request);
+      const saved = await captureAskInteraction({
+        question: input.question,
+        intent: input.interpretation.intent,
+        temporalKind: input.interpretation.temporal.kind,
+        subjectIds: input.subjectIds,
+        resolutionState: input.resolutionState,
+        answerMode: input.mode,
+        answerText: input.answer,
+        answerModel: input.answerModel,
+        validationPassed: input.validationPassed,
+        evidenceRecordCount: input.records.length,
+        evidenceSourceCount: new Set(
+          input.records.map((r) => r.sourceUrl).filter(Boolean),
+        ).size,
+        namedGapCount: input.gaps.length,
+        evidenceProvenance: evidenceProvenance(input.records),
+        surface: input.surface,
+        approximateLocation: input.approximateLocation,
+        ocdIds: input.ocdIds,
+        divisionVintage: DIVISION_VINTAGE,
+        residencyRelation: input.residency.relation,
+        locationConfidence: input.residency.confidence,
+        continuityKey: input.continuityKey,
+        runClass: marker.runClass,
+        runId: marker.runId,
+        occurredAt: new Date().toISOString(),
+      }, writeAskInteraction);
+      if (saved.kind === "FAILED") console.error("Ask question was not saved:", saved.why);
+    } catch (error) {
+      console.error("ask signal capture failed", error);
+    }
+  });
 }

@@ -51,6 +51,7 @@ export interface AzOperationalReferenceBundle {
 
 let installedBundle: OperationalReferenceBundle | null = null;
 let installedAzBundle: AzOperationalReferenceBundle | null = null;
+let installedStateRegistries: Readonly<Record<string, JurisdictionRegistry>> = {};
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
@@ -184,6 +185,7 @@ export function installOperationalReferenceBundle(bundle: OperationalReferenceBu
 export function clearOperationalReferenceBundle(): void {
   installedBundle = null;
   installedAzBundle = null;
+  installedStateRegistries = {};
   installReviewedRegistryStates([]);
 }
 
@@ -197,7 +199,7 @@ export function installAzOperationalReferenceBundle(bundle: AzOperationalReferen
 }
 
 export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Record<string, JurisdictionRegistry>> {
-  const held = { ...installedBundle?.registries, ...installedAzBundle?.registries };
+  const held = { ...installedBundle?.registries, ...installedAzBundle?.registries, ...installedStateRegistries };
   const wanted = states ? new Set([...states].map(state => state.toLowerCase())) : null;
   return structuredClone(Object.fromEntries(Object.entries(held).filter(([state]) => !wanted || wanted.has(state))));
 }
@@ -284,8 +286,7 @@ export async function preloadOperationalReferenceState(state: string, query?: Pa
   if (result.registry) {
     const issues = registryIssues({ [key]: result.registry }, [key]);
     if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_BUNDLE_INVALID:${issues.join(",")}`);
-    installedBundle = { formatVersion: 1, sourceVersion: JURISDICTION_REFERENCE_VERSION,
-      registries: { [key]: structuredClone(result.registry) } as OperationalReferenceBundle["registries"] };
+    installedStateRegistries = { [key]: structuredClone(result.registry) };
     installReviewedRegistryStates([key]);
     installedRegistration.delete(key);
     refusedRegistration.delete(key);

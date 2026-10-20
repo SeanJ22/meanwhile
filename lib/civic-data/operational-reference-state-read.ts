@@ -32,7 +32,22 @@ export async function readOperationalReferenceState(state: string, query?: ReadO
     query = statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
   }
   const scopes = [...(key === "az" ? ["US-AZ:covered-jurisdiction-routing:v1"] : []), "US:covered-jurisdiction-routing:v1"];
-  const [rows] = await query([{ text: OPERATIONAL_REFERENCE_STATE_SQL, params: [key, scopes] }]);
+  const started = performance.now();
+  const [rows] = await query([{ text: OPERATIONAL_REFERENCE_STATE_SQL, params: [key, scopes] }]).catch(error => {
+    let reason = error;
+    for (let i = 0; i < 4; i++) {
+      const nested = reason?.sourceError ?? reason?.cause;
+      if (!nested) break;
+      reason = nested;
+    }
+    const detail = reason instanceof Error ? `${reason.name}: ${reason.message}` : String(reason);
+    const timer = detail.includes("NEON_REQUEST_DEADLINE") ? "standing-neon-request-deadline"
+      : detail.includes("READER_DATABASE_TIMEOUT") ? "reader-database-query-1800ms"
+      : detail.includes("TimeoutError") ? "transport-timeout-unidentified" : "none";
+    const failure = new Error(`OPERATIONAL_REFERENCE_STATE_READ_FAILED: database=reader state=${key} reads=${scopes.map(scope => `OPERATIONAL_REFERENCE:${scope}`).join(",")} timer=${timer} elapsedMs=${Math.round(performance.now() - started)} cause=${detail}`, { cause: error });
+    failure.name = reason instanceof Error ? reason.name : "Error";
+    throw failure;
+  });
   for (const scope of scopes) {
     const row = rows.find(row => row.scope === scope);
     if (!row) continue;

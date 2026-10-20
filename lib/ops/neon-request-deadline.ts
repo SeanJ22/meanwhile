@@ -1,6 +1,7 @@
 import { neonConfig } from "@neondatabase/serverless";
 import { getDefaultAutoSelectFamilyAttemptTimeout } from "node:net";
 import { performance } from "node:perf_hooks";
+import { transferRead } from "../db/reader-route.ts";
 
 /**
  * Canonical-store requests in a standing runtime must settle or abort. The
@@ -27,6 +28,7 @@ export function neonRequestDeadlineFetch(
     throw new Error(`NEON_REQUEST_DEADLINE_INVALID:${timeoutMs}`);
   }
   return async (input, init) => {
+    const read = transferRead(typeof init?.body === "string" ? init.body : undefined);
     const started = performance.now();
     const loop = performance.eventLoopUtilization();
     let phase = "headers";
@@ -36,11 +38,11 @@ export function neonRequestDeadlineFetch(
     const timer = setTimeout(() => {
       const elapsedMs = Math.round(performance.now() - started);
       const utilization = performance.eventLoopUtilization(loop);
-      const diagnostic = { pid: process.pid, phase, elapsedMs, timerLateMs: Math.max(0, elapsedMs - timeoutMs),
+      const diagnostic = { pid: process.pid, read, timer: "standing-neon-request-deadline", deadlineMs: timeoutMs, phase, elapsedMs, timerLateMs: Math.max(0, elapsedMs - timeoutMs),
         eventLoopUtilization: Number(utilization.utilization.toFixed(3)), rssBytes: process.memoryUsage.rss(),
         connectAttemptWindowMs: getDefaultAutoSelectFamilyAttemptTimeout() };
       console.error(`Neon request deadline: ${JSON.stringify(diagnostic)}`);
-      deadline.abort(new DOMException(`Neon request timed out (${phase}; ${elapsedMs}ms)`, "TimeoutError"));
+      deadline.abort(new DOMException(`NEON_REQUEST_DEADLINE: read=${read} timer=standing-neon-request-deadline deadlineMs=${timeoutMs} phase=${phase} elapsedMs=${elapsedMs}`, "TimeoutError"));
     }, timeoutMs);
     const caller = init?.signal ?? (input instanceof Request ? input.signal : undefined);
     const signal = caller ? AbortSignal.any([caller, deadline.signal]) : deadline.signal;

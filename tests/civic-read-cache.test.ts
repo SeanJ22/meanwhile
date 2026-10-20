@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { CivicReadCache, runtimeCivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { saveCivicReadCopy, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
+import { civicReadCopyStore, saveCivicReadCopy, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 
 function cache(root: string) {
   return new CivicReadCache({ read: key => readFile(join(root, key + ".json"), "utf8"),
@@ -121,4 +121,52 @@ test("the runner's one copy host serves every child, and a child that inherits i
   assert.equal(read, false, "a second process reads the part from the runner's copy");
   await runner.close();
   assert.equal(process.env.WTP_CIVIC_READ_CACHE_URL, undefined);
+});
+
+async function diskBytes(root: string): Promise<number> {
+  let total = 0;
+  for (const file of await readdir(root, { withFileTypes: true })) {
+    const path = join(root, file.name);
+    total += file.isDirectory() ? await diskBytes(path) : (await stat(path)).size;
+  }
+  return total;
+}
+
+test("startup evicts oldest copies across database namespaces and removes abandoned writes", async t => {
+  const root = await scratch(t);
+  for (const [namespace, at] of [["retired-db", 1], ["current-db", 2]] as const) {
+    await mkdir(join(root, namespace));
+    const path = join(root, namespace, "held.json");
+    await writeFile(path, "12345678");
+    await utimes(path, at, at);
+  }
+  await writeFile(join(root, "abandoned.tmp"), "abandoned".repeat(50));
+  const store = civicReadCopyStore(root, 12);
+  await store.ready;
+  await assert.rejects(readFile(join(root, "retired-db", "held.json")), { code: "ENOENT" });
+  assert.equal(await readFile(join(root, "current-db", "held.json"), "utf8"), "12345678");
+  assert.equal(await diskBytes(root), 8);
+});
+
+test("concurrent streamed writes stay under the hard limit including temporary files for 24 controlled hours", async t => {
+  const root = await scratch(t);
+  const store = civicReadCopyStore(root, 32, 24);
+  await store.ready;
+  const body = async function* () {
+    for (let chunk = 0; chunk < 3; chunk++) {
+      assert.ok(await diskBytes(root) <= 32, "temporary writes count against the same disk limit");
+      yield Buffer.from("12345678");
+    }
+  };
+  for (let hour = 0; hour < 24; hour++) {
+    await Promise.all(Array.from({ length: 4 }, (_, worker) => store.write(`hour-${hour}-worker-${worker}`, body())));
+    assert.ok(await diskBytes(root) <= 32);
+    assert.equal((await readdir(root)).some(file => file.endsWith(".tmp")), false);
+  }
+  await assert.rejects(store.write("too-big", "x".repeat(25)), /TOO_LARGE/);
+  const broken = async function* () { yield Buffer.from("1234"); throw new Error("sender disconnected"); };
+  await assert.rejects(store.write("disconnected", broken()), /sender disconnected/);
+  assert.equal((await readdir(root)).some(file => file.endsWith(".tmp")), false);
+  await store.write("recovered", "12345678");
+  assert.ok(await diskBytes(root) <= 32);
 });

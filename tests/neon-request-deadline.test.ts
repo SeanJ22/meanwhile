@@ -16,7 +16,12 @@ test("a response that sends headers then stalls is aborted and closes the socket
   const address = server.address();
   assert.ok(address && typeof address !== "string");
   const response = await neonRequestDeadlineFetch(fetch, 150)(`http://127.0.0.1:${address.port}`);
-  await assert.rejects(response.json(), { name: "TimeoutError" });
+  await assert.rejects(response.json(), error => {
+    assert.ok(error instanceof Error);
+    assert.equal(error.name, "TimeoutError");
+    assert.match(error.message, /timer=standing-neon-request-deadline deadlineMs=150 phase=body elapsedMs=\d+/);
+    return true;
+  });
   await disconnected;
 });
 

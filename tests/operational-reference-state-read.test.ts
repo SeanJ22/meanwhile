@@ -9,6 +9,7 @@ import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 
 test("one state's startup reads partitioned reviewed data on the real migration schema", async t => {
+  clearOperationalReferenceBundle();
   const pg = new PGlite();
   t.after(async () => { clearOperationalReferenceBundle(); await pg.close(); });
   for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01"]) {
@@ -48,6 +49,12 @@ test("one state's startup reads partitioned reviewed data on the real migration 
   await pg.exec("UPDATE civic_data_candidates SET acquisition_succeeded=false WHERE id='az-scoped'");
   await assert.rejects(readOperationalReferenceState("az", query), /STATE_PROOF_INVALID/);
   await assert.rejects(readOperationalReferenceState("az", async () => { throw new Error("transport failed"); }), /transport failed/);
+  await assert.rejects(readOperationalReferenceState("az", async () => {
+    throw new Error("Neon request failed", { cause: new DOMException("READER_DATABASE_TIMEOUT", "TimeoutError") });
+  }), /database=reader state=az reads=OPERATIONAL_REFERENCE:US-AZ:[\s\S]*timer=reader-database-query-1800ms elapsedMs=\d+[\s\S]*READER_DATABASE_TIMEOUT/);
+  await assert.rejects(readOperationalReferenceState("nh", async () => {
+    throw new DOMException("NEON_REQUEST_DEADLINE: phase=body", "TimeoutError");
+  }), /state=nh[\s\S]*timer=standing-neon-request-deadline elapsedMs=\d+[\s\S]*phase=body/);
   await pg.exec("DELETE FROM civic_data_payload_parts");
   await assert.rejects(readOperationalReferenceState("nh", query), /CIVIC_PAYLOAD_PART_MISSING/);
 });

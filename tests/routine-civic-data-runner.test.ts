@@ -1,6 +1,6 @@
+import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
-import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -406,7 +406,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     ...REGISTRY_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
-    ...CAMPAIGN_FINANCE_SOURCES.map(source => campaignFinanceSourceId(source.state)),
     "usaspending",
     "federal-audit-clearinghouse",
     "sam-gov-entities",
@@ -452,6 +451,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
 test("one canonical registry owns every supported authority and refuses arbitrary gov hosts", () => {
   const supportingResearchAuthorities = [
     "census-bulk-products",
+    ...CAMPAIGN_FINANCE_SOURCES.map(source=>campaignFinanceSourceId(source.state)),
     "az-legislature",
     "nj-legislature",
     "legiscan",
@@ -2212,17 +2212,6 @@ test("state publishers retain the measured state reservation across small runs",
   second();
 });
 
-test("campaign state jobs run one at a time without changing other source lanes", async () => {
-  const money = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE");
-  assert.equal(money.length, 56);
-  assert.deepEqual([...new Set(money.map(task => task.acquisitionFailureDomain))], ["routine-source:campaign-finance"]);
-  let active = 0, most = 0;
-  await runBoundedChildPass(money.map(task => ({ id: task.id, failureDomain: task.acquisitionFailureDomain, executable: "ignored", args: [] })),
-    { cwd: process.cwd(), env: process.env, sameDomainGapMs: 0, concurrency: 8 }, async command => {
-      most = Math.max(most, ++active);
-      await new Promise(resolve => setTimeout(resolve, 1));
-      active--;
-      return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
-    });
-  assert.equal(most, 1);
+test("the retired native campaign load has no scheduled source jobs", () => {
+  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE"), []);
 });

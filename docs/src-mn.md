@@ -18,87 +18,84 @@ Each place has a constant-size pointer to immutable index pages of at most 64 en
 
 Fixture provenance is in `tests/fixtures/federal-money/provenance.json`. Generated scale inputs never seed production.
 
-## Campaign money — removal of incorrect reader facts
+## Campaign load retirement
 
-River 011443fad and main f7db190d6 are included. Every source now declares 2020 as its first eligible year. A new transaction can publish only with a unique published person, exact office and seat, filed committee name and eligible date. Extracts missing a supported candidate or office stop before downloading financial rows; their committee discovery stays open. Invalid calendar dates and periods spanning multiple cycles are held. Committees without native IDs use the filed committee, candidate, office and year; null IDs never share one committee. Source bytes remain in the vault and unmatched rows are reported as open work. Existing unbound committee facts are excluded by the reader query through the normal code release; no production data edits or migrations are used. Legacy native-filer records also require their verified candidacy match before public display.
+The native state campaign load is retired. Its 56 scheduled contracts and its acquisition/publishing entry point are deleted. No job from this load can repopulate the reader stores after the cleanup. Source acquisition/parsing fixtures and the existing Arizona, New Hampshire, New Jersey and Pima publications remain held. The people-driven replacement is the next SRC-MN READY.
 
-Government cards and Ask read the same cycle summaries, with filing links only in the bottom Sources list. Individual transactions are no longer a reader response. The new §9 rule on main governs both READYs: individual donors are anonymous regardless of amount; organizations and committees keep their filed names. Person-driven hourly acquisition and cycle donor aggregates belong to the second READY.
+Release 60 already excludes unbound, misfiled and pre-2020 native campaign facts from cards and Ask. Individual donation lists are excluded. Rulings §9 permits individual names only above $200 in a cycle; small donors and home addresses remain private. The forthcoming person-cycle publisher implements that rule.
 
-All 56 states and territories were checked against the production database using its `readonly` role, verified to lack INSERT, UPDATE and DELETE permission. The inventory below lists published person IDs across the held official and November 3, 2026 ballot sources, not deduplicated natural people; complementary sources can use different IDs for one person. “Held rows” means existing native campaign transactions, not newly loaded production rows. Every one lacks a verified published-person/seat binding, so the first READY returns zero of these rows to readers. Zero-row states have no native source rows held. No database writes were performed. Louisiana's first connection returned an upstream HTTP 503; the resumed audit completed it and every remaining place. The completed states were retained, not rerun.
+The journaled contract migration `0045_src_mn_retire_campaign_load` deletes every fact version from the retired producer, its native publication pointers, candidate copies/events, old checkpoints and now-empty committee identities and links. Source copies and raw evidence-vault files are preserved. Other funding producers, valid legacy source publications and corrected future money are untouched. No database column is added.
 
-| Place | Official source / access | Published person IDs | People with bound native money | Held rows | Joined | Unmatched | Audit peak MiB |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| AL | [Alabama Secretary of State](https://www.sos.alabama.gov/alabama-votes/media/campaign-finance-reports) / BULK | 393 | 0 | 444,469 | 0 | 444,469 | 112.9 |
-| AK | [Alaska Public Offices Commission](https://aws.state.ak.us/ApocReports/CampaignDisclosure/CDIncome.aspx) / UNCONFIRMED | 195 | 0 | 0 | 0 | 0 | 113.9 |
-| AZ | [Arizona Secretary of State](https://azsos.gov/elections/campaign-finance-reporting) / API | 469 | 0 | 0 | 0 | 0 | 113.8 |
-| AR | [Arkansas Secretary of State](https://financial-disclosures.sos.arkansas.gov/) / UNCONFIRMED | 173 | 0 | 0 | 0 | 0 | 113.5 |
-| CA | [California Secretary of State](https://www.sos.ca.gov/campaign-lobbying/cal-access-resources/raw-data-campaign-finance-and-lobbying-activity) / BULK | 547 | 0 | 3,000 | 0 | 3,000 | 112.7 |
-| CO | [Colorado Secretary of State](https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx) / BULK | 383 | 0 | 351,781 | 0 | 351,781 | 113.5 |
-| CT | [Connecticut State Elections Enforcement Commission](https://seec.ct.gov/Portal/eCRIS/eCrisSearch) / BULK | 737 | 0 | 182,214 | 0 | 182,214 | 113.1 |
-| DE | [Delaware Department of Elections](https://cfrs.elections.delaware.gov/) / UNCONFIRMED | 226 | 0 | 0 | 0 | 0 | 113.6 |
-| DC | [District of Columbia Office of Campaign Finance](https://efiling.ocf.dc.gov/DataDownload) / BULK_API | 65 | 0 | 154,500 | 0 | 154,500 | 113.9 |
-| FL | [Florida Division of Elections](https://dos.elections.myflorida.com/campaign-finance/contributions/) / BULK | 680 | 0 | 127,348 | 0 | 127,348 | 113.7 |
-| GA | [Georgia State Ethics Commission](https://ethics.ga.gov/) / UNCONFIRMED | 723 | 0 | 0 | 0 | 0 | 113.5 |
-| HI | [Hawaii Campaign Spending Commission](https://hicscdata.hawaii.gov/) / API | 177 | 0 | 156,903 | 0 | 156,903 | 113.6 |
-| ID | [Idaho Secretary of State](https://sunshine.sos.idaho.gov/) / API | 360 | 0 | 89,000 | 0 | 89,000 | 114.0 |
-| IL | [Illinois State Board of Elections](https://www.elections.il.gov/CampaignDisclosure/DownloadData.aspx) / BULK | 460 | 0 | 0 | 0 | 0 | 113.2 |
-| IN | [Indiana Election Division](https://cfa.in.gov/) / UNCONFIRMED | 441 | 0 | 0 | 0 | 0 | 114.5 |
-| IA | [Iowa Ethics and Campaign Disclosure Board](https://data.iowa.gov/catalog/dataset/917) / API | 408 | 0 | 0 | 0 | 0 | 113.7 |
-| KS | [Kansas Public Disclosure Commission](https://kpdc.kansas.gov/campaign-finance/campaign-contributor-data/) / UNCONFIRMED | 432 | 0 | 0 | 0 | 0 | 113.5 |
-| KY | [Kentucky Registry of Election Finance](https://secure.kentucky.gov/kref/publicsearch/CandidateSearch/) / BULK_API | 357 | 0 | 92,399 | 0 | 92,399 | 113.3 |
-| LA | [Louisiana Board of Ethics](https://ethics.la.gov/CampaignFinanceSearch/) / BULK | 195 | 0 | 49,000 | 0 | 49,000 | 114.3 |
-| ME | [Maine Commission on Governmental Ethics and Election Practices](https://www.mainecampaignfinance.com/) / UNCONFIRMED | 556 | 0 | 0 | 0 | 0 | 113.9 |
-| MD | [Maryland State Board of Elections](https://campaignfinance.maryland.gov/) / BULK | 523 | 0 | 20,000 | 0 | 20,000 | 113.4 |
-| MA | [Massachusetts Office of Campaign and Political Finance](https://ocpf.us/Data/Downloads) / BULK_API | 513 | 0 | 14,188 | 0 | 14,188 | 113.6 |
-| MI | [Michigan Department of State](https://www.michigan.gov/sos/elections/Disclosure/cfr/committee-search/intro/welcome-to-the-michigan-campaign-finance-searchable-database) / BULK | 631 | 0 | 0 | 0 | 0 | 114.0 |
-| MN | [Minnesota Campaign Finance and Public Disclosure Board](https://cfb.mn.gov/reports-and-data/self-help/data-downloads/) / BULK | 645 | 0 | 12,524 | 0 | 12,524 | 112.8 |
-| MS | [Mississippi Secretary of State](https://cfportal.sos.ms.gov/) / API | 203 | 0 | 0 | 0 | 0 | 112.8 |
-| MO | [Missouri Ethics Commission](https://www.mec.mo.gov/MEC/Campaign_Finance/CF_ContrCSV.aspx) / BULK | 573 | 0 | 0 | 0 | 0 | 113.8 |
-| MT | [Montana Commissioner of Political Practices](https://cers-ext.mt.gov/CampaignTracker/dashboard) / UNCONFIRMED | 416 | 0 | 0 | 0 | 0 | 114.2 |
-| NE | [Nebraska Accountability and Disclosure Commission](https://nadc-e.nebraska.gov/) / BULK | 154 | 0 | 0 | 0 | 0 | 114.7 |
-| NV | [Nevada Secretary of State](https://www.nvsos.gov/SOSCandidateServices/AnonymousAccess/CEFDSearchUU.aspx) / UNCONFIRMED | 212 | 0 | 0 | 0 | 0 | 113.1 |
-| NH | [New Hampshire Secretary of State](https://cfs.sos.nh.gov/) / API | 470 | 0 | 0 | 0 | 0 | 114.1 |
-| NJ | [New Jersey Election Law Enforcement Commission](https://www.elec.nj.gov/) / API | 589 | 0 | 0 | 0 | 0 | 114.9 |
-| NM | [New Mexico Secretary of State](https://cfis.sos.nm.gov/) / BULK_API | 254 | 0 | 0 | 0 | 0 | 114.2 |
-| NY | [New York State Board of Elections](https://data.ny.gov/Government-Finance/Campaign-Finance-Disclosure-Reports-Data-Beginning/e9ss-239a) / BULK_API | 695 | 0 | 0 | 0 | 0 | 114.2 |
-| NC | [North Carolina State Board of Elections](https://www.ncsbe.gov/campaign-finance/search-campaign-funding-and-spending-reports-and-penalties) / UNCONFIRMED | 561 | 0 | 0 | 0 | 0 | 113.2 |
-| ND | [North Dakota Secretary of State](https://www.sos.nd.gov/elections/campaign-finance-statement-interests/search-reports) / UNCONFIRMED | 296 | 0 | 0 | 0 | 0 | 112.9 |
-| OH | [Ohio Secretary of State](https://www.ohiosos.gov/elections/campaign-finance) / BULK | 188 | 0 | 0 | 0 | 0 | 113.7 |
-| OK | [Oklahoma Ethics Commission](https://guardian.ok.gov/PublicSite/) / BULK | 350 | 0 | 0 | 0 | 0 | 115.0 |
-| OR | [Oregon Secretary of State](https://sos.oregon.gov/elections/campaign-finance/pages/search-campaign-finance.aspx) / UNCONFIRMED | 282 | 0 | 0 | 0 | 0 | 113.4 |
-| PA | [Pennsylvania Department of State](https://www.campaignfinanceonline.pa.gov/Pages/CampaignFinanceHome.aspx) / BULK | 400 | 0 | 0 | 0 | 0 | 114.3 |
-| RI | [Rhode Island Board of Elections](https://www.ricampaignfinance.com/) / UNCONFIRMED | 282 | 0 | 0 | 0 | 0 | 114.7 |
-| SC | [South Carolina State Ethics Commission](https://ethicsfiling.sc.gov/filing/home) / API | 473 | 0 | 0 | 0 | 0 | 113.9 |
-| SD | [South Dakota Secretary of State](https://sdcfr.sdsos.gov/) / UNCONFIRMED | 290 | 0 | 0 | 0 | 0 | 114.8 |
-| TN | [Tennessee Registry of Election Finance](https://apps.tn.gov/tncamp/) / UNCONFIRMED | 414 | 0 | 0 | 0 | 0 | 113.6 |
-| TX | [Texas Ethics Commission](https://www.ethics.state.tx.us/search/cf/) / BULK | 722 | 0 | 0 | 0 | 0 | 114.3 |
-| UT | [Utah Lieutenant Governor](https://disclosures.utah.gov/) / BULK | 352 | 0 | 0 | 0 | 0 | 113.7 |
-| VT | [Vermont Secretary of State](https://campaignfinance.vermont.gov/) / BULK_API | 505 | 0 | 0 | 0 | 0 | 113.9 |
-| VA | [Virginia Department of Elections](https://www.elections.virginia.gov/candidatepac-info/reporting/) / BULK | 203 | 0 | 0 | 0 | 0 | 114.1 |
-| WA | [Washington Public Disclosure Commission](https://www.pdc.wa.gov/) / API | 440 | 0 | 0 | 0 | 0 | 112.2 |
-| WV | [West Virginia Secretary of State](https://cfrs.wvsos.gov/) / UNCONFIRMED | 384 | 0 | 0 | 0 | 0 | 114.4 |
-| WI | [Wisconsin Ethics Commission](https://campaignfinance.wi.gov/browse-data) / API | 157 | 0 | 0 | 0 | 0 | 114.1 |
-| WY | [Wyoming Secretary of State](https://www.wycampaignfinance.gov/) / UNCONFIRMED | 230 | 0 | 0 | 0 | 0 | 114.0 |
-| AS | [American Samoa Election Office](https://aselectionoffice.gov/) / UNCONFIRMED | 0 | 0 | 0 | 0 | 0 | 113.8 |
-| GU | [Guam Election Commission](https://gec.guam.gov/) / UNCONFIRMED | 0 | 0 | 0 | 0 | 0 | 114.5 |
-| MP | [Commonwealth Election Commission](https://www.votecnmi.gov.mp/) / UNCONFIRMED | 0 | 0 | 0 | 0 | 0 | 113.4 |
-| PR | [Puerto Rico Office of the Electoral Comptroller](https://oce.pr.gov/) / API | 83 | 0 | 0 | 0 | 0 | 113.9 |
-| VI | [Elections System of the Virgin Islands](https://vivote.gov/) / UNCONFIRMED | 0 | 0 | 0 | 0 | 0 | 113.4 |
+The migration processes one committee in one state at a time, deleting at most 500 fact IDs per statement. It never fetches financial payloads into the runner. PostgreSQL applies the deletion server-side; the runner holds the fixed migration text. Fact watermarks change for each affected state. Trigger permissions are restored in the same transaction. A real PostgreSQL regression checks 1,001 facts across multiple batches, live and superseded facts, flags, candidate self/history foreign keys, preserved money/source evidence and restoration of immutable-store protection. No full production-sized deletion was performed in the workspace.
 
-All 1,697,326 unmatched native rows have the same publication blocker: no verified published-person and seat binding. The underlying reasons include missing office, missing candidate, missing native filer ID, unsupported person matches and historical dates. These are held evidence, not reader facts. No claim is made that every missing binding has already been investigated.
+The release runner quiesces its source lanes before following the deployed commit, applies contract migrations for that exact serving commit, and only then admits source work. Rulings §5 therefore puts this cleanup after deployment. Sean approved releasing the cleanup first and requiring production zeros before the people-refresh READY. The pre-release counts below are reported as still present, not as already removed.
 
-The existing state publications remain held: Arizona 717 records, New Hampshire 28, New Jersey 5,145; Pima retains its local publication. Their source payload hashes at this check are AZ `5f7a45347e88a9963164cb2fdd62689d`, NH `3358afe7d4705486ed1078adbc2c5b2f`, NJ `f37575a744720b6c2d504256ff9d0341`, Pima `8b73fab45eecff781d96607afbec3af8`. Reader restrictions do not remove evidence. No new database columns are introduced.
+| Place | Old facts live | Old publication pointers | Old candidate copies |
+|---|---:|---:|---:|
+| AL | 444,469 | 894 | 5,352 |
+| AK | 0 | 0 | 23 |
+| AZ | 0 | 0 | 23 |
+| AR | 0 | 0 | 23 |
+| CA | 3,000 | 6 | 8 |
+| CO | 351,781 | 705 | 3,434 |
+| CT | 182,214 | 371 | 2,038 |
+| DE | 0 | 0 | 21 |
+| DC | 154,500 | 310 | 2,082 |
+| FL | 127,348 | 343 | 2,599 |
+| GA | 0 | 0 | 16 |
+| HI | 156,903 | 315 | 1,953 |
+| ID | 89,000 | 179 | 857 |
+| IL | 0 | 0 | 11 |
+| IN | 0 | 0 | 10 |
+| IA | 0 | 0 | 10 |
+| KS | 0 | 0 | 9 |
+| KY | 92,399 | 662 | 1,056 |
+| LA | 49,000 | 99 | 553 |
+| ME | 0 | 0 | 4 |
+| MD | 28,740 | 72 | 145 |
+| MA | 14,188 | 192 | 678 |
+| MI | 0 | 0 | 3 |
+| MN | 14,081 | 74 | 77 |
+| MS | 0 | 0 | 2 |
+| MO | 0 | 0 | 1 |
+| MT | 0 | 0 | 1 |
+| NE | 0 | 0 | 0 |
+| NV | 0 | 0 | 0 |
+| NH | 0 | 0 | 1 |
+| NJ | 0 | 0 | 0 |
+| NM | 0 | 0 | 0 |
+| NY | 0 | 0 | 0 |
+| NC | 0 | 0 | 0 |
+| ND | 0 | 0 | 0 |
+| OH | 0 | 0 | 0 |
+| OK | 0 | 0 | 0 |
+| OR | 0 | 0 | 0 |
+| PA | 0 | 0 | 0 |
+| RI | 0 | 0 | 0 |
+| SC | 0 | 0 | 0 |
+| SD | 0 | 0 | 0 |
+| TN | 0 | 0 | 0 |
+| TX | 0 | 0 | 0 |
+| UT | 0 | 0 | 0 |
+| VT | 0 | 0 | 0 |
+| VA | 0 | 0 | 0 |
+| WA | 0 | 0 | 0 |
+| WV | 0 | 0 | 1 |
+| WI | 0 | 0 | 0 |
+| WY | 0 | 0 | 0 |
+| AS | 0 | 0 | 0 |
+| GU | 0 | 0 | 0 |
+| MP | 0 | 0 | 1 |
+| PR | 0 | 0 | 1 |
+| VI | 0 | 0 | 0 |
 
-| Production-backed branch read | Campaign API | Government card money read | Reader sees |
-| --- | ---: | ---: | --- |
-| DC | 0.047 s | 0.058 s | Existing coverage gap; no unbound donation list |
-| FL | 0.119 s | 0.126 s | Existing coverage gap; no unbound donation list |
-| CO | 0.052 s | 0.072 s | Existing coverage gap; no unbound donation list |
-| AZ | 0.177 s | 0.046 s | Existing coverage gap; no unbound donation list |
+Across all 56 places: 1,707,623 facts, all live; 4,222 publication pointers; 20,993 candidate copies. After River releases, `scripts/src-money-check.mts` repeats the same state-scoped, count-only read-only queries, persists measured response bytes and refuses success unless every fact, publication and candidate-copy count is zero. Immutable payload fragments have no independent live status: publication and candidate roots are removed; raw source evidence remains saved.
 
-These timings use the branch's actual API handler and the money reader used by the card, against production data. They are not a claim that the unreleased code is already serving on meanwhileusa.com. All 56 place-money reads completed below 0.489 s. The guarded browser checked the actual cycle card and its single Sources footer. Focused real-source parser, committee identity, period, privacy, card, Ask and held legacy-money checks pass. The first full gates run found an incomplete typed meeting fixture and an obsolete unbound cache fixture; both are corrected and the focused regressions pass.
+The pre-release all-place count check read 39,251 bytes. The earlier targeted 13-state check read 10,944 bytes; a retained-source hash check read 583 bytes. These cleanup checks total 50,778 production response bytes and zero production bytes written. Completed production-backed checks, including preparation for the people-based publisher and the first gate invocation, read 42,697,118 measured response bytes; the final gate traffic is added in READY. Production counts return no financial payload. The isolated migration test is a correctness test, not a production WAL or storage measurement. Actual migration write traffic and run time will be recorded after release; no daily cleanup replay is scheduled. Retired source workers run zero copies and consume no acquisition reservation. The fixed migration’s production runner peak has not been measured; RH-01’s existing admission and 0.75 GiB margin are unchanged.
 
-The measured read-only audit worker peak was 120,553,472 bytes (115.0 MiB). All campaign state contracts share one failure domain; the actual bounded-child executor regression runs all 56 with eight available slots and observes exactly one active money job. The code holds one state's compact people lookup and one source batch of at most 500 rows; no country-sized money collection is retained. The production acquisition worker's full-file peak is not established by this read-only audit. Its existing 384 MiB admission reservation is unchanged; RH-01 owns runner admission. On an 8 GiB runner after the 0.75 GiB margin the audit peak permits 63 memory-only copies; this lane deliberately runs one. Other work's reservations remain under RH-01. Daily acquisition traffic and full-file acquisition peaks remain for the people-driven replacement in the second READY.
+The retained payload hashes are AZ `5f7a45347e88a9963164cb2fdd62689d`, NH `3358afe7d4705486ed1078adbc2c5b2f`, NJ `f37575a744720b6c2d504256ff9d0341` and Pima `8b73fab45eecff781d96607afbec3af8`, identical to the prior held values. Earlier interrupted development probes were not all metered; 50,778 bytes is the exact measured cleanup-check total, not a claimed total for every historical probe.
+
+## Federal source scale measurements
 
 Local scale measurements use a four-core host with concurrent work. Counts describe benchmark inputs; production inventory is checked under DONE. Database traffic means decoded SQL request and response JSON through the production PostgreSQL adapter. It does not measure heap, index, TOAST, WAL, compressed network traffic or production daily changes. Fixture preparation runs separately from the measured worker.
 

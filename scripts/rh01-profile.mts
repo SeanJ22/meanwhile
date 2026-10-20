@@ -216,6 +216,7 @@ environment.WTP_WORKER_HOST_MEMORY_MIB = String(hostBytes / (1024 * 1024));
 process.env.WTP_WORKER_HOST_MEMORY_MIB = environment.WTP_WORKER_HOST_MEMORY_MIB;
 const facts = spawn(process.execPath, ["--experimental-strip-types", join(harnessRoot, "scripts/rh01-facts-server.mts")], { cwd: codeRoot, env: environment, stdio: ["ignore", "pipe", "pipe"] });
 let factsPeak = 0, factsBytes = 0, controlHydrationBytes = 0;
+let controlReadTiming: Record<string, number> | null = null;
 const factsUrl = await new Promise<string>((accept, reject) => {
   let held = "";
   facts.once("error", reject);
@@ -226,7 +227,7 @@ const factsUrl = await new Promise<string>((accept, reject) => {
     const lines = held.split("\n"); held = lines.pop() ?? "";
     for (const line of lines) {
       if (line.startsWith("RH01_FACTS_READY ")) accept(JSON.parse(line.slice(17)).url);
-      if (line.startsWith("RH01_FACTS_END ")) { const row = JSON.parse(line.slice(15)); factsPeak = row.peakRssBytes; factsBytes = row.remoteBytes; controlHydrationBytes = row.remoteControlBytes ?? 0; }
+      if (line.startsWith("RH01_FACTS_END ")) { const row = JSON.parse(line.slice(15)); factsPeak = row.peakRssBytes; factsBytes = row.remoteBytes; controlHydrationBytes = row.remoteControlBytes ?? 0; controlReadTiming = row.controlReadTiming ?? null; }
     }
   });
 });
@@ -326,7 +327,7 @@ const interval = setInterval(() => {
     }
     observedMemory.set(child.pid, memory);
   }
-  let sum = readStatus(process.pid)?.rss ?? 0;
+  let sum = rows.get(process.pid)?.rss ?? 0;
   for (const [pid, row] of active) {
     const rss = tree(pid, rows);
     row.ownPeak = Math.max(row.ownPeak, rows.get(pid)?.peak ?? 0);
@@ -345,11 +346,6 @@ const interval = setInterval(() => {
   }
   const isPeak = sum >= aggregatePeak;
   aggregatePeak = Math.max(aggregatePeak, sum);
-  if (sum > watchdogBytes && !watchdogExceeded) {
-    watchdogExceeded = true;
-    process.stderr.write(`RH01_MEASUREMENT_WATCHDOG ${JSON.stringify({ runnerBytes: sum, ceilingBytes: watchdogBytes, productionProcessesStopped: 0 })}\n`);
-    for (const pid of active.keys()) terminateTree(pid);
-  }
   const descendants = new Set(active.keys());
   for (;;) { let changed = false; for (const [pid, row] of rows) if (descendants.has(row.parent) && !descendants.has(pid)) { descendants.add(pid); changed = true; } if (!changed) break; }
   const leases: { pid: number; role: string; status: string }[] = [];
@@ -362,7 +358,12 @@ const interval = setInterval(() => {
   maxSimultaneousLeaseWorkers = Math.max(maxSimultaneousLeaseWorkers, leases.length);
   maxSimultaneousWorkingLeaseWorkers = Math.max(maxSimultaneousWorkingLeaseWorkers, leases.filter(row => row.status === "RUNNING").length);
   if (isPeak) leaseWorkersAtPeak = leases;
-  void Promise.resolve(memoryHost.transact((state: { reservations: readonly { pid: number | null; entry: string }[] }, processes: readonly { pid: number; parentPid: number; rss: number; peakRss?: number }[]) => {
+  const sampledProcesses = [...new Set([process.pid, ...descendants])].flatMap(pid => {
+    const row = rows.get(pid); return row ? [{ pid, parentPid: row.parent, rss: row.rss, peakRss: row.peak }] : [];
+  });
+  if (isPeak) admissionAtPeak = null;
+  void Promise.resolve(memoryHost.transact((state: { reservations: readonly { pid: number | null; entry: string }[] }) => {
+    const processes = sampledProcesses;
     const at = new Date().toISOString();
     const reading = memoryReading({ at, totalBytes: hostBytes, availableBytes: Math.max(0, hostBytes - sum),
       rootPid: process.pid, rows: processes, state, leaseWorkerPeakBytes: leaseBytes });
@@ -395,7 +396,13 @@ const interval = setInterval(() => {
     }
     minAdmissibleLeaseWorkers = Math.min(minAdmissibleLeaseWorkers ?? Infinity, reading.fitLeaseWorkers);
     if (isPeak) admissionAtPeak = reading;
-  })).catch(() => { admissionAtPeak = null; });
+  }, false)).catch(() => { if (isPeak) admissionAtPeak = null; });
+  // Capture roles, ownership and admission from the same pre-termination sample.
+  if (sum > watchdogBytes && !watchdogExceeded) {
+    watchdogExceeded = true;
+    process.stderr.write(`RH01_MEASUREMENT_WATCHDOG ${JSON.stringify({ runnerBytes: sum, ceilingBytes: watchdogBytes, productionProcessesStopped: 0 })}\n`);
+    for (const pid of active.keys()) terminateTree(pid);
+  }
 }, 100);
 const loaderArgs = ["--experimental-strip-types", "--import", join(codeRoot, "scripts/register-test-loader.mjs"), "--import", join(harnessRoot, "scripts/rh01-loader.mjs")];
 async function recordResult(result: JobResult): Promise<JobResult> {
@@ -601,7 +608,7 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   observationRequestedMs: observationMs, observedFullHour: elapsedMs >= 3600000 && !watchdogExceeded,
   workload: "Every selected command offered simultaneously. Actual parent descendants cover identical child commands; never-spawned offers enter admission after their owner ends. No cadence replay or synthetic clock advance",
   watchdogExceeded, watchdogBytes,
-  aggregatePeakRssBytes: aggregatePeak, localDatabasePeakRssBytes: factsPeak, controlHydrationBytes, readerBytes: physical.reader,
+  aggregatePeakRssBytes: aggregatePeak, localDatabasePeakRssBytes: factsPeak, controlHydrationBytes, controlReadTiming, readerBytes: physical.reader,
   readerBytesPerHour: physical.reader * 3600000 / elapsedMs, logicalReaderBytes,
   productionReadAccounting: { runId: environment.WTP_RH01_RUN_ID, path: environment.WTP_RH01_PRODUCTION_READ_LEDGER,
     phaseStartedAt: new Date(phaseStartedAt).toISOString(), workloadStartedAt: new Date(startedAt).toISOString(), finishedAt: new Date().toISOString(),

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { allowedMeasurementRequest, assertNeededProductionRead } from "../scripts/rh01-network.mjs";
 import { spawn } from "node:child_process";
-import { copyFile, mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { once } from "node:events";
@@ -623,4 +623,70 @@ test("raw loopback Neon queries use local native SQL while the reader transport 
     let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
     const [status] = await once(child, "close"); assert.equal(status, 0, stderr); assert.match(stdout, /raw native query local; reader native/);
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("a slow read keeps its committed shadow snapshot without blocking an unrelated local writer", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-control-read-queue-"));
+  let server: ReturnType<typeof spawn> | undefined;
+  try {
+    await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
+    const marker = join(directory, "remote-started"), cancelled = join(directory, "remote-cancelled"), preload = join(directory, "remote-fixture.mjs");
+    await writeFile(preload, `import {writeFileSync} from 'node:fs';
+      globalThis.fetch=async(url,init)=>{
+        if(!String(url).startsWith('https://api.'))throw Error('ZERO_NETWORK_FIXTURE_ONLY');
+        const body=JSON.parse(init.body);let rows=[],fields=[];
+        if(/SELECT value FROM cp_work_items WHERE id=/.test(body.query)){
+          const local=JSON.parse(body.params.at(-1));rows=[[JSON.stringify(local.find(row=>row.id==='snapshot').value)]];
+          fields=[{name:'value',dataTypeID:3802}];writeFileSync(${JSON.stringify(marker)},'started');
+          await new Promise((resolve,reject)=>{
+            const timer=setTimeout(resolve,700);
+            const abort=()=>{clearTimeout(timer);writeFileSync(${JSON.stringify(cancelled)},'aborted');reject(init.signal.reason);};
+            if(init.signal.aborted)abort();else init.signal.addEventListener('abort',abort,{once:true});
+          });
+        }
+        return Response.json({command:'SELECT',rowCount:rows.length,rows,fields});
+      };`);
+    server = spawn(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--import", preload, "scripts/rh01-facts-server.mts"], {
+      cwd: process.cwd(), env: { NODE_ENV: "test", PATH: process.env.PATH, WTP_RH01_CODE_ROOT: process.cwd(), WTP_RH01_DIRECTORY: directory,
+        WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://wtp_cp_release_readonly:fixture@ep-control.neon.invalid/fixture",
+        WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:fixture@ep-reader.neon.invalid/fixture" }, stdio: ["ignore", "pipe", "pipe"],
+    });
+    const child = server; let stderr = ""; child.stderr!.on("data", data => { stderr += data; });
+    const endpoint = await new Promise<string>((accept, reject) => {
+      let output = "";
+      child.stdout!.on("data", data => {
+        output += data; const ready = output.split("\n").find(line => line.startsWith("RH01_FACTS_READY "));
+        if (ready) accept(JSON.parse(ready.slice(17)).url.replace(/\/query$/, "/control-sql"));
+      });
+      child.once("exit", code => reject(Error(`local fixture exited ${code}: ${stderr}`)));
+    });
+    const query = async (text: string, params: unknown[], signal?: AbortSignal) => {
+      const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, params }), signal });
+      const body = await response.json(); assert.equal(response.status, 200, JSON.stringify(body)); return body.rows;
+    };
+    const at = "2026-10-20T10:00:00.000Z";
+    await query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)", ["snapshot", at, JSON.stringify({ n: 1 })]);
+    let finished = false;
+    const slow = query("SELECT value FROM cp_work_items WHERE id=$1", ["snapshot"]).finally(() => { finished = true; });
+    const waitFor = async (file: string) => {
+      const until = Date.now() + 5000;
+      for (;;) {
+        try { await readFile(file); return; } catch { if (Date.now() >= until) throw Error(`fixture marker missing: ${file}`); }
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    };
+    await waitFor(marker);
+    await query("UPDATE cp_work_items SET value=$2::jsonb,revision=revision+1 WHERE id=$1", ["snapshot", JSON.stringify({ n: 2 })]);
+    assert.equal(finished, false, "the writer waited for unrelated remote read latency");
+    assert.deepEqual(await slow, [{ value: { n: 1 } }], "the earlier SELECT must retain its committed local snapshot");
+    await rm(marker);
+    const abort = new AbortController(), interrupted = query("SELECT value FROM cp_work_items WHERE id=$1", ["snapshot"], abort.signal);
+    await waitFor(marker); abort.abort(Error("fixture caller stopped")); await assert.rejects(interrupted, /fixture caller stopped/);
+    await waitFor(cancelled);
+  } finally {
+    if (server && server.exitCode === null && server.signalCode === null) {
+      const closed = once(server, "close"); server.kill("SIGTERM"); await closed;
+    }
+    await rm(directory, { recursive: true, force: true });
+  }
 });

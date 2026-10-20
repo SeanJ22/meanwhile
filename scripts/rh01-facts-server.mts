@@ -43,6 +43,7 @@ let actionHistoryReady = false;
 const seededControl = new Set<string>();
 const seededSites = new Set<string>();
 const controlTables = new Map<string, readonly string[]>();
+const controlReadTiming = { count: 0, aborted: 0, maxQueueWaitMs: 0, maxSnapshotMs: 0, maxRemoteMs: 0 };
 const aggregateTables = new Set(AGGREGATE_KINDS.map(kind => `cp_${kind}`));
 const logTables = new Set(APPEND_ONLY_LOGS.map(kind => `cp_log_${kind}`));
 async function controlDatabase(): Promise<PGlite> {
@@ -69,13 +70,25 @@ async function ensureControlTable(table: string): Promise<readonly string[]> {
   if (table !== "cp_log_heads") await db.exec(`CREATE TRIGGER ${table}_changed_at BEFORE UPDATE ON ${table} FOR EACH ROW EXECUTE FUNCTION rh01_touch_changed_at()`);
   controlTables.set(table, keys); return keys;
 }
-async function controlRemoteRead(text: string, params: readonly unknown[]): Promise<Record<string, unknown>[]> {
+async function controlRemoteRead(text: string, params: readonly unknown[], signal?: AbortSignal): Promise<Record<string, unknown>[]> {
   if (!/^\s*(?:SELECT|WITH)\b/i.test(text) || /\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(text.replace(/FOR\s+UPDATE(?:\s+OF\s+\w+)?/gi, "")))
     throw Error("RH01_REMOTE_CONTROL_MUTATION_REFUSED");
   const connection = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!connection || decodeURIComponent(new URL(connection).username) !== "wtp_cp_release_readonly") throw Error("RH01 control SQL requires the read-only role");
-  const rows = await neon(connection).query(text, [...params], { fetchOptions: { signal: AbortSignal.any([shutdown.signal, AbortSignal.timeout(30_000)]) } });
+  const rows = await neon(connection).query(text, [...params], { fetchOptions: { signal: AbortSignal.any([shutdown.signal, AbortSignal.timeout(30_000), ...(signal ? [signal] : [])]) } });
   remoteControlBytes += Buffer.byteLength(JSON.stringify(rows)); return rows;
+}
+function ordinaryControlRead(text: string): boolean {
+  const structure = text.replace(/'(?:''|[^'])*'/g, "''").replace(/--[^\n]*|\/\*[\s\S]*?\*\//g, " ");
+  return /^\s*(?:SELECT|WITH)\b/i.test(structure) &&
+    !/\b(?:INSERT|UPDATE|DELETE|MERGE|CALL|CREATE|ALTER|DROP|TRUNCATE|cp_spend_holds|cp_admit_spend_hold|pg_notify|nextval|setval|pg_advisory_lock|pg_try_advisory_lock)\b/i.test(structure);
+}
+/** Capture committed local rows while serialized; remote SELECT latency does not hold the local writer queue. */
+async function snapshotControlRead(text: string, params: readonly unknown[]): Promise<{ text: string; params: unknown[] }> {
+  const db = await controlDatabase(), shadows: SqlShadow[] = [];
+  for (const [table, keys] of controlTables) if (new RegExp(`\\b(?:FROM|JOIN)\\s+(?:public[.])?"?${table}"?\\b`, "i").test(text))
+    shadows.push({ table, keys, rows: (await db.query(`SELECT * FROM ${table}`)).rows as Record<string, unknown>[] });
+  return shadowRead(text, params, shadows);
 }
 async function executeControlSql(text: string, params: readonly unknown[]): Promise<Record<string, unknown>[]> {
   const db = await controlDatabase();
@@ -126,10 +139,7 @@ async function executeControlSql(text: string, params: readonly unknown[]): Prom
     for (const match of text.matchAll(/\b(?:FROM|JOIN)\s+"?(cp_[a-z_0-9]+)\b/gi)) await ensureControlTable(match[1]!);
     return (await db.query(text, [...params])).rows as Record<string, unknown>[];
   }
-  const shadows: SqlShadow[] = [];
-  for (const [table, keys] of controlTables) if (new RegExp(`\\b(?:FROM|JOIN)\\s+(?:public[.])?"?${table}"?\\b`, "i").test(text))
-    shadows.push({ table, keys, rows: (await db.query(`SELECT * FROM ${table}`)).rows as Record<string, unknown>[] });
-  const query = shadowRead(text, params, shadows);
+  const query = await snapshotControlRead(text, params);
   return controlRemoteRead(query.text, query.params);
 }
 let pacingReady = false;
@@ -356,6 +366,9 @@ const server = createServer((request, response) => withProductionReadOwner({
   jobId: String(request.headers["x-rh01-owner-job"] ?? ""), taskId: String(request.headers["x-rh01-owner-task"] ?? ""),
 }, async () => {
   if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
+  const disconnected = new AbortController();
+  request.once("aborted", () => disconnected.abort(Error("RH01 local read caller disconnected")));
+  response.once("close", () => { if (!response.writableEnded) disconnected.abort(Error("RH01 local read caller disconnected")); });
   try {
     let body = "";
     for await (const chunk of request) body += chunk;
@@ -375,6 +388,27 @@ const server = createServer((request, response) => withProductionReadOwner({
     }
     if (request.url === "/control" || request.url === "/control-sql" || request.url === "/pacing") {
       const sqlRequest = request.url === "/control-sql";
+      if (sqlRequest && process.env.WTP_CONTROL_PLANE_DATABASE_URL && ordinaryControlRead(text)) {
+        const queuedAt = Date.now();
+        const prepared = controlQueue.then(async () => {
+          disconnected.signal.throwIfAborted();
+          const started = Date.now();
+          controlReadTiming.maxQueueWaitMs = Math.max(controlReadTiming.maxQueueWaitMs, started - queuedAt);
+          const query = await snapshotControlRead(text, params);
+          controlReadTiming.maxSnapshotMs = Math.max(controlReadTiming.maxSnapshotMs, Date.now() - started);
+          return query;
+        });
+        controlQueue = prepared.catch(() => undefined);
+        const query = await prepared, started = Date.now();
+        controlReadTiming.count++;
+        let rows: Record<string, unknown>[];
+        try { rows = await controlRemoteRead(query.text, query.params, disconnected.signal); }
+        finally {
+          controlReadTiming.maxRemoteMs = Math.max(controlReadTiming.maxRemoteMs, Date.now() - started);
+          if (disconnected.signal.aborted) controlReadTiming.aborted++;
+        }
+        response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ rows })); return;
+      }
       const operation = request.url === "/pacing" ? pacingOperation : controlOperation;
       const pending = controlQueue.then(() => sqlRequest ? executeControlSql(text, params) : operation(decoded.method, decoded.args));
       controlQueue = pending.catch(() => undefined);
@@ -428,6 +462,6 @@ server.listen(0, "127.0.0.1", () => {
 process.once("SIGTERM", () => {
   shutdown.abort(Error("RH01 local database is stopping"));
   current?.end(false);
-  process.stdout.write(`RH01_FACTS_END ${JSON.stringify({ remoteBytes, remoteControlBytes, peakRssBytes: process.resourceUsage().maxRSS * 1024 })}\n`);
+  process.stdout.write(`RH01_FACTS_END ${JSON.stringify({ remoteBytes, remoteControlBytes, peakRssBytes: process.resourceUsage().maxRSS * 1024, controlReadTiming })}\n`);
   server.close(() => { routineSqlite?.close(); void Promise.all([pg.close(), controlPg?.close(), canonicalPg?.close()]).then(() => process.exit(0)); });
 });

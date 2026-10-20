@@ -36,4 +36,3 @@ export async function ensureHuntBodyTarget(input:{facts:FactDb&{query:Query};sub
    UNION SELECT $1,p.id FROM entity p WHERE p.id=$3 AND p.kind='place' ON CONFLICT DO NOTHING`,[id,government.id,government.parent_id]);
  return existing.length?{id:String(existing[0].id),name:String(existing[0].name),state:existing[0].state as string|null,parentId:existing[0].parent_id as string|null}:{id,name:input.name,state:government.state as string|null,parentId:String(government.id)};
 }
-

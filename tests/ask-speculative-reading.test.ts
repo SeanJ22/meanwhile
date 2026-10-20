@@ -1,9 +1,29 @@
+import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installFederalVotes, installPimaLocalFinance, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
+import { installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../lib/outcomes/data-plane.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 await installRegistryAuthority();
 await installFederalVotes();
+await installPimaOutcomes();
+for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-contests","candidate-profiles","candidate-corpus"] as const) {
+  const contract=requiredManualProductionContract(stateBallotContractId(family,state));
+  installAbsent(contract.recordClass,contract.scope);
+}
+const statements=requiredManualProductionContract("officeholder-statements");
+installAbsent(statements.recordClass,statements.scope);
+
+for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
+await installPimaLocalFinance();
+const funding = requiredRoutineContract("fec-funding");
+installAbsent(funding.recordClass, funding.scope);
+installAbsent(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope);
 
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "../lib/ask/speculative-reading.ts";
 import { synthesizeWithLadder } from "../lib/ask/synthesize.ts";
@@ -25,21 +45,21 @@ test("the code's best reading: a guess from the reader's words, the page or the 
     return reading && { intent: reading.interpretation.intent, temporal: reading.interpretation.temporal.kind, basis: reading.basis, subject: reading.subjectId, mentions: reading.interpretation.entityMentions.length, referent: reading.interpretation.referent };
   };
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  // A canonical CONTACT shape: the same guess, read off the shape.
+
   assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
-  // Pronouns have no name slot; the model chooses whether the prior body is the referent.
+
   assert.deepEqual(read("When does it meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   assert.deepEqual(read("When do they meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("How did they vote last time?", PRIOR_MESA), { intent: "PAST_MEETING", temporal: "LAST", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("What's on their agenda?", PRIOR_MESA), { intent: "UPCOMING_AGENDA", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("When do they meet next?", [], [{ id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", kind: "BODY", focused: true }]), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA_SCHOOLS, mentions: 0, referent: "Mesa Unified School District Governing Board" }, "the focused card, when the page has one");
-  // Wording no shape anchors, still about a body's sittings.
+
   assert.deepEqual(read("What did the Mesa City Council decide on September 14, 2026?"), { intent: "PAST_MEETING", temporal: "LAST", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  // No guess: nothing binds, nothing says what is asked, or the page holds more than one candidate.
+
   assert.equal(read("Who can I talk to?"), null, "no subject bound");
   assert.equal(read("When do they meet next?"), null, "a pronoun with no earlier turn binds nothing");
   assert.equal(read("When do they meet next?", [], [{ id: MESA, name: "Mesa", kind: "BODY" }, { id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", kind: "BODY" }]), null, "two cards on the page, none focused: no guess");
-  // No wording rule names an intent: the guess is UNKNOWN (a label for the writer); the model's reading still decides.
+
   assert.deepEqual(read("Tell me something interesting about the Mesa City Council budget process"), { intent: "UNKNOWN", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
 });
 
@@ -49,7 +69,7 @@ test("the verdict keeps the speculative answer only on the same subject, body, q
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA] }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, subjectId: MESA_SCHOOLS, bodyIds: [MESA_SCHOOLS], writerInput: "key-2" }), { keep: false, why: "different-subject" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA_SCHOOLS] }), { keep: false, why: "different-body" });
-  /* The intent is a label for the writer: a reading that names another one but selects the same subject, sittings and evidence keeps the answer. */
+
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, intent: "PERSON_RECORD" }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, temporal: { kind: "NEXT" } }), { keep: false, why: "different-question-kind" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, selection: "NEXT" }), { keep: false, why: "different-question-kind" });
@@ -88,9 +108,9 @@ const QUESTION = "Who can I talk to at the Vail school board?";
 
 interface Call { kind: "INTERPRET" | "SYNTHESIZE"; model: string; startedAt: number; endedAt?: number; aborted?: boolean }
 const calls: Call[] = [];
-/** The model's reading of the next question, or a failed call. */
+
 let reading: Record<string, unknown> | "HTTP_500" = {};
-/** What each writer call answers, in call order; the default once the queue is empty. */
+
 interface Reply { answer: string; citedSources: unknown[] }
 type Completion = (signal?: AbortSignal | null) => Promise<void>;
 let writerQueue: { reply: Reply; complete: Completion }[] = [];
@@ -113,7 +133,7 @@ const delay = (ms: number): Completion => signal => new Promise((resolve, reject
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
-// Hedging has separate tests; this transport counts one reading per speculation.
+
 process.env.WTP_ASK_HEDGE_MS = "off";
 delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -158,15 +178,15 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
   resetGroundedState();
   const before = calls.length;
   const started = performance.now();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+  const response = await withReaderAuthorityEdge({...currentReaderAuthorityEdge(),edgeOnly:true}, () => POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-speculative-reading-test" },
     body: JSON.stringify({ question, ocdIds: [AZ, PIMA, VAIL], today: "2026-08-28", ...extra }),
-  }));
+  })));
   const ms = performance.now() - started;
   const text = await response.text();
   assert.equal(response.status, 200, text);
-  // Anything a discarded writer would still do happens now or never.
+
   await new Promise((resolve) => setTimeout(resolve, 50));
   return { payload: JSON.parse(text) as Payload, calls: calls.slice(before), ms };
 }
@@ -189,11 +209,10 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
   assert.equal(on.payload.trace.interpretation.ran, true, "the model still read the question");
   assert.deepEqual([on.payload.trace.speculation?.ran, on.payload.trace.speculation?.delivered, on.payload.trace.speculation?.why, on.payload.trace.speculation?.codeIntent],
     [true, "SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input", "CONTACT"]);
-  // Measured on the two model calls themselves, first start to last end; the route's own work around them slows with the machine.
+
   const onWindow = modelWindow(on.calls);
   assert.ok(onWindow >= WRITING_MS && onWindow < READING_MS + WRITING_MS, `the model calls took ${onWindow.toFixed(0)} ms together: about the longer call, under the sum`);
 
-  // The control: the same question with speculation switched off runs the two calls one after the other.
   process.env.WTP_ASK_SPECULATION = "off";
   try {
     const off = await timedAsk(QUESTION);
@@ -211,7 +230,7 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
 });
 
 test("ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the earlier turn's body", { concurrency: false }, async () => {
-  // The body the reader asked about in the earlier turn, bound in code the way the route binds it.
+
   reading = CONTACT_READING;
   const first = await timedAsk(QUESTION);
   const vail = first.payload.subject?.id;

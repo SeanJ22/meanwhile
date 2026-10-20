@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import {createMemoryRepositories} from "../lib/control-plane/repository/memory.ts";
+import {readPlanningContinuation} from "../lib/control-plane/scheduler/state-planning.ts";
+import {ADMIN_CONFIG_ID,defaultAdminConfig} from "../lib/control-plane/gateway/admin-config.ts";
 import { readFileSync } from "node:fs";
 import * as nodeModule from "node:module";
 import { test } from "node:test";
@@ -19,9 +22,7 @@ function nextWait(overrides: Record<string, unknown> = {}): (ok: boolean) => Pro
     lifetimeHuntStalledCycles: 0, ownerRepositories: async () => ({ runnerHeartbeat: { read: async () => null } }),
     readRunnerControls: async () => ({ config: null, state: null, research: [] }),
     readIntents: () => ({ paused: false, runnerPause: { paused: false } }),
-    expansionScopesOf: () => ({ malformed: 0, scopes: [] }),
-    isAdminConfig: () => false, isExpansionCycleReading: () => false, isAssignmentCycleReading: () => false,
-    originalLifetimeHuntContinuation: () => null, continuingDirectedHunt: () => null,
+    readPlanningContinuation: async () => null,
     RUNNER_ID: "test", console: { log: () => {}, error: () => {} }, ...overrides,
   });
   return runInContext(stripTypeScriptTypes(wait) + "\nnextCycleWaitMs;", context);
@@ -32,7 +33,7 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
     { ownerRepositories: async () => null },
     { ownerRepositories: async () => { throw new Error("unavailable"); } },
     { readRunnerControls: async () => { throw new Error("control read failed"); } },
-    { expansionScopesOf: () => ({ malformed: 1, scopes: [] }) },
+    { readPlanningContinuation: async () => { throw new Error("planning read failed"); } },
     { readIntents: () => ({ paused: true, runnerPause: { paused: false } }) },
     { readIntents: () => ({ paused: false, runnerPause: { paused: true } }) },
   ]) {
@@ -47,11 +48,25 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
 
 test("failed round continuation caps a long lifetime delay and retains shorter waits", async () => {
   for (const delayMs of [60_000, 600_000, 3_600_000]) {
-    const next = nextWait({ originalLifetimeHuntContinuation: () => ({
-      label: "funded place", due: 20, dispatched: 0, reason: "ELIGIBLE_ZERO_DISPATCH", delayMs,
+    const next = nextWait({ readPlanningContinuation: async () => ({hunt:{label:"funded place",due:20,dispatched:0},
+      lifetime:{reason:"ELIGIBLE_ZERO_DISPATCH",delayMs},
     }) });
     assert.equal(await next(false), Math.min(delayMs, 600_000));
     assert.equal(await next(true), delayMs);
+  }
+});
+
+test("a paid pause or a stopped hunt clears the prior directed-hunt reason before the next wait",async()=>{
+  for(const paused of [true,false]) {
+    const repos=createMemoryRepositories();
+    const at="2026-10-16T11:00:00.000Z";
+    await repos.adminConfig.put(ADMIN_CONFIG_ID,defaultAdminConfig(at),at);
+    await repos.runnerHeartbeat.put("test",{testedSha:"code",nextCycleReason:"Directed hunt ZIP 85122"} as never,at);
+    await repos.researchState.put("level-1:az",{expansion:{scopes:[{key:"zcta:2020/85122",work:{dueThisCycle:79,dispatchedThisCycle:0}}]}} as never,at);
+    const next=nextWait({ownerRepositories:async()=>repos,readPlanningContinuation,
+      readIntents:()=>({paused,runnerPause:{paused:false}})});
+    assert.equal(await next(true),60*60_000);
+    assert.equal((await repos.runnerHeartbeat.mustRead("test")).value.nextCycleReason,null);
   }
 });
 

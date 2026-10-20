@@ -1,7 +1,8 @@
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test, { afterEach, beforeEach } from "node:test";
+import { installFactReader } from "../lib/facts/db.ts";
 
 import { MEETING_PARTITION_CONTRACTS, LEGACY_MEETINGS_AGGREGATE_SCOPE } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
@@ -24,6 +25,16 @@ import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
+
+const factReads: string[] = [];
+beforeEach(() => {
+  factReads.length = 0;
+  installFactReader(async text => { factReads.push(text); return []; });
+});
+afterEach(() => {
+  installFactReader(undefined);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
+});
 
 const legistar = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "legistar")!;
 const insite = MEETING_PARTITION_CONTRACTS.find((partition) =>

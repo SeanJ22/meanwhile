@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  BILLING_FACTS_KEPT,
   PROVIDER_DEFINITIONS,
   billingFactId,
   billingFactsOf,
@@ -135,7 +134,7 @@ test("recording through the gateway: provenance kept, the same slot corrects, an
   assert.match(first.receipt.says, /never added to them/);
   assert.equal(first.receipt.readBackAt, "/admin/money");
 
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: true });
   const held = billingFactsOf(row?.value ?? null);
   assert.equal(held.malformed, 0);
   assert.equal(held.facts.length, 1);
@@ -149,7 +148,7 @@ test("recording through the gateway: provenance kept, the same slot corrects, an
   const corrected = await submit(record({ ...ANTHROPIC_MTD, amountUsd: 180, asOf: TODAY }, "billing-key-0002"), deps(repos));
   assert.equal(corrected.ok, true, corrected.receipt.says);
   assert.match(corrected.receipt.says, /correcting the \$173\.10 so far/);
-  const after = billingFactsOf((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).facts;
+  const after = billingFactsOf((await repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: true }))?.value ?? null).facts;
   assert.equal(after.length, 1, "the same slot is corrected, never counted twice");
   assert.equal(after[0].amountUsd, 180);
 
@@ -159,8 +158,8 @@ test("recording through the gateway: provenance kept, the same slot corrects, an
   );
   assert.equal(removed.ok, true, removed.receipt.says);
   assert.match(removed.receipt.says, /no reading/);
-  assert.equal(billingFactsOf((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).facts.length, 0);
-  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.fleetSpendCeiling?.rollingCeilingUsd, 105);
+  assert.equal(billingFactsOf((await repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: true }))?.value ?? null).facts.length, 0);
+  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: true }))?.value.fleetSpendCeiling?.rollingCeilingUsd, 105);
 });
 
 test("a figure read tomorrow is refused by the gateway's own clock, and nothing is written", async () => {
@@ -168,12 +167,12 @@ test("a figure read tomorrow is refused by the gateway's own clock, and nothing 
   const outcome = await submit(record({ ...ANTHROPIC_MTD, asOf: "2026-09-24" }, "billing-key-0004"), deps(repos));
   assert.equal(outcome.ok, false);
   assert.match(outcome.receipt.says, /cannot be after today/);
-  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null);
+  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: true }), null);
 });
 
-test("a policy row with an unreadable billing entry refuses the write rather than dropping it", async () => {
+test("an unreadable billing slot refuses a write to that slot", async () => {
   const repos = createMemoryRepositories();
-  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), billingFacts: [{ id: "x" } as unknown as BillingFact] }, NOW);
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), billingFacts: [{ id: "anthropic-api:MONTH_TO_DATE:2026-09-01" } as unknown as BillingFact] }, NOW);
   const outcome = await submit(record(ANTHROPIC_MTD, "billing-key-0005"), deps(repos));
   assert.equal(outcome.ok, false);
   assert.match(outcome.receipt.says, /could not be read, so nothing was changed/);
@@ -185,7 +184,9 @@ test("billing figures are read only by the gateway that writes them and the Admi
   const allowed = new Set([
     "lib/control-plane/billing-facts.ts",
     "lib/control-plane/gateway/admin-config.ts",
+    "lib/control-plane/repository/admin-config.ts",
     "lib/control-plane/gateway/registry.ts",
+    "lib/control-plane/gateway/write-readback.ts",
   ]);
   const allowedPrefixes = ["app/(admin)/"];
   const scanned: string[] = [];
@@ -211,9 +212,9 @@ test("billing figures are read only by the gateway that writes them and the Admi
   assert.deepEqual(offenders, [], `billing figures are read outside the gateway and the Admin render path: ${offenders.join(", ")}`);
 });
 
-test("the row keeps a bounded number of figures, oldest read first to go", () => {
+test("billing history retains older figures after the displayed window grows", () => {
   let facts: readonly BillingFact[] = [];
-  for (let i = 0; i < BILLING_FACTS_KEPT + 5; i++) {
+  for (let i = 0; i < 125; i++) {
     const day = new Date(Date.parse("2026-01-01T00:00:00Z") + i * 86_400_000).toISOString().slice(0, 10);
     const fact: BillingFact = {
       id: `brave:BALANCE:${day}`,
@@ -234,6 +235,17 @@ test("the row keeps a bounded number of figures, oldest read first to go", () =>
     };
     facts = withFactRecorded(facts, fact).facts;
   }
-  assert.equal(facts.length, BILLING_FACTS_KEPT);
-  assert.equal(facts[0].asOf, "2026-01-06", "the five oldest readings went first");
+  assert.equal(facts.length, 125);
+  assert.equal(facts[0].asOf, "2026-01-01");
+});
+
+test("recording one billing slot preserves an unreadable entry in another slot", async () => {
+  const repos = createMemoryRepositories();
+  const unreadable = { id: "unrelated" } as BillingFact;
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(NOW), billingFacts: [unreadable] }, NOW);
+  assert.equal((await submit(record(ANTHROPIC_MTD, "billing-isolated"), deps(repos))).ok, true);
+  const held = await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { billingFacts: true });
+  assert.deepEqual(held.value.billingFacts?.find(fact => fact.id === unreadable.id), unreadable);
+  assert.equal(billingFactsOf(held.value).facts.length, 1);
+  assert.equal(billingFactsOf(held.value).malformed, 1);
 });

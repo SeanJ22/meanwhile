@@ -17,10 +17,8 @@ import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import type { ActionResult, RegisteredAction, Validation } from "./registry.ts";
 import { writeFailureSays } from "./write-readback.ts";
 
-/** A hunt is named by its scope key (`zcta:2020/<zip>`) or by its place key (`geo:<state>.zcta.<zip>`). */
 const PLACE_KEY = /^(?:geo:[a-z]{2}.[a-z_]+.[0-9A-Za-z]{2,12}|st:[a-z]{2})$/;
 
-/** The most ZIPs one send takes. A bigger list is a file to split, not one click. */
 export const BULK_SEND_MAX_ITEMS = 5000;
 const ZCTA_VERSION = "zcta:2020";
 
@@ -34,7 +32,6 @@ interface BulkItem {
   readonly group: string | null;
 }
 
-/** The items as the action accepts them; any bad item refuses the whole send with its number. */
 function validateItems(raw: unknown): { readonly ok: true; readonly items: readonly BulkItem[] } | { readonly ok: false; readonly why: string } {
   if (!Array.isArray(raw) || raw.length === 0) return { ok: false, why: "there is nothing in this send" };
   if (raw.length > BULK_SEND_MAX_ITEMS) return { ok: false, why: `one send takes at most ${BULK_SEND_MAX_ITEMS.toLocaleString("en-US")} ZIPs` };
@@ -74,7 +71,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
         "Does not open the paid lane, add a government no registry defines, or raise any spending limit. Each budget can only hold paid work back, and the Fleet ceiling still binds first.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a list of places you want worked",
-      // The config row's compare-and-set is the version check, as for every expansion write.
+
       requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
     },
@@ -98,7 +95,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
       let updated = 0;
       let ceilingUsd: number;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{ids:items.map(item=>scopeKeyOf(item.geography))}});
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         const held = expansionScopesOf(current);
         if (held.malformed > 0) {
@@ -127,8 +124,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
           scopes = next.scopes;
         }
         const written = withExpansionScopes(current, { scopes, decidedAt: at });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+        await deps.repos.adminConfig.save(existing, written, at);
       } catch (error) {
         return refuse(writeFailureSays("your list of hunts", error));
       }
@@ -182,7 +178,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
       let label = key;
       let savedKey = key;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:key.startsWith("geo:")?{where:{path:["geography","geoid"],value:key.split(".").at(-1)!}}:{ids:[key]}});
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : null;
         if (existing === null || current === null) return refuse("There is no list of hunts yet, so there is nothing to change.");
         const held = expansionScopesOf(current);
@@ -215,7 +211,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
         });
-        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
+        await deps.repos.adminConfig.save(existing, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
       } catch (error) {
         return refuse(writeFailureSays("the change to your hunt", error));
       }
@@ -237,4 +233,3 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
     },
   },
 ];
-

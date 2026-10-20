@@ -1,9 +1,9 @@
 import type { BoxRepository } from "../box.ts";
+import type { FieldManualSourceHint,FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
-/** Provider-neutral persistence for state that must outlive the worker holding it. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
@@ -22,10 +22,9 @@ import type {
   OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
+import type { FieldManualEntry, FieldManualQuery, FieldManualRead } from "../field-manual.ts";
 import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -36,7 +35,6 @@ import type {
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
-import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
@@ -45,7 +43,6 @@ import type { LeadOrder } from "../leads/order.ts";
 import type { WebsitePacing } from "../website-pacing.ts";
 import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 
-/** `revision` starts at 1 and increments by exactly one per accepted write. */
 export interface Persisted<T> {
   readonly id: string;
   readonly revision: number;
@@ -53,22 +50,19 @@ export interface Persisted<T> {
   readonly value: T;
 }
 
-/** `created` is false when this exact record was already here; both are successes. */
 export interface PutOutcome<T> {
   readonly created: boolean;
   readonly persisted: Persisted<T>;
 }
 
-/** `appended` is false when the identical record was already present: a retried append, a no-op success. */
 export interface AppendOutcome<T> {
   readonly appended: boolean;
   readonly recordId: string;
   readonly record: T;
-  /** Zero-based position in the log AFTER this call. Order is the history. */
+
   readonly position: number;
 }
 
-/** Two different values offered under one derived id. */
 export class IdentityCollision extends Error {
   readonly kind: string;
   readonly id: string;
@@ -89,7 +83,6 @@ export class IdentityCollision extends Error {
   }
 }
 
-/** A compare-and-set quoted a revision that is no longer current; names expected and found. */
 export class ConcurrentModification extends Error {
   readonly kind: string;
   readonly id: string;
@@ -111,7 +104,6 @@ export class ConcurrentModification extends Error {
   }
 }
 
-/** An append tried to change a record that history already contains. */
 export class AppendOnlyViolation extends Error {
   readonly log: string;
   readonly recordId: string;
@@ -128,7 +120,6 @@ export class AppendOnlyViolation extends Error {
   }
 }
 
-/** Raised instead of returning an empty result: unreadable state is never absent state. */
 export class CorruptPersistedState extends Error {
   readonly location: string;
   readonly detail: string;
@@ -145,7 +136,6 @@ export class CorruptPersistedState extends Error {
   }
 }
 
-/** An exclusive read-modify-write lock is already held by someone else. */
 export class RepositoryLockHeld extends Error {
   readonly lockName: string;
 
@@ -160,7 +150,6 @@ export class RepositoryLockHeld extends Error {
   }
 }
 
-/** An operation named an aggregate the store does not hold. */
 export class UnknownAggregate extends Error {
   readonly kind: string;
   readonly id: string;
@@ -177,7 +166,6 @@ export class UnknownAggregate extends Error {
   }
 }
 
-/** Stable JSON with sorted keys, so value equality does not depend on iteration order. */
 export function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value) ?? "null";
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
@@ -187,7 +175,6 @@ export function canonicalJson(value: unknown): string {
   return `{${entries.map(([k, v]) => `${JSON.stringify(k)}:${canonicalJson(v)}`).join(",")}}`;
 }
 
-/** Shared by every implementation so the double cannot drift from the durable store. */
 export function reconcileIdempotentPut<T>(
   kind: string,
   id: string,
@@ -200,7 +187,6 @@ export function reconcileIdempotentPut<T>(
   throw new IdentityCollision(kind, id, a, b);
 }
 
-/** Decide an idempotent append against an already-recorded record. */
 export function reconcileIdempotentAppend<T>(
   log: string,
   recordId: string,
@@ -213,24 +199,23 @@ export function reconcileIdempotentAppend<T>(
   throw new AppendOnlyViolation(log, recordId, a, b);
 }
 
-/** No `update` and no `delete`: every mutation goes through `compareAndSet`. */
 export interface AggregateRepository<T> {
-  /** The aggregate, or null when it genuinely is not there. Never null on a failed read. */
+
   read(id: string): Promise<Persisted<T> | null>;
-  /** Narrowed to `projection` by the store before it leaves; null when absent. */
+
   readNarrowed(id: string, projection: RecordProjection): Promise<Persisted<unknown> | null>;
-  /** The aggregate, or `UnknownAggregate`. For callers that cannot proceed without it. */
+
   mustRead(id: string): Promise<Persisted<T>>;
-  /** Idempotent create. Identical re-put is a no-op success; a different value refuses. */
+
   put(id: string, value: T, now: string): Promise<PutOutcome<T>>;
-  /** The only mutation path. Quotes the revision the writer read. */
+
   compareAndSet(
     id: string,
     expectedRevision: number,
     next: T,
     now: string,
   ): Promise<Persisted<T>>;
-  /** The named aggregates that exist, in id order; a failed read throws. Optional. */
+
   readMany?(ids: readonly string[]): Promise<readonly Persisted<T>[]>;
   /** `readMany`, each value narrowed to the projection by the store before it leaves. */
   readManyNarrowed?(ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
@@ -238,11 +223,11 @@ export interface AggregateRepository<T> {
   listWhereIn?(path: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
-  /** Every row in the same id order, each value narrowed to the projection. */
+
   listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  /** Exactly `list()` filtered by the scalar `#>>` value at `path`. */
+
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
-  /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
+
   listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /**
    * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
@@ -257,35 +242,29 @@ export interface ChangedReadOptions<R> {
   readonly projection?: RecordProjection;
 }
 
-/** Slots a reader already holds, left out of a changed-since read: an aggregate's [id, revision], a log record's [key, position]. */
 export type HeldSlots = readonly (readonly [string, number])[];
 
-/** `held` as a set of "slot\nversion" keys. */
 export function heldSlotKeys(held: HeldSlots | undefined): ReadonlySet<string> {
   return new Set((held ?? []).map(([slot, version]) => `${slot}\n${version}`));
 }
 
-/** The field manual's rows, one aggregate per entry. */
 export interface FieldManualRepository extends AggregateRepository<FieldManualEntry> {
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
-  /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
-  slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
-  /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
+
+  select(query: FieldManualQuery): Promise<FieldManualRead>;
+  sourceHints(scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]>;
+  learnedRoutes(routeIds:readonly string[]):Promise<{present:boolean;routeIds:readonly string[]}>;
+
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
-  /**
-   * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
-   * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
-   */
+
   retireInstructions?(): Promise<void>;
 }
 
-/** What `AggregateRepository.listChangedSince` answers. */
 export interface ChangedRows<T> {
   readonly rows: readonly Persisted<T>[];
   readonly through: string | null;
 }
 
-/** One log record with the coordinates `readAll()` orders it by. */
 export interface ChangedRecord<T> {
   readonly key: string;
   readonly recordId: string;
@@ -296,20 +275,18 @@ export interface ChangedRecord<T> {
   readonly stampedAt?: string;
 }
 
-/** What `AppendOnlyRepository.readChangedSince` answers. */
 export interface ChangedRecords<T> {
   readonly records: readonly ChangedRecord<T>[];
   readonly through: string | null;
 }
 
-/** Partitioned by key so a replay need not read the whole world. */
 export interface AppendOnlyRepository<T> {
   append(key: string, recordId: string, record: T, now: string): Promise<AppendOutcome<T>>;
-  /** Records under one key, in append order. */
+
   read(key: string): Promise<readonly T[]>;
-  /** A content filter returning every match under one key, in append order. */
+
   readWhere(key: string, path: readonly string[], value: string): Promise<readonly T[]>;
-  /** `readWhere`'s newest `limit` matches, newest first, narrowed by the store. */
+
   readRecentWhere(
     key: string,
     path: readonly string[],
@@ -318,17 +295,17 @@ export interface AppendOnlyRepository<T> {
     projection: RecordProjection,
     recordedAtSince?: string,
   ): Promise<readonly unknown[]>;
-  /** Every record, in key order then append order. */
+
   readAll(): Promise<readonly T[]>;
-  /** `readAll()` with each record narrowed to `projection` as it is read, so only the projection is ever held. */
+
   readAllNarrowed(projection: RecordProjection): Promise<readonly unknown[]>;
-  /** Records appended at or after `since`, in key then append order; filtered before transfer. */
+
   readSince(since: string): Promise<readonly T[]>;
-  /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
+
   readRecent(key: string, limit: number): Promise<readonly T[]>;
-  /** The newest record under each key, narrowed by the store, in one batched read. A key with no record is absent. */
+
   readLatest(keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>>;
-  /** The keys this log holds. */
+
   keys(): Promise<readonly string[]>;
   /** Exactly `keys()` narrowed to keys holding a matching record, sorted. */
   keysWhere(path: readonly string[], value: string): Promise<readonly string[]>;
@@ -340,7 +317,6 @@ export interface AppendOnlyRepository<T> {
   readStampedBetween?(from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void): Promise<void>;
 }
 
-/** `log.readKeys(keys)`, or `read` per key where the provider has no batched read. */
 export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>> {
   const unique = [...new Set(keys)];
   if (unique.length === 0) return new Map();
@@ -356,7 +332,6 @@ export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly
 /** `true` keeps a top-level key whole; an object keeps only its named keys. Every other key is dropped. */
 export type RecordProjection = Readonly<Record<string, true | readonly string[]>>;
 
-/** The in-process mirror of the Postgres projection, so every provider returns the same narrowed record. */
 export function projectRecord(record: unknown, projection: RecordProjection): unknown {
   if (record === null || typeof record !== "object" || Array.isArray(record)) return record;
   const out: Record<string, unknown> = {};
@@ -374,12 +349,10 @@ export function projectRecord(record: unknown, projection: RecordProjection): un
   return out;
 }
 
-/** `projectRecord`, and `{}` for an empty projection. */
 export function projectAggregate(value: unknown, projection: RecordProjection): unknown {
   return Object.keys(projection).length === 0 ? {} : projectRecord(value, projection);
 }
 
-/** The in-process mirror of Postgres `#>>`: null when the path does not resolve or the leaf is not scalar. */
 export function jsonTextAtPath(record: unknown, path: readonly string[]): string | null {
   let cursor: unknown = record;
   for (const segment of path) {
@@ -390,49 +363,43 @@ export function jsonTextAtPath(record: unknown, path: readonly string[]): string
   return String(cursor);
 }
 
-/** One shared host/vendor/credential budget aggregate; every worker contends on it. */
 export interface BudgetRepository {
   read(): Promise<Persisted<BudgetLedger>>;
-  /** Establish the ledger. Idempotent by the same rule as any derived-identity put. */
+
   install(ledger: BudgetLedger, now: string): Promise<PutOutcome<BudgetLedger>>;
   compareAndSet(
     expectedRevision: number,
     next: BudgetLedger,
     now: string,
   ): Promise<Persisted<BudgetLedger>>;
-  /** Read-modify-write under an exclusive lock; the mutator is a pure function of the ledger. */
+
   mutate<R>(
     mutator: (ledger: BudgetLedger) => { readonly ledger: BudgetLedger; readonly result: R },
     now: string,
   ): Promise<{ readonly result: R; readonly persisted: Persisted<BudgetLedger> }>;
 }
 
-/** One row per Send/area spend hold; the rules live in `expansion/spend-holds.ts`. */
 export type SpendHoldRepository = SpendHoldStore;
 
-/** For read-modify-writes across OS processes. A held lock is a named refusal, never a wait. */
 export interface LockManager {
   withLock<R>(name: string, fn: () => Promise<R>): Promise<R>;
 }
 
-/** Evidence metadata only, never bytes; the bodies belong to `evidence/`. */
 export interface ArtifactRecord {
   readonly artifactId: string;
   readonly workItemId: string;
   readonly routeTaskId: string | null;
-  /** The Attempt that actually retrieved it. Immutable, and never re-pointed. */
+
   readonly attemptId: string;
   readonly tier: ArtifactTier;
   readonly contentHash: string;
   readonly byteLength: number;
   readonly contentType: string;
   readonly canonicalUrl: string;
-  /** True when the capture was interrupted: kept and labelled, never treated as complete. */
+
   readonly partial: boolean;
   readonly recordedAt: string;
-  /** A separately acquired candidate publication must retain the exact link
-   * on an approved campaign page that authorized walking this URL. Offsets
-   * address the captured UTF-16 HTML string, never a later reconstruction. */
+
   readonly publicationLink?: {
     readonly candidacyId: string;
     readonly approvalRecordId: string;
@@ -446,57 +413,55 @@ export interface ArtifactRecord {
   };
 }
 
-/** The commit point of a route disposition; the two aggregate writes apply it and `reconcile()` finishes it. */
 export interface DispositionCommit {
   readonly commitId: string;
   readonly routeTaskId: string;
   readonly workItemId: string;
   readonly attemptId: string;
   readonly disposition: RouteDisposition;
-  /** The two aggregate values to apply, already computed by the domain. */
+
   readonly closedAttempt: Attempt;
   readonly disposedTask: RouteTask;
-  /** The revision of the RouteTask this commit was computed against. */
+
   readonly taskRevision: number;
-  /** The revision of the Attempt this commit was computed against. */
+
   readonly attemptRevision: number;
   readonly committedAt: string;
 }
 
-/** A WorkItem transition, with the log's own record identity. */
 export interface RecordedTransition {
   readonly transitionId: string;
   readonly workItemId: string;
   readonly transition: WorkItemTransition;
 }
 
-/** Everything the control-plane runtime persists, behind one neutral surface. */
 export interface ControlPlaneRepositories {
-  /** Bounded, newest-first projection joined to its authoritative receipt. */
+
   readonly adminActionHistoryPage?: (query: import("./action-history-atomic.ts").ActionHistoryReadQuery) => Promise<readonly import("./action-history-atomic.ts").ActionHistoryReadRow[]>;
   readonly workItems: AggregateRepository<WorkItem>;
   readonly routeTasks: AggregateRepository<RouteTask>;
   readonly attempts: AggregateRepository<Attempt>;
   readonly obligations: AggregateRepository<StandingObligation>;
   readonly occurrences: AggregateRepository<FreshnessOccurrence>;
-  /** Keyed by OBLIGATION id: one debt row per obligation, so the row is the state. */
+  readonly dispatchState: import("./dispatch-state.ts").DispatchStateRepository;
+
   readonly debts: AggregateRepository<FreshnessDebt>;
-  /** Keyed by ROUTE TASK id: one lease slot per task, so the slot is the race. */
+
   readonly leases: AggregateRepository<ExecutionLease>;
-  /** Indexed, bounded read of all non-internal active lease claims; unsupported providers say unavailable. */
+
   readonly activeWorkClaims: ActiveWorkClaimReader;
   readonly transitions: AppendOnlyRepository<RecordedTransition>;
   readonly escalations: AppendOnlyRepository<Escalation>;
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
-  /** Exact source-owned captures across jobs, newest acquisition first; no general log scan in Postgres. */
+
   readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
-  /** Which of these exact canonical URLs have a capture, in one indexed read. */
+
   readonly capturedCanonicalUrls?: (urls: readonly string[]) => Promise<ReadonlySet<string>>;
-  /** Exact Admin original-byte copy requests, CAS-leased by the permanent runner. */
+
   readonly adminEvidenceCopyRequests: AggregateRepository<AdminEvidenceCopyRequest>;
   readonly costs: AppendOnlyRepository<CostEntry>;
-  /** Read server-side by the admin host. Every record is aggregate-only (`assertAggregateOnly`). */
+
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
   /** The running totals the snapshot is folded from, and where each of its reads last stopped. */
   readonly ownerSnapshotTotals: AggregateRepository<OwnerSnapshotTotals>;
@@ -506,21 +471,25 @@ export interface ControlPlaneRepositories {
   readonly ownerSnapshotInboxes: AggregateRepository<SpilledInbox>;
   /** Learned discovery knowledge every model-driven worker reads and writes back, one row per entry. */
   readonly fieldManual: FieldManualRepository;
-  /** What each reusable method did in each place. */
+
   readonly fixMap: FixMapRepository;
-  /** Every reader's shared count and holds per website. */
+
   readonly websitePacing: WebsitePacing;
-  /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
+
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   readonly cacheObservations: AggregateRepository<CacheObservationRecord>;
-  /** Every digest the runner wrote: the latest one, and the history. */
+
   readonly ownerDigests: AppendOnlyRepository<OwnerDigestRecord>;
-  /** What a decision button appended. */
+
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
+  readonly huntOrders: import("../hunt-orders.ts").HuntOrderRepository;
+  readonly planningControls?: import("../scheduler/state-planning.ts").PlanningControls;
+  readonly planningState?: string;
+  readonly controlReadsBackfill?: import("./control-reads-backfill.ts").ControlReadsBackfill;
   readonly researchState: AggregateRepository<ResearchState>;
-  /** The running spend counter (`spend-window.ts`). */
-  readonly spendWindow: AggregateRepository<SpendWindow>;
-  /** Canonical live method-candidate lifecycle. Git holds historical evidence only. */
+
+  readonly spend: import("../spend-window.ts").SpendRepository;
+
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
@@ -535,24 +504,24 @@ export interface ControlPlaneRepositories {
   readonly softwareReleaseReviews: AppendOnlyRepository<SoftwareReleaseReviewRecord>;
   readonly adminReceipts: AppendOnlyRepository<ActionReceipt>;
   readonly agentJobs: AppendOnlyRepository<AgentJobRecord>;
-  /** Every walk of a government's own site for its meeting route, keyed by jurisdiction id. */
+
   readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
-  /** Live-audit results by UTC day, corrections, and pulls by work item (`live-audit-log.ts`). */
+
   readonly liveAudits: AppendOnlyRepository<LiveAuditLogRow>;
-  readonly adminConfig: AggregateRepository<AdminConfig>;
-  /** One aggregate per body, gap code and UTC day: `<body id>#<code>#<day>`. */
+  readonly adminConfig: import("./admin-config.ts").AdminConfigRepository;
+
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
-  /** One aggregate per door. Written only through `door.save` and by derive steps that never overwrite a newer manual edit. */
+
   readonly doors: AggregateRepository<DoorRecord>;
-  /** One aggregate per research-leads order, keyed by its receipt id. */
+
   readonly leadOrders: AggregateRepository<LeadOrder>;
   readonly budget: BudgetRepository;
-  /** Absent in the file store, where holds stay on the budget ledger row. */
+
   readonly spendHolds?: SpendHoldRepository;
   readonly locks: LockManager;
-  /** What this store is, for a report that must say where the state lives. */
+
   readonly describe: () => string;
-  /** True only for a store whose contents survive this process. */
+
   readonly durable: boolean;
 }
 

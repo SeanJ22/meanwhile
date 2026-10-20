@@ -16,6 +16,7 @@ type Provenance = CampaignSourceCapture & { readonly publisher: string; readonly
 
 export interface CampaignSourceRecord {
   readonly id: string;
+  readonly person?: { readonly id: string; readonly name: string; readonly seat: string; readonly sourceUrl: string };
   readonly state: string;
   readonly resource: string;
   readonly nativeId: string | null;

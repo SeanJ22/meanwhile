@@ -1,0 +1,19 @@
+{
+  "n": 66,
+  "branch": "release/66",
+  "river_sha": "7dbad3bb5f2ebdee6ab41f9e094237aa00eecb83",
+  "tested_sha": "7dbad3bb5f2ebdee6ab41f9e094237aa00eecb83",
+  "steps": [
+    "HF-02"
+  ],
+  "lanes": [
+    "hf-02"
+  ],
+  "integration_from": 256,
+  "integration_count": 257,
+  "pr": {
+    "number": 776,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/776"
+  },
+  "at": "2026-10-20T15:58:05Z"
+}

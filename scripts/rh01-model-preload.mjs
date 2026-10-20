@@ -16,14 +16,19 @@ if (descriptorPath) {
   registerHooks({ load(url, context, nextLoad) {
     const result = nextLoad(url, context);
     if (!url.startsWith(prefix) || url.includes("/node_modules/") || !result.source) return result;
-    let source = String(result.source);
-    if (url.endsWith("/lib/control-plane/scheduler/scout-executor.ts")) {
+    const modelEntry = url.endsWith("/lib/control-plane/scheduler/scout-executor.ts");
+    const capturedPlace = url.endsWith("/lib/civic-data/held-place-capture.ts") && process.env.WTP_RH01_MODEL_CAPTURE;
+    if (!modelEntry && !capturedPlace) return result;
+    // Decode only the two modules actually transformed. JSON and every other
+    // native source retain their loader result without a byte-to-string rewrite.
+    let source = typeof result.source === "string" ? result.source : Buffer.from(result.source).toString("utf8");
+    if (modelEntry) {
       const declaration = "export function anthropicTransport(";
       if (!source.includes(declaration)) throw Error("RH01 native model transport declaration changed");
       source = source.replace(declaration, "function rhNativeAnthropicTransport(");
       source += `\nimport {diagnosticModelClient as rhModelClient} from ${JSON.stringify(client)};
         export function anthropicTransport(apiKey,fetchImpl,endpoint,options={}) { return rhModelClient(options); }\n`;
-    } else if (url.endsWith("/lib/civic-data/held-place-capture.ts") && process.env.WTP_RH01_MODEL_CAPTURE) {
+    } else if (capturedPlace) {
       const declaration = "export async function readHeldPlaceCapture(";
       if (!source.includes(declaration)) throw Error("RH01 native held-place declaration changed");
       source = source.replace(declaration, "async function rhNativeHeldPlaceCapture(");

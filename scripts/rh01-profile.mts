@@ -42,10 +42,18 @@ if (process.env.WTP_PRODUCTION_DATABASE_URL_READONLY) process.env.DATABASE_URL =
 interface Job { readonly id: string; readonly script: string; readonly command: readonly string[]; readonly source: string; readonly scope?: string; readonly recordClass?: string;
   readonly authority?: { readonly capability: string; readonly contract: string | null } }
 interface SourceReceipt { readonly acquisitionSucceeded?: boolean; readonly decision?: string }
-interface NestedPeak { readonly pid: number; readonly names: readonly string[]; peakRssBytes: number; treePeakRssBytes?: number; readerBytes: number }
+interface NestedPeak { readonly pid: number; readonly names: readonly string[]; peakRssBytes: number; treePeakRssBytes?: number; readerBytes: number;
+  exclusiveOwnerPeakRssBytes?: number; exclusiveOwnerHwmBoundBytes?: number }
+interface OwnerMemoryPeak {
+  readonly pid: number; readonly entries: string[]; samples: number;
+  readonly firstSeenAt: string; lastSeenAt: string;
+  exclusiveOwnerPeakRssBytes: number; exclusiveOwnerHwmBoundBytes: number;
+  ownPeakRssBytes: number; inclusiveTreePeakRssBytes: number;
+}
 interface JobResult extends Job {
   readonly peakRssBytes: number | null; readonly elapsedMs?: number; readonly complete: boolean;
   readonly ownPeakRssBytes?: number;
+  exclusiveOwnerPeakRssBytes?: number; exclusiveOwnerHwmBoundBytes?: number;
   readonly nestedProcesses?: readonly NestedPeak[];
   readonly readerBytes?: number; readonly controlPlaneBytes?: number; readonly sourceReceipt?: SourceReceipt | null;
   readonly code?: number | null; readonly signal?: NodeJS.Signals | null; readonly logDirectory: string; readonly error?: string;
@@ -293,7 +301,7 @@ const memoryHost = workerMemoryHost({ shared: true, processes: () => {
   const rows = sample(), included = new Set([process.pid]);
   for (const pid of active.keys()) included.add(pid);
   for (;;) { let changed = false; for (const [pid, row] of rows) if (included.has(row.parent) && pid !== facts.pid && !included.has(pid)) { included.add(pid); changed = true; } if (!changed) break; }
-  return [...rows].filter(([pid]) => included.has(pid)).map(([pid, row]) => ({ pid, parentPid: row.parent, rss: row.rss }));
+  return [...rows].filter(([pid]) => included.has(pid)).map(([pid, row]) => ({ pid, parentPid: row.parent, rss: row.rss, peakRss: row.peak }));
 } });
 const slots = routineProcessSlots({ availableBytes: () => {
   const rows = sample();
@@ -301,6 +309,8 @@ const slots = routineProcessSlots({ availableBytes: () => {
 }, host: memoryHost });
 let admissionAtPeak: { readonly fitLeaseWorkers: number; readonly reservedGrowthBytes: number; readonly runnerTreeRssBytes: number } | null = null;
 let minAdmissibleLeaseWorkers: number | null = null;
+const ownerMemoryPeaks = new Map<number, OwnerMemoryPeak>();
+let ownerPeaksWrittenAt = 0;
 const interval = setInterval(() => {
   const rows = sample();
   refreshObserved();
@@ -352,9 +362,37 @@ const interval = setInterval(() => {
   maxSimultaneousLeaseWorkers = Math.max(maxSimultaneousLeaseWorkers, leases.length);
   maxSimultaneousWorkingLeaseWorkers = Math.max(maxSimultaneousWorkingLeaseWorkers, leases.filter(row => row.status === "RUNNING").length);
   if (isPeak) leaseWorkersAtPeak = leases;
-  void Promise.resolve(memoryHost.transact((state: unknown, processes: unknown) => {
-    const reading = memoryReading({ at: new Date().toISOString(), totalBytes: hostBytes, availableBytes: Math.max(0, hostBytes - sum),
+  void Promise.resolve(memoryHost.transact((state: { reservations: readonly { pid: number | null; entry: string }[] }, processes: readonly { pid: number; parentPid: number; rss: number; peakRss?: number }[]) => {
+    const at = new Date().toISOString();
+    const reading = memoryReading({ at, totalBytes: hostBytes, availableBytes: Math.max(0, hostBytes - sum),
       rootPid: process.pid, rows: processes, state, leaseWorkerPeakBytes: leaseBytes });
+    // Use the native ownership split for both readings: unmanaged browser/OCR
+    // descendants belong to their owner, separately admitted children do not.
+    const highWater = memoryReading({ at, totalBytes: hostBytes, availableBytes: Math.max(0, hostBytes - sum),
+      rootPid: process.pid, rows: processes.map(row => ({ ...row, rss: Math.max(row.rss, row.peakRss ?? 0) })), state,
+      leaseWorkerPeakBytes: leaseBytes });
+    const keep = (pid: number | null, entry: string, rss: number, hwm: number) => {
+      if (pid === null) return;
+      const prior = ownerMemoryPeaks.get(pid) ?? { pid, entries: [], samples: 0, firstSeenAt: at, lastSeenAt: at,
+        exclusiveOwnerPeakRssBytes: 0, exclusiveOwnerHwmBoundBytes: 0, ownPeakRssBytes: 0, inclusiveTreePeakRssBytes: 0 };
+      if (!prior.entries.includes(entry)) prior.entries.push(entry);
+      prior.samples++; prior.lastSeenAt = at;
+      prior.exclusiveOwnerPeakRssBytes = Math.max(prior.exclusiveOwnerPeakRssBytes, rss);
+      prior.exclusiveOwnerHwmBoundBytes = Math.max(prior.exclusiveOwnerHwmBoundBytes, hwm);
+      prior.ownPeakRssBytes = Math.max(prior.ownPeakRssBytes, rows.get(pid)?.peak ?? 0);
+      prior.inclusiveTreePeakRssBytes = Math.max(prior.inclusiveTreePeakRssBytes, tree(pid, rows));
+      ownerMemoryPeaks.set(pid, prior);
+    };
+    reading.parents.forEach((parent: { pid: number; rssBytes: number }, index: number) =>
+      keep(parent.pid, "managed-parent", parent.rssBytes, highWater.parents[index]?.rssBytes ?? parent.rssBytes));
+    reading.reservations.forEach((reservation: { rssBytes: number }, index: number) => {
+      const identity = state.reservations[index];
+      if (identity) keep(identity.pid, identity.entry, reservation.rssBytes, highWater.reservations[index]?.rssBytes ?? reservation.rssBytes);
+    });
+    if (Date.now() - ownerPeaksWrittenAt >= 5000) {
+      ownerPeaksWrittenAt = Date.now();
+      void writeFile(join(directory, "owner-memory-peaks.json"), JSON.stringify([...ownerMemoryPeaks.values()])).catch(() => {});
+    }
     minAdmissibleLeaseWorkers = Math.min(minAdmissibleLeaseWorkers ?? Infinity, reading.fitLeaseWorkers);
     if (isPeak) admissionAtPeak = reading;
   })).catch(() => { admissionAtPeak = null; });
@@ -534,6 +572,18 @@ const roleCoverage = requiredWorkerRoles.map(role => {
 const allRoleCoverageRequired = Boolean(savedInventory && !only && !process.argv.includes("--representatives"));
 const attributed = new Set<number>();
 for (const result of results) {
+  const ownerMemory = result.actualPid ? ownerMemoryPeaks.get(result.actualPid) : undefined;
+  if (ownerMemory) {
+    result.exclusiveOwnerPeakRssBytes = ownerMemory.exclusiveOwnerPeakRssBytes;
+    result.exclusiveOwnerHwmBoundBytes = ownerMemory.exclusiveOwnerHwmBoundBytes;
+  }
+  for (const nested of result.nestedProcesses ?? []) {
+    const owner = ownerMemoryPeaks.get(nested.pid);
+    if (owner) {
+      nested.exclusiveOwnerPeakRssBytes = owner.exclusiveOwnerPeakRssBytes;
+      nested.exclusiveOwnerHwmBoundBytes = owner.exclusiveOwnerHwmBoundBytes;
+    }
+  }
   const pids = new Set([...(result.actualPid ? [result.actualPid] : []), ...(result.nestedProcesses ?? []).map(row => row.pid)]);
   result.productionReaderResponseBytes = 0; result.productionControlResponseBytes = 0;
   for (const pid of pids) {
@@ -567,6 +617,8 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   leaseWorkersAtPeak, workingLeaseWorkersAtPeak: leaseWorkersAtPeak.filter(row => row.status === "RUNNING").length,
   maxSimultaneousLeaseWorkers, maxSimultaneousWorkingLeaseWorkers,
   minAdmissibleLeaseWorkers, admissionAtPeak,
+  ownerMemoryPeaks: [...ownerMemoryPeaks.values()],
+  ownerMemoryDefinition: "Phase-native memoryReading ownership per PID: parents by reading PID, reservations by the same index in shared state. The after implementation includes unmanaged descendants and excludes separately managed children. HWM bound repeats that identical ownership split with each live process RSS replaced by max(RSS, VmHWM); it is a conservative sum, not an observed simultaneous peak. Inclusive job trees and own-PID HWM remain separate. Baseline native ownership semantics are retained.",
   jobs: results, complete: !watchdogExceeded && activePreparation.status !== "FAILED" && (!allRoleCoverageRequired || roleCoverage.every(row => row.complete)) && results.length === selection.length && results.every(result => result.complete) && admissionAtPeak !== null,
   limits: ["The temporary fact database is separate from runner RSS, as production PostgreSQL is remote.", "Only a completed executable is a full-job measurement; every incomplete executable remains required work.",
     elapsedMs >= 3600000 && !watchdogExceeded ? "Reader bytes were observed for at least one real hour of this simultaneous-offer replay; this does not reproduce production cadence." : "Reader bytes per hour extrapolates this controlled interval, rather than observing a full hour of production cadence.",

@@ -521,6 +521,7 @@ test("native PG receipt writes with a distinct harness root reach only the local
   try {
     await mkdir(join(directory, "scripts"));
     await copyFile("scripts/rh01-readonly-runtime.mts", join(directory, "scripts/rh01-readonly-runtime.mts"));
+    await copyFile("scripts/rh01-loopback-neon.mjs", join(directory, "scripts/rh01-loopback-neon.mjs"));
     await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
     const source = `import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';import {join} from 'node:path';
       import {PGlite} from '@electric-sql/pglite';
@@ -556,5 +557,70 @@ test("native PG receipt writes with a distinct harness root reach only the local
     });
     let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
     const [status] = await once(child, "close"); assert.equal(status, 0, stderr); assert.match(stdout, /no production endpoint called/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("the two model preloads preserve native JSON in an ordinary spawned source child", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-json-preload-"));
+  try {
+    const broker = join(directory, "broker.json"), harness = process.cwd();
+    await writeFile(broker, JSON.stringify({ url: "http://127.0.0.1:1/model", auth: "fixture", authorized: false }));
+    const childSource = `globalThis.fetch=()=>{throw Error('ZERO_NETWORK_REQUIRED')};
+      await import(new URL('lib/funding/state-sources.ts',process.env.RH01_FIXTURE_ROOT_URL));
+      console.log('native JSON unchanged');`;
+    const parentSource = `import {spawn} from 'node:child_process';import {once} from 'node:events';
+      const child=spawn(process.execPath,['--experimental-strip-types','--input-type=module','-e',${JSON.stringify(childSource)}],{stdio:'inherit'});
+      const [code]=await once(child,'close');process.exitCode=code??1;`;
+    const codeRoot = process.env.WTP_RH01_FIXTURE_CODE_ROOT ?? harness;
+    const child = spawn(process.execPath, ["--experimental-strip-types", "--import", join(codeRoot, "scripts/register-test-loader.mjs"),
+      "--import", join(harness, "scripts/rh01-loader.mjs"), "--input-type=module", "-e", parentSource], {
+      cwd: codeRoot, env: { NODE_ENV: "test", PATH: process.env.PATH, NODE_OPTIONS: `--import=${join(harness, "scripts/rh01-loader.mjs")} --import=${join(harness, "scripts/rh01-model-preload.mjs")}`,
+        WTP_RH01_MODEL_BROKER: broker, WTP_RH01_CODE_ROOT: codeRoot, WTP_RH01_HARNESS_ROOT: harness, WTP_RH01_DIRECTORY: directory,
+        RH01_FIXTURE_ROOT_URL: new URL(`file://${codeRoot}/`).href }, stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
+    const [status] = await once(child, "close"); assert.equal(status, 0, stderr.slice(-4000)); assert.match(stdout, /native JSON unchanged/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("raw loopback Neon queries use local native SQL while the reader transport remains unchanged", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-raw-neon-"));
+  try {
+    const native = join(directory, "native-query.mjs");
+    await writeFile(native, `import assert from 'node:assert/strict';import {neon} from '@neondatabase/serverless';
+      let local=0,reader=0;
+      globalThis.fetch=async(url,init)=>{
+        if(String(url)==='http://127.0.0.1:1/control-sql'){
+          local++;const body=JSON.parse(init.body);
+          if(body.text==='SELECT slow'){
+            assert.ok(init.signal instanceof AbortSignal);
+            return new Promise((resolve,reject)=>{if(init.signal.aborted)reject(init.signal.reason);
+              else init.signal.addEventListener('abort',()=>reject(init.signal.reason),{once:true});});
+          }
+          assert.equal(body.text,'SELECT value FROM cp_work_items WHERE id=$1');
+          assert.deepEqual(body.params,['pima']);return Response.json({rows:[{value:{subject:'Pima'}}]});
+        }
+        reader++;throw Error('ORIGINAL_READER_TRANSPORT');
+      };
+      const sql=neon(process.env.WTP_CONTROL_PLANE_DATABASE_URL);
+      assert.deepEqual(await sql.query('SELECT value FROM cp_work_items WHERE id=$1',['pima']),[{value:{subject:'Pima'}}]);
+      assert.throws(()=>sql.transaction([]),/UNSUPPORTED_LOOPBACK_NEON_API/);
+      assert.throws(()=>sql\`SELECT 1\`,/UNSUPPORTED_LOOPBACK_NEON_API/);
+      await assert.rejects(sql.query('SELECT 1',[],{fullResults:true}),/UNSUPPORTED_LOOPBACK_NEON_API/);
+      const abort=new AbortController(),slow=sql.query('SELECT slow',[],{fetchOptions:{signal:abort.signal}});
+      abort.abort(Error('native query aborted'));await assert.rejects(slow,/native query aborted/);
+      await assert.rejects(neon(process.env.WTP_PRODUCTION_DATABASE_URL_READONLY).query('SELECT 1'),/ORIGINAL_READER_TRANSPORT/);
+      assert.equal(local,2);assert.equal(reader,1);console.log('raw native query local; reader native; unsupported APIs refused');`);
+    await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
+    await mkdir(join(directory, "data/campaign-finance"), { recursive: true });
+    await writeFile(join(directory, "data/campaign-finance/sources.json"), "[]");
+    const child = spawn(process.execPath, ["--experimental-strip-types", "--import", join(process.cwd(), "scripts/rh01-loader.mjs"), native], {
+      cwd: directory, env: { NODE_ENV: "test", PATH: process.env.PATH, WTP_RH01_CODE_ROOT: directory,
+        WTP_RH01_HARNESS_ROOT: process.cwd(), WTP_RH01_DIRECTORY: directory, WTP_RH01_FACTS_URL: "http://127.0.0.1:1/query",
+        WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://wtp_cp_release_readonly:local-only@127.0.0.1:1/rh01",
+        WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:fixture@ep-reader.neon.invalid/fixture" }, stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
+    const [status] = await once(child, "close"); assert.equal(status, 0, stderr); assert.match(stdout, /raw native query local; reader native/);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

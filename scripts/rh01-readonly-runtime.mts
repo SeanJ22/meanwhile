@@ -160,9 +160,9 @@ export function controlSql<T extends { query: (...args: never[]) => unknown }>(p
   if (!endpoint) return production;
   return new Proxy(production, { get(target, name) {
     if (name !== "query") return Reflect.get(target, name);
-    return async (text: string, params: readonly unknown[] = []) => {
+    return async (text: string, params: readonly unknown[] = [], options?: { fetchOptions?: { signal?: AbortSignal } }) => {
       const caller = new Error("RH01 native control SQL caller");
-      const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ text, params }) });
+      const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ text, params }), signal: options?.fetchOptions?.signal });
       const result = await response.json() as { rows?: unknown[]; error?: string };
       if (!response.ok) {
         if (result.error?.includes("RH01_")) process.stderr.write(`RH01_REFUSED_SQL ${JSON.stringify({

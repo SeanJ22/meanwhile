@@ -8,12 +8,23 @@ import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
 
 const root = process.env.WTP_RH01_CODE_ROOT ?? process.cwd();
 const runtime = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-readonly-runtime.mts")).href;
+const neonBridge = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-loopback-neon.mjs")).href;
+const routeReplay = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-route-replay.mts")).href;
+
+export async function resolve(specifier, context, nextResolve) {
+  const parent = context.parentURL ?? "";
+  const native = parent.startsWith(pathToFileURL(root + "/").href) && !parent.includes("/node_modules/") && !/\/scripts\/rh01-[^/]+$/.test(parent);
+  if (specifier === "@neondatabase/serverless" && (native || parent === routeReplay) && parent !== neonBridge)
+    return { url: neonBridge, shortCircuit: true };
+  return nextResolve(specifier, context);
+}
 
 export async function load(url, context, nextLoad) {
   const result = await nextLoad(url, context);
   if (!url.startsWith(pathToFileURL(root + "/").href) || url.includes("/node_modules/")) return result;
-  if (result.format === "json" || url.endsWith(".json")) return result;
-  let source = result.source === undefined || result.source === null ? null : String(result.source);
+  let source = result.source === undefined || result.source === null ? null
+    : typeof result.source === "string" ? result.source : Buffer.from(result.source).toString("utf8");
+  if (result.format === "json" || url.endsWith(".json")) return source === null ? result : { ...result, source };
   if (source === null) return result;
   if (source.includes("RH01_LOADER_TRANSFORMED")) return result;
   const add = value => { source += `\n${value}\n`; };

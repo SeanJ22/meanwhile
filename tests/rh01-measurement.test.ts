@@ -793,9 +793,18 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
     await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
     const marker = join(directory, "remote-started"), cancelled = join(directory, "remote-cancelled"), preload = join(directory, "remote-fixture.mjs");
     await writeFile(preload, `import {writeFileSync} from 'node:fs';
+      import {PGlite} from '@electric-sql/pglite';
+      const production=new PGlite();
+      await production.exec("CREATE TABLE cp_leases(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb); INSERT INTO cp_leases VALUES ('nightly-window',17,'2026-10-20T10:00:00Z',jsonb_build_object('holder','production-runner','released',false))");
       globalThis.fetch=async(url,init)=>{
         if(!String(url).startsWith('https://api.'))throw Error('ZERO_NETWORK_FIXTURE_ONLY');
         const body=JSON.parse(init.body);let rows=[],fields=[];
+        if(/FROM cp_leases WHERE id\\s*=/.test(body.query)) {
+          const result=await production.query(body.query,body.params);fields=result.fields;
+          rows=result.rows.map(row=>fields.map(field=>field.dataTypeID===3802?JSON.stringify(row[field.name]):row[field.name]));
+          const original=(await production.query("SELECT revision,value FROM cp_leases WHERE id='nightly-window'")).rows[0];
+          if(original.revision!==17||original.value.holder!=='production-runner'||original.value.released!==false)throw Error('PRODUCTION_LEASE_CHANGED');
+        }
         if(/AS signature$/.test(body.query)){rows=[['0123456789abcdef0123456789abcdef']];fields=[{name:'signature',dataTypeID:25}];}
         if(/SELECT facts_live FROM cp_vital_signs WHERE hour=/.test(body.query)){
           const local=JSON.parse(body.params.at(-1));rows=[[Number(local[0].facts_live)]];fields=[{name:'facts_live',dataTypeID:23}];
@@ -837,6 +846,19 @@ test("a slow read keeps its committed shadow snapshot without blocking an unrela
     assert.deepEqual(await query(CONSOLE_INPUT_SQL, []), [{ signature: "0123456789abcdef0123456789abcdef" }]);
     await query(VITAL_SIGNS_UPSERT, [at, 7, null, null, 0, 0, 0, 12, "{}", 0, 0, 0, 0, 0, null, at]);
     assert.deepEqual(await query("SELECT facts_live FROM cp_vital_signs WHERE hour=$1", [at]), [{ facts_live: 7 }]);
+    const [{ pgAggregateRepository }, { acquireWindowLease, releaseWindowLease, WindowLockHeld }] = await Promise.all([
+      import("../lib/control-plane/repository/pg-store.ts"), import("../lib/control-plane/promotion/window.ts"),
+    ]);
+    const leases = pgAggregateRepository<import("../lib/control-plane/attempt.ts").ExecutionLease>(
+      { query: (text, params) => query(text, [...params ?? []]) }, "ExecutionLease", "cp_leases");
+    const repos = { leases } as import("../lib/control-plane/repository/types.ts").ControlPlaneRepositories;
+    const acquired = await acquireWindowLease(repos, "cycle@isolated#1", at);
+    assert.equal(acquired.revision, 1, "the live production window must not seed the disposable process lease");
+    assert.equal(acquired.lease.holder, "cycle@isolated#1");
+    await assert.rejects(acquireWindowLease(repos, "cycle@isolated#2", at), WindowLockHeld);
+    assert.equal(await releaseWindowLease(repos, "cycle@isolated#1", at), true);
+    assert.equal((await acquireWindowLease(repos, "cycle@isolated#2", at)).lease.holder, "cycle@isolated#2");
+    assert.equal(await releaseWindowLease(repos, "cycle@isolated#2", at), true);
     let finished = false;
     const slow = query("SELECT value FROM cp_work_items WHERE id=$1", ["snapshot"]).finally(() => { finished = true; });
     const waitFor = async (file: string) => {

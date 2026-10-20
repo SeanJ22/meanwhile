@@ -92,8 +92,12 @@ function ordinaryControlRead(text: string): boolean {
 /** Capture committed local rows while serialized; remote SELECT latency does not hold the local writer queue. */
 async function snapshotControlRead(text: string, params: readonly unknown[]): Promise<{ text: string; params: unknown[] }> {
   const db = await controlDatabase(), shadows: SqlShadow[] = [];
+  // A disposable runner owns its own execution window. Production's running
+  // process must neither block this isolated run nor become a local lease holder.
+  if (/\b(?:FROM|JOIN)\s+(?:public[.])?"?cp_leases"?\b/i.test(text)) await ensureControlTable("cp_leases");
   for (const [table, keys] of controlTables) if (new RegExp(`\\b(?:FROM|JOIN)\\s+(?:public[.])?"?${table}"?\\b`, "i").test(text))
-    shadows.push({ table, keys, rows: (await db.query(`SELECT * FROM ${table}`)).rows as Record<string, unknown>[] });
+    shadows.push({ table, keys, rows: (await db.query(`SELECT * FROM ${table}`)).rows as Record<string, unknown>[],
+      ...(table === "cp_leases" ? { deletedKeys: [{ id: "nightly-window" }] } : {}) });
   if (text === CONSOLE_INPUT_SQL && spendHolds) shadows.push(await spendHolds.shadow());
   return shadowRead(text, params, shadows);
 }
@@ -137,7 +141,8 @@ async function executeControlSql(text: string, params: readonly unknown[]): Prom
     if (identities.some(value => typeof value !== "string")) throw Error("RH01 control mutation requires exact row identities");
     const seed = `${table}:${JSON.stringify(identities)}`;
     if (!seededControl.has(seed)) {
-      const rows = process.env.WTP_CONTROL_PLANE_DATABASE_URL ? await controlRemoteRead(`SELECT * FROM ${table} WHERE ${keys.map((key, index) => `${key}=$${index + 1}`).join(" AND ")}`, identities) : [];
+      const isolatedWindow = table === "cp_leases" && identities.length === 1 && identities[0] === "nightly-window";
+      const rows = process.env.WTP_CONTROL_PLANE_DATABASE_URL && !isolatedWindow ? await controlRemoteRead(`SELECT * FROM ${table} WHERE ${keys.map((key, index) => `${key}=$${index + 1}`).join(" AND ")}`, identities) : [];
       for (const row of rows) await db.query(`INSERT INTO ${table} SELECT * FROM jsonb_populate_record(NULL::${table},$1::jsonb) ON CONFLICT DO NOTHING`, [JSON.stringify(row)]);
       seededControl.add(seed);
     }

@@ -5,8 +5,10 @@ import { federalDirectoryForState } from "../lib/officials/federal-directory-dat
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { readNationalShelf } from "../lib/reader/national.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { installFederalDirectory, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installFederalDirectory, syntheticFederalDirectory, registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+import { stateCoverage } from "../lib/reader/coverage.ts";
+import type { Division } from "../lib/registry/types.ts";
 
 test("held vacancies and chamber offices survive state and national composition without another directory query", async () => {
   const original = syntheticFederalDirectory();
@@ -30,6 +32,12 @@ test("held vacancies and chamber offices survive state and national composition 
   assert.deepEqual(combined.value.vacancies, vacancies);
   const shelf = await readNationalShelf();
   assert.deepEqual([...shelf.congress.vacancies ?? []].sort((a, b) => a.ocdId.localeCompare(b.ocdId)), vacancies);
+  const runtime = registryTransferImport().projection.payload;
+  const division: Division = { ...runtime.registry.divisions[0], ocdId: vacancies[0].ocdId,
+    divisionType: "cd", tier: "national", state: states[0], label: "Vacant House district" };
+  const coverage = stateCoverage({ state: states[0], version: "held-vacancy", federal: federalDirectoryForState(model, states[0]),
+    registry: { ...runtime, registry: { ...runtime.registry, bodies: [], divisions: [division] } } }, [division.ocdId], 0, 0);
+  assert.deepEqual(coverage.seats[0].vacancy, vacancies[0], "state and place composition retain the sourced vacancy");
   let queries = 0;
   installReaderDatabaseQuery(async () => { queries++; throw new Error("The held national directory must not query again"); });
   try {

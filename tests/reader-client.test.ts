@@ -19,6 +19,21 @@ const coverage: CoverageSummary = {
 const state: ReaderStateResponse = { state: "AZ", version: "held", coverage, zipPlaces: {}, directory: null, boundaryUrl: "/tiles.pmtiles" };
 const place: MeetingSearchResult = { coverage, meetings: [], tier: "none", radiusKm: 20, center: { lat: 32, lng: -110 } };
 
+test("a sourced vacancy survives the cached state, ZIP selection and merged place answer", async t => {
+  const ocdId = "ocd-division/country:us/state:fl/cd:20";
+  const vacancy = { ocdId, sourceUrl: "https://clerk.house.gov/xml/lists/MemberData.xml", sourceOrg: "House Clerk",
+    collectedAt: "2026-10-18T03:15:00Z", reason: "Vacancy due to resignation" };
+  const answer: ReaderStateResponse = { ...state, state: "FL", zip: "33311",
+    coverage: { ...coverage, seats: [{ ocdId, label: "Florida Congressional District 20", divisionType: "cd", tier: "national", representatives: [], vacancy }] },
+    zipPlaces: { "33311": { ids: [ocdId], partial: [], samples: 1 } } };
+  t.mock.method(globalThis, "fetch", async () => Response.json(answer));
+  const held = await loadReaderState("FL", "33311");
+  assert.deepEqual(getCachedStateDivision(ocdId)?.vacancy, vacancy);
+  const scoped = stateCoverageForZip(held, "33311");
+  assert.deepEqual(mergeReaderCoverage(scoped, coverage, 0)?.seats[0].vacancy, vacancy);
+  assert.equal(getCachedStateDivision(ocdId)?.holders.length, 0);
+});
+
 for (const first of ["state", "place"] as const) {
   test(`state and place start together and publish state first when ${first} arrives first`, async () => {
     const stateRead = deferred<ReaderStateResponse>(), placeRead = deferred<MeetingSearchResult>();

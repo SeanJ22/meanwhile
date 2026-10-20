@@ -25,7 +25,7 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   const { POST, prefetchReaderGeography } = await engine;
   // Start the same file reads used by the Reader beside the first request's
   // manifest/network reads, as /api/meetings and representation already do.
-  // This is work for this cold invocation, not a timer or a keep-warm request.
+  // This work belongs to the current cold invocation.
   prefetchReaderGeography();
   const response = await withResponseLifetime(work => context.waitUntil(work), () => POST(request));
   response.headers.set("x-wtp-ask-instance", instance);

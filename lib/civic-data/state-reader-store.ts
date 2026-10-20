@@ -1,9 +1,10 @@
-import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "./state-scopes.ts";
+import { REGISTRY_STATES, STATE_BALLOT_FAMILIES, stateFromBallotScope } from "./state-scopes.ts";
 import { stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { parseUnchangedConfirmation } from "./unchanged-confirmation.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import type { PublishedCandidateMetadata } from "./store.ts";
 import type { PromotedProjection, RoutineRecordClass } from "./types.ts";
+import type { PromotedEdgeEntry } from "./read-model.ts";
 
 type Query = (text: string, params: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 type StateReaderPromotion<T> = { readonly projection: PromotedProjection<T>; readonly candidate: PublishedCandidateMetadata };
@@ -80,7 +81,13 @@ function decodeStateParts(roots: unknown, parts: Record<string, unknown>): unkno
 }
 
 export async function readStateReaderPromotion<T>(query: Query, recordClass: RoutineRecordClass, scope: string): Promise<StateReaderPromotion<T> | null> {
+  const federalState = /^US-([A-Z]{2}):current-congress-directory$/.exec(scope)?.[1];
+  const portraitState = /^US-([A-Z]{2}):people:portraits:v1$/.exec(scope)?.[1];
+  const registrationState = /^US-([A-Z]{2}):registration:v1$/.exec(scope)?.[1];
   const state = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope)
+    : recordClass === "FEDERAL_DIRECTORY" && federalState ? REGISTRY_STATES.some(state => state === federalState)
+    : recordClass === "STATE_LEGISLATOR" && portraitState ? REGISTRY_STATES.some(state => state === portraitState)
+    : recordClass === "REGISTRATION" && registrationState ? REGISTRY_STATES.some(state => state === registrationState)
     : STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   const rows = await query(READ_STATE, [`${recordClass}:${scope}`]);
@@ -95,4 +102,14 @@ export async function readStateReaderPromotion<T>(query: Query, recordClass: Rou
   if (confirmation?.versionId === result.projection.versionId && confirmation.pointerKey === result.projection.key)
     Object.assign(result.projection, { latestConfirmation: confirmation });
   return result;
+}
+
+/** A verified canonical state record, even when its optional serving copy is absent. */
+export async function readStateReaderEntry(query: Query, recordClass: RoutineRecordClass, scope: string): Promise<PromotedEdgeEntry> {
+  const read = await readStateReaderPromotion(query, recordClass, scope);
+  return read ? { kind: "PROMOTED", projection: read.projection, attested: {
+    recordClass, scope, versionId: read.projection.versionId, payloadSha256: read.candidate.candidate.normalization.normalizedHash!,
+    retrievedAt: read.candidate.candidate.retrieval.retrievedAt, staleAtRetrieval: read.candidate.candidate.temporal.staleAtRetrieval === true,
+    version: read.candidate.candidate.temporal.version, sourceThrough: read.candidate.candidate.temporal.sourceThrough,
+  } } : { kind: "NOT_RECORDED", recordClass, scope };
 }

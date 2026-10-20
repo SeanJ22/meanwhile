@@ -55,6 +55,7 @@ export function getCachedStateDivision(ocdId: string) {
     : representationForDivision(coverage, ocdId);
   const division = coverage.divisions.find(row => row.ocdId === ocdId) ?? coverage.seats.find(row => row.ocdId === ocdId);
   return { holders, label: division?.label ?? null, divisionType: division?.divisionType ?? null, tier: division?.tier ?? null,
+    vacancy: coverage.seats.find(seat => seat.ocdId === ocdId)?.vacancy,
     rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) };
 }
 

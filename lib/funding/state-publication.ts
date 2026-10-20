@@ -1,3 +1,5 @@
+import { bindCampaignMoney, type CampaignMoneyPerson } from "./state-people.ts";
+import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
@@ -16,6 +18,7 @@ import { CAMPAIGN_FINANCE_PARSER, campaignFinanceSourceId, type CampaignFinanceR
 
 type AcquisitionOptions = Parameters<typeof acquireCampaignFinanceResource>[2];
 interface Options extends AcquisitionOptions {
+  readonly people: readonly CampaignMoneyPerson[];
   readonly store: RoutineDataStore;
   readonly facts: FactDb & { readonly query: Query };
   readonly onPublished?: (value: { readonly state: string; readonly records: number; readonly unjoined: number }) => void;
@@ -41,10 +44,13 @@ function candidate(projection: CampaignFinancePublication, scope: string, check:
 }
 
 export async function publishCampaignFinanceResource(state: string, resource: CampaignFinanceResource, options: Options): Promise<{ readonly records: number; readonly unjoined: number; readonly outcome: PromotionOutcome }> {
+  if (!resource.office.length || !resource.candidate.length && !resource.candidateParts?.length) throw sourceAcquisitionFailure(
+    "PUBLISHER_DOCUMENT_INVALID", "This extract has no supported candidate and office binding. Its committee discovery remains open work.");
   const sourceId = campaignFinanceSourceId(state), scope = `${sourceId}:resource:${sha256(resource.id)}`;
   const cursor = `campaign-finance:${state}:${resource.id}`;
   const saved = await readPassCursor(options.facts.query, cursor), prior = saved ? JSON.parse(saved) as Checkpoint : null;
   const publicationId = randomUUID();
+  const people = options.people;
   let records = 0, unjoined = 0, outcome: PromotionOutcome | null = null;
   let check: SourceCheckEvidence | null = null, observedAt: string | null = null;
   await mkdir(temporaryPath(options.directory), { recursive: true });
@@ -61,11 +67,15 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     return `${id}:${String(occurrence!.get(id)!.n).padStart(12, "0")}`;
   };
   try {
-    for await (const page of acquireCampaignFinanceResource(state, resource, { ...options, publicationId, ...(prior && resource.identity.length && resource.identityScope !== "PUBLICATION" ? { acceptedPublicationId: prior.publicationId } : {}) })) {
+    for await (const page of acquireCampaignFinanceResource(state, resource, { ...options, publicationId })) {
       check = page.sourceCheck; observedAt = page.observedAt;
       if (!page.records.length) continue;
       let rows = page.records.map(row => row.nativeId === null || row.nativeIdScope === "PUBLICATION"
         ? { ...row, id: recordId(row.id) } : row);
+      const eligible = rows.flatMap(row => bindCampaignMoney(row, people) ?? []);
+      unjoined += rows.length - eligible.length;
+      rows = eligible;
+      if (!rows.length) continue;
       const previous = await readCampaignPredecessors(options.facts.query, state, rows.map(row => row.id));
       rows = rows.map(row => {
         const old = previous.get(row.id);

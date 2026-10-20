@@ -90,6 +90,7 @@ export interface CampaignFinanceResource {
 
 interface CampaignFinanceSource {
   readonly state: string;
+  readonly minimumYear: number;
   readonly publisher: string;
   readonly officialUrl: string;
   readonly accessType: "BULK" | "API" | "BULK_API" | "WEB" | "UNCONFIRMED";
@@ -138,7 +139,7 @@ export const CAMPAIGN_FINANCE_AUTHORITIES = Object.fromEntries(CAMPAIGN_FINANCE_
     jurisdictions: [`US-${source.state}`], recordClasses: ["CAMPAIGN_FINANCE"],
     competentFacts: ["source-native campaign filings", "filed transaction amounts", "native committee and local-government identifiers"],
     expectedIdentifierKeys: ["source_record_id"], expectedTemporalFields: ["publication_date", "retrieved_at"],
-    horizonSemantics: "Each complete native extract retains every row. Native local-government IDs remain distinct from independently bound governments. A source failure preserves the prior accepted publication.",
+    horizonSemantics: "Source bytes retain unmatched work. Only filed money from 2020 onward, bound to a published person and exact seat, reaches readers. A source failure preserves verified evidence.",
     parserVersion: CAMPAIGN_FINANCE_PARSER, freshnessExpectation: "Conditional daily reads following the publisher's updates; provider Retry-After is honored.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   }];

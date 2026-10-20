@@ -10,6 +10,12 @@ import { transferRead } from "../db/reader-route.ts";
  */
 export const STANDING_NEON_REQUEST_DEADLINE_MS = 30_000;
 
+/** Keep the read/timer diagnosis in the heartbeat even when a stack or a later
+ * crash-recording failure follows it in the child's stderr. */
+export function neonReadFailureLine(stderr: string): string | null {
+  return stderr.split(/\r?\n/).filter(line => /OPERATIONAL_REFERENCE_STATE_READ_FAILED:|Neon request deadline:/.test(line)).at(-1)?.trim().slice(0, 900) ?? null;
+}
+
 type FetchLike = (
   input: Parameters<typeof fetch>[0],
   init?: Parameters<typeof fetch>[1],
@@ -28,7 +34,9 @@ export function neonRequestDeadlineFetch(
     throw new Error(`NEON_REQUEST_DEADLINE_INVALID:${timeoutMs}`);
   }
   return async (input, init) => {
-    const read = transferRead(typeof init?.body === "string" ? init.body : undefined);
+    // Query parameters can contain private values; table names identify the
+    // transport operation without putting parameter contents in diagnostics.
+    const read = transferRead(typeof init?.body === "string" ? init.body : undefined).replace(/:[^,]+/g, "");
     const started = performance.now();
     const loop = performance.eventLoopUtilization();
     let phase = "headers";

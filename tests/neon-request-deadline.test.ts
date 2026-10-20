@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createServer } from "node:http";
-import { neonRequestDeadlineFetch } from "../lib/ops/neon-request-deadline.ts";
+import { neonReadFailureLine, neonRequestDeadlineFetch } from "../lib/ops/neon-request-deadline.ts";
+
+test("the heartbeat retains the read and timer even when more than eight stack lines follow", () => {
+  const cause = "TimeoutError: OPERATIONAL_REFERENCE_STATE_READ_FAILED: database=reader state=wv reads=OPERATIONAL_REFERENCE:US:covered-jurisdiction-routing:v1 timer=reader-database-query-1800ms elapsedMs=1802";
+  assert.equal(neonReadFailureLine(cause + "\n" + "    at stack (file.mts:1)\n".repeat(20)), cause);
+  assert.equal(neonReadFailureLine("an unrelated error"), null);
+});
 
 test("a response that sends headers then stalls is aborted and closes the socket", async t => {
   let closed!: () => void;

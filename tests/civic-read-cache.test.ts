@@ -3,6 +3,8 @@ import { mkdir, mkdtemp, readFile, readdir, rm, stat, utimes, writeFile } from "
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { fork } from "node:child_process";
+import { once } from "node:events";
 import { CivicReadCache, runtimeCivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { civicReadCopyStore, saveCivicReadCopy, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 
@@ -169,4 +171,30 @@ test("concurrent streamed writes stay under the hard limit including temporary f
   assert.equal((await readdir(root)).some(file => file.endsWith(".tmp")), false);
   await store.write("recovered", "12345678");
   assert.ok(await diskBytes(root) <= 32);
+});
+
+test("seventeen concurrent uploads do not accumulate complete copies in the supervisor", async t => {
+  const root = await scratch(t);
+  const child = fork(new URL("./fixtures/civic-read-cache-host.mjs", import.meta.url), [], { cwd: root,
+    env: { ...process.env, DATABASE_URL: "postgresql://fixture:fixture@cache-load.invalid/local", WTP_CIVIC_READ_CACHE_URL: "", WTP_CIVIC_READ_CACHE_TOKEN: "" },
+    execArgv: ["--experimental-strip-types"], stdio: ["ignore", "ignore", "inherit", "ipc"] });
+  const exited = once(child, "exit");
+  t.after(async () => { if (child.exitCode === null && child.signalCode === null) child.kill("SIGKILL"); await exited; });
+  const [host] = await once(child, "message");
+  const started = performance.now();
+  const statuses = await Promise.all(Array.from({ length: 17 }, async (_, worker) => {
+    let chunks = 0;
+    const options: RequestInit & { duplex: "half" } = { method: "PUT", headers: { authorization: host.token }, duplex: "half",
+      body: new ReadableStream({ pull(controller) {
+        if (chunks++ < 128) controller.enqueue(new Uint8Array(65536).fill(120)); else controller.close();
+      } }) };
+    return (await fetch(host.url + "/" + worker.toString(16).padStart(64, "0"), options)).status;
+  }));
+  assert.deepEqual([...new Set(statuses)], [204]);
+  const measured = once(child, "message"); child.send({ done: true });
+  const [memory] = await measured;
+  assert.ok(memory.peakRssBytes - memory.baselineRssBytes < 128 * 1024 ** 2,
+    "17 uploads totaling 136 MiB must not be held together in the copy host");
+  console.log(`RN-01 cache host: ${JSON.stringify({ clients: 17, bytesWritten: 17 * 128 * 65536, elapsedMs: Math.round(performance.now() - started), ...memory })}`);
+  await exited;
 });

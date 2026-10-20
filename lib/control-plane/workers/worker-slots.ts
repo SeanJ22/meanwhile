@@ -14,11 +14,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
-const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // A complete 113 MiB Illinois session peaked at 3,013 MiB;
-  // the host observer also accounts for each worker's descendants.
-  "openstates-votes-refresh.mts": 3072,
-  "legiscan-votes-refresh.mts": 3072,
+export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
+  // RH-01 complete native publication peaks: 3,403 MiB Open States and
+  // 1,249 MiB LegiScan, each with 5% and rounded up to a whole MiB.
+  "openstates-votes-refresh.mts": 3574,
+  "legiscan-votes-refresh.mts": 1312,
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -26,7 +26,8 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
-  "acs-population-promote.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
+  "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.
@@ -53,7 +54,7 @@ export function availableWorkerMemoryBytes(): number {
     ? Math.min(available, Math.max(0, hostMiB * MIB - process.memoryUsage.rss())) : available;
 }
 
-export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number }
+export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number; readonly peakRss?: number }
 async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
   const rows: WorkerProcessMemory[] = [];
   try {
@@ -62,20 +63,24 @@ async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
         try {
           // Async reads reserve oversized buffers for these zero-length proc files.
           const status = readFileSync(`/proc/${name}/status`, "utf8");
+          const highWater = /^VmHWM:\s+(\d+)/m.exec(status);
           rows.push({ pid: Number(name), parentPid: Number(/^PPid:\s+(\d+)/m.exec(status)?.[1] ?? 0),
-            rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024 });
+            rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024,
+            ...(highWater ? { peakRss: Number(highWater[1]) * 1024 } : {}) });
         } catch { /* A process can exit while the host is sampled. */ }
       }
     } else if (platform() === "win32") {
       const source = await new Promise<string>((resolve, reject) => execFile("powershell.exe", ["-NoProfile", "-Command",
-        "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize | ConvertTo-Json -Compress"],
+        "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize,PeakWorkingSetSize | ConvertTo-Json -Compress"],
       { encoding: "utf8", windowsHide: true, timeout: 5000, maxBuffer: 4 * MIB },
       (error, stdout) => { if (error) reject(error); else resolve(stdout); }));
-      const values = JSON.parse(source) as { ProcessId: number; ParentProcessId: number; WorkingSetSize: string | number }[];
-      for (const row of values) rows.push({ pid: row.ProcessId, parentPid: row.ParentProcessId, rss: Number(row.WorkingSetSize) });
+      const values = JSON.parse(source) as { ProcessId: number; ParentProcessId: number; WorkingSetSize: string | number; PeakWorkingSetSize?: string | number }[];
+      for (const row of values) rows.push({ pid: row.ProcessId, parentPid: row.ParentProcessId, rss: Number(row.WorkingSetSize),
+        ...(row.PeakWorkingSetSize === undefined ? {} : { peakRss: Number(row.PeakWorkingSetSize) * 1024 }) });
     }
   } catch { /* Unobserved children keep their complete peak reserved. */ }
-  if (!rows.some(row => row.pid === process.pid)) rows.push({ pid: process.pid, parentPid: process.ppid, rss: process.memoryUsage.rss() });
+  if (!rows.some(row => row.pid === process.pid)) rows.push({ pid: process.pid, parentPid: process.ppid, rss: process.memoryUsage.rss(),
+    peakRss: process.resourceUsage().maxRSS * 1024 });
   return rows;
 }
 
@@ -95,7 +100,13 @@ function alive(pid: number): boolean {
 }
 
 interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
-interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[]; peaks?: Record<string, number[]> }
+interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number; entry?: string }[]; peaks?: Record<string, number[]> }
+
+function parentMemoryEntry(): string {
+  const script = process.argv[1]?.split(/[\\/]/).at(-1) ?? "node";
+  const state = process.argv.find(arg => /^--state=(?:[a-z]{2}|system)$/i.test(arg));
+  return script === "freshness-shadow.mts" ? `${script}:${state?.slice(8).toLowerCase() ?? "round"}` : script;
+}
 
 /** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
 const PEAK_SAMPLE_MS = 2000;
@@ -195,10 +206,16 @@ function statePublicationPeakBytes(entry: string): number {
   return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
+function routineMinimumPeakBytes(entry: string): number {
+  const script = entry.split(/[\\/]/).at(-1)!;
+  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts"].includes(script)
+    ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
+}
+
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
-    minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
+    minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
     peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
@@ -225,8 +242,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   };
   if ((memory.parentPeakBytes ?? 0) > 0) mutate(state => {
     const parent = state.parents.find(row => row.pid === process.pid);
-    if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
-    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
+    if (parent) { parent.peak = Math.max(parent.peak, memory.parentPeakBytes!); parent.entry = parentMemoryEntry(); }
+    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes!, entry: parentMemoryEntry() });
   });
   const expire = (): void => {
     const now = Date.now();
@@ -269,8 +286,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         if (inherited) state.parents = state.parents.filter(parent => parent.pid !== process.pid);
         else {
           const parent = state.parents.find(row => row.pid === process.pid);
-          if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0);
-          else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
+          if (parent) { parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0); parent.entry = parentMemoryEntry(); }
+          else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0, entry: parentMemoryEntry() });
         }
         // A child past its reserved peak has shown it can reach that size again.
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
@@ -375,7 +392,8 @@ export interface HostMemoryReading {
   /** The runner and every process under it. */
   readonly runnerTreeRssBytes: number;
   readonly runnerTreeProcesses: number;
-  readonly parents: readonly { readonly pid: number; readonly peakBytes: number; readonly rssBytes: number }[];
+  readonly parents: readonly { readonly pid: number; readonly peakBytes: number; readonly rssBytes: number;
+    readonly peakRssBytes?: number | null; readonly entry?: string | null }[];
   readonly reservations: readonly { readonly entry: string; readonly peakBytes: number; readonly rssBytes: number }[];
   /** What the parents and reservations may still grow by before their peaks. */
   readonly reservedGrowthBytes: number;
@@ -387,7 +405,7 @@ export interface HostMemoryReading {
 export function memoryReading(input: {
   readonly at: string; readonly totalBytes: number; readonly availableBytes: number; readonly rootPid: number;
   readonly rows: readonly WorkerProcessMemory[]; readonly state: { readonly reservations: readonly { pid: number | null; peak: number; entry: string }[];
-    readonly parents: readonly { pid: number; peak: number }[] } | null;
+    readonly parents: readonly { pid: number; peak: number; entry?: string }[] } | null;
   readonly headroomBytes?: number; readonly leaseWorkerPeakBytes?: number;
 }): HostMemoryReading {
   const headroomBytes = input.headroomBytes ?? WORKER_MEMORY_HEADROOM_MIB * MIB;
@@ -399,7 +417,8 @@ export function memoryReading(input: {
   };
   const runner = descendants(input.rootPid, input.rows);
   const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: row.peak,
-    rssBytes: input.rows.find(r => r.pid === row.pid)?.rss ?? 0 }));
+    rssBytes: input.rows.find(r => r.pid === row.pid)?.rss ?? 0,
+    peakRssBytes: input.rows.find(r => r.pid === row.pid)?.peakRss ?? null, entry: row.entry ?? null }));
   const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak, rssBytes: treeRss(row.pid) }));
   const reservedGrowthBytes = [...parents, ...reservations].reduce((sum, row) => sum + Math.max(0, row.peakBytes - row.rssBytes), 0);
   const spare = input.availableBytes - headroomBytes - reservedGrowthBytes;

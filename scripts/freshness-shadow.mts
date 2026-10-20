@@ -15,7 +15,8 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { legacyArtifactActivityRepositories, readLegacyActivityCaptures } from "../lib/control-plane/workers/activity.ts";
 import { persistVerifiedPublicationAnchors, readStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
@@ -297,9 +298,6 @@ process.on("message", message => {
   }
 });
 
-const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
-  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
-
 const ROOT = process.cwd();
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs", planningStateArg(process.argv.slice(2)) ?? "round");
 const NOW = new Date().toISOString();
@@ -491,6 +489,10 @@ if(STATE===null) {
 }
 
 const PLANNING_STATE=STATE;
+// The round supervisor only forks state planners and combines their small
+// summaries. The planner doing the work owns the research reservation.
+const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 await withReaderRoute(`control-planning:${PLANNING_STATE}`, () => withReaderSelection({keys:new Set([`state:${PLANNING_STATE.toUpperCase()}`])}, async () => {
 
 installNeonCircuitBreaker(ROOT, nowIso);
@@ -2145,7 +2147,10 @@ async function runAutonomousWave() {
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
 
-  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
+  const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
+    () => readLegacyActivityCaptures(PLANNING_STATE));
+  const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : null;
+  const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && (item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject)),
     onSelectionSnapshot: items => { for (const item of items) if(item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject))workItemsById.set(item.id, item); },

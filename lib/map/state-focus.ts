@@ -1,5 +1,6 @@
 import type { FilterSpecification } from "maplibre-gl";
 import { pointInRings } from "../geo/polygon.ts";
+import { fetchReaderResponse, readReaderJson } from "../reader/bootstrap.ts";
 
 /** Where the outlines live. Generalized geometry — see the fetch script. */
 export const STATE_OUTLINES_URL = "/geo/state-outlines.geojson";
@@ -19,9 +20,9 @@ let outlinesLoad: Promise<StateOutlines> | null = null;
 
 /** One shared fetch of the outlines; a failed fetch is forgotten so the next caller retries. */
 export function loadStateOutlines(): Promise<StateOutlines> {
-  outlinesLoad ??= fetch(STATE_OUTLINES_URL).then(response => {
+  outlinesLoad ??= fetchReaderResponse(STATE_OUTLINES_URL).then(response => {
     if (!response.ok) throw new Error(`State outlines: ${response.status}`);
-    return response.json() as Promise<StateOutlines>;
+    return readReaderJson<StateOutlines>(response);
   }).catch(error => { outlinesLoad = null; throw error; });
   return outlinesLoad;
 }

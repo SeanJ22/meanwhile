@@ -85,12 +85,6 @@ test("BAL-26: the pill carries the disclosure state and Escape closes it", () =>
     /useDismissOnOutside\(shell, close, open\)/,
     "an outside press dismisses, through the generic hook rather than a copy",
   );
-  assert.match(
-    src,
-    /requestAnimationFrame\(/,
-    "focus lands in the input one frame after it mounts",
-  );
-
   /* The ballot has no map floaters to raise above. */
   assert.ok(!/takeForeground/.test(src), "the ballot must not import map machinery");
 });

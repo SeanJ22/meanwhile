@@ -87,17 +87,15 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
-import { MapCanvas, type CameraTarget, type MapFocus, type VotingSitePin } from "./map-canvas";
+import type { CameraTarget, MapFocus, VotingSitePin } from "./map-canvas";
 import type { ModalSubject } from "./popup/entity-modal";
 
 const AskBox = dynamic(
   () => import("@/components/ask/ask-box").then((m) => m.AskBox),
   { ssr: false },
 );
-const DoorOverlay = dynamic(
-  () => import("./door-overlay").then((m) => m.DoorOverlay),
-  { ssr: false },
-);
+const DoorOverlay = dynamic(() => import("./door-overlay").then(m => m.DoorOverlay), { ssr: false });
+const ListOverlay = dynamic(() => import("./list-overlay").then(m => m.ListOverlay), { ssr: false });
 const MeetingPanel = dynamic(
   () => import("./meeting-panel").then((m) => m.MeetingPanel),
   { ssr: false },
@@ -112,10 +110,6 @@ const OfficialModal = dynamic(
 );
 const EntityModal = dynamic(
   () => import("./popup/entity-modal").then((m) => m.EntityModal),
-  { ssr: false },
-);
-const ListOverlay = dynamic(
-  () => import("./list-overlay").then((m) => m.ListOverlay),
   { ssr: false },
 );
 const WelcomeOverlay = dynamic(
@@ -161,6 +155,16 @@ export function MapEntry() {
 }
 
 function MapEntryInner() {
+  const [MapCanvas, setMapCanvas] = useState<typeof import("./map-canvas").MapCanvas | null>(null);
+  const [mapLoadError, setMapLoadError] = useState<Error | null>(null);
+  useEffect(() => {
+    let active = true;
+    void import("./map-canvas").then(module => {
+      module.prepareMapWorkers();
+      if (active) setMapCanvas(() => module.MapCanvas);
+    }).catch(error => { if (active) setMapLoadError(error); });
+    return () => { active = false; };
+  }, []);
   const { location, restored, remember } = useStoredZip();
   const { theme } = useStoredTheme();
   const ui = useUi();
@@ -1245,17 +1249,6 @@ function MapEntryInner() {
     return () => window.removeEventListener("mw:open-pop", onRequest);
   }, [closeCard]);
 
-  // Ask opens with the cursor in its box (4a's original focus rule, kept).
-  useEffect(() => {
-    if (pop !== "ask") return;
-    const frame = requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
-        ?.focus({ preventScroll: true });
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [pop]);
-
   const openGoverns = useCallback(() => {
     if (wghOpen) {
       closeCard();
@@ -1350,7 +1343,7 @@ function MapEntryInner() {
       onOpenPop={openPopup}
       onOpenGoverns={openGoverns}
       onOpenBallot={closePop}
-      prefetchReady={Boolean(shown && !shown.localPending && !refreshing)}
+      askReady={Boolean(clusterCoverage && clusterZip)}
     />
   );
 
@@ -1558,6 +1551,7 @@ function MapEntryInner() {
   const popTitle =
     pop === "zip" ? "Show me a ZIP" : pop === "vote" ? "Where can I vote?" : "Ask";
 
+  if (mapLoadError) throw mapLoadError;
   return (
     <DataProvider value={data}>
       {/* The jurisdiction badge can open the address prompt anywhere; the page re-resolves from the answer. */}
@@ -1576,7 +1570,7 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
+          {MapCanvas && districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}

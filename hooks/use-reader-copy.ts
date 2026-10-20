@@ -2,45 +2,44 @@
 
 import { useSyncExternalStore } from "react";
 import { copy, type CopyKey, type CopyValues } from "@/lib/design/copy";
+import { fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 
 const EMPTY: CopyValues = {};
 let values = EMPTY;
 let revision = -1;
 let inFlight: Promise<void> | null = null;
 let timer: ReturnType<typeof setInterval> | null = null;
+let lastReadAt = 0;
 const listeners = new Set<() => void>();
 
 async function refresh() {
   if (inFlight) return inFlight;
   inFlight = (async () => {
     try {
-      const response = await fetch("/api/reader/settings", { cache: "no-cache" });
+      const response = await fetchReaderResponse("/api/reader/settings", { cache: "no-cache" });
       if (!response.ok) return;
-      const data = await response.json() as { available?: boolean; values?: CopyValues; revision?: number };
+      const data = await readReaderJson<{ available?: boolean; values?: CopyValues; revision?: number }>(response);
       if (!data.available || !data.values || typeof data.revision !== "number" || data.revision <= revision) return;
       values = data.values;
       revision = data.revision;
       listeners.forEach(listener => listener());
     } catch { /* Keep the last good copy on a failed settings read. */ }
-    finally { inFlight = null; }
+    finally { lastReadAt = Date.now(); inFlight = null; }
   })();
   return inFlight;
 }
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  if (listeners.size === 1) {
-    void refresh();
-    timer = setInterval(() => { if (document.visibilityState === "visible") void refresh(); }, 60_000);
-    window.addEventListener("focus", refresh);
+  if (listeners.size === 1 && Date.now() - lastReadAt >= 60_000) void refresh();
+  if (!timer) {
+    // The page owns one clock; moving its controls or opening a panel must not
+    // restart the clock or fetch an unchanged snapshot again.
+    timer = setInterval(() => { if (listeners.size && document.visibilityState === "visible") void refresh(); }, 60_000);
+    window.addEventListener("focus", () => { if (listeners.size) void refresh(); });
   }
   return () => {
     listeners.delete(listener);
-    if (!listeners.size) {
-      if (timer) clearInterval(timer);
-      timer = null;
-      window.removeEventListener("focus", refresh);
-    }
   };
 }
 

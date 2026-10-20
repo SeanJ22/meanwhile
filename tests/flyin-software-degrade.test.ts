@@ -7,6 +7,7 @@ import test from "node:test";
 import {
   SOFTWARE_RENDERER_NAMES,
   classifyRenderer,
+  detectRaster,
 } from "../components/map/raster-capability.ts";
 import {
   judgeSoftware,
@@ -50,12 +51,21 @@ test("an unreadable renderer is unknown, and unknown is NOT software", () => {
   assert.notEqual(classifyRenderer(null), "software");
 });
 
+test("the map identifies its existing graphics context without constructing another canvas", () => {
+  let reads=0;
+  const context={RENDERER:1,getExtension:()=>({UNMASKED_RENDERER_WEBGL:2}),getParameter:()=>"SwiftShader"};
+  const canvas={getContext:(kind:string)=>{assert.equal(kind,"webgl2");reads++;return context;}} as unknown as HTMLCanvasElement;
+  assert.deepEqual(detectRaster(canvas),{kind:"software",renderer:"SwiftShader"});
+  assert.equal(reads,1);
+});
+
 const PRESENTATION = readFileSync(join(ROOT, "lib", "map", "flight-presentation.ts"), "utf8");
 const MAP_ENTRY = readFileSync(join(ROOT, "components", "map", "map-entry.tsx"), "utf8");
 
 test("the motion hold is scoped to a software rasteriser, not every renderer", () => {
   /* The motion hold runs only on a positively identified CPU rasteriser; hardware and unknown hide nothing. */
-  assert.match(CANVAS, /const degradeInMotion = detectRaster\(\)\.kind === "software";/);
+  assert.match(CANVAS, /const raster = detectRaster\(map\.getCanvas\(\)\);/);
+  assert.match(CANVAS, /const degradeInMotion = raster\.kind === "software";/);
   const enter = CANVAS.slice(
     CANVAS.indexOf("const enterMotionDegrade"),
     CANVAS.indexOf("const onPresentationIdle"),

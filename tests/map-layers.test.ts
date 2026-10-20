@@ -14,7 +14,7 @@ import { initialZoomForZip } from "../lib/map/initial-zoom.ts";
 import { withDistricts, NATIONAL_BOUNDARIES_SOURCE, boundarySource, BOUNDARY_ARCHIVE_FALLBACK, onSettledDistrictChange } from "../lib/map/districts.ts";
 import { holdMapPresentation, releaseMapPresentation } from "../lib/map/flight-presentation.ts";
 import type { Map as MapLibreMap } from "maplibre-gl";
-import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, resolveBasemap } from "../lib/map/style.ts";
+import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, basemapStyle, resolveBasemap } from "../lib/map/style.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Venue } from "../lib/meetings/venues.ts";
 
@@ -389,4 +389,17 @@ test("the fallback style draws ground and nothing else, so the map still initial
   assert.deepEqual(FALLBACK_STYLE.sources, {}, "the fallback must request no tiles");
   assert.equal(FALLBACK_STYLE.layers.length, 1);
   assert.equal(FALLBACK_STYLE.layers[0].type, "background");
+});
+
+test("software graphics use the same themed MapTiler map as raster tiles and retain interactive district labels", () => {
+  const choice = { provider: "maptiler" as const, styleUrl: "https://api.maptiler.com/maps/custom-dark/style.json?key=fixture" };
+  assert.equal(basemapStyle(choice, false), choice.styleUrl);
+  const style = basemapStyle(choice, true);
+  assert.notEqual(typeof style, "string");
+  if (typeof style === "string") throw new Error("Expected raster style");
+  assert.equal(style.glyphs, "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=fixture");
+  assert.deepEqual(style.sources.basemap, { type: "raster", url: "https://api.maptiler.com/maps/custom-dark/tiles.json?key=fixture", tileSize: 512 });
+  const districts = withDistricts(style, ["congressional"], "NH");
+  assert.ok(districts.layers.some(layer => layer.type === "symbol" && layer.id.startsWith("district-")));
+  assert.ok(districts.layers.some(layer => layer.id === "basemap"));
 });

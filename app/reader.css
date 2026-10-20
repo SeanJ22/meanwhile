@@ -1,4 +1,20 @@
 /* The public reader surfaces. Tokens live in app/globals.css (the READER DESIGN token block). */
+/* CPU graphics keep the same colours, contrast and controls with flat surfaces.
+   Avoid compiling and painting blurred shadows and gradients on first use.
+   Provider attribution and map layers keep their own presentation. */
+:is([data-raster="pending"], [data-raster="software"]) .mw-reader :not(.maplibregl-control-container, .maplibregl-control-container *) {
+  box-shadow: none !important;
+}
+:is([data-raster="pending"], [data-raster="software"]) .mw-reader :not(select, .maplibregl-control-container, .maplibregl-control-container *),
+:is([data-raster="pending"], [data-raster="software"]) .mw-reader .ask-pill::before,
+:is([data-raster="pending"], [data-raster="software"]) .mw-reader .ask-pill::after {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+:is([data-raster="pending"], [data-raster="software"]) .mw-reader :is([aria-expanded="true"], [data-open], [data-active="true"]) {
+  outline: 1px solid var(--ring);
+  outline-offset: -1px;
+}
 .mw-reader {
   background: var(--ground);
   color: var(--text);

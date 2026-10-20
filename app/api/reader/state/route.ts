@@ -8,7 +8,7 @@ import { stateCoverage } from "@/lib/reader/coverage";
 import { readStatePackage } from "@/lib/reader/state";
 import { requireRegistryState } from "@/lib/civic-data/state-scopes";
 import { withReaderRoute } from "@/lib/db/reader-route";
-import { stateMemberDirectories } from "@/lib/reader/member-directories";
+import { stateMemberDirectories, zipMemberDirectories } from "@/lib/reader/member-directories";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 
 export const runtime = "nodejs";
@@ -22,8 +22,10 @@ export async function GET(request: Request) {
   try { state = requireRegistryState(input.replace(/^US-/i, "")); }
   catch { return Response.json({ error: "A US state or territory is required" }, { status: 400 }); }
   try {
-    const divisionIds = zip ? (await readZipPlace(zip))?.ids ?? [] : [];
-    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds), readStateZipPlaces(state)]));
+    const indexed = zip ? await readZipPlace(zip) : null;
+    const divisionIds = indexed?.ids ?? [];
+    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds, zip ?? undefined),
+      zip ? Promise.resolve(new Map(indexed ? [[zip, indexed]] : [])) : readStateZipPlaces(state)]));
     const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
     const selection = currentRepresentationSelection();
     const selected = new Map((["congressional_district", "state_leg_upper", "state_leg_lower"] as const).map(type => [type, selectGeographyVersion(versions, type, selection, state)]));
@@ -53,7 +55,9 @@ export async function GET(request: Request) {
     const summary = stateCoverage(statewide, ids, 0, 0, [], [], extraDivisions);
     const coverage = { ...summary, governments: [], bodies: summary.bodies.filter(body => body.tier !== "local") };
     return Response.json({ state, version: value.version, coverage, zipPlaces, boundaryUrl: value.boundaryUrl, directory: zip ? null : value.federal?.directory ?? null,
-      ...(zip ? { zip } : { memberDirectories: stateMemberDirectories(value.people, value.memberOffices) }) }, { headers: {
+      memberDirectories: zip ? zipMemberDirectories(value.people, value.memberOffices, value.federal,
+        [...coverage.seats.flatMap(seat => seat.representatives), ...coverage.senators, ...coverage.statewideExecutives])
+        : stateMemberDirectories(value.people, value.memberOffices), ...(zip ? { zip } : {}) }, { headers: {
       ...readerCacheHeaders({ states: [state], places: zip ? ids : [] }),
       "Netlify-Vary": "query=state|zip",
       "ETag": `"${value.version}:${zip ?? state}"`,

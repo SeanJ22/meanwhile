@@ -1,30 +1,64 @@
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
+import type { ReaderWorkerRequest } from "../map/boundary-worker.ts";
+
+interface ReaderBoundary { url: string; request: (request: ReaderWorkerRequest, signal?: AbortSignal) => Promise<unknown> }
 
 declare global {
   interface Window {
-    __readerStart?: { zip: string; location: Promise<ZctaCentroid | null>; expires: number; requests: Record<string, Promise<Response>>; parsed: WeakMap<Response, Promise<unknown>> };
+    __readerStart?: { zip: string; location: Promise<ZctaCentroid | null>; value?: unknown; expires: number; requests: Record<string, Promise<Response>>; parsed: WeakMap<Response, Promise<unknown>> };
     __startReaderZip?: (zip: string) => Promise<ZctaCentroid | null> | null;
+    __readerBoundary?: ReaderBoundary;
+    __startReaderBoundary?: (url: string) => ReaderBoundary;
   }
 }
 
-/** A ZIP link starts its two reads in the arriving HTML, before hydration. */
-export const READER_START_SCRIPT = `try{
+/** A ZIP link starts its data and boundary reads before hydration. */
+export function readerStartScript(boundaryUrl: string): string { return `try{
+if(location.pathname==="/")document.documentElement.dataset.raster="pending";
+window.__startReaderBoundary=url=>{
+if(window.__readerBoundary)return window.__readerBoundary;
+const worker=new Worker("/map-boundary-worker.mjs",{type:"module"}),pending=new Map();let serial=0;
+worker.onmessage=({data})=>{const held=pending.get(data.id);if(!held)return;pending.delete(data.id);held.clean();data.error?held.reject(new Error(data.error)):held.resolve(data.value)};
+worker.onerror=error=>{for(const held of pending.values()){held.clean();held.reject(new Error(error.message))}pending.clear()};
+const request=(request,signal)=>new Promise((resolve,reject)=>{
+const id=++serial,abort=()=>{pending.delete(id);worker.postMessage({id,cancel:true});reject(signal.reason||new DOMException("Aborted","AbortError"))};
+if(signal?.aborted){abort();return}
+pending.set(id,{resolve,reject,clean:()=>signal?.removeEventListener("abort",abort)});
+signal?.addEventListener("abort",abort,{once:true});worker.postMessage({id,request});
+});
+return window.__readerBoundary={url,request};
+};
 window.__startReaderZip=zip=>{
 if(location.pathname!=="/"||typeof zip!=="string"||!/^\\d{5}$/.test(zip))return null;
 const previous=window.__readerStart;
 if(previous?.zip===zip&&previous.expires>Date.now())return previous.location;
 const requests={},parsed=previous?.parsed||new WeakMap(),start={zip,requests,parsed,expires:Date.now()+30000};
+const archive=${JSON.stringify(boundaryUrl)};
+if(archive){try{
+const url=new URL(archive,location.href).href;
+window.__startReaderBoundary(url).request({kind:"header",url}).catch(()=>{});
+}catch(e){}}
 const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(r=>{
 const response=r.clone(),value=r.json();value.catch(()=>{});parsed.set(response,value);return response});
-const state=early("/api/reader/state?zip="+zip),place=early("/api/meetings?zip="+zip);
+const stateUrl="/api/reader/state?zip="+zip;
+const state=window.__readerBoundary?window.__readerBoundary.request({kind:"state",url:stateUrl}).then(result=>{
+const response=new Response(null,{status:result.status,headers:result.headers});parsed.set(response,Promise.resolve(result.value));return response;
+}):early(stateUrl),place=early("/api/meetings?zip="+zip);
+const settings="/api/reader/settings";
+const outlines="/geo/state-outlines.geojson";
+if(previous?.requests[outlines])requests[outlines]=previous.requests[outlines];
+else if(!previous){requests[outlines]=early(outlines);requests[outlines].catch(()=>{})}
+if(previous?.requests[settings])requests[settings]=previous.requests[settings];
+else if(!previous){requests[settings]=early(settings);requests[settings].catch(()=>{})}
 state.catch(()=>{});place.catch(()=>{});
-start.location=fetch("/api/location/zip?zip="+zip).then(r=>{
+start.location=fetch("/geo/reader-zips/"+zip.slice(0,2)+".json").then(r=>{
 if(!r.ok)throw new Error("ZIP lookup failed: "+r.status);return r.json()}).then(d=>{
-const resolution=d?.resolution;
-const p=resolution?.ok===true?resolution.centroid:resolution?.ok===false&&resolution.reason==="uncovered"?null:
-resolution===undefined&&d&&Object.hasOwn(d,"location")?d.location:undefined;
+if(!d?.locations||typeof d.locations!=="object")throw new Error("Invalid ZIP location response");
+const p=d.locations[zip]??null;
 if(p===null){if(window.__readerStart===start)start.expires=0;return null}
 if(!p||typeof p!=="object")throw new Error("Invalid ZIP location response");
+start.value=p;
+if(!previous&&window.__readerStart===start&&window.__readerBoundary){const reader=window.__readerBoundary;reader.request({kind:"prefetch",url:reader.url,zip:p.zip,lat:p.lat,lng:p.lng}).catch(()=>{})}
 if(p.postal?.state)requests["/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip]=state;
 requests["/api/meetings?lat="+p.lat+"&lng="+p.lng+"&zip="+zip]=place;
 return p}).catch(error=>{if(window.__readerStart===start)start.expires=0;throw error});
@@ -34,7 +68,9 @@ if(location.pathname==="/"){
 let zip=new URLSearchParams(location.search).get("zip");
 if(zip===null){try{zip=JSON.parse(localStorage.getItem("wtp.approximate_location")||"null")?.zip}catch(e){}}
 window.__startReaderZip(zip);
-}}catch(e){}`;
+}}catch(e){}`; }
+
+export const READER_START_SCRIPT = readerStartScript(typeof process === "undefined" ? "" : process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "");
 
 /** Consume each early response once; normal navigation keeps its abort behavior. */
 export function fetchReaderResponse(url: string, init?: RequestInit): Promise<Response> {

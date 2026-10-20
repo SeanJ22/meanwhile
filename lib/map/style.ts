@@ -33,6 +33,23 @@ export function resolveBasemap(theme: "dark" | "light" = "dark"): BasemapChoice 
   };
 }
 
+/** The same MapTiler style, painted by the provider when this browser uses CPU graphics. */
+export function basemapStyle(choice: BasemapChoice, software: boolean): StyleSpecification | string {
+  if (!software) return choice.styleUrl;
+  return {
+    version: 8,
+    glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf${new URL(choice.styleUrl).search}`,
+    sources: {
+      basemap: {
+        type: "raster",
+        url: choice.styleUrl.replace("/style.json?", "/tiles.json?"),
+        tileSize: 512,
+      },
+    },
+    layers: [{ id: "basemap", type: "raster", source: "basemap", paint: { "raster-fade-duration": 0 } }],
+  };
+}
+
 /**
  * Last resort when the remote style won't load: ground colour only, so the
  * map still initializes and pins, panels and the zip control keep working.

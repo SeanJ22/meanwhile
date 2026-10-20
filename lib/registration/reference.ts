@@ -37,11 +37,12 @@ export interface LoadedReference {
 }
 
 export function loadRegistrationReference(root: string, state: string): LoadedReference {
-  const dir = join(/* turbopackIgnore: true */ root, "data", "derived", "registration");
-  const text = readFileSync(join(dir, `${state.toLowerCase()}.json`), "utf8");
+  const path = join(/* turbopackIgnore: true */ root, "data", "derived", "registration", `${state.toLowerCase()}.json`);
+  const text = readFileSync(path, "utf8");
   const reference = JSON.parse(text) as RegistrationReference;
   if (reference.formatVersion !== 1 || reference.state !== state.toLowerCase()) throw new Error(`REGISTRATION_REFERENCE_INVALID:${state}`);
-  const index = JSON.parse(readFileSync(join(dir, "index.json"), "utf8")) as { generatedAt: string; states: Record<string, { sha256: string; generatedAt?: string }> };
+  const indexPath = join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json");
+  const index = JSON.parse(readFileSync(indexPath, "utf8")) as { generatedAt: string; states: Record<string, { sha256: string; generatedAt?: string }> };
   const sha256 = createHash("sha256").update(text).digest("hex");
   const entry = index.states[state.toLowerCase()];
   if (entry?.sha256 !== sha256) throw new Error(`REGISTRATION_REFERENCE_DRIFT:${state}: the state file does not match index.json`);

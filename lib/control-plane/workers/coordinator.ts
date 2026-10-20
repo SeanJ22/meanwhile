@@ -12,7 +12,10 @@ import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-pol
 import { dispatchWorkerTask, enqueueWorkerTask, FLEET_POLICY_VERSION, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { readStandingLineages } from "./standing-lineage-read.ts";
-import { forEachAggregate } from "./streamed-history.ts";
+import { forEachAggregate, withHistoryIndex, type HistoryIndex } from "./streamed-history.ts";
+import { createPlannerSpool, plannerMap, type PlannerSpool } from "../scheduler/planner-spool.ts";
+import { DiskRows } from "../scheduler/disk-rows.ts";
+import { CONTROL_PLANE_QUERY_CONCURRENCY } from "../repository/pg-store.ts";
 import { taskIdentity, type TaskIdentity } from "./task-identity.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { FIRST_BACKOFF_MINUTES, recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
@@ -28,7 +31,7 @@ import { acquirerFailureCause } from "./known-door-failure.ts";
 import { isHuntPacketPlan } from "../../hunt/packet-plan.ts";
 import { HUNT_PACKET_ROUTE_ID } from "../../hunt/packet.ts";
 import { EXA_AGENT_ROUTE_ID } from "../../hunt/exa-lane.ts";
-import { interleaveByWeight, partOfItem, sendOf, squadKey, squadWeights, type SquadReading, type SquadWeight } from "./squad-weights.ts";
+import { partOfItem, sendOf, SQUAD_DIFFICULTY_WINDOW_HOURS, type SquadReading, type SquadWeight } from "./squad-weights.ts";
 
 /** Blocker codes an acquisition once recorded for robots.txt alone. A result carrying only these is re-acquired, never left refused. */
 const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", "PERMISSION_UNKNOWN"]);
@@ -372,44 +375,6 @@ async function huntOperation(runtime: AutonomousCoordinatorRuntime, item: WorkIt
     : decision("BLOCKED", "This packet's job is running or waiting out a short backoff.");
 }
 
-/** Serve one item per hunt in each round; priority orders a round, never drains a whole hunt first. */
-export function fairAutonomousWorkIds(items: readonly WorkItem[], lastServed: ReadonlyMap<string, string>,
-  priorities: readonly { receiptId: string; priority: number }[] = [],
-  /* Each Send's turns go round-robin over its mission parts, weighted by open blanks and difficulty. */
-  squads?: { readonly partOf: (item: WorkItem) => string; readonly weightOf: (send: string, part: string) => number }): string[] {
-  const priority = new Map(priorities.map(row => [row.receiptId, row.priority] as const));
-  const groups = new Map<string, { priority: number; lastServed: string; items: WorkItem[] }>();
-  for (const item of items) {
-    const key = sendOf(item, priority);
-    const group = groups.get(key) ?? { priority: priority.get(key) ?? Infinity, lastServed: "", items: [] };
-    group.items.push(item);
-    if ((lastServed.get(item.id) ?? "") > group.lastServed) group.lastServed = lastServed.get(item.id)!;
-    groups.set(key, group);
-  }
-  const ordered = [...groups].sort(([ak, a], [bk, b]) =>
-    a.priority - b.priority || a.lastServed.localeCompare(b.lastServed) || ak.localeCompare(bk));
-  const partOf = squads?.partOf ?? ((item: WorkItem) => partOfItem(item));
-  const sequences = ordered.map(([send, group]) => {
-    group.items.sort((a, b) =>
-      (lastServed.get(a.id) ?? "").localeCompare(lastServed.get(b.id) ?? "") ||
-      (a.autonomousPlan?.capability === "voting-source-blanks" && b.autonomousPlan?.capability === "voting-source-blanks"
-        ? (b.autonomousPlan.subjectPopulation ?? -1) - (a.autonomousPlan.subjectPopulation ?? -1) : 0) ||
-      a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
-    const byPart = new Map<string, WorkItem[]>();
-    for (const item of group.items) {
-      const part = partOf(item);
-      byPart.set(part, [...(byPart.get(part) ?? []), item]);
-    }
-    return interleaveByWeight([...byPart].sort(([a], [b]) => a.localeCompare(b))
-      .map(([part, rows]) => ({ weight: squads ? squads.weightOf(send, part) : 1, items: rows })));
-  });
-  const ids: string[] = [];
-  for (let round = 0; ids.length < items.length; round++) {
-    for (const sequence of sequences) if (sequence[round]) ids.push(sequence[round].id);
-  }
-  return ids;
-}
-
 /** Execute a pending canonical task in a lease-owning worker process. */
 export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRuntime, task: RouteTask): Promise<DispatchResult> {
   if (task.workerTask) return dispatchWorkerTask(runtime, task);
@@ -436,158 +401,229 @@ async function owningObligation(repos: ControlPlaneRepositories, workItemId: str
   return occurrence === null ? null : await repos.obligations.read(occurrence.value.obligationId);
 }
 
-export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
+interface CoordinatorOptions {
   maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
-  /** Selection enqueues existing RouteTasks; worker processes claim them later. */
-  planOnly?: boolean;
-  /** Invocation-local ordering metadata, including held work without an autonomous plan. */
-  onSelectionSnapshot?:(items:readonly WorkItem[])=>void;
+  planOnly?:boolean;
   acceptsWorkItem?:(item:WorkItem)=>boolean;
   prioritizedInstructions?:readonly {receiptId:string;priority:number}[];
   admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
-  /** This wave's open blanks by Send and part, for weighting each Send's turns. */
   squads?:SquadReading;
-}={}) {
-  const now = runtime.now ?? (()=>new Date().toISOString());
-  const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
-  // Only scheduling identities survive the scan. Each selection opens its own full place and history.
-  const allItems: WorkItem[] = [], candidates: WorkItem[] = [];
-  await forEachAggregate(runtime.repos.workItems, row => {
-    const item = row.value, plan = item.autonomousPlan;
-    const summary = { id: item.id, project: item.project, subject: item.subject, createdAt: item.createdAt,
-      ...("planRepair" in item ? { planRepair: {parentWorkItemId:(item as WorkItem & {planRepair:{parentWorkItemId:string}}).planRepair.parentWorkItemId} } : {}),
-      ...(plan ? { autonomousPlan: { capability: plan.capability, subjectPopulation: plan.subjectPopulation,
-        jurisdiction: plan.jurisdiction, ownerInstructions: plan.ownerInstructions, missionPart: plan.missionPart,
-        contract: { recordClass: plan.contract.recordClass } } } : {}) } as WorkItem;
-    allItems.push(summary);
-    if (plan && (options.acceptsWorkItem?.(item) ?? true)) candidates.push(summary);
-  });
-  options.onSelectionSnapshot?.(allItems);
-  const lastServed = new Map<string,string>();
-  await forEachAggregate(runtime.repos.attempts, row => {
-    const attempt = row.value;
-    if (attempt.startedAt > (lastServed.get(attempt.workItemId) ?? "")) lastServed.set(attempt.workItemId, attempt.startedAt);
-  }, {workItemId:true,startedAt:true});
-  const obligationIds = new Set<string>(), workByObligation = new Map<string,string>();
-  await forEachAggregate(runtime.repos.occurrences, row => {
-    obligationIds.add(row.value.obligationId);
-    if (row.value.workItemId) workByObligation.set(row.value.obligationId,row.value.workItemId);
-  }, {obligationId:true,workItemId:true});
-  const lineages = await readStandingLineages(runtime.repos, [...obligationIds]);
-  const selectedRoot=new Map(lineages.flatMap(lineage=>lineage.siblingRootIds.map(id=>[id,lineage.rootWorkItemId] as const)));
-  const byItem=new Map(allItems.map(item=>[item.id,item] as const));
-  const lineageRoot=(item:WorkItem):string|null=>{
-    let current=item; const seen=new Set<string>();
-    while(!selectedRoot.has(current.id)) {
-      if(seen.has(current.id)) return null;
-      seen.add(current.id);
-      const parentId=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string}}).planRepair?.parentWorkItemId;
-      const parent=parentId?byItem.get(parentId):null;
-      if(!parent || parent.project!==item.project || parent.subject!==item.subject) return null;
-      current=parent;
-    }
-    return current.id;
-  };
-  const duplicateLineageDeferred:{workItemId:string;reason:string;detail:string}[]=[];
-  const items=candidates.filter(item=>{
-    const root=lineageRoot(item);
-    if(!root || selectedRoot.get(root)===root) return true;
-    duplicateLineageDeferred.push({workItemId:item.id,reason:"DUPLICATE_PERIOD_LINEAGE",
-      detail:`This recorded work remains open; source acquisition continues on canonical period root ${selectedRoot.get(root)}.`});
-    return false;
-  }).map(value=>({id:value.id,value}));
-  const itemSubjectById=new Map(items.map(row=>[row.id,row.value.subject] as const));
-  const knownItems=items.map(row=>row.value);
-  // Weights retain only the role/time/owner metadata of recent turns and open debts.
-  let weights:ReadonlyMap<string,SquadWeight>|null=null;
-  if(options.squads) {
-    const routeTasks: RouteTask[] = [];
-    const since = Date.parse(now()) - 24 * 3_600_000;
-    await forEachAggregate(runtime.repos.routeTasks, row => {
-      if (row.value.workerTask?.role === "DETECTIVE" && Date.parse(row.value.createdAt) >= since) routeTasks.push(row.value);
-    }, {workItemId:true,createdAt:true,workerTask:["role"]});
-    const debts: {debt: FreshnessDebt;workItemId:string|null}[] = [];
-    await forEachAggregate(runtime.repos.debts, row => {
-      debts.push({debt:row.value,workItemId:workByObligation.get(row.value.obligationId)??null});
-    }, {obligationId:true});
-    weights=squadWeights({items:knownItems,priority:new Map((options.prioritizedInstructions??[]).map(row=>[row.receiptId,row.priority] as const)),
-      reading:options.squads,routeTasks,now:now(),debts});
-  }
-  const squadParts=options.squads?.parts;
-  const ids=fairAutonomousWorkIds(items.map(row => row.value), lastServed, options.prioritizedInstructions,
-    weights?{partOf:item=>partOfItem(item,squadParts),weightOf:(send,part)=>weights!.get(squadKey(send,part))?.weight??1}:undefined);
-  const decisions:SelectedDecision[]=[]; const dispatches:DispatchResult[]=[];
-  const deferred:{workItemId:string;reason:string;detail:string}[]=[...duplicateLineageDeferred];
-  const maximum=options.maximum??ids.length; const concurrency=Math.min(options.concurrency??Math.max(1,ids.length),Math.max(1,ids.length));
-  // A caller may still pass a finite diagnostic
-  // sub-cap; an unbounded value clamps to `maximum`.
-  const maxScoutDispatches=Math.min(options.maxScoutDispatches??maximum,maximum);
-  if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
+}
+interface CollectedCoordinatorOptions extends CoordinatorOptions {
+  readonly planner?:undefined;
+  onSelectionSnapshot?:(items:readonly WorkItem[])=>void;
+}
+interface StreamedCoordinatorOptions extends CoordinatorOptions {
+  readonly planner:PlannerSpool;
+  onSelectionSnapshot?:(items:DiskRows<WorkItem>)=>void;
+}
+type CoordinatorDeferred={workItemId:string;reason:string;detail:string};
+type CoordinatorRows<T,D extends boolean>=D extends true?DiskRows<T>:T[];
+interface CoordinatorReading<D extends boolean> {
+  readonly recovery:Awaited<ReturnType<typeof sweepExpiredLeases>>;
+  readonly decisions:CoordinatorRows<SelectedDecision,D>;
+  readonly dispatches:CoordinatorRows<DispatchResult,D>;
+  readonly scoutsAdmitted:number;
+  readonly scoutsLimitedAdmitted:number;
+  readonly deferred:CoordinatorRows<CoordinatorDeferred,D>;
+  readonly considered:number;
+  readonly squadWeights:CoordinatorRows<SquadWeight,D>;
+}
+interface OrderedWork {readonly id:string;readonly body:string;readonly served:string;readonly group_priority:string;readonly group_served:string;readonly send:string}
 
-  let cursor=0; let admitted=0; let scoutsAdmitted=0; let scoutsLimitedAdmitted=0;
-  // Join every admitted lane even when another lane's selection fails. An
-  // early Promise.all rejection would let an already dispatched paid worker
-  // continue after the cycle began its final records.
-  const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
-    while(cursor<ids.length && admitted<maximum) {
-      const id=ids[cursor++];
-      try {
-      let d: AutonomousDecision;
-      try {
-        d=await nextAutonomousOperation(runtime,id);
-      } catch (error) {
-        // Only a bounded, pre-dispatch selection can be deferred as unpaid
-        // work. A timeout after dispatch may carry unknown provider exposure
-        // and must reach the ordinary durable attempt/hold failure path.
-        if (error instanceof Error && /^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) {
-          d = {workItemId:id,action:"BLOCKED",task:null,reason:`${error.message}; source reference remains unresolved`};
-          deferred.push({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",detail:d.reason});
-        } else if (isControlPlaneRequestTimeout(error) && error.kind === "DEADLINE") {
-          deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"the bounded cycle ended during repository selection; this work remains owed"});
-          break;
-        } else throw error;
-      }
-      decisions.push(selectedDecision(d));
-      if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
-      if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
-      const lifetimeScout = runtime.lifetimeHuntSubject?.(itemSubjectById.get(id) ?? "") === true;
-      if(d.action==="SCOUT"&&!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
-      if (options.planOnly) continue;
-      if (d.action==="WORKER") {
-        const aggregate=options.admitDispatch?.(d.task.id)??{admit:true as const};
-        if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); continue; }
-        admitted++;
-        dispatches.push(await dispatchWorkerTask(runtime,d.task));
-        continue;
-      }
-      // Shared durable reservations arbitrate model spending; task leases arbitrate execution.
-      const dispatchScout = async()=>{
-        if(admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); return; }
-        if(!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); return; }
-        const aggregate=options.admitDispatch?.(d.task!.id)??{admit:true as const};
-        if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); return; }
-        admitted++;
-        scoutsAdmitted++;
-        if (!lifetimeScout) scoutsLimitedAdmitted++;
-        dispatches.push(await dispatchAutonomousTask(runtime,d.task!));
-      };
-      // The lifetime hunt's durable reservation ledger arbitrates concurrent model calls.
-      // Other work retains the legacy serialization until it has the same guarantee.
-      await dispatchScout();
-      } catch(error) {
-        if(!(error instanceof RepositoryLockHeld)) throw error;
-        deferred.push({workItemId:id,reason:"REPOSITORY_LOCK_HELD",detail:error.message});
+/** Order each Send and its own places using two disk cursors. */
+function sortCoordinatorWork(db:HistoryIndex,count:number):void {
+  const statement=`SELECT w.id,w.body,w.served,w.send,g.priority AS group_priority,g.served AS group_served
+    FROM work w JOIN groups g ON g.send=w.send WHERE w.selected=1 AND w.item_order>=? AND w.item_order<? ORDER BY w.item_order`;
+  const compare=(a:OrderedWork,b:OrderedWork):number=>{
+    const groups=Number(a.group_priority)-Number(b.group_priority)||a.group_served.localeCompare(b.group_served)||a.send.localeCompare(b.send);
+    if(groups)return groups;
+    const left=JSON.parse(a.body) as WorkItem,right=JSON.parse(b.body) as WorkItem;
+    return a.served.localeCompare(b.served)||
+      (left.autonomousPlan?.capability==="voting-source-blanks"&&right.autonomousPlan?.capability==="voting-source-blanks"
+        ?(right.autonomousPlan.subjectPopulation??-1)-(left.autonomousPlan.subjectPopulation??-1):0)||
+      left.createdAt.localeCompare(right.createdAt)||left.id.localeCompare(right.id);
+  };
+  const put=db.prepare("INSERT INTO sorting VALUES(?,?)");
+  let initial=0;
+  for(const row of db.prepare("SELECT id FROM work WHERE selected=1 ORDER BY item_order").iterate())put.run(row.id,initial++);
+  db.exec("UPDATE work SET item_order=(SELECT rank FROM sorting WHERE sorting.id=work.id) WHERE selected=1");
+  for(let width=1;width<count;width*=2){
+    db.exec("DELETE FROM sorting");let rank=0;
+    for(let start=0;start<count;start+=2*width){
+      const a=db.prepare(statement).iterate(start,start+width)[Symbol.iterator]();
+      const b=db.prepare(statement+" /* right */").iterate(start+width,start+2*width)[Symbol.iterator]();
+      let left=a.next(),right=b.next();
+      while(!left.done||!right.done){
+        const useLeft=right.done||!left.done&&!(compare(left.value as unknown as OrderedWork,right.value as unknown as OrderedWork)>0);
+        const chosen=useLeft?left.value!:right.value!;put.run(chosen.id,rank++);
+        if(useLeft)left=a.next();else right=b.next();
       }
     }
-  }));
-  const failed=lanes.find((lane): lane is PromiseRejectedResult => lane.status==="rejected");
-  if(failed) throw failed.reason;
-  const order = new Map(ids.map((id, index) => [id, index]));
-  decisions.sort((a, b) => order.get(a.workItemId)! - order.get(b.workItemId)!);
-  for (const id of ids.slice(cursor)) deferred.push(admitted>=maximum
-    ? {workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
-    : {workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
-  // `considered` lets a reader check the pass: every item is dispatched, deferred, or decided not to run.
-  return {recovery,decisions,dispatches,scoutsAdmitted,scoutsLimitedAdmitted,deferred,considered:candidates.length,
-    squadWeights:weights===null?[]:[...weights.values()]};
+    db.exec("UPDATE work SET item_order=(SELECT rank FROM sorting WHERE sorting.id=work.id) WHERE selected=1");
+  }
+}
+
+export function runAutonomousCoordinator(runtime:AutonomousCoordinatorRuntime,options:StreamedCoordinatorOptions):Promise<CoordinatorReading<true>>;
+export function runAutonomousCoordinator(runtime:AutonomousCoordinatorRuntime,options?:CollectedCoordinatorOptions):Promise<CoordinatorReading<false>>;
+export async function runAutonomousCoordinator(runtime:AutonomousCoordinatorRuntime,options:StreamedCoordinatorOptions|CollectedCoordinatorOptions={}):Promise<CoordinatorReading<true>|CoordinatorReading<false>> {
+  if(!options.planner&&process.env.NODE_ENV==="production")throw new Error("AUTONOMOUS_COORDINATOR_PLANNER_REQUIRED");
+  const owned=options.planner?null:await createPlannerSpool(),planner=options.planner??owned!;
+  const prefix=`coordinator:${randomUUID()}`;
+  const output=<T>(name:string)=>{
+    let count=0;
+    const table=planner.table<{id:string;order:number;value:T}>(`${prefix}:${name}`,row=>row.id);
+    return {add:(value:T,order?:number)=>{const id=count++;table.add({id:String(id),order:order??id,value});},
+      rows:table.rowsBy([["order"]]).map(row=>row.value)};
+  };
+  const decisions=output<SelectedDecision>("decisions"),dispatches=output<DispatchResult>("dispatches"),deferred=output<CoordinatorDeferred>("deferred"),weightRows=output<SquadWeight>("weights");
+  const summaries=planner.table<WorkItem>(`${prefix}:snapshot`,row=>row.id);
+  try{return await withHistoryIndex(async db=>{
+    const now=runtime.now??(()=>new Date().toISOString());
+    const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
+    db.exec(`CREATE TABLE work(id TEXT PRIMARY KEY,body TEXT NOT NULL,accepted INTEGER NOT NULL,selected INTEGER NOT NULL DEFAULT 0,
+      served TEXT NOT NULL DEFAULT '',send TEXT NOT NULL DEFAULT '',part TEXT NOT NULL DEFAULT '',item_order INTEGER NOT NULL);
+      CREATE TABLE roots(id TEXT PRIMARY KEY,canonical TEXT NOT NULL);
+      CREATE TABLE occurrences(obligation TEXT PRIMARY KEY,work_id TEXT,first_index INTEGER NOT NULL);
+      CREATE TABLE groups(send TEXT PRIMARY KEY,priority REAL NOT NULL,served TEXT NOT NULL,turns INTEGER NOT NULL DEFAULT 0,debts INTEGER NOT NULL DEFAULT 0,rank INTEGER);
+      CREATE TABLE parts(send TEXT NOT NULL,part TEXT NOT NULL,remaining INTEGER NOT NULL DEFAULT 0,turns INTEGER NOT NULL DEFAULT 0,debts INTEGER NOT NULL DEFAULT 0,
+        weight REAL NOT NULL DEFAULT 1,current REAL NOT NULL DEFAULT 0,first_index INTEGER NOT NULL,part_order INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(send,part));
+      CREATE TABLE sorting(id TEXT PRIMARY KEY,rank INTEGER NOT NULL);
+      CREATE TABLE sequences(send TEXT NOT NULL,seq INTEGER NOT NULL,id TEXT NOT NULL,PRIMARY KEY(send,seq));
+      CREATE TABLE queue(rank INTEGER PRIMARY KEY,id TEXT NOT NULL);
+      CREATE INDEX work_part ON work(selected,send,part,item_order);
+      CREATE INDEX work_selection_order ON work(selected,item_order);`);
+    let seen=0,considered=0;
+    const putWork=db.prepare("INSERT INTO work(id,body,accepted,item_order) VALUES(?,?,?,?)");
+    await forEachAggregate(runtime.repos.workItems,async row=>{
+      const item=row.value,plan=item.autonomousPlan;
+      const summary={id:item.id,project:item.project,subject:item.subject,createdAt:item.createdAt,
+        ...("planRepair"in item?{planRepair:{parentWorkItemId:(item as WorkItem&{planRepair:{parentWorkItemId:string}}).planRepair.parentWorkItemId}}:{}),
+        ...(plan?{autonomousPlan:{capability:plan.capability,subjectPopulation:plan.subjectPopulation,jurisdiction:plan.jurisdiction,
+          ownerInstructions:plan.ownerInstructions,missionPart:plan.missionPart,contract:{recordClass:plan.contract.recordClass}}}:{})} as WorkItem;
+      const accepted=!!plan&&(options.acceptsWorkItem?options.acceptsWorkItem((await runtime.repos.workItems.mustRead(item.id)).value):true);
+      summaries.add(summary);putWork.run(item.id,JSON.stringify(summary),Number(accepted),seen++);if(accepted)considered++;
+    },{id:true,project:true,subject:true,createdAt:true,planRepair:["parentWorkItemId"],autonomousPlan:{capability:true,subjectPopulation:true,jurisdiction:true,ownerInstructions:true,missionPart:true,contract:["recordClass"]}});
+    if(options.planner)(options as StreamedCoordinatorOptions).onSelectionSnapshot?.(summaries.rows);
+    else (options as CollectedCoordinatorOptions).onSelectionSnapshot?.([...summaries.rows]);
+    const served=db.prepare("UPDATE work SET served=MAX(served,?) WHERE id=?");
+    await forEachAggregate(runtime.repos.attempts,row=>{served.run(row.value.startedAt,row.value.workItemId);},{workItemId:true,startedAt:true});
+    let occurrenceAt=0;
+    const occurrence=db.prepare("INSERT INTO occurrences VALUES(?,?,?) ON CONFLICT(obligation) DO UPDATE SET work_id=CASE WHEN excluded.work_id='' THEN occurrences.work_id ELSE excluded.work_id END");
+    await forEachAggregate(runtime.repos.occurrences,row=>{occurrence.run(row.value.obligationId,row.value.workItemId??"",occurrenceAt++);},{obligationId:true,workItemId:true});
+    const root=db.prepare("INSERT OR REPLACE INTO roots VALUES(?,?)");
+    for(const held of db.prepare("SELECT obligation FROM occurrences ORDER BY first_index").iterate())
+      for(const lineage of await readStandingLineages(runtime.repos,[held.obligation]))for(const id of lineage.siblingRootIds)root.run(id,lineage.rootWorkItemId);
+    const work=db.prepare("SELECT body,served,send,part FROM work WHERE id=?"),canonical=db.prepare("SELECT canonical FROM roots WHERE id=?");
+    const lineageRoot=(item:WorkItem):string|null=>{
+      let current=item;const visited=new Set<string>();
+      while(!canonical.get(current.id)){
+        if(visited.has(current.id))return null;visited.add(current.id);
+        const parentId=(current as WorkItem&{planRepair?:{parentWorkItemId:string}}).planRepair?.parentWorkItemId;
+        const held=parentId?work.get(parentId):undefined,parent=held?JSON.parse(held.body) as WorkItem:undefined;
+        if(!parent||parent.project!==item.project||parent.subject!==item.subject)return null;current=parent;
+      }
+      return current.id;
+    };
+    const priority=plannerMap<number>(planner,`${prefix}:priority`);
+    for(const row of options.prioritizedInstructions??[])priority.set(row.receiptId,row.priority);
+    const select=db.prepare("UPDATE work SET selected=1,send=?,part=? WHERE id=?");
+    const group=db.prepare("INSERT INTO groups(send,priority,served) VALUES(?,?,?) ON CONFLICT(send) DO UPDATE SET served=MAX(groups.served,excluded.served)");
+    const part=db.prepare("INSERT INTO parts(send,part,remaining,first_index) VALUES(?,?,1,?) ON CONFLICT(send,part) DO UPDATE SET remaining=parts.remaining+1");
+    let count=0;
+    for(const held of db.prepare("SELECT id,body,served,item_order FROM work WHERE accepted=1 ORDER BY item_order").iterate()){
+      const item=JSON.parse(held.body) as WorkItem,ancestor=lineageRoot(item),chosen=ancestor?canonical.get(ancestor)?.canonical:null;
+      if(ancestor&&chosen!==ancestor){deferred.add({workItemId:item.id,reason:"DUPLICATE_PERIOD_LINEAGE",detail:`This recorded work remains open; source acquisition continues on canonical period root ${chosen}.`});continue;}
+      const send=sendOf(item,priority),mission=partOfItem(item,options.squads?.parts);
+      select.run(send,mission,item.id);group.run(send,priority.get(send)??Infinity,held.served);part.run(send,mission,Number(held.item_order));count++;
+    }
+    if(options.squads){
+      const since=Date.parse(now())-SQUAD_DIFFICULTY_WINDOW_HOURS*3_600_000,turn=db.prepare("UPDATE parts SET turns=turns+1 WHERE send=? AND part=?"),sendTurn=db.prepare("UPDATE groups SET turns=turns+1 WHERE send=?");
+      await forEachAggregate(runtime.repos.routeTasks,row=>{
+        if(row.value.workerTask?.role!=="DETECTIVE"||!(Date.parse(row.value.createdAt)>=since))return;
+        const own=db.prepare("SELECT send,part FROM work WHERE selected=1 AND id=?").get(row.value.workItemId);
+        if(own){turn.run(own.send,own.part);sendTurn.run(own.send);}
+      },{workItemId:true,createdAt:true,workerTask:["role"]});
+      const debt=db.prepare("UPDATE parts SET debts=debts+1 WHERE send=? AND part=?"),sendDebt=db.prepare("UPDATE groups SET debts=debts+1 WHERE send=?");
+      await forEachAggregate(runtime.repos.debts,row=>{
+        const own=db.prepare("SELECT w.send,w.part FROM work w JOIN occurrences o ON o.work_id=w.id WHERE w.selected=1 AND o.obligation=?").get(row.value.obligationId);
+        if(own){debt.run(own.send,own.part);sendDebt.run(own.send);}
+      },{obligationId:true});
+      for(const held of db.prepare("SELECT p.*,g.turns AS send_turns,g.debts AS send_debts FROM parts p JOIN groups g ON p.send=g.send ORDER BY p.send,p.part").iterate()){
+        const open=options.squads.open.get(held.send),n=open?open.get(held.part)??0:null;
+        const detectiveTurns=Number(held.turns),openDebts=Number(held.debts),difficulty=1+(Number(held.send_turns)?detectiveTurns/Number(held.send_turns):0)+(Number(held.send_debts)?openDebts/Number(held.send_debts):0);
+        const weight=n===null?difficulty:n*difficulty;
+        db.prepare("UPDATE parts SET weight=? WHERE send=? AND part=?").run(weight,held.send,held.part);
+        weightRows.add({send:held.send,part:held.part,open:n,detectiveTurns,openDebts,weight},Number(held.first_index));
+      }
+    }
+    sortCoordinatorWork(db,count);
+    // JavaScript's locale comparison and stable first occurrence also order mission-part ties.
+    const partRows="SELECT p.part,MIN(w.item_order) AS first_at FROM parts p JOIN work w ON w.send=p.send AND w.part=p.part WHERE p.send=? AND w.selected=1 GROUP BY p.part";
+    for(const send of db.prepare("SELECT send FROM groups").iterate())for(const lane of db.prepare(partRows).iterate(send.send)){
+      let rank=0;
+      for(const other of db.prepare(partRows).iterate(send.send)){
+        const comparison=other.part.localeCompare(lane.part);
+        if(comparison<0||comparison===0&&Number(other.first_at)<Number(lane.first_at))rank++;
+      }
+      db.prepare("UPDATE parts SET part_order=? WHERE send=? AND part=?").run(rank,send.send,lane.part);
+    }
+    let groupRank=0,lastGroup:string|undefined;
+    for(const row of db.prepare("SELECT send FROM work WHERE selected=1 ORDER BY item_order").iterate())if(row.send!==lastGroup){db.prepare("UPDATE groups SET rank=? WHERE send=?").run(groupRank++,row.send);lastGroup=row.send;}
+    const sequence=db.prepare("INSERT INTO sequences VALUES(?,?,?)"),takePart=db.prepare("SELECT id FROM work WHERE selected=1 AND send=? AND part=? ORDER BY item_order LIMIT 1");
+    for(const send of db.prepare("SELECT send FROM groups ORDER BY rank").iterate()){
+      let seq=0;
+      const take=(mission:string)=>{const own=takePart.get(send.send,mission)!;sequence.run(send.send,seq++,own.id);db.prepare("UPDATE work SET selected=2 WHERE id=?").run(own.id);db.prepare("UPDATE parts SET remaining=remaining-1 WHERE send=? AND part=?").run(send.send,mission);};
+      for(;;){
+        let total=0,best:{part:string;current:number}|undefined;
+        for(const lane of db.prepare("SELECT part,weight,current FROM parts WHERE send=? AND remaining>0 AND weight>0 ORDER BY part_order").iterate(send.send)){
+          const current=Number(lane.current)+Number(lane.weight);total+=Number(lane.weight);
+          db.prepare("UPDATE parts SET current=? WHERE send=? AND part=?").run(current,send.send,lane.part);
+          if(!best||current>best.current)best={part:lane.part,current};
+        }
+        if(!best)break;
+        db.prepare("UPDATE parts SET current=? WHERE send=? AND part=?").run(best.current-total,send.send,best.part);take(best.part);
+      }
+      for(;;){let moved=false;for(const lane of db.prepare("SELECT part FROM parts WHERE send=? AND remaining>0 ORDER BY part_order").iterate(send.send)){take(lane.part);moved=true;}if(!moved)break;}
+    }
+    let rank=0;for(const row of db.prepare("SELECT s.id FROM sequences s JOIN groups g ON g.send=s.send ORDER BY s.seq,g.rank").iterate())db.prepare("INSERT INTO queue VALUES(?,?)").run(rank++,row.id);
+    const maximum=options.maximum??count,concurrency=Math.min(options.concurrency??CONTROL_PLANE_QUERY_CONCURRENCY,Math.max(1,count));
+    const maxScoutDispatches=Math.min(options.maxScoutDispatches??maximum,maximum);
+    if(!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0)throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
+    let cursor=0,admitted=0,scoutsAdmitted=0,scoutsLimitedAdmitted=0;
+    const queue=db.prepare("SELECT id FROM queue WHERE rank=?");
+    const lanes=await Promise.allSettled(Array.from({length:concurrency},async()=>{
+      while(cursor<count&&admitted<maximum){
+        const position=cursor++,id=queue.get(position)!.id;
+        try{
+          let d:AutonomousDecision;
+          try{d=await nextAutonomousOperation(runtime,id);}
+          catch(error){
+            if(error instanceof Error&&/^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)){d={workItemId:id,action:"BLOCKED",task:null,reason:`${error.message}; source reference remains unresolved`};deferred.add({workItemId:id,reason:"WORKER_ARTIFACT_MISSING_OR_PARTIAL",detail:d.reason});}
+            else if(isControlPlaneRequestTimeout(error)&&error.kind==="DEADLINE"){deferred.add({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"the bounded cycle ended during repository selection; this work remains owed"});break;}
+            else throw error;
+          }
+          decisions.add(selectedDecision(d),position);
+          if(!d.task||!["WORKER","SCOUT"].includes(d.action))continue;
+          if(admitted>=maximum){deferred.add({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`});continue;}
+          const subject=(JSON.parse(work.get(id)!.body) as WorkItem).subject,lifetimeScout=runtime.lifetimeHuntSubject?.(subject)===true;
+          if(d.action==="SCOUT"&&!lifetimeScout&&scoutsLimitedAdmitted>=maxScoutDispatches){deferred.add({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`});continue;}
+          if(options.planOnly)continue;
+          const aggregate=options.admitDispatch?.(d.task.id)??{admit:true as const};
+          if(!aggregate.admit){deferred.add({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`});continue;}
+          admitted++;
+          if(d.action==="WORKER"){dispatches.add(await dispatchWorkerTask(runtime,d.task));continue;}
+          scoutsAdmitted++;if(!lifetimeScout)scoutsLimitedAdmitted++;
+          dispatches.add(await dispatchAutonomousTask(runtime,d.task));
+        }catch(error){if(!(error instanceof RepositoryLockHeld))throw error;deferred.add({workItemId:id,reason:"REPOSITORY_LOCK_HELD",detail:error.message});}
+      }
+    }));
+    const failed=lanes.find((lane):lane is PromiseRejectedResult=>lane.status==="rejected");if(failed)throw failed.reason;
+    for(const row of db.prepare("SELECT id FROM queue WHERE rank>=? ORDER BY rank").iterate(cursor))deferred.add(admitted>=maximum
+      ?{workItemId:row.id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`}
+      :{workItemId:row.id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained before this registered work item; work remains owed"});
+    const common={recovery,scoutsAdmitted,scoutsLimitedAdmitted,considered};
+    return options.planner?{...common,decisions:decisions.rows,dispatches:dispatches.rows,deferred:deferred.rows,squadWeights:weightRows.rows}
+      :{...common,decisions:[...decisions.rows],dispatches:[...dispatches.rows],deferred:[...deferred.rows],squadWeights:[...weightRows.rows]};
+  });}finally{await owned?.close();}
 }

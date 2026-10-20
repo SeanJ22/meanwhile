@@ -1,7 +1,8 @@
+import { orderedAutonomousWorkIds } from "./helpers/ordered-autonomous-work.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_NOW, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { fairAutonomousWorkIds, nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -20,7 +21,7 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { createPlannerSpool, plannerMap, plannerSet } from "../lib/control-plane/scheduler/planner-spool.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
 
 test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
@@ -95,13 +96,13 @@ test("50 hunts share admission before a larger priority hunt takes its second it
   const extra = Array.from({ length: 80 }, (_, i) => ({ ...items[0], id: `hunt-0:extra-${i}` }));
   const priorities = items.map((_, i) => ({ receiptId: `hunt-${i}`, priority: i }));
   const byId = new Map([...extra, ...items].map(item => [item.id, item]));
-  const ordered = fairAutonomousWorkIds([...extra, ...items], new Map(), priorities);
+  const ordered = await orderedAutonomousWorkIds([...extra, ...items], new Map(), priorities);
   assert.equal(new Set(ordered.slice(0, 50).map(id => byId.get(id)!.autonomousPlan.ownerInstructions[0])).size, 50);
   const served = new Map([[ordered[0], FIXTURE_NOW]]);
-  const resumed = fairAutonomousWorkIds([...extra, ...items], served, priorities);
+  const resumed = await orderedAutonomousWorkIds([...extra, ...items], served, priorities);
   assert.equal(byId.get(resumed[0])!.autonomousPlan.ownerInstructions[0], "hunt-0", "owner place rank precedes earlier service");
   const equalRanks = priorities.map(row => ({ ...row, priority: 0 }));
-  assert.equal(byId.get(fairAutonomousWorkIds([...extra, ...items], served, equalRanks)[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
+  assert.equal(byId.get((await orderedAutonomousWorkIds([...extra, ...items], served, equalRanks))[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
   assert.equal(new Set(resumed).size, items.length + extra.length);
 });
 
@@ -354,29 +355,32 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   const held = [task(legacy.id, "legacy:first"), task(legacy.id, "legacy:second"), task("work:missing", "dangling")];
   const plannedTask = task(current.id, "planned:first");
   const placeOrder = ["hunt:legacy", "hunt:planned"];
-  const snapshotStart = source.indexOf("const workItemsById =", source.indexOf("async function runAutonomousWave("));
-  const snapshotEnd = source.indexOf("const plainTaskIds =", snapshotStart);
+  const snapshotStart = source.indexOf("const waveKey =", source.indexOf("async function runAutonomousWave("));
+  const snapshotEnd = source.indexOf("let queueFailures =", snapshotStart);
   const queueStart = source.indexOf("const readTaskQueue =", snapshotEnd);
   const queueEnd = source.indexOf("let taskQueue:", queueStart);
   assert.ok(snapshotStart >= 0 && snapshotEnd > snapshotStart && queueStart > snapshotEnd && queueEnd > queueStart);
   const ordering = transpileModule(`return (async () => {
+    let plannerOrderSequence = 0;
     ${source.slice(snapshotStart, snapshotEnd)}
     ${source.slice(queueStart, queueEnd)}
     return { taskIds, metadata, remainingSnapshotItems: workItemsById.size, readTaskQueue };
   })();`, { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let orderingReads = 0;
   const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
+  const planner = await createPlannerSpool();
+  try {
   const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
-    "placeRankFor", "huntRoundComparator", "repos", "squadReading", ordering)(held, {},
+    "placeRankFor", "planner", "plannerMap", "plannerSet", "CONTINUOUS_HUNTERS", "repos", "squadReading", ordering)(held, {},
     async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
       options.onSelectionSnapshot([legacy, current]);
-      return { decisions: [{ action: "WORKER", task: plannedTask }] };
+      return { decisions: [{ action: "WORKER", task: plannedTask }], squadWeights: [] };
     }, placeOrder, () => 1,
     (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
-    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+    planner, plannerMap, plannerSet, false, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
   assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
-  assert.equal(selected.metadata.get(held[0]!.id), legacy);
-  assert.equal(selected.metadata.get(plannedTask.id), current);
+  assert.deepEqual(selected.metadata.get(held[0]!.id), JSON.parse(JSON.stringify(legacy)));
+  assert.deepEqual(selected.metadata.get(plannedTask.id), current);
   assert.equal(selected.metadata.get(held[2]!.id), undefined, "a dangling task has no fabricated metadata and remains for the child's fresh read");
   placeOrder.reverse(); // The first child asks after the owner priority refresh.
   const queue = selected.readTaskQueue();
@@ -388,6 +392,7 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   assert.ok(ordered.includes(held[2]!.id), "ordering does not drop unresolved tasks or claim that they are absent");
   assert.ok(queue.compareRound(held[1]!.id, plannedTask.id) > 0, "removing a completed first task does not reset the hunt's second round");
   assert.equal(orderingReads, 0);
+  } finally { await planner.close(); }
 });
 
 test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {

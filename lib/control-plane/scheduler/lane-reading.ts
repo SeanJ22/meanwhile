@@ -113,10 +113,10 @@ export function lanesInFlight(input: {
 
 export interface CoordinatorPass {
   readonly considered: number;
-  readonly decisions: readonly { readonly workItemId: string; readonly action: string; readonly task: unknown; readonly reason: string }[];
-  readonly dispatches?: readonly unknown[];
+  readonly decisions: Iterable<{ readonly workItemId: string; readonly action: string; readonly task: unknown; readonly reason: string }>;
+  readonly dispatches?: { readonly length: number };
   readonly dispatched?: number;
-  readonly deferred: readonly { readonly workItemId: string; readonly reason: string }[];
+  readonly deferred: Iterable<{ readonly workItemId: string; readonly reason: string }>;
 }
 
 export function coordinatorDecisionCode(decision: { readonly action: string; readonly task: unknown; readonly reason: string }): string {

@@ -1,3 +1,4 @@
+import { orderedAutonomousWorkIds } from "./helpers/ordered-autonomous-work.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -8,7 +9,7 @@ import { planVotingSourceBlanks, persistVotingSourceBlanks, votingSourcePlaces }
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import { votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { fairAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
+
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
@@ -124,7 +125,7 @@ test("open blanks persist in the existing hunter queue idempotently, most populo
   assert.equal((await repos.occurrences.list()).length, 2);
   const items = (await repos.workItems.list()).map(row => row.value);
   assert.ok(items.every(item => item.state === "OPEN" && item.autonomousPlan?.publication?.contractId === "voting-sites:FL"));
-  assert.equal(fairAutonomousWorkIds(items.reverse(), new Map())[0], first.workItemIds[0]);
+  assert.equal((await orderedAutonomousWorkIds(items.reverse(), new Map()))[0], first.workItemIds[0]);
   const plan = items.find(item => item.subject === okaloosa.ocdId)!.autonomousPlan!;
   assert.equal(plan.contract.schemaVersion, 2);
   if (plan.contract.schemaVersion === 2) {

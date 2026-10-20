@@ -50,7 +50,6 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import {
   closeCycleOccurrences,
   digestLines,
-  huntRoundComparator,
   runCycle,
   runPool,
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
@@ -2217,30 +2216,42 @@ async function runAutonomousWave(label: string) {
   const fleet = await makeAutonomousFleet();
   /* The legacy held-evidence plan runs only when schema-1 held work is owed: a registered event
      capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
-  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
-  const workItemsById = new Map<string, WorkItem>();
-  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan),
+  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true, planner) : [];
+  const waveKey = `autonomous-wave:${plannerOrderSequence++}`;
+  const workItemsById = plannerMap<WorkItem>(planner, `${waveKey}:work-items`);
+  const planned = await runAutonomousCoordinator(fleet, { planner, planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan),
     onSelectionSnapshot: items => { for (const item of items) workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
-  /* Under the hunter lane the lane decides paid admission, so every planned Scout is queued. */
-  const plannedTasks = planned.decisions.filter(row => row.task && (row.action === "WORKER" ||
-    (row.action === "SCOUT" && (CONTINUOUS_HUNTERS || paidWorkerCapacity() > 0)))).map(row => row.task!);
-  const taskIds = [...new Set([...held.map(task => task.id),
-    ...plannedTasks.map(task => task.id)])];
-  const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
-  const metadata = new Map(taskIds.map(id => [id, workItemsById.get(taskWorkIds.get(id)!)]));
+  /* Under the hunter lane the lane decides paid admission, so every planned Scout is queued.
+     Preserve first insertion order without retaining the national task identities in RAM. */
+  const taskRows = planner.table<string>(`${waveKey}:task-identities`, id => id);
+  const taskWorkIds = plannerMap<string>(planner, `${waveKey}:task-work`);
+  const plainTaskIds = plannerSet(planner, `${waveKey}:plain-tasks`);
+  for (const task of held) {
+    taskRows.add(task.id); taskWorkIds.set(task.id, task.workItemId);
+    if (!["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")) plainTaskIds.add(task.id);
+  }
+  const plannedOrder = plannerMap<number>(planner, `${waveKey}:planned-order`);
+  let plannedAt = 0;
+  for (const row of planned.decisions) {
+    if (row.task) plannedOrder.set(row.task.id, plannedAt++);
+    if (!row.task || !(row.action === "WORKER" || row.action === "SCOUT" && (CONTINUOUS_HUNTERS || paidWorkerCapacity() > 0))) continue;
+    taskRows.add(row.task.id); taskWorkIds.set(row.task.id, row.task.workItemId);
+    if (row.action === "WORKER" && !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")) plainTaskIds.add(row.task.id);
+  }
+  const taskIds = taskRows.rows;
+  const metadata = plannerMap<WorkItem>(planner, `${waveKey}:metadata`);
+  for (const id of taskIds) {
+    const item = workItemsById.get(taskWorkIds.get(id)!);
+    if (item) metadata.set(id, item);
+  }
   workItemsById.clear();
-  const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
-    ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
-      !["SCOUT", "DETECTIVE"].includes(row.task.workerTask?.role ?? "")).map(row => row.task!.id)]);
-  if (planned.squadWeights.length > 0) {
-    console.log(`  squads: ${planned.squadWeights.filter(row => row.send !== "standing").map(row =>
-      `${row.send} ${row.part} open ${row.open ?? "unread"} detective ${row.detectiveTurns} debts ${row.openDebts} weight ${row.weight.toFixed(2)}`).join("; ")}`);
+  for (const row of planned.squadWeights) if (row.send !== "standing") {
+    console.log(`  squads: ${row.send} ${row.part} open ${row.open ?? "unread"} detective ${row.detectiveTurns} debts ${row.openDebts} weight ${row.weight.toFixed(2)}`);
   }
   /* The coordinator's (Send, part) order breaks ties among a Send's pending tasks. */
-  const plannedOrder = new Map(planned.decisions.filter(row => row.task).map((row, index) => [row.task!.id, index] as const));
-  const failedTaskIds = new Set<string>();
+  const failedTaskIds = plannerSet(planner, `${waveKey}:failed-tasks`);
   let queueFailures = 0;
   const failedQueueRead = (id: string, error: unknown) => {
     if (failedTaskIds.has(id)) return;
@@ -2259,18 +2270,31 @@ async function runAutonomousWave(label: string) {
       const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
       return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
     };
-    const compareRound = huntRoundComparator(taskIds, id => {
+    const rounds = plannerMap<number>(planner, `${waveKey}:hunt-rounds`);
+    const counts = plannerMap<number>(planner, `${waveKey}:hunt-round-counts`);
+    for (const id of taskIds) {
       const at = rank(id);
-      return placeOrder[at] ?? metadata.get(id)?.autonomousPlan?.ownerInstructions?.[0] ?? null;
-    });
+      const hunt = placeOrder[at] ?? metadata.get(id)?.autonomousPlan?.ownerInstructions?.[0] ?? "standing";
+      const round = counts.get(hunt) ?? 0;
+      rounds.set(id, round); counts.set(hunt, round + 1);
+    }
+    const compareRound = (a: string, b: string) => (rounds.get(a) ?? Number.MAX_SAFE_INTEGER) - (rounds.get(b) ?? Number.MAX_SAFE_INTEGER);
     return { rank, compareRound };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   if (CONTINUOUS_HUNTERS) {
     /* The round's order, written for the standing hunter lane; no lease worker starts here. */
     const queue = taskQueue ??= readTaskQueue();
-    const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
-      (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
+    const orderRows = planner.table<{ id: string; round: number; rank: number; planned: number }>(`${waveKey}:hunter-order`, row => row.id);
+    // Compare against a fixed first item to recover the recorded round without a national sort array.
+    const first = taskIds.find(() => true);
+    for (const id of taskIds) if (!failedTaskIds.has(id)) {
+      const rank = queue.rank(id);
+      const round = first === undefined ? 0 : queue.compareRound(id, first);
+      orderRows.add({ id, round, rank: Number.isFinite(rank) ? rank : Number.MAX_SAFE_INTEGER,
+        planned: plannedOrder.get(id) ?? Number.MAX_SAFE_INTEGER });
+    }
+    const ordered = orderRows.rowsBy([["round"], ["rank"], ["planned"]]).map(row => row.id);
     if (!dry && !canary) {
       try {
         writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT)), { writtenAt: nowIso(), taskIds: ordered, plainTaskIds: ordered.filter(id => plainTaskIds.has(id)) });

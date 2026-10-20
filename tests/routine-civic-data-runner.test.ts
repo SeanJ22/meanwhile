@@ -259,6 +259,7 @@ import {
 } from "../lib/ops/neon-request-deadline.ts";
 import {
   MEETING_PARTITION_CONTRACTS,
+  meetingAcquisitionFailureDomain,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
 import {
@@ -427,26 +428,12 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     ROUTINE_SOURCE_TASKS.every((task) => task.acquisitionFailureDomain.length > 0),
     "every routine child declares its real acquisition failure domain",
   );
-  const newburyIcal = ROUTINE_SOURCE_TASKS.find((task) =>
-    task.id.includes("meetings:ical:") && task.id.includes("newbury_town"),
-  );
-  const newburySchedule = ROUTINE_SOURCE_TASKS.find((task) =>
-    task.id.includes("meetings:schedulepage:") && task.id.includes("newbury_town"),
-  );
-  const wilmotIcal = ROUTINE_SOURCE_TASKS.find((task) =>
-    task.id.includes("meetings:ical:") && task.id.includes("wilmot_town"),
-  );
-  assert.ok(newburyIcal && newburySchedule && wilmotIcal);
-  assert.equal(
-    newburyIcal.acquisitionFailureDomain,
-    newburySchedule.acquisitionFailureDomain,
-    "different adapters sharing one publisher host share its bounded lane",
-  );
-  assert.notEqual(
-    newburyIcal.acquisitionFailureDomain,
-    wilmotIcal.acquisitionFailureDomain,
-    "the generic iCal adapter does not serialize unrelated publisher hosts",
-  );
+  const wiring = { bodyId: "fixture-body", ocdId: null, agendaSourceType: "ICAL" as const, jurisdiction: "Fixture",
+    publishingOrg: "Fixture", timeZone: "America/New_York", verifiedAt: T0,
+    config: { feedUrl: "https://newbury-nh.gov/calendar.ics", schedulePage: "https://newbury-nh.gov/calendar" } };
+  assert.equal(meetingAcquisitionFailureDomain("ical", wiring), meetingAcquisitionFailureDomain("schedulepage", wiring));
+  assert.notEqual(meetingAcquisitionFailureDomain("ical", wiring),
+    meetingAcquisitionFailureDomain("ical", { ...wiring, config: { feedUrl: "https://wilmotnh.org/calendar.ics" } }));
   const commands = ROUTINE_SOURCE_TASKS.flatMap((task) => task.command).join(" ");
   assert.doesNotMatch(commands, /(?:^|\s)(?:git|gh|next|netlify|playwright)(?:\s|$)|\.github|browser|deploy|(?:pnpm|npm|yarn|bun)\s+(?:run\s+)?(?:test|build)|tests[\\/]/i);
   assert.equal(new Set(ROUTINE_SOURCE_TASKS.map((task) => `${task.recordClass}:${task.scope}`)).size, ROUTINE_SOURCE_TASKS.length);
@@ -471,6 +458,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "legiscan-bills",
     "plural-openstates",
     "meetings-history",
+    "meetings-public-bodies",
     "door-outcomes",
   ];
   const expectedAuthorities = new Set([
@@ -1220,12 +1208,14 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
   assert.deepEqual(await store.events(candidateId), before.events);
 });
 
-test("the pilot outer bound contains the frontier (one a pass, two on a meeting lane), not a failed provider tail", () => {
-  const passBound = routineFrontierPassBound();
+test("the pilot outer bound contains the source and meeting frontier", () => {
+  const tasks = [...ROUTINE_SOURCE_TASKS, ...Array.from({length:SITTING_WINDOW_LANE_SLOTS_PER_PASS}, () => ({ acquisitionFailureDomain: "fixture-meeting-host",
+    contract: { ...ROUTINE_SOURCE_TASKS[0]!.contract, schedule: { kind: "SITTING_WINDOW" as const, windowMs: 1, hotEveryMs: 1, baseEveryMs: 1 } } }))];
+  const passBound = routineFrontierPassBound(tasks);
   const admittedCommands = passBound.commandCount;
   const largestDomain = passBound.largestFailureDomainSize;
   assert.equal(largestDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
-  assert.ok(admittedCommands > routineFailureDomainCount(), "meeting lanes take a second read a pass");
+  assert.ok(admittedCommands > routineFailureDomainCount(tasks), "meeting lanes take a second read a pass");
   const readerDomains = routineReaderRepairDomains();
   const bounds = {
     neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
@@ -1251,7 +1241,6 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
     ROUTINE_CHILD_CONCURRENCY,
     largestDomain,
   );
-  // A meeting lane's two reads run one after the other; the pass bound covers that chain.
   assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
@@ -2221,4 +2210,19 @@ test("state publishers retain the measured state reservation across small runs",
   first();
   (await queued)();
   second();
+});
+
+test("campaign state jobs run one at a time without changing other source lanes", async () => {
+  const money = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE");
+  assert.equal(money.length, 56);
+  assert.deepEqual([...new Set(money.map(task => task.acquisitionFailureDomain))], ["routine-source:campaign-finance"]);
+  let active = 0, most = 0;
+  await runBoundedChildPass(money.map(task => ({ id: task.id, failureDomain: task.acquisitionFailureDomain, executable: "ignored", args: [] })),
+    { cwd: process.cwd(), env: process.env, sameDomainGapMs: 0, concurrency: 8 }, async command => {
+      most = Math.max(most, ++active);
+      await new Promise(resolve => setTimeout(resolve, 1));
+      active--;
+      return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+    });
+  assert.equal(most, 1);
 });

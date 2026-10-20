@@ -255,22 +255,34 @@ test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", a
   const { fileCampaignMoneyFacts } = await import("../lib/funding/state-facts.ts");
   const { campaignSourceRecord } = await import("../lib/funding/state-source-records.ts");
   const { campaignFinanceSource } = await import("../lib/funding/state-sources.ts");
+  const { bindCampaignMoney } = await import("../lib/funding/state-people.ts");
   const facts = await factDb();
-  const state = "ocd-division/country:us/state:wa", place = `${state}/county:king`;
+  const state = "ocd-division/country:us/state:wa", place = `${state}/place:seattle`;
   const resource = campaignFinanceSource("WA").resources[0]!;
   const source = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"))[0];
   const base = campaignSourceRecord("WA", resource, source, { url: resource.url, rawHash: "a".repeat(64),
     vaultKey: "test", byteLength: 10, retrievedAt: "2026-10-17T00:00:00.000Z", publicationDate: null });
-  const rows = [{ ...base, id: "WA:ask-state" }, { ...base, id: "WA:ask-place", governmentOcdId: place }];
+  const person = { id: "published-ask-person", name: source.filer_name, seat: "seattle-judge", office: source.office,
+    division: place, incumbent: true, sourceUrl: "https://www.seattle.gov/courts" };
+  const bound = bindCampaignMoney(base, [person]);
+  assert.ok(bound, "the saved native filer matches the published person and exact seat");
+  const rows = [{ ...bound, id: "WA:ask-place" }, { ...base, id: "WA:unbound" }, { ...bound, id: "WA:historical", period: "2018" }];
   const placesRead: string[] = [];
   try {
-    await fileCampaignMoneyFacts(facts, "WA", rows, "2026-10-17T00:00:00.000Z");
+    const written = await fileCampaignMoneyFacts(facts, "WA", rows, "2026-10-17T00:00:00.000Z");
+    assert.equal(written.written, 1, "unbound and pre-2020 rows remain off the reader");
+    const withdrawn = `campaign-committee:WA:${"0".repeat(64)}`;
+    await facts.query("INSERT INTO entity (id,kind,name,state,parent_id) VALUES ($1,'committee','Small Donor Fixture','WA',$2)", [withdrawn, state]);
+    await facts.query("INSERT INTO entity_place (entity_id,place_id) VALUES ($1,$2),($1,$3)", [withdrawn, state, place]);
+    await facts.query(`INSERT INTO fact (entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
+      VALUES ($1,'campaign-money:WA:withdrawn',$2::jsonb,'','live','OFFICIAL',(SELECT id FROM source_copy WHERE blob_key='test'),'','2026-10-17','2026-10-17','legacy-fixture',0)`,
+    [withdrawn, JSON.stringify({ ...base, id: "WA:withdrawn", filerName: "Small Donor Fixture", period: "2026", amounts: [{ label: "Contribution", amount: 150 }] })]);
     const key = await createReaderFixture(true, {}, {
       "registry-runtime": stateRegistryArtifacts("edge-test:ask:campaign", ["WA"]),
     });
     activateCanonicalFixture(key);
     installFactReader(async (text, params) => {
-      if (text.includes("FROM entity_place p")) placesRead.push(String(params?.[0]));
+      if (/FROM entity_place (?:ep|p)\b/.test(text)) placesRead.push(String(params?.[0]));
       return facts.query(text, params);
     });
     clearPromotedReadModelCache();
@@ -281,20 +293,25 @@ test("AQ-01's merged Ask reads SRC-MN's state and exact-place campaign facts", a
     }));
     assert.equal(response.status, 200);
     const payload = await response.json();
-    assert.deepEqual(payload.records.filter((record: { id: string }) => record.id.startsWith("WA:ask-")).map((record: { id: string }) => record.id).sort(), rows.map(row => row.id).sort());
+    const campaignRecords = payload.records.filter((record: { kind: string }) => record.kind === "FINANCE_COMMITTEE");
+    assert.equal(campaignRecords.length, 1, "state and exact-place reads share one sourced committee/cycle total");
+    assert.equal(campaignRecords[0].subjectId, person.id);
+    assert.match(campaignRecords[0].text, /2026 cycle/);
+    assert.equal(campaignRecords[0].sourceUrl, base.filingUrl);
+    assert.doesNotMatch(JSON.stringify(payload), /Small Donor Fixture|WA:unbound|WA:historical|WA:withdrawn/);
     assert.ok(payload.trace.preloads.campaignFinance !== undefined, "the applicable campaign preloader survived the merge");
     assert.ok(placesRead.includes(state));
     assert.ok(placesRead.includes(place));
-    assert.ok(payload.records.filter((record: { id: string }) => record.id.startsWith("WA:ask-")).every((record: { sourceUrl: string }) => record.sourceUrl === base.filingUrl));
     const named = await POST(new Request("https://wtp.test/api/ask/grounded", {
       method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
-      body: JSON.stringify({ question: "What campaign finance records are held for King County?", surface: "MAP", ocdIds: [state] }),
+      body: JSON.stringify({ question: "What campaign finance records are held for Seattle?", surface: "MAP", ocdIds: [state] }),
     }));
     assert.equal(named.status, 200);
     const namedPayload = await named.json();
     assert.equal(namedPayload.mode, "GROUNDED_COMPOSED");
     assert.equal(namedPayload.trace.interpretation.why, "place-campaign-records");
-    assert.deepEqual(namedPayload.records.map((record: { id: string }) => record.id), ["WA:ask-place"]);
+    assert.deepEqual(namedPayload.records.map((record: { id: string }) => record.id), campaignRecords.map((record: { id: string }) => record.id));
+    assert.doesNotMatch(JSON.stringify(namedPayload), /Small Donor Fixture|WA:unbound|WA:historical|WA:withdrawn/);
     assert.match(namedPayload.answer, /Held campaign records include/);
     assert.equal(namedPayload.trace.preloads.officeholders, undefined);
   } finally {

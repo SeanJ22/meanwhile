@@ -1,4 +1,3 @@
-/** Reader eligibility and answer selection, separate from acquisition normalization. */
 import { isRenderable as allowedFilingState, type StateMoneyRecord } from "./state-money.ts";
 import { filedOrganizations, stateMoneyFundingIssue } from "./state-money-funding.ts";
 import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
@@ -6,9 +5,8 @@ import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 /** A normalized enum never substitutes for civic verification or a resolved identity. */
 export function isRenderable(record: StateMoneyRecord): boolean {
   if (record.dataClass !== "STATE_COMMITTEE" || !record.targetKeys?.length || !record.checkedAt ||
-      !record.provenance?.sourceUrl || !record.provenance.verifiedAt) return false;
-  if ((record.filingState === "FILED" || record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") && !record.match?.allThreeAgree &&
-      !(record.identityBasis === "NATIVE_FILER" && record.committeeId && record.targetKeys.every(key => key === `state-finance:${record.jurisdiction}:${record.committeeId}:${record.electionYear}`))) return false;
+      !record.provenance?.sourceUrl || !record.provenance.verifiedAt || record.electionYear < 2020) return false;
+  if ((record.filingState === "FILED" || record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") && !record.match?.allThreeAgree) return false;
   if (record.filingState === "OURS_GAP" && (!record.ourGap?.whatIsMissing || record.committeeId !== null ||
       record.totals.receipts !== null || record.totals.expenditures !== null || record.totals.cashOnHand !== null)) return false;
   return allowedFilingState(record);
@@ -41,11 +39,7 @@ export function publicStateMoneyRecord(record: StateMoneyRecord): StateMoneyReco
   };
 }
 
-/**
- * One candidate's answer. A sourced filing/activity record outranks a search
- * absence for the same candidate; all held filings remain. This is semantic
- * contradiction resolution, never a completeness threshold.
- */
+
 export function stateMoneyRecordsForDisplay(records: readonly StateMoneyRecord[]): StateMoneyRecord[] {
   const eligible = records.filter(isRenderable).map(publicStateMoneyRecord);
   const filed = eligible.filter(r => r.filingState === "FILED");

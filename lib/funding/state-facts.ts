@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { campaignRecordYear } from "./state-people.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { campaignFinanceStateScope } from "./state-sources.ts";
@@ -13,7 +14,7 @@ function campaignStateDivision(state: string): string {
   if (!place) throw new Error("Campaign money requires a supported state.");
   return `ocd-division/country:us/${place.prefix}:${place.slug}`;
 }
-const committeeId = (row: CampaignSourceRecord) => `campaign-committee:${row.state}:${digest(JSON.stringify([row.resource.split(":")[0], row.filerId]))}`;
+const committeeId = (row: CampaignSourceRecord) => `campaign-committee:${row.state}:${digest(JSON.stringify([row.provenance.publisher, row.filerId ?? [row.filerName, row.candidateName, row.office, campaignRecordYear(row)], row.person?.id, row.person?.seat]))}`;
 
 interface HeldFact { readonly entity_id: string; readonly field: string; readonly value: CampaignSourceRecord; readonly provenance_kind: string; readonly id: number }
 
@@ -28,17 +29,21 @@ export async function readCampaignPredecessors(query: Query, state: string, ids:
 export async function fileCampaignMoneyFacts(db: FactDb, state: string, records: readonly CampaignSourceRecord[], at: string,
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<{ written: number; confirmed: number }> {
   if (records.length > 500 || records.some(row => row.state !== state || row.governmentOcdId !== null && campaignFinanceStateScope(row.governmentOcdId) !== `US-${state}:campaign-finance`)) throw new Error("Campaign facts exceed their state or source batch.");
+  records = records.filter(row => row.person?.id && row.person.seat && row.person.sourceUrl && row.filerName && (campaignRecordYear(row) ?? 0) >= 2020);
   if (!records.length) return { written: 0, confirmed: 0 };
   const outcome = await db.transaction(async query => {
     const stateDivision = campaignStateDivision(state);
     const places = [...new Set([stateDivision, ...records.flatMap(row => row.governmentOcdId ?? [])])];
     await query(`INSERT INTO entity (id,kind,name,state,parent_id)
       SELECT id,'place',id,$2,CASE WHEN id<>$3 THEN $3 END FROM unnest($1::text[]) id ON CONFLICT DO NOTHING`, [places, state, stateDivision]);
+    const persons = [...new Map(records.map(row => [row.person!.id, row.person!])).values()];
+    await query(`INSERT INTO entity (id,kind,name,state) SELECT id,'person',name,$3 FROM unnest($1::text[],$2::text[]) p(id,name)
+      ON CONFLICT DO NOTHING`, [persons.map(person => person.id), persons.map(person => person.name), state]);
     const committees = [...new Map(records.map(row => [committeeId(row), row])).entries()];
     await query(`INSERT INTO entity (id,kind,name,state,parent_id)
       SELECT id,'committee',name,$4,parent FROM unnest($1::text[],$2::text[],$3::text[]) c(id,name,parent)
       ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name,parent_id=EXCLUDED.parent_id WHERE entity.state=EXCLUDED.state AND entity.kind='committee'`,
-    [committees.map(([id]) => id), committees.map(([, row]) => row.filerName ?? row.filerId ?? "Unjoined campaign filings"), committees.map(([, row]) => row.governmentOcdId ?? stateDivision), state]);
+    [committees.map(([id]) => id), committees.map(([, row]) => row.filerName ?? row.filerId ?? "Unjoined campaign filings"), committees.map(([, row]) => row.person!.id), state]);
     const links = [...new Map(records.flatMap(row => [...new Set([stateDivision, ...(row.governmentOcdId ? [row.governmentOcdId] : [])])]
       .map(place => [`${committeeId(row)}:${place}`, [committeeId(row), place]] as const))).values()];
     await query(`INSERT INTO entity_place (entity_id,place_id) SELECT * FROM unnest($1::text[],$2::text[]) ON CONFLICT DO NOTHING`, [links.map(link => link[0]), links.map(link => link[1])]);

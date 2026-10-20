@@ -26,6 +26,7 @@ import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport,
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
   stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+import { ensureWorkerToolsHost } from "./worker-tools-host.mts";
 
 readFromHeldCopies();
 
@@ -56,6 +57,9 @@ if (wantsPostgres) {
   repos = await createFileRepositories(store);
 }
 
+const workerToolsHost = await ensureWorkerToolsHost({ repos });
+let exitCode = 1;
+try {
 const armingPath = hunterLaneArmingPath(ROOT);
 const queuePath = hunterQueuePath(armingPath);
 const providerQueue = new ModelProviderQueue({
@@ -150,8 +154,13 @@ const lane = hunterLane({
 
 process.on("uncaughtException", error => {
   console.error(`hunter lane: crashed: ${error instanceof Error ? error.stack ?? error.message : String(error)}`);
-  void lane.releaseAll(nowIso()).finally(() => process.exit(1));
+  void lane.releaseAll(nowIso()).finally(async () => {
+    try { await workerToolsHost.close(); }
+    finally { process.exit(1); }
+  });
 });
 
 const run = await lane.run();
-process.exit(run.releaseFailures.length > 0 ? 1 : 0);
+exitCode = run.releaseFailures.length > 0 ? 1 : 0;
+} finally { await workerToolsHost.close(); }
+process.exit(exitCode);

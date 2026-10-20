@@ -16,6 +16,7 @@ import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
 import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
+import { processStartTicks } from "./rh01-remote-process.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -233,6 +234,9 @@ const factsUrl = await new Promise<string>((accept, reject) => {
   });
 });
 environment.WTP_RH01_FACTS_URL = factsUrl;
+// Native child probes share the profiler's admission file. They must exclude
+// the same verified local database stand-in as this profiler's own probe.
+environment.WTP_RH01_REMOTE_DATABASE_PROCESS = JSON.stringify({ pid: facts.pid, startTicks: processStartTicks(facts.pid!) });
 // Only the read adapter has the production CP credential. Failed interception can reach only loopback.
 const productionControlHost = new URL(environment.WTP_CONTROL_PLANE_DATABASE_URL!).hostname;
 for (const name of Object.keys(environment)) if (environment[name]?.includes(productionControlHost)) delete environment[name];

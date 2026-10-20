@@ -11,6 +11,40 @@ import { measuredCompletion } from "../scripts/rh01-completion.mts";
 import { projectedRead, updateRead, shadowRead } from "../scripts/rh01-sql.mts";
 import { commandIdentity, workloadOffers } from "../scripts/rh01-workload.mts";
 import { physicalRunReads, reserveProductionReadRun } from "../scripts/rh01-read-accounting.mts";
+import { processStartTicks } from "../scripts/rh01-remote-process.mts";
+
+test("native admission excludes only the identity-verified remote database stand-in and retains runner browsers", async () => {
+  const root = process.cwd(), marker = join(root, "scripts/rh01-facts-server.mts");
+  const database = spawn(process.execPath, ["-e", "setInterval(()=>{},1000)", marker], { stdio: "ignore" });
+  const browser = spawn(process.execPath, ["-e", "setInterval(()=>{},1000)", "rh01-native-browser"], { stdio: "ignore" });
+  await Promise.all([once(database, "spawn"), once(browser, "spawn")]);
+  const descriptor = { pid: database.pid!, startTicks: processStartTicks(database.pid!) };
+  const source = `import assert from 'node:assert/strict';
+    import {runnerProcessRows} from ${JSON.stringify(new URL("../scripts/rh01-remote-process.mts", import.meta.url).href)};
+    const parent={pid:process.pid,parentPid:process.ppid,rss:123};
+    const remote={pid:${database.pid},parentPid:process.pid,rss:999999};
+    const browser={pid:${browser.pid},parentPid:process.pid,rss:456};
+    const remoteChild={pid:123456789,parentPid:remote.pid,rss:999999};
+    const browserChild={pid:123456788,parentPid:browser.pid,rss:789};
+    const rows=[parent,remote,browser,remoteChild,browserChild];
+    const result=runnerProcessRows(rows);assert.deepEqual(result,[parent,browser,browserChild]);assert.equal(result[0],parent);
+    const saved=process.env.WTP_RH01_REMOTE_DATABASE_PROCESS;delete process.env.WTP_RH01_REMOTE_DATABASE_PROCESS;
+    assert.equal(runnerProcessRows(rows),rows);process.env.WTP_RH01_REMOTE_DATABASE_PROCESS=saved;
+    const {workerMemoryHost}=await import(${JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href)});
+    let called=false;await workerMemoryHost().transact((_state,actual)=>{called=true;
+      assert.ok(!actual.some(row=>row.pid===remote.pid));assert.ok(actual.some(row=>row.pid===browser.pid));assert.ok(actual.some(row=>row.pid===process.pid));});assert.ok(called);
+    process.env.WTP_RH01_REMOTE_DATABASE_PROCESS=JSON.stringify({...JSON.parse(saved),startTicks:'0'});
+    assert.throws(()=>runnerProcessRows(rows),/IDENTITY_CHANGED/);console.log('remote-database-admission-verified');`;
+  try {
+    const child = spawn(process.execPath, ["--experimental-strip-types", "--import", join(root, "scripts/rh01-loader.mjs"), "--input-type=module", "-e", source],
+      { cwd: root, env: { ...process.env, WTP_RH01_CODE_ROOT: root, WTP_RH01_HARNESS_ROOT: root,
+        WTP_RH01_REMOTE_DATABASE_PROCESS: JSON.stringify(descriptor) }, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "", stderr = ""; child.stdout.on("data", chunk => { stdout += chunk; }); child.stderr.on("data", chunk => { stderr += chunk; });
+    const [status] = await once(child, "close"); assert.equal(status, 0, stderr + stdout); assert.match(stdout, /remote-database-admission-verified/);
+  } finally {
+    const closed = [once(database, "close"), once(browser, "close")]; database.kill(); browser.kill(); await Promise.all(closed);
+  }
+});
 
 test("all-offer ownership retains exact modes and aliases only identical authority and commands", () => {
   const job = (id: string, command: readonly string[], source = "standing runner") => ({ id, command, source, script: command[0] });

@@ -56,6 +56,12 @@ export async function load(url, context, nextLoad) {
         for(const result of results)rhObserveEnd(files.get(result.id),result);
         return results;
       }`);
+  } else if (url.endsWith("/lib/control-plane/workers/worker-slots.ts")) {
+    const declaration = "async function hostProcesses(";
+    if (!source.includes(declaration)) throw Error("RH01 native admission process probe did not match");
+    source = source.replace(declaration, "async function rhNativeHostProcesses(");
+    add(`import {runnerProcessRows as rhRunnerProcessRows} from ${JSON.stringify(pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-remote-process.mts")).href)};
+      async function hostProcesses() { return rhRunnerProcessRows(await rhNativeHostProcesses()); }`);
   } else if (url.endsWith("/lib/civic-data/production-write.ts")) {
     source = source.replace("export function prepareProductionCivicDataWrite(", "function rhOriginalPrepareProductionCivicDataWrite(");
     add(`import { assertReadonlyTargets as rhReadonlyTargets } from ${JSON.stringify(runtime)};

@@ -22,6 +22,108 @@ import ts from "typescript";
 /* A measured child reserves its high-water peak, 5% over, rounded up to a whole MiB. */
 const reservedFor = (peaks: readonly number[]) => Math.ceil(Math.max(...peaks) * 1.05 / 1048576) * 1048576;
 
+test("Linux cgroup availability credits only proved clean inactive disk cache", async context => {
+  const nativeRequire = createRequire(import.meta.url), mib = 1048576;
+  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  let files: Record<string, string> = {};
+  const mockProcess = Object.create(process) as typeof process;
+  mockProcess.env = { ...process.env }; delete mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
+  mockProcess.memoryUsage = Object.assign(() => process.memoryUsage(), { rss: () => 512 * mib });
+  const loaded: Record<string, unknown> = {};
+  runInNewContext(source, { exports: loaded, process: mockProcess, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
+    require: (name: string) => {
+      if (name === "node:os") return { ...nativeRequire(name), platform: () => "linux", freemem: () => 32 * 1024 * mib };
+      if (name === "node:fs") return { ...nativeRequire(name), readFileSync: (path: string) => {
+        if (!(path in files)) throw Object.assign(new Error(`Missing fixture ${path}`), { code: "ENOENT" });
+        return files[path];
+      } };
+      return nativeRequire(name);
+    } });
+  const available = loaded.availableWorkerMemoryBytes as typeof availableWorkerMemoryBytes;
+  const stat = (values: Record<string, number>): string => Object.entries(values).map(([key, value]) => `${key} ${value * mib}`).join("\n");
+  const v2 = { file: 4096, shmem: 3072, inactive_file: 3072, file_dirty: 128, file_writeback: 64, unevictable: 32 };
+  const setup = (version: 1 | 2, stats: string): string => {
+    const directory = version === 2 ? "/sys/fs/cgroup" : "/sys/fs/cgroup/memory";
+    files = { "/proc/meminfo": `MemAvailable: ${16 * 1024 * 1024} kB\n`,
+      [`${directory}/${version === 2 ? "memory.max" : "memory.limit_in_bytes"}`]: String(8192 * mib),
+      [`${directory}/${version === 2 ? "memory.current" : "memory.usage_in_bytes"}`]: String(7168 * mib),
+      [`${directory}/memory.stat`]: stats };
+    return directory;
+  };
+  await context.test("v2 caps inactive pages by disk files minus tmpfs and excludes dirty, writeback and unevictable pages", () => {
+    setup(2, stat(v2));
+    assert.equal(available(), 1824 * mib, "1024 free plus only 800 MiB of proved reclaimable pages");
+    assert.equal(WORKER_ENTRY_PEAK_MIB.national! * mib + 768 * mib > available(), true,
+      "reclaim accounting still refuses a job whose full peak and unchanged margin do not fit");
+  });
+  await context.test("tmpfs, active cache, anonymous memory and reclaimable slab never become admission credit", () => {
+    setup(2, stat({ ...v2, file: 4096, shmem: 4096, anon: 2048, slab_reclaimable: 2048 }));
+    assert.equal(available(), 1024 * mib);
+    setup(2, stat({ ...v2, shmem: 0, inactive_file: 0, active_file: 4096, anon: 2048, slab_reclaimable: 2048 }));
+    assert.equal(available(), 1024 * mib);
+    setup(2, stat({ ...v2, shmem: 0, inactive_file: 128, file_dirty: 256 }));
+    assert.equal(available(), 1024 * mib, "dirty counters larger than inactive pages cannot create negative usage");
+  });
+  await context.test("missing, malformed, negative and duplicate relevant statistics keep all cgroup usage charged", () => {
+    const directory = setup(2, stat(v2));
+    delete files[`${directory}/memory.stat`];
+    assert.equal(available(), 1024 * mib);
+    for (const key of Object.keys(v2)) {
+      const missing = { ...v2 } as Record<string, number>; delete missing[key];
+      setup(2, stat(missing)); assert.equal(available(), 1024 * mib, `missing ${key}`);
+      setup(2, stat(v2).replace(new RegExp(`^${key} \\d+$`, "m"), `${key} NaN`));
+      assert.equal(available(), 1024 * mib, `malformed ${key}`);
+      setup(2, stat({ ...v2, [key]: -1 })); assert.equal(available(), 1024 * mib, `negative ${key}`);
+    }
+    setup(2, stat(v2) + "\ninactive_file 0"); assert.equal(available(), 1024 * mib);
+  });
+  await context.test("v1 hierarchy uses the complete descendant counters rather than mixing local values", () => {
+    const local = { cache: 2000, shmem: 500, inactive_file: 1000, dirty: 100, writeback: 50, unevictable: 25 };
+    const total = { total_cache: 6000, total_shmem: 2000, total_inactive_file: 3000, total_dirty: 200, total_writeback: 100, total_unevictable: 100 };
+    const directory = setup(1, stat({ ...local, ...total }));
+    files[`${directory}/memory.use_hierarchy`] = "1\n";
+    assert.equal(available(), 3624 * mib);
+    files[`${directory}/memory.use_hierarchy`] = "0\n";
+    assert.equal(available(), 1849 * mib);
+    delete files[`${directory}/memory.use_hierarchy`];
+    assert.equal(available(), 1024 * mib, "an unknown v1 hierarchy cannot prove which counters match usage");
+    files[`${directory}/memory.use_hierarchy`] = "1\n";
+    delete (total as Partial<typeof total>).total_shmem;
+    files[`${directory}/memory.stat`] = stat({ ...local, ...total });
+    assert.equal(available(), 1024 * mib, "missing descendant metadata cannot fall back to a mismatched local field");
+  });
+  await context.test("cache credit cannot exceed usage, physical MemAvailable or the configured host budget", () => {
+    const directory = setup(2, stat({ ...v2, file: 16384, shmem: 0, inactive_file: 16384, file_dirty: 0, file_writeback: 0, unevictable: 0 }));
+    assert.equal(available(), 8192 * mib, "a changing cache sample can never make availability exceed the limit");
+    files["/proc/meminfo"] = `MemAvailable: ${700 * 1024} kB\n`;
+    assert.equal(available(), 700 * mib);
+    files["/proc/meminfo"] = `MemAvailable: ${16 * 1024 * 1024} kB\n`;
+    mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB = "2048";
+    assert.equal(available(), 1536 * mib, "already-allocated own RSS remains subtracted from the configured host");
+    delete mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
+    files[`${directory}/memory.max`] = "max\n";
+    assert.equal(available(), 16 * 1024 * mib, "an unlimited cgroup retains the physical memory bound");
+  });
+  await context.test("the observed spool-heavy host admits its national child without changing either floor or margin", async () => {
+    const directory = setup(2, "file 13787439104\nshmem 3596398592\ninactive_file 6766063616\nfile_dirty 737280\nfile_writeback 0\nunevictable 0\n");
+    files[`${directory}/memory.current`] = "15146618880\n";
+    files[`${directory}/memory.max`] = "17179869184\n";
+    files[`/proc/${process.pid}/stat`] = `${process.pid} (cgroup fixture) S ${process.ppid} 0`;
+    assert.equal(available(), 8798576640);
+    const host = (loaded.workerMemoryHost as typeof workerMemoryHost)({ processes: () => [] });
+    const slots = (loaded.workerProcessSlots as typeof workerProcessSlots)(() => 1, { host, parentPeakBytes: NATIONAL_PLACE_PEAK_MIB * mib });
+    const release = await slots.acquire("lib/control-plane/workers/national-worker.ts", Date.now() + 1000);
+    try {
+      host.transact(state => {
+        assert.equal(state.reservations[0]?.peak, 3648 * mib);
+        assert.equal(state.parents[0]?.peak, 1923 * mib);
+      }, false);
+    } finally { release(); }
+  });
+});
+
 test("Linux zombies cannot retain parent or child memory reservations even while kill(pid,0) succeeds", () => {
   const nativeRequire = createRequire(import.meta.url);
   const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {

@@ -3,7 +3,8 @@ import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic
 import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
-import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots, startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
+import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
+import { ensureWorkerToolsHost, type WorkerToolsHandle } from "./worker-tools-host.mts";
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots, hostMemoryReading, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime, maintainAutonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
@@ -331,6 +332,7 @@ function writeCycleRecord(record: Readonly<Record<string, unknown>>): string {
 
 let crashRecorded = false;
 let crashRepos: ControlPlaneRepositories | null = null;
+let standaloneWorkerToolsHost: WorkerToolsHandle | null = null;
 /** Set once the round's paid jobs exist: settles every job the round never settled, so a failed round leaves no hold behind. */
 let releaseRoundHolds: (() => Promise<readonly string[]>) | null = null;
 const SPEND_HOLD_STALE_HOURS = SPEND_HOLD_STALE_MS / 3_600_000;
@@ -339,6 +341,7 @@ const CRASH_HOLD_RELEASE_MS = 5_000;
 async function recordCrash(error: unknown): Promise<void> {
   if (crashRecorded) return;
   crashRecorded = true;
+  try {
   const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
   const headline = message.split("\n")[0];
   /* What the cycle was waiting on when it failed, taken before the crash's own label is entered. */
@@ -365,7 +368,10 @@ async function recordCrash(error: unknown): Promise<void> {
     console.error(`\n  freshness:shadow CRASHED — ${headline}`);
     console.log(`  local diagnostic: ${result.recordPath}`);
   }
-  process.exit(1);
+  } finally {
+    try { await standaloneWorkerToolsHost?.close(); }
+    finally { process.exit(1); }
+  }
 }
 process.on("uncaughtException", (error) => { void recordCrash(error); });
 process.on("unhandledRejection", (error) => { void recordCrash(error); });
@@ -437,7 +443,7 @@ const cycleObservation = observeCyclePhases(repos);
 /* Every repository call is tracked while in flight, for the stall diagnostic. */
 repos = trackStoreCalls(cycleObservation.repos, pending);
 crashRepos = repos;
-const standaloneWorkerToolsHost = process.env.WTP_WORKER_TOOLS_URL ? null : await startWorkerToolsHost({ repos, browse: browseWithPlaywright });
+standaloneWorkerToolsHost = await ensureWorkerToolsHost({ repos });
 const finishPhase = (name: string) => {
   const phase = cycleObservation.finish(name);
   pending.phaseFinished(name);

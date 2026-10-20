@@ -162,8 +162,8 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { sharedScoutBrowser } from "./scout-browse.mts";
+import { ensureWorkerToolsHost, type WorkerToolsHandle } from "./worker-tools-host.mts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childCrash, childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
@@ -178,7 +178,13 @@ readFromHeldCopies();
 
 // An uncaught error ends this process through one sanitized protocol line naming the step (lib/ops/fatal-line.ts).
 let step = "reading its task selection";
-installFatalLine("routine-civic-data-runner", () => step);
+let workerToolsHost: WorkerToolsHandle | null = null;
+installFatalLine("routine-civic-data-runner", () => step, { exit: code => {
+  void (async () => {
+    try { await workerToolsHost?.close(); }
+    finally { process.exit(code); }
+  })();
+} });
 
 const ROOT = process.cwd();
 // Admit the supervisor before opening hosts or changing durable source state.
@@ -301,7 +307,24 @@ function releaseChildMemory(id: string): void {
   startedSourceChildren.delete(id);
 }
 
+function safeFailure(value: string): string {
+  return value
+    .replace(/(postgres(?:ql)?:\/\/)[^@\s]+@/gi, "$1[credentials-redacted]@")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(-8)
+    .join(" | ")
+    .slice(0, 4_000) || "The source process exited without a diagnostic.";
+}
+
 const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
+try {
+workerToolsHost = ROUTINE_DATA_PROCESS_LEASE ? await ensureWorkerToolsHost({ repos: () => {
+  const url = controlPlaneUrlFromEnv();
+  return url ? createPgRepositories(url, RUN_STARTED_AT, { skipBootstrap: true })
+    : createFileRepositories(join(ROOT, ".runtime", "control-plane", "freshness-shadow"));
+} }) : null;
 if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
@@ -322,11 +345,6 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
     console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
   }
 }
-
-const sharedBrowser = sharedScoutBrowser();
-const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
-  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
-    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
 
 async function observedChangeRateRepository() {
   const connection = controlPlaneUrlFromEnv();
@@ -400,17 +418,6 @@ function boundedExecutionFailure(run: BoundedChildResult): SupervisorFailure | n
     code,
     detail: `${run.termination}: ${safeFailure(`${run.errorMessage ?? ""}\n${run.stdout}\n${run.stderr}`)}`,
   };
-}
-
-function safeFailure(value: string): string {
-  return value
-    .replace(/(postgres(?:ql)?:\/\/)[^@\s]+@/gi, "$1[credentials-redacted]@")
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .slice(-8)
-    .join(" | ")
-    .slice(0, 4_000) || "The source process exited without a diagnostic.";
 }
 
 async function latestUnreceiptedSupervisorAttempts(selectedTasks: readonly RoutineSourceTask[], codeChangeRetryIds: ReadonlySet<string>): Promise<RoutineSupervisorAttemptHistory & { readonly protocolFailures: readonly unknown[] }> {
@@ -811,7 +818,6 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
   await ROUTINE_DATA_PROCESS_LEASE.release();
   await readCacheHost.close();
   await workerToolsHost?.close();
-  await sharedBrowser.close();
   process.exit(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
@@ -1631,6 +1637,7 @@ if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counte
 step = "releasing the host-local singleton";
 await ROUTINE_DATA_PROCESS_LEASE.release();
 }
-await readCacheHost.close();
-await workerToolsHost?.close();
-await sharedBrowser.close();
+} finally {
+  try { await workerToolsHost?.close(); }
+  finally { await readCacheHost.close(); }
+}

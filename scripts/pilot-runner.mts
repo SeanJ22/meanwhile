@@ -10,6 +10,8 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import { ensureWorkerToolsHost, type WorkerToolsHandle } from "./worker-tools-host.mts";
 import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import {
   assertDurableRepositories,
@@ -1839,8 +1841,13 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
 }
 
-let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
+let handoffExitCode: number | null = null;
 let cycle = 0;
+let pilotWorkerToolsHost: WorkerToolsHandle | null = null;
+try {
+pilotWorkerToolsHost = await ensureWorkerToolsHost({ repos: async () =>
+  await ownerRepositories() ?? await createFileRepositories(join(ROOT, ".runtime", "control-plane", "freshness-shadow")) });
+handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 
 if (handoffExitCode === null) {
 console.log(
@@ -2015,6 +2022,8 @@ while (cycle < CYCLES) {
 }
 }
 
+} finally {
+try {
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 if (!standingDrainFailed) {
@@ -2034,7 +2043,11 @@ if (!standingDrainFailed) {
   }
 }
 if (hangWatchdog !== null) await hangWatchdog.stop();
-await PILOT_PROCESS_LEASE.release();
+} finally {
+  try { await pilotWorkerToolsHost?.close(); }
+  finally { await PILOT_PROCESS_LEASE.release(); }
+}
+}
 if (handoffExitCode === null) {
   console.log(`\npilot-runner · ${cycle} cycle(s) complete. Canonical outcomes are in the owner control-plane log; disposable diagnostics are under ${RUNS_DIR}.`);
 } else {

@@ -23,6 +23,8 @@ const processMemorySlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER);
 /** Transient tools on this host; leases, costs and publications keep their existing stores. A manual read takes only the asking job's rows. */
 export async function startWorkerToolsHost(input: { repos: FieldManualRepos&Partial<AuditHistoryRepositories>; browse: BrowseFn }) {
   const token = randomUUID();
+  const priorUrl = process.env.WTP_WORKER_TOOLS_URL;
+  const priorToken = process.env.WTP_WORKER_TOOLS_TOKEN;
   const server = createServer(async (request, response) => {
     if (request.method !== "POST" || request.url !== "/" || request.headers.authorization !== token) {
       response.writeHead(404).end(); return;
@@ -39,18 +41,36 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos&Part
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));
     } catch { response.writeHead(503).end(); }
   });
-  await new Promise<void>((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
-  server.unref();
-  const address = server.address();
-  if (!address || typeof address === "string") throw new Error("WORKER_TOOLS_ADDRESS_UNAVAILABLE");
-  process.env.WTP_WORKER_TOOLS_URL = `http://127.0.0.1:${address.port}/`;
-  process.env.WTP_WORKER_TOOLS_TOKEN = token;
-  return { close: async () => {
-    delete process.env.WTP_WORKER_TOOLS_URL; delete process.env.WTP_WORKER_TOOLS_TOKEN;
+  let url: string;
+  try {
+    await new Promise<void>((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(0, "127.0.0.1", () => { server.removeListener("error", reject); resolve(); });
+    });
+    server.unref();
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("WORKER_TOOLS_ADDRESS_UNAVAILABLE");
+    url = `http://127.0.0.1:${address.port}/`;
+  } catch (error) {
     await new Promise<void>(resolve => server.close(() => resolve()));
-    await closeMethodCatalogHost(input.repos);
-    if(input.repos.workerResults)await closeAuditHistoryIndex(input.repos as AuditHistoryRepositories);
-  } };
+    throw error;
+  }
+  process.env.WTP_WORKER_TOOLS_URL = url;
+  process.env.WTP_WORKER_TOOLS_TOKEN = token;
+  let closing: Promise<void> | null = null;
+  return { close: () => closing ??= (async () => {
+    if (process.env.WTP_WORKER_TOOLS_URL === url && process.env.WTP_WORKER_TOOLS_TOKEN === token) {
+      if (priorUrl === undefined) delete process.env.WTP_WORKER_TOOLS_URL;
+      else process.env.WTP_WORKER_TOOLS_URL = priorUrl;
+      if (priorToken === undefined) delete process.env.WTP_WORKER_TOOLS_TOKEN;
+      else process.env.WTP_WORKER_TOOLS_TOKEN = priorToken;
+    }
+    try { await new Promise<void>(resolve => server.close(() => resolve())); }
+    finally {
+      try { await closeMethodCatalogHost(input.repos); }
+      finally { if(input.repos.workerResults)await closeAuditHistoryIndex(input.repos as AuditHistoryRepositories); }
+    }
+  })() };
 }
 import type { DeclaredExecutor, DispatchResult } from "../scheduler/dispatch.ts";
 import type { ModelRequest, ModelTransport } from "../scheduler/scout-executor.ts";

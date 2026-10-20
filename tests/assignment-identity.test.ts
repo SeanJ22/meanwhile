@@ -1,3 +1,4 @@
+import { assignmentHistoryOf, scopeHistoryOf } from "./helpers/spend.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -115,10 +116,10 @@ test("a Send records itself on what it created and on what it found already on a
   const second = dispatchWorkTarget({ intentId: "i-2", note: "Pima Arizona again", requestedAt: T1 });
   const a2 = await applyDispatchWork(repos, planDispatchWork({ targets: [second], world: await cycleWorld(repos, T1) }), { now: T1 });
   assert.equal(a2.written.length, 0, "nothing is created twice");
-  const created = (await repos.obligations.mustRead(Array.from(a1.written)[0])).value.assignments!;
+  const created = (await repos.obligations.mustRead(a1.written[0])).value.assignments!;
   assert.deepEqual(created[0], { assignmentKey: "dispatch:i-1", ref: "i-1", relation: "CREATED", at: T0 }, "never overwritten");
   assert.deepEqual(created[1], { assignmentKey: "dispatch:i-2", ref: "i-2", relation: "REORDERED", at: T1 }, "another Send created it: this one found it on a clock");
-  assert.equal((await repos.obligations.mustRead(Array.from(carried)[0])).value.assignments?.length, 2, "one obligation serves both Sends");
+  assert.equal((await repos.obligations.mustRead(carried[0])).value.assignments?.length, 2, "one obligation serves both Sends");
 
   /* The same Send again records nothing new. */
   const again = planDispatchWork({ targets: [first], world: await cycleWorld(repos, T2) });
@@ -163,7 +164,7 @@ test("a created row whose creator is not on record is never guessed into a Send"
   };
   const target = dispatchWorkTarget({ intentId: "i-3", note: "Pima Arizona", requestedAt: T0 });
   const plan = planDispatchWork({ targets: [target], world });
-  const id = Array.from(plan.writes)[0].instance.obligation.id;
+  const id = plan.writes[0].instance.obligation.id;
   /* The same row, created by a Send before Sends were kept on the row: materialized, no record. */
   const legacy = planDispatchWork({
     targets: [target],
@@ -303,7 +304,7 @@ test("the owner's questions travel typed through expansion.scope.set onto the de
   const out = await submit(request("expansion.scope.set", { geography: PIMA, priority: 1, budgetUsd: 5, note: "start here", questions: ["HAS_CHANGED", "HAVE_IT", "HAVE_IT"] }, "question-0001"), deps);
   assert.equal(out.ok, true, out.receipt.says);
   assert.match(out.receipt.says, /Your questions are kept on it and on every piece of work it reaches: Do we have this record at all\? Has it changed since we last looked\?/);
-  const [scope] = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).scopes;
+  const [scope] = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}))?.value ?? null).scopes;
   assert.deepEqual(scope.questions, ["HAVE_IT", "HAS_CHANGED"], "typed, once each, in the canonical order");
   assert.equal(scope.note, "start here", "and never folded into the words");
 
@@ -363,7 +364,7 @@ function charge(over: Partial<CostEntry> & { readonly usd: number | null; readon
 const priced = (rows: readonly CostEntry[]) => rows.flatMap(row => pricedModelCharge(row, row.attemptId) ?? []);
 
 function gate(specs: readonly AssignmentBudgetSpec[], rows: ReturnType<typeof row>[], costs: CostEntry[] | null, over: { intentsReadable?: boolean } = {}): AssignmentBudgetGate {
-  return armAssignmentBudget({ now: T0, specs, membership: assignmentMembership(rows), charges: costs === null ? null : priced(costs), worstCaseUsd: 0.6, intentsReadable: over.intentsReadable ?? true });
+  return armAssignmentBudget({ now: T0, specs, membership: assignmentMembership(rows), history: assignmentHistoryOf(costs === null ? null : priced(costs), T0, specs, assignmentMembership(rows)), worstCaseUsd: 0.6, intentsReadable: over.intentsReadable ?? true });
 }
 
 test("a Scout on a spent assignment is refused by the assignment's own name, with spent and held", () => {
@@ -469,9 +470,9 @@ test("the runner's reading names what each Send reached and its budget — spent
   rows[0] = { id: "ob-c", subjectId: "s1", assignments: [{ assignmentKey: A.key, ref: A.ref, relation: "CREATED", at: JOINED }] };
   const membership = assignmentMembership(rows, [{ obligationId: "ob-new", subjectId: "s3", entry: { assignmentKey: "dispatch:i-q", ref: "i-q", relation: "CREATED", at: T0 } }]);
   const charges = priced([charge({ obligationId: "ob-c", usd: 1.25 })]);
-  const g = armAssignmentBudget({ now: T0, specs: [A], membership, charges, worstCaseUsd: 0.6, intentsReadable: true });
+  const g = armAssignmentBudget({ now: T0, specs: [A], membership, history: assignmentHistoryOf(charges, T0, [A], membership), worstCaseUsd: 0.6, intentsReadable: true });
   g.admit("ob-r");
-  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership, charges, intentsReadable: true, labels: new Map([["dispatch:i-q", "Tucson"]]) });
+  const reading = assignmentCycleReading({ at: T0, now: T0, gate: g, specs: [A], membership,  intentsReadable: true, labels: new Map([["dispatch:i-q", "Tucson"]]) });
   assert.equal(isAssignmentCycleReading(reading), true);
   const a = reading.assignments.find((x) => x.key === A.key)!;
   assert.deepEqual(a.members, { created: 1, reordered: 1, createdSample: ["ob-c"], reorderedSample: ["ob-r"] });
@@ -496,7 +497,7 @@ test("a Send's completion uses the same created and reordered members as its lin
     { obligationId: "created", subjectId: "s1", entry: { assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED } },
     { obligationId: "reordered", subjectId: "s2", entry: { assignmentKey: A.key, ref: "r-a", relation: "REORDERED", at: JOINED } },
   ]);
-  const members = memberRecordsForSend(A.key, membership, id => id === "reordered" ? { id, lastWorkedAt: JOINED } : undefined);
+  const members = memberRecordsForSend(A.key, membership, [{ id: "reordered", lastWorkedAt: JOINED }]);
   const completion = evaluateAssignmentFromRecords({ assignmentKey: A.key, obligations: members, debtFor: () => null, now: T0 });
   assert.equal(completion.kind, "NOT_COMPLETE");
   if (completion.kind !== "NOT_COMPLETE") return;
@@ -512,7 +513,7 @@ test("a policy row that is not a policy holds paid work, by name, instead of rea
   assert.notEqual(load.plan, null, "the owner's budgets did not silently disappear");
   assert.equal(load.plan?.malformedScopes, 1);
   assert.match(load.conditions.join(" "), /the owner's policy row is on record and is not a readable policy/);
-  const { gate: g } = armExpansionBudget(load.plan!, { now: T0, charges: [], worstCaseUsd: 0.6 });
+  const { gate: g } = armExpansionBudget(load.plan!, { now: T0, history: scopeHistoryOf([], load.plan!, T0), worstCaseUsd: 0.6 });
   const v = g.admit("ob-1", "az:city:city-of-tucson");
   assert.equal(v.admit, false);
   if (!v.admit) {

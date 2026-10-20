@@ -24,8 +24,6 @@ import {
   type ResearchMetrics,
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines, researchDigestRows } from "../lib/control-plane/research-digest.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readScoutMetricSummary, SCOUT_METRIC_PROJECTION } from "../lib/control-plane/research-metrics-read.ts";
 import type { ScoutResult, ScoutStep } from "../lib/control-plane/scheduler/scout-result.ts";
 
 const NOW = "2026-09-02T16:00:00.000Z";
@@ -303,37 +301,4 @@ test("the digest lines and rows print every number with its denominator, and an 
   for (const row of Object.values(rows).flat()) assert.ok(row.denominator.length > 0, `${row.label} has no denominator`);
   assert.equal(rows.capacity[0].value, "20");
   assert.equal(rows.share[0].value, "UNMEASURED");
-});
-
-
-test("paged lifetime counters preserve full-history metrics without retaining Scout narratives",async()=>{
-  const repos=createMemoryRepositories();
-  const records=[
-    result({attemptId:"a",obligationId:"same",steps:[modelStep(1,0),modelStep(2,50)],cacheDefect:{turns:[2],detail:"legacy"}}),
-    result({attemptId:"b",obligationId:"same",usd:null,outcome:"EVIDENCE_FOUND",steps:[],cacheDefect:null}),
-    result({attemptId:"c",usd:0.5,refusal:[{code:"SCOUT_POLICY_DENIED",detail:"Fixture ceiling"}],steps:[modelStep(2,0)],cacheDefect:{turns:[2],stationaryTurns:[2],zeroReadTurns:[],detail:"stationary"}}),
-    result({attemptId:"a",obligationId:"same",usd:0.2,steps:[modelStep(3,0)]}),
-  ];
-  for(let index=0;index<records.length;index++) await repos.scoutResults.append("fixture",String(index),records[index],NOW);
-  const read= repos.scoutResults.readChangedSince.bind(repos.scoutResults);
-  repos.scoutResults.readChangedSince=async(since,held,options)=>{
-    assert.deepEqual(options?.projection,SCOUT_METRIC_PROJECTION);
-    assert.ok(options?.page);
-    return read(since,held,options);
-  };
-  repos.scoutResults.readAll=async()=>{throw new Error("country-wide Scout export forbidden");};
-  const summary=await readScoutMetricSummary(repos);
-  try {
-    const candidateCounts={proposed:3,validated:2,admitted:1,rejected:0};
-    const pipeline: readonly { stage: string; count: number }[]=[];
-    assert.deepEqual(graduationFunnel({scoutedCount:summary.scoutedCount,candidateCounts,pipeline,pipelineSource:"fixture",deterministicReplays:0}),
-      graduationFunnel({results:records,candidateCounts,pipeline,pipelineSource:"fixture",deterministicReplays:0}));
-    assert.deepEqual(costPerUsefulOutcome({totals:summary.outcomes,candidateCounts}),costPerUsefulOutcome({results:records,candidateCounts}));
-    assert.deepEqual(summary.cacheDefects,cacheDefectCounts(records));
-    const costs=[cost("a",1),cost("c",1)];
-    assert.deepEqual(cacheHitRateByRole({costs,results:summary.cacheResults(["a","c","a"])}),cacheHitRateByRole({costs,results:records}));
-    assert.equal(Array.from(summary.cacheResults(["a"])).length,2,"duplicate recorded results retain both counters");
-    assert.ok(!JSON.stringify(Array.from(summary.cacheResults(["a"]))).includes("narrative"));
-  } finally { await summary.close(); }
-  assert.throws(()=>summary.cacheResults(["a"]),/CLOSED/);
 });

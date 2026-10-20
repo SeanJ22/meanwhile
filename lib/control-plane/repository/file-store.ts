@@ -1,3 +1,6 @@
+import type { HuntOrder } from "../hunt-orders.ts";
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, migrateStoredAdminConfig, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -8,17 +11,15 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-import { withStreamedFieldManualMerge } from "./streamed-field-manual-merge.ts";
-import { scanAggregateFile,rewriteAggregateFile } from "./streamed-aggregate-array.ts";
-import { createReadStream } from "node:fs";
-import { createInterface } from "node:readline";
-/** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
-
-import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { appendFile, link, mkdir, open, opendir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { pricedModelCharge, type PricedCharge } from "../fleet-safety.ts";
+import { costRecordId } from "../spend-window.ts";
+import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -31,7 +32,7 @@ import path from "node:path";
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
-import { fingerprint,contentHash } from "../ids.ts";
+import { fingerprint } from "../ids.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { Escalation, WorkItem } from "../work-item.ts";
 import type {
@@ -61,16 +62,15 @@ import {
   canonicalJson,
   heldSlotKeys,
   jsonTextAtPath,
+  projectAggregate,
   projectRecord,
   reconcileIdempotentAppend,
   reconcileIdempotentPut,
   type AggregateRepository,
-  type FieldManualRepository,
   type AppendOnlyRepository,
   type AppendOutcome,
   type ArtifactRecord,
   type ChangedReadOptions,
-  type ChangedLogReadOptions,
   type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
@@ -83,14 +83,12 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/** Unique per write without randomness: process id plus a per-process counter. */
 let tempCounter = 0;
 function tempPath(target: string): string {
   tempCounter += 1;
   return `${target}.${process.pid}.${tempCounter}.tmp`;
 }
 
-/** The readable prefix is for humans; the `fingerprint` suffix makes the name injective. */
 function fileNameFor(key: string): string {
   const readable = key.replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 64);
   return `${readable}-${fingerprint([key])}`;
@@ -104,11 +102,6 @@ function isEexist(error: unknown): boolean {
   return (error as NodeJS.ErrnoException)?.code === "EEXIST";
 }
 
-/**
- * All-or-nothing exclusive create: write a complete temp file, then `link` it into place (EEXIST when the
- * target exists). Where `link` is unavailable, an exclusive `open(path, "wx")` plus write lets a concurrent
- * reader briefly see an empty file, which reads as `CorruptPersistedState`, never a wrong answer.
- */
 async function exclusiveCreate(target: string, contents: string): Promise<boolean> {
   await mkdir(path.dirname(target), { recursive: true });
   const temp = tempPath(target);
@@ -140,21 +133,6 @@ async function exclusiveCreate(target: string, contents: string): Promise<boolea
   }
 }
 
-/** The same exclusive revision commit, with the replacement streamed to its complete temporary file. */
-async function exclusiveStreamCreate(target:string,write:(sink:(text:string)=>Promise<void>)=>Promise<void>):Promise<boolean>{
-  await mkdir(path.dirname(target),{recursive:true});const temporary=tempPath(target);
-  const file=await open(temporary,"wx");
-  try{
-    await write(async text=>{const bytes=Buffer.from(text);let at=0;while(at<bytes.length){const part=await file.write(bytes,at,bytes.length-at);if(!part.bytesWritten)throw new Error("Aggregate stream write made no progress");at+=part.bytesWritten;}});
-    await file.close();
-    try{await link(temporary,target);return true;}
-    catch(error){if(isEexist(error))return false;if(!["EPERM","ENOSYS","EXDEV","EOPNOTSUPP"].includes((error as NodeJS.ErrnoException).code??""))throw error;}
-    let output;try{output=await open(target,"wx");}catch(error){if(isEexist(error))return false;throw error;}
-    try{for await(const chunk of createReadStream(temporary))await output.writeFile(chunk);}finally{await output.close();}return true;
-  }finally{await file.close().catch(()=>{});await rm(temporary,{force:true});}
-}
-
-/** ENOENT is the only absence; every other failure is raised, never returned as null. */
 async function readJsonFile<T>(file: string, validate: (parsed: unknown) => T): Promise<T | null> {
   let raw: string;
   try {
@@ -175,7 +153,6 @@ async function readJsonFile<T>(file: string, validate: (parsed: unknown) => T): 
   return validate(parsed);
 }
 
-/** The on-disk shape of an aggregate. Validated on every read, never assumed. */
 function validateEnvelope<T>(file: string, kind: string, parsed: unknown): Persisted<T> {
   if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
     throw new CorruptPersistedState(file, `expected a ${kind} envelope object, found ${typeof parsed}`);
@@ -200,7 +177,6 @@ function validateEnvelope<T>(file: string, kind: string, parsed: unknown): Persi
   return { id: row.id, revision: row.revision, updatedAt: row.updatedAt, value: row.value as T };
 }
 
-/** A missing kind directory is empty; a missing root is corruption. */
 async function listDirectory(root: string, dir: string): Promise<string[]> {
   try {
     return await readdir(dir);
@@ -221,18 +197,16 @@ async function listDirectory(root: string, dir: string): Promise<string[]> {
   return [];
 }
 
-/** One file per revision (`<id>.r<n>.json`); taking a revision is winning an exclusive create, and the loser is refused with `ConcurrentModification`. */
 export function fileAggregateRepository<T>(
   root: string,
   kind: string,
   folder: string,
-): AggregateRepository<T> & Pick<FieldManualRepository,"compareAndSetMergedEntry"> {
+): AggregateRepository<T> {
   const dir = path.join(root, "aggregates", folder);
   const baseFor = (id: string): string => fileNameFor(id);
   const fileForRevision = (id: string, revision: number): string =>
     path.join(dir, `${baseFor(id)}.r${revision}.json`);
 
-  /** Revisions present for one id, ascending. */
   const revisionsOf = async (id: string): Promise<number[]> => {
     const prefix = `${baseFor(id)}.r`;
     const names = await listDirectory(root, dir);
@@ -257,7 +231,7 @@ export function fileAggregateRepository<T>(
     const latest = revisions[revisions.length - 1];
     const row = await readRevision(id, latest);
     if (row === null) {
-      // Listed but not found on read: the store changed underneath us, which is not an absence.
+
       throw new CorruptPersistedState(
         fileForRevision(id, latest),
         `revision ${latest} was listed in ${dir} and then could not be read`,
@@ -266,23 +240,7 @@ export function fileAggregateRepository<T>(
     return row;
   };
 
-  const readStreamMetadata=async(file:string)=>{
-    try{return await scanAggregateFile(file);}
-    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
-  };
-  const readNarrowed=async(id:string,projection:RecordProjection):Promise<Persisted<unknown>|null>=>{
-    const revisions=await revisionsOf(id);if(!revisions.length)return null;const file=fileForRevision(id,revisions.at(-1)!);
-    try{const {values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});return row;}
-    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
-  };
-  const readArrayType=async(id:string,path:readonly string[],expectedRevision?:number):Promise<boolean|null>=>{
-    const revisions=await revisionsOf(id);if(!revisions.length)return null;
-    const file=fileForRevision(id,expectedRevision??revisions.at(-1)!);
-    try{return (await scanAggregateFile(file,{field:path})).isArray??false;}
-    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
-  };
-
-  const latestFiles=async()=>{
+  const list = async (): Promise<readonly Persisted<T>[]> => {
     const names = (await listDirectory(root, dir)).filter((n) => n.endsWith(".json"));
     const latestByBase = new Map<string, number>();
     for (const name of names) {
@@ -294,23 +252,9 @@ export function fileAggregateRepository<T>(
         latestByBase.set(base, Number(revision));
       }
     }
-    return [...latestByBase.entries()].sort().map(([base,revision])=>path.join(dir,`${base}.r${revision}.json`));
-  };
-  const filtered=async(jsonPath:readonly string[],wanted:ReadonlySet<string>|string,projection?:RecordProjection)=>{
-    const out:Persisted<unknown>[]=[];
-    for(const file of await latestFiles()){
-      try{
-      let selected:string|null=null;
-      const metadata=await scanAggregateFile(file,{watchRoot:[{path:jsonPath,observe:value=>{selected=value===null||typeof value==='object'?null:String(value);}}]});
-      if(selected===null||!(typeof wanted==="string"?(selected as string).startsWith(wanted):wanted.has(selected)))continue;
-      if(projection){const{values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});out.push(row);}
-      else{const row=await readRevision(metadata.id,metadata.revision);if(!row)throw new CorruptPersistedState(file,"the selected revision disappeared");out.push(row);}
-      }catch(error){if(error instanceof CorruptPersistedState)throw error;throw new CorruptPersistedState(file,(error as Error).message);}
-    }return out.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
-  };
-  const list = async (): Promise<readonly Persisted<T>[]> => {
     const rows: Persisted<T>[] = [];
-    for (const file of await latestFiles()) {
+    for (const [base, revision] of [...latestByBase.entries()].sort()) {
+      const file = path.join(dir, `${base}.r${revision}.json`);
       const row = await readJsonFile<Persisted<T>>(file, (parsed) =>
         validateEnvelope<T>(file, kind, parsed),
       );
@@ -328,59 +272,10 @@ export function fileAggregateRepository<T>(
   return {
     read,
 
-    compareAndSetMergedEntry:async(id,expectedRevision,entry,now)=>{
-      if(id!==entry.id)throw new Error("FIELD_MANUAL_MERGE_ID_MISMATCH");
-      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
-      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision??0,latest);
-      if(latest===null){
-        const won=await exclusiveStreamCreate(fileForRevision(id,1),async out=>{await out(JSON.stringify({id,revision:1,updatedAt:now,value:entry})+"\n");});
-        if(!won)throw new ConcurrentModification(kind,id,0,(await revisionsOf(id)).at(-1)??null);
-        return{revision:1,changed:true};
-      }
-      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
-      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
-      return withStreamedFieldManualMerge(source,entry,async(write,changed)=>{
-        if(!changed)return{revision:latest,changed:false};
-        const revision=latest+1;
-        const won=await exclusiveStreamCreate(fileForRevision(id,revision),async out=>{
-          await out(`{"id":${JSON.stringify(id)},"revision":${revision},"updatedAt":${JSON.stringify(now)},"value":`);
-          await write(out);await out("}\n");
-        });
-        if(!won)throw new ConcurrentModification(kind,id,latest,(await revisionsOf(id)).at(-1)??null);
-        return{revision,changed:true};
-      });
+    readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
+      const row = await read(id);
+      return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
     },
-
-    readArrayPage:async(id,field,query={})=>{
-      const revisions=await revisionsOf(id);if(!revisions.length)return null;
-      const file=fileForRevision(id,revisions.at(-1)!);
-      try{const row=await scanAggregateFile(file,{field,query});if(row.id!==id||row.revision!==revisions.at(-1))throw new Error("aggregate identity or revision disagrees with its filename");return{id:row.id,revision:row.revision,updatedAt:row.updatedAt,values:row.values,next:row.next,...row.nextKey!==undefined?{nextKey:row.nextKey}:{}};}
-      catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
-    },
-    compareAndSetFields:async(id,expectedRevision,fields,now)=>{
-      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
-      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision,latest);
-      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
-      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
-      const next={id,revision:expectedRevision+1,updatedAt:now};
-      const won=await exclusiveStreamCreate(fileForRevision(id,next.revision),out=>rewriteAggregateFile(source,out,next,fields));
-      if(!won)throw new ConcurrentModification(kind,id,expectedRevision,(await revisionsOf(id)).at(-1)??null);
-      return{...next,value:fields};
-    },
-    compareAndSetArrayItem:async(id,expectedRevision,field,keyPath,key,value,now,retention,fields)=>{
-      const revisions=await revisionsOf(id),latest=revisions.at(-1)??null;
-      if(latest!==expectedRevision)throw new ConcurrentModification(kind,id,expectedRevision,latest);
-      const source=fileForRevision(id,latest),metadata=await readStreamMetadata(source);
-      if(metadata.id!==id||metadata.revision!==latest)throw new CorruptPersistedState(source,"aggregate identity or revision disagrees with its filename");
-      const next={id,revision:expectedRevision+1,updatedAt:now};
-      const won=await exclusiveStreamCreate(fileForRevision(id,next.revision),out=>rewriteAggregateFile(source,out,next,{},
-        {field,keyPath,key,next:value,retention,fields}));
-      if(!won)throw new ConcurrentModification(kind,id,expectedRevision,(await revisionsOf(id)).at(-1)??null);
-      return{...next,value};
-    },
-
-    readNarrowed,
-    readArrayType,
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);
@@ -388,7 +283,6 @@ export function fileAggregateRepository<T>(
       return row;
     },
 
-    /** Compared against revision 1, the creation, so re-registering a task that has since moved is still idempotent. */
     put: async (id: string, value: T, now: string): Promise<PutOutcome<T>> => {
       const row: Persisted<T> = { id, revision: 1, updatedAt: now, value };
       const created = await exclusiveCreate(
@@ -427,52 +321,36 @@ export function fileAggregateRepository<T>(
         `${JSON.stringify(row, null, 2)}\n`,
       );
       if (won) return row;
-      // Another writer created this exact revision between our read and our
-      // write. It won; we are stale, and we say so with the revision that landed.
+
       const winner = await read(id);
       throw new ConcurrentModification(kind, id, expectedRevision, winner?.revision ?? null);
     },
 
     list,
-    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
-      const out:Persisted<unknown>[]=[];
-      for(const file of await latestFiles()){
-        try{const{values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});out.push(row);}
-        catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
-      }return out.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
-    },
+    listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
+      (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
-    /* Scan the exact match path before returning only its selected record. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
-      await filtered(jsonPath,new Set([value])) as Persisted<T>[],
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
-      filtered(jsonPath,new Set([value]),projection),
-    listWherePrefix:(jsonPath,prefix,projection)=>filtered(jsonPath,prefix,projection),
+      (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
     readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
-      const out:Persisted<unknown>[]=[];
-      for(const id of [...new Set(ids)].sort()){const row=await readNarrowed(id,projection);if(row)out.push(row);}
-      return out;
+      const wanted = new Set(ids);
+      return (await list()).filter((row) => wanted.has(row.id)).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
     },
     listWhereIn: async (jsonPath: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> => {
-      return filtered(jsonPath,new Set(values),projection);
+      const wanted = new Set(values);
+      return (await list()).filter((row) => wanted.has(jsonTextAtPath(row.value, jsonPath) ?? "")).map(row => ({ ...row, value: projectAggregate(row.value, projection) }));
     },
     /* A directory has no database clock; a revision's own time stands in for it. */
     listChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}) => {
       const through = new Date().toISOString();
       const skip = heldSlotKeys(held);
-      const rows:Persisted<T>[]=[];
-      const slots:{file:string;row:Persisted<unknown>}[]=[];
-      for(const file of await latestFiles())slots.push({file,row:await readStreamMetadata(file)});
-      slots.sort((a,b)=>a.row.id<b.row.id?-1:a.row.id>b.row.id?1:0);
-      for(const{file,row}of slots){
-        if((since!==null&&Date.parse(row.updatedAt)<Date.parse(since))||skip.has(`${row.id}\n${row.revision}`))continue;
-        let selected:Persisted<T>|null;
-        if(read.projection){const{values:_values,next:_next,...narrowed}=await scanAggregateFile(file,{valueProjection:read.projection});selected=narrowed as Persisted<T>;}
-        else selected=await readRevision(row.id,row.revision);
-        if(!selected)throw new CorruptPersistedState(file,"the listed revision disappeared");
-        if(read.page)await read.page([selected]);else rows.push(selected);
-      }
-      return { through, rows };
+      const rows = (await list()).filter((row) => (since === null || Date.parse(row.updatedAt) >= Date.parse(since)) && !skip.has(`${row.id}\n${row.revision}`))
+        .map(row => read.projection ? { ...row, value: projectAggregate(row.value, read.projection) as T } : row);
+      if (!read.page) return { through, rows };
+      await read.page(rows);
+      return { through, rows: [] };
     },
   };
 }
@@ -508,7 +386,6 @@ function parseLogLine<T>(file: string, line: string, lineNumber: number): LogLin
   return { key: row.key, recordId: row.recordId, at: String(row.at ?? ""), record: row.record as T };
 }
 
-/** Identical lines sharing a record id collapse to one; divergent ones are raised on read. */
 function dedupeHistory<T>(log: string, file: string, lines: readonly LogLine<T>[]): LogLine<T>[] {
   const seen = new Map<string, LogLine<T>>();
   const out: LogLine<T>[] = [];
@@ -532,25 +409,6 @@ export function fileAppendOnlyRepository<T>(
 ): AppendOnlyRepository<T> {
   const dir = path.join(root, "logs", log);
   const fileFor = (key: string): string => path.join(dir, `${fileNameFor(key)}.jsonl`);
-
-  async function* fileLines(file:string):AsyncGenerator<LogLine<T>>{
-    let handle;try{handle=await open(file,"r");}catch(error){if(isEnoent(error))return;throw new CorruptPersistedState(file,`read failed: ${(error as Error).message}`);}
-    const input=handle.createReadStream({encoding:"utf8",highWaterMark:64*1024,autoClose:false});
-    const lines=createInterface({input,crlfDelay:Infinity});const seen=new Map<string,string>();let lineNumber=0;
-    try{for await(const raw of lines){lineNumber++;if(!raw.trim())continue;const row=parseLogLine<T>(file,raw.trim(),lineNumber);
-      const hash=contentHash(canonicalJson(row.record)),prior=seen.get(row.recordId);
-      if(prior!==undefined){if(prior!==hash)throw new AppendOnlyViolation(`${log} (${file})`,row.recordId,prior,hash);continue;}
-      seen.set(row.recordId,hash);yield row;
-    }}catch(error){if(error instanceof CorruptPersistedState||error instanceof AppendOnlyViolation)throw error;throw new CorruptPersistedState(file,`read failed: ${(error as Error).message}`);}finally{lines.close();input.destroy();await handle.close();}
-  }
-  async function* coordinateLines(keys?:readonly string[]):AsyncGenerator<ChangedRecord<T>>{
-    const positions=new Map<string,number>();
-    const names=keys===undefined?(await listDirectory(root,dir)).filter(name=>name.endsWith(".jsonl")):[...new Set(keys)].map(key=>`${fileNameFor(key)}.jsonl`);
-    for(const name of names.sort())for await(const line of fileLines(path.join(dir,name))){
-      const position=positions.get(line.key)??0;positions.set(line.key,position+1);
-      yield{key:line.key,recordId:line.recordId,position,record:line.record,changedAt:line.at,stampedAt:line.at};
-    }
-  }
 
   const readLines = async (key: string): Promise<LogLine<T>[]> => {
     const file = fileFor(key);
@@ -590,7 +448,7 @@ export function fileAppendOnlyRepository<T>(
       const file = fileFor(key);
       await mkdir(path.dirname(file), { recursive: true });
       const entry: LogLine<T> = { key, recordId, at: now, record };
-      // O_APPEND, never a whole-file rewrite: a race must not be able to shorten history.
+
       await appendFile(file, `${JSON.stringify(entry)}\n`, "utf8");
       return { appended: true, recordId, record, position: lines.length };
     },
@@ -598,22 +456,19 @@ export function fileAppendOnlyRepository<T>(
     read: async (key: string): Promise<readonly T[]> =>
       (await readLines(key)).map((line) => line.record),
 
-    readRecord: async (key: string, recordId: string): Promise<T | null> => {
-      for await (const line of fileLines(fileFor(key))) if (line.recordId === recordId) return line.record;
-      return null;
-    },
-
     readWhere: async (
       key: string,
       jsonPath: readonly string[],
       value: string,
-    ): Promise<readonly T[]> => {
-      const out:T[]=[];for await(const line of fileLines(fileFor(key)))if(jsonTextAtPath(line.record,jsonPath)===value)out.push(line.record);return out;
-    },
+    ): Promise<readonly T[]> =>
+      (await readLines(key))
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value),
 
     readRecent: async (key: string, limit: number): Promise<readonly T[]> => {
+      const records = (await readLines(key)).map((line) => line.record);
       const bounded = Math.max(0, Math.trunc(limit));
-      const records:T[]=[];for await(const line of fileLines(fileFor(key))){records.push(line.record);if(records.length>bounded)records.shift();}return records.reverse();
+      return records.slice(Math.max(0, records.length - bounded)).reverse();
     },
 
     readRecentWhere: async (
@@ -625,16 +480,22 @@ export function fileAppendOnlyRepository<T>(
       recordedAtSince?: string,
     ): Promise<readonly unknown[]> => {
       const since = recordedAtSince === undefined ? null : Date.parse(recordedAtSince);
+      const matches = (await readLines(key))
+        .filter(line => since === null || Date.parse(line.at) >= since)
+        .map((line) => line.record)
+        .filter((record) => jsonTextAtPath(record, jsonPath) === value);
       const bounded = Math.max(0, Math.trunc(limit));
-      const matches:unknown[]=[];
-      for await(const line of fileLines(fileFor(key)))if((since===null||Date.parse(line.at)>=since)&&jsonTextAtPath(line.record,jsonPath)===value){matches.push(projectRecord(line.record,projection));if(matches.length>bounded)matches.shift();}
-      return matches.reverse();
+      return matches
+        .slice(Math.max(0, matches.length - bounded))
+        .reverse()
+        .map((record) => projectRecord(record, projection));
     },
 
     readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
       const out = new Map<string, unknown>();
       for (const key of new Set(keys)) {
-        let newest:LogLine<T>|undefined;for await(const line of fileLines(fileFor(key)))newest=line;
+        const lines = await readLines(key);
+        const newest = lines[lines.length - 1];
         if (newest !== undefined) out.set(key, projectRecord(newest.record, projection));
       }
       return out;
@@ -649,34 +510,43 @@ export function fileAppendOnlyRepository<T>(
     readSince: async (since: string): Promise<readonly T[]> =>
       (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedLogReadOptions<T> = {}) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
       const through = new Date().toISOString();
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      const records:ChangedRecord<T>[]=[];
-      for await(const changed of coordinateLines(read.keys)){
-        if((from!==null&&Date.parse(changed.stampedAt!)<from)||skip.has(`${changed.key}\n${changed.position}`))continue;
-        if(read.recordTimeAtOrAfter!==undefined&&!(Date.parse(jsonTextAtPath(changed.record,read.recordTimeAtOrAfter.path)??"")>=Date.parse(read.recordTimeAtOrAfter.at)))continue;
-        const selected=read.projection?{...changed,record:projectRecord(changed.record,read.projection)as T}:changed;
-        if(read.page)await read.page([selected]);else records.push(selected);
-      }
-      return { through, records };
+      const records = (await coordinates()).filter(({ changed, line }) => !((from !== null && Date.parse(line.at) < from) || skip.has(`${changed.key}\n${changed.position}`)))
+        .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
+      if (!read.page) return { through, records };
+      await read.page(records);
+      return { through, records: [] };
     },
 
     readStampedBetween: async (from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void) => {
-      for await(const changed of coordinateLines())if(Date.parse(changed.stampedAt!)>=Date.parse(from)&&Date.parse(changed.stampedAt!)<Date.parse(until))await page([changed]);
+      await page((await coordinates()).filter(({ line }) => Date.parse(line.at) >= Date.parse(from) && Date.parse(line.at) < Date.parse(until))
+        .map(({ changed }) => changed));
     },
 
     keys: async (): Promise<readonly string[]> => {
-      const keys=new Set<string>();for await(const row of coordinateLines())keys.add(row.key);
+      const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
       return [...keys].sort();
     },
 
     keysWhere: async (jsonPath: readonly string[], value: string): Promise<readonly string[]> => {
-      const keys=new Set<string>();for await(const row of coordinateLines())if(jsonTextAtPath(row.record,jsonPath)===value)keys.add(row.key);
+      const keys = new Set<string>((await readEveryPartition())
+        .filter((line) => jsonTextAtPath(line.record, jsonPath) === value).map((line) => line.key));
       return [...keys].sort();
     },
   };
+
+  /** Every line with the coordinates and clocks a changed-since read answers with; the line's own time stands in for both clocks. */
+  async function coordinates() {
+    const positions = new Map<string, number>();
+    return (await readEveryPartition()).map((line) => {
+      const position = positions.get(line.key) ?? 0;
+      positions.set(line.key, position + 1);
+      return { line, changed: { key: line.key, recordId: line.recordId, position, record: line.record, changedAt: line.at, stampedAt: line.at } };
+    });
+  }
 
   /** Every line in every partition, in filename then append order. */
   async function readEveryPartition(): Promise<LogLine<T>[]> {
@@ -702,7 +572,6 @@ export function fileAppendOnlyRepository<T>(
   }
 }
 
-/** Exclusive-create lock. It refuses when held and never waits. */
 export function fileLockManager(root: string): LockManager {
   const dir = path.join(root, "locks");
   return {
@@ -732,7 +601,91 @@ export function fileLockManager(root: string): LockManager {
   };
 }
 
-/** No default directory. After this call creates the root, a missing root is corruption, not emptiness. */
+async function* streamedSpendCharges(file: string): AsyncGenerator<PricedCharge> {
+  let prefix = "", suffix = "", entry = "";
+  let phase: "prefix" | "entries" | "suffix" = "prefix";
+  let depth = 0, quoted = false, escaped = false, comma = false, count = 0;
+  for await (const chunk of createReadStream(file, { encoding: "utf8" })) {
+    let text = String(chunk);
+    if (phase === "prefix") {
+      prefix += text;
+      const start = /"charges"\s*:\s*\[/.exec(prefix);
+      if (!start) continue;
+      const end = start.index + start[0].length;
+      text = prefix.slice(end);
+      prefix = prefix.slice(0, end);
+      phase = "entries";
+    }
+    if (phase === "suffix") { suffix += text; continue; }
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (depth === 0) {
+        if (/\s/.test(char)) continue;
+        if (char === "]" && !comma) { suffix = text.slice(i); phase = "suffix"; break; }
+        if (char === "," && count > 0 && !comma) { comma = true; continue; }
+        if (char !== "{" || (count > 0 && !comma)) throw new CorruptPersistedState(file, "invalid spend charge array");
+        entry = "{"; depth = 1; quoted = false; escaped = false; comma = false;
+        continue;
+      }
+      entry += char;
+      if (escaped) { escaped = false; continue; }
+      if (quoted && char === "\\") { escaped = true; continue; }
+      if (char === '"') { quoted = !quoted; continue; }
+      if (quoted) continue;
+      if (char === "{" || char === "[") depth++;
+      if (char === "}" || char === "]") depth--;
+      if (depth === 0) {
+        const charge = JSON.parse(entry) as PricedCharge;
+        if (typeof charge.id !== "string" || typeof charge.at !== "string" || !charge.metered) throw new CorruptPersistedState(file, "invalid priced charge");
+        yield charge;
+        entry = ""; count++;
+      }
+    }
+  }
+  if (phase !== "suffix") throw new CorruptPersistedState(file, "incomplete spend charge array");
+  validateEnvelope(file, "SpendWindow", JSON.parse(prefix + suffix));
+}
+
+async function migrateFileSpend(root: string, locks: LockManager): Promise<void> {
+  const source = path.join(root, "aggregates", "spend-window");
+  try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+  await locks.withLock("cp01-spend-migration", async () => {
+    try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+    const target = path.join(root, "aggregates", "model-charges");
+    await mkdir(target, { recursive: true });
+    const insert = async (charge: PricedCharge) => {
+      await exclusiveCreate(path.join(target, `${fileNameFor(charge.id)}.r1.json`), canonicalJson({
+        id: charge.id, revision: 1, updatedAt: charge.at, value: charge,
+      }));
+    };
+    const prefix = `${fileNameFor("model-charges")}.r`;
+    let latest = 0;
+    for await (const file of await opendir(source)) {
+      if (!file.name.startsWith(prefix) || !file.name.endsWith(".json")) continue;
+      const revision = file.name.slice(prefix.length, -5);
+      if (/^\d+$/.test(revision)) latest = Math.max(latest, Number(revision));
+    }
+    if (latest > 0) for await (const charge of streamedSpendCharges(path.join(source, `${prefix}${latest}.json`))) await insert(charge);
+    const logs = path.join(root, "logs", "costs");
+    let directory;
+    try { directory = await opendir(logs); } catch (error) { if (!isEnoent(error)) throw error; }
+    if (directory) for await (const file of directory) {
+      if (!file.name.endsWith(".jsonl")) continue;
+      const sourceFile = path.join(logs, file.name);
+      const lines = createInterface({ input: createReadStream(sourceFile, { encoding: "utf8" }), crlfDelay: Infinity });
+      let lineNumber = 0;
+      for await (const line of lines) {
+        lineNumber++;
+        if (!line.trim()) continue;
+        const row = parseLogLine<CostEntry>(sourceFile, line, lineNumber);
+        const charge = pricedModelCharge(row.record, costRecordId(row.record));
+        if (charge) await insert(charge);
+      }
+    }
+    await rm(source, { recursive: true });
+  });
+}
+
 export async function createFileRepositories(root: string): Promise<ControlPlaneRepositories> {
   if (typeof root !== "string" || root.trim().length === 0) {
     throw new Error(
@@ -745,8 +698,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
   const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
+  const scoutResults = fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results");
+  const adminBase = fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
+    dispatchState: createDispatchState(() => repositories),
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
     routeTasks: fileAggregateRepository<RouteTask>(resolved, "RouteTask", "route-tasks"),
     attempts: fileAggregateRepository<Attempt>(resolved, "Attempt", "attempts"),
@@ -786,7 +742,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
     ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
-    fieldManual: (() => { const base = fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"); return fieldManualRows(base, base); })(),
+    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
@@ -801,13 +757,14 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
+    huntOrders: (() => { const base=fileAggregateRepository<HuntOrder>(resolved,"HuntOrder","hunt-orders"); return {...base,request:async(orders:readonly HuntOrder[],at:string)=>{for(const order of orders)await base.put(order.id,order,at);},latestStop:async(state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.scopeKey===null).sort((a,b)=>b.value.requestedAt.localeCompare(a.value.requestedAt))[0]??null,pending:async (state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.confirmedAt===null)}; })(),
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
-    spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
+    spend: storedSpendRepository(fileAggregateRepository<PricedCharge>(resolved, "ModelCharge", "model-charges"), scoutResults),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: listedBoxRepository(fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings")),
     passCursors: fileAggregateRepository<PassCursor>(resolved, "PassCursor", "pass-cursors"),
-    scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+    scoutResults,
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
@@ -818,7 +775,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     liveAudits: fileAppendOnlyRepository<LiveAuditLogRow>(resolved, "live-audits"),
-    adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
+    adminConfig: storedAdminConfigRepository(adminBase, Object.fromEntries(Object.entries(ADMIN_SECTIONS).map(([key, table]) => [key, fileAggregateRepository<StoredAdminSection>(resolved, key, `admin-${table}`)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
     leadOrders: fileAggregateRepository<LeadOrder>(resolved, "LeadOrder", "lead-orders"),
@@ -830,4 +787,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     describe: () => `durable control-plane repositories rooted at ${resolved}`,
     durable: true,
   };
+  await migrateFileSpend(resolved, locks);
+  await migrateStoredAdminConfig(adminBase, repositories.adminConfig);
+  return repositories;
 }

@@ -13,19 +13,6 @@ import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
-import { PUBLISHED_ARRAY_SLICE_SQL } from "../lib/civic-data/published-array-slice.ts";
-import type { Statement } from "../lib/control-plane/admin-view/promoted-slices.ts";
-
-function absentLegacyMemberOffices(statement:Statement):boolean{
-  if(statement.text!==PUBLISHED_ARRAY_SLICE_SQL)return false;
-  assert.equal(statement.params[0],"CURATED_READER_RECORD");
-  assert.equal(statement.params[1],"US:state-legislator-member-offices");
-  assert.deepEqual(statement.params[2],["records"]);
-  const selectors=JSON.parse(String(statement.params[7]))as {path:string[];pattern:string}[];
-  assert.ok(selectors.some(selector=>selector.path.join(".")==="office.state"&&selector.pattern==="^AZ$"),
-    "the separate legacy lookup selects only the requested state's member offices");
-  return true;
-}
 
 function stateRows(version: string, divisions: readonly string[]) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";
@@ -90,10 +77,7 @@ test("settled state and geography reads stay consistent within one request while
   let version = "request-state:one", reads = 0, block: Promise<void> | undefined, release: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1);
-    const statement = statements[0];
-    if(absentLegacyMemberOffices(statement))return[[]];
-    const keys = statement.params[0] as string[];
-    assert.ok(Array.isArray(keys));
+    const statement = statements[0], keys = statement.params[0] as string[];
     if (!keys.some(key => key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     const currentVersion = version, divisions = statement.params.at(-1) as readonly string[];
@@ -142,9 +126,7 @@ test("a failed state read remains failed for that request and a later request ca
   const failure = new Error("The selected state could not be read");
   let reads = 0, failed = true;
   installReaderDatabaseQuery(async statements => {
-    if(absentLegacyMemberOffices(statements[0]))return[[]];
     const keys = statements[0].params[0] as string[];
-    assert.ok(Array.isArray(keys));
     if (!keys.some(key => key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     if (failed) throw failure;
@@ -169,10 +151,7 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   let reads = 0;
   const scope = "US:plain-english-translations:ocd-division/country:us/state:az/cd:7";
   installReaderDatabaseQuery(async statements => {
-    const statement = statements[0];
-    if(absentLegacyMemberOffices(statement))return[[]];
-    const keys = statement.params[0] as string[];
-    assert.ok(Array.isArray(keys));
+    const statement = statements[0], keys = statement.params[0] as string[];
     if (!keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     const rows = stateRows(`zip-request:${statement.params[7]}`,[]);
@@ -201,9 +180,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
   const blocked = new Promise<void>(resolve=>{ release=resolve; });
   installReaderDatabaseQuery(async statements=>{
     assert.equal(statements.length,1);
-    const statement=statements[0];
-    if(absentLegacyMemberOffices(statement)){order.push("member-offices");return[[]];}
-    const keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     const family=keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
@@ -222,8 +199,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
       "CURATED_READER_RECORD:US:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
     release!();
     await Promise.all([data.registryRead,data.districtRead]);
-    assert.deepEqual(order,["state","place","auxiliary","member-offices"],
-      "the separate state-filtered legacy office lookup follows the initial state, place and auxiliary submissions");
+    assert.equal(order.length,3,"geographic qualification and registry composition add no follow-up lookup");
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
 });
 
@@ -231,9 +207,8 @@ test("an unavailable local territory file leaves the ballot's canonical families
   const { readBallotReaderData } = await import("../lib/ballot/reader-data.ts");
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   const failure=new Error("The local territory file is unavailable");
-  let auxiliaries=0,legacyOfficeReads=0;
+  let auxiliaries=0;
   installReaderDatabaseQuery(async statements=>{
-    if(absentLegacyMemberOffices(statements[0])){legacyOfficeReads++;return[[]];}
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
     if (keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[])];
@@ -248,7 +223,6 @@ test("an unavailable local territory file leaves the ballot's canonical families
       await assert.rejects(data.registryRead,error=>error === failure);
       await data.districtRead;
       assert.equal(auxiliaries,1,"the single canonical batch still loads all independent ballot families");
-      assert.equal(legacyOfficeReads,1,"the state-filtered legacy office lookup remains available without a local territory file");
       assert.equal((await readerCanonicalEntry("BALLOT_CANDIDACY",stateAuthorityPointers("ballot-contests","AZ")[0].scope))?.kind,"NOT_RECORDED");
     });
   } finally { installReaderDatabaseQuery(undefined); }
@@ -259,7 +233,7 @@ test("the selected funding slice survives later official aliases without another
   const { primeReaderProjection } = await import("../lib/civic-data/read-model.ts");
   const { provenEdgeEntry } = await import("./helpers/promoted-edge-entry.ts");
   const { requiredRoutineContract } = await import("../lib/civic-data/contracts.ts");
-  const contract = requiredRoutineContract("fec-funding:AZ");
+  const contract = requiredRoutineContract("fec-funding");
   const entry = provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: contract.scope, sourceId: contract.sourceId,
     versionId: "bs01-funding-slice", value: { candidates: [{ targetKeys: ["ballot-az-federal-candidate"] }] } });
   assert.equal(entry.kind, "PROMOTED");

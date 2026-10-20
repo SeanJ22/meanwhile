@@ -94,30 +94,6 @@ test("corrupt or unwritable disposable copies fall back to the actual database r
   assert.deepEqual(await cache(blocked).rows(input), [{ hash: "hash", payload: { verified: true } }]);
 });
 
-test("a shared copy streams to scratch storage and becomes visible only after the complete upload", async t => {
-  const root = await scratch(t), key = "a".repeat(64), chunk = Buffer.alloc(64 * 1024, "x");
-  let release!: () => void, entered!: () => void;
-  const waiting = new Promise<void>(done => { release = done; });
-  const started = new Promise<void>(done => { entered = done; });
-  async function* body() {
-    yield chunk;
-    entered(); await waiting;
-    for (let index = 1; index < 64; index++) yield chunk;
-  }
-  const copy = saveCivicReadCopy(root, key, body());
-  try {
-    await started;
-    const [temporary] = await readdir(root);
-    assert.match(temporary!, /\.tmp$/);
-    assert.equal((await readFile(join(root, temporary!))).byteLength, chunk.byteLength);
-    await assert.rejects(readFile(join(root, key + ".json")), {code: "ENOENT"});
-  } finally { release(); await copy; }
-  const saved = await readFile(join(root, key + ".json"));
-  assert.equal(saved.byteLength, 64 * chunk.byteLength);
-  assert.ok(saved.every(byte => byte === 120));
-  assert.deepEqual(await readdir(root), [key + ".json"]);
-});
-
 test("the runner's one copy host serves every child, and a child that inherits it starts no other", async t => {
   const saved = { ...process.env };
   const cwd = process.cwd();

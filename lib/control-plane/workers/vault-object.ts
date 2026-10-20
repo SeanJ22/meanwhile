@@ -1,16 +1,19 @@
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readArtifact, type EvidenceStore } from "../evidence/store.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { readArtifactsById } from "./scoped-history.ts";
-import { artifactVaultKeys } from "./vault-keys.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 
 /** Resolve first-observation metadata, including partial acquisitions, without any retrieval. */
 export function researchVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly snapshot?: boolean } = {}) {
+  let snapshotRecords: Promise<readonly ArtifactRecord[]> | undefined;
+  let snapshotKeys: Promise<string[]> | undefined;
   const resolved = new Map<string, Promise<{ artifact: Artifact; key: string; bytes: Uint8Array }>>();
   const resolve = async (id: string): Promise<{artifact: Artifact; key: string; bytes: Uint8Array}> => {
-    const records = await readArtifactsById(repos, id);
+    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
+    const records = all.filter(a => a.artifactId === id);
     if (!records.length) throw new Error("RESEARCH_ARTIFACT_METADATA_MISSING");
-    const keys = await artifactVaultKeys(store, project, records);
+    const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
+    const hashes = new Set(records.map(record => record.contentHash));
+    const keys = listed.filter(key => hashes.has(key.slice(key.lastIndexOf("/") + 1).split(".")[0]));
     // No local/remote bytes means acquisition is owed. Do not query every
     // historical acquiring Attempt to rediscover the same absent object.
     if (!keys.length) throw new Error("RESEARCH_ARTIFACT_VAULT_IDENTITY_MISSING");

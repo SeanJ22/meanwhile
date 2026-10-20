@@ -1,4 +1,4 @@
-import { lookupCivicAddress, type CivicReadOptions } from "./api-read.ts";
+import { lookupCivicAddress, type CivicReadOptions } from "./acquisition.ts";
 import { GOOGLE_CIVIC_DOCS, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import type { CivicJson, CivicLookup } from "./model.ts";
 import { GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../../ballot/voting-answer.ts";

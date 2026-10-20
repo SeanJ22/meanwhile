@@ -1,5 +1,3 @@
-import { meetingDerivationScope } from "./meeting-derivation-scope.ts";
-import { readMeetingDerivationProjection, type MeetingDerivationReadOptions, type MeetingDerivationRead } from "./meeting-derivation-read.ts";
 import { meetingRouteIdentity } from "./meeting-body-crosswalk.ts";
 import { createHash } from "node:crypto";
 
@@ -14,7 +12,9 @@ import {
 } from "./derived-authority.ts";
 import {
   civicDataReadNotInitialized,
+  readPromotedCivicData,
   type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig, isDataDoorKind, type DataDoorKind } from "./derived-door-kinds.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
@@ -138,9 +138,9 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
 let installed: CivicDataReadResult<DerivedWiringProjection> | null = null;
 
 export async function readDerivedMeetingWiring(
-  options: MeetingDerivationReadOptions = {},
-): Promise<MeetingDerivationRead<DerivedWiringProjection>> {
-  const result = await readMeetingDerivationProjection<DerivedWiringProjection>({ family: "meeting-source-wiring", options, statePath: ["row", "state"], value: records => ({ kind: "meeting-source-wiring", formatVersion: 1, records: records as readonly DerivedWiringRecord[] }) });
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<DerivedWiringProjection>> {
+  const result = await readPromotedCivicData<DerivedWiringProjection>(DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, options);
   if (result.kind === "PROMOTED") {
     const issue = derivedWiringProjectionIssue(result.value);
     if (issue !== null) {
@@ -189,9 +189,7 @@ export function derivedWiringCandidate(
   plan: DerivedVersionPlan<DerivedWiringRow>,
   extraInputs: readonly DerivedInputRef[],
   attemptedAt: string,
-  state?: string,
 ): RoutineCandidate {
-  const scope = state === undefined ? DERIVED_WIRING_SCOPE : meetingDerivationScope("meeting-source-wiring", state);
   const readModel = derivedWiringProjection(plan);
   const byKey = new Map<string, DerivedInputRef>();
   for (const input of [...plan.inputs, ...extraInputs]) byKey.set(canonicalCivicDataJson(input), input);
@@ -210,18 +208,17 @@ export function derivedWiringCandidate(
       refusals: plan.refusals,
     },
   };
-  const shapeIssue = derivedWiringProjectionIssue(readModel) ?? (state && readModel.records.some(record => record.row.state !== `US-${state.toUpperCase()}`)
-    ? "the state wiring contains a body outside its state" : null);
+  const shapeIssue = derivedWiringProjectionIssue(readModel);
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   return {
-    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: WIRING_SOURCE_ID,
     recordClass: DERIVED_WIRING_RECORD_CLASS,
-    scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, scope),
+    scope: DERIVED_WIRING_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE),
     retrieval: {
       succeeded,
-      requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, scope),
+      requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, DERIVED_WIRING_SCOPE),
       finalUrl: null,
       httpStatus: null,
       retrievedAt,
@@ -247,7 +244,7 @@ export function derivedWiringCandidate(
       matchBasis: "EXACT_SCOPED_ID" as const,
       ambiguous: false,
     })),
-    temporal: { version: scope, expectedVersion: scope, sourceThrough: retrievedAt, staleAtRetrieval: false },
+    temporal: { version: DERIVED_WIRING_SCOPE, expectedVersion: DERIVED_WIRING_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
     semantics: {
       factKind: "reviewed calendar-to-body connections recomputed from promoted and vaulted inputs",
       violations: [
@@ -275,21 +272,20 @@ export function derivedWiringCandidate(
   };
 }
 
-export function derivedWiringFailedCandidate(attemptedAt: string, failureDetail: string, state?: string): RoutineCandidate {
-  const scope = state === undefined ? DERIVED_WIRING_SCOPE : meetingDerivationScope("meeting-source-wiring", state);
+export function derivedWiringFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
-    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${scope}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${WIRING_SOURCE_ID}\u001f${DERIVED_WIRING_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
     sourceId: WIRING_SOURCE_ID,
     recordClass: DERIVED_WIRING_RECORD_CLASS,
-    scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, scope),
-    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, scope), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
+    scope: DERIVED_WIRING_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(WIRING_SOURCE_ID, DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE),
+    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(WIRING_SOURCE_ID, DERIVED_WIRING_SCOPE), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
     normalization: {
       succeeded: false, parserVersion: WIRING_PARSER, schemaVersion: "meeting-source-wiring:1", normalizedHash: null,
       inputRecords: 0, outputRecords: 0, droppedRecords: 0, missingRequiredFields: [], failureDetail,
     },
     identities: [],
-    temporal: { version: scope, expectedVersion: scope, sourceThrough: attemptedAt, staleAtRetrieval: false },
+    temporal: { version: DERIVED_WIRING_SCOPE, expectedVersion: DERIVED_WIRING_SCOPE, sourceThrough: attemptedAt, staleAtRetrieval: false },
     semantics: { factKind: "reviewed calendar-to-body connections recomputed from promoted and vaulted inputs", violations: [] },
     horizon: { kind: "OPEN_FACT_SET", query: "no inputs read", returnedRecords: 0, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },

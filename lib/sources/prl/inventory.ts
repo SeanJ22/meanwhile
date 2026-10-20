@@ -15,7 +15,7 @@ export const PRL_DATA_BASE = "https://americaspoliticalpulse.com/data/elite/" as
 /** Where a dataset's rows come to rest. */
 export type PrlTarget =
   | "reference" // committed dictionary CSV; field meanings become code
-  | "profile" // source-normalized per-official objects; the release root enters Postgres
+  | "profile" // small per-official aggregate → promotion plane (Postgres)
   | "archive"; // large raw rows → object storage bucket
 
 export type PrlFormat = "csv" | "csv-zip" | "json-zip";
@@ -78,9 +78,9 @@ export const PRL_DICTIONARIES: readonly PrlDataset[] = [
 
 /**
  * The three aggregate profile files. PRL has already computed the per-official
- * shares; we read its means, refuse its ranks/percentiles/ideology, and store
- * one native person's profile per immutable object. The source root and counts
- * publish through `PRL_PROFILE` or `PRL_ARCHIVE`.
+ * shares; we read its means, refuse its ranks/percentiles/ideology, and promote
+ * the small result. `profiles-all-national` is served through the separate
+ * `PRL_PROFILE` path and is listed here only so the inventory is complete.
  */
 export const PRL_PROFILES: readonly PrlDataset[] = [
   {

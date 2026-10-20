@@ -6,9 +6,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 import { carryBackRuntimeState, linkRuntimeState, parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
-import { admittedAsyncRunCommand, discardStagedReleases, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
-
-const defaultAsyncRunCommand = admittedAsyncRunCommand({ acquire: async () => () => {} });
+import { defaultAsyncRunCommand, discardStagedReleases, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
 
 const git = (cwd: string, ...args: string[]): string =>
   execFileSync("git", ["-c", "user.email=t@example.com", "-c", "user.name=t", "-c", "commit.gpgsign=false", ...args], { cwd, encoding: "utf8" }).trim();

@@ -128,14 +128,10 @@ test("a release drain ends only its owned idle routine child while an unrelated 
   const { spawn } = await import("node:child_process");
   const unrelated = spawn(process.execPath, ["-e", "setInterval(()=>{},1000)"], { stdio: "ignore" });
   try {
-    let entered!: () => void;
-    const childEntered = new Promise<void>(resolve => { entered = resolve; });
     const running = runRuntimeChildren([{ id: "idle-routine", executable: process.execPath,
       args: ["-e", "console.log('routine entered');setInterval(()=>{},1000)"] }], {
       cwd: process.cwd(), env: process.env, maxBufferBytes: 4096,
-      onStdout: (_id, output) => { if (output.includes("routine entered")) entered(); },
     });
-    await childEntered;
     await assert.rejects(waitForRuntimeQuiescence(async () => { await running; }, {
       reason: "release", noProgressMs: 400,
     }), /RUNTIME_DRAIN_NO_PROGRESS/);

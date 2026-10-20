@@ -105,17 +105,6 @@ export function reconcileOfficialCandidacies(input: {
   const rows = new Map(input.bridge.rows.map(row => [row.holder.id, row]));
   for (const holder of holders.values()) {
     const office = officeIdentity(holder.officeTitle);
-    const previous = rows.get(holder.id);
-    if (previous?.status === "RESOLVED" && previous.candidacy) {
-      const currentBallot = contests.find(row => row.contest.id === previous.candidacy!.contestId &&
-        row.candidates.some(candidate => candidate.candidate.id === previous.candidacy!.candidacyId));
-      if (currentBallot && (!office || !holder.divisions.includes(currentBallot.contest.ocdId) || office !== currentBallot.office ||
-        !sameSeatDiscriminators(currentBallot.contest.title,holder.officeTitle,currentBallot.contest.ocdId))) {
-        rows.set(holder.id,{holder,status:"IDENTITY_UNRESOLVED",candidacy:null,
-          reason:"The current sourced office and division do not reproduce the prior candidacy's exact seat.",
-          unresolvedCandidacyIds:[previous.candidacy.candidacyId],ballotSourceUrls:httpsUrls([currentBallot.contest.provenance.sourceUrl])});
-      }
-    }
     if (!office) continue;
     const exact = holder.divisions.flatMap(division => bySeat.get(`${division}\u0000${office}`) ?? [])
       .filter(({ contest }) => sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId));
@@ -703,13 +692,6 @@ function registryPublishedReceipt(row: Pick<PublishedCandidateMetadata, "candida
 
 const priorStores = new WeakMap<RegistryRuntimePrior, { store: CivicDataReadStore; normalization: PublishedCandidateMetadata["candidate"]["normalization"] }>();
 
-/** Reuse an immutable, genuinely read base while each candidate consumes its own authority handle. */
-export function copyRegistryRuntimePrior(prior:RegistryRuntimePrior):RegistryRuntimePrior {
-  const held=priorStores.get(prior);
-  if(!held)throw new Error("REGISTRY_RUNTIME_PRIOR_PROOF_UNAVAILABLE");
-  const copy={...prior};priorStores.set(copy,held);return copy;
-}
-
 export async function acceptedRegistryPrior(store: CivicDataReadStore, published: PromotionOutcome): Promise<RegistryRuntimePrior> {
   if (!published.promoted) throw new Error("REGISTRY_PUBLICATION_NOT_ACCEPTED");
   const candidate = published.candidate.candidate;
@@ -814,8 +796,7 @@ function registryCandidateFromIsolation(input: RegistryRuntimePackage, isolated:
   const normalizedPayload = { version: input.version, sources: sources.map(({ finalUrl, rawHash }) => ({ finalUrl, rawHash })) };
   const normalizedHash = canonicalCivicDataHash(payload);
   const normalizedPayloadHash = canonicalCivicDataHash(normalizedPayload);
-  const primary = [...promotionReceipt.sources].sort((left,right) => `${left.finalUrl}\n${left.rawHash}`.localeCompare(`${right.finalUrl}\n${right.rawHash}`))
-    .find((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED");
+  const primary = sources.find((source) => (source.reviewOutcome ?? "SUPPORTED") === "SUPPORTED");
   const blockedSources = input.sourceReceipt.sources.filter((source) => source.reviewOutcome === "BLOCKED");
   const acquired = isolated.supportedCurrentSources > 0 && Boolean(primary);
   const records = civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload);

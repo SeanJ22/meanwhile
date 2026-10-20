@@ -6,8 +6,7 @@ import { readMeetingBodies } from "../../meetings/edge-serving.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import { doorFactsAt, meetingSittingsByDoor, overdueDoors, type DoorFacts, type OverdueDoor } from "../../doors/overdue.ts";
 import { readOnSchedule, type DoorRecord } from "../../doors/registry.ts";
-import { ensureMeetingDoors, installDoorRecords } from "../../doors/meeting-doors.ts";
-import { REGISTRY_STATES } from "../../civic-data/state-scopes.ts";
+import { ensureMeetingDoors } from "../../doors/meeting-doors.ts";
 import { fixItems } from "../fix-list.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { DoorNumberReadings } from "./door-numbers.ts";
@@ -36,17 +35,12 @@ export async function readOverdueDoors(doors: readonly DoorRecord[], now: string
 }
 
 export async function readRecentPostingToLive(): Promise<readonly PostingToLiveRow[]> {
+  await ensureMeetingDoors();
   const store = new PostgresRoutineDataStore();
+  const identities = await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, MEETING_PARTITION_CONTRACTS.map((p) => p.scope));
   const rows: PostingToLiveRow[] = [];
-  try {
-    for (const state of REGISTRY_STATES) {
-      const doors = await ensureMeetingDoors({ state });
-      if (!doors.ready) throw new Error(doors.reason);
-      const identities = await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, MEETING_PARTITION_CONTRACTS.map((p) => p.scope));
-      for (const identity of identities) rows.push(...(await readPostingToLive(store, identity.versionId) ?? []));
-    }
-    return rows;
-  } finally { installDoorRecords([]); }
+  for (const identity of identities) rows.push(...(await readPostingToLive(store, identity.versionId) ?? []));
+  return rows;
 }
 
 export async function readDoorNumbers(input: { readonly now: string; readonly doors: readonly DoorRecord[] | null; readonly config: AdminConfig | null }): Promise<Omit<DoorNumberReadings, "shutDoors">> {

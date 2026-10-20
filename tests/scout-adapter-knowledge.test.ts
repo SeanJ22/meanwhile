@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,fieldManualEntryId} from '../lib/control-plane/field-manual.ts';
+import {readFieldManual,writeFieldManual} from '../lib/control-plane/field-manual.ts';
 import {installedAdapterGuides,installedAdapterVersion} from '../lib/control-plane/scheduler/scout-adapters.ts';
 import {learnInstalledAdapters,workAdapterQueue} from '../lib/control-plane/workers/engineering-adapter.ts';
 import type {ScoutResult} from '../lib/control-plane/scheduler/scout-result.ts';
@@ -36,30 +36,4 @@ test('Engineer offers installed extraction to other tenants before buying anothe
   transportFor:()=>async()=>{models++;throw Error('Installed code comes first');},
   request:async()=>{pulls++;throw Error('No duplicate adapter PR');}});
  assert.deepEqual(opened,[]);assert.equal(models,0);assert.equal(pulls,0);
-});
-
-test('Engineer folds country bookkeeping metadata and opens only installed guide identities',async()=>{
- const repos=createMemoryRepositories(),now='2026-10-02T00:00:00Z';
- const platform='custom-unimplemented-platform',attempt='own-attempt';
- const saved=await writeFieldManual(repos,[...Array.from({length:180},(_,index)=>newFieldManualEntry('engineer-investigation',`other-${index}`,{
-  role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:`other-${index}`,platforms:[`other-${index}`],outcome:'BLOCKED',
-  summary:'A different place history',payload:{sourceAttemptId:`other-attempt-${index}`,tried:['country narrative '.repeat(1000)]},
- })),newFieldManualEntry('engineer-investigation',platform,{role:'ENGINEER',kind:'ENGINEER_INVESTIGATION',title:platform,
-  platforms:[platform],outcome:'BLOCKED',summary:'Already exhausted this exact evidence',payload:{sourceAttemptId:attempt,tried:['Already exhausted this exact evidence']}})],now);
- assert.equal(saved.error,undefined,'the investigation fixture must actually persist');
- const guideIds=new Set((await installedAdapterGuides()).map(guide=>fieldManualEntryId('installed-adapter',guide.name)));
- let scans=0,models=0,evidenceReads=0;
- const watched={...repos,fieldManual:{...repos.fieldManual,
-  readMany:async(ids:readonly string[])=>{assert.ok(ids.every(id=>guideIds.has(id)));return repos.fieldManual.readMany(ids);},
-  visitSlice:async(...args:Parameters<typeof repos.fieldManual.visitSlice>)=>{
-   scans++;assert.ok(args[2]);assert.notEqual(args[2]?.payload,true,'country payloads never cross bookkeeping selection');
-   await repos.fieldManual.visitSlice(args[0],async row=>{assert.doesNotMatch(JSON.stringify(row.value),/country narrative/);await args[1](row);},args[2]);
-  },
- }};
- const result={attemptId:attempt,subjectId:'ocd-division/country:us/state:az/county:pima',recordClass:'OFFICIAL_ROSTER',refusal:null,
-  outcome:'NEEDS_ADAPTER',recordedAt:now,narrative:'Need this exact publisher adapter',candidates:[{routeId:platform,procedure:''}],nextRungs:[],rungs:[],artifactIds:['own-capture']} as unknown as ScoutResult;
- const opened=await workAdapterQueue({repos:watched,results:[result],now,
-  readEvidence:async()=>{evidenceReads++;throw Error('An exhausted exact attempt never reopens source bytes');},
-  transportFor:()=>async()=>{models++;throw Error('An exhausted exact attempt never buys another model');}});
- assert.deepEqual(opened,[]);assert.equal(models,0);assert.equal(evidenceReads,0);assert.equal(scans,1);
 });

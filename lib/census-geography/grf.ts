@@ -6,9 +6,6 @@ import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, h
 import type { GeographyApplicability } from "./selection.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { establishedApplicability } from "./selection.ts";
-import { createReadStream } from "node:fs";
-import { createInterface } from "node:readline";
-import { censusSourceFile } from "./tiger-source.ts";
 
 /** The 2026 congressional map from Census grf block files; the tab20 relationship files stop at the 119th Congress. Shares are area-based, as in the tab20 build. */
 export const GRF_ROOT = "https://www2.census.gov/geo/docs/maps-data/data/grf/";
@@ -175,15 +172,10 @@ export function legislativeTarget(column: "SLDUST" | "SLDLST", year: number): Gr
 export function grfTargetsFromNames(text: string): readonly GrfTarget[] {
   const lines = text.trim().split(/\r?\n/);
   const header = parseGrfHeader(lines.shift() ?? "");
-  const vintage = header.indexOf("VINTAGE");
-  // GRFN also lists historical geographies (for example CA's vintage-70
-  // 116th Congress). The block file's CUR columns refer to vintage 90.
-  const current = lines.map(line => line.split("|"))
-    .filter(row => vintage < 0 || row[vintage]?.trim() === "90");
   const valueOf = (name: string): number => {
     const index = header.indexOf(name);
     if (index < 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grfn header is missing ${name}`);
-    const values = new Set(current.map(row => row[index]?.trim()).filter(value => value && /^\d+$/.test(value) && Number(value) > 0));
+    const values = new Set(lines.map(line => line.split("|")[index]?.trim()).filter(value => value && /^\d+$/.test(value) && Number(value) > 0));
     if (values.size !== 1) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grfn does not establish one ${name}: ${[...values].join(", ")}`);
     return Number([...values][0]);
   };
@@ -270,28 +262,32 @@ export async function acquireGrfScopes(targets: readonly GrfTarget[], options: A
       blockChecksum = provenance.sourceChecksums[provenance.sourceFiles.indexOf(blockUrl.split("/").pop()!)]!;
       blockValidator = provenance.sourceValidators!.find(row => row.url === blockUrl)!;
     } else {
-      const parse = async (path: string): Promise<readonly BuiltScope[]> => {
-        let header: string[] | null = null, accs: GrfAccumulator[] = [];
-        const lines = createInterface({input:createReadStream(path),crlfDelay:Infinity});
-        for await (const line of lines) {
-          options.signal?.throwIfAborted();
-          if (!header) { header=parseGrfHeader(line); accs=plans.map(target=>new GrfAccumulator(target,resolveGrfColumns(header!,target.column))); continue; }
-          if (line === "") continue;
-          const fields=line.split("|");
-          if (fields.length !== header.length || fields[header.indexOf("TABBLKST")] !== state) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID",`grf malformed block row for ${state}`);
-          for (const acc of accs) acc.add(fields);
+      const parse = (bytes: Uint8Array): readonly BuiltScope[] => {
+        const text = new TextDecoder().decode(bytes);
+        let newline = text.indexOf("\n");
+        const header = parseGrfHeader(text.slice(0, newline).replace(/\r$/, ""));
+        const accs = plans.map(target => new GrfAccumulator(target, resolveGrfColumns(header, target.column)));
+        let offset = newline + 1;
+        while (offset < text.length) {
+          newline = text.indexOf("\n", offset);
+          const line = text.slice(offset, newline < 0 ? undefined : newline).replace(/\r$/, "");
+          if (line !== "") {
+            const fields = line.split("|");
+            if (fields.length !== header.length || fields[header.indexOf("TABBLKST")] !== state) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf malformed block row for ${state}`);
+            for (const acc of accs) acc.add(fields);
+          }
+          if (newline < 0) break;
+          offset = newline + 1;
         }
-        if (!header || accs.some(acc => acc.stats().blocks === 0)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf returned no blocks for ${state}`);
+        if (accs.some(acc => acc.stats().blocks === 0)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf returned no blocks for ${state}`);
         return accs.map((acc, index) => acc.finish({ key: plans[index].version, type: plans[index].type, plan: plans[index].plan,
           zctaTabulation: "2020", effectiveFor: plans[index].effectiveFor,
           provenance: { sourceUrls: [], sourceDataset: `CENSUS_GRF_CUR${year}`, sourceFiles: [], sourceChecksums: [], method: "pending source assembly", computedAt: new Date().toISOString() } }));
       };
       let parsed: readonly BuiltScope[] | undefined;
-      const blocks = await censusSourceFile(blockUrl, options, async path => { parsed = await parse(path); });
-      try {
-        stateScopes = parsed ?? await parse(blocks.path);
-        blockChecksum = blocks.sha256; blockValidator = blocks.sourceValidator;
-      } finally { await blocks.dispose(); }
+      const blocks = await censusSourceRelease(blockUrl, options, bytes => { parsed = parse(bytes); });
+      stateScopes = parsed ?? parse(blocks.bytes);
+      blockChecksum = blocks.sha256; blockValidator = sourceValidator(blocks);
     }
     for (let index = 0; index < plans.length; index++) {
       const target = plans[index];

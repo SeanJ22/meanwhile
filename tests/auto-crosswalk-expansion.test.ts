@@ -1,5 +1,4 @@
 import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
-/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -47,6 +46,7 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -145,7 +145,7 @@ async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async () => {
+test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async (t) => {
   assert.ok(DERIVED_MEETING_FAMILY_STATES.includes("US-OH"), "Ohio has a derived family with no code change");
 
   /* 1. The owner's Send creates the work. */
@@ -265,8 +265,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
 
   /* 5a. The automatic crosswalk promotes through the routine door. */
   const crosswalkPlan = planDerivedCrosswalk({ previous: [], reviews });
-  const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK, "OH");
-  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived:OH", crosswalkCandidate, T_CROSSWALK);
+  const crosswalkCandidate = derivedCrosswalkCandidate(crosswalkPlan, [], T_CROSSWALK);
+  const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", crosswalkCandidate, T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
   assert.equal(crosswalkOutcome.readerReadback?.status, "PASS", JSON.stringify(crosswalkOutcome.readerReadback));
   /* The held city is on the version's durable record, with its dead end: what Admin's held records show. */
@@ -276,11 +276,11 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal((heldFact?.record as { whoMovesNext?: string } | undefined)?.whoMovesNext, "a reviewing agent session");
 
   /* 5b. The wiring derives from the automatic rows, no reviewed crosswalk promoted at all. */
-  const automatic = await readDerivedMeetingBodyCrosswalk({ state: "OH", store, bypassCache: true, now: T_WIRING });
+  const automatic = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now: T_WIRING });
   assert.equal(automatic.kind, "PROMOTED");
   if (automatic.kind !== "PROMOTED") return;
   const automaticInput: DerivedInputRef = {
-    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-body-crosswalk-derived",
+    kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-body-crosswalk-derived",
     versionId: automatic.metadata.versionId!, readModelSha256: sha(automatic.value), promotedAt: automatic.metadata.promotedAt!,
   };
   const composed = composeCrosswalk(null, automatic.value.records);
@@ -311,11 +311,11 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.deepEqual(decisions.map((d) => [d.key, d.disposition]), [[derivedWiringKey("ICAL", COUNTY_BODY, COUNTY_ROUTE), "PROMOTE"]]);
   const wiringPlan = planDerivedVersion([], decisions);
   assert.deepEqual(wiringPlan.refusals, []);
-  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring:OH", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING, "OH"), T_WIRING);
+  const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
   /* 5c. Ohio's derived family reads the member on its own attested host and promotes. */
-  const wiring = await readDerivedMeetingWiring({ state: "OH", store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));
@@ -331,7 +331,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     };
   });
   const build = buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-OH:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
+    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring", versionId: wiring.metadata.versionId!, readModelSha256: sha(wiring.value), promotedAt: wiring.metadata.promotedAt! },
     members, reads, previous: null, generatedAt: T_FAMILY,
     reconcile: (r) => ({ meetings: r.freshMeetings, agendaDocuments: [], removalEvidence: [] }),
   });
@@ -339,9 +339,16 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
   /* 6. The Reader. */
+  let factReads = 0;
+  installFactReader(async () => {
+    factReads++;
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
   const edge = freshEdge();
   assert.equal((await publishPass(store, edge, T_READER)).status, "PUBLISHED");
   const reader = await readPlace(edge, store, [COUNTY_DIVISION, "ocd-division/country:us/state:oh/place:franklin"], T_READER);
+  assert.equal(factReads, 0, "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COUNTY_BODY);

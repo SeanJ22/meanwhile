@@ -1,5 +1,5 @@
 import { readRolePlaybook } from "../playbooks.ts";
-import { backfillBox } from "../box.ts";
+import { indexScoutFindings, indexDetectiveFindings, indexReportedFinding } from "../box.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
@@ -10,7 +10,7 @@ import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { hostSpacer } from "../scheduler/http-executor.ts";
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import { standingFleetRuntime } from "./standing.ts";
-import { openRuntimeMethod, requireRuntimeMethodVersion } from "../../method/runtime-manual.ts";
+import { readMethodKnowledge } from "../../method/manual-bridge.ts";
 import { scoutStateHint } from "../scheduler/field-manual-scout.ts";
 import { researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { durableResearchTools } from "./durable-research-tools.ts";
@@ -19,23 +19,15 @@ import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-re
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
-import { installOperationalReferenceSubjects, releaseOperationalReferenceState, requiredJurisdictionRegistry } from "../../civic-data/operational-references.ts";
-import { readOperationalReferenceSubjects, readOperationalReferenceStateIndex } from "../../civic-data/operational-reference-state-read.ts";
-import { hasReviewedRegistry } from "../../civic-data/reviewed-registry-states.ts";
+import { promotedRegistries } from "../scheduler/provider-inputs.ts";
 import { brokeredSiblingCaptures, selectStandingLineages } from "./standing-lineage.ts";
 import { readLineageHistory } from "./scoped-history.ts";
-import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
-import { indexReportedFinding } from "../box.ts";
 import { hunterFor, readAskedGaps } from "../../hunt/runtime.ts";
 import { exaAgentExecutor, EXA_AGENT_ROUTE_ID } from "../../hunt/exa-lane.ts";
 import { readGovernmentPackets } from "../../hunt/packet-read.ts";
 import { huntPacketObligationId, reportableSubjects } from "../../hunt/packet.ts";
 import type { HuntSearch, SearchBudget } from "../../hunt/search.ts";
-import { workerVaultResolver } from "./vault.ts";
-import { forEachAggregate, forEachLatestScout } from "./streamed-history.ts";
-import { refreshDoorsForPass } from "../../doors/install.ts";
-import { jurisdictionMatchesSubject } from "../../hunt/jurisdiction-identity.ts";
 
 /** One runtime over the same stores and bounded worker infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -54,85 +46,64 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The rolling ceiling in force; the auditor admits against it (model-audit.ts). */
   auditCeilingUsd?:number;
   lifetimeHuntSubject?:(subjectId:string)=>boolean;
-  /** Each task's history reads are scoped to its own work item, subject and lineage. */
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
   transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport;
   refusedBeforeSending?:(error:unknown)=>boolean}):Promise<AutonomousCoordinatorRuntime> {
+  if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
-  let siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = () => null;
+  const siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = async held => {
+    const history=await readLineageHistory(input.repos,held.childWorkItemId);
+    for (const lineage of selectStandingLineages(history)) {
+      if (!lineage.siblingRootIds.includes(held.originWorkItemId) || lineage.rootWorkItemId===held.originWorkItemId) continue;
+      const address=registeredPublisherAddressFor(history.workItems.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
+      if (!address) continue;
+      const brokered=brokeredSiblingCaptures({lineage,artifacts:history.artifacts,attempts:history.attempts,scouts:history.scouts,
+        registeredHost:new URL(address).hostname.toLowerCase()});
+      if (brokered.some(row=>row.originWorkItemId===held.originWorkItemId && row.artifactId===held.artifactId)) return lineage.rootWorkItemId;
+    }
+    return null;
+  };
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
     siblingHeldRootFor: held=>siblingHeldRootFor(held),
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
     ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
-  const knowledge=await openRuntimeMethod(input.repos);
-  let taskState: string | null = null, installedState: string | null = null;
-  let reviewedStates: readonly string[] | null = null;
-  const releaseState = () => { if (installedState !== null) releaseOperationalReferenceState(); installedState = null; };
-  try {
+  const knowledge=await readMethodKnowledge(input.repos);
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
 
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
+  const installed = promotedRegistries();
   const registeredPublisherAddressFor = (subjectId:string):string|null => {
-    const state = taskState ?? scoutStateHint(subjectId, null)[0];
-    if (!state) return null;
-    let registry;
-    try { registry = requiredJurisdictionRegistry(state); } catch { return null; }
-    const found = registry.jurisdictions.filter(row=>jurisdictionMatchesSubject(row, subjectId));
+    if ("unreadable" in installed) return null;
+    const found = [...installed.registries.values()].flatMap(registry=>registry.jurisdictions.filter(row=>row.id===subjectId));
     if (found.length !== 1) return null;
     const address = found[0]!.ownWebAddress;
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
     catch { return null; }
   };
-  // The worker replaces its history when it starts another place.
-  let lineages: ReturnType<typeof selectStandingLineages> = [];
-  let sharedOriginByRoot=new Map<string,Set<string>>();
-  const brokerLineages=(history:{occurrences:Parameters<typeof selectStandingLineages>[0]["occurrences"];workItems:readonly WorkItem[];
-    artifacts:Parameters<typeof selectStandingLineages>[0]["artifacts"];attempts:Parameters<typeof selectStandingLineages>[0]["attempts"];
-    workerResults:Parameters<typeof selectStandingLineages>[0]["workerResults"];scouts:readonly ScoutResult[]})=>{
-    lineages=selectStandingLineages(history);
-    sharedOriginByRoot=new Map();
-    for (const lineage of lineages.filter(row=>row.siblingRootIds.length>1)) {
-      const address=registeredPublisherAddressFor(history.workItems.find(item=>item.id===lineage.rootWorkItemId)?.subject??"");
-      if (!address) continue;
-      const registeredHost=new URL(address).hostname.toLowerCase();
-      const brokered=brokeredSiblingCaptures({lineage,artifacts:history.artifacts,attempts:history.attempts,scouts:history.scouts,registeredHost});
-      sharedOriginByRoot.set(lineage.rootWorkItemId,new Set(brokered.map(row=>`${row.originWorkItemId}\u0000${row.artifactId}`)));
+  const prepareWorkItem = async (item:WorkItem):Promise<WorkItem> => {
+    const row = await input.repos.workItems.mustRead(item.id);
+    const plan = row.value.autonomousPlan;
+    if (plan?.contract.schemaVersion === 2 && plan.contract.methodVersion === 0 &&
+      plan.contract.extraction.format === "UNSUPPORTED" && !plan.contract.sourceScope.observationArtifactIds.length) {
+      item = (await input.repos.workItems.compareAndSet(row.id,row.revision,{...row.value,
+        autonomousPlan:{...plan,contract:{...plan.contract,methodVersion:knowledge.version}}},now())).value;
     }
+    const history=await readLineageHistory(input.repos,item.id);
+    for (const result of history.scouts) await indexScoutFindings(input.repos.boxFindings,result,now());
+    for (const record of history.workerResults) if (record.result.role === "DETECTIVE") {
+      await indexDetectiveFindings(input.repos.boxFindings,{...record,result:record.result},input.repos.artifacts,now());
+    }
+    if (history.scouts.some(result=>result.outcome === "NEEDS_ADAPTER" && result.refusal === null)) {
+      await workAdapterQueue({repos:input.repos,results:history.scouts,now:now(),
+        readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
+        ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
+    }
+    return item;
   };
 
-  siblingHeldRootFor=held=>{
-    const lineage=lineages.find(row=>row.siblingRootIds.includes(held.originWorkItemId) &&
-      row.rootWorkItemId!==held.originWorkItemId &&
-      sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
-    return lineage?.rootWorkItemId??null;
-  };
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: async () => {
-    releaseState(); taskState = null;
-    try { await heldRuntime.close(); } finally { await knowledge.close(); }
-  },
-    beginTask:async (task)=>{
-      releaseState(); lineages = []; sharedOriginByRoot.clear(); taskState = null;
-      const item = await input.repos.workItems.read(task.workItemId);
-      const contract = task.workerTask?.contract ?? item?.value.autonomousPlan?.contract;
-      const jurisdiction = contract?.schemaVersion === 2 ? contract.jurisdiction.state : item?.value.autonomousPlan?.jurisdiction;
-      const states = scoutStateHint(item?.value.subject, jurisdiction), state = states.length === 1 ? states[0] : null;
-      taskState = state;
-      if (!mayUseTestFixture()) {
-        if (state) {
-          reviewedStates ??= (await readOperationalReferenceStateIndex()).states;
-          if (reviewedStates.includes(state) || hasReviewedRegistry(state)) {
-            const subjectIds = [...new Set([item?.value.subject, contract?.subjectId,
-              contract?.schemaVersion === 2 ? contract.jurisdiction.canonicalId : undefined].filter((id): id is string => Boolean(id)))];
-            const read = await readOperationalReferenceSubjects(state, subjectIds);
-            installOperationalReferenceSubjects(read.registry, reviewedStates, subjectIds);
-            installedState = state;
-          }
-          const doors = await refreshDoorsForPass(input.repos.doors, { state });
-          if (!doors.partitions?.refreshed) throw new Error(doors.reason ?? "The task's registered doors could not be read");
-          await refreshVenueResolutionsFromPromoted({ state });
-        }
-      }
-      brokerLineages(await readLineageHistory(input.repos,task.workItemId)); },
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
+    prepareWorkItem,
+    beginTask:async (task,item)=>{ await prepareWorkItem(item??(await input.repos.workItems.mustRead(task.workItemId)).value); },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
     ...(input.transport?{scoutFor:async (item:WorkItem,task)=>{
@@ -146,7 +117,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       };
       const exaKey=(input.environment??process.env).EXA_API_KEY?.trim();
       if (task.routeId===EXA_AGENT_ROUTE_ID) {
-        const packetNow=async()=>(await readGovernmentPackets([item.subject],now(),await readAskedGaps(input.repos,now(),item.subject))).get(item.subject)??null;
+        const packetNow=async()=>(await readGovernmentPackets([item.subject],now(),await readAskedGaps(input.repos,now()))).get(item.subject)??null;
         return exaAgentExecutor({key:exaKey,now,budget:input.searchBudget,packetNow,
           ...(input.endsAt!==undefined?{endsAt:input.endsAt}:{}),...(input.progress?{progress:input.progress}:{}),
           instructions:async()=>(await readRolePlaybook(input.repos,"HUNTER")).text,
@@ -165,41 +136,4 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         ...(search?{search}:{}),...(input.environment?{environment:input.environment}:{}),readHeldArtifact},item,task);
     }}:{})};
   return runtime;
-  } catch (error) { releaseState(); await knowledge.close(); throw error; }
-}
-
-/** The round's upkeep streams one source log or work page; lease workers do only their place's work. */
-export async function maintainAutonomousStandingRuntime(input: Parameters<typeof autonomousStandingRuntime>[0]): Promise<void> {
-  const now = input.now ?? (() => new Date().toISOString());
-  const methodVersion = await requireRuntimeMethodVersion(input.repos);
-  const needsMethod = (item: WorkItem) => {
-    const contract = item.autonomousPlan?.contract;
-    return contract?.schemaVersion === 2 && contract.methodVersion === 0 &&
-      contract.extraction.format === "UNSUPPORTED" && contract.sourceScope.observationArtifactIds.length === 0;
-  };
-  await forEachAggregate(input.repos.workItems, async header => {
-    if (!needsMethod(header.value)) return;
-    const row = await input.repos.workItems.mustRead(header.id);
-    if (!needsMethod(row.value)) return;
-    const plan = row.value.autonomousPlan;
-    if (!plan || plan.contract.schemaVersion !== 2) return;
-    await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
-      autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion } } }, now());
-  }, { autonomousPlan: { contract: { schemaVersion: true, methodVersion: true, extraction: ["format"], sourceScope: ["observationArtifactIds"] } } });
-  await backfillBox(input.repos, now());
-  const vault = workerUpkeepEvidence(input);
-  await forEachLatestScout(input.repos.scoutResults, result => workAdapterQueue({ repos: input.repos,
-    results: [result], now: now(), readEvidence: vault,
-    ...(input.transportFor ? { transportFor: result => input.transportFor!({ subjectId: result.subjectId,
-      state: scoutStateHint(result.subjectId, result.obligationId)[0] ?? null }) } : {}) }).then(() => {}), async header => {
-    if (header.outcome === "NEEDS_ADAPTER") return true;
-    await workAdapterQueue({ repos: input.repos, results: [], now: now() });
-    return false;
-  });
-}
-
-function workerUpkeepEvidence(input: Parameters<typeof autonomousStandingRuntime>[0]) {
-  const store = new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR));
-  const read = workerVaultResolver(input.repos, store, "freshness");
-  return async (id: string) => evidenceProjection(await read(id));
 }

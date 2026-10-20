@@ -37,13 +37,10 @@ export async function extractTextLayer(
   }
 
   let doc;
-  let loadingTask: ReturnType<(typeof import("pdfjs-dist/legacy/build/pdf.mjs"))["getDocument"]> | undefined;
   try {
     const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-    loadingTask = getDocument({ data: bytes, useWorkerFetch: false });
-    doc = await loadingTask.promise;
+    doc = await getDocument({ data: bytes, useWorkerFetch: false }).promise;
   } catch (error) {
-    await loadingTask?.destroy();
     return cannotRun(
       "TEXT_LAYER",
       source,
@@ -53,10 +50,9 @@ export async function extractTextLayer(
   }
 
   const pages: PdfPage[] = [];
-  const numPages = doc.numPages;
   let pagesEmpty = 0;
   try {
-    for (let i = 1; i <= numPages; i += 1) {
+    for (let i = 1; i <= doc.numPages; i += 1) {
       const page = await doc.getPage(i);
       const content = await page.getTextContent();
       const text = content.items
@@ -70,10 +66,10 @@ export async function extractTextLayer(
       else pagesEmpty += 1;
     }
   } finally {
-    await loadingTask!.destroy();
+    await doc.cleanup();
   }
 
-  const counts = { pages: numPages, pagesWithText: pages.length, pagesEmpty };
+  const counts = { pages: doc.numPages, pagesWithText: pages.length, pagesEmpty };
 
   if (pages.length === 0) {
     /* Every page rendered and none carried text: a scan, for OCR, not an empty document. */
@@ -81,7 +77,7 @@ export async function extractTextLayer(
       "TEXT_LAYER",
       source,
       bytes.length,
-      `all ${numPages} page(s) rendered and none carried a text layer — this is ` +
+      `all ${doc.numPages} page(s) rendered and none carried a text layer — this is ` +
         "a scanned PDF. The next rung is OCR (lib/extract/ocr.ts), NOT a finding " +
         "that the document is empty.",
       counts,

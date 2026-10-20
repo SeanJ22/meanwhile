@@ -1,7 +1,6 @@
-import { replayPropertyAs } from "../sources/verified-replay.ts";
 import { createHash } from "node:crypto";
 import { classifySourceContent, sourceBody, sourceLinks, SOURCE_FAMILIES, type SourceDisposition } from "../doors/source-content.ts";
-import { pageAddress } from "../doors/page-address.ts";
+import { pageAddress } from "../doors/page-doors.ts";
 import { extractTextLayer } from "../extract/text-layer.ts";
 import type { SiteKind } from "./voting-sites.ts";
 import { fingerprintVotingPlatform } from "./voting-source-readers.ts";
@@ -101,7 +100,7 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
     if (!/html/i.test(capture.contentType) && !/^\s*<(?:!doctype|html)/i.test(text)) continue;
     if (!disposition.belongs && pageAddress(source.url)?.url !== pageAddress(root.url)?.url) continue;
     const parentText = sourceBody(text).text;
-    const linkingPage = replayPropertyAs(capture, "bytes", "html", { url: capture.url, linkingPage: source.officialLinkingPage });
+    const linkingPage = { url: capture.url, html: text, linkingPage: source.officialLinkingPage };
     const currentElection = pageNamesElection(parentText, root.electionDate);
     for (const link of sourceLinks(text, capture.url)) {
       const resolved = runtime.resolveScope?.(link.label, link.url, source.scope);

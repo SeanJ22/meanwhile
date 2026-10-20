@@ -1,5 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
+let nextAfter: typeof import("next/server")["after"] | undefined;
+
 const responseLifetime = new AsyncLocalStorage<(work: Promise<unknown>) => void>();
 
 /** Host adapter supplies its own request lifetime without starting the Next server. */
@@ -18,8 +20,10 @@ export async function afterResponse(work: () => Promise<unknown>): Promise<void>
   const waitUntil = responseLifetime.getStore();
   if (waitUntil) { waitUntil(Promise.resolve().then(work)); return; }
   try {
-    const { after } = await import("next/server");
-    after(work);
+    // Keep the host adapter once loaded. Register later work synchronously;
+    // another asynchronous module lookup can otherwise outlive a canceled send.
+    nextAfter ??= (await import("next/server")).after;
+    nextAfter(work);
     return;
   } catch {
     await work();

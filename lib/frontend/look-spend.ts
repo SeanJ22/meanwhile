@@ -1,26 +1,14 @@
-/**
- * The look reviewer's model call and spend reservation, for the runner.
- *
- *   reserve   refuses when Admin's settings cannot be read, when research or
- *             the runner is paused, when rolling model spend cannot be
- *             measured, or when this review would cross the rolling ceiling
- *             Admin sets. Nothing here raises or bypasses that dial.
- *   call      one metered model request with the screenshots, counted against
- *             the same ceiling; through the Message Batches API when that lane
- *             is on, else one Messages request.
- */
 import { randomUUID } from "node:crypto";
 
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { costEntryWithModel, modelRequestBoundFor } from "../control-plane/cost.ts";
 import { resolveRollingCeiling } from "../control-plane/fleet-safety.ts";
-import { adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
-import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
+import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd } from "../control-plane/gateway/admin-config.ts";
 import { batchEnabledForJob, MESSAGE_BATCHES_ENDPOINT, readMessageBatchResults, retrieveMessageBatch, submitMessageBatch, type MessageBatch } from "../control-plane/model-batch.ts";
 import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY, researchSpendInWindow } from "../control-plane/scheduler/research-policy.ts";
+import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY } from "../control-plane/scheduler/research-policy.ts";
 import { readSpendWindow } from "../control-plane/spend-window.ts";
 import { canonicalModelId, MODELS } from "../models.ts";
 import type { LookReviewDeps, LookScreenshot } from "./look-review.ts";
@@ -57,13 +45,13 @@ export function lookSpendDecision(facts: LookSpendFacts, screens: number): { rea
   return { ok: admit.permits, why: admit.why };
 }
 
-type Repos = Pick<ControlPlaneRepositories, "adminConfig" | "researchIntents" | "costs">;
+type Repos = Pick<ControlPlaneRepositories, "adminConfig" | "researchIntents" | "spend">;
 
 export async function reserveLookSpend(repos: Repos, now: string, screens: number): Promise<{ readonly ok: boolean; readonly why: string }> {
-  const adminConfigRow = await readRuntimeAdminConfig(repos, ["fleetSpendCeiling"]).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
+  const adminConfigRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
   const intentLog = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY).then((rows) => [...rows], () => null);
-  const windowUsd = await readSpendWindow(repos as ControlPlaneRepositories, now)
-    .then((charges) => researchSpendInWindow(charges, now).windowUsd, () => null);
+  const windowUsd = await readSpendWindow(repos, now)
+    .then((spend) => spend.windowUsd, () => null);
   return lookSpendDecision({ adminConfigRow, intentLog, windowUsd }, screens);
 }
 

@@ -46,7 +46,6 @@ import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryC
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
-  isRegisteredRuntimeDerivation,
   runtimeAuthorityEnvelope,
   RuntimeAuthorityRefused,
   type RuntimeAuthorityEnvelope,
@@ -69,9 +68,8 @@ export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> 
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
-    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash" | "stateRecordHashes"> &
-      Partial<RoutineCandidate["normalization"]>;
-  } & Partial<Pick<RoutineCandidate, "semantics" | "horizon" | "absence" | "sourceProjectionEvidence" | "dependentChecks">>;
+    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash" | "stateRecordHashes">;
+  };
 };
 
 export function publishedCandidateMetadata(row: CandidateVersionRecord): PublishedCandidateMetadata {
@@ -79,12 +77,8 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
   const publishedRetrieval = { ...retrieval };
   delete publishedRetrieval.derived;
   return { ...row, candidate: { id, sourceId, recordClass, scope, retrieval: publishedRetrieval, temporal,
-    ...(recordClass === "FEDERAL_ROLL_CALL" && scope === "US:recent-federal-rollcalls" ? {
-      semantics: row.candidate.semantics, horizon: row.candidate.horizon, absence: row.candidate.absence,
-      sourceProjectionEvidence: row.candidate.sourceProjectionEvidence, dependentChecks: row.candidate.dependentChecks,
-    } : {}),
-    normalization: recordClass === "FEDERAL_ROLL_CALL" && scope === "US:recent-federal-rollcalls" ? normalization : { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
-      normalizedPayloadHash: normalization.normalizedPayloadHash, parserVersion: normalization.parserVersion,
+    normalization: { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
+      normalizedPayloadHash: normalization.normalizedPayloadHash,
       ...(normalization.stateRecordHashes ? { stateRecordHashes: normalization.stateRecordHashes } : {}) } } };
 }
 
@@ -124,12 +118,13 @@ export interface RoutineDataStore {
     readonly promoted: boolean; readonly sourceAuthenticity: string | null;
   } | null>;
   readonly readStatePublicationBase?: (recordClass: RoutineRecordClass, scope: string) => Promise<{ readonly current: PromotedProjection | null; readonly lkg: CandidateVersionRecord | null }>;
-  readonly readFederalRollCallPublicationBase?: () => Promise<{ readonly current: PromotedProjection | null; readonly lkg: CandidateVersionRecord | null }>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPublishedCandidateMetadata: (candidateId: string) => Promise<PublishedCandidateMetadata | null>;
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
+  /** Potential bill matches only; callers still prove every selected version. */
+  readonly historicalVoteBillVersions?: (candidateIds: readonly string[], bill: string) => Promise<readonly string[]>;
   readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
@@ -140,6 +135,7 @@ export interface RoutineDataStore {
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
   readonly pointerMoveEvents?: (candidateId: string) => Promise<readonly CandidateEvent[]>;
+  readonly pointerMoveChain?: (key: string, currentId: string) => Promise<readonly CandidateEvent[]>;
   readonly clock: (
     sourceId: string,
     recordClass: RoutineRecordClass,
@@ -263,13 +259,6 @@ export function routineDataStoreCandidateAuthorityIssue(
   if (authority.capability === "FEDERAL_PEOPLE_SPLIT") {
     return !hasAuthorityTransferMarker && (federalDirectoryStateOf(contract.id) !== null || contract.id === "congress-rollcalls")
       ? null : `the federal people split cannot mutate ${contract.id}`;
-  }
-  // A same-state candidacy derivation still uses the normal registry source receipt,
-  // validated prior, contract identity, candidate validation and Reader readback.
-  if (isRegisteredRuntimeDerivation(authority, contract.id, contract.kind)) {
-    return hasAuthorityTransferMarker
-      ? `ordinary ${authority.capability} authority cannot write an authority-transfer marker`
-      : null;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
@@ -1546,6 +1535,41 @@ export function pointerMoveEventsRead(db: RoutineClockDb, candidateId: string) {
     .orderBy(civicDataCandidateEvents.sequence);
 }
 
+/** Follow only this pointer's anchored links in one round trip, including
+ * conflicting links so the existing history reader can reject ambiguity. */
+export function pointerMoveChainRead(db: Pick<ReturnType<typeof getDb>, "execute">, key: string, currentId: string) {
+  const prefix = `Atomic pointer ${key} moved from `;
+  return db.execute<PostgresCandidateEventRow>(sql`WITH RECURSIVE chain(id, path) AS (
+    SELECT ${currentId}::text, ARRAY[${currentId}]::text[]
+    UNION ALL
+    SELECT link.previous, chain.path || link.previous
+    FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+    CROSS JOIN LATERAL (SELECT substring(e.detail FROM ${prefix.length + 1}
+      FOR greatest(0, length(e.detail) - ${prefix.length} - length(' to ' || chain.id || '.'))) AS previous) link
+    WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}
+      AND right(e.detail, length(' to ' || chain.id || '.')) = ' to ' || chain.id || '.'
+      AND link.previous <> 'bootstrap/no-version' AND link.previous <> ''
+      AND link.previous !~ '\\s' AND NOT link.previous = ANY(chain.path)
+  )
+  SELECT DISTINCT e.candidate_id AS "candidateId", e.sequence, e.state, e.at, e.detail
+  FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+  WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}`);
+}
+
+/** Filter only the already anchored history, without transferring unrelated
+ * roll calls. Encoded payloads remain candidates for the normal full reader. */
+export function historicalVoteBillVersionsRead(db: Pick<ReturnType<typeof getDb>, "execute">, ids: readonly string[], bill: string) {
+  const parsed = /^(hr|s|hres|hconres|sres|sconres)([0-9]+)$/.exec(bill);
+  if (!parsed) throw new Error("HISTORICAL_VOTE_BILL_INVALID");
+  const titlePattern = `\\m${parsed[1].split("").join("[[:space:].]*")}[[:space:].]*${parsed[2]}\\M`;
+  return db.execute<{ id: string }>(sql`SELECT requested.id FROM unnest(${sql.param([...ids])}::text[]) requested(id)
+    LEFT JOIN civic_data_candidates USING(id) WHERE candidate IS NULL OR (
+      jsonb_path_exists(candidate->'readModel', 'strict $.**."$civicPayloadPart"', '{}'::jsonb, true)
+      OR EXISTS (SELECT 1 FROM jsonb_array_elements(coalesce(candidate#>'{readModel,votes}', candidate#>'{readModel,snapshot,votes}', '[]'::jsonb)) vote
+        WHERE regexp_replace(lower(coalesce(vote->>'legisNum','')), '[^a-z0-9]', '', 'g') = ${bill}
+          OR lower(coalesce(vote->>'title','')) ~ ${titlePattern}))`);
+}
+
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
   return {
     candidateId: row.candidateId,
@@ -1923,12 +1947,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
   }
 
-  async readFederalRollCallPublicationBase(): Promise<{ current: PromotedProjection | null; lkg: CandidateVersionRecord | null }> {
-    const { readFederalRollCallPublicationBase } = await import("./federal-roll-publication-base.ts");
-    const { readerDatabaseQuery } = await import("../reader/database.ts");
-    return readFederalRollCallPublicationBase(this, readerDatabaseQuery());
-  }
-
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     if (statePublicationScope(scope)) return this.readStatePromotion<T>(recordClass, scope);
     const [row] = await this.promotionRows(recordClass, [scope]);
@@ -1990,17 +2008,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       candidate: sql<PublishedCandidateMetadata["candidate"]>`jsonb_build_object(
         'id', ${column}->'id', 'sourceId', ${column}->'sourceId', 'recordClass', ${column}->'recordClass',
         'scope', ${column}->'scope', 'retrieval', (${column}->'retrieval') - 'derived', 'temporal', ${column}->'temporal',
-        'normalization', case when ${column}->>'recordClass'='FEDERAL_ROLL_CALL' and ${column}->>'scope'='US:recent-federal-rollcalls'
-          then (${column}->'normalization')-'stateRecordHashes'
-          when ${column}->'normalization' ? '$civicPayloadPart' then ${column}->'normalization'
+        'normalization', case when ${column}->'normalization' ? '$civicPayloadPart' then ${column}->'normalization'
           else jsonb_build_object('succeeded', ${column}->'normalization'->'succeeded',
-            'parserVersion', ${column}->'normalization'->'parserVersion',
             'normalizedHash', ${column}->'normalization'->'normalizedHash',
             'normalizedPayloadHash', ${column}->'normalization'->'normalizedPayloadHash',
-            'stateRecordHashes', ${column}->'normalization'->'stateRecordHashes') end) ||
-        case when ${column}->>'recordClass'='FEDERAL_ROLL_CALL' and ${column}->>'scope'='US:recent-federal-rollcalls' then jsonb_build_object(
-          'semantics',${column}->'semantics','horizon',${column}->'horizon','absence',${column}->'absence',
-          'sourceProjectionEvidence',${column}->'sourceProjectionEvidence','dependentChecks',${column}->'dependentChecks') else '{}'::jsonb end`,
+            'stateRecordHashes', ${column}->'normalization'->'stateRecordHashes') end)`,
       state: civicDataCandidates.state,
       acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
       receipt: civicDataCandidates.validationReceipt,
@@ -2296,6 +2308,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await pointerMoveEventsRead(this.db, candidateId);
     return rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async pointerMoveChain(key: string, currentId: string): Promise<readonly CandidateEvent[]> {
+    const result = await pointerMoveChainRead(this.db, key, currentId);
+    return result.rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async historicalVoteBillVersions(ids: readonly string[], bill: string): Promise<readonly string[]> {
+    if (!ids.length) return [];
+    return (await historicalVoteBillVersionsRead(this.db, ids, bill)).rows.map(row => row.id);
   }
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */

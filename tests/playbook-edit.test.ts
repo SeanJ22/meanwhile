@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
-import { fieldManualEntryId, newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { readRolePlaybook, workerSystemPrompt, WORKER_SAFETY_FRAME } from "../lib/control-plane/playbooks.ts";
 import { playbookEditView, updateRolePlaybook } from "../lib/control-plane/playbook-edit.ts";
 
@@ -16,10 +16,7 @@ test("edited instructions reach the next worker and undo restores the previous c
   assert.notEqual(current.version, before.version);
   assert.ok(workerSystemPrompt("HUNTER", current.text).startsWith(WORKER_SAFETY_FRAME));
   const read = await readFieldManual(repos, { kinds: ["PLAYBOOK"], everywhere: true });
-  const id = fieldManualEntryId("role-playbook", "HUNTER");
-  assert.equal((read.store.entries.find(entry => entry.id === id)?.payload as { history?: unknown }).history, undefined, "worker tools omit the edit log");
-  const adminRows = await repos.fieldManual.readMany([id]);
-  const row = playbookEditView(adminRows.map(row => row.value), "HUNTER");
+  const row = playbookEditView(read.store.entries, "HUNTER");
   assert.equal(row.history[0].before, before.text);
   assert.equal(row.history[0].factory, undefined);
   assert.deepEqual(await updateRolePlaybook(repos, edit), { version: current.version, changed: false });
@@ -56,8 +53,5 @@ test("imported instructions and their source records survive an edit while the n
   assert.equal(read.store.entries.filter(e => e.kind === "PLAYBOOK" && e.role === "HUNTER").length, 3);
   assert.equal(read.store.entries.filter(e => e.source === "legacy").length, 2, "imported record identities and payloads are preserved");
   assert.equal((await readRolePlaybook(repos, "HUNTER")).text, "Replacement");
-  const saved = await repos.fieldManual.readMany([fieldManualEntryId("role-playbook", "HUNTER"), ...["one", "two"].map(key => fieldManualEntryId("legacy", key))]);
-  for (const key of ["one", "two"]) assert.deepEqual(saved.find(row => row.id === fieldManualEntryId("legacy", key))?.value.payload,
-    { text: key }, "the original imported payloads remain stored intact");
-  assert.equal(playbookEditView(saved.map(row => row.value), "HUNTER").history[0].before, before.text);
+  assert.equal(playbookEditView(read.store.entries, "HUNTER").history[0].before, before.text);
 });

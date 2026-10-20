@@ -16,10 +16,12 @@
  * with a one-line summary; exit 1 when the control plane is not configured.
  */
 import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { readAuditWeek, readLatestLookPasses } from "../lib/control-plane/live-audit-log.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { addUpdates } from "../lib/control-plane/updates.ts";
-import { LOSS_KIND_WORDS, LOSS_KINDS, lossLessonUpdates, type LossKind } from "../lib/method/study-all-losses.ts";
-import { runLossStudy } from "../lib/method/loss-study-run.ts";
+import { listDoors } from "../lib/doors/registry.ts";
+import { absenceReadings, auditReadings, doorReadings, holdReadings, lookReadings, placeTraitsFrom } from "../lib/method/loss-readings.ts";
+import { LOSS_KIND_WORDS, lessonKinds, lossLessonUpdates, studyAllLosses } from "../lib/method/study-all-losses.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
 readFromHeldCopies();
@@ -33,20 +35,35 @@ if (!url) {
 }
 const repos = await createPgRepositories(url, now, { skipBootstrap: true });
 
-const kinds = new Set<LossKind>();
-const out = await runLossStudy(repos, now, async lesson => {
-  kinds.add(lesson.kind);
-  if (DRY) console.log(`  ${lesson.says}`);
-  else {
-    const written = await writeFieldManual(repos, [lesson.entry], now);
-    if (written.error) console.error(`loss study: the field manual could not be written (${written.error})`);
-    await addUpdates(repos, lossLessonUpdates([lesson], now), now);
-  }
-});
+// Each source is read on its own; one that cannot be read is named and left out, never counted as no losses.
+const unread: string[] = [];
+const read = async <T,>(what: string, f: () => Promise<T>, empty: T): Promise<T> => {
+  try { return await f(); } catch { unread.push(what); return empty; }
+};
+const doors = await read("doors", async () => (await listDoors(repos.doors)).doors, []);
+const obligations = await read("hunts", async () => (await repos.obligations.list()).map((r) => r.value), []);
+const items = await read("checker holds", async () => [
+  ...(await repos.workItems.listWhere(["publicationOutcome", "status"], "HELD")),
+  ...(await repos.workItems.listWhere(["publicationOutcome", "status"], "PUBLISHED")),
+].map((r) => r.value), []);
+const audits = await read("auditors' red flags", async () => (await readAuditWeek(repos, now)).results, []);
+const looks = await read("front-end red flags", () => readLatestLookPasses(repos, 7), []);
+
+const readings = [...doorReadings(doors), ...absenceReadings(obligations, now), ...holdReadings(items), ...auditReadings(audits), ...lookReadings(looks)];
 /* With nothing read there is no population to study; "0 lessons from 0 losses" would be a false all-clear. */
-if (out.readings === 0) {
-  console.error(`loss study: no doors, hunts, holds or red flags were read${out.unread.length ? ` (not read: ${out.unread.join(", ")})` : ""}; nothing was measured`);
+if (readings.length === 0) {
+  console.error(`loss study: no doors, hunts, holds or red flags were read${unread.length ? ` (not read: ${unread.join(", ")})` : ""}; nothing was measured`);
   process.exit(1);
 }
-const words = LOSS_KINDS.filter(kind => kinds.has(kind)).map(kind => LOSS_KIND_WORDS[kind]);
-console.log(`loss study: ${out.lessons} lessons from ${out.failures} losses${words.length ? ` (${words.join(", ")})` : ""}${out.unread.length ? `; not read: ${out.unread.join(", ")}` : ""}`);
+const traits = placeTraitsFrom({ doors, items, places: readings.map((r) => r.placeId) });
+const lessons = studyAllLosses(readings, traits, now);
+
+if (DRY) {
+  for (const l of lessons) console.log(`  ${l.says}`);
+} else if (lessons.length) {
+  const written = await writeFieldManual(repos, lessons.map((l) => l.entry), now);
+  if (written.error) console.error(`loss study: the field manual could not be written (${written.error})`);
+  await addUpdates(repos, lossLessonUpdates(lessons, now), now);
+}
+const kinds = lessonKinds(lessons).map((k) => LOSS_KIND_WORDS[k]);
+console.log(`loss study: ${lessons.length} lessons from ${readings.filter((r) => r.failed).length} losses${kinds.length ? ` (${kinds.join(", ")})` : ""}${unread.length ? `; not read: ${unread.join(", ")}` : ""}`);

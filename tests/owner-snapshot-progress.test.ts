@@ -20,8 +20,7 @@ const publisher = (reportSteps: boolean) => `
   console.log("owner-snapshot · published: snapshot");
 `;
 const run = (reportSteps: boolean) => runRuntimeChildren([{ id: "console-publish:owner snapshot", executable: process.execPath,
-  args: ["--input-type=module", "-e", publisher(reportSteps)] }], { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: QUIET_MS,
-    slots:{acquire:async()=>()=>{}} });
+  args: ["--input-type=module", "-e", publisher(reportSteps)] }], { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: QUIET_MS });
 
 test("a publisher silent for longer than the runner's limit is ended before it writes the snapshot", async () => {
   const [result] = await run(false);
@@ -41,7 +40,7 @@ const COLLECTION_STEPS: readonly (readonly [RegExp, string])[] = [
   [/await readControlPlane\(repos, /, 'stepDone("control plane read")'],
   [/await collectMapTilerUsage\(/, 'stepDone("map usage collected")'],
   [/await collectProviderBilling\(/, 'stepDone("provider bills collected")'],
-  [/collectPublishedCampaignReadback\(/, 'stepDone("campaign page readback collected")'],
+  [/await collectPublishedCampaignReadback\(/, 'stepDone("campaign page readback collected")'],
   [/collectPublishedManualReaderReadback\(publications/, 'stepDone("worker and help page readbacks collected")'],
   [/readPlaceOwed\(key\)/, "stepDone(`place history read for ${key}`)"],
 ];

@@ -24,10 +24,6 @@ import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
 import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { PGlite } from "@electric-sql/pglite";
-import { PUBLISHED_ARRAY_SLICE_SQL } from "../lib/civic-data/published-array-slice.ts";
-import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { PUBLISHED_SLICE_FIXTURE_SCHEMA } from "./helpers/published-slice-fixture.ts";
 
 
 
@@ -160,47 +156,19 @@ test("a place reads one full state ballot and its own candidate families before 
   installManualValue("candidate-profiles:AZ", { cards: { ...profiles.cards, hunts: [] }, links: { ...profiles.links, hunts: [] } });
   installManualValue("voting-sites:AZ", { jurisdictions: [{ ocdId: county, name: "Selected", sites: [] }, { ocdId: neighbour, name: "Other", sites: [] }] });
   installManualValue("candidate-corpus:AZ", { documents: [] });
-  const bundle = promotedFixtureBundle(), selected: string[] = [], queriedScopes: string[] = [];
-  const readFamilies = () => withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
+  const bundle = promotedFixtureBundle(), selected: string[] = [];
+  const families = await withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
     families: bundle.stateAuthorities!.families,
     load: async (family, state) => { selected.push(`${family}:${state}`); return bundle.stateAuthorities!.load(family, state); },
   } }, () => readHeldPlaceFamilies([county], { now: at }));
-  const pg = new PGlite();
-  try {
-    await pg.exec(PUBLISHED_SLICE_FIXTURE_SCHEMA);
-    installReaderDatabaseQuery(async statements => {
-      const results = [];
-      for (const statement of statements) {
-        assert.equal(statement.text, PUBLISHED_ARRAY_SLICE_SQL);
-        assert.equal(statement.params[0], "FEC_FUNDING");
-        assert.ok(["US-AZ:fec-funding:v1", "federal-supported"].includes(String(statement.params[1])));
-        assert.equal(statement.params[4], "^AZ$");
-        queriedScopes.push(String(statement.params[1]));
-        results.push((await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows);
-      }
-      return results;
-    });
-    const families = await readFamilies();
-    assert.deepEqual([...new Set(queriedScopes)].sort(), ["US-AZ:fec-funding:v1", "federal-supported"]);
-    assert.equal(families.funding, null, "absent FEC pointers stay unrecorded");
-    assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
-    assert.deepEqual(families.ballots![0].contests.map(row => row.id), ["ballot-az-pima:supervisor"]);
-    assert.deepEqual(families.ballots![0].candidacies.map(row => row.id), ["ballot-az-pima:supervisor:one-candidate"]);
-    assert.deepEqual(families.votingSites!.jurisdictions.map(row => row.ocdId), [county]);
-    assert.deepEqual(Object.keys(families.candidateProfiles!.cards.cards), ["ballot-az-pima:supervisor|Candidate One"]);
-    const held = projectHeldPlaceFamilies([county], null, families);
-    assert.equal(held.held.find(row => row.checklistId === "CAN-16")?.checkedAt, "2026-09-29");
-    assert.equal(ballot.contests.length, 2, "place filtering leaves the published state unit intact");
-    await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,source_id,current_version_id,last_known_good_version_id,payload)
-      VALUES($1,'FEC_FUNDING',$2,'fixture-fec','missing-candidate','missing-candidate','{}'::jsonb)`,
-    ["FEC_FUNDING:US-AZ:fec-funding:v1", "US-AZ:fec-funding:v1"]);
-    await assert.rejects(readFamilies(), /PUBLISHED_ARRAY_SLICE_POINTER_INVALID/);
-    installReaderDatabaseQuery(async () => { throw new Error("HELD_FEC_READ_FAILED"); });
-    await assert.rejects(readFamilies(), /HELD_FEC_READ_FAILED/);
-  } finally {
-    installReaderDatabaseQuery(undefined);
-    await pg.close();
-  }
+  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
+  assert.deepEqual(families.ballots![0].contests.map(row => row.id), ["ballot-az-pima:supervisor"]);
+  assert.deepEqual(families.ballots![0].candidacies.map(row => row.id), ["ballot-az-pima:supervisor:one-candidate"]);
+  assert.deepEqual(families.votingSites!.jurisdictions.map(row => row.ocdId), [county]);
+  assert.deepEqual(Object.keys(families.candidateProfiles!.cards.cards), ["ballot-az-pima:supervisor|Candidate One"]);
+  const held = projectHeldPlaceFamilies([county], null, families);
+  assert.equal(held.held.find(row => row.checklistId === "CAN-16")?.checkedAt, "2026-09-29");
+  assert.equal(ballot.contests.length, 2, "place filtering leaves the published state unit intact");
 });
 
 test("scoped state authorities cannot use database place slices", async () => {

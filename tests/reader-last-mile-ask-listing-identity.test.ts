@@ -26,10 +26,8 @@ import { installCanonicalEntries } from "./helpers/canonical-reader-fixtures.ts"
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
-delete process.env.DATABASE_URL;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
-// The recorded 85701 calendar, three of its Tucson Unified sittings each listed a second time, and three date-only listings.
 const { meetings: listed, pairs } = ambiguousListingPairs(3);
 // A copied listing cannot cite its original's attribution rows: a promoted snapshot's rows each cite only themselves.
 const ownRows = (rows: readonly Meeting[]) => rows.map(({ actingBodies: _acting, ...row }) => row as Meeting);

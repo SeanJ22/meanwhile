@@ -1,8 +1,4 @@
-/**
- * A task's reads of its own work item, subject and lineage, scoped instead of
- * listing whole tables. Filters apply in the store before records reach the worker.
- */
-import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { Attempt } from "../attempt.ts";
@@ -10,36 +6,14 @@ import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
 
-/** The Scout logs that ever held a record about one of these subjects. */
-async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[]> {
+export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly ScoutResult[]> {
   const keys = new Set<string>();
   for (const subject of new Set(subjectIds)) for (const key of await repos.scoutResults.keysWhere(["subjectId"], subject)) keys.add(key);
-  return [...keys].sort();
-}
-
-/** Only Scout results about these subjects, with log keys in canonical order. */
-export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly ScoutResult[]> {
   const out: ScoutResult[] = [];
-  const subjects = [...new Set(subjectIds)].sort();
-  for (const key of await scoutKeysFor(repos, subjects)) {
-    for (const subject of subjects) out.push(...await repos.scoutResults.readWhere(key, ["subjectId"], subject));
-  }
+  for (const key of [...keys].sort()) out.push(...await repos.scoutResults.read(key));
   return out;
 }
 
-/** Exact artifact identity, even when a legacy log key contains other places. */
-export async function readArtifactsById(repos: Pick<ControlPlaneRepositories, "artifacts">, id: string): Promise<readonly ArtifactRecord[]> {
-  const out: ArtifactRecord[] = [];
-  for (const key of await repos.artifacts.keysWhere(["artifactId"], id)) out.push(...await repos.artifacts.readWhere(key, ["artifactId"], id));
-  return out;
-}
-
-/**
- * An audit's work items and captures (`generalizedIndependentContext`): the owner and every item about the
- * contract's subject, and every capture recorded for one of them, for a work item the owner's plan says it
- * inherited from, or under one of the audit's required artifact IDs. That is every row the audit reads; the
- * logs are read in the whole log's key order so "the first capture of an ID" is the same capture.
- */
 export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
   readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] }> {
   const byId = new Map<string, WorkItem>();
@@ -53,26 +27,13 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
   for (const id of itemIds) for (const key of await repos.artifacts.keysWhere(["workItemId"], id)) keys.add(key);
   for (const id of new Set(input.requiredArtifactIds)) for (const key of await repos.artifacts.keysWhere(["artifactId"], id)) keys.add(key);
   const artifacts: ArtifactRecord[] = [];
-  for (const key of [...keys].sort()) {
-    const selected = new Map<string, ArtifactRecord>();
-    for (const id of itemIds) for (const row of await repos.artifacts.readWhere(key, ["workItemId"], id)) selected.set(canonicalJson(row), row);
-    for (const id of new Set(input.requiredArtifactIds)) for (const row of await repos.artifacts.readWhere(key, ["artifactId"], id)) selected.set(canonicalJson(row), row);
-    artifacts.push(...selected.values());
-  }
+  for (const key of [...keys].sort()) artifacts.push(...await repos.artifacts.read(key));
   return { artifacts, items };
 }
 
 type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkItemId?: string } };
 
-/**
- * Everything `selectStandingLineages` and `brokeredSiblingCaptures` read for the lineage one work item belongs to:
- * the occurrences of every standing obligation the item (or a repair ancestor) was opened for, the items those
- * occurrences opened and their repair families (found through the version-20 lineage index), and those items'
- * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
- * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
- */
-export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string,
-  options: { readonly obligationId?: string; readonly scouts?: boolean } = {}) {
+export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
   const items = new Map<string, WorkItem>();
   const readItem = async (id: string) => {
     if (!items.has(id)) { const row = await repos.workItems.read(id); if (row) items.set(id, row.value); }
@@ -84,7 +45,7 @@ export async function readLineageHistory(repos: ControlPlaneRepositories, workIt
     const parent = (cursor as LinkedWorkItem).planRepair?.parentWorkItemId;
     cursor = parent ? await readItem(parent) : null;
   }
-  const obligationIds = new Set<string>(options.obligationId ? [options.obligationId] : []);
+  const obligationIds = new Set<string>();
   for (const id of ancestors) for (const row of await repos.occurrences.listWhere(["workItemId"], id)) obligationIds.add(row.value.obligationId);
   const occurrences = new Map<string, FreshnessOccurrence>();
   for (const id of obligationIds) for (const row of await repos.occurrences.listWhere(["obligationId"], id)) occurrences.set(row.id, row.value);
@@ -108,10 +69,10 @@ export async function readLineageHistory(repos: ControlPlaneRepositories, workIt
     workerResults.push(...await readCompletedWorkerResults(repos, id));
   }
   const artifacts: ArtifactRecord[] = [];
-  for (const key of [...artifactKeys].sort()) for (const id of [...items.keys()].sort()) artifacts.push(...await repos.artifacts.readWhere(key, ["workItemId"], id));
+  for (const key of [...artifactKeys].sort()) artifacts.push(...await repos.artifacts.read(key));
   return {
     occurrences: [...occurrences.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, value]) => value),
     workItems: byId(items.values()), artifacts, attempts: byId(attempts.values()), workerResults,
-    scouts: options.scouts === false ? [] : await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))]),
+    scouts: await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))]),
   };
 }

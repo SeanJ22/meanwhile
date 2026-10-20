@@ -75,7 +75,7 @@ function checkCycleFailsClosed(src: string): void {
   /* 1. An unreadable intent log is captured, never read as "not paused". */
   assert.match(
     src,
-    /let intentLogUnreadable: string \| null = null;\s*try \{\s*intentLog = \[\.\.\.\(await repos\.researchIntents\.read\(RESEARCH_INTENT_LOG_KEY\)\)\];\s*\} catch \(error\) \{\s*intentLogUnreadable = /,
+    /let intentLogUnreadable: string \| null = null;\s*try \{\s*intentLog = \[\.\.\.\(await readPlanningIntents\(repos\)\)\];\s*\} catch \(error\) \{\s*intentLogUnreadable = /,
     "an unreadable intent log is not captured",
   );
   assert.doesNotMatch(src, /treats the owner as not paused/, "the cycle still treats an unreadable log as no pause");
@@ -92,7 +92,7 @@ function checkCycleFailsClosed(src: string): void {
   assert.match(closure[0], /paused: intents\.paused,/);
   assert.match(closure[0], /runnerPaused: intents\.runnerPause\.paused,/, "the runner pause does not close the lane");
   assert.match(closure[0], /unreadableControls,/);
-  assert.match(src, /paused: intents\.runnerPause\.paused,\s*\/\*[^*]*\*\/\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
+  assert.match(src, /paused: intents\.runnerPause\.paused,\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
 
   /* 4 & 5. The row is read through the trusted reading, before the lane is decided. */
   assert.match(src, /const \{ config, holdPaidWork: configHold \} = adminConfigForPaidWork\(configRead\);/);
@@ -107,18 +107,8 @@ function checkCycleFailsClosed(src: string): void {
   assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("async function makeAutonomousFleet"), "the hunters' search is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
-  const fleet = src.match(/async function makeAutonomousFleet\(\) \{[\s\S]*?\n\}/);
-  assert.ok(fleet, "no autonomous Fleet constructor");
-  assert.match(fleet[0], /const input: Parameters<typeof autonomousStandingRuntime>\[0\] = \{[\s\S]*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
-    "the auditor's shared runtime input is not given the ceiling in force");
-  assert.match(fleet[0], /await \(autonomousUpkeep \?\?= maintainAutonomousStandingRuntime\(input\)\);/,
-    "standing upkeep does not use the same guarded input");
-  assert.match(fleet[0], /const runtime = await autonomousStandingRuntime\(input\);/,
-    "the per-task runtime does not use the guarded input");
-  assert.match(fleet[0], /const fleetTransport = modelLaneEnabled \? workerMessages : null;/,
-    "the Fleet's paid transport ignores the lane closure");
-  assert.match(fleet[0], /fleetTransport !== null && paidWorkerCapacity\(\) > 0 \? \{ transport: fleetTransport,\s*transportFor: autonomousTransportFor\(fleetTransport\)/,
-    "the Fleet's paid transport bypasses its capacity or shared admission guard");
+  assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
+    "the auditor is not given the ceiling in force");
 }
 
 /** Free work obeys the runner pause and remains independent of paid controls and explicit dispatches. */
@@ -130,12 +120,12 @@ function checkFreeStandingWork(src: string, walk = source("scripts/platform-cens
   );
   assert.match(walk, /intents.runnerPause.paused/);
   assert.match(walk, /REGISTRATION_TARGETS.map/);
-  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state, dotgovSource\)/);
+  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state\)/);
   assert.match(walk, /readPlatformCensusNeeds\(state, null,/);
   assert.match(walk, /runCensusState/);
   assert.doesNotMatch(walk, /modelLaneEnabled|laneClosure|scoutFor/);
   assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents\.runnerPause\.paused;/);
-  assert.match(src, /const dispatchScopes = expansionPlan\?\.scopes \?\? \[\];/);
+  assert.match(src, /const dispatchScopes = \(expansionPlan\?\.scopes \?\? \[\]\)\.filter\(scope=>scope\.decision\.budgetUsd>0\);/);
   assert.match(src, /for \(const \{ intent \} of dispatchDetails\)[\s\S]*?for \(const t of carriedDispatchTargets/);
   assert.match(src, /for \(const scope of dispatchScopes\) add\(scopeWorkTarget\(scope\)\)/);
   assert.match(src, /applyManualSourceGaps\(repos, dispatchScopes,/,
@@ -153,8 +143,6 @@ test("PRODUCTION TODAY: routine intake and standing discovery run while paid con
 
 test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker", () => {
   const src = source("scripts/freshness-shadow.mts");
-  checkCycleFailsClosed(src);
-  checkFreeStandingWork(src);
   const mutations: [string, string, string][] = [
     ["runnerPaused: intents.runnerPause.paused,\n", "", "a lane blind to the runner pause"],
     ["  unreadableControls,\n});", "});", "a lane blind to unreadable controls"],
@@ -162,11 +150,6 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
     ["const scoutSearch = searchBudget === null ? null : makeHuntSearch({", "const scoutSearch = makeHuntSearch({", "a hunters' search outside the switch"],
     ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
-    ["const fleetTransport = modelLaneEnabled ? workerMessages : null;", "const fleetTransport = workerMessages;", "a Fleet transport under a closed paid lane"],
-    ["fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,", "fleetTransport !== null ? { transport: fleetTransport,", "a Fleet transport that bypasses paid capacity"],
-    ["transportFor: autonomousTransportFor(fleetTransport),", "transportFor: () => fleetTransport,", "a Fleet transport that bypasses shared admission"],
-    ["const runtime = await autonomousStandingRuntime(input);", "const runtime = await autonomousStandingRuntime({});", "a task runtime that drops its guarded input"],
-    ["await (autonomousUpkeep ??= maintainAutonomousStandingRuntime(input));", "await maintainAutonomousStandingRuntime({});", "standing upkeep that drops its guarded input"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);

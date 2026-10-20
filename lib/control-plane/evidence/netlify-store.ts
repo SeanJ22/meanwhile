@@ -1,6 +1,5 @@
 import { getStore, type Store } from "@netlify/blobs";
 import { AsyncLocalStorage } from "node:async_hooks";
-import { createHash } from "node:crypto";
 import { contentHash } from "../ids.ts";
 import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
 
@@ -136,44 +135,6 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     })(), signal));
   }
 
-  async stream(key: string, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<AsyncIterable<Uint8Array> | null> {
-    const held = await this.requestSignals.run(signal, () => abortable(this.store.getWithMetadata(key, { type: "stream" }), signal));
-    if (!held) return null;
-    const metadataOf = this.metadata.bind(this);
-    return (async function* () {
-      const reader = held.data.getReader(), digest = createHash("sha256");
-      let meta: ObjectMeta | undefined, bodySha256 = "", length = 0;
-      let header = Buffer.alloc(0), wanted = held.metadata.format === ENVELOPE_FORMAT ? 4 : 0;
-      if (!wanted) ({ meta, bodySha256 } = metadataOf(key, held.metadata));
-      try {
-        for (;;) {
-          const next = await abortable(reader.read(), signal);
-          if (next.done) break;
-          let bytes = next.value;
-          if (wanted) {
-            let offset = 0;
-            while (wanted && offset < bytes.byteLength) {
-              const count = Math.min(wanted - header.byteLength, bytes.byteLength - offset);
-              header = Buffer.concat([header, bytes.subarray(offset, offset + count)]); offset += count;
-              if (header.byteLength !== wanted) continue;
-              if (wanted === 4) {
-                wanted = 4 + header.readUInt32BE(0);
-                if (wanted <= 4 || wanted > 1024 * 1024) throw new EvidenceStoreRefusal(`Stored evidence envelope is unreadable at ${key}`);
-              } else {
-                ({ meta, bodySha256 } = metadataOf(key, JSON.parse(header.subarray(4).toString("utf8")) as Record<string, unknown>));
-                wanted = 0; header = Buffer.alloc(0);
-              }
-            }
-            bytes = bytes.subarray(offset);
-          }
-          if (bytes.byteLength) { digest.update(bytes); length += bytes.byteLength; yield bytes; }
-        }
-        if (wanted || !meta || length !== meta.byteLength || `sha256-${digest.digest("hex")}` !== bodySha256)
-          throw new EvidenceStoreRefusal(`Stored evidence is corrupt at ${key}`);
-      } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
-    })();
-  }
-
   async list(prefix: string, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<string[]> {
     return this.requestSignals.run(signal, () => abortable((async () => {
     const keys: string[] = [];
@@ -191,16 +152,6 @@ export class NetlifyEvidenceStore implements EvidenceStore {
       }
     }
     return [...directories].sort();
-  }
-
-  async visitKeys(prefix: string, visit: (key: string) => Promise<boolean|void>|boolean|void,
-    signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<void> {
-    await this.requestSignals.run(signal, () => abortable((async () => {
-      for await (const page of this.store.list({ prefix, paginate: true })) {
-        signal.throwIfAborted();
-        for (const blob of page.blobs) if (await visit(blob.key) === false) return;
-      }
-    })(), signal));
   }
 
   private metadata(key: string, metadata: Record<string, unknown>): { meta: ObjectMeta; bodySha256: string } {

@@ -284,12 +284,9 @@ function builtInRecords(): ProvidedObligation[] {
 interface DescriptorFile {
   readonly records?: readonly ProvidedObligation[];
 }
-const recordState = (record: ProvidedObligation): string =>
-  record.scopeDivisions?.flatMap(division => /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(division)?.[1] ?? [])[0] ??
-    /^([a-z]{2})-/.exec(record.subjectId.toLowerCase())?.[1] ?? "us";
 
 /** Read every descriptor file, keyed by subject. A present file that yields no records is a failed read, returned rather than covered by the built-ins. */
-export function readDescriptorFiles(root: string, state?: string): {
+export function readDescriptorFiles(root: string): {
   readonly bySubject: Map<string, ProvidedObligation>;
   readonly failures: readonly string[];
   readonly files: readonly string[];
@@ -326,14 +323,13 @@ export function readDescriptorFiles(root: string, state?: string): {
         failures.push(`${name} carries a record with no subjectId or no routes; it is skipped`);
         continue;
       }
-      if (state && recordState(record) !== state.toLowerCase()) continue;
       bySubject.set(record.subjectId, record);
     }
   }
   return { bySubject, failures, files };
 }
 
-export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceInputs, state?: string): ObligationProvider {
+export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceInputs): ObligationProvider {
   return {
     id: CAMPAIGN_FINANCE_PROVIDER_ID,
     describe: readBallotInputs ? "campaign finance owed for admitted held ballot candidates, from registered source doors and recorded methods" :
@@ -350,8 +346,8 @@ export function campaignFinanceProvider(readBallotInputs?: () => BallotFinanceIn
         catch { return { obligations: [], readFailure: "The admitted held ballot finance inputs could not be read.", emptyReason: null }; }
       }
       // Preserved way back until River checks the connected generic path live.
-      const dropped = readDescriptorFiles(ctx.root, state);
-      const records = builtInRecords().filter(record => !state || recordState(record) === state.toLowerCase()).map(
+      const dropped = readDescriptorFiles(ctx.root);
+      const records = builtInRecords().map(
         (r) => dropped.bySubject.get(r.subjectId) ?? r,
       );
       /* A lane descriptor for a subject the built-ins do not carry is ADDED,

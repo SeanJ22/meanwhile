@@ -1,13 +1,9 @@
 import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import type { EvidenceGap, EvidenceRecord } from "../../ask/evidence.ts";
 import type { CardSource } from "../../officials/card-sources.ts";
-import { readFederalSourceProjection } from "./read-projection.ts";
+import { readFederalSourceProjection } from "./publication.ts";
 import type { FederalFact } from "./types.ts";
 import { federalCardSources, federalDeadlineDate } from "./presentation.ts";
-import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../../civic-data/store.ts";
-import { readerDatabaseQuery } from "../../reader/database.ts";
-import { FEDERAL_RECORD_CLASS } from "./targets.ts";
-import { readFederalRulesPage } from "./rules-page.ts";
 export { federalCardSources } from "./presentation.ts";
 
 export const isOpenFederalRule = (row: FederalFact, now: string): boolean => {
@@ -69,25 +65,9 @@ export interface FederalRuleRead { rules: { rule: FederalFact; sources: FederalF
 export async function readFederalRules(options: PromotedCivicDataReadOptions & { offset?: number; limit?: number } = {}): Promise<FederalRuleRead> {
   const now = options.now ?? new Date().toISOString();
   const sources = ["regulations-gov", "federal-register"] as const;
-  const offset = Math.max(0, Math.floor(options.offset ?? 0)), limit = Math.max(0, Math.min(100, Math.floor(options.limit ?? 20)));
-  if (!options.store || options.store instanceof PostgresRoutineDataStore) {
-    const query = readerDatabaseQuery();
-    if (!query) return { rules: [], totalRules: 0, coverage: Object.fromEntries(sources.map(source => [source, "STORE_UNREACHABLE"])) };
-    try { return await readFederalRulesPage(query, now, offset, limit); }
-    catch { return { rules: [], totalRules: 0, coverage: Object.fromEntries(sources.map(source => [source, "STORE_UNREACHABLE"])) }; }
-  }
-  // Fixtures exercise the same native precedence without a database payload codec.
-  if (!(options.store instanceof MemoryRoutineDataStore)) throw new Error("FEDERAL_RULES_REQUIRE_PAGINATED_DATABASE_READER");
-  const scopes = await options.store.listPromotionScopes([FEDERAL_RECORD_CLASS]);
-  const held = await Promise.all(sources.map(async source => {
-    const partitions = scopes.filter(row => row.scope.startsWith(`${source}:rule:`)).map(row => row.scope.slice(source.length + 1));
-    const results = await Promise.all(["rules", ...partitions].map(partition => readFederalSourceProjection(source, partition, options)));
-    const records = new Map<string, FederalFact>();
-    for (const result of results) if (result.kind === "PROMOTED") for (const row of result.value.records) records.set(row.nativeId, row);
-    return { kind: results.some(row => row.kind === "STORE_UNREACHABLE") ? "STORE_UNREACHABLE" : results.some(row => row.kind === "PROMOTED") ? "PROMOTED" : "NOT_RECORDED", records: [...records.values()] };
-  }));
+  const held = await Promise.all(sources.map(source => readFederalSourceProjection(source, "rules", options)));
   const groups = new Map<string, FederalFact[]>();
-  for (const result of held) if (result.kind === "PROMOTED") for (const row of result.records) {
+  for (const result of held) if (result.kind === "PROMOTED") for (const row of result.value.records) {
     const key = row.documentNumber || `${row.source}:${row.nativeId}`;
     const group = groups.get(key) ?? []; group.push(row); groups.set(key, group);
   }
@@ -98,7 +78,7 @@ export async function readFederalRules(options: PromotedCivicDataReadOptions & {
       return rule ? [{ rule, sources: group }] : [];
     }).sort((a, b) => a.rule.closesAt!.localeCompare(b.rule.closesAt!));
   return { coverage: Object.fromEntries(sources.map((source, index) => [source, held[index].kind])), totalRules: rules.length,
-    rules: rules.slice(offset, offset + limit) };
+    rules: rules.slice(options.offset ?? 0, (options.offset ?? 0) + (options.limit ?? rules.length)) };
 }
 
 export function federalEvidence(row: FederalFact, subjectId?: string): EvidenceRecord {
@@ -144,7 +124,7 @@ export async function federalAskEvidence(memberId: string | null, question: stri
   if (/\b(rule|rules|regulation|regulations|comment|comments|deadline|deadlines|participate)\b|voice heard|weigh in/i.test(question)) {
     const rules = await readFederalRules(options);
     records.push(...rules.rules.flatMap(({ sources }) => sources.map(row => federalEvidence(row, memberId ?? undefined))));
-    denominators.federalRulesOpenForComment = rules.totalRules;
+    denominators.federalRulesOpenForComment = rules.rules.length;
   }
   return { records, gaps, denominators };
 }

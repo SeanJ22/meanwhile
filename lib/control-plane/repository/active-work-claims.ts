@@ -1,4 +1,3 @@
-/** Read-only census of active RouteTask claims: the Attempt/lease universe, not routine civic-data source runs. */
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import { WINDOW_LEASE_ID } from "../promotion/window.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -68,7 +67,7 @@ export function activeClaimPageSql(hasCursor: boolean): string {
     ORDER BY (l.value->>'expiresAt'), l.id LIMIT ${limit}
   ), mapped AS (
     SELECT p.id, p.value AS lease, p.expires_at, t.value AS task, a.attempts
-    FROM page p LEFT JOIN cp_route_tasks t ON t.id = p.id
+    FROM page p LEFT JOIN cp_route_tasks_history t ON t.id = p.id
     LEFT JOIN LATERAL (
       SELECT coalesce(jsonb_agg(x.value), '[]'::jsonb) AS attempts
       FROM (SELECT value FROM cp_attempts

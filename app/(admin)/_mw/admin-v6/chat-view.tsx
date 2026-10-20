@@ -19,7 +19,6 @@ import { everyQuestion } from "@/lib/control-plane/operator-chat/contract.ts";
 import type { ChatAnswer, ChatResponse, ChatTurn } from "@/lib/control-plane/operator-chat/contract.ts";
 
 import { CHAT_PAGE, CHAT_ROUTE, CHAT_TITLE } from "@/lib/control-plane/operator-chat/surface.ts";
-import { FreshnessIncidentDetails } from "./trail-view.tsx";
 
 interface Said {
   readonly id: number;
@@ -39,15 +38,14 @@ function Answer({ answer }: { answer: ChatAnswer }) {
       next={answer.readBackAt === null ? undefined : `Shown on ${answer.readBackAt}`}
       needsYou={answer.needsYou}
       detail={
-        answer.detail.length === 0 && !answer.incidentCycleId ? undefined : (
-          <><ul className="chat-detail">
+        answer.detail.length === 0 ? undefined : (
+          <ul className="chat-detail">
             {answer.detail.map((line) => (
               <li key={line}>
                 <code>{line}</code>
               </li>
             ))}
           </ul>
-          {answer.incidentCycleId && <FreshnessIncidentDetails cycleId={answer.incidentCycleId} />}</>
         )
       }
     >

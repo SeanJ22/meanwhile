@@ -150,13 +150,15 @@ function dotGovRows(changed: boolean) {
 }
 
 function dotGov(version: string, changed: boolean, sha?: string): RoutineCandidate {
-  const domains = dotGovRows(changed).map(row => ({ ...row, state: "AZ" }));
+  const domains = [...dotGovRows(changed), ...Array.from({ length: 14_500 }, (_, index) => ({
+    domain: `government-${String(index).padStart(5, "0")}.gov`, type: "City", organization: `Example City ${index}`,
+    suborganization: null, city: null, state: null,
+  }))];
   const byType: Record<string, number> = {};
   for (const row of domains) byType[row.type] = (byType[row.type] ?? 0) + 1;
   const snapshot: DotGovSnapshot = {
     source: { sha: sha ?? (changed ? "b".repeat(40) : "a".repeat(40)), url: "https://github.com/cisagov/dotgov-data/blob/example/current-full.csv", readAt: version },
-    state: "AZ", counts: { domains: domains.length, electionDomains: 500, byType }, domains,
-    registryCounts: { domains: 15_000, electionDomains: 500, byType: { ...byType, City: 14_500 } },
+    counts: { domains: domains.length, electionDomains: 500, byType }, domains,
     boundary: "The CISA registry enumerates domains, never governments.",
   };
   return dotGovCandidate({

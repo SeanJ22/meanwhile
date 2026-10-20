@@ -451,7 +451,7 @@ async function main(): Promise<void> {
     client = legistarClientsFromWiring([partition.wiring])[0];
   } else {
     // Pima's own contract: its client is read off the published meeting doors.
-    const doors = await ensureMeetingDoors({ state: "AZ" });
+    const doors = await ensureMeetingDoors();
     if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
     client = findClient(args.slug, "ocd-division/country:us/state:az/county:pima#governing");
   }

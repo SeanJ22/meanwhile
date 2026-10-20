@@ -23,7 +23,6 @@ import { meetingStateOf } from "../lib/meetings/body-scope.ts";
 import { stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
-import { withRegistryState } from "../lib/control-plane/scheduler/registry-state-planner.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const PR = "ocd-division/country:us/territory:pr/county:adjuntas";
@@ -155,36 +154,17 @@ test("Admin's preview: the registration slice, and the governments a Send must p
   assert.equal(hasReviewedRegistry("oh"), false);
 });
 
-test("the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH", async () => {
+test("the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH", () => {
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  const planner = readFileSync(join(ROOT, "lib/control-plane/scheduler/registry-state-planner.ts"), "utf8");
-  const statePass = planner.slice(planner.indexOf("export async function forEachStateRegistry"));
-  const hydrate = statePass.indexOf("await withRegistryState("), providers = statePass.indexOf("const providers = [");
-  assert.ok(hydrate > 0 && providers > hydrate && statePass.indexOf("buildRegistry(providers, input.context)") > providers,
-    "each state's native authority is awaited before its providers enumerate work");
-  assert.match(runner, /await forEachStateRegistry\(\{ context: registryContext/, "the actual runner uses the state hydration pass");
-  const beforeTerritory = runner.slice(runner.indexOf("beforeTerritory: async (states) => {"), runner.indexOf("  loadTerritory:"));
-  assert.ok(beforeTerritory.indexOf("await ensureRegistryStates(states)") > 0);
-  assert.ok(beforeTerritory.indexOf("return [...registryRefusals]") > beforeTerritory.indexOf("await ensureRegistryStates(states)"),
-    "a scope awaits state authority and preserves registration refusals before its territory read");
-  const dispatch = runner.slice(runner.indexOf("if (dispatchTargets.length > 0) {"));
-  const dispatchHydrate = dispatch.indexOf("await ensureRegistryStates(dispatchTargets.flatMap");
-  assert.ok(dispatchHydrate > 0 && dispatchHydrate < dispatch.indexOf("const plan = planDispatchWork({"), "a DISPATCH awaits its states before its plan");
-  const ensure = runner.slice(runner.indexOf("async function ensureRegistryStates"), runner.indexOf("const materializedMembership"));
-  assert.match(ensure, /await withRegistryState\(\{ state, root: ROOT, trackedStates: trackedStateSet, registration: true,\s*readReviewedState:/);
-
-  const events: string[] = [], refusal = "REGISTRATION_NOT_PROMOTED:OH: fixture";
-  await withRegistryState({ state: "oh", root: ROOT, trackedStates: new Set(), registration: true,
-    hydrateRegistration: async input => {
-      assert.deepEqual([...input.states], ["oh"], "only the current state's registration is hydrated");
-      assert.equal(input.options?.bypassCache, true); events.push("registration");
-      return { registries: new Map(), refused: new Map([["oh", refusal]]) };
-    }, ownership: { source: "fixture own-state ownership", ownerOf: () => "UNKNOWN", bodyIdFor: () => null, reasonFor: () => "fixture",
-      readStates: async states => { assert.deepEqual(states, ["oh"]); events.push("ownership"); }, release: () => { events.push("release"); } },
-  }, async authority => {
-    events.push("consumer"); assert.equal(authority.failure, refusal); assert.equal(authority.registry, null, "an unread registration supplies no invented registry");
-  });
-  assert.deepEqual(events, ["registration", "ownership", "consumer", "release"], "providers and territory consumers receive the refusal only after registration and ownership have settled");
+  const preload = runner.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids]");
+  assert.ok(preload > 0 && preload < runner.indexOf("const registryProviders = ["), "created work's states are read before the providers keep it");
+  const beforeTerritory = runner.slice(runner.indexOf("beforeTerritory: async (states) => {"), runner.indexOf("...(\"registries\" in promoted"));
+  const registrationRead = beforeTerritory.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states,");
+  const ownershipRead = beforeTerritory.indexOf("await meetingPartitions.readStates(states)");
+  const refusalReturn = beforeTerritory.indexOf("return [...registration.refused]");
+  assert.ok(registrationRead > 0 && ownershipRead > registrationRead && refusalReturn > ownershipRead,
+    "a scope awaits registration and meeting ownership before returning its territory preflight, preserving refused registrations");
+  assert.match(runner, /await preloadRegistrationJurisdictions\(\{ root: ROOT, states: dispatchTargets\.flatMap/, "a DISPATCH's states before its plan");
   assert.match(runner, /addressSource: dispatchedAddressSource\(e\.reg,\s*/, "a dispatched need's address names the registry it was recorded in");
   const wiring = readFileSync(join(ROOT, "scripts", "derive-meeting-source-wiring.mts"), "utf8");
   assert.match(wiring, /const stateOf = \(ocdId: string\): string \| null => ocdStateCode\(ocdId\)/, "the wiring derive reads a territory's registration too");

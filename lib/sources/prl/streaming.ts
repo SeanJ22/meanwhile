@@ -13,8 +13,7 @@ export type TextChunks = AsyncIterable<string>;
  * quoted fields, escaped `""` quotes, and embedded commas and newlines. The
  * first yielded record is the header.
  */
-export async function* streamCsvRecords(chunks: TextChunks, delimiter = ",", quote: '"' | null = '"'): AsyncGenerator<string[]> {
-  if (delimiter !== "," && delimiter !== "\t") throw new Error("DELIMITED_SOURCE_SEPARATOR_INVALID");
+export async function* streamCsvRecords(chunks: TextChunks): AsyncGenerator<string[]> {
   let row: string[] = [];
   let cell = "";
   let quoted = false;
@@ -41,12 +40,12 @@ export async function* streamCsvRecords(chunks: TextChunks, delimiter = ",", quo
         else cell += c;
         continue;
       }
-      if (closedQuote && c !== delimiter && c !== "\n" && c !== "\r") throw new Error("PRL_CSV_INVALID_QUOTE");
-      if (c === quote) {
+      if (closedQuote && c !== "," && c !== "\n" && c !== "\r") throw new Error("PRL_CSV_INVALID_QUOTE");
+      if (c === '"') {
         if (cell.length) throw new Error("PRL_CSV_INVALID_QUOTE");
         quoted = true;
       }
-      else if (c === delimiter) {
+      else if (c === ",") {
         row.push(cell);
         cell = ""; closedQuote = false;
       } else if (c === "\n") {

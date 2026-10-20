@@ -31,7 +31,7 @@ import { dirname, join } from "node:path";
 import type { Page } from "playwright";
 
 import { addFixItem } from "../lib/control-plane/fix-list.ts";
-import { hasLookedCommit, recordLookPass } from "../lib/control-plane/live-audit-log.ts";
+import { readLookedCommits, recordLookPass } from "../lib/control-plane/live-audit-log.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
   LOOK_PROFILES, lookFixAdds, lookOwed, lookPass, lookShotKey, lookTargets, screenLabel, withFixIds,
@@ -40,8 +40,9 @@ import {
 import { reviewLook, type LookScreenshot } from "../lib/frontend/look-review.ts";
 import { lookModelCall, reserveLookSpend } from "../lib/frontend/look-spend.ts";
 import { collectPageObservation, LAYOUT_SHIFT_INIT_SCRIPT, measurePage } from "../lib/health/page-metrics.ts";
-import { samplePublishedZips } from "../lib/ops/published-zip-selection.ts";
+import { sampleZips } from "../lib/health/worst-case-speed.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { storeRunScreenshot } from "../lib/photos/store.ts";
 import { launchGuarded, seedZip, type GuardedBrowser } from "./browser.mts";
 import { fetchServedCommit } from "./post-deploy-observer.mts";
@@ -68,18 +69,19 @@ if (!url && !DRY) {
 }
 const repos = url && !DRY ? await createPgRepositories(url, now, { skipBootstrap: true }) : null;
 const served = await fetchServedCommit(BASE, { runId: "look-pass" });
-const looked = repos && served.sha !== null && await hasLookedCommit(repos, served.sha) ? new Set([served.sha]) : new Set<string>();
+const looked = repos ? new Set((await readLookedCommits(repos)).map((l) => l.sha)) : new Set<string>();
 if (!FORCE && !DRY && !lookOwed(served.sha, looked)) {
   console.log(served.sha === null ? `look pass: the served commit could not be read (${served.how}); nothing was looked at`
     : `look pass: the deploy of ${served.sha.slice(0, 8)} has been looked at already`);
   process.exit(0);
 }
 const sha = served.sha ?? "unknown";
-const zips = await samplePublishedZips({origin: BASE, onlyZip: ONLY_ZIP, count: ZIP_COUNT, now}).catch(() => []);
-if (zips.length === 0) {
+const places = ONLY_ZIP ? [{ zip: ONLY_ZIP }] : await publishedPlaces(BASE, fetch, 15_000).catch(() => []);
+if (places.length === 0) {
   console.error("look pass: no published place could be read from the live site");
   process.exit(1);
 }
+const zips = ONLY_ZIP ? [ONLY_ZIP] : sampleZips(places.map((p) => p.zip), ZIP_COUNT, now);
 const targets = lookTargets(zips);
 const tasks = JSON.parse(readFileSync(join(process.cwd(), "data/health/resident-tasks.json"), "utf8")) as { tasks: { start: string; title: string }[] };
 const standard = readFileSync(join(process.cwd(), "docs/look-standard.md"), "utf8");

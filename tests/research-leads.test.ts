@@ -1,8 +1,5 @@
-/**
- * Research leads from Admin: pasted or uploaded links become one tracked
- * order, known links are marked held, new ones are tested by plain code, and
- * what works becomes a lesson with the owner as its source that spreads.
- */
+import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -260,7 +257,7 @@ test("a link plain code is turned away from goes to paid work only inside a plac
 
 /** A round's guarded fetch, as the runner builds it: the controller paces every reader through the shared store. */
 function roundSafety(pacing: WebsitePacing, clock: () => number, small: (host: string) => boolean): FleetSafetyController {
-  return new FleetSafetyController({ now: new Date(clock()).toISOString(), charges: [], clock, websitePacing: pacing,
+  return new FleetSafetyController({ now: new Date(clock()).toISOString(), spend: aggregatePricedSpend([], new Date(Date.parse(new Date(clock()).toISOString()) - 24 * 3_600_000).toISOString(), new Date(clock()).toISOString()), clock, websitePacing: pacing,
     websiteSize: (url) => (small(new URL(url).hostname) ? { kind: "local-government", population: 4_000 } : { kind: "federal" }) });
 }
 /** A website answering from a table of pages, robots.txt allowing everything, and counting what it was asked. */
@@ -370,7 +367,7 @@ test("the shared pacing store takes a request under one row lock and says when t
     calls.push({ text, params });
     if (text === WEBSITE_TAKE_SQL) return full ? [] : [{ site: params[0] }];
     if (text.startsWith("SELECT min(t)")) return [{ oldest: new Date("2026-10-07T15:20:00.000Z") }];
-    if (text.startsWith("SELECT hold_until")) return params[0] === "busy.example.gov" ? [{ hold_until: "2026-10-07T16:30:00.000Z" }] : [];
+    if (text.startsWith("SELECT site, hold_until")) return [{ site: "busy.example.gov", hold_until: "2026-10-07T16:30:00.000Z" }];
     return [];
   });
   assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: true });
@@ -379,10 +376,7 @@ test("the shared pacing store takes a request under one row lock and says when t
   assert.deepEqual(await pacing.take("tiny.example.gov", 10, Date.parse(NOW)), { ok: false, until: Date.parse("2026-10-07T16:20:00.000Z") });
   await pacing.hold("busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z"), Date.parse(NOW));
   assert.match(calls.at(-1)!.text, /hold_until = GREATEST\(COALESCE\(p\.hold_until, \$2::timestamptz\), \$2::timestamptz\)/);
-  assert.equal(await pacing.heldUntil("busy.example.gov", Date.parse(NOW)), Date.parse("2026-10-07T16:30:00.000Z"));
-  assert.equal(await pacing.heldUntil("other.example.gov", Date.parse(NOW)), null);
-  assert.deepEqual(calls.at(-1)!.params, ["other.example.gov", NOW]);
-  assert.match(calls.at(-1)!.text, /WHERE site=\$1 AND hold_until>\$2::timestamptz$/);
+  assert.deepEqual([...await pacing.heldUntil(Date.parse(NOW))], [["busy.example.gov", Date.parse("2026-10-07T16:30:00.000Z")]]);
   assert.equal(websiteOf("https://WWW.SmallTown.example.gov/x"), "smalltown.example.gov", "one website however it is addressed");
 });
 

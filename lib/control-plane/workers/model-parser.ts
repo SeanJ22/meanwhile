@@ -1,10 +1,4 @@
 import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
-/**
- * The parser's fallback when no parsing rule exists: a model pulls each field with its exact quote, and code keeps
- * only fields whose quote occurs character for character in the saved document and contains the value, on a
- * record carrying every required and identity field. Everything else is dropped and named in a finding. The
- * field manual decides the starting tier and field names, and the outcome is written back.
- */
 
 import { performance } from "node:perf_hooks";
 import type { WorkerRef } from "../attempt.ts";
@@ -23,7 +17,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { canonicalJson } from "../repository/types.ts";
 import { canonicalModelId } from "../../models.ts";
 import { assertStepMayEscalate, assertStepMayInvokeModel, MODEL_FOR_CLASS, type ModelClass } from "../scheduler/model-routing.ts";
-import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { confirmQuotedRecords, MODEL_PARSER_IMPLEMENTATION, type ProposedRecord, type Rejection } from "./quoted-proof.ts";
@@ -38,15 +32,13 @@ import type {
 export const MODEL_PARSER_VERSION = "1.0.0";
 export const PARSE_STEP = "extraction";
 export const PARSE_RESPONSE_MAX_TOKENS = 8_192;
-/** One model call reads at most this many characters of the document. */
+
 export const PARSE_WINDOW_CHARS = 24_000;
 export const PARSE_WINDOW_OVERLAP = 1_000;
-/** A document longer than this many windows is read in part, and says so. */
+
 export const PARSE_MAX_WINDOWS = 6;
 export const PARSE_LEARNING_SOURCE = "parser-learning";
 const MAX_FINDINGS = 60;
-
-
 
 const RECORD_EXTRACTION = {
   name: "record_extraction",
@@ -67,18 +59,16 @@ const RECORD_EXTRACTION = {
   cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
 
-
-/** The tiers the extraction step may use, cheapest first. */
 export const PARSE_TIERS: readonly ModelClass[] = ["haiku", "sonnet"];
 
 export interface ParseRoute {
-  /** Where this parse starts. */
+
   readonly tier: ModelClass;
-  /** Why, in a line a person can read. */
+
   readonly reason: string;
-  /** The manual entries that changed the answer (empty = the default, cheapest tier). */
+
   readonly inheritedEntryIds: readonly string[];
-  /** Field names earlier parses of this record class settled on. */
+
   readonly knownFieldNames: readonly string[];
 }
 
@@ -88,19 +78,12 @@ function outcomeEntries(store: FieldManualStore, recordClass: string): FieldManu
   return store.entries.filter((e) => e.kind === "PARSE_OUTCOME" && (e.payload as OutcomePayload | null)?.recordClass === recordClass);
 }
 
-/** A tier is ruled out for a publisher when the manual's latest word on it there is FAILED, or, with nothing for the publisher, when it failed on others of this record class and yielded on none. The parse starts at the cheapest tier not ruled out. */
 export function routeParse(store: FieldManualStore, key: { readonly recordClass: string; readonly host: string }): ParseRoute {
   const entries = outcomeEntries(store, key.recordClass);
   const names = store.entries.find((e) => e.id === parseFieldsId(key.recordClass));
   const knownFieldNames = names ? ((names.payload as { fieldNames?: unknown }).fieldNames as string[] | undefined) ?? [] : [];
   const ruledOut: { tier: ModelClass; id: string; why: string }[] = [];
   for (const tier of PARSE_TIERS) {
-    const learned = store.parserEvidence?.recordClass === key.recordClass && store.parserEvidence.host === key.host ? store.parserEvidence.tiers[tier] : undefined;
-    if (learned) {
-      if (learned.here) { if (learned.here.outcome === "FAILED") ruledOut.push({ tier, id: learned.here.id, why: `${tier} failed to confirm quotes on ${key.host} before` }); }
-      else if (learned.count > 0 && learned.nonFailed === 0) ruledOut.push({ tier, id: learned.firstId, why: `${tier} failed to confirm quotes on ${learned.count} other publisher(s) of ${key.recordClass} and yielded on none` });
-      continue;
-    }
     const here = entries.find((e) => (e.payload as OutcomePayload).host === key.host && (e.payload as OutcomePayload).tier === tier);
     if (here) {
       if (here.outcome === "FAILED") ruledOut.push({ tier, id: here.id, why: `${tier} failed to confirm quotes on ${key.host} before` });
@@ -125,8 +108,6 @@ export function parseFieldsId(recordClass: string): string {
   return newFieldManualEntry(PARSE_LEARNING_SOURCE, `fields|${recordClass}`, { role: "PARSER", kind: "PARSE_FIELDS", title: "", summary: "", outcome: "REFERENCE" }).id;
 }
 
-
-/** The document cut into overlapping windows on line boundaries; each is [start, end) in the full text. */
 export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap = PARSE_WINDOW_OVERLAP, max = PARSE_MAX_WINDOWS): { readonly windows: readonly { readonly start: number; readonly end: number }[]; readonly unreadFrom: number | null } {
   const windows: { start: number; end: number }[] = [];
   let start = 0;
@@ -143,8 +124,6 @@ export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap
   return { windows, unreadFrom: start < text.length ? windows[windows.length - 1]!.end : null };
 }
 
-
-/** What a finished parse teaches the next one: this tier's outcome for this publisher, and the field names used. */
 export function parseLearningEntries(
   store: FieldManualStore,
   input: { readonly recordClass: string; readonly host: string; readonly state: string; readonly tier: ModelClass; readonly proposed: number; readonly confirmed: number;
@@ -173,7 +152,6 @@ export function parseLearningEntries(
   return entries;
 }
 
-
 export interface ModelParseRecord {
   readonly byModel?: readonly CostModelShare[];
   readonly step: "extraction";
@@ -200,7 +178,6 @@ export interface ModelParseOutcome {
   readonly metering: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
 }
 
-/** Keep answered windows attributable when another window's provider request fails. */
 export class ModelParseFailure extends Error {
   readonly accounting: Pick<ModelParseOutcome, "usage" | "usd" | "metering"> & {
     readonly byModel: readonly CostModelShare[];
@@ -211,7 +188,7 @@ export class ModelParseFailure extends Error {
 }
 
 function toolInput(response: ModelResponse, expectedModel: string): unknown {
-  // The provider may answer with a dated alias of the model asked for: the same model.
+
   if (canonicalModelId(String(response.model)) !== canonicalModelId(expectedModel)) throw new Error("PARSE_MODEL_IDENTITY_MISMATCH");
   const tools = (Array.isArray(response.content) ? response.content : []).filter((b) => b.type === "tool_use");
   if (tools.length !== 1 || tools[0]!.name !== "record_extraction" || response.stop_reason !== "tool_use") throw new Error(`PARSE_MODEL_NO_TOOL_CALL:${String(response.stop_reason).slice(0, 60)}`);
@@ -248,8 +225,7 @@ export function modelParseReasoner(
   now: () => string,
   options: {
     readonly ceilingUsd?: number;
-    /** Read only the cost rows the rolling window can count. */
-      readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
+    readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {},
 ): { readonly workerProvider: string; readonly workerVersion: string; readonly parse: (input: ParserWorkerInput, worker: WorkerRef) => Promise<ModelParseOutcome> } {
@@ -261,12 +237,12 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
+    const spend = await readSpendWindow(repos, now());
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
     const playbook = await readRolePlaybook(repos, "PARSER");
-    const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass, parserHost: host });
+    const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass,ocdIds:[contract.subjectId],limit:40 });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });
     const { windows, unreadFrom } = documentWindows(input.evidence.text);
     const send = options.transportFor === undefined ? transport
@@ -338,7 +314,7 @@ export function modelParseReasoner(
       confirmed = confirmQuotedRecords({ evidence: input.evidence, contract }, proposals);
       attempts.push({ tier, proposed: confirmed.proposed, confirmed: confirmed.records.length, rejected: confirmed.rejections.length });
       if (confirmed.records.length > 0) break;
-      // The cheaper tier's claims did not confirm: one step up, once, with the reason recorded.
+
       const up = PARSE_TIERS.indexOf(tier) < PARSE_TIERS.length - 1 ? assertStepMayEscalate(PARSE_STEP, "RESULT_REFUSED") : null;
       if (up === null || escalation !== undefined) break;
       escalation = { from: tier, to: up.modelClass, reason: validationError ?? `no proposed field confirmed against the saved document (${confirmed.rejections.length} claim(s) dropped)` };
@@ -365,7 +341,6 @@ export function modelParseReasoner(
       declaredRowCount: null, sourceRowCount: confirmed.proposed, actualRowCount: confirmed.records.length,
     };
 
-    // Write what this parse learned, best effort: a store hiccup must not lose a result that stands.
     const fieldNames = [...new Set(confirmed.records.flatMap((r) => Object.keys(r.fields)))];
     const samples = confirmed.spans.slice(0, 3).map((s) => ({ field: s.field, quote: s.quote.slice(0, 160) }));
     await writeFieldManual(repos as FieldManualRepos, attempts.flatMap((a) => parseLearningEntries(manual.store, {

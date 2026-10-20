@@ -1,5 +1,4 @@
 import type { RoutineTaskClock } from "./runner.ts";
-import { parseMeetingDerivationContractId, meetingDerivationContractId } from "./meeting-derivation-scope.ts";
 
 export type MeetingDiscoveryInputs = ReadonlyMap<string, string>;
 /** Only timestamps are read; national discovery payloads stay in their state jobs. */
@@ -18,28 +17,28 @@ export async function readMeetingDiscoveryInputs(query: (sql: string, params: un
 }
 export function meetingDiscoveryInputsDue(taskId: string, clock: RoutineTaskClock | undefined, inputs: MeetingDiscoveryInputs | null, nowMs: number): boolean {
   if (!inputs) return false;
-  const state = parseMeetingDerivationContractId(taskId)?.state ?? /^meetings:derived:US-([A-Z]{2})$/.exec(taskId)?.[1];
-  if (!state) return false;
+  const global = taskId === "meeting-body-crosswalk-derived" || taskId === "meeting-source-wiring";
+  const state = /^meetings:derived:US-([A-Z]{2})$/.exec(taskId)?.[1];
+  if (!global && !state) return false;
   const last = Date.parse(clock?.lastAttemptedAt ?? "");
-  const found = [inputs.get(state) ?? ""];
+  const found = global ? [...inputs.values()] : [inputs.get(state!) ?? ""];
   return found.some(at => Number.isFinite(Date.parse(at)) && Date.parse(at) <= nowMs && (!Number.isFinite(last) || Date.parse(at) > last));
 }
 /** Crosswalk then wiring settle before families read the newly promoted routes. */
 export async function runMeetingDiscoveryChain<T extends { id: string }, R>(tasks: readonly T[], run: (tasks: readonly T[]) => Promise<readonly R[]>): Promise<readonly R[]> {
-  const independent = tasks.filter(task => !parseMeetingDerivationContractId(task.id) && !task.id.startsWith("meetings:derived:"));
+  const derives = ["meeting-body-crosswalk-derived", "meeting-source-wiring"];
+  const independent = tasks.filter(task => !derives.includes(task.id) && !task.id.startsWith("meetings:derived:"));
   const independentRun = independent.length ? run(independent) : Promise.resolve([]);
-  const states = [...new Set(tasks.flatMap(task => parseMeetingDerivationContractId(task.id)?.state ??
-    /^meetings:derived:US-([A-Z]{2})$/.exec(task.id)?.[1] ?? []))];
-  const chains = Promise.all(states.map(async state => {
+  const chainRun = (async () => {
     const results: R[] = [];
-    for (const family of ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const) {
-      const task = tasks.find(task => task.id === meetingDerivationContractId(family, state));
+    for (const id of derives) {
+      const task = tasks.find(task => task.id === id);
       if (task) results.push(...await run([task]));
     }
-    const task = tasks.find(task => task.id === `meetings:derived:US-${state}`);
-    if (task) results.push(...await run([task]));
+    const families = tasks.filter(task => task.id.startsWith("meetings:derived:"));
+    if (families.length) results.push(...await run(families));
     return results;
-  }));
-  const [other, chain] = await Promise.all([independentRun, chains]);
-  return [...other, ...chain.flat()];
+  })();
+  const [other, chain] = await Promise.all([independentRun, chainRun]);
+  return [...other, ...chain];
 }

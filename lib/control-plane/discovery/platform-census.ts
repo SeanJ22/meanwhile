@@ -14,8 +14,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { DiscoveryRuntime } from "./meetings-discovery-executor.ts";
 import { loadRegistrationReference } from "../../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../../registration/jurisdictions.ts";
-import { acquireDotGov, type DotGovAcquisition } from "../../civic-data/dotgov-acquisition.ts";
-import type { DotGovDomain } from "../../civic-data/dotgov.ts";
+import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
 
 const PLATFORM_CENSUS_RECHECK_HOURS = 12;
 export const DOTGOV_CENSUS_URL = "https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv";
@@ -136,16 +135,7 @@ export function dotgovDomainLeads(csv: string, state: string): FieldManualEntry[
   return entries;
 }
 
-function domainLeads(rows: readonly DotGovDomain[], state: string): FieldManualEntry[] {
-  return rows.filter(row => /^[a-z0-9-]+\.gov$/.test(row.domain)).map(row => newFieldManualEntry("cisa-dotgov-census", row.domain, {
-    role: "SHARED", kind: "PLATFORM_CENSUS_DOMAIN", title: row.organization || row.domain,
-    summary: `${row.domain}: official domain listed by CISA.`, states: [state.toLowerCase()], recordClasses: ["meetings"],
-    outcome: "REFERENCE", url: `https://${row.domain}/`, payload: { domain: row.domain, state, organization: row.organization, city: row.city, source: DOTGOV_CENSUS_URL },
-  }));
-}
-
-export async function refreshDotgovCensusLeads(repos: CensusRepos, runtime: DiscoveryRuntime, state: string,
-  sharedSource?: () => Promise<DotGovAcquisition>): Promise<void> {
+export async function refreshDotgovCensusLeads(repos: CensusRepos, runtime: DiscoveryRuntime, state: string): Promise<void> {
   const marker = newFieldManualEntry("platform-census-reference", state.toLowerCase(), { role: "SHARED", kind: "PLATFORM_CENSUS_REFERENCE", title: `${state} census inputs`, summary: "Standing census inputs", outcome: "REFERENCE" });
   const prior = (await repos.fieldManual.readMany([marker.id]))[0];
   if (prior?.value.observedAt && Date.parse(nextCheck(prior.value.observedAt)) > Date.parse(runtime.now())) return;
@@ -154,22 +144,16 @@ export async function refreshDotgovCensusLeads(repos: CensusRepos, runtime: Disc
   if (runtime.budget.spent()) return;
   await runtime.spaceOut(new URL(DOTGOV_CENSUS_URL).hostname);
   const timeoutMs = Math.max(1, Math.min(runtime.timeoutMs ?? 20_000, runtime.budget.remainingMs?.() ?? 20_000));
-  const source = await (sharedSource?.() ?? acquireDotGov(AbortSignal.timeout(timeoutMs)));
-  try {
-    const postal = state.toUpperCase(), snapshot = source.snapshot(postal), csv = source.csv(postal);
-    const acquired = recordAcquisition({ canonicalUrl: source.finalUrl, retrievedAt: source.retrievedAt, httpStatus: 200, contentType: "text/csv",
-      sourceId: "cisa-dotgov-registry", workItemId: `platform-census-${state.toLowerCase()}`, attemptId: `platform-census-${state.toLowerCase()}-${runtime.now()}`,
-      methodRouteId: "platform-census:dotgov-state", permission: "ALLOWED", transport: "REACHABLE",
-      headers: { "x-meanwhile-source-state": postal, "x-meanwhile-source-sha256": source.rawHash, "x-meanwhile-source-projection": "selected CSV rows" } }, csv);
-    const stored = await runtime.vault(acquired.artifact, csv);
-    if (!stored.stored) throw new Error(`CISA census evidence could not be saved: ${stored.why}`);
-    const saved = await writeFieldManual(repos, domainLeads(snapshot.domains, postal).map(entry => ({ ...entry, observedAt: runtime.now() })), runtime.now());
-    if (saved.error) throw new Error(saved.error);
-    const marked = await writeFieldManual(repos, [{ ...marker, states: [state.toLowerCase()], observedAt: runtime.now(), payload: {
-      source: source.finalUrl, sourceDocumentSha256: source.rawHash, sourceRevision: source.sourceSha,
-      artifactId: acquired.artifact.id, sha256: createHash("sha256").update(csv).digest("hex") } }], runtime.now());
-    if (marked.error) throw new Error(marked.error);
-  } finally { if (!sharedSource) await source.dispose(); }
+  const got = await runtime.open({ url: DOTGOV_CENSUS_URL, headers: { "user-agent": DEFAULT_USER_AGENT, accept: "text/csv" }, timeoutMs });
+  if (got.status !== 200 || got.transportError) throw new Error(`CISA domain census unavailable: ${got.transportError ?? got.status}`);
+  const acquired = recordAcquisition({ canonicalUrl: DOTGOV_CENSUS_URL, retrievedAt: runtime.now(), httpStatus: got.status, contentType: got.contentType,
+    sourceId: "cisa-dotgov-registry", workItemId: `platform-census-${state.toLowerCase()}`, attemptId: `platform-census-${state.toLowerCase()}-${runtime.now()}`, methodRouteId: "platform-census:dotgov", permission: "ALLOWED", transport: "REACHABLE" }, got.body);
+  const stored = await runtime.vault(acquired.artifact, got.body);
+  if (!stored.stored) throw new Error(`CISA census evidence could not be saved: ${stored.why}`);
+  const saved = await writeFieldManual(repos, dotgovDomainLeads(got.body, state).map(entry => ({ ...entry, observedAt: runtime.now() })), runtime.now());
+  if (saved.error) throw new Error(saved.error);
+  const marked = await writeFieldManual(repos, [{ ...marker, states: [state.toLowerCase()], observedAt: runtime.now(), payload: { source: DOTGOV_CENSUS_URL, artifactId: acquired.artifact.id, sha256: createHash("sha256").update(got.body).digest("hex") } }], runtime.now());
+  if (marked.error) throw new Error(marked.error);
 }
 
 export function heldCensusWebsiteNeeds(state: string, root = process.cwd()): MeetingsDiscoveryNeed[] {

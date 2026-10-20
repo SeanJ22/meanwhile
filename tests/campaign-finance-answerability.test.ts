@@ -4,9 +4,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { installFundingFixture } from "./helpers/funding-fixture.ts";
+import { installFundingFirstSeed } from "./helpers/registry-runtime-first-seed.ts";
 
-await installFundingFixture();
+await installFundingFirstSeed();
 
 import {
   fecAbsenceIsNotClosure,

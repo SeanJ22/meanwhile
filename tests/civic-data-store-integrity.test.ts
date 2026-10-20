@@ -92,8 +92,8 @@ function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceI
     id,
     sourceId,
     recordClass: "FEC_FUNDING",
-    scope: "US-AZ:fec-funding:v1",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"),
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
     retrieval: {
       succeeded: true,
       requestedUrl: "https://api.open.fec.gov/v1/",
@@ -560,11 +560,11 @@ test("append-only Reader evidence must be a receipt for the exact promoted contr
   const readerReceipt = {
     contractVersion: 2 as const,
     kind: "READER_PROJECTION_READBACK" as const,
-    contractId: "fec-funding:AZ",
+    contractId: "fec-funding",
     sourceId: value.sourceId,
     recordClass: value.recordClass,
     scope: value.scope,
-    projectionId: "funding-snapshot:AZ",
+    projectionId: "funding-snapshot",
     versionId: value.id,
     pointerKey: `${value.recordClass}:${value.scope}`,
     observedAt: "2026-09-08T12:02:00.000Z",
@@ -610,11 +610,11 @@ test("Reader proof cannot be appended after the canonical pointer leaves that ve
       serializeReaderProjectionReadback({
         contractVersion: 2,
         kind: "READER_PROJECTION_READBACK",
-        contractId: "fec-funding:AZ",
+        contractId: "fec-funding",
         sourceId: old.sourceId,
         recordClass: old.recordClass,
         scope: old.scope,
-        projectionId: "funding-snapshot:AZ",
+        projectionId: "funding-snapshot",
         versionId: old.id,
         pointerKey: `${old.recordClass}:${old.scope}`,
         observedAt: "2026-09-08T13:02:00.000Z",
@@ -653,17 +653,17 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
     /authority for nh-members cannot mutate fec-funding/,
   );
   assert.equal(
-    routineDataStoreCandidateAuthorityIssue(value, { ...authority, contract: "fec-funding:AZ" }, "candidate"),
+    routineDataStoreCandidateAuthorityIssue(value, { ...authority, contract: "fec-funding" }, "candidate"),
     null,
   );
   const malformedTransfer = {
     ...value,
-    bootstrapImport: { kind: "UNRECOGNIZED_AUTHORITY_TRANSFER", contractId: "fec-funding:AZ" },
+    bootstrapImport: { kind: "UNRECOGNIZED_AUTHORITY_TRANSFER", contractId: "fec-funding" },
   } as unknown as RoutineCandidate;
   assert.match(
     routineDataStoreCandidateAuthorityIssue(
       malformedTransfer,
-      { ...authority, contract: "fec-funding:AZ" },
+      { ...authority, contract: "fec-funding" },
       "candidate",
     ) ?? "",
     /ordinary ROUTINE_CONTRACT authority cannot write an authority-transfer marker/,
@@ -674,7 +674,7 @@ test("a contract-A runtime envelope cannot mutate contract B through the public 
       { ...authority, capability: "TRUSTED_LKG_IMPORT", contract: null } as unknown as RuntimeAuthorityEnvelope,
       "candidate",
     ) ?? "",
-    /contract fec-funding:AZ requires ROUTINE_CONTRACT, not TRUSTED_LKG_IMPORT/,
+    /contract fec-funding requires ROUTINE_CONTRACT, not TRUSTED_LKG_IMPORT/,
   );
   assert.match(
     routineDataStoreCandidateAuthorityIssue(
@@ -694,7 +694,7 @@ function selectList(query: { toSQL(): { sql: string } }): string {
 test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", async () => {
   let pointer = "";
   await withCannedNeon(() => ({ columns: [], rows: [] }), async (store, sent) => {
-    assert.deepEqual(await store.readPromotionIdentities("FEC_FUNDING", ["US-AZ:fec-funding:v1"]), []);
+    assert.deepEqual(await store.readPromotionIdentities("FEC_FUNDING", ["federal-supported"]), []);
     assert.deepEqual(await store.readPromotionIdentities("STATE_ROLL_CALL", ["US-NJ"]), []);
     assert.equal(sent.length, 2);
     const identity = sent[0].query;
@@ -739,7 +739,7 @@ test("the Reader-evidence door's narrow read decides authority exactly as the wh
     repo: ROOT,
     sha: "1".repeat(40),
     capability: "ROUTINE_CONTRACT" as const,
-    contract: "fec-funding:AZ",
+    contract: "fec-funding",
     parentPid: 123,
     nonce: "2".repeat(64),
   };
@@ -749,7 +749,7 @@ test("the Reader-evidence door's narrow read decides authority exactly as the wh
     ["a present null marker", { ...value, bootstrapImport: null } as unknown as RoutineCandidate],
     ["a transfer marker", {
       ...value,
-      bootstrapImport: { kind: "TRUSTED_LKG_IMPORT", contractId: "fec-funding:AZ" },
+      bootstrapImport: { kind: "TRUSTED_LKG_IMPORT", contractId: "fec-funding" },
     } as unknown as RoutineCandidate],
   ];
   for (const [label, whole] of envelopes) {
@@ -874,7 +874,7 @@ async function withCannedNeon<T>(
         repo: ROOT,
         sha: "1".repeat(40),
         capability: "ROUTINE_CONTRACT",
-        contract: "fec-funding:AZ",
+        contract: "fec-funding",
         parentPid: 123,
         nonce: "2".repeat(64),
       } satisfies RuntimeAuthorityEnvelope,

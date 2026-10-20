@@ -149,6 +149,4 @@ test("national GRF completeness excludes unpublished territories, and missing re
 test("grfn metadata must establish a single actual Congress and legislative plan", () => {
   assert.deepEqual(grfTargetsFromNames(NAMES).map(target => target.version), ["cd:120", "sldu:2026", "sldl:2026"]);
   assert.throws(() => grfTargetsFromNames("TABBLKST|CDSESSN|LSY\n04|120|2026\n04|121|2026\n"), /one CDSESSN/);
-  assert.deepEqual(grfTargetsFromNames("MTFCC|VINTAGE|STATEFP|CDSESSN|LSY\nG5200|70|06|116|\nG5200|90|06|120|\nG5210|90|06||2026\nG5220|90|06||2026\n").map(target=>target.version),
-    ["cd:120","sldu:2026","sldl:2026"],"the California names file's historical116th Congress does not override current120th Congress rows");
 });

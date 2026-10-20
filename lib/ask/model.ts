@@ -76,7 +76,7 @@ export const ASK_MODEL_ROLES: Readonly<Record<AskModelRole, AskModelRoleSpec>> =
     defaultTier: "haiku",
     settings: [ASK_FAST_WRITER_SETTING],
     effort: "low",
-    thinking: "ADAPTIVE",
+    thinking: "OFF",
     canBeOff: true,
   }),
   ESCALATION_WRITER: roleSpec({

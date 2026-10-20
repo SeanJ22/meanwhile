@@ -1,4 +1,3 @@
-import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
@@ -23,7 +22,7 @@ import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { classifyAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
-
+import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import {
   retireObligationsByPrefix,

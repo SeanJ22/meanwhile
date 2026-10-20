@@ -267,6 +267,7 @@ export interface OfficialsComposition {
   citedUrls: string[];
   gaps: EvidenceGap[];
   named: HeldOfficial[];
+  missingAnswer?: boolean;
 }
 
 export function composeReaderOfficials(input: {
@@ -277,12 +278,13 @@ export function composeReaderOfficials(input: {
 }): OfficialsComposition | null {
   if (input.ask.unresolvedPlace) {
     const answer = `We have not recorded local government coverage for ${input.ask.unresolvedPlace} yet, so we cannot identify who governs that place.`;
-    return { answer, citedUrls: [], gaps: [{ whose: "OURS", statement: answer }], named: [] };
+    return { answer, citedUrls: [], gaps: [{ whose: "OURS", statement: answer }], named: [], missingAnswer: true };
   }
   const contact = Boolean(input.ask.contact);
   const clauses: string[] = [];
   const sentences: string[] = [];
   const gaps: EvidenceGap[] = [];
+  let missingAnswer = false;
   const named: HeldOfficial[] = [];
   const urls = new Set<string>();
   const gap = (statement: string) => { if (!gaps.some((held) => held.statement === statement)) gaps.push({ whose: "OURS", statement }); };
@@ -292,13 +294,20 @@ export function composeReaderOfficials(input: {
     for (const held of input.held) {
       if (officeKeyOf(held) !== key) continue;
       if (input.ask.place && !inPlace(held, input.ask.place)) continue;
-      const prior = seats.get(held.seat.id);
-      seats.set(held.seat.id, prior
-        ? { ...prior, divisionIds: [...new Set([...prior.divisionIds, ...held.divisionIds])], bodyId: prior.bodyId ?? held.bodyId, bodyName: prior.bodyName ?? held.bodyName }
+      // A state has one holder of these offices. Two sourced IDs naming that
+      // same holder in the same office are complementary records of one seat.
+      const singleOffice = ["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"].includes(key);
+      const seatKey = singleOffice && held.seat.officeJurisdictionOcdId
+        ? `${held.seat.officeJurisdictionOcdId}|${key}|${normalizeName(held.seat.name)}` : held.seat.id;
+      const prior = seats.get(seatKey);
+      const preferred = prior && prior.seat.partyLabel && !held.seat.partyLabel ? prior : held;
+      seats.set(seatKey, prior
+        ? { ...preferred, divisionIds: [...new Set([...prior.divisionIds, ...held.divisionIds])], bodyId: prior.bodyId ?? held.bodyId, bodyName: prior.bodyName ?? held.bodyName }
         : held);
     }
     const holders = [...seats.values()];
     if (holders.length === 0) {
+      missingAnswer = true;
       if (input.holdingFailed) {
         gap("We couldn't load our records of who holds this office. Please try again in a moment.");
         clauses.push(`we couldn't load the name of your ${singular}`);
@@ -313,6 +322,7 @@ export function composeReaderOfficials(input: {
       named.push(held);
       if (held.seat.sourceUrl) urls.add(held.seat.sourceUrl);
       if (contact && !held.seat.phone && !held.seat.email) {
+        missingAnswer = true;
         const statement = `We have not recorded a published phone number or email for ${held.seat.name}.`;
         gap(statement);
         sentences.push(statement);
@@ -363,7 +373,7 @@ export function composeReaderOfficials(input: {
   if (clauses.length === 0) return null;
   const lead = `${clauses[0]![0]!.toUpperCase()}${clauses[0]!.slice(1)}`;
   const answer = [`${[lead, ...clauses.slice(1)].join("; ")}.`, ...sentences].join(" ");
-  return { answer, citedUrls: [...urls], gaps, named };
+  return { answer, citedUrls: [...urls], gaps, named, ...(missingAnswer ? { missingAnswer: true } : {}) };
 }
 
 export function composeBodyRoster(input: {

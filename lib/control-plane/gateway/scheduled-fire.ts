@@ -1,4 +1,3 @@
-/** Each due occurrence is sent under a key made from the order and its moment, so a restart or a second timer never sends it twice. */
 import { writeDailyBrief } from "../admin-view/brief.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "./admin-config.ts";
 import { refreshFixDispatchHonors } from "../fix-list.ts";
@@ -61,7 +60,7 @@ export async function fireDueOrders(deps: GatewayDeps, nowIso: string, lastFired
     if (!latest || !isAdminConfig(latest.value)) break;
     const next: AdminConfig = { ...latest.value, updatedAt: nowIso,
       scheduledOrders: scheduledOrders(latest.value).filter(o => !done.has(o.id)).map(o => moved.has(o.id) ? { ...o, lastFiredAt: moved.get(o.id)! } : o) };
-    try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, latest.revision, next, nowIso); break; }
+    try { await deps.repos.adminConfig.save(latest, next, nowIso); break; }
     catch { /* A concurrent timer uses the same occurrence keys. */ }
   }
   return fired;

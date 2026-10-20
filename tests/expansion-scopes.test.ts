@@ -1,3 +1,4 @@
+import { scopeHistoryOf } from "./helpers/spend.ts";
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";
@@ -35,7 +36,6 @@ import {
   validateScopeKey,
   validateScopeNote,
   validateScopePriority,
-  withScopeRemoved,
   withScopeSet,
   type ExpansionScopeDecision,
   type ExpansionScopeGeography,
@@ -46,17 +46,12 @@ import { placeFirstRows } from "@/lib/control-plane/scheduler/shadow-loop.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-/**
- * Expansion scopes: the owner's geography, order and paid-work budget. Pure, or against in-memory repositories and
- * the committed Arizona census-geography bootstrap. No network, no database.
- */
-
 const NOW = "2026-09-23T04:00:00.000Z";
 
 test("an unprepared ZIP resolves national divisions after held geography fails, including split states", async () => {
   const repos = createMemoryRepositories();
   const zip = { type: "zcta" as const, geoid: "12345", version: "zcta:2020", label: "ZIP 12345", stateAbbr: "MO" };
-  await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [decision(zip, 1, 0)], decidedAt: NOW }), NOW);
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [decision(zip, 1, 1)], decidedAt: NOW }), NOW);
   const seen: string[] = [];
   const loaded = await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
     loadLookup: async () => { throw Error("No published ZIP yet"); },
@@ -114,7 +109,6 @@ async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
   return [...(await geometryOf(g)).zctas];
 }
 
-/** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
 async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
   if (g.type === "zcta" || g.type === "state") throw new Error("Use resolveScopes for a ZIP or state hunt");
   const lookup = loadBootstrapLookup();
@@ -217,10 +211,6 @@ test("setting a scope is an upsert that keeps the previous decision, and removin
   assert.deepEqual(pima?.previous, { priority: 2, budgetUsd: 5 });
   assert.deepEqual(changed.scopes.map((s) => s.key), ["cd:119/0406", "county:2020/04019"], "a priority tie goes to the scope decided earlier");
 
-  const removed = withScopeRemoved(changed.scopes, "cd:119/0406");
-  assert.equal(removed.removed?.geography.label, CD6.label);
-  assert.deepEqual(removed.scopes.map((s) => s.key), ["county:2020/04019"]);
-  assert.equal(withScopeRemoved(removed.scopes, "cd:119/0401").removed, null);
 });
 
 test("a malformed stored scope is counted, never dropped as if no restriction stood", () => {
@@ -476,7 +466,7 @@ test("the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and
     cost("az:county:county-of-coconino", 5, "2026-09-23T02:00:00.000Z"),
     cost(null, 9, "2026-09-23T02:00:00.000Z"),
   ]);
-  const armed = armExpansionBudget(plan, { now: NOW, charges, worstCaseUsd: 0.6 });
+  const armed = armExpansionBudget(plan, { now: NOW, history: scopeHistoryOf(charges, plan, NOW), worstCaseUsd: 0.6 });
   const pima = armed.reading.scopes.find((s) => s.key === "county:2020/04019");
   assert.equal(pima?.spend?.rolling24hUsd, 0.3, "only work in the scope, only the last 24 hours");
   assert.equal(pima?.spend?.sevenDayUsd, 0.5);
@@ -484,9 +474,9 @@ test("the budget arms from the ledger: 24h and 7d spend, unmeasured as null, and
   assert.equal(armed.gate.admit("o", "az:county:county-of-pima").admit, false);
   assert.equal(armed.gate.admit("o2", "az:county:county-of-coconino").admit, true, "Coconino is in no scope; the Fleet ceiling governs it alone");
 
-  const unmeasured = armExpansionBudget(plan, { now: NOW, charges: priced([cost("az:county:county-of-pima", null, "2026-09-23T01:00:00.000Z")]), worstCaseUsd: 0.6 });
+  const unmeasured = armExpansionBudget(plan, { now: NOW, history: scopeHistoryOf(priced([cost("az:county:county-of-pima", null, "2026-09-23T01:00:00.000Z")]), plan, NOW), worstCaseUsd: 0.6 });
   assert.equal((unmeasured.reading.scopes.find((s) => s.key === "county:2020/04019")?.spend?.rolling24hUsd ?? 0) > 0, true, "an unpriced charge is counted at its worst case, not left out");
-  const unread = armExpansionBudget(plan, { now: NOW, charges: null, worstCaseUsd: 0.6 });
+  const unread = armExpansionBudget(plan, { now: NOW, history: scopeHistoryOf(null, plan, NOW), worstCaseUsd: 0.6 });
   assert.equal(unread.reading.scopes[0].spend, null);
   assert.match(unread.reading.scopes[0].budgetSays, /could not be read/);
 
@@ -529,7 +519,7 @@ test("the runner's load: nothing selected changes nothing; a bootstrap lookup re
   assert.match(lookupDown.conditions.join(" "), /could not be read/);
 
   const broken = createMemoryRepositories();
-  const failing = { ...broken, adminConfig: { ...broken.adminConfig, readNarrowed: async () => { throw new Error("boom"); } } } as typeof broken;
+  const failing = { ...broken, adminConfig: { ...broken.adminConfig, read: async () => { throw new Error("boom"); } } } as typeof broken;
   const unreadable = await loadExpansionPlan({ repos: failing, root: ".", now: NOW, obligations });
   assert.equal(unreadable.plan?.malformedScopes, 1, "an unreadable policy row holds paid work rather than dropping a budget");
 });
@@ -561,7 +551,7 @@ test("an unresolved hunt retains its budget period and holds unrelated model adm
     loadLookup: async () => { throw new Error("STORE_UNREACHABLE"); }, loadTerritory: () => territory });
   assert.ok(loaded.plan);
   assert.equal(loaded.plan.scopes[0].kind, "UNRESOLVED");
-  const { gate } = armExpansionBudget(loaded.plan, { now: NOW, charges: [], worstCaseUsd: 1 });
+  const { gate } = armExpansionBudget(loaded.plan, { now: NOW, history: scopeHistoryOf([], loaded.plan, NOW), worstCaseUsd: 1 });
   assert.equal(gate.bindingScopes("az:county:county-of-pima")[0].budgetStartedAt, NOW);
   for (const subject of ["az:county:county-of-pima", "nj:county:morris", "unplaced-body"]) {
     assert.equal(gate.admit(`job:${subject}`, subject).admit, false);

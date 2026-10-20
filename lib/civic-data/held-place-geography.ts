@@ -2,7 +2,7 @@ import type { Division } from "../registry/types.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { BuiltGrouping, BuiltScope } from "../census-geography/dataset.ts";
 import { censusWorkDivision } from "../census-geography/division-id.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, censusGeographyScope } from "../census-geography/publication.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
@@ -66,23 +66,18 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
   const query = injected ?? readerQuery();
   if (!query) throw new Error("HELD_GEOGRAPHY_READ_FAILED:STORE_UNCONFIGURED");
   const keys = geographyKeys(ids, divisions);
-  const states = [...new Set(ids.flatMap(id=>/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/i.exec(id)?.[1]?.toUpperCase() ?? []))];
-  if (states.length > 1) throw new Error("HELD_GEOGRAPHY_EXACT_STATE_REQUIRED");
-  const scope = states.length ? censusGeographyScope(states[0]) : CENSUS_GEO_SCOPE;
-  const source = `SELECT payload,current_version_id FROM civic_data_promotions WHERE record_class=$1
-    AND scope IN ($2,'${CENSUS_GEO_SCOPE}') ORDER BY (scope=$2) DESC LIMIT 1`;
   const selectedCache = injected ? injectedCaches.get(injected) ?? new Map<string, { version: string; capture: HeldPlaceCapture }>() : cache;
   if (injected) injectedCaches.set(injected, selectedCache);
   const cacheKey = JSON.stringify([injected ? "injected" : process.env.DATABASE_URL, [...ids].sort(), [...keys].sort()]);
-  const [pointer] = await query([{ text: `SELECT current_version_id FROM (${source}) source`,
-    params: [CENSUS_GEO_RECORD_CLASS, scope] }]);
+  const [pointer] = await query([{ text: "SELECT current_version_id FROM civic_data_promotions WHERE record_class=$1 AND scope=$2",
+    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }]);
   const version = pointer[0]?.current_version_id;
   if (typeof version !== "string") return { subjects: [], held: [] };
   const cached = selectedCache.get(cacheKey);
   if (cached?.version === version) return cached.capture;
-  const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, scope, [...ids], [...keys.keys()]], text: `
-    WITH RECURSIVE source AS MATERIALIZED (${source}), walk(step,node,meta) AS (
-      SELECT 0,payload,'{}'::jsonb FROM source
+  const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...ids], [...keys.keys()]], text: `
+    WITH RECURSIVE walk(step,node,meta) AS (
+      SELECT 0,payload,'{}'::jsonb FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
       UNION ALL
       SELECT n.step,n.node,n.meta FROM walk w
       LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
@@ -104,7 +99,7 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
     SELECT '{}'::jsonb,jsonb_build_object('$missing',true) FROM walk WHERE node ? '$civicPayloadPart'
       AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')
     UNION ALL
-    SELECT '{}'::jsonb,jsonb_build_object('$version',current_version_id) FROM source` }]);
+    SELECT '{}'::jsonb,jsonb_build_object('$version',current_version_id) FROM civic_data_promotions WHERE record_class=$1 AND scope=$2` }]);
   if ((rows.find(row => (row.grouping as { $version?: string }).$version)?.grouping as { $version?: string } | undefined)?.$version !== version) {
     throw new Error("CIVIC_POINTER_CHANGED_DURING_READ");
   }

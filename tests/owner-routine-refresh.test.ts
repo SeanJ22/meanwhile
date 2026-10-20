@@ -16,9 +16,9 @@ test("owner refresh accepts one exact registered partition and at most two attem
 });
 
 test("owner refresh also takes one exact registered routine source contract, never an unregistered id", async () => {
-  const sourceContract = "census-geography-overlaps-az";
+  const sourceContract = "census-geography-overlaps";
   assert.deepEqual(routineRefreshSelection([`--contract=${sourceContract}`]), { contractId: sourceContract, maximumAttempts: 1 });
-  for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
+  for (const args of [["--contract=census-geography"], ["--contract=census-geography-overlaps/2"], ["--contract="]]) {
     assert.throws(() => routineRefreshSelection(args), /OWNER_REFRESH_REGISTERED_CONTRACT_REQUIRED/);
   }
   const repos = await fixtureRepositories();
@@ -36,7 +36,7 @@ test("standing parent consumes durable bounded refresh requests independently of
   assert.ok(first);
   assert.equal(first.ordinal, 0);
   assert.deepEqual(first.args, ["--force", `--only=${contractId}`]);
-  const stored = (await repos.adminConfig.mustRead("current")).value;
+  const stored = (await repos.adminConfig.mustRead("current", { routineRefreshRequests: true })).value;
   assert.equal(stored.routineRefreshRequests?.[0].attempts[0].finishedAt, null, "reservation is not a success claim");
   await finishRoutineRefresh(repos, first, "2026-09-15T20:01:00.000Z", 0);
   const second = await reserveRoutineRefresh(repos, "2026-09-15T20:02:00.000Z");
@@ -44,7 +44,7 @@ test("standing parent consumes durable bounded refresh requests independently of
   assert.equal(second.ordinal, 1);
   await finishRoutineRefresh(repos, second, "2026-09-15T20:03:00.000Z", 2);
   assert.equal(await reserveRoutineRefresh(repos, "2026-09-15T20:04:00.000Z"), null);
-  const attempts = (await repos.adminConfig.mustRead("current")).value.routineRefreshRequests?.find(row => row.id === request.id)?.attempts;
+  const attempts = (await repos.adminConfig.mustRead("current", { routineRefreshRequests: true })).value.routineRefreshRequests?.find(row => row.id === request.id)?.attempts;
   assert.deepEqual(attempts?.map(row => row.exitCode), [0, 2], "failure remains a failure and does not create an unbounded retry");
 });
 
@@ -53,5 +53,5 @@ test("a crash after reservation cannot restart the same attempt indefinitely", a
   await requestRoutineRefresh(repos, [`--contract=${contractId}`, "--attempts=1"], NOW);
   assert.ok(await reserveRoutineRefresh(repos, NOW));
   assert.equal(await reserveRoutineRefresh(repos, NOW), null);
-  assert.equal((await repos.adminConfig.mustRead("current")).value.routineRefreshRequests?.[0].attempts[0].exitCode, null);
+  assert.equal((await repos.adminConfig.mustRead("current", { routineRefreshRequests: true })).value.routineRefreshRequests?.[0].attempts[0].exitCode, null);
 });

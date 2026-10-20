@@ -1,4 +1,3 @@
-import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
@@ -24,6 +23,7 @@ import { collectProviderBilling } from "../lib/control-plane/provider-billing-co
 import { billingAttributionOf } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { readLiveSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
+import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
   CACHE_OBSERVATION_ID,
@@ -34,7 +34,6 @@ import {
 import {
   OWNER_SURFACE_FORMAT_VERSION,
   assertAggregateOnly,
-  ownerIncidentCount,
   gap,
   held,
   measured,
@@ -53,7 +52,6 @@ import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type Owner
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
-import { readOwnerTotals,readOwnerStateReadback,writeOwnerStateReadback } from "../lib/control-plane/owner-readback-state.ts";
 
 readFromHeldCopies();
 const NOW = new Date();
@@ -70,8 +68,6 @@ function log(line: string): void {
   console.log(`owner-snapshot · ${line}`);
 }
 
-/* The runner ends a child that prints no new line for ten minutes (RUNTIME_NO_PROGRESS_MS),
-   so every finished collection step prints one. */
 function stepDone(what: string): void {
   log(`${what} (${Math.round((Date.now() - NOW.getTime()) / 1000)}s into this publish)`);
 }
@@ -82,17 +78,15 @@ const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
   ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
   : null;
 
-/** Candidate display names belong to the canonical candidate-profile projection, not this snapshot. */
+// Candidate display names belong to the canonical candidate-profile projection, not this snapshot.
 function candidateNames(): Record<string, string> {
   return {};
 }
 
-/** Measured spend per Eastern calendar day over the trailing fortnight. */
 function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
   return reads === null ? [] : spendByDayOf(reads.fold.costs.days);
 }
 
-/** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
 interface CycleRecord {
   risk?: {
     obligationsScheduled?: number;
@@ -104,7 +98,6 @@ interface CycleRecord {
     activation?: string;
   };
   incidents?: Array<Record<string, unknown>>;
-  incidentDetails?: import("../lib/control-plane/owner-surface.ts").FreshnessDetailReference;
   registry?: {
     providers?: Array<{ providerId?: string; units?: number; records?: number; readFailure?: string | null }>;
     registeredUnits?: number;
@@ -149,7 +142,6 @@ const registeredUnits =
     : providerRows.reduce((n, p) => n + (typeof p.units === "number" ? p.units : 0), 0);
 const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 
-/** Read once so every cost row and the by-state deployment come from one instant. Null when the store was not opened. */
 interface ControlPlaneReads {
   readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof billingAttributionOf>[0]["scopes"];
@@ -165,15 +157,14 @@ interface ControlPlaneReads {
 async function readControlPlane(repos: ControlPlaneRepositories, existing: CarriedForward | null): Promise<ControlPlaneReads> {
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds, prior, research, askGaps] = await Promise.all([
-    readRuntimeAdminConfig(repos, ["expansionScopes"]).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+    repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     // Only live holds count as set aside.
     readLiveSpendHolds(repos, new Date().toISOString()).catch(() => null),
-    readOwnerTotals(repos),
-    repos.researchState.readNarrowed(RESEARCH_STATE_ID,{metrics:["cacheByRole","share"]}) as Promise<Persisted<{metrics?:Pick<import("../lib/control-plane/research-metrics.ts").ResearchMetrics,"cacheByRole"|"share">}>|null>,
+    repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID),
+    repos.researchState.read(RESEARCH_STATE_ID),
     readAskGapObservations(repos.askGapObservations),
   ]);
-  const fold = await OwnerSnapshotFold.fold(repos, prior?.value ?? null, { nowIso: NOW_ISO, servedReader: null,
-    servedReaderForState:state=>readOwnerStateReadback(repos,state),
+  const fold = await OwnerSnapshotFold.fold(repos, prior?.value ?? null, { nowIso: NOW_ISO, servedReader: existing?.servedReaderReadback ?? null,
     askGapObservations: "unreadable" in askGaps ? null : askGaps.rows, scopes: billingScopes, carried: existing?.providerBilling?.readings ?? [], write: !DRY_RUN, log });
   const metrics = research?.value.metrics ?? null;
   return { runnerHeartbeat, billingScopes, billingHolds, fold, cacheByRole: metrics?.cacheByRole ?? null, share: metrics?.share ?? null, prior };
@@ -207,7 +198,6 @@ function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
   });
 }
 
-/** Standing obligations by state from obligation ids; an obligation naming no state lands in "other". */
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
   const counts = reads === null ? {} : reads.fold.obligationsByState();
   const total = Object.values(counts).reduce((n, c) => n + c, 0);
@@ -294,9 +284,7 @@ function buildSnapshot(
       target: String(i.target ?? "unknown"),
       obligationsAffected: Number(i.obligationsAffected ?? 0),
       oldestHours: typeof i.oldestHours === "number" ? i.oldestHours : null,
-      ...(typeof i.incidents === "number" ? { incidents: i.incidents } : {}),
     })),
-    ...(cycle?.record.incidentDetails ? { incidentDetails: cycle.record.incidentDetails } : {}),
 
     costByRole: cost ? cost.costByRole : [{ key: "every role", usd: notOpened, attemptsMeasured: 0, attemptsUnmeasured: 0 }],
     costByModel: cost ? cost.costByModel : [{ key: "every model", usd: notOpened, attemptsMeasured: 0, attemptsUnmeasured: 0 }],
@@ -334,19 +322,17 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
     );
   }
   if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
-  // Without a per-request deadline one hung request holds the publisher until the runner's ceiling kills it.
+
   installNeonRequestDeadline();
   return createPgRepositories(url, NOW_ISO);
 }
 
-/** The parts of the published snapshot this publish carries forward; the rest is rebuilt, so it is never read back. */
-const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: ["checkedAt","stateScopes","witnessCount","errors"], placeHistory: true } as const;
+const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true } as const;
 type CarriedForward = Partial<Pick<OwnerSnapshot, keyof typeof CARRIED_FORWARD>>;
 
 async function main(): Promise<void> {
   log(`HEAD ${HEAD?.slice(0, 8) ?? "unknown"}`);
 
-  // Opened first so the cost panel and the by-state deployment read the same instant.
   const repos = publisherRepos;
   if (repos) log(repos.describe());
   const existing = repos ? await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, CARRIED_FORWARD) as Persisted<CarriedForward> | null : null;
@@ -384,40 +370,43 @@ async function main(): Promise<void> {
   const billingAttribution = reads && providerBilling ? billingAttributionOf({ now: NOW_ISO, scopes: reads.billingScopes, holds: reads.billingHolds,
     readings: providerBilling.readings, hunts: reads.fold.costs.hunts, windowOf: readingWindows(reads.fold.costs, providerBilling.readings, NOW_ISO) }) : null;
   let servedReader = existing?.value.servedReaderReadback ?? null;
-  const fold = reads?.fold ?? null;
-  if (!DRY_RUN && repos) {
-    let witnessCount=0;
-    const errors:string[]=[],stateScopes:string[]=[];
-    const states=[...new Set([...REGISTRY_STATES.map(state=>state.toLowerCase()),...fold?.publicationStates()??[]])].sort();
-    for(const state of states){
-      const previous=await readOwnerStateReadback(repos,state);
-      const publications=fold?await fold.publications(state):[];
-      const collect=async(label:string,run:()=>Promise<ServedReaderReadback>):Promise<ServedReaderReadback>=>{
-        try{return await run();}catch{return{checkedAt:NOW_ISO,witnesses:[],errors:[`${label} public readback failed; prior observations retain their original expiry.`]};}
-      };
-      const campaign=REGISTRY_STATES.some(code=>code.toLowerCase()===state)?await collect("Campaign",()=>collectPublishedCampaignReadback(state.toUpperCase(),NOW_ISO)):{checkedAt:NOW_ISO,witnesses:[],errors:[]};
-      stepDone("campaign page readback collected");
-      const worker=await collect("Worker",()=>collectPublishedWorkerReadback(publications,NOW_ISO,previous));
-      const manual=await collect("Help",()=>collectPublishedManualReaderReadback(publications,NOW_ISO,previous));
-      stepDone("worker and help page readbacks collected");
-      const joined=new Map([...(previous?.witnesses??[]),...campaign.witnesses,...worker.witnesses,...manual.witnesses]
-        .map(w=>[`${w.itemId}:${w.approvalId}:${w.readerKey}`,{...w,stateCode:state.toUpperCase()}]));
-      const readback:ServedReaderReadback={checkedAt:NOW_ISO,witnesses:[...joined.values()],errors:[...campaign.errors,...worker.errors,...manual.errors]};
-      if(fold)await fold.readBack(readback,state);
-      await writeOwnerStateReadback(repos,state,readback,NOW_ISO);
-      witnessCount+=readback.witnesses.length;stateScopes.push(state);
-      if(readback.errors.length)errors.push(`${state.toUpperCase()}: ${readback.errors.length} public readback error(s).`);
-      stepDone(`${state.toUpperCase()} public readbacks collected`);
+  if (!DRY_RUN) {
+    const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
+    for (const state of REGISTRY_STATES) {
+      try {
+        const read = await collectPublishedCampaignReadback(state, NOW_ISO);
+        combined.witnesses.push(...read.witnesses);
+        combined.errors.push(...read.errors);
+      } catch {
+        combined.errors.push(`${state} public readback collection failed; earlier witnesses retain their original expiry.`);
+      }
     }
-    servedReader={checkedAt:NOW_ISO,witnesses:[],stateScopes,witnessCount,errors};
+    const observed = new Set(combined.witnesses.map(row => `${row.itemId}:${row.readerKey}`));
+    combined.witnesses.push(...(servedReader?.witnesses ?? []).filter(row => !observed.has(`${row.itemId}:${row.readerKey}`)));
+    servedReader = combined;
   }
-  stepDone("public page readbacks collected");
+  stepDone("campaign page readback collected");
+  const fold = reads?.fold ?? null;
+  if (!DRY_RUN && fold) {
+    const publications = fold.publications();
+    const [workerReadback, manualReadback] = await Promise.all([
+      collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
+      collectPublishedManualReaderReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+        .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Public help readback collection failed; prior observations retain their original time and expiry."] })),
+    ]);
+    const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
+      .map(w => [`${w.itemId}:${w.approvalId}`, w]));
+    servedReader = { checkedAt: NOW_ISO, witnesses: [...joined.values()], errors: [...(servedReader?.errors ?? []), ...workerReadback.errors, ...manualReadback.errors] };
+    stepDone("worker and help page readbacks collected");
+  }
   const placeHistory = DRY_RUN ? existing?.value.placeHistory
     : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key).finally(() => stepDone(`place history read for ${key}`)) })
       .catch(() => existing?.value.placeHistory);
   let assignments: AssignmentPublication | undefined;
   if (fold) {
     try {
+      await fold.readBack(servedReader);
       assignments = { kind: "BUILT", view: await assignmentView(fold) };
     } catch (error) {
       // The error NAME only: a driver message can carry the connection string.
@@ -442,8 +431,8 @@ async function main(): Promise<void> {
       floored(
         "incidents",
         "the newest freshness-shadow cycle",
-        Math.max(ownerIncidentCount(snapshot.incidents), 1),
-        ownerIncidentCount(snapshot.incidents),
+        Math.max(snapshot.incidents.length, 1),
+        snapshot.incidents.length,
         snapshot.incidents.length === 0 && cycle === null
           ? "no freshness-shadow cycle record exists, so incidents were never counted"
           : undefined,

@@ -2,98 +2,43 @@ import { freemem, platform, tmpdir, totalmem } from "node:os";
 import { existsSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { execFile } from "node:child_process";
-import { createHash, randomUUID } from "node:crypto";
-import { join, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import { join } from "node:path";
 
 const MIB = 1024 * 1024;
-/** Measured RSS floors; host observations may raise these, never lower them. */
-// The completed 15af national worker's owned-tree HWM was 2,386,071,552 bytes; 2,432 MiB retains more than 5% room.
-export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 544, national: 2432 };
-const SCOPED_DATA_PEAK_MIB = 1258;
+/** Rounded-up measured RSS peaks for a script never measured on this host; a reservation pays only for growth not yet in OS usage. */
+export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 342, national: 1258 };
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
-/** Completed promoter peaks: 435,355,648 bytes on 15af and 482,476,032 on 0305. The national child reserves separately. */
-export const NATIONAL_PLACE_PEAK_MIB = 512;
-/** Parent high-water observations, rounded up with room for sampling. */
-export const RUNNER_PARENT_PEAK_MIB: Readonly<Record<string, number>> = {
-  "pilot-runner.mts": 384,
-  "routine-civic-data-runner.mts": 640,
-  "publish-now-runner.mts": 704,
-  "freshness-shadow.mts": RESEARCH_PARENT_PEAK_MIB,
-  "hunter-lane.mts": RESEARCH_PARENT_PEAK_MIB,
-};
+/** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
+export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
-export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // A fresh frozen install, including postinstall, peaked at 1,295 MiB across three processes (100 ms samples).
-  "runtime-release-install.mjs": 1536,
-  "runtime-release-command.mjs": 342,
+const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session peaked at 3,013 MiB;
   // the host observer also accounts for each worker's descendants.
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
   "federal-money-refresh.mts": 768,
-  "fetch-fec.mts": 448,
-  "state-campaign-finance.mts": 704,
-  "state-money-az.mts": 416,
-  "state-money-nh.mts": 342,
-  "state-money-nj.mts": 768,
-  "state-legislators.mts": 384,
-  "nh-gencourt-members.mts": 512,
-  "openstates-people-refresh.mts": 1024,
-  "open-data-refresh.mts": 1792,
-  "registration-refresh.mts": 1344,
-  "fetch-dotgov.mts": 544,
-  "derive-meeting-body-crosswalk.mts": 640,
-  "derive-meeting-source-wiring.mts": 1024,
-  "publish-meeting-doors.mts": 512,
-  "publish-member-offices.mts": 960,
-  "platform-census-runner.mts": 512,
-  "src-cg-refresh.mts": 512,
-  "fetch-votes.mts": 512,
-  "fetch-key-vote-positions.mts": 512,
-  "census-geography-refresh.mts": SCOPED_DATA_PEAK_MIB,
-  "promote-manual-civic-projection.mts": SCOPED_DATA_PEAK_MIB,
-  "ingest.ts": SCOPED_DATA_PEAK_MIB,
-  "state-rollcalls.mts": SCOPED_DATA_PEAK_MIB,
-  "legistar-outcomes-ingest.mts": 640,
-  "legistar-insite-minutes-ingest.mts": 768,
-  "acs-population-promote.mts": SCOPED_DATA_PEAK_MIB,
-  "fetch-congress-legislators.mts": 652,
-  "national-people-refresh.mts": 3575,
-  "people-portraits-refresh.mts": 640,
-  "campaign-finance-az-pima-transactions.mts": 640,
+  "state-campaign-finance.mts": 384,
+  "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
+  "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "legistar-outcomes-ingest.mts": 355,
+  "acs-population-promote.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "fetch-congress-legislators.mts": 384,
+  "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.
+  "people-portraits-refresh.mts": 448,
+  "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
-  "fetch-voting-sites.mts": 640,
+  "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
-  "promote-registry-runtime.mts": 768,
-  "routine-civic-data-reader-repair.mts": 544,
+  "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
-  "loss-study-pass.mts": 544,
-  "look-pass.mts": 800,
-  "resident-tasks.mts": 1280,
 };
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
-
-/** Only clean inactive disk pages are available without freeing a job's memory. */
-function reclaimableInactiveFileBytes(source: string, version: 1 | 2, hierarchical: boolean): number {
-  const values = new Map<string, number>();
-  for (const line of source.trim().split("\n")) {
-    const match = /^(\S+)\s+(\d+)$/.exec(line);
-    if (!match || values.has(match[1]!)) return 0;
-    values.set(match[1]!, Number(match[2]));
-  }
-  const prefix = hierarchical ? "total_" : "";
-  const fields = [version === 2 ? "file" : "cache", "shmem", "inactive_file",
-    version === 2 ? "file_dirty" : "dirty", version === 2 ? "file_writeback" : "writeback", "unevictable"];
-  const bytes = fields.map(field => values.get(prefix + field));
-  if (bytes.some(value => value === undefined || !Number.isSafeInteger(value) || value < 0)) return 0;
-  const [file, shmem, inactive, dirty, writeback, unevictable] = bytes as number[];
-  // Dirty/writeback and unevictable pages may overlap other file counters.
-  // Subtracting their complete totals is conservative without guessing where
-  // those pages sit on the inactive list. Never credit tmpfs, active or slab pages.
-  return Math.max(0, Math.min(inactive!, Math.max(0, file! - shmem!)) - dirty! - writeback! - unevictable!);
-}
 
 export function availableWorkerMemoryBytes(): number {
   let available = freemem();
@@ -102,33 +47,13 @@ export function availableWorkerMemoryBytes(): number {
       const match = /^MemAvailable:\s+(\d+)\s+kB$/m.exec(readFileSync("/proc/meminfo", "utf8"));
       if (match) available = Number(match[1]) * 1024;
     } catch { /* os.freemem remains conservative. */ }
-    // MemAvailable describes the machine, which may be larger than this runner's cgroup.
-    for (const [version, directory, limitName, usedName] of [
-      [2, "/sys/fs/cgroup", "memory.max", "memory.current"],
-      [1, "/sys/fs/cgroup/memory", "memory.limit_in_bytes", "memory.usage_in_bytes"],
-    ] as const) {
-      try {
-        const limit = Number(readFileSync(join(directory, limitName), "utf8").trim());
-        const used = Number(readFileSync(join(directory, usedName), "utf8").trim());
-        if (Number.isFinite(limit) && limit > 0 && Number.isFinite(used) && used >= 0) {
-          let reclaimable = 0;
-          try {
-            // v1 usage follows use_hierarchy; never mix local and descendant counters.
-            const hierarchy = version === 1 ? readFileSync(join(directory, "memory.use_hierarchy"), "utf8").trim() : "0";
-            if (hierarchy === "0" || hierarchy === "1") reclaimable = reclaimableInactiveFileBytes(
-              readFileSync(join(directory, "memory.stat"), "utf8"), version, hierarchy === "1");
-          } catch { /* Missing cache evidence keeps the complete usage charged. */ }
-          available = Math.min(available, Math.max(0, limit - used + Math.min(used, reclaimable)));
-        }
-      } catch { /* This cgroup interface is not mounted. */ }
-    }
   }
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
   return Number.isFinite(hostMiB) && hostMiB > 0
     ? Math.min(available, Math.max(0, hostMiB * MIB - process.memoryUsage.rss())) : available;
 }
 
-export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number; readonly peakRss?: number }
+export interface WorkerProcessMemory { readonly pid: number; readonly parentPid: number; readonly rss: number }
 async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
   const rows: WorkerProcessMemory[] = [];
   try {
@@ -138,20 +63,16 @@ async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
           // Async reads reserve oversized buffers for these zero-length proc files.
           const status = readFileSync(`/proc/${name}/status`, "utf8");
           rows.push({ pid: Number(name), parentPid: Number(/^PPid:\s+(\d+)/m.exec(status)?.[1] ?? 0),
-            rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024,
-            peakRss: Number(/^VmHWM:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024 });
+            rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024 });
         } catch { /* A process can exit while the host is sampled. */ }
       }
     } else if (platform() === "win32") {
       const source = await new Promise<string>((resolve, reject) => execFile("powershell.exe", ["-NoProfile", "-Command",
-        "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize,PeakWorkingSetSize | ConvertTo-Json -Compress"],
+        "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize | ConvertTo-Json -Compress"],
       { encoding: "utf8", windowsHide: true, timeout: 5000, maxBuffer: 4 * MIB },
       (error, stdout) => { if (error) reject(error); else resolve(stdout); }));
-      const values = JSON.parse(source) as { ProcessId: number; ParentProcessId: number; WorkingSetSize: string | number; PeakWorkingSetSize: string | number }[];
-      for (const row of values) {
-        const rss = Number(row.WorkingSetSize), peakKiB = Number(row.PeakWorkingSetSize);
-        rows.push({ pid: row.ProcessId, parentPid: row.ParentProcessId, rss, peakRss: Number.isFinite(peakKiB) ? peakKiB * 1024 : rss });
-      }
+      const values = JSON.parse(source) as { ProcessId: number; ParentProcessId: number; WorkingSetSize: string | number }[];
+      for (const row of values) rows.push({ pid: row.ProcessId, parentPid: row.ParentProcessId, rss: Number(row.WorkingSetSize) });
     }
   } catch { /* Unobserved children keep their complete peak reserved. */ }
   if (!rows.some(row => row.pid === process.pid)) rows.push({ pid: process.pid, parentPid: process.ppid, rss: process.memoryUsage.rss() });
@@ -169,125 +90,37 @@ function descendants(root: number, rows: readonly WorkerProcessMemory[]): Set<nu
   return ids;
 }
 function alive(pid: number): boolean {
-  if (platform() === "linux") try {
-    const stat = readFileSync(`/proc/${pid}/stat`, "utf8");
-    // A zombie still answers kill(pid,0), but has no process memory left to reserve.
-    const state = stat.slice(stat.lastIndexOf(")") + 2, stat.lastIndexOf(")") + 3);
-    if (state === "Z" || state === "X") return false;
-  } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; }
   try { process.kill(pid, 0); return true; }
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }
 
-interface OwnerPeak { pid: number | null; peak: number; observedPeak?: number; pendingPeaks?: WorkerProcessMemory[][] }
-interface MemoryReservation extends OwnerPeak { id: string; owner: number; entry: string; key?: string | null }
-interface ParentPeak extends OwnerPeak { pid: number }
-interface SampleBinding { pid: number; key?: string | null }
-interface HostSample { id: string; owner: number; bindings: SampleBinding[] }
-interface HostState { reservations: MemoryReservation[]; parents: ParentPeak[]; peaks?: Record<string, number[]>;
-  samples?: HostSample[]; sampledBindings?: readonly SampleBinding[] }
+interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
+interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[]; peaks?: Record<string, number[]> }
 
-/** Every managed process owns its unmanaged descendants; separately admitted children own their own memory. */
-function memoryOwners(state: { readonly reservations: readonly { readonly pid: number | null }[]; readonly parents: readonly { readonly pid: number }[];
-  readonly sampledBindings?: readonly SampleBinding[] }, rows: readonly WorkerProcessMemory[]) {
-  const roots = new Set([...state.parents.map(row => row.pid), ...state.reservations.flatMap(row => row.pid === null ? [] : [row.pid]),
-    ...(state.sampledBindings ?? []).map(row => row.pid)]);
-  const trees = new Map<number, Set<number>>();
-  const tree = (pid: number): Set<number> => {
-    let ids = trees.get(pid);
-    if (!ids) { ids = descendants(pid, rows); trees.set(pid, ids); }
-    return ids;
-  };
-  const members = (pid: number | null): readonly WorkerProcessMemory[] => {
-    if (pid === null) return [];
-    const ids = new Set(tree(pid));
-    for (const other of roots) if (other !== pid && ids.has(other)) for (const child of tree(other)) ids.delete(child);
-    return rows.filter(row => ids.has(row.pid));
-  };
-  return { roots, tree, members, rss: (pid: number | null) => members(pid).reduce((sum, row) => sum + row.rss, 0),
-    peak: (pid: number | null) => peakSum(members(pid)) };
-}
-
-function peakSum(rows: readonly WorkerProcessMemory[]): number {
-  return rows.reduce((sum, row) => sum + Math.max(row.rss, row.peakRss ?? 0), 0);
-}
-function reservedPeak(row: { readonly peak: number; readonly pendingPeaks?: readonly (readonly WorkerProcessMemory[])[] }): number {
-  return (row.pendingPeaks ?? []).reduce((peak, sample) => Math.max(peak, peakSum(sample)), row.peak);
-}
-function recordOwnerPeak(state: HostState, owner: OwnerPeak, rows: readonly WorkerProcessMemory[]): void {
-  if (owner.pid === null || rows.length === 0) return;
-  if (!state.reservations.some(row => row.owner === owner.pid && row.pid === null)) {
-    owner.observedPeak = Math.max(owner.observedPeak ?? 0, peakSum(rows));
-    owner.peak = Math.max(owner.peak, owner.observedPeak);
-    return;
-  }
-  // A process visible before its spawn callback is not yet proved managed or
-  // unmanaged. Reserve the complete observation now, retaining its identities
-  // only until the admitted child is bound or the unstarted offer is released.
-  const sample = rows.map(row => ({ pid: row.pid, parentPid: row.parentPid, rss: Math.max(row.rss, row.peakRss ?? 0) }))
-    .sort((left, right) => left.pid - right.pid || left.parentPid - right.parentPid);
-  const prior = owner.pendingPeaks?.find(previous => previous.length === sample.length &&
-    previous.every((row, index) => row.pid === sample[index]!.pid && row.parentPid === sample[index]!.parentPid));
-  if (prior) {
-    for (let index = 0; index < sample.length; index++) prior[index] = { ...sample[index]!, rss: Math.max(prior[index]!.rss, sample[index]!.rss) };
-  } else (owner.pendingPeaks ??= []).push(sample);
-}
-/** Move observations only when a separately admitted process proves ownership. */
-function reconcileOwnerPeaks(state: HostState): void {
-  const bindings = [...state.parents.map(row => ({ pid: row.pid } as SampleBinding)),
-    ...state.reservations.flatMap(row => row.pid === null ? [] : [{ pid: row.pid, key: row.key }])];
-  for (const sample of state.samples ?? []) for (const binding of bindings) {
-    const prior = sample.bindings.find(row => row.pid === binding.pid);
-    if (prior) { if (binding.key !== undefined) prior.key = binding.key; }
-    else sample.bindings.push({ ...binding });
-  }
-  for (const owner of [...state.parents, ...state.reservations]) {
-    if (!owner.pendingPeaks?.length || owner.pid === null) continue;
-    const samples = owner.pendingPeaks;
-    delete owner.pendingPeaks;
-    for (const sample of samples) {
-      const ownership = memoryOwners(state, sample);
-      const before = ownership.tree(owner.pid);
-      for (const pid of ownership.roots) {
-        if (pid === owner.pid || !before.has(pid) || !sample.some(row => row.pid === pid)) continue;
-        const recipient = state.reservations.find(row => row.pid === pid) ?? state.parents.find(row => row.pid === pid);
-        if (recipient) recordOwnerPeak(state, recipient, ownership.members(pid));
-      }
-      recordOwnerPeak(state, owner, ownership.members(owner.pid));
-    }
-  }
-}
-
-/** How often a running reserved child's high-water memory is read. */
+/** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
 const PEAK_SAMPLE_MS = 2000;
+const MEASURED_PEAK_RUNS = 5;
 /** The script an entry runs ("…/national-people-refresh.mts"); entries that name no script keep their table peak. */
-let loadedCommit: string | undefined;
-function peakCodeIdentity(): string {
-  if (process.env.WTP_WORKER_MEMORY_RELEASE) return process.env.WTP_WORKER_MEMORY_RELEASE;
-  if (loadedCommit !== undefined) return loadedCommit;
-  try {
-    let git = join(process.cwd(), ".git");
-    try { const pointer = readFileSync(git, "utf8"); if (pointer.startsWith("gitdir:")) git = resolve(process.cwd(), pointer.slice(7).trim()); } catch { /* Ordinary .git directory. */ }
-    const head = readFileSync(join(git, "HEAD"), "utf8").trim();
-    if (/^[a-f0-9]{40}$/.test(head)) return loadedCommit = head;
-    const ref = head.replace(/^ref:\s*/, "");
-    let common = git;
-    try { common = resolve(git, readFileSync(join(git, "commondir"), "utf8").trim()); } catch { /* Main checkout. */ }
-    for (const directory of [git, common]) {
-      try { const sha = readFileSync(join(directory, ref), "utf8").trim(); if (/^[a-f0-9]{40}$/.test(sha)) return loadedCommit = sha; } catch { /* Packed reference. */ }
-      try { const line = readFileSync(join(directory, "packed-refs"), "utf8").split("\n").find(line => line.endsWith(` ${ref}`)); if (line) return loadedCommit = line.slice(0, 40); } catch { /* No packed references. */ }
-    }
-  } catch { /* Isolated workers retain the declared table version. */ }
-  return loadedCommit = "isolated";
-}
-export function workerMemoryPeakKey(entry: string): string | null {
+function measuredPeakKey(entry: string): string | null {
   const script = entry.split(/[\\/]/).at(-1)!;
-  const table = createHash("sha256").update(JSON.stringify([WORKER_ENTRY_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, RUNNER_PARENT_PEAK_MIB])).digest("hex").slice(0, 16);
-  return /[.](?:mts|ts|mjs|js)$/.test(script) ? `${peakCodeIdentity()}:${table}:${script}` : null;
+  return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
 }
-/** The measured peak, 5% over and rounded up to a whole MiB. */
+/** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
 function measuredReservationBytes(peaks: readonly number[]): number {
   return Math.ceil(Math.max(...peaks) * 1.05 / MIB) * MIB;
+}
+/** Linux high-water RSS of a process and its live descendants; null once the process is gone. */
+async function processTreePeakBytes(root: number): Promise<number | null> {
+  let total = 0;
+  const pending = [root];
+  for (let index = 0; index < pending.length; index++) {
+    const pid = pending[index]!;
+    try { total += Number(/^VmHWM:\s+(\d+)/m.exec(readFileSync(`/proc/${pid}/status`, "utf8"))?.[1] ?? 0) * 1024; }
+    catch { if (pid === root) return null; continue; }
+    try { pending.push(...readFileSync(`/proc/${pid}/task/${pid}/children`, "utf8").split(/\s+/).filter(Boolean).map(Number)); }
+    catch { /* A descendant can exit between reads. */ }
+  }
+  return total;
 }
 export interface WorkerMemoryHost {
   transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses?: boolean): boolean | Promise<boolean>;
@@ -297,8 +130,7 @@ export interface WorkerMemoryHost {
 export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]> } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
-  let sampling: { id: string; work: Promise<readonly WorkerProcessMemory[]>; waiting: number } | undefined;
-  const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[], sampleId?: string): boolean => {
+  const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[]): boolean => {
     const path = join(tmpdir(), "meanwhile-worker-memory.json");
     const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
     const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
@@ -317,21 +149,7 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
-      local.samples = local.samples?.filter(row => alive(row.owner));
-      local.sampledBindings = local.samples?.find(row => row.id === sampleId)?.bindings;
-      try {
-        reconcileOwnerPeaks(local);
-        operation(local, rows);
-        reconcileOwnerPeaks(local);
-        // A released child's proof lasts through every OS probe that could
-        // still return it. Its final observed peak belongs to that script.
-        const owners = memoryOwners(local, rows);
-        for (const binding of local.sampledBindings ?? []) {
-          if (!binding.key || local.reservations.some(row => row.pid === binding.pid) || local.parents.some(row => row.pid === binding.pid)) continue;
-          const bytes = owners.peak(binding.pid);
-          if (bytes > 0) (local.peaks ??= {})[binding.key] = [Math.max(bytes, ...local.peaks[binding.key] ?? [])];
-        }
-      } finally { delete local.sampledBindings; }
+      operation(local, rows);
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
@@ -341,38 +159,11 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       if (input.shared) unlinkSync(lock);
     }
   };
-  const finishSample = (id: string): void => {
-    const clear = () => {
-      if (!apply(state => { state.samples = state.samples?.filter(row => row.id !== id); }, [])) setTimeout(clear, 50).unref();
-    };
-    clear();
-  };
   return { transact: (operation, sampleProcesses = true) => {
     if (!sampleProcesses) return apply(operation, []);
-    if (!sampling) {
-      const id = randomUUID();
-      if (!apply(state => { (state.samples ??= []).push({ id, owner: process.pid, bindings: [] }); }, [])) return false;
-      let rows: readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]>;
-      try { rows = sample(); }
-      catch (error) { finishSample(id); throw error; }
-      // Sampling may wait on the OS; its proof marker, not the shared lock,
-      // keeps released process ownership until all waiting callbacks finish.
-      if (Array.isArray(rows)) {
-        try { return apply(operation, rows, id); }
-        finally { finishSample(id); }
-      }
-      let deadline: ReturnType<typeof setTimeout>;
-      const work = Promise.race([Promise.resolve(rows), new Promise<never>((_resolve, reject) => {
-        deadline = setTimeout(() => reject(new Error("WORKER_MEMORY_SAMPLE_TIMEOUT")), 5000);
-        deadline.unref();
-      })]).finally(() => clearTimeout(deadline));
-      const probe = { id, work, waiting: 0 };
-      sampling = probe;
-      void probe.work.then(() => { if (sampling === probe) sampling = undefined; }, () => { if (sampling === probe) sampling = undefined; });
-    }
-    const probe = sampling;
-    probe.waiting++;
-    return probe.work.then(values => apply(operation, values, probe.id)).finally(() => { if (--probe.waiting === 0) finishSample(probe.id); });
+    const rows = sample();
+    // Sampling may wait on the OS; the shared lock only protects the state update.
+    return Array.isArray(rows) ? apply(operation, rows) : Promise.resolve(rows).then(values => apply(operation, values));
   } };
 }
 const sharedHost = workerMemoryHost({ shared: true });
@@ -394,29 +185,22 @@ export interface WorkerMemoryRelease {
   observe?(pid: number): void;
 }
 export interface WorkerProcessSlots {
-  acquire(entry?: string, deadlineMs?: number, signal?: AbortSignal): Promise<WorkerMemoryRelease>;
+  acquire(entry?: string, deadlineMs?: number): Promise<WorkerMemoryRelease>;
 }
 
 function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
-  if (entry.startsWith("national-place:") && script === "promote-registry-runtime.mts") return NATIONAL_PLACE_PEAK_MIB * MIB;
   const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
-  const scripted = ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script);
-  return Math.max(family ? STATE_PUBLICATION_PEAK_MIB : 0, family || scripted ? ROUTINE_ENTRY_PEAK_MIB[script] ?? 0 : 0) * MIB;
-}
-
-export function routineProcessPeakBytes(entry: string): number {
-  if (entry.startsWith("national-place:")) return NATIONAL_PLACE_PEAK_MIB * MIB;
-  const script = entry.split(/[\\/]/).at(-1)!;
-  return Math.max(statePublicationPeakBytes(entry), (RUNNER_PARENT_PEAK_MIB[script] ?? ROUTINE_ENTRY_PEAK_MIB[script] ??
-    (/^state-money-.+[.]mts$/.test(script) ? SCOPED_DATA_PEAK_MIB : WORKER_ENTRY_PEAK_MIB.lease!)) * MIB);
+  if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
-    parentPeakBytes: memory.parentPeakBytes ?? (RUNNER_PARENT_PEAK_MIB[process.argv[1]?.split(/[\\/]/).at(-1) ?? ""] ?? 0) * MIB,
+    // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
-    peakBytes: memory.peakBytes ?? routineProcessPeakBytes });
+    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -432,30 +216,18 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
   const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
-  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses = false): void => {
+  const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
-      void Promise.resolve(host.transact(operation, sampleProcesses)).then(applied => {
-        if (!applied) setTimeout(() => mutate(operation, sampleProcesses), 50).unref();
-      }, () => { setTimeout(() => mutate(operation, sampleProcesses), 1000).unref(); });
-    } catch { setTimeout(() => mutate(operation, sampleProcesses), 1000).unref(); }
+      void Promise.resolve(host.transact(operation, false)).then(applied => {
+        if (!applied) setTimeout(() => mutate(operation), 50).unref();
+      }, () => { setTimeout(() => mutate(operation), 1000).unref(); });
+    } catch { setTimeout(() => mutate(operation), 1000).unref(); }
   };
-  const registerParent = (state: HostState) => {
-    const reservation = state.reservations.find(row => row.pid === process.pid);
-    if (reservation) {
-      reservation.peak = Math.max(reservation.peak, memory.parentPeakBytes ?? 0);
-      for (const parent of state.parents.filter(parent => parent.pid === process.pid)) {
-        reservation.peak = Math.max(reservation.peak, parent.peak);
-        reservation.observedPeak = Math.max(reservation.observedPeak ?? 0, parent.observedPeak ?? 0);
-        for (const sample of parent.pendingPeaks ?? []) recordOwnerPeak(state, reservation, sample);
-      }
-      state.parents = state.parents.filter(parent => parent.pid !== process.pid);
-      return;
-    }
+  if ((memory.parentPeakBytes ?? 0) > 0) mutate(state => {
     const parent = state.parents.find(row => row.pid === process.pid);
-    if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0);
-    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
-  };
-  if ((memory.parentPeakBytes ?? 0) > 0) mutate(registerParent);
+    if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes!);
+    else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes! });
+  });
   const expire = (): void => {
     const now = Date.now();
     for (let index = waiting.length - 1; index >= 0; index--) {
@@ -487,66 +259,66 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           for (const item of waiting.splice(0)) item.reject(new Error("LEASE_WORKER_CAPACITY_INVALID"));
           return;
         }
-        registerParent(state);
-        const owners = memoryOwners(state, rows);
-        const rssFor = owners.rss;
-        // The OS high-water value survives a brief peak between observer samples.
-        for (const row of [...state.reservations, ...state.parents]) recordOwnerPeak(state, row, owners.members(row.pid));
+        const current = new Map(rows.map(row => [row.pid, row.rss]));
+        const trees = new Map<number, Set<number>>();
+        const idsFor = (pid: number): Set<number> => {
+          let ids = trees.get(pid); if (!ids) { ids = descendants(pid, rows); trees.set(pid, ids); } return ids;
+        };
+        const rssFor = (pid: number | null): number => pid === null ? 0 : rows.reduce((sum, row) => idsFor(pid).has(row.pid) ? sum + row.rss : sum, 0);
+        const inherited = state.reservations.find(row => row.owner !== process.pid && row.pid !== null && idsFor(row.pid).has(process.pid));
+        if (inherited) state.parents = state.parents.filter(parent => parent.pid !== process.pid);
+        else {
+          const parent = state.parents.find(row => row.pid === process.pid);
+          if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0);
+          else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
+        }
+        // A child past its reserved peak has shown it can reach that size again.
+        for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
-          const measured = state.peaks?.[workerMemoryPeakKey(entry) ?? ""];
-          return Math.max(peakFor(entry), measured?.length ? measuredReservationBytes(measured) : 0, memory.minimumPeakBytes?.(entry) ?? 0);
+          const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
+          return Math.max(measured?.length ? measuredReservationBytes(measured) : peakFor(entry), memory.minimumPeakBytes?.(entry) ?? 0);
         };
         while (active < maximum && waiting.length) {
-          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, reservedPeak(row) - rssFor(row.pid)), 0) +
-            state.parents.reduce((sum, row) => sum + Math.max(0, reservedPeak(row) - rssFor(row.pid)), 0);
+          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
+            state.parents.reduce((sum, row) => sum + Math.max(0, row.peak - (current.get(row.pid) ?? 0)), 0);
           const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
-          const participants = new Set([...owners.roots].flatMap(pid => [...owners.tree(pid)]));
+          const participants = new Set(state.parents.flatMap(parent => [...idsFor(parent.pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
           const free = Math.min(available(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity);
           const index = waiting.findIndex(item => {
             if (Date.now() >= item.deadline) return false;
-            return free >= headroom + growth + reserve(item.entry);
+            return inherited || free >= headroom + growth + reserve(item.entry);
           });
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
           const id = randomUUID();
-          const reserved = reserve(item!.entry);
-          const key = workerMemoryPeakKey(item!.entry);
-          state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry, key });
+          let reserved = reserve(item!.entry);
+          if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry });
           active++;
           let released = false;
           let measured = 0;
-          let observedPid: number | null = null;
           let sampler: ReturnType<typeof setInterval> | undefined;
+          const key = measuredPeakKey(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;
             clearInterval(sampler);
-            mutate(state => {
-              const row = state.reservations.find(row => row.id === id);
-              if (row && observedPid !== null) row.pid = observedPid;
-              reconcileOwnerPeaks(state);
-              measured = Math.max(measured, row?.observedPeak ?? 0);
+            if (!inherited) mutate(state => {
               state.reservations = state.reservations.filter(row => row.id !== id);
-              if (key !== null && measured > 0) (state.peaks ??= {})[key] = [Math.max(measured, ...state.peaks[key] ?? [])];
+              if (key !== null && measured > 0) (state.peaks ??= {})[key] = [...state.peaks[key] ?? [], measured].slice(-MEASURED_PEAK_RUNS);
             });
             requestDrain();
           }, { observe: (pid: number) => {
-            if (released) return;
-            observedPid = pid;
+            if (released || inherited) return;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
-            const samplePeak = () => mutate((state, processes) => {
-              if (released) return;
-              if (!processes.some(row => row.pid === pid)) { clearInterval(sampler); return; }
-              const row = state.reservations.find(row => row.id === id);
-              if (!row) return;
-              row.pid = pid;
-              reconcileOwnerPeaks(state);
-              recordOwnerPeak(state, row, memoryOwners(state, processes).members(pid));
-              measured = Math.max(measured, row.observedPeak ?? 0);
-            }, true);
-            samplePeak();
-            sampler = setInterval(samplePeak, PEAK_SAMPLE_MS);
+            if (platform() !== "linux") return;
+            sampler = setInterval(() => void processTreePeakBytes(pid).then(bytes => {
+              if (bytes === null || released) { clearInterval(sampler); return; }
+              measured = Math.max(measured, bytes);
+              if (bytes <= reserved) return;
+              reserved = bytes;
+              mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.peak = Math.max(row.peak, bytes); });
+            }), PEAK_SAMPLE_MS);
             sampler.unref();
           } });
           item!.resolve(release);
@@ -560,24 +332,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     drainScheduled = true;
     queueMicrotask(() => { drainScheduled = false; void drain(); });
   };
-  return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000), signal) =>
-    new Promise<WorkerMemoryRelease>((resolve, reject) => {
-      if (signal?.aborted) { reject(signal.reason); return; }
-      const cleanup = () => signal?.removeEventListener("abort", abort);
-      const item = { entry, deadline: deadlineMs,
-        resolve: (release: WorkerMemoryRelease) => { cleanup(); resolve(release); },
-        reject: (error: Error) => { cleanup(); reject(error); } };
-      const abort = () => {
-        const index = waiting.indexOf(item);
-        if (index < 0) return;
-        waiting.splice(index, 1);
-        item.reject(signal!.reason instanceof Error ? signal!.reason : new Error(String(signal!.reason)));
-        requestDrain();
-      };
-      waiting.push(item);
-      signal?.addEventListener("abort", abort, { once: true });
-      requestDrain();
-    }) };
+  return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
+    new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };
 }
 
 /** How often a wait for host memory says it is still waiting. */
@@ -594,7 +350,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   const everyMs = options.everyMs ?? MEMORY_WAIT_REPORT_EVERY_MS;
   const minuteMs = options.minuteMs ?? 60_000;
   let waits = 0;
-  return { acquire: (entry, deadlineMs, signal) => {
+  return { acquire: (entry, deadlineMs) => {
     const wait = ++waits;
     const started = Date.now();
     const kind = (entry ?? "lease-worker.ts").split(/[\\/]/).at(-1);
@@ -604,7 +360,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
       write(`  waiting for memory: wait ${wait} (${kind}) ${minutes}${limit === null ? "" : ` of ${limit}`} min; the work stays owed`);
     }, everyMs);
     timer.unref?.();
-    const settled = slots.acquire(entry, deadlineMs, signal);
+    const settled = slots.acquire(entry, deadlineMs);
     void settled.then(() => clearInterval(timer), () => clearInterval(timer));
     return settled;
   } };
@@ -636,11 +392,15 @@ export function memoryReading(input: {
 }): HostMemoryReading {
   const headroomBytes = input.headroomBytes ?? WORKER_MEMORY_HEADROOM_MIB * MIB;
   const leaseWorkerPeakBytes = input.leaseWorkerPeakBytes ?? WORKER_ENTRY_PEAK_MIB.lease! * MIB;
-  const owners = memoryOwners(input.state ?? { parents: [], reservations: [] }, input.rows);
+  const treeRss = (pid: number | null): number => {
+    if (pid === null) return 0;
+    const ids = descendants(pid, input.rows);
+    return input.rows.reduce((sum, row) => ids.has(row.pid) ? sum + row.rss : sum, 0);
+  };
   const runner = descendants(input.rootPid, input.rows);
-  const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: reservedPeak(row),
-    rssBytes: owners.rss(row.pid) }));
-  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: reservedPeak(row), rssBytes: owners.rss(row.pid) }));
+  const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: row.peak,
+    rssBytes: input.rows.find(r => r.pid === row.pid)?.rss ?? 0 }));
+  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak, rssBytes: treeRss(row.pid) }));
   const reservedGrowthBytes = [...parents, ...reservations].reduce((sum, row) => sum + Math.max(0, row.peakBytes - row.rssBytes), 0);
   const spare = input.availableBytes - headroomBytes - reservedGrowthBytes;
   return { at: input.at, totalBytes: input.totalBytes, availableBytes: input.availableBytes, headroomBytes,
@@ -656,13 +416,8 @@ export async function hostMemoryReading(at: string = new Date().toISOString()): 
   try { state = JSON.parse(readFileSync(join(tmpdir(), "meanwhile-worker-memory.json"), "utf8")) as HostState; }
   catch { state = null; }
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
-  const live = state === null ? null : { reservations: (state.reservations ?? []).filter(row => row.pid === null ? alive(row.owner) : alive(row.pid) || alive(row.owner)),
-    parents: (state.parents ?? []).filter(row => alive(row.pid)) };
-  const rows = await hostProcesses();
-  const owners = memoryOwners(live ?? { reservations: [], parents: [] }, rows);
-  const participants = new Set([...descendants(process.pid, rows), ...[...owners.roots].flatMap(pid => [...owners.tree(pid)])]);
-  const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
   return memoryReading({ at, totalBytes: Number.isFinite(hostMiB) && hostMiB > 0 ? hostMiB * MIB : totalmem(),
-    availableBytes: Math.min(availableWorkerMemoryBytes(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity),
-    rootPid: process.pid, rows, state: live });
+    availableBytes: availableWorkerMemoryBytes(), rootPid: process.pid, rows: await hostProcesses(),
+    state: state === null ? null : { reservations: (state.reservations ?? []).filter(row => row.pid === null || alive(row.pid) || alive(row.owner)),
+      parents: (state.parents ?? []).filter(row => alive(row.pid)) } });
 }

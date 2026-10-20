@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { openHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { type ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import { projectRecord, type ArtifactRecord, type ChangedRecords, type RecordProjection } from "../lib/control-plane/repository/types.ts";
 import { nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { databaseReadsOf } from "../lib/control-plane/admin-view/v6-workers-read.ts";
 
@@ -9,53 +13,21 @@ const capture = (i: number) => ({ artifactId: `art-${i}`, workItemId: `wi-${i % 
   canonicalUrl: `https://county.example.gov/agenda/${i}`, recordedAt: "2026-10-13T18:00:00.000Z",
   extraction: { text: "x".repeat(4_000), complete: true }, contentHash: "h".repeat(64) }) as unknown as ArtifactRecord;
 
-test("system upkeep selects the latest Scout per subject across logs without whole-country arrays", async () => {
-  const { forEachLatestScout } = await import("../lib/control-plane/workers/streamed-history.ts");
-  const repos = createMemoryRepositories();
-  const result = (subjectId: string, recordedAt: string, outcome: string) => ({ subjectId, recordedAt, outcome, recordClass: "OFFICIAL_ROSTER", findings: [{summary:"x".repeat(4_000)}] }) as unknown as import("../lib/control-plane/scheduler/scout-result.ts").ScoutResult;
-  await repos.scoutResults.append("a-new", "new", result("same-place","2026-10-20T12:00:00Z","EVIDENCE_FOUND"),"2026-10-20T12:00:00Z");
-  await repos.scoutResults.append("z-old", "old", result("same-place","2026-10-19T12:00:00Z","NEEDS_ADAPTER"),"2026-10-20T12:00:00Z");
-  for (let i=0;i<600;i++) await repos.scoutResults.append(`other-${i}`,`${i}`,result(`place-${i}`,"2026-10-18T12:00:00Z","EVIDENCE_FOUND"),"2026-10-20T12:00:00Z");
-  let pageReads=0, visited=0; const selected: string[]=[];
-  const original = repos.scoutResults.readChangedSince.bind(repos.scoutResults);
-  const bounded = {...repos.scoutResults,
-    readAll: async () => { throw new Error("whole-country results"); },
-    keys: async () => { throw new Error("country log keys"); },
-    readChangedSince: async (...args: Parameters<typeof original>) => {
-      assert.equal(typeof args[2]?.page,"function");
-      assert.deepEqual(args[2]?.projection, {subjectId: true, recordClass: true, recordedAt: true, outcome: true, attemptId: true});
-      pageReads++; return original(...args);
-    },
-  };
-  await forEachLatestScout(bounded, async row => { visited++; if(row.subjectId==="same-place") selected.push(row.outcome); });
-  assert.equal(pageReads,1); assert.equal(visited,601); assert.deepEqual(selected,["EVIDENCE_FOUND"],"an older result in a later log cannot reopen a completed adapter job");
-});
-
-test("capture scheduling preserves recorded-time order on temporary disk and stops at its admitted place", async () => {
-  const { forEachRecorded } = await import("../lib/control-plane/workers/streamed-history.ts");
-  const repos = createMemoryRepositories();
-  for (const [key,at] of [["a","2026-10-20T12:00:00Z"],["z","2026-10-18T12:00:00Z"],["y","2026-10-19T12:00:00Z"]]) {
-    const record={...capture(1),artifactId:key,recordedAt:at}; await repos.artifacts.append(key,key,record,at);
+test("held-copy and repository projections keep only requested capture fields", async () => {
+  const fields: RecordProjection = { artifactId: true, workItemId: true, attemptId: true, partial: true, canonicalUrl: true };
+  const records = Array.from({ length: 300 }, (_, i) => ({ key: `wi-${i % 7}`, recordId: `art-${i}`, position: i + 1, record: capture(i) }));
+  const copies = openHeldCopies(mkdtempSync(join(tmpdir(), "narrowed-")), { log: () => {} });
+  const changedSince = async (): Promise<ChangedRecords<ArtifactRecord>> => ({ records, through: "2026-10-13T19:00:00.000Z" });
+  const project = (record: ArtifactRecord) => projectRecord(record, fields);
+  for (const narrowed of [await copies.logReadAll("cp_log_artifacts", changedSince, project),
+    await copies.logReadAll("cp_log_artifacts", changedSince, project)]) {
+    assert.equal(narrowed.length, 300);
+    assert.deepEqual(Object.keys(narrowed[0] as object).sort(), ["artifactId", "attemptId", "canonicalUrl", "partial", "workItemId"]);
+    assert.ok(JSON.stringify(narrowed).length < JSON.stringify(records).length / 20, "a capture's text never enters the projection");
   }
-  const visited:string[]=[];
-  await forEachRecorded({...repos.artifacts,readAll:async()=>{throw new Error("whole-country captures");}}, row=>{visited.push(row.artifactId);if(visited.length===2)return false;});
-  assert.deepEqual(visited,["z","y"]);
-});
-
-test("upkeep fetches changes after its first pass while revisiting unchanged pending subjects and preserving log-order ties", async () => {
-  const { forEachLatestScout } = await import("../lib/control-plane/workers/streamed-history.ts");
-  const since:(string|null)[]=[],outcomes:string[]=[];let pass=0;
-  const row=(outcome:string)=>({subjectId:"az:one",recordClass:"OFFICIAL_ROSTER",recordedAt:"2026-10-20T12:00:00Z",outcome}) as unknown as import("../lib/control-plane/scheduler/scout-result.ts").ScoutResult;
-  const log={readRecord:async(key:string,recordId:string)=>{
-    assert.equal(recordId,key);return row(key==="z"?"NEEDS_ADAPTER":"EVIDENCE_FOUND");
-  },readChangedSince:async(after:string|null,_held:unknown,options:{page:(rows:unknown[])=>Promise<void>|void})=>{
-    since.push(after);const current=pass++;
-    if(current<2)await options.page([{key:current===0?"z":"a",recordId:current===0?"z":"a",position:0,record:row(current===0?"NEEDS_ADAPTER":"EVIDENCE_FOUND")}]);
-    return{records:[],through:`2026-10-20T12:0${current+1}:00.000Z`};
-  }} as unknown as import("../lib/control-plane/repository/types.ts").AppendOnlyRepository<import("../lib/control-plane/scheduler/scout-result.ts").ScoutResult>;
-  for(let i=0;i<3;i++)await forEachLatestScout(log,async result=>{outcomes.push(result.outcome);});
-  assert.deepEqual(since,[null,"2026-10-20T12:00:00.000Z","2026-10-20T12:01:00.000Z"]);
-  assert.deepEqual(outcomes,["NEEDS_ADAPTER","NEEDS_ADAPTER","NEEDS_ADAPTER"],"pending upkeep runs each pass; a late append under an earlier key cannot win an exact recorded-time tie");
+  const repos = createMemoryRepositories();
+  for (const row of records.slice(0, 3)) await repos.artifacts.append(row.key, row.recordId, row.record, row.record.recordedAt);
+  assert.deepEqual(await repos.artifacts.readAllNarrowed(fields), (await repos.artifacts.readAll()).map(project));
 });
 
 test("a native abort's own line leads the heartbeat's error, ahead of its stack and the workers' disconnects", () => {

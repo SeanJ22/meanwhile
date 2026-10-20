@@ -31,21 +31,17 @@ test("2454 never-worked obligations retain their owed time instead of causing 49
   }
 });
 
-test("unchanged full-size registry synchronization scopes complete reads and never rewrites provider or runtime state", async () => {
+test("unchanged full-size registry synchronization uses one read and never rewrites provider or runtime state", async () => {
   const repos = createMemoryRepositories();
   const corpus = Array.from({ length: 2454 }, (_, i) => ({ id: `registered-${i}`, recordClass: "meetings", subjectId: `body-${i}`,
     routeId: null, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }));
   await syncObligations(repos, corpus, NOW);
-  const scopes: string[][] = [], readMany = repos.obligations.readMany!.bind(repos.obligations);
-  repos.obligations.readMany = ids => { scopes.push([...ids]); return readMany(ids); };
   const observed = observeCyclePhases(repos, () => 0);
   const sync = await syncObligations(observed.repos, structuredClone(corpus), "2026-09-15T16:00:00.000Z");
   assert.equal(sync.alreadyDurable.length, 2454);
   assert.equal(sync.refreshed.length, 0);
   assert.equal(sync.registered.length, 0);
-  assert.equal(observed.finish("registration").repositoryCalls, scopes.length + 1, "one projected header scan plus exact-ID scopes");
-  assert.ok(scopes.length > 1); assert.ok(scopes.every(ids => ids.length <= 100));
-  assert.deepEqual(scopes.flat(), corpus.map(row => row.id), "every definition is read once in bounded scopes");
+  assert.equal(observed.finish("registration").repositoryCalls, 1);
   assert.ok(sync.all.every(row => row.updatedAt === NOW));
 });
 

@@ -294,9 +294,6 @@ export interface ResearchView {
     readonly modelLaneEnabled: boolean;
     readonly modelLaneDisabledReason: string | null;
     readonly runtimeConditions: readonly string[];
-    readonly runtimeConditionCount?: number;
-    readonly runtimeConditionDetails?: import("./owner-surface.ts").FreshnessDetailReference;
-    readonly runtimeConditionDetailsUnavailable?: string | null;
   }>;
   readonly workerCredential: Held<{
     readonly name: string;
@@ -499,10 +496,7 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
         model: state.model,
         modelLaneEnabled: state.modelLaneEnabled,
         modelLaneDisabledReason: state.modelLaneDisabledReason,
-        runtimeConditions: state.runtimeConditions.slice(0, 12),
-        runtimeConditionCount: state.runtimeConditionCount ?? state.runtimeConditions.length,
-        runtimeConditionDetails: state.runtimeConditionDetails,
-        runtimeConditionDetailsUnavailable: state.runtimeConditionDetailsUnavailable,
+        runtimeConditions: state.runtimeConditions,
       })
     : stateGap();
 

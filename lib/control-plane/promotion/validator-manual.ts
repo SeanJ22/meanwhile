@@ -1,11 +1,12 @@
 /**
- * Publication reads the current source host's shared lessons and writes back what it learned:
+ * Each publication pass reads the shared field manual before checking anything and writes back what it learned:
  * - OFFICIAL_LINK: a non-`.gov` host an official page links, with that saved page; later jobs reuse it.
  * - SOURCE_REGISTER: a saved official page that passed, and for what.
  * - SECTION3_REFUSAL: a refused page and the reason, so the next worker fetches what was missing.
  */
 import {
   newFieldManualEntry,
+  readFieldManual,
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualRepos,
@@ -13,9 +14,9 @@ import {
 
 const SOURCE = "section3-validator";
 
-export interface ValidatorOfficialLinks {
-  /** Saved official pages linking this host, newest first. Publication uses at most three. */
-  readonly artifactIds: readonly string[];
+export interface ValidatorManual {
+  /** host → saved official pages (artifact ids) that link it, newest first. */
+  readonly officialLinks: ReadonlyMap<string, readonly string[]>;
   readonly offered: number;
   readonly error?: string;
 }
@@ -23,24 +24,18 @@ export interface ValidatorOfficialLinks {
 export const hostOfUrl = (url: string): string | null =>
   /^https?:\/\/([^/?#:\s]+)/i.exec(url.trim())?.[1]?.toLowerCase().replace(/^www\./, "") ?? null;
 
-/** Read only this host, across all sources and places. A failed read checks without inherited links. */
-export async function readValidatorOfficialLinks(repos: FieldManualRepos, host: string): Promise<ValidatorOfficialLinks> {
-  const selected: { id: string; artifactId: string; observedAt: string }[] = [];
-  let offered = 0;
-  try {
-    await repos.fieldManual.visitSlice({ role: "VALIDATOR", kinds: ["OFFICIAL_LINK"], everywhere: true, payloadHost: host }, ({ value: entry }) => {
-      const payload = entry.payload as { host?: unknown; linkingArtifactId?: unknown } | null;
-      if (entry.kind !== "OFFICIAL_LINK" || !["SHARED", "VALIDATOR"].includes(entry.role) || payload?.host !== host) return;
-      offered++;
-      if (entry.outcome !== "YIELDED" || typeof payload.linkingArtifactId !== "string") return;
-      selected.push({ id: entry.id, artifactId: payload.linkingArtifactId, observedAt: entry.observedAt ?? "" });
-      selected.sort((a, b) => b.observedAt.localeCompare(a.observedAt) || a.id.localeCompare(b.id));
-      if (selected.length > 3) selected.pop();
-    }, { id: true, role: true, kind: true, outcome: true, observedAt: true, payload: ["host", "linkingArtifactId"] });
-    return { artifactIds: selected.map(entry => entry.artifactId), offered };
-  } catch (error) {
-    return { artifactIds: [], offered: 0, error: error instanceof Error ? error.message : String(error) };
+/** THE READ, once per pass, before any record is checked. A failed read checks without inherited links. */
+export async function readValidatorManual(repos: FieldManualRepos): Promise<ValidatorManual> {
+  const read = await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK"], everywhere: true });
+  const links = new Map<string, string[]>();
+  // Every official link counts, whatever state or record class learned it.
+  const entries = read.store.entries.filter(e => e.kind === "OFFICIAL_LINK").sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""));
+  for (const entry of entries) {
+    const payload = entry.payload as { host?: unknown; linkingArtifactId?: unknown } | null;
+    if (entry.kind !== "OFFICIAL_LINK" || entry.outcome !== "YIELDED" || typeof payload?.host !== "string" || typeof payload.linkingArtifactId !== "string") continue;
+    links.set(payload.host, [...(links.get(payload.host) ?? []), payload.linkingArtifactId]);
   }
+  return { officialLinks: links, offered: read.projection.entryIds.length, ...(read.error ? { error: read.error } : {}) };
 }
 
 export interface ValidatorObservation {

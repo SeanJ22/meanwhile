@@ -1,13 +1,13 @@
 import { projectHeldPlaceCapture } from "./held-place-projection.ts";
-import { withRegistryRuntimeStates } from "../registry/runtime-read-model.ts";
-import { readRegistryPlaceProjection } from "../registry/place-read.ts";
+import { readRegistryRuntimeProjection, withRegistryRuntimeStates } from "../registry/runtime-read-model.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { MEETING_PARTITION_CONTRACTS } from "./meeting-partitions.ts";
 import { readPromotedCivicDataBatch, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { readHeldPlaceFamilies } from "./held-place-families.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
-import { heldPlaceValue as published, readPlacePointerSlices } from "./held-place-slices.ts";
+import { heldPlaceValue as published, readPlacePointerSlices, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
 import { readHeldPlaceGeography } from "./held-place-geography.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
@@ -21,7 +21,7 @@ export interface HeldPlaceCapture {
 
 async function readStatePlaceCapture(state: string | null, divisionIds: readonly string[], options: PromotedCivicDataReadOptions): Promise<HeldPlaceCapture> {
   const sliced = !options.store || options.store instanceof PostgresRoutineDataStore;
-  const registry = state ? await readRegistryPlaceProjection(state,divisionIds,options) : null;
+  const registry = state ? placeRegistry(await readRegistryRuntimeProjection([state], options), new Set(divisionIds)) : null;
   const value = registry ? published(registry) : null;
   const bodies = new Set((value?.registry.bodies ?? []).filter(body =>
     [body.ocdId, ...(body.alsoServesOcdIds ?? [])].some(id => id !== null && divisionIds.includes(id))).map(body => body.id));
@@ -41,6 +41,22 @@ async function readStatePlaceCapture(state: string | null, divisionIds: readonly
   ]);
   const capture = projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
   return { subjects: [...capture.subjects, ...geography.subjects], held: [...capture.held, ...geography.held] };
+}
+
+function placeRegistry(read: PlaceCaptureRead<RegistryRuntimeReadModel>, ids: ReadonlySet<string>): PlaceCaptureRead<RegistryRuntimeReadModel> {
+  const value = published(read);
+  if (!value) return read;
+  const bodies = value.registry.bodies.filter(body => [body.ocdId, ...(body.alsoServesOcdIds ?? [])].some(id => id !== null && ids.has(id)));
+  const bodyIds = new Set(bodies.map(body => body.id));
+  const bodyRosters = value.bodyRosters.filter(roster => bodyIds.has(roster.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => ids.has(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(id => ids.has(id)));
+  const holders = new Set([...bodyRosters.flatMap(roster => roster.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...read, value: { ...value, registry: { ...value.registry, bodies, divisions: value.registry.divisions.filter(row => ids.has(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { ...value.officialPhotos, photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id))) } };
 }
 
 export async function readHeldPlaceCapture(divisionIds: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<HeldPlaceCapture> {

@@ -1,7 +1,9 @@
-import type { FieldManualRepos } from "../field-manual.ts";
-import { readRuntimeMaturity } from "../../method/runtime-manual.ts";
+import { readLearnedManualRoutes, type FieldManualRepos } from "../field-manual.ts";
+import type { MethodMaturity } from "./dispatch.ts";
 
-/** Route graduation is an exact disk identity lookup; an unreadable or empty manual still throws. */
-export async function methodMaturityFromManual(repos: FieldManualRepos) {
-  return readRuntimeMaturity(repos);
+export async function methodMaturityFromManual(repos: FieldManualRepos,routeIds:readonly string[]): Promise<MethodMaturity> {
+  const read=await readLearnedManualRoutes(repos,routeIds);
+  if (!read.present) throw new Error("the field manual holds no learned routes. An empty manual would send every route to the bounded worker.");
+  const known=new Set(read.routeIds);
+  return route=>route!==null&&known.has(route)?"GRADUATED":"UNGRADUATED";
 }

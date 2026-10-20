@@ -1,7 +1,7 @@
 /** One national bulk clock, publishing one bounded session at a time. */
 import { pathToFileURL } from "node:url";
 import { acquireDatasetList,acquireDataset } from "../lib/sources/legiscan/acquisition.ts";
-import { LEGISCAN_BULK_CONTRACT,billScope,stateOfDataset,type BillSession,type HeldPerson } from "../lib/sources/legiscan/bills.ts";
+import { LEGISCAN_BULK_CONTRACT,LEGISCAN_API,billScope,stateOfDataset,type BillSession,type HeldPerson } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import { PostgresRoutineDataStore,type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -43,10 +43,6 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
   }
   return {marker,counts};
 }
-export async function recordLegiscanBulkFailure(store:RoutineDataStore,error:unknown,attemptedAt?:string) {
-  const failure=sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",error instanceof Error?error.message:"LegiScan bulk unavailable");
-  return recordRegisteredSourceAcquisitionFailure({store,contractId:LEGISCAN_BULK_CONTRACT,failure,attemptedAt});
-}
 async function main() {
   if(process.argv.slice(2).join(" ")!=="--promote") throw Error("LEGISCAN_PROMOTE_REQUIRED");
   installNeonRequestDeadline();prepareProductionCivicDataWrite();const store=new PostgresRoutineDataStore();
@@ -57,7 +53,8 @@ async function main() {
     if(failures.length) throw Error(failures.join("; "));
     printSourceRunnerReceipt(LEGISCAN_BULK_CONTRACT,marker.candidate,marker.outcome);
   } catch(error) {
-    const failed=await recordLegiscanBulkFailure(store,error);
+    const failure=sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",error instanceof Error?error.message:"LegiScan bulk unavailable");
+    const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:LEGISCAN_BULK_CONTRACT,requestedUrl:LEGISCAN_API,failure});
     console.log(failed.line);process.exitCode=2;
   }
 }

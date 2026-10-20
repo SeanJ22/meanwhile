@@ -121,10 +121,9 @@ export function xlsxVotingTables(bytes: Uint8Array, config: VotingExtraction = {
 
 export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtraction = {}): Promise<VotingTable[]> {
   const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const loadingTask = getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false });
+  const doc = await getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false }).promise;
   const tables: VotingTable[] = [];
   try {
-    const doc = await loadingTask.promise;
     const { rowsFromItems, cellsFromRow } = await import("../extract/tables.ts");
     const allRows: string[][] = [];
     let documentTitle: string | undefined, lastUpdated: string | undefined;
@@ -176,6 +175,6 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
       }
       tables.push({ headers: config.pdfColumns.map(c => c.name), rows: records, documentTitle, lastUpdated });
     } else tables.push({ ...tableFromRows(allRows, { ...config, headers: config.headers ?? config.pdfColumns?.map(c => c.name) }), documentTitle, lastUpdated });
-  } finally { await loadingTask.destroy(); }
+  } finally { await doc.cleanup(); }
   return tables;
 }

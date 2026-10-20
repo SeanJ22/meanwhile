@@ -13,11 +13,29 @@ import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
 import { allSeatHolders, seatHolderById, seatHoldersForDivision } from "../registry/server.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "../officials/people-identity.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
+import { holdersFor, indexByDivision, indexByOfficeholderId } from "../officials/lookup.ts";
+import { normalizeName } from "../routing/exact-name.ts";
+import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
 import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
+
+/** An exact full name in the already-read federal directory needs no state legislature lookup. */
+export function namedFederalOfficeholder(question: string): SeatHolder | null {
+  try {
+    const seats = [...new Map([...indexByOfficeholderId([getFederalOfficeholderSet()]).values()]
+      .map(seat => [seat.id, seat])).values()];
+    const binding = bindNamedEntity(question, seats.map(seat => ({ id: seat.id, name: seat.name, nameClass: "person" as const })));
+    if (binding.kind !== "BOUND") return null;
+    const seat = seats.find(row => row.id === binding.entity.id);
+    const name = seat && normalizeName(seat.name);
+    return seat && name && name.split(" ").length > 1 && ` ${normalizeName(question)} `.includes(` ${name} `) ? seat : null;
+  } catch { return null; }
+}
 
 export async function namedOfficeholders(question: string, explicitIds: readonly string[], divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const states=stateDivisionsOf(divisionIds).map(id=>/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]).filter((state):state is string=>Boolean(state));
@@ -40,7 +58,15 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
   return held.filter((seat) => [...personIdentityKeys(seat)].some(id => wanted.has(id)));
 }
 
-export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
+export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = [], offices?: readonly string[]): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
+  const statewide = new Set(["governor", "us_senator", "us_representative", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"]);
+  const narrow = Boolean(offices?.length && offices.every(key => statewide.has(key)));
+  const readDivision = async (id: string): Promise<SeatHolder[]> => {
+    if (!narrow) return seatHoldersForDivision(id);
+    const federal = offices!.some(key => key === "us_senator" || key === "us_representative")
+      ? holdersFor(indexByDivision([getFederalOfficeholderSet()]), id) : [];
+    return [...federal, ...statewideExecutivesFor([id])].filter(seat => offices!.includes(officeIdentity(seat.officeTitle) ?? ""));
+  };
   const seats = new Map<string, SeatHolder>();
   const key = (seat: SeatHolder) => `${seat.id}|${seat.officeJurisdictionOcdId ?? ""}|${seat.officeTitle}`;
   const where = new Map<string, { divisionIds: Set<string>; bodyId: string | null; bodyName: string | null }>();
@@ -49,7 +75,7 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
     if (!row) where.set(key(seat), row = { divisionIds: new Set(), bodyId: null, bodyName: null });
     return row;
   };
-  for (const bodyId of bodyIds) {
+  for (const bodyId of narrow ? [] : bodyIds) {
     const governing = /#(?:governing|board)$/.test(bodyId);
     for (const seat of membersOfBody(bodyId).members) {
       seats.set(key(seat), seat);
@@ -58,17 +84,20 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
   }
   let loaderFailures = 0;
   const divisions = new Set([...ocdIds, ...stateDivisionsOf(ocdIds)]);
-  for (const ocdId of divisions) {
-    try {
-      const held = await seatHoldersForDivision(ocdId);
+  const reads = await Promise.all([...divisions].map(async ocdId => {
+    try { return { ocdId, held: await readDivision(ocdId) }; }
+    catch { return { ocdId, held: null }; }
+  }));
+  for (const { ocdId, held } of reads) {
+    if (held) {
       for (const seat of held) {
         seats.set(key(seat), seat);
         at(seat).divisionIds.add(ocdId);
       }
-      if (/\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
+      if (!narrow && /\/(?:sldu|sldl):/.test(ocdId) && held.length === 0) {
         loaderFailures += 1;
       }
-    } catch {
+    } else {
       loaderFailures += 1;
     }
   }

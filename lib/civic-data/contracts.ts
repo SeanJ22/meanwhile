@@ -1,4 +1,3 @@
-import { FEC_STATES, fecFundingContractId, fecFundingScope } from "./fec-state-scope.ts";
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
@@ -13,13 +12,9 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
 import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
-import { CAMPAIGN_FINANCE_SOURCES, CAMPAIGN_FINANCE_PARSER, campaignFinanceSourceId, campaignFinanceNativeScope } from "../funding/state-sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
-import { CENSUS_GEO_STATES, censusGeographyContractId, censusGeographyScope } from "../census-geography/publication.ts";
-import { ACS_STATES, acsContractId, acsPopulationScope } from "../sources/census-acs-population/publication.ts";
-import { meetingDerivationContractId, meetingDerivationScope } from "./meeting-derivation-scope.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -203,24 +198,24 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
 } as const;
 
 export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
-  ...FEC_STATES.map((state): RoutineSourceContract => ({
-    id: fecFundingContractId(state),
+  {
+    id: "fec-funding",
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
-    scope: fecFundingScope(state),
-    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/fetch-fec.mts", "--promote", `--state=${state}`] },
+    scope: "federal-supported",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/fetch-fec.mts", "--promote"] },
     parserNormalizerVersion: "fec-funding/4",
     cadence: { description: "weekly", defaultEveryMs: 7 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "fec-open-api" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: `funding-snapshot:${state}`, consumers: ["lib/funding/snapshot.ts", "ballot", "funding", "Ask"] },
+    readerProjection: { id: "funding-snapshot", consumers: ["lib/funding/snapshot.ts", "ballot", "funding", "Ask"] },
     lkgBehavior: "The current atomic pointer remains on the last GOOD FEC projection after every refused or failed attempt.",
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-  })),
+    bootstrapFixturePaths: ["data/fec/fec-2026.json"],
+  },
   {
     id: "nh-members",
     sourceId: "nh-general-court",
@@ -356,32 +351,30 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       bootstrapFixturePaths: [],
     };
   }),
-  ...ACS_STATES.map((state): RoutineSourceContract => ({
-    id: acsContractId(state),
+  {
+    id: "census-acs-population",
     sourceId: "census-data-api",
     recordClass: "CENSUS_REFERENCE",
-    scope: acsPopulationScope(state),
-    acquisitionFailureDomain: `census-acs-population:${state}`,
-    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE" as const, command: ["scripts/acs-population-promote.mts", `--state=${state}`], requestedUrl: "https://api.census.gov/data/" },
+    scope: "acs-population",
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/acs-population-promote.mts"], requestedUrl: "https://api.census.gov/data/" },
     parserNormalizerVersion: "census-data-api/3",
     cadence: { description: "monthly check of Census's annual ACS five-year release catalog; read the newest published vintage", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "census-data-api" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: `acs-population-reference:${state}`, consumers: ["lib/reference/acs-population.ts", "readiness", "Admin", "data business", "Ask"] },
+    readerProjection: { id: "acs-population-reference", consumers: ["lib/reference/acs-population.ts", "readiness", "Admin", "data business", "Ask"] },
     lkgBehavior: "The current atomic pointer remains on the last GOOD complete ACS projection after refusal.",
     autoPromotable: true,
-    classification: "OPERATIONAL_REFERENCE_DATA" as const,
+    classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: [],
-  })),
-  ...CENSUS_GEO_STATES.map((state): RoutineSourceContract => ({
-    id: censusGeographyContractId(state),
+  },
+  {
+    id: "census-geography-overlaps",
     sourceId: "census-geography-relationships",
     recordClass: "CENSUS_GEOGRAPHY",
-    scope: censusGeographyScope(state),
-    acquisitionFailureDomain: `census-geography:${state}`,
-    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES" as const, command: ["scripts/census-geography-refresh.mts", `--state=${state}`] },
+    scope: "US:zcta-geography-overlaps",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/census-geography-refresh.mts"] },
     parserNormalizerVersion: "census-geography-overlaps/1",
     cadence: { description: "monthly check for a new Census relationship-file vintage", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
@@ -389,14 +382,14 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
     readerProjection: {
-      id: `census-geography-zcta-overlaps:${state}`,
+      id: "census-geography-zcta-overlaps",
       consumers: ["lib/census-geography/reader.ts", "Admin scope preview", "Admin collection assignments", "Admin geographic reporting"],
     },
     lkgBehavior: "A missing, malformed, empty, or internally inconsistent ZCTA-overlap dataset records a refusal and leaves the prior promoted census-geography version live.",
     autoPromotable: true,
-    classification: "OPERATIONAL_REFERENCE_DATA" as const,
+    classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: ["lib/census-geography/bootstrap-az.json"],
-  })),
+  },
 
   {
     id: "pima-legistar-outcomes",
@@ -461,10 +454,9 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     id: "dotgov",
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "cisa-dotgov-registry:release",
+    scope: "US:current-full:domains",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-dotgov.mts", "--promote"], requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1" },
-    parserNormalizerVersion: "cisa-dotgov/4",
-    fanOut: true,
+    parserNormalizerVersion: "cisa-dotgov/3",
     cadence: { description: "monthly", defaultEveryMs: 30 * DAY },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "cisa-dotgov-registry" },
@@ -500,34 +492,33 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   })),
-  ...REGISTRY_STATES.map((state): RoutineSourceContract => ({
-    id: meetingDerivationContractId("meeting-body-crosswalk-derived", state),
+  {
+    id: "meeting-body-crosswalk-derived",
     sourceId: "meeting-source-wiring",
     recordClass: "CURATED_READER_RECORD",
-    scope: meetingDerivationScope("meeting-body-crosswalk-derived", state),
-    acquisitionFailureDomain: `derived:meeting-body-crosswalk:${state}`,
-    acquisitionAdapter: { authorityMode: "DERIVED" as const, command: ["scripts/derive-meeting-body-crosswalk.mts", "--promote", `--state=${state}`] },
+    scope: "US:meeting-body-crosswalk-derived",
+    acquisitionFailureDomain: "derived:meeting-body-crosswalk",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-body-crosswalk.mts", "--promote"] },
     parserNormalizerVersion: "meeting-source-wiring/1",
     cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-source-wiring" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: meetingDerivationContractId("meeting-body-crosswalk-derived", state), consumers: ["derived meeting-source wiring", "Admin"] },
+    readerProjection: { id: "meeting-body-crosswalk-derived", consumers: ["derived meeting-source wiring", "Admin"] },
     lkgBehavior: "A version with a malformed row, a conflicting pair, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD rows live; an accepted row is never dropped, and an outage or an absent walk carries it exactly as it was.",
     autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA" as const,
+    classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-  })),
+  },
   {
     id: "meeting-doors",
     sourceId: "meeting-doors",
     recordClass: "CURATED_READER_RECORD",
-    scope: "meeting-doors:release",
+    scope: "US:meeting-doors",
     acquisitionFailureDomain: "derived:meeting-doors",
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/publish-meeting-doors.mts", "--promote"] },
     parserNormalizerVersion: "meeting-doors/1",
-    fanOut: true,
     cadence: { description: "at the start of every routine pass, before any meeting door is read", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
     retry: { afterMs: ROUTINE_DATA_ADMISSION_MS, description: "the next routine pass" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-doors" },
@@ -539,25 +530,25 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
-  ...REGISTRY_STATES.map((state): RoutineSourceContract => ({
-    id: meetingDerivationContractId("meeting-source-wiring", state),
+  {
+    id: "meeting-source-wiring",
     sourceId: "meeting-source-wiring",
     recordClass: "CURATED_READER_RECORD",
-    scope: meetingDerivationScope("meeting-source-wiring", state),
-    acquisitionFailureDomain: `derived:meeting-source-wiring:${state}`,
-    acquisitionAdapter: { authorityMode: "DERIVED" as const, command: ["scripts/derive-meeting-source-wiring.mts", "--promote", `--state=${state}`] },
+    scope: "US:meeting-source-wiring",
+    acquisitionFailureDomain: "derived:meeting-source-wiring",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-source-wiring.mts", "--promote"] },
     parserNormalizerVersion: "meeting-source-wiring/1",
     cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "meeting-source-wiring" },
     validationContract: CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: meetingDerivationContractId("meeting-source-wiring", state), consumers: ["derived meeting families", "Admin"] },
+    readerProjection: { id: "meeting-source-wiring", consumers: ["derived meeting families", "Admin"] },
     lkgBehavior: "A version with a refused decision, an input the door cannot find promoted, or any other failed check records its refusal and leaves the prior GOOD wiring live; no row is ever dropped, and a suspended row stays marked until a later review.",
     autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA" as const,
+    classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-  })),
+  },
   ...REGISTRY_STATES.map(state => ({
     id: stateBallotContractId("candidate-campaign-sites-derived", state),
     sourceId: "candidate-campaign-site-chain",
@@ -577,20 +568,6 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   } as const)),
-  ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
-    id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
-    recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(source.state), fanOut: true,
-    acquisitionFailureDomain: "routine-source:campaign-finance",
-    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/state-campaign-finance.mts", "--promote", `--state=${source.state}`] },
-    parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
-    cadence: { description: "Daily conditional checks of the official state's campaign-finance publication", defaultEveryMs: DAY },
-    retry: { afterMs: HOUR, description: "Retry acquisition gaps after an hour while preserving accepted source records" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: campaignFinanceSourceId(source.state) },
-    validationContract: CHECKS, canonicalProductionStore: STORE,
-    readerProjection: { id: `campaign-finance:${source.state}`, consumers: ["state and local campaign money", "government and person cards", "Ask", "Admin"] },
-    lkgBehavior: "A failed source or publication retains each government's last accepted records and reports the reason. Empty deltas succeed and create no absence claim.",
-    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/campaign-finance/"],
-  })),
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,
@@ -636,7 +613,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   },
   ...PEOPLE_SOURCE_CONTRACTS,
   ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
-    id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:release`, fanOut: true,
+    id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
     acquisitionFailureDomain: `routine-source:${sourceId}`,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/open-data-refresh.mts", "--promote", `--source=${sourceId}`],
       requestedUrl: sourceId === "socrata-discovery" ? SOCRATA_CATALOG : ECHO_EXPORT },

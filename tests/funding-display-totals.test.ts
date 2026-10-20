@@ -1,16 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { installFundingFixture } from "./helpers/funding-fixture.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { fundingAnswerForTarget, smallDonorShare } from "../lib/funding/display.ts";
-import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 
 test("numeric funding totals copy the exact five held committee values for every target", async () => {
-  let checked = 0;
-  for (const state of ["AZ", "NJ", "NH"]) {
-  await installFundingFixture(state);
+  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
   for (const candidate of getFundingSnapshot().candidates) {
-    checked++;
     for (const targetKey of candidate.targetKeys) {
       const answer = fundingAnswerForTarget(targetKey);
       assert.equal(answer.kind, "funding", targetKey);
@@ -26,8 +23,6 @@ test("numeric funding totals copy the exact five held committee values for every
       }, targetKey);
     }
   }
-  }
-  assert.equal(checked, 24, "every recorded candidate is checked through its state pointer");
 
   const candidate = getFundingSnapshot().candidates.find(row => row.fecCandidateId === "S0NH00219");
   assert.ok(candidate);
@@ -40,7 +35,7 @@ test("numeric funding totals copy the exact five held committee values for every
 });
 
 test("an absent small-donor share stays null in the numeric payload", async () => {
-  await installFundingFixture("AZ");
+  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
   const candidate = getFundingSnapshot().candidates[0];
   const previous = candidate.totals.individualItemized;
   try {

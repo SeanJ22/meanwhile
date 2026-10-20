@@ -1,4 +1,3 @@
-import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
 /**
  * Every due row a lane holds is accounted for by
  * reason, the reasons add up (or a MISMATCH line says they do not), the
@@ -22,7 +21,7 @@ import {
 } from "../lib/control-plane/scheduler/lane-reading.ts";
 import { isScheduled, scheduleObligation, type FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
-
+import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 const NOW = "2026-09-25T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
@@ -134,9 +133,6 @@ test("MW-014: the coordinator's BLOCKED and STAGED decisions are counted, not si
   });
   assert.deepEqual(lane.skippedBy, { COORDINATOR_CYCLE_MAX: 1, REPAIR_WAITING_ON_SUCCESSOR: 1, COORDINATOR_STAGED: 1, COORDINATOR_BLOCKED: 1 });
   assert.equal(lane.due - lane.dispatched, Object.values(lane.skippedBy!).reduce((n, v) => n + v, 0));
-  assert.deepEqual(coordinatorLane({ considered: 5, decisions: [], deferred: [], dispatched: 3 }), {
-    due: 5, dispatched: 3, active: 0, waiting: 2, skippedBy: {}, oldestWaitingDueAt: null,
-  }, "streamed process summaries preserve Admin's dispatched and waiting counts without holding result payloads");
 });
 
 test("MW-071: mid-cycle lanes count running Scouts as active and the oldest row neither started nor running", () => {

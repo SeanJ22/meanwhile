@@ -7,10 +7,8 @@ import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { federalOfficeRecordsForMember, officeRecordsForHolder, officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
 import { fromMemberOffice, type OfficeLocation } from "./office-locations.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts";
-import { readMemberOfficeRecords } from "./member-office-projection.ts";
 
 export { refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
-export { readMemberOfficeProjection } from "./member-office-projection.ts";
 
 /** Core people publication makes its offices immediately available; one request loads one state. */
 export async function readMemberOffices(officeholderId: string, state?: string, options: PromotedCivicDataReadOptions = {}): Promise<readonly MemberOfficeRecord[]> {
@@ -48,12 +46,6 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
       const records = officeRecordsForHolder(matches[0]);
       if (records.length) return officesForMember(records,matches[0].id);
     }
-  }
-  if (jurisdiction) {
-    try {
-      const records = await readMemberOfficeRecords(jurisdiction.slice(3), options);
-      return [...new Map([...aliases].flatMap(id => officesForMember(records, id)).map(row => [row.id, row])).values()];
-    } catch (error) { if (knownPerson) return []; throw error; }
   }
   try { if(options.store) await refreshMemberOfficesFromPromoted(options); else await settleMemberOfficesRead(); }
   catch (error) { if (knownPerson) return []; throw error; }

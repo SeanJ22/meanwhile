@@ -1,49 +1,129 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { ripcordPulled } from "../ripcords.ts";
 import type { ContributorGroups } from "./grouping.ts";
-import type { ContributionRow, FundingAbsence, FundingCandidate, FundingSnapshot, SecondHopCommittee } from "./types.ts";
-import { civicDataReadNotInitialized, promotedVersionOrThrow, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
-import { routineFreshnessMs } from "../civic-data/contracts.ts";
-import { fecFundingContractId, fecStateOfTarget } from "../civic-data/fec-state-scope.ts";
-import { requireRegistryState, registryJurisdictions } from "../civic-data/state-scopes.ts";
-import { readFecStateSnapshot } from "./fec-state-read.ts";
+import type {
+  ContributionRow,
+  FundingAbsence,
+  FundingCandidate,
+  FundingSnapshot,
+  SecondHopCommittee,
+} from "./types.ts";
+import {
+  civicDataReadNotInitialized,
+  promotedVersionOrThrow,
+  readPromotedOrBootstrap,
+  type CivicDataBootstrap,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { requiredRoutineContract, routineFreshnessMs } from "../civic-data/contracts.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
-export interface FundingReadOptions extends PromotedCivicDataReadOptions { readonly state?: string; readonly targetKeys?: readonly string[]; readonly districts?: readonly string[] }
-interface Holding { read: CivicDataReadResult<FundingSnapshot>; snapshot: FundingSnapshot | null }
-const holdings = new WeakMap<ReaderSelection, Holding>();
-const emptyHolding: Holding = { snapshot: null, read: civicDataReadNotInitialized("FEC_FUNDING", "FEC_STATE_REQUIRED", "The selected state's FEC pointer has not been read.") };
-let outsideRequest: Holding = emptyHolding;
-function current(): Holding { return currentReaderSelection() ? holdings.get(currentReaderSelection()!) ?? emptyHolding : outsideRequest; }
-function selectedState(explicit?: string): string {
-  if (explicit) return requireRegistryState(explicit);
-  const selection = currentReaderSelection();
-  const nativeStates = [...new Set([...selection?.keys ?? []].flatMap(key => fecStateOfTarget(key) ?? []))];
-  if (nativeStates.length === 1) return requireRegistryState(nativeStates[0]);
-  const states = [...new Set([...(selection?.states ?? []), ...(selection?.divisions ?? []).flatMap(registryJurisdictions),
-    ...[...selection?.keys ?? []].flatMap(key => fecStateOfTarget(key) ?? [])])];
-  if (states.length !== 1) throw new Error("FEC_STATE_REQUIRED");
-  return requireRegistryState(states[0]);
+/**
+ * Server-side reader over the promoted operational FEC projection, with the
+ * committed `data/fec/fec-2026.json` retained as bootstrap LKG. No live FEC
+ * call happens at request time, and the FEC API key never reaches runtime code.
+ *
+ * The contributor accessor is the ripcord's enforcement point: when
+ * `ripcord.fecContributorDisplay` is pulled, contributor rows do not leave
+ * this module — the pull is a data filter, not a CSS rule.
+ */
+
+const FEC_CONTRACT = requiredRoutineContract("fec-funding");
+const FEC_SCOPE = FEC_CONTRACT.scope;
+
+let cache: FundingSnapshot | null = null;
+let readState: CivicDataReadResult<FundingSnapshot> = civicDataReadNotInitialized(
+  "FEC_FUNDING",
+  FEC_SCOPE,
+  "The FEC canonical pointer has not been read for this process.",
+);
+
+function validateFundingSnapshot(payload: FundingSnapshot, versionId: string): void {
+  if (payload.formatVersion !== 1 || !Array.isArray(payload.candidates) || !Array.isArray(payload.absences)) {
+    throw new Error(`FEC projection ${versionId} does not satisfy FundingSnapshot.`);
+  }
 }
-export async function readFundingSnapshot(options: FundingReadOptions = {}): Promise<CivicDataReadResult<FundingSnapshot>> {
-  const state = selectedState(options.state), now = options.now ?? new Date().toISOString(), selectionKeys = [...currentReaderSelection()?.keys ?? []];
-  const targetKeys = options.targetKeys ?? selectionKeys.filter(key => /^(?:fec:[HS]\d[A-Z]{2}\d{5}|congress:[A-Z]\d{6}|ballot-)/.test(key));
-  const districts = options.districts ?? [...new Set(selectionKeys.flatMap(key => /\/cd:(\d+)(?:\/|$)/.exec(key)?.[1]?.padStart(2, "0") ?? []))];
-  const read = await readFecStateSnapshot(state, { ...options, now, maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(fecFundingContractId(state), now),
-    ...(targetKeys.length ? { targetKeys } : districts.length ? { districts } : {}) });
-  const holding = { read, snapshot: read.kind === "PROMOTED" ? read.value : null };
-  if (holding.snapshot?.formatVersion !== undefined && (holding.snapshot.formatVersion !== 1 || !Array.isArray(holding.snapshot.candidates) || !Array.isArray(holding.snapshot.absences))) throw new Error("FEC_SNAPSHOT_INVALID");
-  const selection = currentReaderSelection(); if (selection) holdings.set(selection, holding); else outsideRequest = holding;
-  return read;
+
+function fundingBootstrap(): CivicDataBootstrap<FundingSnapshot> {
+  const tracked = JSON.parse(
+    readFileSync(join(process.cwd(), "data", "fec", "fec-2026.json"), "utf8"),
+  ) as FundingSnapshot;
+  validateFundingSnapshot(tracked, "bundled bootstrap");
+  const heldAbsenceCount = tracked.absences.length;
+  const value: FundingSnapshot = {
+    ...tracked,
+    // The frozen rows cannot prove an absence; never revive them as Reader authority.
+    absences: [],
+  };
+  const sourceThrough = value.candidates
+    .map((candidate) => candidate.totals.coverageEndDate ?? "")
+    .sort()
+    .at(-1) || String(value.cycle);
+  return {
+    value,
+    sourceId: FEC_CONTRACT.sourceId,
+    version: String(value.cycle),
+    versionId: `bootstrap:fec:${value.fetchedAt}`,
+    sourceThrough,
+    retrievedAt: value.fetchedAt,
+    staleAtRetrieval: false,
+    detail:
+      `Bundled FEC bootstrap selected only because the canonical store answered with no promoted pointer; ` +
+      `${heldAbsenceCount} frozen absence rows are withheld because this projection does not claim their authority.`,
+  };
 }
-export async function refreshFundingFromPromoted(options: FundingReadOptions = {}): Promise<string | null> {
+
+/** Typed FEC read outcome; a store failure never opens the bootstrap file. */
+export async function readFundingSnapshot(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<FundingSnapshot>> {
+  const now = options.now ?? new Date().toISOString();
+  const result = await readPromotedOrBootstrap({
+    ...options,
+    now,
+    recordClass: "FEC_FUNDING",
+    scope: FEC_SCOPE,
+    maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(FEC_CONTRACT.id, now),
+    bootstrap: fundingBootstrap,
+    allowUnconfiguredBootstrap: process.env.NODE_ENV !== "production",
+  });
+  readState = result;
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
+    validateFundingSnapshot(result.value, result.metadata.versionId ?? result.kind);
+    cache = result.value;
+  } else {
+    cache = null;
+  }
+  return result;
+}
+
+/** Compatibility return for existing request preloads and live acceptance. */
+export async function refreshFundingFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
   return promotedVersionOrThrow(await readFundingSnapshot(options));
 }
-export const settleFundingSnapshotRead = (state?: string): Promise<CivicDataReadResult<FundingSnapshot>> => readFundingSnapshot({ state });
-export const settleFundingRead = async (state?: string): Promise<string | null> => promotedVersionOrThrow(await settleFundingSnapshotRead(state));
-export function fundingReadState(): CivicDataReadResult<FundingSnapshot> { return current().read; }
+
+/** The FEC read, edge first: the reader edge's proven copy through this Reader, else the database. */
+export const settleFundingSnapshotRead = (): Promise<CivicDataReadResult<FundingSnapshot>> =>
+  readPromotedEdgeFirst("FEC_FUNDING", FEC_SCOPE, readFundingSnapshot, "The FEC funding");
+/** The FEC preload, edge first. */
+export const settleFundingRead = async (): Promise<string | null> => promotedVersionOrThrow(await settleFundingSnapshotRead());
+
+export function fundingReadState(): CivicDataReadResult<FundingSnapshot> {
+  return readState;
+}
+
 export function getFundingSnapshot(): FundingSnapshot {
-  const held = current(); if (!held.snapshot) throw new Error(`FEC funding is ${held.read.kind}; read the selected state before using its projection.`);
-  return held.snapshot;
+  if (cache === null) {
+    throw new Error(
+      `FEC funding is ${readState.kind}; call refreshFundingFromPromoted before using the synchronous projection.`,
+    );
+  }
+  return cache;
 }
 
 /** The committee-level record answering for an app-side target id, if any. */
@@ -56,7 +136,7 @@ export function fundingForTarget(targetKey: string): FundingCandidate | null {
 
 /** Native FEC aliases are optional when the money holding was not loaded. */
 export function fecPersonKeys(targetKey: string): string[] {
-  const rows = current().snapshot?.candidates.filter(candidate => candidate.targetKeys.includes(targetKey) || targetKey === `fec:${candidate.fecCandidateId}`) ?? [];
+  const rows = cache?.candidates.filter(candidate => candidate.targetKeys.includes(targetKey) || targetKey === `fec:${candidate.fecCandidateId}`) ?? [];
   return [...new Set(rows.flatMap(row => [`fec:${row.fecCandidateId}`, ...row.targetKeys]))];
 }
 

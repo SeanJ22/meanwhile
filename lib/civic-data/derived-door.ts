@@ -4,10 +4,6 @@ import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { sourceAuthority } from "./source-authority.ts";
 import type { CandidateVersionRecord, RoutineCandidate, SourceAuthorityContract } from "./types.ts";
-import { PostgresRoutineDataStore, type PublishedCandidateMetadata } from "./store.ts";
-import { readPublishedArraySlice } from "./published-array-slice.ts";
-import { derivedRequestedUrl } from "./derived-request.ts";
-export { derivedRequestedUrl } from "./derived-request.ts";
 
 /**
  * A derived candidate has no route of its own; it is authentic only as its exact inputs. Pure check: every input is
@@ -16,6 +12,10 @@ export { derivedRequestedUrl } from "./derived-request.ts";
  */
 export const DERIVED_WIRING_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_WIRING_SCOPE = "US:meeting-source-wiring" as const;
+
+export function derivedRequestedUrl(sourceId: string, scope: string): string {
+  return `derived:${sourceId}:${scope}`;
+}
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const VAULT_HASH = /^sha256-[a-f0-9]{64}$/;
@@ -107,7 +107,6 @@ export function derivedAuthorityFor(candidate: RoutineCandidate): DerivedAuthori
 
 export interface DerivedDoorStore {
   readCandidate(candidateId: string): Promise<CandidateVersionRecord | null>;
-  readPublishedCandidateMetadata?(candidateId: string): Promise<PublishedCandidateMetadata | null>;
 }
 
 const readModelSha256 = (record: CandidateVersionRecord): string =>
@@ -139,43 +138,24 @@ const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
  */
 export async function derivedInputAuthorityIssue(store: DerivedDoorStore, candidate: RoutineCandidate): Promise<string | null> {
   const inputs = candidate.retrieval.derived?.inputs ?? [];
-  const members = inputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION");
-  const promoted = new Map<string, unknown>();
+  const promoted = new Map<string, CandidateVersionRecord>();
   for (const input of inputs) {
     if (input.kind !== "PROMOTED_VERSION") continue;
-    // Published metadata carries the immutable read-model hash. Only a member acquisition
-    // needs the wiring rows themselves to attest the member's host.
-    const needsWiringRows = members.length > 0 && input.recordClass === DERIVED_WIRING_RECORD_CLASS &&
-      (input.scope === DERIVED_WIRING_SCOPE || /^US-[A-Z]{2}:meeting-source-wiring$/.test(input.scope));
-    const metadataOnly = typeof store.readPublishedCandidateMetadata === "function";
-    const record = metadataOnly ? await store.readPublishedCandidateMetadata!(input.versionId) : await store.readCandidate(input.versionId);
+    const record = await store.readCandidate(input.versionId);
     if (record === null) return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
     if (record.candidate.recordClass !== input.recordClass || record.candidate.scope !== input.scope) {
       return `DERIVED_INPUT_IDENTITY_MISMATCH: ${input.versionId} is ${record.candidate.recordClass}:${record.candidate.scope}`;
     }
     if (record.state !== "PROMOTED") return `DERIVED_INPUT_NOT_PROMOTED: ${input.versionId} is ${record.state}`;
-    const hash = metadataOnly ? record.candidate.normalization.normalizedHash : readModelSha256(record as CandidateVersionRecord);
-    if (hash !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
-    if (needsWiringRows) {
-      if (input.scope === DERIVED_WIRING_SCOPE && store instanceof PostgresRoutineDataStore) {
-        const state = /(?:^|:)US-([A-Z]{2})(?=:|$)/.exec(candidate.scope)?.[1];
-        if (!state) return "DERIVED_MEMBER_STATE_REQUIRED: a member reads one state's wiring";
-        const slice = await readPublishedArraySlice({ recordClass: DERIVED_WIRING_RECORD_CLASS, scope: input.scope,
-          path: ["records"], statePath: ["row", "state"], statePattern: `^US-${state}$` });
-        if (!slice || slice.input.versionId !== input.versionId || slice.input.readModelSha256 !== input.readModelSha256)
-          return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
-        promoted.set(input.versionId, { kind: "meeting-source-wiring", records: slice.records });
-      } else {
-        const full = metadataOnly ? await store.readCandidate(input.versionId) : record as CandidateVersionRecord;
-        if (!full || readModelSha256(full) !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
-        promoted.set(input.versionId, full.candidate.readModel);
-      }
-    }
+    if (readModelSha256(record) !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
+    promoted.set(input.versionId, record);
   }
+  const members = inputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION");
   if (members.length === 0) return null;
-  const wiring = [...promoted.values()];
+  const wiring = [...promoted.values()].filter((record) =>
+    record.candidate.recordClass === DERIVED_WIRING_RECORD_CLASS && record.candidate.scope === DERIVED_WIRING_SCOPE);
   if (wiring.length !== 1) return "DERIVED_MEMBERS_WITHOUT_ONE_WIRING_VERSION: a member read is authorized only by exactly one named wiring version";
-  const rows = wiringRows(wiring[0]);
+  const rows = wiringRows(wiring[0]!.candidate.readModel);
   if (rows === null) return "DERIVED_WIRING_UNREADABLE: the named wiring version has no rows";
   for (const member of members) {
     const row = rows.find((r) => r.key === member.memberKey);

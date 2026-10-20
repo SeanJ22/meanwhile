@@ -1,6 +1,3 @@
-import { meetingDerivationScope } from "./meeting-derivation-scope.ts";
-import { ocdStateCode } from "../ocd/state-of.ts";
-import { readMeetingDerivationProjection, type MeetingDerivationReadOptions, type MeetingDerivationRead } from "./meeting-derivation-read.ts";
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -9,7 +6,9 @@ import { derivedRequestedUrl } from "./derived-door.ts";
 import { crosswalkListIssues, crosswalkRowId, crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "./meeting-body-crosswalk.ts";
 import {
   civicDataReadNotInitialized,
+  readPromotedCivicData,
   type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
 } from "./read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
@@ -98,9 +97,9 @@ export function derivedCrosswalkProjectionIssue(value: unknown): string | null {
 let installed: CivicDataReadResult<DerivedCrosswalkProjection> | null = null;
 
 export async function readDerivedMeetingBodyCrosswalk(
-  options: MeetingDerivationReadOptions = {},
-): Promise<MeetingDerivationRead<DerivedCrosswalkProjection>> {
-  const result = await readMeetingDerivationProjection<DerivedCrosswalkProjection>({ family: "meeting-body-crosswalk-derived", options, statePath: ["ocdId"], value: records => ({ kind: "meeting-body-crosswalk-derived", formatVersion: 1, records: records as readonly MeetingBodyCrosswalkRow[] }) });
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<DerivedCrosswalkProjection>> {
+  const result = await readPromotedCivicData<DerivedCrosswalkProjection>(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, options);
   if (result.kind === "PROMOTED") {
     const issue = derivedCrosswalkProjectionIssue(result.value);
     if (issue !== null) {
@@ -212,9 +211,7 @@ export function derivedCrosswalkCandidate(
   plan: DerivedCrosswalkPlan,
   extraInputs: readonly DerivedInputRef[],
   attemptedAt: string,
-  state?: string,
 ): RoutineCandidate {
-  const scope = state === undefined ? DERIVED_CROSSWALK_SCOPE : meetingDerivationScope("meeting-body-crosswalk-derived", state);
   const readModel = derivedCrosswalkProjection(plan);
   const keyed = new Map<string, DerivedInputRef>();
   for (const i of [...plan.inputs, ...extraInputs]) keyed.set(inputKey(i), i);
@@ -222,22 +219,21 @@ export function derivedCrosswalkCandidate(
   const retrieval = derivedRetrieval(inputs);
   const succeeded = retrieval.retrievedAt !== null;
   const retrievedAt = retrieval.retrievedAt ?? attemptedAt;
-  const shapeIssue = derivedCrosswalkProjectionIssue(readModel) ?? (state && readModel.records.some(row => ocdStateCode(row.ocdId)?.toUpperCase() !== state.toUpperCase())
-    ? "the state crosswalk contains a body outside its state" : null);
+  const shapeIssue = derivedCrosswalkProjectionIssue(readModel);
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
   const normalizedPayload = {
     readModel,
     decisions: { accepted: plan.accepted, renewed: plan.renewed, carried: plan.carried, held: plan.held.map((h) => h.key) },
   };
   return {
-    id: `cv-${sha256Hex(`${DERIVED_CROSSWALK_CONTRACT_ID}\u001f${scope}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${DERIVED_CROSSWALK_CONTRACT_ID}\u001f${DERIVED_CROSSWALK_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: DERIVED_CROSSWALK_SOURCE_ID,
     recordClass: DERIVED_CROSSWALK_RECORD_CLASS,
-    scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_RECORD_CLASS, scope),
+    scope: DERIVED_CROSSWALK_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE),
     retrieval: {
       succeeded,
-      requestedUrl: derivedRequestedUrl(DERIVED_CROSSWALK_SOURCE_ID, scope),
+      requestedUrl: derivedRequestedUrl(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_SCOPE),
       finalUrl: null,
       httpStatus: null,
       retrievedAt,
@@ -263,7 +259,7 @@ export function derivedCrosswalkCandidate(
       matchBasis: "EXACT_SCOPED_ID" as const,
       ambiguous: false,
     })),
-    temporal: { version: scope, expectedVersion: scope, sourceThrough: retrievedAt, staleAtRetrieval: false },
+    temporal: { version: DERIVED_CROSSWALK_SCOPE, expectedVersion: DERIVED_CROSSWALK_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
     semantics: {
       factKind: "calendar-to-body connections accepted by the runner's deterministic reviewer on vaulted official evidence",
       violations: shapeIssue === null ? [] : [`the version is not an automatic meeting-body crosswalk: ${shapeIssue}`],
@@ -288,21 +284,20 @@ export function derivedCrosswalkCandidate(
   };
 }
 
-export function derivedCrosswalkFailedCandidate(attemptedAt: string, failureDetail: string, state?: string): RoutineCandidate {
-  const scope = state === undefined ? DERIVED_CROSSWALK_SCOPE : meetingDerivationScope("meeting-body-crosswalk-derived", state);
+export function derivedCrosswalkFailedCandidate(attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
-    id: `cv-${sha256Hex(`${DERIVED_CROSSWALK_CONTRACT_ID}\u001f${scope}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
+    id: `cv-${sha256Hex(`${DERIVED_CROSSWALK_CONTRACT_ID}\u001f${DERIVED_CROSSWALK_SCOPE}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
     sourceId: DERIVED_CROSSWALK_SOURCE_ID,
     recordClass: DERIVED_CROSSWALK_RECORD_CLASS,
-    scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_RECORD_CLASS, scope),
-    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(DERIVED_CROSSWALK_SOURCE_ID, scope), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
+    scope: DERIVED_CROSSWALK_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE),
+    retrieval: { succeeded: false, requestedUrl: derivedRequestedUrl(DERIVED_CROSSWALK_SOURCE_ID, DERIVED_CROSSWALK_SCOPE), finalUrl: null, httpStatus: null, retrievedAt: attemptedAt, rawHash: null, failureDetail },
     normalization: {
       succeeded: false, parserVersion: DERIVED_CROSSWALK_PARSER, schemaVersion: "meeting-body-crosswalk-derived:1", normalizedHash: null,
       inputRecords: 0, outputRecords: 0, droppedRecords: 0, missingRequiredFields: [], failureDetail,
     },
     identities: [],
-    temporal: { version: scope, expectedVersion: scope, sourceThrough: attemptedAt, staleAtRetrieval: false },
+    temporal: { version: DERIVED_CROSSWALK_SCOPE, expectedVersion: DERIVED_CROSSWALK_SCOPE, sourceThrough: attemptedAt, staleAtRetrieval: false },
     semantics: { factKind: "calendar-to-body connections accepted by the runner's deterministic reviewer on vaulted official evidence", violations: [] },
     horizon: { kind: "OPEN_FACT_SET", query: "no inputs read", returnedRecords: 0, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },

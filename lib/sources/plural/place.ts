@@ -4,16 +4,15 @@ import type { PlaceDivision } from "../../control-plane/expansion/national-geogr
 import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 import { electionPageFields, type ElectionFieldCandidate } from "../../hunt/election-page.ts";
 import type { WorkerPublicationCapture } from "../../civic-data/worker-roster-publication.ts";
-import { fieldManualForSource, type FieldManualRead } from "../../control-plane/field-manual.ts";
-import { replayPropertyAs } from "../verified-replay.ts";
+import type { FieldManualSourceHint } from "../../control-plane/field-manual-sources.ts";
 
 export interface HeldSourcePage {
   readonly url: string;
-  /** Final retrieval location for relative links; url remains the saved source identity. */
+
   readonly baseUrl?: string;
   readonly text: string;
   readonly collectedAt: string;
-  /** Metadata for these same bytes in the ordinary shared evidence vault. */
+
   readonly capture?: WorkerPublicationCapture;
 }
 export interface NationalOfficialCandidate {
@@ -21,41 +20,36 @@ export interface NationalOfficialCandidate {
   readonly divisionId: string;
   readonly name: string;
   readonly officeTitle: string;
-  /** Discovery label, not source-verified text or an identity merge. */
+
   readonly seatLabel?: string;
   readonly officialUrl: string;
   readonly document: HeldSourcePage;
-  /** Exact source words, never a claim that the publisher has verified them. */
+
   readonly quote: string;
   readonly linkingPage?: OfficialLinkingPage;
   readonly portrait?: import("../../photos/evidence.ts").PortraitSources;
 }
 
-/** The kinds of fact this job collects. A family with no open blank is not read. */
 export interface NationalSourceFamilies { readonly officials: boolean; readonly elections: boolean }
 export const ALL_NATIONAL_FAMILIES: NationalSourceFamilies = { officials: true, elections: true };
-/** The checklist families each national source family fills. */
+
 export const NATIONAL_FAMILY_GROUPS: Readonly<Record<keyof NationalSourceFamilies, readonly string[]>> = {
   officials: ["OFF"], elections: ["ELE"],
 };
-/** Which families still have an open blank, from the place's open blanks. */
+
 export function openNationalFamilies(blanks: readonly { readonly checklistId: string }[]): NationalSourceFamilies {
   const open = (family: keyof NationalSourceFamilies) => blanks.some(blank => NATIONAL_FAMILY_GROUPS[family].includes(blank.checklistId.slice(0, blank.checklistId.indexOf("-"))));
   return { officials: open("officials"), elections: open("elections") };
 }
 
 export interface NationalPlaceSources {
-  /** The families this pass read. A family with nothing open was skipped. */
+
   readonly families?: NationalSourceFamilies;
   readonly officials: readonly NationalOfficialCandidate[];
   readonly electionDocuments: readonly HeldSourcePage[];
   readonly electionFields: readonly ElectionFieldCandidate[];
   readonly documents: readonly HeldSourcePage[];
   readonly gaps: readonly { sourceUrl: string; detail: string }[];
-}
-
-function pageLinkingEvidence(page:HeldSourcePage,linkingPage:OfficialLinkingPage):OfficialLinkingPage {
-  return replayPropertyAs(page,"text","html",{url:page.url,linkingPage}) as unknown as OfficialLinkingPage;
 }
 
 function links(page: HeldSourcePage): { url: string; label: string }[] {
@@ -69,35 +63,33 @@ function links(page: HeldSourcePage): { url: string; label: string }[] {
 
 const OFFICE = "(?:Lieutenant Governor|Governor|Secretary of State|Attorney General|State Auditor|Auditor|State Treasurer|Treasurer|Comptroller|Mayor)";
 const namedOffice = new RegExp(`^(${OFFICE})\\s+([A-Z][\\p{L}.'’ -]+)$`, "u");
-/* National sources are acquisition inputs: the publisher checks the saved
- * official document and the seat before anything reaches the reader. */
+
 export async function collectNationalPlaceSources(input: {
   readonly divisions: readonly PlaceDivision[];
   readonly now: string;
   readonly read: (url: string) => Promise<HeldSourcePage>;
-  readonly knowledge?: FieldManualRead;
+  readonly sourceHints:(url:string)=>Promise<readonly FieldManualSourceHint[]>;
   readonly onSources?: (sources: NationalPlaceSources) => Promise<void>;
-  /** Only the families with open blanks are read. Omitted, every family is read. */
+
   readonly families?: NationalSourceFamilies;
 }): Promise<NationalPlaceSources> {
   const families = input.families ?? ALL_NATIONAL_FAMILIES;
   const documents = new Map<string, HeldSourcePage>();
   const inFlight = new Map<string, Promise<HeldSourcePage>>();
   const gaps: { sourceUrl: string; detail: string }[] = [];
-  const sourceKnowledge = new Map<string, ReturnType<typeof fieldManualForSource>>();
+  const sourceKnowledge = new Map<string,Promise<readonly FieldManualSourceHint[]>>();
   const learned = (url: string, state: string) => {
     const key = `${state}|${new URL(url).origin}`;
-    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key, input.knowledge ? fieldManualForSource(input.knowledge, url) : []);
+    if (!sourceKnowledge.has(key)) sourceKnowledge.set(key,input.sourceHints(url));
     return sourceKnowledge.get(key)!;
   };
-  const orderRoutes = (urls: readonly string[], state: string) => [...new Set(urls)].sort((a, b) => {
-    const rank = (url: string) => {
-      const entry = learned(url, state).filter(entry => entry.url === url)
-        .sort((a, b) => (b.observedAt ?? "").localeCompare(a.observedAt ?? ""))[0];
-      return entry?.outcome === "YIELDED" ? 0 : entry?.outcome === "FAILED" || entry?.outcome === "BLOCKED" ? 2 : 1;
-    };
-    return rank(a) - rank(b);
-  });
+  const orderRoutes = async(urls:readonly string[],state:string)=>{
+    const unique=[...new Set(urls)],ranks=new Map(await Promise.all(unique.map(async url=>{
+      const hint=(await learned(url,state)).find(hint=>hint.url===url);
+      return [url,hint?.outcome==="YIELDED"?0:hint?.outcome==="FAILED"||hint?.outcome==="BLOCKED"?2:1] as const;
+    })));
+    return unique.sort((a,b)=>ranks.get(a)!-ranks.get(b)!);
+  };
   const read = (url: string) => {
     const prior = inFlight.get(url);
     if (prior) return prior;
@@ -126,7 +118,7 @@ export async function collectNationalPlaceSources(input: {
       electionDocuments: [...electionDocuments], documents: [...documents.values()], gaps: [] });
   };
   await Promise.all(states.map(async state => {
-    // Held national directories supply the state routes once; each hunt reads only that state's pages.
+
     if (!families.officials && !families.elections) return;
     const heldOffices = stateOfficesForStates([state]).filter(office => office.kind === "ELECTION_OFFICE");
     const divisionId = input.divisions.find(d => d.divisionType === "state" && d.id.endsWith(`:${state}`))?.id;
@@ -146,9 +138,7 @@ export async function collectNationalPlaceSources(input: {
         for (const heading of page.text.matchAll(/<h([1-3])\b[^>]*>([\s\S]*?)<\/h\1>/gi)) {
           const label = cellText(heading[2]).replace(/\s+/g, " ").trim();
           const name = label.replace(new RegExp(`^(?:${OFFICE})\\s+`, "i"), "");
-          // A site's news carousel can contain several name-shaped H1s.
-          // Bind the person to the office in this heading, not elsewhere on
-          // the page; a bare heading remains extraction work.
+
           if (label === name || !looksLikeNameCell(name)) continue;
           if (!/^[\p{Lu}][\p{L}.'’ -]+$/u.test(name) || name.split(/\s+/).length < 2 || name.length > 80 ||
             /\b(?:office|about|contact|state|government|attorney|general|governor|secretary|welcome|news|services)\b/i.test(name)) continue;
@@ -180,9 +170,8 @@ export async function collectNationalPlaceSources(input: {
       await flush();
     }
     const directoryProvenance = stateOfficeLinkingPage(primary);
-    const stateProvenance = pageLinkingEvidence(statePage,directoryProvenance);
-    // Office landing pages often name the office but link a separate biography.
-    // Read that profile rather than trying to infer a person from a URL slug.
+    const stateProvenance = { url: statePage.url, html: statePage.text, linkingPage: directoryProvenance };
+
     const officeLinks = stateLinks.flatMap(link => {
       const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(link.label)?.[1];
       return office ? [{ ...link, office }] : [];
@@ -192,7 +181,7 @@ export async function collectNationalPlaceSources(input: {
       if (!page) return;
       addOfficials(page, link.office, parent);
       await flush();
-      const provenance = pageLinkingEvidence(page,parent);
+      const provenance = { url: page.url, html: page.text, linkingPage: parent };
       await Promise.all(links(page).filter(l => new RegExp(`^(?:About (?:the )?)?${link.office}$`, "i").test(l.label)).map(async l => {
         const profile = await attempt(l.url);
         if (profile) { addOfficials(profile, link.office, provenance); await flush(); }
@@ -203,10 +192,9 @@ export async function collectNationalPlaceSources(input: {
     if (government) {
       let page = await attempt(government) ?? await attempt(new URL(government).origin);
       if (!page) {
-        // A stale landing path does not establish that the government's site
-        // is unavailable. Try its other routes published by the directory.
-        const alternatives = orderRoutes([
-          ...learned(government, state).filter(entry => entry.outcome === "YIELDED").flatMap(entry => entry.url ?? []),
+
+        const alternatives = await orderRoutes([
+          ...(await learned(government,state)).filter(hint=>hint.worked).map(hint=>hint.url),
           ...stateLinks.filter(l => l.url !== government && new URL(l.url).origin === new URL(government).origin).map(link => link.url),
         ], state);
         for (const route of alternatives) {
@@ -221,12 +209,12 @@ export async function collectNationalPlaceSources(input: {
         await Promise.all(offices.map(async url => {
           const found = await attempt(url);
           if (!found) return;
-          const parent = pageLinkingEvidence(page,stateProvenance);
+          const parent = { url: page.url, html: page.text, linkingPage: stateProvenance };
           addOfficials(found, undefined, parent);
           await flush();
           await Promise.all(links(found).flatMap(l => {
             const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})(?:\\s+[A-Z][\\p{L}.'’ -]+)?$`, "u").exec(l.label)?.[1];
-            return office ? [followOffice({ url: l.url, office },pageLinkingEvidence(found,parent))] : [];
+            return office ? [followOffice({ url: l.url, office }, { url: found.url, html: found.text, linkingPage: parent })] : [];
           }));
         }));
       }
@@ -244,13 +232,13 @@ export async function collectNationalPlaceSources(input: {
       electionFields.push(...electionPageFields(page, divisionId, parent));
       if (families.officials && page.url !== statePage.url) addOfficials(page, undefined, parent);
       await flush();
-      const provenance = pageLinkingEvidence(page,parent);
+      const provenance = { url: page.url, html: page.text, linkingPage: parent };
       if (families.officials && page.url !== statePage.url) await Promise.all(links(page).flatMap(l => {
         const office = new RegExp(`^(?:Office of (?:the )?)?(${OFFICE})$`, "i").exec(l.label)?.[1];
         return office ? [followOffice({ url: l.url, office }, provenance)] : [];
       }));
-      const routes = orderRoutes([
-        ...learned(page.url, state).filter(entry => entry.outcome === "YIELDED" && entry.recordClasses.some(kind => /election|ballot|voter/i.test(kind))).flatMap(entry => entry.url ?? []),
+      const routes = await orderRoutes([
+        ...(await learned(page.url,state)).filter(hint=>hint.workedFor.some(kind=>/election|ballot|voter/i.test(kind))).map(hint=>hint.url),
         ...links(page).filter(l => /registration|deadline|early voting|polling|voting location|voting schedule|certified|canvass|election results/i.test(l.label)).map(l => l.url),
       ], state);
       await Promise.all(routes.map(async route => {
@@ -263,7 +251,7 @@ export async function collectNationalPlaceSources(input: {
           const accessible = await attempt(l.url);
           if (accessible) {
             electionDocuments.push(accessible);
-            electionFields.push(...electionPageFields(accessible, divisionId,pageLinkingEvidence(document,provenance)));
+            electionFields.push(...electionPageFields(accessible, divisionId, { url: document.url, html: document.text, linkingPage: provenance }));
             await flush();
           }
         }));

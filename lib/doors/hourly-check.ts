@@ -57,13 +57,6 @@ export interface ProbeRunReport {
   readonly requests: number;
 }
 
-/** Shared URL results and counts let a streaming pass keep one request per page across all places. */
-export interface ProbeRunCache {
-  get(url: string): ProbeResult | undefined;
-  put(url: string, result: ProbeResult): void;
-  countOnce(url: string): boolean;
-}
-
 /**
  * Make this minute's first looks and store what each saw on its door. One look per distinct page: the doors behind
  * one feed share it. A look that fails or waits stores nothing and the door is looked at again on a later minute.
@@ -74,7 +67,6 @@ export async function runHourlyProbes(
   hotPartitions: ReadonlySet<string>,
   fetchFn: ProbeFetch,
   now: string,
-  cache?: ProbeRunCache,
 ): Promise<ProbeRunReport> {
   const plan = planProbes(doors, hotPartitions, now);
   const byUrl = new Map<string, Promise<ProbeResult>>();
@@ -87,11 +79,9 @@ export async function runHourlyProbes(
   let requests = 0;
   for (const door of plan.doors) {
     const url = probeUrlFor(door)!;
-    const held = cache?.get(url);
-    if (!held && !byUrl.has(url)) byUrl.set(url, firstLook(url, door.validators, fetchFn, now));
-    const result = held ?? await byUrl.get(url)!;
-    if (cache && !held) cache.put(url, result);
-    if (cache ? cache.countOnce(url) : !counted.has(url)) {
+    if (!byUrl.has(url)) byUrl.set(url, firstLook(url, door.validators, fetchFn, now));
+    const result = await byUrl.get(url)!;
+    if (!counted.has(url)) {
       counted.add(url);
       requests += result.requests;
       if (result.verdict === "CHANGED") changed += 1;

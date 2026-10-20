@@ -69,8 +69,8 @@ function candidate(id: string, overrides: Partial<RoutineCandidate> = {}): Routi
     id,
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
-    scope: "US-AZ:fec-funding:v1",
-    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "US-AZ:fec-funding:v1"),
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
     retrieval: {
       succeeded: true,
       requestedUrl: "https://api.open.fec.gov/v1/",
@@ -160,7 +160,7 @@ function narrowed(record: CandidateVersionRecord): RoutineClockRecord {
 }
 
 test("the routine clock reads a pointer's identity and proof, never its promoted payload", () => {
-  const select = selectList(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "US-AZ:fec-funding:v1"));
+  const select = selectList(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
   assert.doesNotMatch(select, DATASET);
   for (const column of ["source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "validation_receipt"]) {
     assert.match(select, new RegExp(`"${column}"`), `the pointer read must still carry ${column}`);
@@ -632,7 +632,7 @@ test("the Postgres confirmation is one guarded insert, and the clock reads one e
     /this\.candidateEventLock\(id\)/,
     /\$\{priorCheckedAt\} > \$\{checkedAt\}::timestamptz/,
   ]) assert.match(method, guard);
-  const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "US-AZ:fec-funding:v1"));
+  const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
   assert.doesNotMatch(select, DATASET);
   assert.match(select, /"detail"/);
 });
@@ -753,14 +753,14 @@ test("a confirmation's runner receipt is proved from the pointer and its newest 
   }, at);
   assert.equal(confirmed.kind, "CONFIRMED");
   const line = "RCD_RECEIPT=" + JSON.stringify({
-    source: "fec-funding:AZ", candidateId: value.id, acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD",
+    source: "fec-funding", candidateId: value.id, acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD",
     promotedVersion: value.id, lastKnownGoodVersion: value.id, confirmedAt: at, structuralReleaseContract: ZERO_RELEASE_EVENTS,
   });
   const parsed = parseRoutineRunnerReceipt(line);
   assert.ok(parsed.ok);
   if (!parsed.ok) return;
   assert.equal(parsed.receipt.confirmedAt, at);
-  const expected = { id: "fec-funding:AZ", sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope };
+  const expected = { id: "fec-funding", sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope };
   // Count every dataset door: a confirmation's proof opens none of them.
   let datasetReads = 0;
   const counting = Object.assign(Object.create(store), {

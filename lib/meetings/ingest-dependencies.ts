@@ -3,13 +3,12 @@ import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { ATTESTED_PROMOTIONS_ENV, attestedPromotionFor, parseAttestedPromotions } from "../civic-data/attested-promotion.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../civic-data/curated-reader-read-model.ts";
-import type { VenueResolutionReadOptions } from "./venue-projection.ts";
 
 export async function preloadCanonicalMeetingDependencies(input: {
   readonly sourceName: string;
   readonly state: string;
   readonly refreshRegistry?: (states: readonly string[], options: PromotedCivicDataReadOptions) => Promise<unknown>;
-  readonly refreshVenues?: (options: VenueResolutionReadOptions) => Promise<unknown>;
+  readonly refreshVenues?: () => Promise<unknown>;
   readonly env?: Readonly<Record<string, string | undefined>>;
 }): Promise<void> {
   const refreshRegistry = input.refreshRegistry ?? refreshRegistryRuntimeFromPromoted;
@@ -24,7 +23,7 @@ export async function preloadCanonicalMeetingDependencies(input: {
   await Promise.all([
     refreshRegistry([input.state], attested ? { attested } : {}),
     ...(input.sourceName === "composite" || input.sourceName === "legistar"
-      ? [refreshVenues({ state: input.state })]
+      ? [refreshVenues()]
       : []),
   ]);
 }

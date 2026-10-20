@@ -71,7 +71,6 @@ function registryFixtureForState(state: string, value: RegistryRuntimeReadModel 
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-
 const now = "2026-10-13T12:00:00.000Z";
 const registry = registryTransferImport().projection.payload;
 const source = "https://elections.example.gov/official-candidates";
@@ -183,16 +182,4 @@ test("published national ballot rows are written to the promoted registry bridge
   assert.equal(ambiguous.kind, "BOOTSTRAP");
   if (ambiguous.kind === "BOOTSTRAP") assert.equal(ambiguous.value.officialCandidacies.rows.find(row => row.holder.id === "congress:H001104")?.status, "IDENTITY_UNRESOLVED");
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), []);
-});
-
-test("a committee office cannot keep an old legislative candidacy when the current ballot identifies its actual seat",()=>{
-  const division="ocd-division/country:us/state:nh/sldl:607",candidate=ballot("NH","State Representative","Karen Ebel",division);
-  const holder={id:"plural:nh:exact-person",name:"Karen Ebel",officeTitle:"State Representative",divisions:[division],authority:"STATE_PEOPLE" as const,sourceUrl:"https://legislature.example.gov/member"};
-  const valid=reconcileOfficialCandidacies({bridge:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[]},ballots:[candidate],holders:[holder]});
-  const committee={...valid.rows[0],holder:{...holder,id:"roster:delegation#5",officeTitle:"Vice Chair, Delegation Executive Committee",divisions:["ocd-division/country:us/state:nh/county:merrimack"],authority:"REGISTRY_BODY_ROSTER" as const}};
-  const refreshed=reconcileOfficialCandidacies({bridge:{...valid,rows:[committee]},ballots:[candidate],holders:[holder]});
-  assert.equal(refreshed.rows.find(row=>row.holder.id===committee.holder.id)?.status,"IDENTITY_UNRESOLVED");
-  assert.equal(refreshed.rows.find(row=>row.holder.id===committee.holder.id)?.candidacy,null);
-  assert.equal(refreshed.rows.filter(row=>row.status==="RESOLVED").length,1);
-  assert.equal(refreshed.rows.find(row=>row.holder.id===holder.id)?.candidacy?.candidacyId,candidate.candidacies[0].id);
 });

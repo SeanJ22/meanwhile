@@ -1,6 +1,4 @@
 import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
-import { normalizeHost } from "./page-address.ts";
-export { normalizeHost } from "./page-address.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
@@ -123,6 +121,7 @@ export type Checked<T> = { readonly ok: true; readonly value: T } | { readonly o
 
 const DOOR_ID = /^[a-z0-9][a-z0-9:._~#@+%/-]{0,299}$/i;
 const KIND = /^[a-z][a-z0-9-]{0,63}$/;
+const HOST = /^[a-z0-9]([a-z0-9.-]{0,251}[a-z0-9])?$/;
 const OCD = /^ocd-division\/[a-z0-9_.~:\/-]{1,300}$/;
 const HOLD = /^[a-z][a-z0-9-]{0,63}$/;
 const CONFIG_KEY = /^[^\s\x00-\x1f]([^\x00-\x1f]{0,118}[^\s\x00-\x1f])?$/;
@@ -151,6 +150,20 @@ function list(value: unknown, max: number, what: string): Checked<readonly strin
   }
   if (seen.size > max) return { ok: false, why: `${what} has more than ${max} entries` };
   return { ok: true, value: [...seen].sort() };
+}
+
+/** A hostname as the registry stores it: lower case, no scheme, no path, no port. */
+export function normalizeHost(raw: string): string | null {
+  let text = raw.trim().toLowerCase();
+  if (/^[a-z][a-z0-9+.-]*:\/\//.test(text)) {
+    try {
+      text = new URL(text).hostname;
+    } catch {
+      return null;
+    }
+  }
+  text = text.replace(/\.$/, "");
+  return HOST.test(text) ? text : null;
 }
 
 function configOf(value: unknown): Checked<Readonly<Record<string, DoorConfigValue>>> {

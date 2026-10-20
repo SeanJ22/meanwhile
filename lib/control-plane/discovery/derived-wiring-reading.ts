@@ -23,7 +23,6 @@ import { legistarClientsFromWiring } from "../../sources/legistar/client-registr
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
 import type { Meeting } from "../../sources/types.ts";
 import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
-import { registryJurisdictions } from "../../civic-data/state-scopes.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
@@ -61,10 +60,7 @@ export async function readHeldCalendars(input: {
 }): Promise<HeldCalendarReadings> {
   if (input.readings.length === 0) return { kind: "READ", verifications: new Map() };
   try {
-    const bodyOcdIds = [...new Set(input.readings.map(reading => reading.row.ocdId))];
-    const states = [...new Set(bodyOcdIds.flatMap(registryJurisdictions))];
-    if (states.length !== 1) throw new Error("HELD_CALENDAR_EXACT_STATE_REQUIRED");
-    await refreshVenueResolutionsFromPromoted({ ...input.options, state: states[0], bodyOcdIds });
+    await refreshVenueResolutionsFromPromoted(input.options);
   } catch (error) {
     return { kind: "UNREADABLE", detail: `The venue resolutions every adapter reading resolves through could not be read: ${message(error)}` };
   }

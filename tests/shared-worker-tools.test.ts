@@ -3,9 +3,9 @@ import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { availableWorkerMemoryBytes, workerMemoryPeakKey, routineProcessSlots, workerProcessSlots, workerMemoryHost, memoryReading, NATIONAL_PLACE_PEAK_MIB, RESEARCH_PARENT_PEAK_MIB, WORKER_ENTRY_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, RUNNER_PARENT_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -19,142 +19,7 @@ import { createRequire } from "node:module";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
-/* A measured child reserves its high-water peak, 5% over, rounded up to a whole MiB. */
 const reservedFor = (peaks: readonly number[]) => Math.ceil(Math.max(...peaks) * 1.05 / 1048576) * 1048576;
-
-test("Linux cgroup availability credits only proved clean inactive disk cache", async context => {
-  const nativeRequire = createRequire(import.meta.url), mib = 1048576;
-  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  }).outputText;
-  let files: Record<string, string> = {};
-  const mockProcess = Object.create(process) as typeof process;
-  mockProcess.env = { ...process.env }; delete mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
-  mockProcess.memoryUsage = Object.assign(() => process.memoryUsage(), { rss: () => 512 * mib });
-  const loaded: Record<string, unknown> = {};
-  runInNewContext(source, { exports: loaded, process: mockProcess, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
-    require: (name: string) => {
-      if (name === "node:os") return { ...nativeRequire(name), platform: () => "linux", freemem: () => 32 * 1024 * mib };
-      if (name === "node:fs") return { ...nativeRequire(name), readFileSync: (path: string) => {
-        if (!(path in files)) throw Object.assign(new Error(`Missing fixture ${path}`), { code: "ENOENT" });
-        return files[path];
-      } };
-      return nativeRequire(name);
-    } });
-  const available = loaded.availableWorkerMemoryBytes as typeof availableWorkerMemoryBytes;
-  const stat = (values: Record<string, number>): string => Object.entries(values).map(([key, value]) => `${key} ${value * mib}`).join("\n");
-  const v2 = { file: 4096, shmem: 3072, inactive_file: 3072, file_dirty: 128, file_writeback: 64, unevictable: 32 };
-  const setup = (version: 1 | 2, stats: string): string => {
-    const directory = version === 2 ? "/sys/fs/cgroup" : "/sys/fs/cgroup/memory";
-    files = { "/proc/meminfo": `MemAvailable: ${16 * 1024 * 1024} kB\n`,
-      [`${directory}/${version === 2 ? "memory.max" : "memory.limit_in_bytes"}`]: String(8192 * mib),
-      [`${directory}/${version === 2 ? "memory.current" : "memory.usage_in_bytes"}`]: String(7168 * mib),
-      [`${directory}/memory.stat`]: stats };
-    return directory;
-  };
-  await context.test("v2 caps inactive pages by disk files minus tmpfs and excludes dirty, writeback and unevictable pages", () => {
-    setup(2, stat(v2));
-    assert.equal(available(), 1824 * mib, "1024 free plus only 800 MiB of proved reclaimable pages");
-    assert.equal(WORKER_ENTRY_PEAK_MIB.national! * mib + 768 * mib > available(), true,
-      "reclaim accounting still refuses a job whose full peak and unchanged margin do not fit");
-  });
-  await context.test("tmpfs, active cache, anonymous memory and reclaimable slab never become admission credit", () => {
-    setup(2, stat({ ...v2, file: 4096, shmem: 4096, anon: 2048, slab_reclaimable: 2048 }));
-    assert.equal(available(), 1024 * mib);
-    setup(2, stat({ ...v2, shmem: 0, inactive_file: 0, active_file: 4096, anon: 2048, slab_reclaimable: 2048 }));
-    assert.equal(available(), 1024 * mib);
-    setup(2, stat({ ...v2, shmem: 0, inactive_file: 128, file_dirty: 256 }));
-    assert.equal(available(), 1024 * mib, "dirty counters larger than inactive pages cannot create negative usage");
-  });
-  await context.test("missing, malformed, negative and duplicate relevant statistics keep all cgroup usage charged", () => {
-    const directory = setup(2, stat(v2));
-    delete files[`${directory}/memory.stat`];
-    assert.equal(available(), 1024 * mib);
-    for (const key of Object.keys(v2)) {
-      const missing = { ...v2 } as Record<string, number>; delete missing[key];
-      setup(2, stat(missing)); assert.equal(available(), 1024 * mib, `missing ${key}`);
-      setup(2, stat(v2).replace(new RegExp(`^${key} \\d+$`, "m"), `${key} NaN`));
-      assert.equal(available(), 1024 * mib, `malformed ${key}`);
-      setup(2, stat({ ...v2, [key]: -1 })); assert.equal(available(), 1024 * mib, `negative ${key}`);
-    }
-    setup(2, stat(v2) + "\ninactive_file 0"); assert.equal(available(), 1024 * mib);
-  });
-  await context.test("v1 hierarchy uses the complete descendant counters rather than mixing local values", () => {
-    const local = { cache: 2000, shmem: 500, inactive_file: 1000, dirty: 100, writeback: 50, unevictable: 25 };
-    const total = { total_cache: 6000, total_shmem: 2000, total_inactive_file: 3000, total_dirty: 200, total_writeback: 100, total_unevictable: 100 };
-    const directory = setup(1, stat({ ...local, ...total }));
-    files[`${directory}/memory.use_hierarchy`] = "1\n";
-    assert.equal(available(), 3624 * mib);
-    files[`${directory}/memory.use_hierarchy`] = "0\n";
-    assert.equal(available(), 1849 * mib);
-    delete files[`${directory}/memory.use_hierarchy`];
-    assert.equal(available(), 1024 * mib, "an unknown v1 hierarchy cannot prove which counters match usage");
-    files[`${directory}/memory.use_hierarchy`] = "1\n";
-    delete (total as Partial<typeof total>).total_shmem;
-    files[`${directory}/memory.stat`] = stat({ ...local, ...total });
-    assert.equal(available(), 1024 * mib, "missing descendant metadata cannot fall back to a mismatched local field");
-  });
-  await context.test("cache credit cannot exceed usage, physical MemAvailable or the configured host budget", () => {
-    const directory = setup(2, stat({ ...v2, file: 16384, shmem: 0, inactive_file: 16384, file_dirty: 0, file_writeback: 0, unevictable: 0 }));
-    assert.equal(available(), 8192 * mib, "a changing cache sample can never make availability exceed the limit");
-    files["/proc/meminfo"] = `MemAvailable: ${700 * 1024} kB\n`;
-    assert.equal(available(), 700 * mib);
-    files["/proc/meminfo"] = `MemAvailable: ${16 * 1024 * 1024} kB\n`;
-    mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB = "2048";
-    assert.equal(available(), 1536 * mib, "already-allocated own RSS remains subtracted from the configured host");
-    delete mockProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
-    files[`${directory}/memory.max`] = "max\n";
-    assert.equal(available(), 16 * 1024 * mib, "an unlimited cgroup retains the physical memory bound");
-  });
-  await context.test("the observed spool-heavy host admits its national child without changing either floor or margin", async () => {
-    const directory = setup(2, "file 13787439104\nshmem 3596398592\ninactive_file 6766063616\nfile_dirty 737280\nfile_writeback 0\nunevictable 0\n");
-    files[`${directory}/memory.current`] = "15146618880\n";
-    files[`${directory}/memory.max`] = "17179869184\n";
-    files[`/proc/${process.pid}/stat`] = `${process.pid} (cgroup fixture) S ${process.ppid} 0`;
-    assert.equal(available(), 8798576640);
-    const host = (loaded.workerMemoryHost as typeof workerMemoryHost)({ processes: () => [] });
-    const slots = (loaded.workerProcessSlots as typeof workerProcessSlots)(() => 1, { host, parentPeakBytes: NATIONAL_PLACE_PEAK_MIB * mib });
-    const release = await slots.acquire("lib/control-plane/workers/national-worker.ts", Date.now() + 1000);
-    try {
-      host.transact(state => {
-        assert.equal(state.reservations[0]?.peak, WORKER_ENTRY_PEAK_MIB.national! * mib);
-        assert.equal(state.parents[0]?.peak, NATIONAL_PLACE_PEAK_MIB * mib);
-      }, false);
-    } finally { release(); }
-  });
-});
-
-test("Linux zombies cannot retain parent or child memory reservations even while kill(pid,0) succeeds", () => {
-  const nativeRequire = createRequire(import.meta.url);
-  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  }).outputText;
-  const loaded: Record<string, unknown> = {};
-  const states: Record<number, string> = { 1001: "S", 1002: "Z", 1003: "X" };
-  const mockProcess = Object.create(process) as typeof process;
-  mockProcess.kill = () => true;
-  runInNewContext(source, { exports: loaded, process: mockProcess, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
-    require: (name: string) => {
-      if (name === "node:os") return { ...nativeRequire(name), platform: () => "linux" };
-      if (name === "node:fs") return { ...nativeRequire(name), readFileSync: (path: string) => {
-        const match = /^\/proc\/(\d+)\/stat$/.exec(path);
-        if (match) return `${match[1]} (worker (old) name) ${states[Number(match[1])]} 1 0`;
-        return nativeRequire(name).readFileSync(path, "utf8");
-      } };
-      return nativeRequire(name);
-    } });
-  const host = (loaded.workerMemoryHost as typeof workerMemoryHost)({ processes: () => [] });
-  host.transact(state => {
-    state.parents.push({ pid: 1002, peak: 7e9 });
-    state.reservations.push({ id: "zombie", owner: 1002, pid: 1003, peak: 7e9, entry: "lease-worker.ts" },
-      { id: "surviving-child", owner: 1002, pid: 1001, peak: 1024, entry: "lease-worker.ts" });
-  }, false);
-  host.transact(state => {
-    assert.equal(state.parents.length, 0);
-    assert.equal(state.reservations.length, 1);
-    assert.equal(state.reservations[0]?.id, "surviving-child");
-  }, false);
-});
 
 test("Windows and Linux process probes leave timers and the host lock available", async context => {
   const nativeRequire = createRequire(import.meta.url);
@@ -166,8 +31,8 @@ test("Windows and Linux process probes leave timers and the host lock available"
     const root = await mkdtemp(join(tmpdir(), "s18-process-probe-"));
     let probing = false, metadataDuringProbe = false, samples = 0;
     const locksAtProbe: boolean[] = [];
-    const rows = JSON.stringify([{ ProcessId: process.pid, ParentProcessId: process.ppid, WorkingSetSize: 200 * 1024, PeakWorkingSetSize: 500 }]);
-    const status = `PPid:\t${process.ppid}\nVmRSS:\t200 kB\nVmHWM:\t500 kB\n`;
+    const rows = JSON.stringify([{ ProcessId: process.pid, ParentProcessId: process.ppid, WorkingSetSize: 200 * 1024 }]);
+    const status = `PPid:\t${process.ppid}\nVmRSS:\t200 kB\n`;
     const beginProbe = () => { samples++; probing = true; locksAtProbe.push(existsSync(join(root, "meanwhile-worker-memory.json.lock"))); };
     const finishProbe = () => { probing = false; };
     const waitForProbe = async () => { beginProbe(); await new Promise(resolve => setTimeout(resolve, 75)); finishProbe(); };
@@ -201,8 +66,6 @@ test("Windows and Linux process probes leave timers and the host lock available"
     }, 10));
     try {
       const releases = await Promise.all(Array.from({ length: 20 }, () => slots.acquire("scout-worker.ts", Date.now() + 2000)));
-      host.transact(state => { assert.equal(state.parents.find(parent => parent.pid === process.pid)?.peak, 500 * 1024,
-        "a short high-water spike raises the parent floor even after current RSS has fallen"); }, false);
       releases.forEach(release => release());
       await heartbeat;
       assert.equal(metadataDuringProbe, true, "unrelated timers and metadata updates run before the OS probe returns");
@@ -224,13 +87,6 @@ test("memory deadlines settle while an asynchronous host sample is still pending
   } finally { clearTimeout(fallback); finishSample([]); await yieldToEventLoop(); }
 });
 
-test("concurrent observers share one pending host process sample", async () => {
-  let samples = 0, updates = 0;
-  const host = workerMemoryHost({ processes: async () => { samples++; await yieldToEventLoop(); return []; } });
-  await Promise.all(Array.from({ length: 20 }, () => host.transact(() => { updates++; })));
-  assert.equal(samples, 1); assert.equal(updates, 20);
-});
-
 test("capacity closed during an asynchronous host read cannot admit queued children", async () => {
   let capacity = 20;
   const host = workerMemoryHost({ processes: async () => { await yieldToEventLoop(); capacity = 0; return []; } });
@@ -239,265 +95,13 @@ test("capacity closed during an asynchronous host read cannot admit queued child
   host.transact(state => { assert.equal(state.reservations.length, 0); }, false);
 });
 
-test("a nested parent must reserve each child at the margin, even inside an admitted process", async () => {
+test("a nested research parent keeps only its inherited reservation after the fresh sample", async () => {
   const host = workerMemoryHost({ processes: () => [{ pid: process.pid, parentPid: process.ppid, rss: 200 }] });
   host.transact(state => { state.reservations.push({ id: "ancestor", owner: process.ppid, pid: process.pid, peak: 600, entry: "ancestor" }); }, false);
-  let free = 0;
-  const slots = workerProcessSlots(() => 20, { host, parentPeakBytes: 400, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 600 });
-  await assert.rejects(slots.acquire(undefined, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  free = 1100; // Parent's remaining 400, the new child's 600, and the 100 margin.
-  const release = await slots.acquire(undefined, Date.now() + 500);
-  host.transact(state => { assert.equal(state.parents.some(parent => parent.pid === process.pid), false); assert.equal(state.reservations.length, 2); }, false);
+  const slots = workerProcessSlots(() => 20, { host, parentPeakBytes: 400, availableBytes: () => 0, headroomBytes: 100, peakBytes: () => 600 });
+  const release = await slots.acquire();
+  host.transact(state => { assert.equal(state.parents.some(parent => parent.pid === process.pid), false); assert.equal(state.reservations.length, 1); }, false);
   release();
-});
-
-test("nested reservations count exclusive process memory in admission and the heartbeat", async () => {
-  const rows = [{ pid: process.pid, parentPid: process.ppid, rss: 200 },
-    { pid: 100001, parentPid: process.pid, rss: 300 }, { pid: 100002, parentPid: 100001, rss: 100 }];
-  const host = workerMemoryHost({ processes: () => rows });
-  host.transact(state => { state.reservations = [
-    { id: "parent", owner: process.ppid, pid: process.pid, peak: 600, entry: "promoter" },
-    { id: "child", owner: process.pid, pid: 100001, peak: 500, entry: "national" },
-  ]; }, false);
-  let free = 899;
-  const slots = workerProcessSlots(() => 20, { host, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 300 });
-  await assert.rejects(slots.acquire("next", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  host.transact(state => {
-    const reading = memoryReading({ at: "2026-10-20T00:00:00Z", rows, state, totalBytes: 2000, availableBytes: free,
-      rootPid: process.pid, headroomBytes: 100, leaseWorkerPeakBytes: 300 });
-    assert.deepEqual(reading.reservations.map(row => row.rssBytes), [200, 400]);
-    assert.equal(reading.runnerTreeRssBytes, 600);
-    assert.equal(reading.reservedGrowthBytes, 500);
-    assert.equal(reading.fitLeaseWorkers, 0);
-  }, false);
-  free = 900;
-  const release = await slots.acquire("next", Date.now() + 500);
-  release();
-});
-
-test("heartbeat capacity includes every managed process under a configured host memory limit", async () => {
-  const nativeRequire = createRequire(import.meta.url), mib = 1048576;
-  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  }).outputText;
-  const rows = [{ pid: process.pid, parent: process.ppid, rss: 200 }, { pid: 100001, parent: process.pid, rss: 300 },
-    { pid: 100002, parent: 1, rss: 400 }];
-  const state = { parents: [{ pid: process.pid, peak: 300 * mib }, { pid: 100002, peak: 500 * mib }],
-    reservations: [{ id: "child", owner: process.pid, pid: 100001, peak: 400 * mib, entry: "lease-worker.ts" }] };
-  const mockProcess = Object.create(process) as typeof process;
-  mockProcess.env = { ...process.env, WTP_WORKER_HOST_MEMORY_MIB: "2048" };
-  mockProcess.kill = () => true;
-  const loaded: Record<string, unknown> = {};
-  runInNewContext(source, { exports: loaded, process: mockProcess, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
-    require: (name: string) => {
-      if (name === "node:os") return { ...nativeRequire(name), platform: () => "linux", freemem: () => 4096 * mib };
-      if (name === "node:fs/promises") return { ...nativeRequire(name), readdir: async () => rows.map(row => String(row.pid)) };
-      if (name === "node:fs") return { ...nativeRequire(name), readFileSync: (path: string) => {
-        if (path.endsWith("meanwhile-worker-memory.json")) return JSON.stringify(state);
-        const found = /^\/proc\/(\d+)\/(status|stat)$/.exec(path);
-        if (found?.[2] === "stat") return `${found[1]} (worker) S 1 0`;
-        if (found) { const row = rows.find(row => row.pid === Number(found[1]))!; return `PPid:\t${row.parent}\nVmRSS:\t${row.rss * 1024} kB\n`; }
-        return nativeRequire(name).readFileSync(path, "utf8");
-      } };
-      return nativeRequire(name);
-    } });
-  const reading = await (loaded.hostMemoryReading as typeof import("../lib/control-plane/workers/worker-slots.ts").hostMemoryReading)();
-  assert.equal(reading.availableBytes, (2048 - 900) * mib);
-  assert.equal(reading.runnerTreeRssBytes, 500 * mib);
-  assert.equal(reading.reservedGrowthBytes, 300 * mib);
-  assert.equal(reading.fitLeaseWorkers, 0);
-});
-
-test("small runs cannot lower any script's known peak or admit an extra money job", async () => {
-  const mib = 1048576;
-  for (const [script, peak] of Object.entries(ROUTINE_ENTRY_PEAK_MIB)) {
-    const host = workerMemoryHost({ processes: () => [] });
-    host.transact(state => { state.peaks = { [workerMemoryPeakKey(script)!]: Array(5).fill(20 * mib) }; }, false);
-    const slots = routineProcessSlots({ host, availableBytes: () => (768 + 2 * peak) * mib - 1 });
-    const first = await slots.acquire(`one/${script}`, Date.now() + 500);
-    await assert.rejects(slots.acquire(`two/${script}`, Date.now() + 25), /WORKER_MEMORY_DEADLINE/, script);
-    first();
-  }
-  const host = workerMemoryHost({ processes: () => [] });
-  const slots = routineProcessSlots({ host, availableBytes: () => Number.MAX_SAFE_INTEGER });
-  const release = await slots.acquire("national-place:85701/promote-registry-runtime.mts");
-  host.transact(state => assert.equal(state.reservations[0]!.peak, NATIONAL_PLACE_PEAK_MIB * mib), false);
-  release();
-});
-
-test("runtime parents and publication-prefixed commands retain the actual executable's peak", async () => {
-  const mib = 1048576;
-  const entries = [
-    ...Object.entries(RUNNER_PARENT_PEAK_MIB).map(([script, peak]) => [`runtime/${script}`, peak] as const),
-    ["voting-sites:AZ/fetch-voting-sites.mts", ROUTINE_ENTRY_PEAK_MIB["fetch-voting-sites.mts"]!] as const,
-    ["candidate-profiles:AZ/national-people-refresh.mts", ROUTINE_ENTRY_PEAK_MIB["national-people-refresh.mts"]!] as const,
-  ];
-  for (const [entry, peak] of entries) {
-    const host = workerMemoryHost({ processes: () => [] });
-    const slots = routineProcessSlots({ host, availableBytes: () => (768 + peak) * mib - 1 });
-    await assert.rejects(slots.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/, entry);
-  }
-});
-
-test("parent and nested job high-water growth includes their own unmanaged children exactly once", async () => {
-  const rows = [{ pid: process.pid, parentPid: process.ppid, rss: 200, peakRss: 600 },
-    { pid: 100001, parentPid: process.pid, rss: 300, peakRss: 900 },
-    { pid: 100002, parentPid: 100001, rss: 100, peakRss: 120 },
-    { pid: 100003, parentPid: process.pid, rss: 100, peakRss: 150 }];
-  const host = workerMemoryHost({ processes: () => rows });
-  host.transact(state => {
-    state.parents.push({ pid: process.pid, peak: 400 });
-    state.reservations.push({ id: "nested", owner: process.pid, pid: 100001, peak: 500, entry: "nested-job" });
-  }, false);
-  let free = 1469;
-  const slots = workerProcessSlots(() => 10, { host, parentPeakBytes: 400, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 300 });
-  await assert.rejects(slots.acquire("next-job", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  host.transact(state => {
-    assert.equal(state.parents[0]?.peak, 750); assert.equal(state.reservations[0]?.peak, 1020);
-    const reading = memoryReading({ at: "2026-10-20T00:00:00Z", rows, state, totalBytes: 2500, availableBytes: free,
-      rootPid: process.pid, headroomBytes: 100, leaseWorkerPeakBytes: 300 });
-    assert.equal(reading.parents[0]?.rssBytes, 300); assert.equal(reading.reservations[0]?.rssBytes, 400);
-    assert.equal(reading.reservedGrowthBytes, 1070); assert.equal(reading.fitLeaseWorkers, 0);
-  }, false);
-  free = 1470;
-  const release = await slots.acquire("next-job", Date.now() + 500); release();
-});
-
-test("independent parent samples retain full growth before PID binding and transfer only the proved child tree", async () => {
-  const nativeRequire = createRequire(import.meta.url), mib = 1048576;
-  const root = await mkdtemp(join(tmpdir(), "s18-binding-race-"));
-  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  }).outputText;
-  type SlotsModule = { workerMemoryHost: typeof workerMemoryHost; workerProcessSlots: typeof workerProcessSlots;
-    memoryReading: typeof memoryReading; workerMemoryPeakKey: typeof workerMemoryPeakKey };
-  const loadParent = (pid: number): SlotsModule => {
-    const loaded: Record<string, unknown> = {}, parentProcess = Object.create(process) as typeof process;
-    Object.defineProperty(parentProcess, "pid", { value: pid });
-    parentProcess.kill = () => true;
-    parentProcess.env = { ...process.env, WTP_WORKER_MEMORY_RELEASE: "binding-race" };
-    delete parentProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
-    runInNewContext(source, { exports: loaded, process: parentProcess, console, Buffer,
-      setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
-      require: (name: string) => name === "node:os" ? { ...nativeRequire(name), platform: () => "win32", tmpdir: () => root } : nativeRequire(name),
-    });
-    return loaded as unknown as SlotsModule;
-  };
-  const first = loadParent(100000), second = loadParent(100010);
-  let rows = [{ pid: 100000, parentPid: 1, rss: 200 * mib, peakRss: 200 * mib },
-    { pid: 100010, parentPid: 1, rss: 100 * mib, peakRss: 100 * mib }];
-  const host = first.workerMemoryHost({ shared: true, processes: () => rows });
-  let bindingBlocked = false;
-  const delayedHost: typeof host = { transact: (operation, sample) => bindingBlocked ? false : host.transact(operation, sample) };
-  const otherHost = second.workerMemoryHost({ shared: true, processes: () => rows });
-  const memory = { availableBytes: () => 5000 * mib, headroomBytes: 768 * mib };
-  const ownSlots = first.workerProcessSlots(() => 10, { ...memory, host: delayedHost, parentPeakBytes: 250 * mib, peakBytes: () => 800 * mib });
-  const otherSlots = second.workerProcessSlots(() => 10, { ...memory, host: otherHost, parentPeakBytes: 150 * mib, peakBytes: () => 300 * mib });
-  const releases: (() => void)[] = [];
-  try {
-    const child = await ownSlots.acquire("managed-child.mts"); releases.push(child);
-    rows.push({ pid: 100001, parentPid: 100000, rss: 700 * mib, peakRss: 900 * mib },
-      { pid: 100002, parentPid: 100000, rss: 40 * mib, peakRss: 150 * mib },
-      { pid: 100003, parentPid: 100001, rss: 20 * mib, peakRss: 80 * mib });
-    const beforeBinding = await otherSlots.acquire("before-spawn-callback"); releases.push(beforeBinding);
-    otherHost.transact(state => {
-      const parent = state.parents.find(row => row.pid === 100000)!;
-      assert.equal(parent.peak, 250 * mib, "an unclassified child is not committed as the parent's permanent peak");
-      const reading = second.memoryReading({ at: "2026-10-20T00:00:00Z", totalBytes: 8192 * mib, availableBytes: 5000 * mib,
-        rootPid: 100000, rows, state });
-      assert.equal(reading.parents.find(row => row.pid === 100000)?.peakBytes, 1330 * mib,
-        "the complete own, child, and both unmanaged-browser high waters remain reserved before proof");
-      assert.equal(reading.headroomBytes, 768 * mib);
-    }, false);
-    for (let index = 1; index <= 8; index++) {
-      rows = rows.map(row => row.pid === 100001 ? { ...row, peakRss: (900 + index) * mib } : row);
-      const raised = await otherSlots.acquire("same-topology-new-high-water"); releases.push(raised); raised();
-    }
-    otherHost.transact(state => {
-      assert.equal(state.parents.find(row => row.pid === 100000)?.pendingPeaks?.length, 1,
-        "changing VmHWM within one PID/parent topology coalesces instead of retaining poll history");
-    }, false);
-    rows = rows.filter(row => row.pid !== 100002 && row.pid !== 100003);
-    bindingBlocked = true;
-    child.observe!(100001);
-    const duringBinding = await otherSlots.acquire("while-observe-lock-busy"); releases.push(duringBinding);
-    otherHost.transact(state => {
-      assert.equal(state.reservations.find(row => row.entry === "managed-child.mts")?.pid, null);
-      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 250 * mib);
-      assert.equal(state.parents.find(row => row.pid === 100000)?.pendingPeaks?.length, 2,
-        "a changed browser topology preserves its earlier proved memory rather than replacing that observation");
-    }, false);
-    bindingBlocked = false;
-    await new Promise(resolve => setTimeout(resolve, 80));
-    beforeBinding(); duringBinding();
-    otherHost.transact(state => {
-      const parent = state.parents.find(row => row.pid === 100000)!;
-      const admitted = state.reservations.find(row => row.entry === "managed-child.mts")!;
-      assert.equal(parent.peak, 350 * mib, "the parent's genuine unmanaged browser remains in its confirmed peak");
-      assert.equal(parent.pendingPeaks, undefined);
-      assert.equal(admitted.pid, 100001);
-      assert.equal(admitted.peak, 988 * mib, "the proved child receives its own peak and its own unmanaged browser");
-      assert.equal(admitted.observedPeak, 988 * mib);
-    }, false);
-    rows = rows.filter(row => row.pid !== 100002 && row.pid !== 100003);
-    const later = await otherSlots.acquire("after-browsers-exit"); releases.push(later); later();
-    otherHost.transact(state => {
-      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 350 * mib);
-      assert.equal(state.reservations.find(row => row.entry === "managed-child.mts")?.peak, 988 * mib);
-      const reading = second.memoryReading({ at: "2026-10-20T00:00:01Z", totalBytes: 8192 * mib, availableBytes: 5000 * mib,
-        rootPid: 100000, rows, state });
-      assert.equal(reading.reservedGrowthBytes, 488 * mib, "real prior browser peaks remain reserved after the browsers exit");
-    }, false);
-    rows = rows.filter(row => row.pid !== 100001);
-    child();
-    otherHost.transact(state => {
-      assert.equal(state.peaks?.[first.workerMemoryPeakKey("managed-child.mts")!]?.[0], 988 * mib,
-        "adaptive script peaks receive the child's corrected observation, never the ancestor's combined tree");
-    }, false);
-    const unstarted = await ownSlots.acquire("unstarted.mts"); releases.push(unstarted);
-    rows.push({ pid: 100004, parentPid: 100000, rss: 20 * mib, peakRss: 180 * mib });
-    const sample = await otherSlots.acquire("unmanaged-during-unstarted-offer"); releases.push(sample); sample();
-    unstarted();
-    otherHost.transact(state => {
-      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 380 * mib,
-        "releasing an unstarted offer preserves every unproved process as genuinely unmanaged");
-    }, false);
-  } finally {
-    bindingBlocked = false;
-    releases.forEach(release => release());
-    await new Promise(resolve => setTimeout(resolve, 80));
-    await rm(root, { recursive: true, force: true });
-  }
-});
-
-test("a process sample returning after child release keeps its proved ownership and genuine browser peaks", async () => {
-  const mib = 1048576;
-  let rows = [{ pid: process.pid, parentPid: process.ppid, rss: 200 * mib, peakRss: 200 * mib }];
-  let holdSample = false, finishSample: ((sampleRows: typeof rows) => void) | undefined;
-  const host = workerMemoryHost({ processes: () => holdSample ? new Promise<typeof rows>(resolve => { finishSample = resolve; }) : rows });
-  const memory = { host, availableBytes: () => 5000 * mib, headroomBytes: 768 * mib, parentPeakBytes: 250 * mib, peakBytes: () => 300 * mib };
-  const own = workerProcessSlots(() => 10, memory), other = workerProcessSlots(() => 10, memory);
-  const child = await own.acquire("sampled-child.mts");
-  rows.push({ pid: 100001, parentPid: process.pid, rss: 700 * mib, peakRss: 900 * mib },
-    { pid: 100002, parentPid: process.pid, rss: 40 * mib, peakRss: 150 * mib });
-  child.observe!(100001);
-  const before = await other.acquire("before-release"); before();
-  holdSample = true;
-  const pending = other.acquire("sample-returning-late");
-  await yieldToEventLoop();
-  assert.ok(finishSample);
-  const captured = rows;
-  rows = rows.filter(row => row.pid === process.pid);
-  child();
-  holdSample = false;
-  finishSample(captured);
-  const release = await pending;
-  try {
-    host.transact(state => {
-      assert.equal(state.parents.find(row => row.pid === process.pid)?.peak, 350 * mib,
-        "the exited managed child cannot become a parent's permanent high water, while the real browser peak stays");
-    }, false);
-  } finally { child(); release(); }
 });
 
 test("concurrent workers share a browser and close only their own contexts", async () => {
@@ -521,16 +125,22 @@ test("concurrent workers share a browser and close only their own contexts", asy
 test("hosted workers receive their own manual rows and browser observations without reading the manual themselves", async () => {
   const priorUrl = process.env.WTP_WORKER_TOOLS_URL, priorToken = process.env.WTP_WORKER_TOOLS_TOKEN;
   const entry = (state: string) => newFieldManualEntry("test", state || "portable", { role: "SHARED", kind: "REFERENCE",
-    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "" });
+    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "",url:state==="az"?"https://one.gov/source":null });
   const shared = createMemoryRepositories();
   await writeFieldManual(shared, [entry("az"), entry("nj"), entry("")], "2026-10-07T00:00:00.000Z");
   const host = await startWorkerToolsHost({ repos: shared, browse: async input => ({ finalUrl: input.url,
     status: 200, html: "official", text: "official", requests: [], transportError: null, durationMs: 1 }) });
   try {
-    const repos = { fieldManual: { slice: async () => { throw new Error("worker must not read the manual itself"); } } };
+    const fail=async():Promise<never>=>{throw new Error("worker must not read the manual itself");};
+    const repos = { fieldManual: { select:fail,sourceHints:fail,learnedRoutes:fail } };
     const manual = await readFieldManual(repos as never, { state: "az" });
     assert.equal(manual.error, undefined);
     assert.deepEqual(manual.store.entries.map(row => row.states).sort(), [[], ["az"]]);
+    assert.deepEqual(await readFieldManualSourceHints(repos as never,{state:"az"},"https://one.gov/"),[
+      {url:"https://one.gov/source",outcome:"REFERENCE",observedAt:null,worked:false,workedFor:[]},
+    ]);
+    await writeFieldManual(shared,[newFieldManualEntry("test","learned-route",{role:"SHARED",kind:"ROUTE",title:"Indexed route",summary:"Shared maturity",outcome:"YIELDED",payload:{routeId:"indexed-route"}})],"2026-10-07T00:00:00.000Z");
+    assert.deepEqual(await readLearnedManualRoutes(repos as never,["indexed-route","unlearned"]),{present:true,routeIds:["indexed-route"]});
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();
@@ -568,50 +178,23 @@ test("national pairs retain both measured entry peaks and the 768 MiB margin", a
   }
 });
 
-test("native national entries retain their completed promoter and child floors while ordinary publication and observations keep their own bounds", async () => {
-  const mib = 1048576, host = workerMemoryHost({ processes: () => [] });
-  let available = (768 + 512) * mib;
-  const sources = routineProcessSlots({ host, availableBytes: () => available });
-  const workers = workerProcessSlots(() => 2, { host, availableBytes: () => available });
-  const entry = "national-place:85535/scripts/promote-registry-runtime.mts";
-  const promoter = await sources.acquire(entry, Date.now() + 1000);
-  host.transact(state => assert.equal(state.reservations[0]?.peak, 512 * mib,
-    "the script's ordinary 768 MiB minimum must not override the measured national-place mode"), false);
-  available = (768 + 512 + 2432) * mib;
-  const child = await workers.acquire("lib/control-plane/workers/national-worker.ts", Date.now() + 1000);
-  host.transact(state => assert.deepEqual(state.reservations.map(row => row.peak), [512 * mib, 2432 * mib]), false);
-  await assert.rejects(workers.acquire("lease-worker.ts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/,
-    "the fully reserved native pair leaves exactly the unchanged 768 MiB margin");
-  child(); promoter();
-  available = (768 + 768) * mib;
-  const ordinary = await sources.acquire("worker-publication:registry-runtime:AZ/scripts/promote-registry-runtime.mts", Date.now() + 1000);
-  host.transact(state => assert.equal(state.reservations[0]?.peak, 768 * mib), false);
-  ordinary();
-  host.transact(state => { (state.peaks ??= {})[workerMemoryPeakKey(entry)!] = [600 * mib]; }, false);
-  const observed = await sources.acquire(entry, Date.now() + 1000);
-  host.transact(state => assert.equal(state.reservations[0]?.peak, reservedFor([600 * mib]),
-    "a larger actual observation still raises the measured floor with the existing shared key and 5% rounding"), false);
-  observed();
-});
-
 test("all publication siblings and routine script families reserve their measured peak", async () => {
   const mib = 1024 * 1024;
-  const slots = routineProcessSlots({ availableBytes: () => (768 + ROUTINE_ENTRY_PEAK_MIB["promote-manual-civic-projection.mts"]!) * mib });
+  const slots = routineProcessSlots({ availableBytes: () => (768 + WORKER_ENTRY_PEAK_MIB.national!) * mib });
   const first = await slots.acquire("worker-publication:ballot-navigation:one/promote-manual-civic-projection.mts");
   await assert.rejects(slots.acquire("worker-publication:ballot-navigation:two/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   first();
   const census = routineProcessSlots({ availableBytes: () => (768 + 1199) * mib });
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
-  const small = routineProcessSlots({ availableBytes: () => (768 + 341) * mib });
+  const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
   for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts", "campaign-money/state-campaign-finance.mts"]) {
     await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   }
 });
 
 test("state registry publications reserve one state and queue until memory is released", async () => {
-  const peak = Math.max(512, WORKER_ENTRY_PEAK_MIB.lease!);
-  for (const [availableMiB, expected] of [[768 + peak, 1], [768 + 2 * peak, 2]] as const) {
+  for (const [availableMiB, expected] of [[768 + 512, 1], [768 + 2 * 512, 2]] as const) {
     const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
     const entries = ["worker-publication:registry-runtime:AZ:roster-one",
       "worker-publication:registry-runtime:NH:directory-two",
@@ -634,13 +217,13 @@ test("state publishers retain their state-unit floor after small-state measureme
   const mib = 1024 * 1024;
   for (const [family, script, measured] of [
     ["ballot-contests", "assemble-ballot-package.mts", 512 * mib],
-    ["candidate-profiles", "promote-manual-civic-projection.mts", ROUTINE_ENTRY_PEAK_MIB["promote-manual-civic-projection.mts"]! * mib],
-    ["candidate-corpus", "promote-manual-civic-projection.mts", ROUTINE_ENTRY_PEAK_MIB["promote-manual-civic-projection.mts"]! * mib],
-    ["voting-sites", "fetch-voting-sites.mts", ROUTINE_ENTRY_PEAK_MIB["fetch-voting-sites.mts"]! * mib],
+    ["candidate-profiles", "promote-manual-civic-projection.mts", 512 * mib],
+    ["candidate-corpus", "promote-manual-civic-projection.mts", 512 * mib],
+    ["voting-sites", "fetch-voting-sites.mts", 512 * mib],
     ["candidate-campaign-sites-derived", "derive-candidate-campaign-sites.mts", 512 * mib],
   ] as const) {
     const host = workerMemoryHost({ processes: () => [] });
-    host.transact(state => { state.peaks = { [workerMemoryPeakKey(script)!]: Array(5).fill(200 * mib) }; }, false);
+    host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
     const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
     const task = family === "candidate-profiles" ? `candidate-findings:${family}` : family;
     const first = await slots.acquire(`${task}:IL/${script}`, Date.now() + 500);
@@ -674,20 +257,18 @@ test("OS-free memory reserves only unreached child peaks and the research parent
 
 test("a routine child uses the lease peak and a large queue head does not block smaller work", async () => {
   const mib = 1024 * 1024;
-  const lease = WORKER_ENTRY_PEAK_MIB.lease!;
-  const registry = ROUTINE_ENTRY_PEAK_MIB["promote-registry-runtime.mts"]!;
-  const ordinary = routineProcessSlots({ availableBytes: () => (768 + lease) * mib });
+  const ordinary = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
   const release = await ordinary.acquire("meetings:ordinary", Date.now() + 100);
   release();
-  let free = (768 + lease) * mib;
+  let free = (768 + 400) * mib;
   const slots = routineProcessSlots({ availableBytes: () => free });
   let rosterStarted = false;
-  const roster = slots.acquire("registry-runtime:AZ/promote-registry-runtime.mts", Date.now() + 2000).then(release => { rosterStarted = true; return release; });
+  const roster = slots.acquire("registry-runtime:AZ", Date.now() + 2000).then(release => { rosterStarted = true; return release; });
   const small = await slots.acquire("meetings:small", Date.now() + 100);
   assert.equal(rosterStarted, false); small();
-  free = (768 + registry) * mib;
+  free = (768 + 512) * mib;
   const large = await roster;
-  assert.equal(rosterStarted, true, "the state roster runs once its executable's reservation fits");
+  assert.equal(rosterStarted, true, "the state roster runs once its 512MiB reservation fits");
   large();
 });
 
@@ -724,12 +305,12 @@ test("a burst of queued offers shares one fresh admission sample without blockin
 });
 
 test("children already at their peaks do not reserve their current RSS a second time", async () => {
-  const rows: { pid: number; parentPid: number; rss: number }[] = [];
+  const rows = [{ pid: 100001, parentPid: process.pid, rss: 300 }, { pid: 100002, parentPid: process.pid, rss: 300 }];
   let free = 1000;
   const host = workerMemoryHost({ processes: () => rows });
   const slots = workerProcessSlots(() => 10, { host, availableBytes: () => free, headroomBytes: 100, peakBytes: () => 300 });
-  const one = await slots.acquire(); rows.push({ pid: 100001, parentPid: process.pid, rss: 300 }); one.observe!(100001); free = 700;
-  const two = await slots.acquire(); rows.push({ pid: 100002, parentPid: process.pid, rss: 300 }); two.observe!(100002); free = 400;
+  const one = await slots.acquire(); one.observe!(100001); free = 700;
+  const two = await slots.acquire(); two.observe!(100002); free = 400;
   const three = await slots.acquire(undefined, Date.now() + 100);
   one(); two(); three();
 });
@@ -792,37 +373,32 @@ test("separate research and routine parent processes cannot over-admit the share
 
 test("twenty Scouts and a routine pass finish under one 8 GiB budget without a stuck queue", async () => {
   const mib = 1024 * 1024;
-  const lease = WORKER_ENTRY_PEAK_MIB.lease!;
-  const scout = WORKER_ENTRY_PEAK_MIB.scout!;
-  const parent = RESEARCH_PARENT_PEAK_MIB;
   const host = workerMemoryHost({ processes: () => [{ pid: process.pid, parentPid: process.ppid, rss: 1024 * mib }] });
-  const memory = { host, availableBytes: () => (8192 - 1024) * mib, parentPeakBytes: parent * mib };
+  const memory = { host, availableBytes: () => (8192 - 1024) * mib, parentPeakBytes: 2928 * mib };
   const research = workerProcessSlots(() => 20, memory);
   const routine = routineProcessSlots(memory);
   const admitted = new Map<number, () => void>();
   let simultaneous = 0, routineOverlap = 0;
   const offers = Array.from({ length: 20 }, (_, id) => research.acquire("scout-worker.ts", Date.now() + 2000).then(release => {
     admitted.set(id, release); simultaneous = Math.max(simultaneous, admitted.size);
-    assert.ok(parent + 768 + admitted.size * scout + (routineDone ? lease : 0) <= 8192);
+    assert.ok(2928 + 768 + admitted.size * 248 + (routineOverlap ? 342 : 0) <= 8192);
   }));
   let routineDone: (() => void) | undefined;
   const pass = routine.acquire("meetings:ordinary", Date.now() + 2000).then(release => {
     routineDone = release; routineOverlap = admitted.size;
-    assert.ok(parent + 768 + admitted.size * scout + lease <= 8192);
+    assert.ok(2928 + 768 + admitted.size * 248 + 342 <= 8192);
   });
   await yieldToEventLoop();
-  const initialScouts = Math.floor((8192 - parent - 768) / scout);
-  const scoutsWithRoutine = Math.floor((8192 - parent - 768 - lease) / scout);
-  assert.equal(admitted.size, initialScouts);
+  assert.equal(admitted.size, 18);
   for (let id = 0; id < 20; id++) {
     await offers[id];
     admitted.get(id)!(); admitted.delete(id);
     await yieldToEventLoop();
-    if (id === 20 - scoutsWithRoutine - 1) await pass;
+    if (id === 3) await pass;
   }
   await pass;
   routineDone!();
-  assert.equal(simultaneous, initialScouts);
+  assert.equal(simultaneous, 18);
   assert.ok(routineOverlap > 0, "the ordinary routine pass overlaps live Scouts");
   assert.equal(admitted.size, 0);
 });
@@ -843,7 +419,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   const mib = 1024 * 1024;
   const crashed = 3.57e9;
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { [workerMemoryPeakKey("national-people-refresh.mts")!]: [1.1e9, crashed, 1.2e9] }; }, false);
+  host.transact(state => { state.peaks = { "national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
   let free = crashed + 768 * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   const people = "people-wikidata-people-ca/national-people-refresh.mts";
@@ -859,23 +435,9 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   votes();
 });
 
-test("adaptive peaks from older code cannot carry a country's former memory hold into a bounded release", async () => {
-  const mib = 1024 * 1024;
-  const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "lease-worker.ts": [7e9], "old-release:old-table:lease-worker.ts": [7e9] }; }, false);
-  const slots = workerProcessSlots(() => 2, { host, availableBytes: () => 768 * mib + 2 * WORKER_ENTRY_PEAK_MIB.lease! * mib });
-  const first = await slots.acquire("lease-worker.ts", Date.now() + 500);
-  const second = await slots.acquire("lease-worker.ts", Date.now() + 500);
-  host.transact(state => assert.ok(state.reservations.every(row => row.peak === WORKER_ENTRY_PEAK_MIB.lease! * mib)), false);
-  first(); second();
-  host.transact(state => { state.peaks![workerMemoryPeakKey("lease-worker.ts")!] = [7e9]; }, false);
-  await assert.rejects(slots.acquire("lease-worker.ts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/,
-    "a peak observed on the current code remains binding");
-});
-
 test("a running child's high-water memory is sampled, raises its live reservation and sets the next one", { skip: process.platform !== "linux" }, async () => {
   const mib = 1024 * 1024;
-  const host = workerMemoryHost();
+  const host = workerMemoryHost({ processes: () => [] });
   const slots = workerProcessSlots(() => 10, { host, availableBytes: () => Number.MAX_SAFE_INTEGER, headroomBytes: 0, peakBytes: () => mib });
   const release = await slots.acquire("probe/peak-probe.mts");
   const child = spawn(process.execPath, ["-e", "const b = Buffer.alloc(160 * 1024 * 1024, 1); setTimeout(() => b.length, 2600)"], { stdio: "ignore" });
@@ -886,7 +448,7 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   release();
   await yieldToEventLoop();
   let recorded: number[] = [];
-  host.transact(state => { recorded = state.peaks?.[workerMemoryPeakKey("peak-probe.mts")!] ?? []; }, false);
+  host.transact(state => { recorded = state.peaks?.["peak-probe.mts"] ?? []; }, false);
   assert.equal(recorded.length, 1);
   assert.ok(recorded[0]! >= 160 * mib);
   const next = await slots.acquire("probe/peak-probe.mts");

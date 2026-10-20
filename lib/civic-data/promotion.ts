@@ -198,7 +198,6 @@ function routineCandidateFanOutContractIssue(
   }
   if (candidate.normalization.parserVersion !== task.parserVersion) return `parser ${candidate.normalization.parserVersion} does not equal ${task.parserVersion}`;
   if (candidate.bootstrapImport) return "a fan-out member candidate does not accept trusted-LKG import";
-  if (task.authorityMode === "DERIVED") return routineCandidateContractIssueFor({ ...contract, scope: candidate.scope }, candidate);
   if (candidate.retrieval.succeeded || candidate.retrieval.requestedUrl !== "") {
     const authority = authorityFor(task.sourceId, task.recordClass, candidate.retrieval.requestedUrl);
     if (!authority.ok) return `${authority.code}: ${authority.detail}`;
@@ -212,11 +211,10 @@ export async function processRegisteredFanOutCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
-  let boundedCandidate = durableCandidateSnapshot(candidate);
+  const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredRoutineContract(contractId);
   if (contract.fanOut !== true) throw new Error(`FANOUT_CONTRACT_NOT_DECLARED:${contractId}`);
   if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
@@ -224,7 +222,6 @@ export async function processRegisteredFanOutCandidate(
   }
   const issue = routineCandidateFanOutContractIssue(contract, boundedCandidate);
   if (issue !== null) throw new Error(`FANOUT_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
-  boundedCandidate = await withDerivedInputAuthority(store, contract, boundedCandidate);
   const federalPrior = boundedCandidate.recordClass === "FEDERAL_MONEY"
     ? await store.readPromotion(boundedCandidate.recordClass, boundedCandidate.scope) : null;
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
@@ -244,7 +241,6 @@ export async function processRegisteredFanOutCandidate(
       expectedBaseVersionId,
       REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
-      options,
     ),
     now,
   );

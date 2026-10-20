@@ -83,12 +83,9 @@ export async function runPageDoorChecks(repos: ControlPlaneRepositories, runtime
       } else if (pending) {
         if (typeof door.config.sourceScopes === "string") {
           const scopes = JSON.parse(door.config.sourceScopes) as { ocdId: string; state: string; names: string[] }[];
-          const vault = cycleVault(join(root, ...VAULT_DIR));
-          try {
-            for (const scope of scopes) await recordSourceObservation(repos, { url, ...scope,
-              disposition: classifySourceContent({ url, text: page.body, contentType: page.contentType ?? "", names: scope.names, owed: SOURCE_FAMILIES }),
-              capture: { bytes: new TextEncoder().encode(page.body), contentType: page.contentType ?? "" } }, at, vault);
-          } finally { await vault.close(); }
+          for (const scope of scopes) await recordSourceObservation(repos, { url, ...scope,
+            disposition: classifySourceContent({ url, text: page.body, contentType: page.contentType ?? "", names: scope.names, owed: SOURCE_FAMILIES }),
+            capture: { bytes: new TextEncoder().encode(page.body), contentType: page.contentType ?? "" } }, at, cycleVault(join(root, ...VAULT_DIR)));
           await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at);
         } else await queuePageRead(repos, door, at, changedAt);
       }

@@ -2,10 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { zip, buildWorkbook } from "../scripts/xlsx.mjs";
 import { readBoundaryZip } from "../lib/geo/shapefile.ts";
-import { readXlsxFileSheets } from "../lib/census-geography/xlsx.ts";
-import { mkdtemp, writeFile, rm } from "node:fs/promises";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
+import { readXlsxSheets } from "../lib/census-geography/xlsx.ts";
 import { censusWorkDivision, districtFamilyKey } from "../lib/census-geography/division-id.ts";
 import { applicabilityOf, selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import type { GeographyRef } from "../lib/census-geography/contract.ts";
@@ -31,17 +28,12 @@ test("null shapes and deleted DBF rows preserve ordinal identity", () => {
   assert.equal(readBoundaryZip(boundary(true)).features.length, 0);
 });
 
-test("every named workbook sheet is parsed, including dependent systems", async () => {
+test("every named workbook sheet is parsed, including dependent systems", () => {
   const bytes = buildWorkbook([
     { name: "General Purpose", header: ["PID6", "UNIT_NAME"], rows: [["00123", "A County"]], widths: [10, 20] },
     { name: "DEP School Dist", header: ["PID6", "UNIT_NAME"], rows: [["00456", "A School"]], widths: [10, 20] },
   ], "2026-10-01");
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-xlsx-test-"));
-  const sheets: { name: string; rows: string[][] }[] = [];
-  try {
-    const path = join(directory, "source.xlsx"); await writeFile(path, bytes);
-    for await (const sheet of readXlsxFileSheets(path)) { const rows: string[][] = []; for await (const row of sheet.rows) rows.push(row); sheets.push({ name: sheet.name, rows }); }
-  } finally { await rm(directory, { recursive: true, force: true }); }
+  const sheets = [...readXlsxSheets(bytes)].map(sheet => ({ name: sheet.name, rows: [...sheet.rows] }));
   assert.deepEqual(sheets.map(sheet => sheet.name), ["General Purpose", "DEP School Dist"]);
   assert.deepEqual(sheets[1].rows[1], ["00456", "A School"]);
 });

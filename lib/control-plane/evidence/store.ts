@@ -66,13 +66,9 @@ export interface StoredObject {
 export interface EvidenceStore {
   put(key: string, bytes: Uint8Array, meta: ObjectMeta): Promise<void>;
   get(key: string): Promise<StoredObject | null>;
-  /** Verified chunks; consumers finish the stream before using the evidence. Large source replays never buffer the object. */
-  stream?(key: string): Promise<AsyncIterable<Uint8Array> | null>;
   head(key: string): Promise<ObjectMeta | null>;
   /** Keys under a prefix, in lexicographic order. */
   list(prefix: string): Promise<string[]>;
-  /** A bounded index scan. Returning false stops before later pages are fetched. */
-  visitKeys?(prefix: string, visit: (key: string) => Promise<boolean|void>|boolean|void): Promise<void>;
 }
 
 /** ------------------------------------------------------------ keys */
@@ -558,13 +554,6 @@ export class MemoryEvidenceStore implements EvidenceStore {
 
   async head(key: string): Promise<ObjectMeta | null> {
     return this.objects.get(key)?.meta ?? null;
-  }
-
-  async stream(key: string): Promise<AsyncIterable<Uint8Array> | null> {
-    const found = this.objects.get(key);
-    return found ? (async function* () {
-      for (let offset = 0; offset < found.bytes.byteLength; offset += 64 * 1024) yield Uint8Array.from(found.bytes.subarray(offset, offset + 64 * 1024));
-    })() : null;
   }
 
   async list(prefix: string): Promise<string[]> {

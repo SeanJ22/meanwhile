@@ -8,7 +8,7 @@ import { execFile } from 'node:child_process';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
 import { installedAdapters,installedAdapterGuides,installedAdapterVersion } from '../scheduler/scout-adapters.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,projectFieldManual,type FieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
 import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
@@ -124,47 +124,22 @@ test('dated sitemap preserves exact publisher locators and rejects unrelated hos
 
 /** Reviewed code teaches its portable instructions after deployment; unchanged versions need no write. */
 export async function learnInstalledAdapters(repos:ControlPlaneRepositories,now:string):Promise<FieldManualRead> {
-  const guides=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
+  const manual=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
+  const learned=(await installedAdapterGuides()).map(({name,version,file,guide})=>newFieldManualEntry('installed-adapter',name,{
     role:'SHARED',kind:'PLATFORM_ADAPTER',title:name,summary:guide.summary,
     outcome:'REFERENCE',recordClasses:guide.recordClasses,platforms:[name],url:guide.sourceUrls[0]??null,observedAt:now,
     payload:{platform:name,installed:true,implementationVersion:version,files:[file],sourceUrls:guide.sourceUrls,procedure:guide.procedure},
-  }));
-  const readInstalled=async():Promise<FieldManualRead>=>{
-    try {
-      const store={entries:(await repos.fieldManual.readMany(guides.map(entry=>entry.id))).map(row=>row.value)};
-      return {store,projection:projectFieldManual(store,{role:'ENGINEER',everywhere:true,kinds:['PLATFORM_ADAPTER']})};
-    } catch(error) {
-      const store={entries:[]};return {store,projection:projectFieldManual(store),error:error instanceof Error?error.message:String(error)};
-    }
-  };
-  const manual=await readInstalled();
-  const learned=guides.filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
+  })).filter(entry=>!manual.store.entries.some(prior=>prior.id===entry.id && prior.kind===entry.kind &&
     (prior.payload as {implementationVersion?:string|null}|null)?.implementationVersion===(entry.payload as {implementationVersion:string|null}).implementationVersion));
   if(!learned.length)return manual;
   const saved=await writeFieldManual(repos,learned,now);
-  const read=await readInstalled();
+  const read=await readFieldManual(repos,ENGINEER_BOOKKEEPING);
   return saved.error?{...read,error:saved.error}:read;
 }
 
-/** Fold reusable adapter identities without retaining the country's investigations or source narratives. */
-async function adapterHistory(repos:ControlPlaneRepositories,result:ScoutResult,platform:string,installed:readonly string[],guides:readonly FieldManualEntry[]) {
-  let done=false,investigated=false,untried=hasUntriedAdapter(result,installed,guides);
-  await repos.fieldManual.visitSlice({role:'ENGINEER',everywhere:true,kinds:['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER','ENGINEER_INVESTIGATION']},row=>{
-    const entry=row.value,payload=entry.payload as {sourceAttemptId?:string}|null;
-    if(entry.kind==='ENGINEER_ADAPTER_PR' && entry.title===platform)done=true;
-    if(entry.kind==='ENGINEER_INVESTIGATION' && entry.title===platform && payload?.sourceAttemptId===result.attemptId)investigated=true;
-    if(!untried)untried=hasUntriedAdapter(result,installed,[entry]);
-  },{kind:true,title:true,recordClasses:true,payload:['sourceAttemptId','files','sourceUrls']});
-  return {done,investigated,untried};
-}
-
-/** Portable recognition signatures are classifier input; place histories and evidence never join them. */
-async function adapterFingerprints(repos:ControlPlaneRepositories):Promise<readonly FieldManualEntry[]> {
-  const entries:FieldManualEntry[]=[];
-  await repos.fieldManual.visitSlice({role:'ENGINEER',everywhere:true,kinds:['PLATFORM_FINGERPRINT']},row=>{entries.push(row.value);},
-    {kind:true,observedAt:true,payload:['id','label','hostPattern','flags','markup','haveAdapter']});
-  return entries;
-}
+/** What the Engineer keeps track of across platforms: adapters built and installed, investigations, and how platforms are recognized. */
+const ENGINEER_BOOKKEEPING:FieldManualQuery={role:'ENGINEER',everywhere:true,
+  kinds:['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER','ENGINEER_INVESTIGATION','PLATFORM_FINGERPRINT']};
 
 /** The Engineer's page for one platform: what is known for this platform, this place and its record class. */
 export function engineerJob(result:Pick<ScoutResult,"subjectId"|"recordClass">,platform:string):FieldManualQuery {
@@ -207,7 +182,7 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
   repairScopeFor?:typeof loadAdapterRepairScope}):Promise<AdapterStreamPublication[]> {
   const manual=await learnInstalledAdapters(input.repos,input.now);
   const opened:AdapterStreamPublication[]=[];
-  const done=new Set<string>();
+  const done=new Set(manual.store.entries.filter(e=>e.kind==='ENGINEER_ADAPTER_PR').map(e=>e.title));
   const installed=new Set(await installedAdapters());
   const latest=new Map<string,ScoutResult>();
   for(const result of [...input.results].sort((a,b)=>a.recordedAt.localeCompare(b.recordedAt))) latest.set(result.subjectId+':'+result.recordClass,result);
@@ -215,20 +190,19 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
   for(const result of pending) {
     const plain=plainAdapterFor(result);
     const platform=adapterBranchKey(plain?.platform ?? result.candidates[0]?.routeId ?? result.recordClass);
-    const history=await adapterHistory(input.repos,result,platform,[...installed],manual.store.entries);
-    if(done.has(platform) || history.done || installed.has(platform) || history.untried)continue;
+    if(done.has(platform) || installed.has(platform) || hasUntriedAdapter(result,[...installed],manual.store.entries))continue;
     try {
     let candidate:({platform:string;files:AdapterFile[];scope?:RepairScope})|null=plain;
     if(!candidate && input.transportFor && input.readEvidence) {
       // Exhausted code generation waits for new evidence, rather than buying the same three answers every cycle.
-      if(history.investigated)continue;
+      if(manual.store.entries.some(e=>e.kind==='ENGINEER_INVESTIGATION' && e.title===platform &&
+        (e.payload as {sourceAttemptId?:string}|null)?.sourceAttemptId===result.attemptId))continue;
       const evidence:WorkerEvidence[]=[];
       for(const id of new Set(result.artifactIds)) {
         try { evidence.push(await input.readEvidence(id)); } catch { /* Missing bytes are not invented. */ }
       }
       if(!evidence.length)continue;
-      const fingerprints=await adapterFingerprints(input.repos);
-      const kinds=[...new Set([...evidence.flatMap(e=>detectTenancy(e.text,e.canonicalUrl,fingerprints).map(hit=>hit.platform)),platform])];
+      const kinds=[...new Set([...evidence.flatMap(e=>detectTenancy(e.text,e.canonicalUrl,manual.store.entries).map(hit=>hit.platform)),platform])];
       let scope:RepairScope|undefined;
       for(const kind of kinds) {
         const loaded=(input.repairScopeFor??loadAdapterRepairScope)(kind,{savedBytes:evidence.map(e=>e.text).join('\n\n'),failure:result.narrative});

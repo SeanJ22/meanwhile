@@ -15,10 +15,9 @@
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
-import { createHash, randomBytes } from "node:crypto";
-import { createReadStream } from "node:fs";
+import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
-import { mkdir, readFile, readdir, opendir, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 import { contentHash } from "../ids.ts";
@@ -49,7 +48,6 @@ export interface RestrictedEvidenceProvider {
   readonly accessControlled: boolean;
   put(key: string, bytes: Uint8Array, meta: ObjectMeta): Promise<void>;
   get(key: string): Promise<StoredObject | null>;
-  stream?(key: string): Promise<AsyncIterable<Uint8Array> | null>;
   head(key: string): Promise<ObjectMeta | null>;
   list(prefix: string): Promise<string[]>;
 }
@@ -412,12 +410,7 @@ export class DurableEvidenceStore implements EvidenceStore {
       if (fromProvider) return fromProvider;
     }
     if (this.remote) return this.remote.head(key);
-    const sidecar = await this.readSidecar(key);
-    if (!sidecar) return null;
-    const stream = await this.stream(key);
-    if (!stream) throw new EvidenceStoreRefusal(`Committed evidence body is missing at ${key}`);
-    for await (const chunk of stream) void chunk;
-    return sidecar.meta;
+    return (await this.get(key))?.meta ?? null;
   }
 
   /**
@@ -436,33 +429,6 @@ export class DurableEvidenceStore implements EvidenceStore {
 
     const bytes = await this.readBody(key, sidecar.bodySha256, sidecar.bodyBytes);
     return { key, bytes: new Uint8Array(bytes), meta: sidecar.meta };
-  }
-
-  async stream(key: string): Promise<AsyncIterable<Uint8Array> | null> {
-    if (this.restricted && await this.restricted.head(key)) {
-      if (!this.restricted.stream) throw new EvidenceStoreRefusal("Restricted evidence provider has no streaming read");
-      return this.restricted.stream(key);
-    }
-    if (this.remote) {
-      if (!this.remote.stream) throw new EvidenceStoreRefusal("Remote evidence provider has no streaming read");
-      return this.remote.stream(key);
-    }
-    const sidecar = await this.readSidecar(key);
-    if (!sidecar) return null;
-    const path = this.bodyPath(key);
-    return (async function* () {
-      const digest = createHash("sha256"); let length = 0;
-      try {
-        for await (const part of createReadStream(path, { highWaterMark: 64 * 1024 })) {
-          const bytes = part as Buffer; digest.update(bytes); length += bytes.byteLength; yield bytes;
-        }
-      } catch (cause) {
-        throw new EvidenceStoreRefusal(`Key ${key} records ${sidecar.bodyBytes} byte(s) and its body could not be read (${(cause as NodeJS.ErrnoException).code ?? "unknown"}).`);
-      }
-      const actual = `sha256-${digest.digest("hex")}`;
-      if (actual !== sidecar.bodySha256) throw new EvidenceCorrupted(key, sidecar.bodySha256, actual, length);
-      if (length !== sidecar.bodyBytes) throw new EvidenceStoreRefusal(`Key ${key} records ${sidecar.bodyBytes} byte(s), but holds ${length}.`);
-    })();
   }
 
   private async readBody(key: string, recordedHash: string, byteLength: number): Promise<Buffer> {
@@ -491,33 +457,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     const keys = this.remote ? await this.remote.list(prefix) : await this.walk(this.root, "");
     if (this.restricted) keys.push(...(await this.restricted.list(prefix)));
     return [...new Set(keys.filter((k) => k.startsWith(prefix)))].sort();
-  }
-
-  async visitKeys(prefix: string, visit: (key: string) => Promise<boolean|void>|boolean|void): Promise<void> {
-    let stopped = false;
-    const boundedVisit = async (key: string) => {
-      if (stopped || !key.startsWith(prefix)) return;
-      if (await visit(key) === false) { stopped = true; return false; }
-    };
-    if (this.remote?.visitKeys) await this.remote.visitKeys(prefix, boundedVisit);
-    else if (this.remote) { for (const key of await this.remote.list(prefix)) if (await boundedVisit(key) === false) break; }
-    else {
-      const walk = async (directory: string, keyPrefix: string): Promise<void> => {
-        let entries: Awaited<ReturnType<typeof opendir>>;
-        try { entries = await opendir(directory); }
-        catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return; throw error; }
-        for await (const entry of entries) {
-          if (stopped) return;
-          if (entry.name.startsWith(TEMP_PREFIX)) continue;
-          const childKey = keyPrefix ? `${keyPrefix}/${decodePathSegment(entry.name)}` : decodePathSegment(entry.name);
-          if (entry.isDirectory()) {
-            if (prefix.startsWith(childKey + "/") || childKey.startsWith(prefix)) await walk(join(directory,entry.name),childKey);
-          } else if (entry.name.endsWith(SIDECAR_SUFFIX)) await boundedVisit(childKey.slice(0,-SIDECAR_SUFFIX.length));
-        }
-      };
-      await walk(this.root, "");
-    }
-    if (!stopped && this.restricted) for (const key of await this.restricted.list(prefix)) if (await boundedVisit(key) === false) break;
   }
 
   private async walk(directory: string, keyPrefix: string): Promise<string[]> {

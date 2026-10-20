@@ -22,11 +22,11 @@ import { join } from "node:path";
 import { recordSpeedPass } from "../lib/control-plane/live-audit-log.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import {
-  judgeSpeed, speedTargets, SPEED_PROFILES, type ResidentTaskSet, type SpeedRun, type SpeedTarget,
+  judgeSpeed, sampleZips, speedTargets, SPEED_PROFILES, type ResidentTaskSet, type SpeedRun, type SpeedTarget,
 } from "../lib/health/worst-case-speed.ts";
 import { openSurfaceFixes } from "../lib/health/surface-fixes.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { samplePublishedZips } from "../lib/ops/published-zip-selection.ts";
+import { publishedPlaces } from "../lib/ops/post-deploy-warm.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
@@ -46,11 +46,12 @@ if (!url && !DRY) {
   process.exit(1);
 }
 const tasks = JSON.parse(readFileSync(join(process.cwd(), "data/health/resident-tasks.json"), "utf8")) as ResidentTaskSet;
-const zips = await samplePublishedZips({origin: BASE, count: ZIP_COUNT, now}).catch(() => []);
-if (zips.length === 0) {
+const places = await publishedPlaces(BASE, fetch, 15_000).catch(() => []);
+if (places.length === 0) {
   console.error("speed: no published place could be read from the live site");
   process.exit(1);
 }
+const zips = sampleZips(places.map((p) => p.zip), ZIP_COUNT, now);
 const askZips = new Set(zips.slice(0, ASK_ZIP_COUNT));
 const targets = speedTargets(tasks, zips).filter((t) => t.surface !== "ask" || askZips.has(t.zip));
 

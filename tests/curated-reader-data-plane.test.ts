@@ -21,9 +21,6 @@ import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts"
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
 import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
-import { MEMBER_OFFICE_STATES, memberOfficeContractId, memberOfficeStateOf } from "../lib/officials/member-office-scope.ts";
-
-const registeredId = (id: (typeof CURATED_READER_CONTRACT_IDS)[number]) => id === "member-offices" ? memberOfficeContractId("AZ") : id;
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -180,7 +177,7 @@ function packageFor(
   hashCharacter = "a",
 ): ManualProjectionPackage {
   return {
-    contractId: registeredId(id),
+    contractId: id,
     version: at,
     sourceThrough: at,
     sourceReceipt: receipt(id, at, hashCharacter),
@@ -192,7 +189,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
   const store = new MemoryRoutineDataStore();
   for (const id of CURATED_READER_CONTRACT_IDS) {
     const candidate = manualProjectionCandidate(packageFor(id));
-    const outcome = await processRegisteredManualCandidate(store, registeredId(id), candidate, T0);
+    const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", id);
     assert.equal(outcome.candidate.receipt?.decision, "GOOD", id);
     assert.equal(outcome.readerReadback?.status, "PASS", id);
@@ -201,7 +198,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
       ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
       id,
     );
-    const read = await readCuratedReaderProjection(id, { state: "AZ", store, bypassCache: true, now: T0 });
+    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
@@ -238,7 +235,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   const promotedCandidates = new Map<string, ReturnType<typeof manualProjectionCandidate>>();
   for (const id of CURATED_READER_CONTRACT_IDS) {
     const candidate = manualProjectionCandidate(packageFor(id));
-    const outcome = await processRegisteredManualCandidate(store, registeredId(id), candidate, T0);
+    const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.ok(outcome.promoted, id);
     promotedIds.set(id, outcome.promoted!.versionId);
     promotedCandidates.set(id, candidate);
@@ -264,9 +261,9 @@ test("a bad curated family is held against its own LKG and cannot affect another
   assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
 
   for (const id of CURATED_READER_CONTRACT_IDS) {
-    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === registeredId(id))!;
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.equal(
-      (await store.readPromotion(contract.recordClass, promotedCandidates.get(id)!.scope))?.versionId,
+      (await store.readPromotion(contract.recordClass, contract.scope))?.versionId,
       promotedIds.get(id),
       `${id} LKG/pointer changed after the unrelated campaign-site refusal`,
     );
@@ -276,12 +273,12 @@ test("a bad curated family is held against its own LKG and cannot affect another
 test("curated Reader evidence is source-scoped and never names software certification", () => {
   for (const id of CURATED_READER_CONTRACT_IDS) {
     const candidate = manualProjectionCandidate(packageFor(id));
-    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === registeredId(id))!;
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.deepEqual(candidate.sourceProjectionEvidence, {
       kind: "SOURCE_PROJECTION_CONTRACT",
       sourceId: contract.sourceId,
       recordClass: contract.recordClass,
-      scope: candidate.scope,
+      scope: contract.scope,
     });
     assert.ok(candidate.dependentChecks.every((check) => !/(?:playwright|office-opening-spell|pnpm\s+(?:test|build)|browser installation|full test tier)/i.test(`${check.consumer} ${check.detail}`)));
   }
@@ -294,7 +291,7 @@ test("store failure does not reopen any curated tracked first seed", async () =>
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all(CURATED_READER_CONTRACT_IDS.map((id) =>
-    readCuratedReaderProjection(id, { state: "AZ", store: brokenStore, bypassCache: true })
+    readCuratedReaderProjection(id, { store: brokenStore, bypassCache: true })
   ));
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);
@@ -302,8 +299,8 @@ test("store failure does not reopen any curated tracked first seed", async () =>
 
 test("Admin projects every curated authority including official filings without inventing a clock", () => {
   const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
-  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id) || memberOfficeStateOf(contract.id) !== null);
-  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "ballot-navigation", "stances", "campaign-sites", ...MEMBER_OFFICE_STATES.map(memberOfficeContractId), "venue-resolutions", "meeting-body-crosswalk"].sort());
+  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
+  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "ballot-navigation", "stances", "campaign-sites", "member-offices", "venue-resolutions", "meeting-body-crosswalk"].sort());
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);

@@ -18,16 +18,15 @@ import { governmentListingsForDivisions } from "../lib/registry/server.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { stateOfficesForStates } from "../lib/reference/state-offices.ts";
 import { attachGovernmentDomains, parseDotGovRegistry, DOTGOV_BOUNDARY, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
-import type { KnownReleaseFile } from "../lib/sources/known-release-file.ts";
-import { knownReleaseFileFixture } from "./helpers/known-release-file-fixture.ts";
+import type { KnownRelease } from "../lib/sources/known-release.ts";
 import type { RegistrationReadModel } from "../lib/registration/candidate.ts";
 
 const places = [["85004", "AZ"], ["30303", "GA"], ["02108", "MA"], ["48201", "MI"], ["97201", "OR"]] as const;
-function fixtureRelease(member: string, url: string): KnownReleaseFile {
+function fixtureRelease(member: string, url: string): KnownRelease {
   const bytes = zip([{ name: member, data: readFileSync(`tests/fixtures/national-listings/${member}`) }], "2026-10-12");
-  return knownReleaseFileFixture({ sourceId: "fixture", releaseId: member, bytes, sha256: createHash("sha256").update(bytes).digest("hex"), requestedUrl: url, finalUrl: url,
+  return { sourceId: "fixture", releaseId: member, bytes, sha256: createHash("sha256").update(bytes).digest("hex"), requestedUrl: url, finalUrl: url,
     httpStatus: 200, retrievedAt: "2026-10-12T00:00:00.000Z", sourceObservedAt: "2026-10-12T00:00:00.000Z", checkedAt: "2026-10-12T00:00:00.000Z",
-    lastCheckStatus: 200, lastModified: null, etag: null, contentType: "application/zip", reused: true });
+    lastCheckStatus: 200, lastModified: null, etag: null, contentType: "application/zip", reused: true };
 }
 
 test("five ZIPs first show their source-code school district, government contacts and state offices", async () => {
@@ -39,8 +38,8 @@ test("five ZIPs first show their source-code school district, government contact
     counts: { domains: domains.length, electionDomains: domains.filter(row => /election/i.test(row.type)).length, byType }, domains, boundary: DOTGOV_BOUNDARY };
   const regions: Record<string, { state: string; records: unknown[]; offices: unknown[] }> = {};
   for (const [postal, state] of places) {
-    const reference = await registrationReferenceFromRelease(loadRegistrationReference(process.cwd(), state), fixtureRelease("census-government-sample.csv", "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP"));
-    const schools = await schoolListingsFromRelease(reference, fixtureRelease("nces-lea-directory.csv", "https://nces.ed.gov/ccd/data/zip/ccd_lea_029_2526_w_0a_050626.zip"));
+    const reference = registrationReferenceFromRelease(loadRegistrationReference(process.cwd(), state), fixtureRelease("census-government-sample.csv", "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP"));
+    const schools = schoolListingsFromRelease(reference, fixtureRelease("nces-lea-directory.csv", "https://nces.ed.gov/ccd/data/zip/ccd_lea_029_2526_w_0a_050626.zip"));
     const listings = new Map(referenceGovernmentListings(reference).map(row => [row.id, row]));
     for (const school of schools) listings.set(school.id, school);
     const candidate = registrationCandidate({ target: registrationTarget(state), reference: { ...reference, listings: [...listings.values()] }, receipt: heldRegistrationReceipt() });

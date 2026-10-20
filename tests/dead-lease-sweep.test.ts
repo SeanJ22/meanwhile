@@ -1,12 +1,3 @@
-/**
- * A dead lease on a settled route is released once, and the sweep never lists every Attempt to find one task's.
- *
- * `claimRouteTask` now refuses a disposed task, so `legacyReclaim` asserts that refusal and then writes what the old
- * claim wrote (the domain's `claim()` lease and the CLAIMED state), producing the residue the sweep meets.
- *
- * Every test runs on the in-memory double AND the durable file store.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync } from "node:fs";
@@ -32,44 +23,12 @@ import { createRouteTask, type RouteTask } from "../lib/control-plane/route-task
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { createPlannerSpool } from "../lib/control-plane/scheduler/planner-spool.ts";
-import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
 
-const T0 = "2026-09-22T10:00:00.000Z"; // walked to a disposition
-const T1 = "2026-09-22T10:05:00.000Z"; // a later dispatch re-claims the settled task
-const T2 = "2026-09-22T10:10:00.000Z"; // the re-claim's lease has expired: the sweep
-const T3 = "2026-09-22T10:20:00.000Z"; // the NEXT sweep
+const T0 = "2026-09-22T10:00:00.000Z";
+const T1 = "2026-09-22T10:05:00.000Z";
+const T2 = "2026-09-22T10:10:00.000Z";
+const T3 = "2026-09-22T10:20:00.000Z";
 const TTL = 60_000;
-
-test("the production recovery sink retains every live and refused lease on disk with the same classifications", async () => {
-  for (const [label, repos] of await eachStore()) {
-    const planner = await createPlannerSpool();
-    try {
-      for (let n = 0; n < 205; n++) {
-        const id = `live-${String(n).padStart(3, "0")}`;
-        await repos.leases.put(id, claim(id, "holder", T2, TTL, null), T2);
-      }
-      for (let n = 0; n < 17; n++) {
-        const id = `expired-${n}`;
-        await repos.leases.put(id, claim(id, "holder", T0, TTL, null), T0);
-      }
-      const output = <T>(name: string) => {
-        let position = 0;
-        const table = planner.table<{ position: number; value: T }>(name, row => String(row.position));
-        return { rows: table.rows.map(row => row.value), add: (value: T) => table.add({ position: position++, value }) };
-      };
-      const streamed = await sweepExpiredLeases(repos, { now: T2, observedBy: "supervisor", sink: {
-        reclaimed: output<string>("reclaimed"), releasedSettled: output<string>("settled"), stillLive: output<string>("live"),
-        refused: output<{ routeTaskId: string; why: string }>("refused"),
-      } });
-      for (const rows of Object.values(streamed)) assert.ok(rows instanceof DiskRows, label);
-      assert.equal(streamed.stillLive.length, 205); assert.equal(streamed.refused.length, 17);
-      const collected = await sweepExpiredLeases(repos, { now: T2, observedBy: "supervisor" });
-      assert.deepEqual({ reclaimed: [...streamed.reclaimed], releasedSettled: [...streamed.releasedSettled],
-        stillLive: [...streamed.stillLive], refused: [...streamed.refused] }, collected, label);
-    } finally { await planner.close(); }
-  }
-});
 
 async function eachStore(): Promise<Array<readonly [string, ControlPlaneRepositories]>> {
   return [
@@ -104,11 +63,6 @@ async function registered(repos: ControlPlaneRepositories, subject: string): Pro
   return task;
 }
 
-/**
- * The re-claim of a settled task, as `claimRouteTask` performed it before it
- * refused one: the domain's `claim()` over the slot, then the task's state
- * overwritten to CLAIMED. The modern claim's refusal is asserted first.
- */
 async function legacyReclaim(repos: ControlPlaneRepositories, routeTaskId: string, holder: string, now: string) {
   await assert.rejects(claimRouteTask(repos, { routeTaskId, holder, now, ttlMs: TTL }), RouteTaskSettled);
   const slot = await repos.leases.mustRead(routeTaskId);
@@ -123,7 +77,6 @@ async function legacyReclaim(repos: ControlPlaneRepositories, routeTaskId: strin
   return { lease };
 }
 
-/** A disposed RouteTask carrying an unreleased lease. */
 async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: string) {
   const task = await registered(repos, subject);
 
@@ -170,7 +123,6 @@ async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: st
     T0,
   );
 
-  /* The later dispatch: the claim was admitted on the settled task... */
   const again = await legacyReclaim(repos, task.id, "walker-b", T1);
   const redundant = await beginAttemptFor(repos, {
     routeTaskId: task.id,
@@ -181,7 +133,6 @@ async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: st
     methodVersion: 1,
     policyVersion: "p1",
   });
-  /* ...and its abandonment is refused by reclaim() before any lease release. */
   await assert.rejects(
     abandonAttempt(repos, {
       routeTaskId: task.id,
@@ -195,7 +146,6 @@ async function settledWithDeadLease(repos: ControlPlaneRepositories, subject: st
   return { task, deadLease: again.lease.value };
 }
 
-/** Every repository call, as `kind.method(firstStringArg)`, the way the cycle observer sees them. */
 function recording(repos: ControlPlaneRepositories) {
   const calls: string[] = [];
   const observed = new Proxy(repos, {
@@ -238,7 +188,6 @@ test("SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once,
       dispositions: await repos.dispositions.readAll(),
       debts: await repos.debts.list(),
     };
-    /* The fixture shape is asserted rather than assumed. */
     assert.equal(before.task.value.disposition?.disposition, "WALKED_NO_YIELD", `${label}: settled`);
     assert.equal(before.task.value.state, "CLAIMED", `${label}: re-claimed after it was disposed`);
     assert.equal(before.lease.value.id, deadLease.id, `${label}: the re-claim's lease holds the slot`);
@@ -261,13 +210,12 @@ test("SEEDED: an expired lease on a DISPOSED RouteTask is released exactly once,
     assert.deepEqual(await repos.dispositions.readAll(), before.dispositions, `${label}: the disposition log is untouched`);
     assert.deepEqual(await repos.debts.list(), before.debts, `${label}: the debt rows are untouched`);
 
-    /* THE NEXT SWEEP: a released lease is skipped, so the settled task is never read again. */
     const observed = recording(repos);
     const next = await sweepExpiredLeases(observed.repos, { now: T3, observedBy: "sweeper" });
     assert.deepEqual(next, { reclaimed: [], releasedSettled: [], stillLive: [], refused: [] }, `${label}: nothing left to walk`);
     assert.deepEqual(observed.calls.filter((call) => call.includes(task.id)), [], `${label}: the settled task was not walked again`);
-    assert.ok(observed.calls.includes("leases.listChangedSince()"), `${label}: control — the sweep streamed the lease metadata it skipped`);
-    assert.ok(!observed.calls.includes("leases.list()"),`${label}: full lease history never returns to the sweeper`);
+    assert.ok(observed.calls.includes("leases.listWhere()"), `${label}: the sweep queries unreleased leases`);
+    assert.ok(!observed.calls.includes("leases.list()"), `${label}: the sweep does not load released lease history`);
     assert.equal((await repos.leases.mustRead(task.id)).revision, lease.revision, `${label}: released exactly once`);
   }
 });
@@ -310,53 +258,7 @@ test("a LIVE task's expired lease is still reclaimed and the task reopened, in t
   }
 });
 
-test("a work-item scoped sweep reclaims its dead lease without reading or changing another place", async () => {
-  for (const [label, repos] of await eachStore()) {
-    const tasks = await Promise.all([registered(repos, "wtp-body/selected"), registered(repos, "wtp-body/other-place")]);
-    const attempts = [];
-    for (const task of tasks) {
-      const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: task.id, now: T1, ttlMs: TTL });
-      attempts.push(await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: task.workItemId,
-        worker: walker(task.id), lease: claimed.lease.value, now: T1, methodVersion: 1, policyVersion: "p1" }));
-    }
-    const [selected, stranger] = tasks;
-    const strangerBefore = {
-      task: await repos.routeTasks.mustRead(stranger.id),
-      lease: await repos.leases.mustRead(stranger.id),
-      attempt: await repos.attempts.mustRead(attempts[1].id),
-    };
-    const fail = async (): Promise<never> => { throw new Error("UNRELATED_LEASE_HISTORY_READ"); };
-    const observed: ControlPlaneRepositories = { ...repos,
-      workerResults: { ...repos.workerResults, readAll: fail, readChangedSince: async (...args) => {
-        assert.deepEqual(args[2]?.keys, [selected.workItemId]);
-        return repos.workerResults.readChangedSince(...args);
-      } },
-      routeTasks: { ...repos.routeTasks, list: fail, listChangedSince: fail,
-        listWhereNarrowed: async (...args) => {
-          assert.deepEqual(args.slice(0, 2), [["workItemId"], selected.workItemId]);
-          return repos.routeTasks.listWhereNarrowed(...args);
-        } },
-      attempts: { ...repos.attempts, list: fail, listChangedSince: fail },
-      leases: { ...repos.leases, list: fail, listChangedSince: fail,
-        readNarrowed: async (...args) => {
-          assert.equal(args[0], selected.id);
-          return repos.leases.readNarrowed(...args);
-        } },
-    };
-    assert.deepEqual(await sweepExpiredLeases(observed, { now: T2, observedBy: "selected-place-supervisor",
-      workItemIds: [selected.workItemId, selected.workItemId] }),
-    { reclaimed: [selected.id], releasedSettled: [], stillLive: [], refused: [] }, label);
-    assert.equal((await repos.attempts.mustRead(attempts[0].id)).value.outcome, "LEASE_EXPIRED");
-    assert.deepEqual(await repos.routeTasks.mustRead(stranger.id), strangerBefore.task);
-    assert.deepEqual(await repos.leases.mustRead(stranger.id), strangerBefore.lease);
-    assert.deepEqual(await repos.attempts.mustRead(attempts[1].id), strangerBefore.attempt);
-    assert.deepEqual((await sweepExpiredLeases(repos, { now: T3, observedBy: "global-supervisor" })).reclaimed,
-      [stranger.id], `${label}: the parent still recovers the other place independently`);
-  }
-});
-
 test("an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released", async () => {
-  /* A contention proof's claim that exited, by design, without opening an Attempt. */
   for (const [label, repos] of await eachStore()) {
     const task = await registered(repos, "wtp-body/claim-only#1");
     await claimRouteTask(repos, { routeTaskId: task.id, holder: "proof-worker", now: T0, ttlMs: TTL });
@@ -393,9 +295,6 @@ function attemptRow(id: string, routeTaskId: string, startedAt: string): Attempt
 }
 
 test("attemptsForRouteTask's filtered read returns exactly what the old full-list filter returned, row for row and in order, on memory and file", async () => {
-  /* Id order disagrees with start order, two Attempts on rt-a start at the
-     same instant, and three RouteTasks interleave, so a filtered read that
-     dropped, duplicated or reordered a row cannot pass by accident. */
   const fixtures = [
     attemptRow("at-03", "rt-a", "2026-09-22T10:00:00.000Z"),
     attemptRow("at-01", "rt-a", "2026-09-22T10:02:00.000Z"),
@@ -411,7 +310,6 @@ test("attemptsForRouteTask's filtered read returns exactly what the old full-lis
   for (const [label, repos] of await eachStore()) {
     for (const attempt of fixtures) await repos.attempts.put(attempt.id, attempt, T0);
     for (const routeTaskId of routeTaskIds) {
-      /* The pre-fix implementation, verbatim: list everything, filter, sort. */
       const everything = await repos.attempts.list();
       const old = everything
         .filter((row) => row.value.routeTaskId === routeTaskId)
@@ -463,7 +361,6 @@ test("POSITIVE CONTROL: a sweep over N dead settled leases makes zero full Attem
     assert.equal(attemptReads("list"), 0, `${label}: no full Attempt listing across ${N} dead leases`);
     assert.equal(attemptReads("listWhere"), 1, `${label}: one filtered read, for the one live reclaim that needs its Attempts`);
 
-    /* The control: the pre-fix read, once per dead lease, through the SAME counter. */
     for (const routeTaskId of dead) {
       (await observed.repos.attempts.list()).filter((row) => row.value.routeTaskId === routeTaskId);
     }

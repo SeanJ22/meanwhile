@@ -1,16 +1,12 @@
-import { FEC_STATES, fecFundingContractId } from "../lib/civic-data/fec-state-scope.ts";
+import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
-import { ACS_STATES, acsContractId } from "../lib/sources/census-acs-population/publication.ts";
-import { CENSUS_GEO_STATES, censusGeographyContractId } from "../lib/census-geography/publication.ts";
-import { meetingDerivationContractId } from "../lib/civic-data/meeting-derivation-scope.ts";
-import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { childCrash } from "../lib/ops/fatal-line.ts";
 import { runInNewContext } from "node:vm";
-import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
+import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -61,20 +57,26 @@ import {
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
-import { ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
+import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
-import { installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
-// This portfolio needs the same installed door schedules with or without the CI preloader.
-installFixtureDoors();
+function functionSource(source:string,name:string):string {
+  const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
+  let declaration:import("typescript").FunctionDeclaration|undefined;
+  const visit=(node:import("typescript").Node):void=>{
+    if(isFunctionDeclaration(node) && node.name?.text===name)declaration=node;
+    else node.forEachChild(visit);
+  };
+  visit(tree);
+  assert.ok(declaration,`Missing function ${name}`);
+  return declaration.getText(tree);
+}
 
 test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const progressStart = source.indexOf("let sourceProgressRepos");
   const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
-  const start = source.indexOf("async function settlePendingRunResult(");
-  const end = source.indexOf("\n// Reader delivery", start);
   const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
@@ -90,7 +92,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
+  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
     recordHuntSourceProgress: (task: unknown, stage: string, detail: string) => Promise<void>;
@@ -160,8 +162,6 @@ test("a crashed source child is logged by name, leaves its work owed and does no
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const progressStart = source.indexOf("let sourceProgressRepos");
   const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
-  const start = source.indexOf("async function settlePendingRunResult(");
-  const end = source.indexOf("\n// Reader delivery", start);
   const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
@@ -178,7 +178,7 @@ test("a crashed source child is logged by name, leaves its work owed and does no
     RUN_STARTED_AT: "2026-10-14T13:00:00.000Z", SUPERVISOR_CYCLE_ID: "routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const { settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
+  const { settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ settle: settlePendingRunResult });", context) as { settle: (pending: unknown, run: unknown) => Promise<void> };
   const task = { id, sourceId: "wikidata-people", scope: "US-CA", acquisitionFailureDomain: "routine-source:wikidata-people:ca", contract: {},
@@ -277,16 +277,15 @@ import {
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
-const FEC_TASK = ROUTINE_SOURCE_TASKS.find(task => task.id === fecFundingContractId("AZ"))!;
 
 test("ordinary registered doors reject authority-transfer markers without changing LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
-  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", good, T0);
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", good, T0);
   assert.ok(seeded.promoted);
   const before = await store.readPromotion(good.recordClass, good.scope);
-  for (const marker of [null, {kind: "RETIRED_TRANSFER", contractId: "fec-funding:AZ"}]) {
-    await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding:AZ", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  for (const marker of [null, {kind: "RETIRED_TRANSFER", contractId: "fec-funding"}]) {
+    await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
     assert.deepEqual(await store.readPromotion(good.recordClass, good.scope), before);
   }
   const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "ballot-navigation")!;
@@ -309,7 +308,7 @@ test("the standing parent durably accounts for a routine child killed outside so
     output: [
       "RCD_PASS launching 3 isolated command(s) through a bounded pool; concurrency=1",
       "postgres://user:secret@example.invalid/private",
-      "RCD_TASK fec-funding:AZ: GOOD (PROMOTED)",
+      "RCD_TASK fec-funding: GOOD (PROMOTED)",
       "RCD_TASK meetings:ical:body:scope: SOURCE_HELD_LKG (SOURCE_BLOCKED)",
     ].join("\n"),
     termination: "TIMED_OUT",
@@ -331,8 +330,6 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-
-
 
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
@@ -395,7 +392,7 @@ test("installed doors' partitions are standing tasks once: the runner never adds
 test("the standing portfolio invokes data-plane scripts only", () => {
   const nonMeetingTasks = ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass !== "MEETING");
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), [
-    ...FEC_STATES.map(fecFundingContractId),
+    "fec-funding",
     "nh-members",
     "az-state-legislators",
     "nj-state-legislators",
@@ -404,18 +401,17 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     ...PLURAL_STATES.map(state => `legiscan-votes-${state}`),
     "nh-state-rollcalls",
     "nj-state-rollcalls",
-    ...ACS_STATES.map(acsContractId),
-    ...CENSUS_GEO_STATES.map(censusGeographyContractId),
+    "census-acs-population",
+    "census-geography-overlaps",
     "pima-legistar-outcomes",
     "mesa-legistar-minutes-outcomes",
     "dotgov",
-    // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
+
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
-    ...REGISTRY_STATES.map(state => meetingDerivationContractId("meeting-body-crosswalk-derived", state)),
+    "meeting-body-crosswalk-derived",
     "meeting-doors",
-    ...REGISTRY_STATES.map(state => meetingDerivationContractId("meeting-source-wiring", state)),
+    "meeting-source-wiring",
     ...REGISTRY_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
-    ...CAMPAIGN_FINANCE_SOURCES.map(source => campaignFinanceSourceId(source.state)),
     "usaspending",
     "federal-audit-clearinghouse",
     "sam-gov-entities",
@@ -461,6 +457,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
 test("one canonical registry owns every supported authority and refuses arbitrary gov hosts", () => {
   const supportingResearchAuthorities = [
     "census-bulk-products",
+    ...CAMPAIGN_FINANCE_SOURCES.map(source=>campaignFinanceSourceId(source.state)),
     "az-legislature",
     "nj-legislature",
     "legiscan",
@@ -494,7 +491,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
-  // Bill datasets are their own source and are not competent for roll calls.
+
   const billIntermediary = authorityFor("legiscan-bills", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
   assert.equal(billIntermediary.ok, false);
   if (!billIntermediary.ok) assert.equal(billIntermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
@@ -1041,7 +1038,7 @@ test("the real child boundary enforces both timeout and per-stream output limits
   ], {
     cwd: process.cwd(),
     env: process.env,
-    // Allow loaded CI hosts to start Node; seven facts still outlive this idle allowance.
+
     timeoutMs: 5_000,
     maxBufferBytes: 1_024,
   });
@@ -1177,10 +1174,10 @@ test("one timed-out canonical clock is isolated while ordered sibling clocks set
 test("a killed Reader child is an exact delivery repair fault and cannot mutate source or LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const domain = routineReaderRepairDomains().find(({ contracts }) =>
-    contracts.length === 1 && contracts[0]?.id === "fec-funding:AZ");
+    contracts.length === 1 && contracts[0]?.id === "fec-funding");
   assert.ok(domain);
   const contract = domain.contracts[0]!;
-  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", sourceGoodCandidate(), T0);
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", sourceGoodCandidate(), T0);
   assert.ok(seeded.promoted);
   const candidateId = seeded.candidate.candidate.id;
   const before = {
@@ -1208,7 +1205,7 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
     detail: "Reader process exceeded its killable deadline.",
   });
   assert.deepEqual(reconciled.references.map(({ contractId, disposition }) => ({ contractId, disposition })), [{
-    contractId: "fec-funding:AZ",
+    contractId: "fec-funding",
     disposition: "REPAIR_FAILED",
   }]);
   assert.ok(reconciled.failures.some(({ code }) => code === "READER_READBACK_REPAIR_FAILED"));
@@ -1250,7 +1247,6 @@ test("the pilot outer bound contains the source and meeting frontier", () => {
     ROUTINE_CHILD_CONCURRENCY,
     largestDomain,
   );
-  // A meeting lane's three reads run one after the other; the pass bound covers that chain.
   assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
@@ -1336,7 +1332,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   assert.equal(all.ok, true);
   if (all.ok) assert.equal(all.only, null);
 
-  const selectedId = FEC_TASK?.id;
+  const selectedId = ROUTINE_SOURCE_TASKS[0]?.id;
   assert.ok(selectedId);
   const selected = routineTaskSelection([
     `--only=${selectedId},${selectedId}`,
@@ -1383,7 +1379,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /MEETING_PARTITION_TASK_IDS\.has\(task\.id\) \? "MEETING_PARTITION" : "SINGLE"/);
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
-  // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
+
   assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
@@ -1487,8 +1483,7 @@ test("the routine runner derives its clock from durable candidate history", () =
   assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope, task\.parserVersion\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
-  // Sitting windows are decided once, at the frozen instant, from the same reads
-  // and the publisher-stated ends read in the same pass.
+
   const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
   const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
@@ -1499,7 +1494,7 @@ test("the routine runner derives its clock from durable candidate history", () =
 
 test("runner receipts are exact JSON, exact-count, and seven-zero structural evidence", () => {
   const good = {
-    source: "fec-funding:AZ",
+    source: "fec-funding",
     candidateId: "candidate-1",
     acquisitionSucceeded: true,
     state: "PROMOTED",
@@ -1530,35 +1525,31 @@ test("runner receipts are exact JSON, exact-count, and seven-zero structural evi
 test("the shared source printer reports the pointed candidate and observation for an unchanged recheck", async (t) => {
   const store = new MemoryRoutineDataStore();
   const original = sourceGoodCandidate();
-  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", original, T0);
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", original, T0);
   assert.ok(seeded.promoted);
   const at = "2026-09-08T12:01:00.000Z";
   const recheck = { ...original, id: `cv-${"f".repeat(32)}`,
     retrieval: { ...original.retrieval, retrievedAt: at } };
-  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", recheck, at);
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", recheck, at);
   assert.ok(outcome.confirmed, "the real promotion door must take its unchanged-confirmation path");
   const printed: string[] = [];
   t.mock.method(console, "log", (line: string) => { printed.push(line); });
-  printSourceRunnerReceipt("fec-funding:AZ", recheck, outcome);
+  printSourceRunnerReceipt("fec-funding", recheck, outcome);
   const parsed = parseRoutineRunnerReceipt(printed.join("\n"));
   assert.ok(parsed.ok);
   assert.equal(parsed.receipt.candidateId, original.id);
   assert.equal(parsed.receipt.confirmedAt, at);
   assert.equal(successfulRoutineRunnerReceiptIssue(parsed.receipt), null);
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt,
-    ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding:AZ")!, store, "SUCCESS"), null);
+    ROUTINE_SOURCE_TASKS.find(task => task.id === "fec-funding")!, store, "SUCCESS"), null);
   assert.equal(await store.readCandidateSummary(recheck.id), null, "an unchanged check never creates a candidate");
 });
 
 test("every standing source child emits its exact contract id and the supervisor persists admitted code identity", () => {
-  const fec = readFileSync("scripts/fetch-fec.mts", "utf8");
-  assert.match(fec, /const state = requireRegistryState\(/);
-  assert.match(fec, /contractId = fecFundingContractId\(state\)/);
-  assert.match(fec, /printSourceRunnerReceipt\(contractId, candidate, outcome\)/);
-  assert.deepEqual(ROUTINE_SOURCE_CONTRACTS.filter(contract => contract.sourceId === "fec-open-api").map(contract => [contract.id, contract.acquisitionAdapter.command]),
-    FEC_STATES.map(state => [fecFundingContractId(state), ["scripts/fetch-fec.mts", "--promote", `--state=${state}`]]));
   const fixedChildren = [
+    ["scripts/fetch-fec.mts", "fec-funding"],
     ["scripts/nh-gencourt-members.mts", "nh-members"],
+    ["scripts/acs-population-promote.mts", "census-acs-population"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
@@ -1571,10 +1562,6 @@ test("every standing source child emits its exact contract id and the supervisor
       `${path} must name ${contractId} in its successful protocol receipt`,
     );
   }
-  const stateAcsChild = readFileSync("scripts/acs-population-promote.mts", "utf8");
-  assert.match(stateAcsChild, /contractId\s*=\s*acsContractId\(state\)/);
-  assert.match(stateAcsChild, /printSourceRunnerReceipt\(contractId,/);
-  for (const state of ACS_STATES) assert.ok(ROUTINE_SOURCE_TASKS.find(task => task.id === acsContractId(state))?.command.includes(`--state=${state}`));
   for (const path of ["scripts/state-legislators.mts", "scripts/state-rollcalls.mts"]) {
     assert.match(
       readFileSync(path, "utf8"),
@@ -1598,7 +1585,7 @@ test("every standing source child emits its exact contract id and the supervisor
 });
 
 test("durable receipt verification rejects a publisher label in the task identity field", async () => {
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0]!;
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
   await processRegisteredRoutineCandidate(store, task.id, good, T0);
@@ -1614,13 +1601,13 @@ test("durable receipt verification rejects a publisher label in the task identit
   };
   assert.match(
     await durableRoutineRunnerReceiptIssue(mislabeled, task, store, "SUCCESS") ?? "",
-    /does not match registered task fec-funding:AZ/,
+    /does not match registered task fec-funding/,
   );
 });
 
 test("same-cycle isolation requires exact task/candidate receipts, never aggregate counts", () => {
   const successReceipt = {
-    source: "fec-funding:AZ",
+    source: "fec-funding",
     candidateId: "candidate-success",
     acquisitionSucceeded: true,
     state: "PROMOTED" as const,
@@ -1653,10 +1640,10 @@ test("same-cycle isolation requires exact task/candidate receipts, never aggrega
     failures: [],
     taskReceipts: [
       {
-        taskId: "fec-funding:AZ",
+        taskId: "fec-funding",
         sourceId: "FEC OpenFEC",
         recordClass: "FEC_FUNDING",
-        scope: "US-AZ:fec-funding:v1",
+        scope: "federal-supported",
         classification: "VERIFIED_SOURCE_SUCCESS",
         receipt: successReceipt,
       },
@@ -1760,7 +1747,7 @@ test("an exit-zero child is not called GOOD before exact receipt and canonical r
 test("a child process or receipt failure is operational and cannot fabricate source state", async () => {
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
-  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding:AZ", good, T0);
+  const seeded = await processRegisteredRoutineCandidate(store, "fec-funding", good, T0);
   assert.equal(seeded.candidate.state, "PROMOTED");
   const before = {
     candidate: await store.readCandidate(good.id),
@@ -1791,7 +1778,7 @@ test("a child process or receipt failure is operational and cannot fabricate sou
     attemptedTasks: 1,
     verifiedSourceSuccesses: 0,
     verifiedSourceFailures: 0,
-    failures: [{ taskId: "fec-funding:AZ", code: classified.code, detail: classified.detail }],
+    failures: [{ taskId: "fec-funding", code: classified.code, detail: classified.detail }],
   });
   await appendRoutineCivicDataSupervisorDigest(repos, {
     outcome: operational,
@@ -1824,7 +1811,7 @@ test("a child process or receipt failure is operational and cannot fabricate sou
 });
 
 test("a genuine source-unavailable child receipt remains durable and preserves exact LKG", async () => {
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0];
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
   await processRegisteredRoutineCandidate(store, task.id, good, T0);
@@ -1870,7 +1857,7 @@ test("a genuine source-unavailable child receipt remains durable and preserves e
 
 test("a proven durable source outcome survives a later child execution failure", () => {
   const good = {
-    source: "fec-funding:AZ",
+    source: "fec-funding",
     candidateId: "durable-before-timeout",
     acquisitionSucceeded: true,
     state: "PROMOTED" as const,
@@ -1895,7 +1882,7 @@ test("a proven durable source outcome survives a later child execution failure",
 });
 
 test("nonzero child receipts must prove a durable held candidate and cannot claim PROMOTED", async () => {
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0];
   const noDurable: DurableReceiptStore = {
     readCandidate: async () => null,
     readCandidateSummary: async () => null,
@@ -1903,7 +1890,7 @@ test("nonzero child receipts must prove a durable held candidate and cannot clai
     readPromotionIdentity: async () => null,
   };
   const held = {
-    source: "fec-funding:AZ",
+    source: "fec-funding",
     candidateId: "not-persisted",
     acquisitionSucceeded: false,
     state: "SOURCE_BLOCKED" as const,
@@ -1932,8 +1919,6 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
       return super.readCandidate(candidateId);
     }
 
-    // The proof's own narrowed read: the read model and normalized payload it
-    // checks, never the change set, records or identities (candidateProofView).
     override async readCandidateProof(candidateId: string) {
       this.whole.push(`candidate-proof:${candidateId}`);
       return super.readCandidateProof(candidateId);
@@ -1944,7 +1929,7 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
       return super.readPromotion<T>(recordClass, scope);
     }
   }
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0];
   assert.notEqual(task.contract.readerProjection, null, "fec-funding has a Reader projection the repair phase re-proves");
   const store = new CountingStore();
   const good = sourceGoodCandidate();
@@ -1973,13 +1958,11 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     /does not match registered task/);
   assert.deepEqual(store.whole, [], "success: identity only; the Reader repair reads the new version in full");
 
-  // A contract no Reader readback ever proves keeps the full proven read on
-  // success, and that proof still refuses a payload its candidate does not back.
   const unprojected = { ...task, contract: { ...task.contract, readerProjection: null } };
   store.whole.length = 0;
   assert.equal(await durableRoutineRunnerReceiptIssue(success, unprojected, store, "SUCCESS"), null);
   assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "no Reader projection: the new pointer's proof, once, narrowed");
-  // A caller that does not name the contract keeps the full proof as well.
+
   const { contract: _contract, ...anonymous } = task;
   store.whole.length = 0;
   assert.equal(await durableRoutineRunnerReceiptIssue(success, anonymous, store, "SUCCESS"), null);
@@ -2012,8 +1995,6 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     assert.deepEqual(store.whole, [], "held: the unchanged LKG by identity; never the refused envelope or the LKG payload");
   }
 
-  // The no-projection proof is still whole: a pointer whose payload no longer
-  // matches its candidate's read model is refused.
   class TamperedStore extends CountingStore {
     override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
       const row = await super.readPromotion<T>(recordClass, scope);
@@ -2026,7 +2007,7 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
 });
 
 test("the durable receipt check refuses invalid current identities and keeps exact LKG equality for holds", async () => {
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0];
   const store = new MemoryRoutineDataStore();
   const good = sourceGoodCandidate();
   await processRegisteredRoutineCandidate(store, task.id, good, T0);
@@ -2062,7 +2043,7 @@ test("the durable receipt check refuses invalid current identities and keeps exa
     lastKnownGoodVersion: good.id,
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
-  // Every dataset door fails the test: a mismatch is refused from identity alone.
+
   const pointing = (identity: typeof real | null): DurableReceiptStore => Object.assign(Object.create(store), {
     readPromotionIdentity: async () => identity,
     readPromotion: async () => { throw new Error("the payload was read"); },
@@ -2096,7 +2077,7 @@ test("the durable receipt check refuses invalid current identities and keeps exa
 });
 
 test("two successful publications settle independently after the canonical pointer advances", async () => {
-  const task = FEC_TASK;
+  const task = ROUTINE_SOURCE_TASKS[0];
   const store = new MemoryRoutineDataStore();
   const first = sourceGoodCandidate();
   const second = sourceGoodCandidate(20);
@@ -2131,7 +2112,6 @@ test("two successful publications settle independently after the canonical point
   assert.match(await durableRoutineRunnerReceiptIssue(receipt, { ...task, sourceId: "another-source" }, store, "SUCCESS") ?? "",
     /does not match the registered task identity/);
 });
-
 
 test("C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap", async () => {
   const events: { id: string; phase: "start" | "end"; at: number }[] = [];
@@ -2215,11 +2195,10 @@ test("scoped source passes repair only matching reader pointers, including narro
 
 test("state publishers retain the measured state reservation across small runs", async () => {
   const mib = 1024 * 1024;
-  const workingMiB = ROUTINE_ENTRY_PEAK_MIB["promote-registry-runtime.mts"] + ROUTINE_ENTRY_PEAK_MIB["assemble-ballot-package.mts"];
-  const slots = routineProcessSlots({ availableBytes: () => (workingMiB + 768) * mib, headroomBytes: 768 * mib, parentPeakBytes: 0,
+  const slots = routineProcessSlots({ availableBytes: () => (1024 + 768) * mib, headroomBytes: 768 * mib, parentPeakBytes: 0,
     peakBytes: () => mib, host: workerMemoryHost({ processes: () => [] }) });
-  const first = await slots.acquire("registry-runtime:AZ/promote-registry-runtime.mts");
-  const second = await slots.acquire("ballot-contests:CA/assemble-ballot-package.mts");
+  const first = await slots.acquire("ballot-contests:CA/assemble-ballot-package.mts");
+  const second = await slots.acquire("registry-runtime:AZ/promote-registry-runtime.mts");
   let admitted = false;
   const queued = slots.acquire("registry-runtime:TX/promote-registry-runtime.mts").then(release => {
     admitted = true; return release;
@@ -2231,17 +2210,6 @@ test("state publishers retain the measured state reservation across small runs",
   second();
 });
 
-test("campaign state jobs run one at a time without changing other source lanes", async () => {
-  const money = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE");
-  assert.equal(money.length, 56);
-  assert.deepEqual([...new Set(money.map(task => task.acquisitionFailureDomain))], ["routine-source:campaign-finance"]);
-  let active = 0, most = 0;
-  await runBoundedChildPass(money.map(task => ({ id: task.id, failureDomain: task.acquisitionFailureDomain, executable: "ignored", args: [] })),
-    { cwd: process.cwd(), env: process.env, sameDomainGapMs: 0, concurrency: 8 }, async command => {
-      most = Math.max(most, ++active);
-      await new Promise(resolve => setTimeout(resolve, 1));
-      active--;
-      return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
-    });
-  assert.equal(most, 1);
+test("the retired native campaign load has no scheduled source jobs", () => {
+  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE"), []);
 });

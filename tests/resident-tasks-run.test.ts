@@ -3,8 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { readLatestTaskPass, recordTaskPass } from "../lib/control-plane/live-audit-log.ts";
-import { readTaskZips } from "./helpers/live-audit.ts";
+import { readLatestTaskPass, readTaskZips, recordTaskPass } from "../lib/control-plane/live-audit-log.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
   chooseTaskZips, judgeTask, residentTaskView, saysGathering, shotKey, TASK_SCRIPTS, taskPass, taskTargets, WORDS,

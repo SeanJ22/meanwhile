@@ -1,5 +1,3 @@
-/** The `ask-gaps` provider's I/O, read once a cycle. Read-only; a reading that cannot be taken whole is named, never shrunk. */
-
 import { cadenceMsAt, sittingWindowRereadMs } from "../../civic-data/contracts.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import {
@@ -13,27 +11,34 @@ import {
 import { heldBodyGaps, type HeldAskGap } from "../../ask/held-gaps.ts";
 import { readMeetingBodies, type StateMeetingBody } from "../../meetings/edge-serving.ts";
 import type { MeetingsSnapshot } from "../../meetings/snapshot.ts";
-import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted, readStateMeetingOutcomes } from "../../outcomes/store.ts";
+import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted, outcomePointers, readDoorOutcomeProjection } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
 import { foldAskGapObservations, readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
 import type { AggregateRepository } from "../repository/types.ts";
 import type { AskGapHoldingsReading, AskGapsInput, CarrierClock } from "./providers/ask-gaps.ts";
 
-/** The meeting and outcome tasks whose clocks Ask reads, from the doors installed now. */
 export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
   return ROUTINE_SOURCE_TASKS.filter((task) => task.recordClass === "MEETING" || task.recordClass === "MEETING_OUTCOME");
 }
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/** Every body Ask reads, one state at a time from each state's index. */
-function readHeldBodies(states?: readonly string[]): AsyncGenerator<StateMeetingBody> {
-  return readMeetingBodies({ window: "HELD", states });
+function readHeldBodies(state?: string): AsyncGenerator<StateMeetingBody> {
+  return readMeetingBodies({ window: "HELD", ...(state ? { states: [state.toUpperCase()] } : {}) });
 }
 
-/** The recorded outcomes Ask reads, and whether they could be read (Ask's own test: an empty store is unreadable). */
-async function readHeldOutcomes(): Promise<{ readonly sittings: readonly PersistedSittingOutcomes[]; readonly unreadable: string | null }> {
+async function readHeldOutcomes(state?: string): Promise<{ readonly sittings: readonly PersistedSittingOutcomes[]; readonly unreadable: string | null }> {
   try {
+    if (state) {
+      const sittings: PersistedSittingOutcomes[] = [];
+      const failures:string[] = [];
+      for (const pointer of outcomePointers().filter(pointer=>pointer.scope.startsWith(`US-${state.toUpperCase()}:`))) {
+        const result=await readDoorOutcomeProjection(pointer.scope);
+        if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") sittings.push(...result.value.sittings);
+        else if (result.kind === "STORE_UNREACHABLE") failures.push(result.detail);
+      }
+      return {sittings,unreadable:failures.length?failures.join("; "):null};
+    }
     await refreshOutcomeSnapshotFromPromoted();
   } catch (error) {
     return { sittings: [], unreadable: message(error) };
@@ -71,14 +76,11 @@ export function carrierClocks(
   return out;
 }
 
-/** The whole reading's bound: a hung read is named and the cycle continues without Ask gaps. */
 export const ASK_GAP_READING_BOUND_MS = 90_000;
 
 interface ReadingOptions {
   readonly now: string;
-  /** The planner hydrates one state before asking its providers for work. */
-  readonly states?: readonly string[];
-  readonly clocks?: ReadonlyMap<string, CarrierClock>;
+  readonly state?: string;
   readonly readBodies?: () => AsyncIterable<{ readonly bodyId: string; readonly load: () => Promise<{ readonly snapshot: MeetingsSnapshot } | null> }>;
   /** Bodies readers were told we hold no meeting of; their meeting counts are kept. */
   readonly toldNoMeetings?: ReadonlySet<string>;
@@ -87,7 +89,6 @@ interface ReadingOptions {
   readonly boundMs?: number;
 }
 
-/** Never throws and never outlasts its bound; a failure is the reading's `unreadable`. */
 export async function readAskGapHoldings(options: ReadingOptions): Promise<AskGapHoldingsReading> {
   const boundMs = options.boundMs ?? ASK_GAP_READING_BOUND_MS;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -106,16 +107,14 @@ export async function readAskGapHoldings(options: ReadingOptions): Promise<AskGa
 
 async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReading> {
   const nowMs = Date.parse(options.now);
-  const outcomes = await (options.readOutcomes ?? (options.states ? async () => {
-    const read = await readStateMeetingOutcomes(options.states!); return { sittings: read.sittings, unreadable: null };
-  } : readHeldOutcomes))().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
+  const outcomes = await (options.readOutcomes ?? (() => readHeldOutcomes(options.state)))().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
   const sittingsByBody = new Map<string, PersistedSittingOutcomes[]>();
   for (const sitting of outcomes.sittings) if (sitting.bodyId) sittingsByBody.set(sitting.bodyId, [...sittingsByBody.get(sitting.bodyId) ?? [], sitting]);
 
   const bodies: { readonly bodyId: string; readonly gaps: readonly HeldAskGap[] }[] = [];
   const counts = new Map<string, number>();
   try {
-    for await (const body of (options.readBodies ?? (() => readHeldBodies(options.states)))()) {
+    for await (const body of (options.readBodies ?? (() => readHeldBodies(options.state)))()) {
       const read = await body.load();
       if (read === null) return { unreadable: `the meetings of ${body.bodyId} could not be read, so no gap is decided on this cycle` };
       const { meetings, agendaDocuments } = read.snapshot;
@@ -128,19 +127,16 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
   }
 
   let clocks: ReadonlyMap<string, CarrierClock>;
-  if (options.clocks) clocks = options.clocks;
-  else {
   try {
     const readClock = options.readClock ?? (() => {
-      // Constructed here: the store binds its connection on construction, which throws when none is configured.
+
       const store = new PostgresRoutineDataStore();
       return (task: RoutineSourceTask) => store.clock(task.sourceId, task.recordClass, task.scope);
     })();
-    clocks = carrierClocks(await readRoutineTaskClocks(askGapCarrierTasks(), readClock), nowMs);
+    clocks = carrierClocks(await readRoutineTaskClocks(askGapCarrierTasks().filter(task=>!options.state || task.scope.startsWith(`US-${options.state.toUpperCase()}:`)), readClock), nowMs);
   } catch (error) {
     const why = `the routine clocks could not be read (${message(error)})`;
     clocks = new Map(askGapCarrierTasks().map((task) => [task.id, { kind: "UNREAD", why } as const]));
-  }
   }
 
   return {

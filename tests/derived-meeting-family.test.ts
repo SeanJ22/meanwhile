@@ -1,17 +1,3 @@
-/**
- * A reviewed calendar publishes through the runner's doors with no code release, and keeps its verified sittings
- * through temporary outages. Every step is the production door, on the in-memory store:
- *
- * 1. a reviewed crosswalk row is promoted through the manual door;
- * 2. the wiring store is derived from it, a validated walk and the vault, and
- *    promoted through the routine door, which checks every promoted input;
- * 3. the state's derived family reads the member on its attested host and
- *    promotes through the meeting-partition door, which checks every member
- *    read's host against the wiring version it names;
- * 4. the meetings Reader composes the family's sittings beside every partition.
- *
- * No code names the body, the calendar or the host: they are data from step 1.
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -146,7 +132,7 @@ async function walk(feed: string, feedStatus = 200) {
 
 async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200, options: { readonly confirmUnchanged?: boolean } = {}, names: readonly string[] = [BODY_NAME]) {
   const attempt = await walk(feed, feedStatus);
-  const previousRead = await readDerivedMeetingWiring({ state: "AZ", store, bypassCache: true, now });
+  const previousRead = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   const previous = previousRead.kind === "PROMOTED" ? derivedWiringEntries(previousRead.value) : [];
   const vaulted = (artifactId: string) => ({ kind: "VAULTED_EVIDENCE" as const, artifactId, contentHash: `sha256-${sha256(feed)}`, tier: "RAW" as const, retrievedAt: T_WALK });
   const decisions = deriveWiringDecisions({
@@ -170,8 +156,8 @@ async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: Deriv
   });
   const plan = planDerivedVersion(previous, decisions);
   assert.deepEqual(plan.refusals, []);
-  const candidate = derivedWiringCandidate(plan, [crosswalkInput], now, "AZ");
-  return { decisions, plan, candidate, outcome: await processRegisteredRoutineCandidate(store, "meeting-source-wiring:AZ", candidate, now, undefined, options) };
+  const candidate = derivedWiringCandidate(plan, [crosswalkInput], now);
+  return { decisions, plan, candidate, outcome: await processRegisteredRoutineCandidate(store, "meeting-source-wiring", candidate, now, undefined, options) };
 }
 
 async function readBodySnapshot(store: MemoryRoutineDataStore, edge: ReaderArtifactStore, bodyId: string, now: string) {
@@ -193,7 +179,7 @@ function readFeed(feed: string, now: string, name = BODY_NAME): Meeting[] {
 }
 
 async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST, options: { readonly confirmUnchanged?: boolean } = {}, alter?: (read: FamilyMemberRead) => FamilyMemberRead) {
-  const wiring = await readDerivedMeetingWiring({ state: "AZ", store, bypassCache: true, now });
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") throw new Error("no wiring");
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
@@ -210,7 +196,7 @@ async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: s
   }).map(read => alter ? alter(read) : read);
   const build = buildDerivedFamily({
     wiringInput: {
-      kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-AZ:meeting-source-wiring",
+      kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring",
       versionId: wiring.metadata.versionId!, readModelSha256: sha256(canonicalCivicDataJson(wiring.value as DerivedWiringProjection)), promotedAt: wiring.metadata.promotedAt!,
     },
     members, reads, previous, generatedAt: now,
@@ -228,7 +214,7 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
   const store = new MemoryRoutineDataStore();
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
-  const wiring = await readDerivedMeetingWiring({ state: "AZ", store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const [one] = familyMembers(wiring.value, "US-AZ");
@@ -243,7 +229,7 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
     acquisitions: [{ requestedUrl: member.row.route, finalUrl: member.row.route, httpStatus: 200, rawHash: sha256(FEED), byteCount: FEED.length }],
   });
   const build = (reads: FamilyMemberRead[], previous: ReturnType<typeof buildDerivedFamily>["snapshot"] | null) => buildDerivedFamily({
-    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US-AZ:meeting-source-wiring",
+    wiringInput: { kind: "PROMOTED_VERSION", recordClass: "CURATED_READER_RECORD", scope: "US:meeting-source-wiring",
       versionId: wiring.metadata.versionId!, readModelSha256: sha256(canonicalCivicDataJson(wiring.value)), promotedAt: wiring.metadata.promotedAt! },
     members: [one, two], reads, previous, generatedAt: T_FAMILY,
     reconcile: (read, prior, anchor) => reconcileSuccessfulMeetingPartition({ sourceName: "ical", generatedAt: anchor,
@@ -381,7 +367,7 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   const suspended = await deriveWiring(store, crosswalkInput, "Not Found", "2026-09-24T21:00:00.000Z", 404);
   assert.equal(suspended.decisions[0]?.disposition, "SUSPEND");
   assert.equal(suspended.outcome.candidate.state, "PROMOTED", suspended.outcome.candidate.failureDetail ?? "");
-  const wiring = await readDerivedMeetingWiring({ state: "AZ", store, bypassCache: true, now: T_SECOND });
+  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
   assert.equal(wiring.kind === "PROMOTED" ? wiring.value.records[0]?.status : null, "SUSPENDED");
 
   const held = await promoteFamily(store, T_SECOND, FEED);
@@ -397,10 +383,10 @@ test("C16: a wiring version that drops a row is refused by the door, and the las
   const first = await deriveWiring(store, crosswalkInput, FEED, T_WIRING);
   assert.equal(first.outcome.candidate.state, "PROMOTED");
   /* A plan that silently omits the promoted row: no trigger, no withdrawal, just gone. */
-  const dropped = derivedWiringCandidate({ ...first.plan, rows: [], promoted: [], carried: [] }, [crosswalkInput], "2026-09-24T21:10:00.000Z", "AZ");
-  const outcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring:AZ", dropped, "2026-09-24T21:10:00.000Z");
+  const dropped = derivedWiringCandidate({ ...first.plan, rows: [], promoted: [], carried: [] }, [crosswalkInput], "2026-09-24T21:10:00.000Z");
+  const outcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", dropped, "2026-09-24T21:10:00.000Z");
   assert.equal(outcome.promoted, null, "a connection never disappears without its own evidence");
-  const live = await readDerivedMeetingWiring({ state: "AZ", store, bypassCache: true, now: T_SECOND });
+  const live = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
   assert.equal(live.kind === "PROMOTED" ? live.value.records.length : 0, 1);
 });
 

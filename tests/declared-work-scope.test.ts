@@ -1,3 +1,4 @@
+import { scopeHistoryOf } from "./helpers/spend.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { loadBootstrapLookup } from "../lib/census-geography/reader.ts";
@@ -37,7 +38,7 @@ test("a ZIP hunt reaches its shared candidates and finance, records the Send on 
   assert.equal(held.value.assignments?.[0]?.assignmentKey, decision.key);
   const again = planDispatchWork({ targets: [scopeWorkTarget(plan.scopes[0])], world: { ...world, durable: new Map((await repos.obligations.list()).map(row => [row.id, row.value])) } });
   assert.equal(again.marks.length, 0, "the next cycle reuses attribution");
-  const budget = armExpansionBudget(plan, { now, charges: [], worstCaseUsd: 10 }).gate;
+  const budget = armExpansionBudget(plan, { now, history: scopeHistoryOf([], plan, now), worstCaseUsd: 10 }).gate;
   assert.equal(budget.bindingScopes("az:cd6-candidate")[0].budgetUsd, 50);
   assert.equal(budget.bindingScopes("az:cd7-candidate").length, 0);
   assert.equal(budget.bindingScopes("us:shared-federal")[0].budgetUsd, 50);

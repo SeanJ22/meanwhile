@@ -1,11 +1,4 @@
-/**
- * Aggregate unattended-Fleet safety.
- *
- * This is an admission controller over the existing cost ledger and scheduler;
- * it is not a second budget ledger. Historical spend comes only from the
- * spend window the ledger's writes keep (`spend-window.ts`). In-cycle reservations close the race between
- * concurrent model requests until their provider-reported cost is persisted.
- */
+import type { SpendTotals } from "./spend-window.ts";
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
@@ -21,7 +14,6 @@ import { memoryWebsitePacing, websiteOf, type WebsitePacing } from "./website-pa
 import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./scheduler/provider-limits.ts";
 import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
-import { spendScratch } from "./spend-scratch.ts";
 
 export const FLEET_ZONE = "America/Phoenix";
 
@@ -41,13 +33,6 @@ export const FLEET_SAFETY_BOUNDS = {
 /** The largest ceiling the console control accepts: a typo guard, not a spend cap. */
 export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
 
-/**
- * The rolling 24-hour model-spend ceiling in force, given the owner's override
- * (or null). A missing, non-positive or non-finite override falls back to
- * {@link FLEET_SAFETY_BOUNDS}, never "no ceiling". The runner calls this only
- * for a cleanly read row; an unreadable row holds paid work instead
- * (`adminConfigForPaidWork`).
- */
 export function resolveRollingCeiling(
   overrideUsd: number | null | undefined,
 ): { readonly rollingCeilingUsd: number; readonly source: "OVERRIDE" | "FALLBACK"; readonly fallbackUsd: number } {
@@ -230,67 +215,62 @@ function answeredModelPrice(entry: CostEntry): { usd: number | null; knownUsd: n
   return { usd: legacyAsk, knownUsd: 0, measured: false, bounded: legacyAsk !== null };
 }
 
-/** Every recorded model role/identity/usage is accounted for, including a
- * tokenless Scout. Known prices remain visible beside unbounded historical
- * charges; only exact model-backed job identities may consume a hold. */
 export function aggregateModelSpend(
-  costs: Iterable<CostEntry>,
+  costs: readonly CostEntry[],
   since: string,
   until: string,
-  spendHolds: Iterable<SpendHold> = [],
+  spendHolds: readonly SpendHold[] = [],
 ): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
-  return aggregatePricedSpend({[Symbol.iterator]: function* () {
-    for (const entry of costs) { const charge = pricedModelCharge(entry, entry.attemptId); if (charge) yield charge; }
-  }}, since, until, spendHolds);
+  return aggregatePricedSpend(costs.flatMap(entry => pricedModelCharge(entry, entry.attemptId) ?? []), since, until, spendHolds);
 }
 
 /** The spend of the charges recorded in [since, until], holds standing in where they are tighter. */
 export function aggregatePricedSpend(
-  charges: Iterable<PricedCharge>,
+  charges: readonly PricedCharge[],
   since: string,
   until: string,
-  spendHolds: Iterable<SpendHold> = [],
+  spendHolds: readonly SpendHold[] = [],
 ): { readonly usd: number; readonly knownUsd: number; readonly measured: number; readonly unmeasured: number; readonly worstCaseCharges: number } {
   let usd = 0;
   let knownUsd = 0;
   let measured = 0;
   let unmeasured = 0;
   let worstCaseCharges = 0;
-  const scratch = spendScratch(), {db, owner} = scratch;
-  const addJob = db.prepare(`INSERT INTO jobs(owner,id,usd,worst) VALUES(?,?,?,?)
-    ON CONFLICT(owner,id) DO UPDATE SET usd=jobs.usd+excluded.usd,worst=jobs.worst+excluded.worst`);
-  const addHold = db.prepare("INSERT OR IGNORE INTO holds VALUES(?,?)");
-  const addHeldJob = db.prepare(`INSERT INTO held_jobs VALUES(?,?,?,?)
-    ON CONFLICT(owner,id) DO UPDATE SET worst=held_jobs.worst+excluded.worst,held=held_jobs.held+excluded.held`);
-  const heldJob = db.prepare("SELECT worst,held FROM held_jobs WHERE owner=? AND id=?");
+  const jobs = new Map<string, { usd: number; worstCaseUsd: number }>();
   const start = Date.parse(since), end = Date.parse(until);
-  try {
   for (const charge of charges) {
     const at = Date.parse(charge.at);
     if (!(at >= start && at <= end)) continue;
+    const job = jobs.get(charge.jobId) ?? { usd: 0, worstCaseUsd: 0 };
     knownUsd += charge.knownUsd;
     if (charge.measured) measured += 1;
     else unmeasured += 1;
     if (charge.bounded) worstCaseCharges += 1;
-    addJob.run(owner, charge.jobId, charge.usd, charge.bounded ? charge.usd : 0);
+    job.usd += charge.usd;
+    if (charge.bounded) job.worstCaseUsd += charge.usd;
+    jobs.set(charge.jobId, job);
   }
+  const held = new Map<string, number>();
+  const worstCase = new Map<string, number>();
+  const seen = new Set<string>();
   for (const hold of spendHolds) {
     const at = Date.parse(hold.heldAt);
-    if (!(at >= start && at <= end) || !amount(hold.usd) || !addHold.run(owner, hold.holdId).changes) continue;
-    addHeldJob.run(owner, hold.jobId, hold.usd, hold.settled === null ? hold.usd : 0);
+    if (seen.has(hold.holdId) || !(at >= start && at <= end) || !amount(hold.usd)) continue;
+    seen.add(hold.holdId);
+    worstCase.set(hold.jobId, (worstCase.get(hold.jobId) ?? 0) + hold.usd);
+    if (hold.settled === null) held.set(hold.jobId, (held.get(hold.jobId) ?? 0) + hold.usd);
   }
-  for (const job of db.prepare("SELECT id,usd,worst FROM jobs WHERE owner=? ORDER BY sequence").iterate(owner)) {
+  for (const [id, job] of jobs) {
     // Only an exact job identity can stand in for a bounded charge: its hold is the job's actual maximum.
     // Obligation-only attribution can reuse one hold for several failed attempts, so it never does.
-    const held = heldJob.get(owner, job.id), actual = Number(job.usd), worst = Number(job.worst);
-    const known = actual - worst;
-    const exact = worst > 0 && held ? Number(held.worst) : undefined;
-    usd += exact !== undefined && exact >= known ? Math.min(exact, actual) : Math.max(actual, Number(held?.held ?? 0));
+    const known = job.usd - job.worstCaseUsd;
+    const exact = job.worstCaseUsd > 0 ? worstCase.get(id) : undefined;
+    usd += exact !== undefined && exact >= known ? Math.min(exact, job.usd) : Math.max(job.usd, held.get(id) ?? 0);
+    held.delete(id);
   }
   // A hold carries no provider or model. Unmatched holds may reserve a paid
   // API/search job, so they cannot be added to Anthropic spend by inference.
   return { usd, knownUsd, measured, unmeasured, worstCaseCharges };
-  } finally { scratch.release(); }
 }
 
 export type ProviderFailureClass = "HARD" | "TRANSIENT" | "OTHER";
@@ -327,9 +307,6 @@ export class FleetSafetyRefusal extends Error {
   }
 }
 
-/** This wrapper is created only when the Fleet reservation refused before the
- * provider transport was invoked. A same-code refusal after a response (notably
- * incomplete usage) must not release a durable spend hold. */
 export class FleetPreSendRefusal extends FleetSafetyRefusal {
   constructor(source: FleetSafetyRefusal) {
     super(source.code, source.message);
@@ -352,11 +329,6 @@ interface PayloadReservation {
   released: boolean;
 }
 
-/**
- * The total size of the resource a `Content-Range` header describes, or null
- * when it is absent, unknown (`*`), or malformed. Used to tell a 206 that
- * delivered a whole small resource from one that returned only part of it.
- */
 export function parseContentRangeTotal(header: string | null): number | null {
   if (header === null) return null;
   const match = /\/\s*(\d+)\s*$/.exec(header.trim());
@@ -365,12 +337,6 @@ export function parseContentRangeTotal(header: string | null): number | null {
   return Number.isFinite(total) ? total : null;
 }
 
-/**
- * The most one model request can cost: every UTF-8 byte of its body as an
- * input token at the cache-write rate, plus its whole `max_tokens` at the
- * output rate. Null for a model with no stated rate. Reserved against the
- * rolling ceiling and the Send and area budgets.
- */
 export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
   const rate = rateFor(request.model);
   if (rate === null || !amount(request.max_tokens)) return null;
@@ -389,12 +355,7 @@ export function modelResponseUsd(response: ModelResponse): number | null {
 }
 
 export class FleetSafetyController {
-  /**
-   * The bounds this cycle runs under. `rolling24HourModelUsd` is the owner's
-   * override when passed, else the fallback; assigned here so a live change
-   * governs the very next reservation. Read by `reserveModelRequest` and
-   * `rollingCeilingReached`.
-   */
+
   bounds: FleetSafetyBounds;
   readonly startedAt: string;
   private readonly startedMs: number;
@@ -417,8 +378,8 @@ export class FleetSafetyController {
   /** Every reader's shared count and holds per website; this process's own when the store cannot answer. */
   private readonly pacing: WebsitePacing;
   private readonly localPacing = memoryWebsitePacing();
-  /** Only the current site's hold is cached; other active holds stay in the shared store or local scratch fallback. */
-  private held: { readonly at: number; readonly site: string; readonly until: number | null } | null = null;
+  /** The held websites as last read, refreshed every `HELD_REFRESH_MS`, and every hold this process recorded since. */
+  private held: { readonly at: number; readonly until: ReadonlyMap<string, number> } | null = null;
   private readonly websiteSize?: WebsiteSizeForUrl;
   private cycleUsd = 0;
   private cycleModelSpendMeasured = true;
@@ -430,16 +391,10 @@ export class FleetSafetyController {
 
   constructor(input: {
     readonly now: string;
-    readonly charges: Iterable<PricedCharge>;
-    readonly spendHolds?: Iterable<SpendHold>;
+    readonly spend: SpendTotals;
     /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
-    /**
-     * Why the cycle's paid model lane is closed, or null/undefined while it is
-     * open. Every model request is refused with this reason: the lane already
-     * builds no paid caller while closed, and this is the second lock, so a
-     * caller added later cannot spend past a pause or an unreadable control.
-     */
+
     readonly modelHold?: string | null;
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
@@ -472,25 +427,14 @@ export class FleetSafetyController {
     this.hostConcurrency = input.hostConcurrency ?? (() => HOST_CONCURRENCY_DEFAULT);
     this.sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
-    const nightSpend = aggregatePricedSpend(input.charges, this.night.start, input.now, input.spendHolds);
-    const rollingSpend = aggregatePricedSpend(
-      input.charges,
-      new Date(this.startedMs - 24 * 3_600_000).toISOString(),
-      input.now,
-      input.spendHolds,
-    );
-    this.historicalNightUsd = input.costLedgerReadable === false ? null : nightSpend.usd;
-    this.historicalRollingUsd = input.costLedgerReadable === false ? null : rollingSpend.usd;
-    this.worstCaseCharges = rollingSpend.worstCaseCharges;
+    this.historicalNightUsd = input.costLedgerReadable === false ? null : 0;
+    this.historicalRollingUsd = input.costLedgerReadable === false ? null : input.spend.usd;
+    this.worstCaseCharges = input.spend.worstCaseCharges;
     for (const circuit of input.circuits ?? []) {
       if (this.hardCircuit(circuit) || Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
     }
   }
 
-  /**
-   * The owner's dial moved mid-round: the next reservation and pre-admission
-   * read use the new value. An invalid value falls back, never no ceiling.
-   */
   setRollingCeilingUsd(rollingCeilingUsd: number | null | undefined): void {
     const ceiling = resolveRollingCeiling(rollingCeilingUsd);
     this.bounds = ceiling.source === "OVERRIDE"
@@ -717,13 +661,6 @@ export class FleetSafetyController {
     };
   }
 
-  /**
-   * Whether the rolling-24h ceiling is already reached for one more dispatch:
-   * the pre-admission read of the inequality `reserveModelRequest` enforces,
-   * with `worstCaseUsd` as the reserve, so an admission gate pauses the lane
-   * instead of busy-looping on refusals. Read-only. Unmeasured spend returns
-   * `reached: false` (the caller's ledger-unreadable check owns that case).
-   */
   rollingCeilingReached(
     worstCaseUsd = 0,
     _work = "",
@@ -742,9 +679,7 @@ export class FleetSafetyController {
   }
 
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
-    // Never hand up a partial document: a truncated CSV still parses. A 206 is
-    // accepted only when `Content-Range` proves the whole resource fit within
-    // the cap; anything else throws.
+
     if (response.status === 206) {
       const total = parseContentRangeTotal(response.headers.get("content-range"));
       if (total === null || total > cap) {
@@ -784,28 +719,21 @@ export class FleetSafetyController {
     return merged;
   }
 
-  /**
-   * One count per website, shared by every reader in every process: a website some reader was asked to leave alone
-   * waits until then, and a small publisher's website takes its hourly allowance across all work and rounds.
-   */
   private async admitWebsiteRequest(url: string, work: string): Promise<void> {
     const site = websiteOf(url);
     const now = this.clock();
-    const until = await this.heldWebsite(site, now);
-    if (until !== null && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
+    const until = (await this.heldWebsites(now)).get(site);
+    if (until !== undefined && until > now) this.refuse(work, "WEBSITE_ASKED_TO_WAIT", `${site} asked to be left alone until ${new Date(until).toISOString()}`);
     const limit = websiteRequestLimit(this.websiteSize?.(url));
     if (limit === null) return;
     const took = await this.pacing.take(site, limit, now).catch(() => this.localPacing.take(site, limit, now));
     if (!took.ok) this.refuse(work, "WEBSITE_REQUEST_CAP", `${site} has had its ${limit} requests in the last hour; small-publisher allowance exhausted until ${new Date(took.until).toISOString()}`);
   }
 
-  private async heldWebsite(site: string, now: number): Promise<number | null> {
-    if (this.held === null || this.held.site !== site || now - this.held.at >= HELD_REFRESH_MS) {
-      const local = await this.localPacing.heldUntil(site, now);
-      const read = await this.pacing.heldUntil(site, now).catch(() => local);
-      const until = Math.max(local ?? 0, read ?? 0);
-      if (until > now) await this.localPacing.hold(site, until, now);
-      this.held = {at: now, site, until: until > now ? until : null};
+  private async heldWebsites(now: number): Promise<ReadonlyMap<string, number>> {
+    if (this.held === null || now - this.held.at >= HELD_REFRESH_MS) {
+      const read = await this.pacing.heldUntil(now).catch(() => null);
+      this.held = { at: now, until: read ?? this.held?.until ?? new Map() };
     }
     return this.held.until;
   }
@@ -816,10 +744,10 @@ export class FleetSafetyController {
     const now = this.clock();
     const site = websiteOf(url);
     const until = now + Math.max(RATE_LIMIT_BACKOFF_MS, this.retryAfterMs(response) ?? 0);
-    const prior = this.held?.site === site ? this.held.until ?? 0 : 0;
-    this.held = {at: now, site, until: Math.max(until, prior)};
-    await this.localPacing.hold(site, until, now);
-    if (this.pacing !== this.localPacing) await this.pacing.hold(site, until, now).catch(() => {});
+    const held = new Map(this.held?.until ?? []);
+    held.set(site, Math.max(until, held.get(site) ?? 0));
+    this.held = { at: this.held?.at ?? now, until: held };
+    await this.pacing.hold(site, until, now).catch(() => this.localPacing.hold(site, until, now));
   }
 
   /** One request's place at its provider: under the in-flight cap (one while half-open), at its published pace, never while open. */
@@ -928,10 +856,6 @@ export class FleetSafetyController {
     };
   }
 
-  /**
-   * `followRedirects: false` answers the first hop, with its `location`, so a
-   * caller that must read permission on every new host can walk the chain itself.
-   */
   guardedOpenBytes(
     _provider: string,
     work: string,
@@ -971,9 +895,7 @@ export class FleetSafetyController {
               redirect: "manual",
               headers,
             });
-            // The bounded reader may refuse a partial response before it can
-            // be classified below. Record this actual failed recovery once;
-            // a complete oversized body remains a local memory refusal.
+
             if (observed && this.hardCircuit(observed) && (response.status === 206 || response.headers.has("content-range"))) {
               this.latchProvider(provider, `partial HTTP ${response.status} response`, work,
                 new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");

@@ -1,22 +1,3 @@
-/**
- * Billing facts the owner read from a provider console, invoice or export,
- * recorded with the period they cover and when and where they were read. They
- * live on the owner's policy row (`AdminConfig.billingFacts`) but drive
- * nothing: no ceiling, budget or runner decision reads them.
- *
- * ```
- *   BILLED          a closed billing period's final amount (an invoice)
- *   MONTH_TO_DATE   a running figure read from a console, not a final bill
- *   SUBSCRIPTION    a fixed charge per month or year, with its renewal date
- *   BALANCE         prepaid credit remaining on a date, not consumption
- *   PURCHASE        prepaid credit bought on a date, not consumption
- *   USAGE_IMPORT    a usage total for a period, summed from the provider's export
- *   LIMIT           a spending cap set in the provider's console, not a charge
- * ```
- *
- * Pure. No store, no clock, no environment.
- */
-
 export const BILLING_PROVIDERS = [
   "anthropic-api",
   "anthropic-subscription",
@@ -41,8 +22,6 @@ export type Cadence = (typeof CADENCES)[number];
 const SUBSCRIPTION_CADENCES: readonly Cadence[] = ["MONTHLY", "ANNUAL"];
 const LIMIT_CADENCES: readonly Cadence[] = ["DAILY", "MONTHLY"];
 
-/** How many facts the policy row keeps. The oldest by `asOf` go first; a row that grows without bound is read every cycle. */
-export const BILLING_FACTS_KEPT = 120;
 export const BILLING_AMOUNT_MAX_USD = 1_000_000;
 export const BILLING_SOURCE_MAX = 200;
 export const BILLING_LABEL_MAX = 80;
@@ -67,11 +46,6 @@ export interface ProviderDefinition {
   readonly needsLabel: boolean;
 }
 
-/**
- * Every provider the system is known to use, from its own code and
- * credentials. No amount lives here: an amount comes only from a reading or
- * from a fact the owner entered.
- */
 export const PROVIDER_DEFINITIONS: readonly ProviderDefinition[] = [
   {
     key: "anthropic-api",
@@ -262,10 +236,6 @@ function text(value: unknown): string | null {
 
 export type Checked<T> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly why: string };
 
-/**
- * Validate one entry, as the gateway receives it. `todayUtc` is the gateway's
- * own day (YYYY-MM-DD), so a figure "read" tomorrow is refused as a typo.
- */
 export function validateBillingFact(raw: Readonly<Record<string, unknown>>, todayUtc: string): Checked<BillingFactInput> {
   const provider = raw.provider;
   if (typeof provider !== "string" || !(BILLING_PROVIDERS as readonly string[]).includes(provider)) {
@@ -350,11 +320,6 @@ export function validateBillingFact(raw: Readonly<Record<string, unknown>>, toda
   };
 }
 
-/**
- * The slot a fact fills: one per provider, product, kind and period, so
- * re-entering corrects rather than double-counts. A balance or purchase is a
- * slot per day read.
- */
 export function billingFactId(input: Pick<BillingFactInput, "provider" | "label" | "kind" | "periodStart" | "asOf">): string {
   const who = input.label === null ? input.provider : `${input.provider}/${input.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
   const when = input.kind === "SUBSCRIPTION" || input.kind === "LIMIT" ? "current" : input.kind === "BALANCE" || input.kind === "PURCHASE" ? input.asOf : input.periodStart ?? input.asOf;
@@ -377,7 +342,7 @@ function looksLikeFact(value: unknown): value is BillingFact {
   );
 }
 
-/** The facts a policy row carries. A malformed entry is counted, never dropped silently or read as zero. */
+/** A malformed billing entry is counted, never dropped silently or read as zero. */
 export function billingFactsOf(config: { readonly billingFacts?: readonly unknown[] | null } | null): {
   readonly facts: readonly BillingFact[];
   readonly malformed: number;
@@ -396,7 +361,7 @@ export function withFactRecorded(
   const previous = facts.find((f) => f.id === fact.id) ?? null;
   const rest = facts.filter((f) => f.id !== fact.id);
   const next = [...rest, fact].sort((a, b) => (a.asOf === b.asOf ? a.id.localeCompare(b.id) : a.asOf < b.asOf ? -1 : 1));
-  return { facts: next.slice(Math.max(0, next.length - BILLING_FACTS_KEPT)), previous };
+  return { facts: next, previous };
 }
 
 export function withFactRemoved(

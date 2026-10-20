@@ -5,11 +5,12 @@ import test from "node:test";
 import type { GeographyType } from "../lib/census-geography/contract.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, censusGeographyScope } from "../lib/census-geography/publication.ts";
+import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import {
   containersOfCode,
   oneContainer,
   stateContainers,
+  geographyOfRows,
   type ReadOnlyQuery,
   type Row,
   type Statement,
@@ -24,11 +25,11 @@ function postgresOver(ds: BuiltDataset | null, seen: Statement[] = []): ReadOnly
   return async (statements) => {
     seen.push(...statements);
     return statements.map((s): Row[] => {
-      if (s.text.startsWith("SELECT CASE")) return ds === null ? [] : [{ version_id: "cv-test" }];
+      if (s.text.startsWith("SELECT current_version_id")) return ds === null ? [] : [{ version_id: "cv-test" }];
       if (ds === null) return [];
       if (s.text.includes("zctaUniverse")) return [{ known: ds.zctaUniverse.includes(String(s.params[2])) }];
       const [, , types, arg] = s.params as [string, string, string[], string];
-      const withOverlaps = s.text.includes(",actual_overlaps");
+      const withOverlaps = s.text.includes("g->'memberStates', g->'overlaps'");
       const rows: Row[] = ds.scopes.map((scope) => ({ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.versionMeta.plan }));
       for (const scope of ds.scopes) {
         if (!types.includes(scope.type)) continue;
@@ -144,7 +145,7 @@ test("every statement is scoped to the promoted pointer, the state is matched up
   await containersOfCode("85701", TYPES, postgresOver(dataset, seen));
   for (const s of seen) {
     assert.equal(s.params[0], CENSUS_GEO_RECORD_CLASS);
-    assert.ok([CENSUS_GEO_SCOPE,censusGeographyScope("AZ")].includes(String(s.params[1])));
+    assert.equal(s.params[1], CENSUS_GEO_SCOPE);
     assert.match(s.text, /^(SELECT|WITH) /, "reads only");
   }
   assert.ok(seen.some((s) => s.params[3] === "AZ"));
@@ -157,7 +158,7 @@ test("real state geography SQL carries each scope's metadata once and preserves 
     applicability: [{ purpose: "representation", from: "2025-01-03", through: "2027-01-02" }],
     states: ["AZ"], retrievalComplete: true,
   } })) };
-  const afterRows: Row[] = [];
+  const beforeRows: Row[] = [], afterRows: Row[] = [];
   const query: ReadOnlyQuery = async statements => {
     const results: Row[][] = [];
     for (const statement of statements) {
@@ -165,19 +166,21 @@ test("real state geography SQL carries each scope's metadata once and preserves 
       results.push(result.rows);
       if (statement.text.includes("'grouping'")) {
         afterRows.push(...result.rows);
-
+        const previous = statement.text.replace(", NULL::jsonb FROM scopes CROSS JOIN LATERAL", ", scope->'versionMeta' FROM scopes CROSS JOIN LATERAL");
+        assert.notEqual(previous, statement.text);
+        beforeRows.push(...(await pg.query<Record<string, unknown>>(previous, [...statement.params])).rows);
       }
     }
     return results;
   };
   try {
-    await pg.exec("CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb); CREATE TABLE civic_data_payload_parts(hash text,payload jsonb)");
+    await pg.exec("CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
     await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4)",[CENSUS_GEO_RECORD_CLASS,CENSUS_GEO_SCOPE,"cv-real-sql",JSON.stringify(held)]);
     const slice = await stateContainers("AZ", TYPES, true, query);
     assert.equal(slice.kind,"HELD");
     if (slice.kind !== "HELD") return;
     assert.equal(slice.versionId,"cv-real-sql");
-    assert.equal(slice.value.containers.length,held.scopes.reduce((sum,scope)=>sum+scope.groupings.length,0));
+    assert.deepEqual(slice.value,geographyOfRows(beforeRows,true),"scope selection, provenance, applicability, refs, and overlaps are unchanged");
     assert.equal(slice.value.scopes.length,held.scopes.length);
     for (const scope of slice.value.scopes) {
       const expected = held.scopes.find(row => row.type === scope.type && row.version === scope.version)!;
@@ -190,6 +193,7 @@ test("real state geography SQL carries each scope's metadata once and preserves 
     assert.ok(slice.value.containers.length > 1 && slice.value.containers.some(row => row.overlaps?.length));
     assert.ok(afterRows.filter(row => row.row_kind === "scope").every(row => row.version_meta));
     assert.ok(afterRows.filter(row => row.row_kind === "grouping").every(row => row.version_meta === null));
-
+    assert.ok(beforeRows.filter(row => row.row_kind === "grouping").every(row => row.version_meta));
+    assert.ok(JSON.stringify(afterRows).length < JSON.stringify(beforeRows).length,"per-district copies of the same source metadata do not travel to readers");
   } finally { await pg.close(); }
 });

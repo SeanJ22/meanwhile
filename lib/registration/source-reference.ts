@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
-import { registrationSourceTables } from "./source-file.ts";
+import { readZipEntries } from "../sources/archive.ts";
+import { readXlsxSheets } from "../census-geography/xlsx.ts";
+import { parseCsv } from "../reference/index.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import type { KnownReleaseFile } from "../sources/known-release-file.ts";
+import type { KnownRelease } from "../sources/known-release.ts";
 import type { LoadedReference, ReferenceGovernment } from "./reference.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "./listings.ts";
 import type { RegistrationReadModel } from "./candidate.ts";
@@ -33,24 +35,31 @@ const SHEETS: Readonly<Record<string, string | null>> = {
 };
 const clean = (name: string) => name.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_");
 
+function* sourceTables(bytes: Uint8Array): Generator<{ name: string; rows: Iterable<string[]> }> {
+  const entries = readZipEntries(bytes, { maxEntries: 64, maxMemberBytes: 96 * 1024 * 1024, maxTotalBytes: 128 * 1024 * 1024 });
+  const workbooks = entries.filter(entry => /\.xlsx$/i.test(entry.name));
+  if (workbooks.length === 1) { yield* readXlsxSheets(workbooks[0].data); return; }
+  const csvs = entries.filter(entry => /\.csv$/i.test(entry.name));
+  if (!csvs.length) throw new Error("REGISTRATION_SOURCE_TABLE_MISSING");
+  for (const entry of csvs) yield { name: entry.name, rows: parseCsv(new TextDecoder("utf-8", { fatal: true }).decode(entry.data)) };
+}
+
 /** Validate every expected source sheet, without fixed national row counts. */
-export async function validateGovernmentRelease(path: string): Promise<void> {
+export function validateGovernmentRelease(bytes: Uint8Array): void {
   let recognized = 0;
-  for await (const table of registrationSourceTables(path)) {
+  for (const table of sourceTables(bytes)) {
     if (!Object.hasOwn(SHEETS, table.name) && !/\.csv$/i.test(table.name)) continue;
-    const iterator = table.rows[Symbol.asyncIterator]();
-    const header = (await iterator.next()).value as string[] | undefined;
+    const header = table.rows[Symbol.iterator]().next().value as string[] | undefined;
     const names = new Set((header ?? []).map(clean));
     if (!(names.has("PID6") || names.has("CENSUS_ID_PID6")) || !(names.has("UNIT_NAME") || names.has("NAME"))) throw new Error(`REGISTRATION_SOURCE_HEADER_INVALID:${table.name}`);
     recognized++;
-    for (let next = await iterator.next(); !next.done; next = await iterator.next()) { /* Finish the source member's CRC check without retaining its rows. */ }
   }
   if (!recognized) throw new Error("REGISTRATION_SOURCE_TABLE_MISSING");
 }
 
 /** Parse only the requested state's rows. Source-native identity is sufficient
  * to list a government; geography and the recorded website are independent. */
-export async function registrationReferenceFromRelease(prior: LoadedReference, release: KnownReleaseFile): Promise<LoadedReference> {
+export function registrationReferenceFromRelease(prior: LoadedReference, release: KnownRelease): LoadedReference {
   const state = prior.reference.state.toUpperCase();
   const existing = new Map(prior.reference.governments.map(row => [row[0], row]));
   const governments: ReferenceGovernment[] = prior.reference.governments.filter(row => row[3] === "STATE" || row[5] === "TIGER_FUNCSTAT");
@@ -58,14 +67,14 @@ export async function registrationReferenceFromRelease(prior: LoadedReference, r
   const native = new Set<string>();
   const divisions = new Map(prior.reference.divisions.map((row, index) => [`${row[1]}:${row[2]}`, index]));
   let found = 0;
-  for await (const table of registrationSourceTables(release.path)) {
+  for (const table of sourceTables(release.bytes)) {
     if (!Object.hasOwn(SHEETS, table.name) && !/\.csv$/i.test(table.name)) continue;
-    const iterator = table.rows[Symbol.asyncIterator]();
-    const header = ((await iterator.next()).value as string[] | undefined)?.map(clean) ?? [];
+    const iterator = table.rows[Symbol.iterator]();
+    const header = (iterator.next().value as string[] | undefined)?.map(clean) ?? [];
     const at = (...names: string[]) => names.map(name => header.indexOf(name)).find(index => index >= 0) ?? -1;
     const pidAt = at("PID6", "CENSUS_ID_PID6"), nameAt = at("UNIT_NAME", "NAME");
     if (pidAt < 0 || nameAt < 0) throw new Error(`REGISTRATION_SOURCE_HEADER_INVALID:${table.name}`);
-    for (let next = await iterator.next(); !next.done; next = await iterator.next()) {
+    for (let next = iterator.next(); !next.done; next = iterator.next()) {
       const row = next.value;
       const value = (...names: string[]) => (row[at(...names)] ?? "").trim();
       const fips = value("FIPS_STATE", "FIPSST", "FIPS_ST").padStart(2, "0");

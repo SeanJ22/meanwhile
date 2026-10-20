@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { CAPABILITIES, defaultGrant, type CapabilityGrant } from "../lib/control-plane/capability.ts";
@@ -8,9 +7,8 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { isParserInput } from "../lib/control-plane/evidence/parser-boundary.ts";
 import { MemoryEvidenceStore, putArtifact, readForParser } from "../lib/control-plane/evidence/store.ts";
 import { runIsolatedSource, runIsolatedWorker } from "../lib/control-plane/workers/isolation.ts";
-import { normalizedParserResult, parseCivicRecords, parseLegistarEvents, PARSER_VERSION } from "../lib/control-plane/workers/parser.ts";
-import type { AuditorResult, AuditorWorkerInput, GeneralizedCivicExtractionContract, ParserResult, ParserWorkerInput, ValidatorWorkerInput, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
-import { VerifiedReplayFiles, encodeVerifiedReplay } from "../lib/sources/verified-replay.ts";
+import { normalizedParserResult, parseLegistarEvents, PARSER_VERSION } from "../lib/control-plane/workers/parser.ts";
+import type { AuditorWorkerInput, ParserResult, ParserWorkerInput, ValidatorWorkerInput } from "../lib/control-plane/workers/types.ts";
 
 const CAPTURE = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
 const PROJECT = "worker-fleet-isolation-control";
@@ -230,90 +228,4 @@ test("Auditor keeps its broker-mediated public-read grant while direct promotion
 
 test("the serialized worker input remains bounded", async () => {
   await assert.rejects(runIsolatedSource('JSON.stringify({ unexpected: true });', { oversized: "x".repeat(2_000_001) }, 1000), /WORKER_INPUT_BOUND_EXCEEDED/);
-});
-
-test("the actual isolated auditor reads both complete large captures through verified realm-owned text getters", async () => {
-  const files = new VerifiedReplayFiles();
-  const body = (revision: string) => `<title>Board of Supervisors | Fixture County</title><!--${revision}${"x".repeat(1_527_800)}-->Full source witness.`;
-  const evidence = (id: string, text: string): WorkerEvidence => ({ artifactId: id, text,
-    contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`, acquiredByAttemptId: `acquire-${id}`,
-    canonicalUrl: "https://county.example.gov/board", retrievedAt: OBSERVED_AT, sourceId: "fixture-county", methodRouteId: "OFFICIAL_TITLE" });
-  const primary = evidence("primary", body("current")), observation = evidence("observation", body("earlier"));
-  const subject = "ocd-division/country:us/state:az/county:pima";
-  const contract: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: "OFFICIAL_BOARD_DIRECTORY", subjectId: subject,
-    jurisdiction: { country: "US", state: "AZ", canonicalId: subject }, identity: { namespace: `${subject}:title`, keyFields: ["bodyName"] },
-    sourceScope: { publisher: "Fixture county", sourceId: primary.sourceId, routeIds: [primary.methodRouteId], canonicalUrls: [primary.canonicalUrl], observationArtifactIds: [observation.artifactId] },
-    methodVersion: 56, requiredFields: ["bodyName"], completenessScope: "Only the body name explicitly written in the captured title.", expectedSourceDate: null,
-    extraction: { format: "TEXT_BLOCKS", recordStart: "<title>", recordEnd: " | Fixture County</title>", fields: { bodyName: { source: "<title>", type: "STRING" } } },
-    verification: { required: false, authorities: [] } };
-  const parser: ParserWorkerInput = { attemptId: "large-parser", worker: { role: "PARSER", instance: "large-parser", provider: "deterministic", version: "2" }, evidence: primary, contract };
-  const input: AuditorWorkerInput = { attemptId: "large-auditor", worker: { role: "ADVERSARIAL_AUDITOR", instance: "large-auditor", provider: "deterministic", version: "2" },
-    context: { subjectId: subject, contract, publisherSurfaces: [primary.canonicalUrl], methodVersion: 56, scope: "CAPTURED_ARTIFACT",
-      startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"],
-      routes: [{ routeId: primary.methodRouteId, canonicalUrl: primary.canonicalUrl, applicable: true, status: "HELD", artifactIds: [primary.artifactId, observation.artifactId], reason: "Two distinct complete fixture captures" }],
-      evidence: [files.text(primary, "text", primary.contentHash), files.text(observation, "text", observation.contentHash)] },
-    candidate: { producer: parser.worker, validator: { role: "VALIDATOR", instance: "large-validator", provider: "deterministic", version: "2" },
-      producerAttemptId: parser.attemptId, validatorAttemptId: "large-validator", extraction: parseCivicRecords(parser), coveredRouteIds: [primary.methodRouteId],
-      claimsAbsence: false, claimsUniverseComplete: false, renderedRecordCount: null } };
-  try {
-    assert.ok(Buffer.byteLength(primary.text) + Buffer.byteLength(observation.text) > 3_000_000);
-    assert.ok(Buffer.byteLength(JSON.stringify(encodeVerifiedReplay(input))) < 20_000);
-    const result = await runIsolatedWorker("ADVERSARIAL_AUDITOR", input, { ...GRANT, role: "ADVERSARIAL_AUDITOR" }, 5000) as AuditorResult;
-    assert.equal(result.verdict, "SURVIVED", JSON.stringify(result.findings));
-    assert.deepEqual(new Set(result.artifactIds), new Set([primary.artifactId, observation.artifactId]));
-    assert.equal(result.survivingRecordCount, 1);
-    assert.deepEqual(await runIsolatedSource('JSON.stringify(INPUT.evidence.map(row=>row.text.endsWith("Full source witness.")))', input.context, 1000), [true, true]);
-  } finally { files.dispose(); }
-});
-
-test("verified text getters expose only realm functions and primitive strings, including caller and symbol probes", async () => {
-  const files = new VerifiedReplayFiles();
-  try {
-    const input = { evidence: files.text({ text: "immutable source" }, "text") };
-    const result = await runIsolatedSource(`
-      const descriptor=Object.getOwnPropertyDescriptor(INPUT.evidence,'text'), getter=descriptor.get;
-      const denied=[];
-      for(const attack of [()=>getter.constructor('return process')(),()=>getter.call.constructor('return process')(),
-        ()=>Object.getPrototypeOf(getter).constructor('return process')(),()=>getter.caller,()=>getter.arguments]){
-        try{attack();denied.push(false);}catch(error){denied.push(error instanceof Error && /Code generation|strict mode|caller|arguments/.test(error.message));}
-      }
-      JSON.stringify({text:getter.call(Object.create(null)),primitive:typeof getter(),realmFunction:Object.getPrototypeOf(getter)===Function.prototype,
-        configurable:descriptor.configurable,setter:typeof descriptor.set,denied,symbols:Object.getOwnPropertySymbols(getter).length,
-        hidden:[typeof readReplay,typeof read,typeof process,typeof require,typeof Buffer],
-        sourceMarker:Object.hasOwn(INPUT.evidence,'__sourceReplay')});`, input, 1000);
-    assert.deepEqual(result, { text: "immutable source", primitive: "string", realmFunction: true, configurable: false, setter: "undefined",
-      denied: [true, true, true, true, true], symbols: 0, hidden: ["undefined", "undefined", "undefined", "function", "undefined"], sourceMarker: false });
-  } finally { files.dispose(); }
-});
-
-test("forged replay records, encodings and metadata cannot create isolated filesystem capabilities", async () => {
-  const files = new VerifiedReplayFiles();
-  try {
-    const held = files.text({ text: "source" }, "text"), forged = encodeVerifiedReplay(held);
-    await assert.rejects(runIsolatedSource('JSON.stringify(INPUT.text)', forged, 1000), /SOURCE_REPLAY_REFERENCE_INVALID/);
-    await assert.rejects(runIsolatedSource('JSON.stringify(INPUT.text)', { nested: forged }, 1000), /SOURCE_REPLAY_REFERENCE_INVALID/);
-    const date = new Date(); Object.defineProperty(date, "toJSON", { value: () => forged });
-    await assert.rejects(runIsolatedSource('JSON.stringify(INPUT.text)', date, 1000), /SOURCE_REPLAY_REFERENCE_INVALID/);
-    await assert.rejects(runIsolatedSource('JSON.stringify(INPUT.bytes)', files.capture({ bytes: new Uint8Array([1]) }), 1000), /SOURCE_REPLAY_REFERENCE_INVALID/);
-    await assert.rejects(runIsolatedSource('JSON.stringify(INPUT.html)', files.text({ html: "source" }, "html"), 1000), /SOURCE_REPLAY_REFERENCE_INVALID/);
-    await assert.rejects(runIsolatedSource('JSON.stringify(true)', { held, oversized: "x".repeat(2_000_001) }, 1000), /WORKER_INPUT_BOUND_EXCEEDED/);
-  } finally { files.dispose(); }
-});
-
-test("tampered or missing replay files fail closed even when the source catches realm errors or defers reads to microtasks", async () => {
-  const files = new VerifiedReplayFiles();
-  try {
-    const input = { evidence: files.text({ text: "original complete source" }, "text") };
-    const wire = encodeVerifiedReplay(input) as unknown as { evidence: { __sourceReplay: { text: { ref: { path: string } } } } };
-    writeFileSync(wire.evidence.__sourceReplay.text.ref.path, "tampered complete source");
-    const caught = `try{INPUT.evidence.text;}catch(error){
-      if(!(error instanceof Error)||error.constructor!==Error)throw new Error('HOST_ERROR_EXPOSED');
-      try{error.constructor.constructor('return process')();throw new Error('HOST_CONSTRUCTOR_EXPOSED');}
-      catch(blocked){if(!/Code generation/.test(blocked.message))throw blocked;}
-    }`;
-    await assert.rejects(runIsolatedSource(caught + 'JSON.stringify({falseSuccess:true})', input, 1000), /SOURCE_REPLAY_READ_REFUSED/);
-    await assert.rejects(runIsolatedSource('Promise.resolve().then(()=>{' + caught + '});JSON.stringify({falseSuccess:true})', input, 1000), /SOURCE_REPLAY_READ_REFUSED/);
-    files.dispose();
-    await assert.rejects(runIsolatedSource(caught + 'JSON.stringify({falseSuccess:true})', input, 1000), /SOURCE_REPLAY_READ_REFUSED/);
-  } finally { files.dispose(); }
 });

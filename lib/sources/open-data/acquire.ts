@@ -35,11 +35,10 @@ export function parseCatalogPage(body: string) {
 /** All public catalog entries, without a tag, state, government-size or dataset-category filter. */
 export async function* socrataPages(options: {
   signal: AbortSignal; token?: string; acquire?: typeof acquireKnownRelease;
-  /** Persist duplicate detection on disk across pages, without a country-sized ID set. */
-  trackResource: (id: string) => void | Promise<void>;
   releaseOptions?: Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">;
 }): AsyncGenerator<CatalogPage> {
   let cursor="";
+  const seen = new Set<string>();
   do {
     // The provider caps offset+limit at 10,000. Native deep scrolling has no offset or order parameter.
     const url = new URL(SOCRATA_CATALOG); url.searchParams.set("limit","1000"); url.searchParams.set("scroll_id",cursor);
@@ -50,7 +49,8 @@ export async function* socrataPages(options: {
     const body = new TextDecoder("utf-8",{fatal:true}).decode(release.bytes), page=parseCatalogPage(body);
     for (const row of page.rows) {
       const key=`${object(row.metadata).domain}:${object(row.resource).id}`;
-      await options.trackResource(key);
+      if (seen.has(key)) throw Error("Socrata repeated a resource while paging; completeness remains unresolved.");
+      seen.add(key);
     }
     yield {...page,body,url:release.finalUrl,retrievedAt:release.retrievedAt,sha256:release.sha256,sourceCheck:knownReleaseSourceCheck(release)};
     if(!page.rows.length)break;

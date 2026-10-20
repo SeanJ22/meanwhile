@@ -1,4 +1,3 @@
-import { readRuntimeAdminConfig } from "../runtime-admin-config.ts";
 import { contentHash, fingerprint } from "../ids.ts";
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { canonicalJson, readByKeys, type AppendOnlyRepository, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -9,6 +8,7 @@ import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type Box
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
 import type { Clocks } from "../../facts/publish.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { CAMPAIGN_SITE_LEAD, FINDING_SLOTS_VERSION } from "../../facts/finding-slots.ts";
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
@@ -511,7 +511,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
 
   // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
-  const windowHours = leads.length ? factClocks((await readRuntimeAdminConfig(repos, ["settings"]))?.value ?? null).windowHours : () => 0;
+  const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
   for (const finding of leads) {
     const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
     if (subject === undefined) {

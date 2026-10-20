@@ -64,9 +64,7 @@ const record = (artifact: Artifact, partial = false): ArtifactRecord => ({
 /** The two control-plane reads the resolver makes, from fixed rows in log order. */
 function repos(records: readonly ArtifactRecord[], roles: Readonly<Record<string, string>> = {}): ControlPlaneRepositories {
   return {
-    artifacts: { readAll: async () => {throw new Error("whole-country metadata");},
-      keysWhere: async (_path: readonly string[], id: string) => records.some(row=>row.artifactId===id)?["matching"]:[],
-      readWhere: async (_key: string,_path: readonly string[],id: string) => records.filter(row=>row.artifactId===id) },
+    artifacts: { readAll: async () => records },
     attempts: { mustRead: async (id: string) => ({ id, revision: 1, value: { id, worker: { role: roles[id] ?? "ACQUIRER" } } }) },
   } as unknown as ControlPlaneRepositories;
 }
@@ -161,10 +159,10 @@ test("a retained-evidence pass shares its immutable index, while the next pass s
   let attemptReads = 0;
   const mustRead = repository.attempts.mustRead.bind(repository.attempts);
   repository.attempts.mustRead = async id => { attemptReads++; return mustRead(id); };
-  const readWhere = repository.artifacts.readWhere.bind(repository.artifacts);
-  repository.artifacts.readWhere = async (...args) => { logReads++; return [...await readWhere(...args)]; };
-  const visit = store.visitKeys.bind(store);
-  store.visitKeys = async (...args) => { listings++; return visit(...args); };
+  const readAll = repository.artifacts.readAll.bind(repository.artifacts);
+  repository.artifacts.readAll = async () => { logReads++; return [...await readAll()]; };
+  const list = store.list.bind(store);
+  store.list = async prefix => { listings++; return list(prefix); };
   const read = workerVaultResolver(repository, store, PROJECT, { snapshot: true });
   const held = await Promise.all([read(first.id), read(first.id), read(first.id)]);
   assert.ok(held.every(input => input.text === BODY && input.attemptId === first.attemptId));
@@ -175,7 +173,7 @@ test("a retained-evidence pass shares its immutable index, while the next pass s
   const newer = recordAcquisition({ ...first, workItemId: "wi-new", attemptId: "at-new" }, text).artifact;
   await putArtifact(store, PROJECT, newer, new TextEncoder().encode(text));
   records.push(record(newer));
-  assert.equal((await read(newer.id)).text,text,"a new identity reads its own indexed metadata without a frozen country snapshot");
+  await assert.rejects(read(newer.id), /WORKER_ARTIFACT_MISSING_OR_PARTIAL/, "the existing pass cannot silently change its evidence set");
   const next = await workerVaultResolver(repository, store, PROJECT, { snapshot: true })(newer.id);
   assert.equal(next.text, text);
   assert.equal(next.attemptId, "at-new");
@@ -203,8 +201,8 @@ test("research snapshots share successful and failed content resolution, and a n
   const repository = repos([record(first)]);
   let listings = 0;
   let attemptReads = 0;
-  const visit = store.visitKeys.bind(store);
-  store.visitKeys = async (...args) => { listings++; return visit(...args); };
+  const list = store.list.bind(store);
+  store.list = async prefix => { listings++; return list(prefix); };
   const mustRead = repository.attempts.mustRead.bind(repository.attempts);
   repository.attempts.mustRead = async id => { attemptReads++; return mustRead(id); };
   const absent = researchVaultResolver(repository, store, PROJECT, { snapshot: true });
@@ -227,8 +225,8 @@ test("publication reads matching artifact metadata once for both provenance vali
   await hold(store, second);
   const repository = repos([]);
   let keysRead = 0, rowsRead = 0, vaultLists = 0;
-  const visited = store.visitKeys.bind(store);
-  t.mock.method(store, "visitKeys", async (...args: Parameters<typeof visited>) => { vaultLists++; return visited(...args); });
+  const listed = store.list.bind(store);
+  t.mock.method(store, "list", async (prefix: string) => { vaultLists++; return listed(prefix); });
   repository.artifacts.keysWhere = async (path, id) => {
     keysRead++; assert.deepEqual(path, ["artifactId"]); assert.equal(id, first.id);
     return [first.workItemId, second.workItemId];

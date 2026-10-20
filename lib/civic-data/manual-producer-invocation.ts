@@ -3,7 +3,6 @@ import { parseStateBallotContractId, type StateBallotContractId, type StateBallo
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
 import { federalDirectoryStateOf, type FederalDirectoryContractId } from "../officials/federal-directory-data-plane.ts";
-import { memberOfficeStateOf, type MemberOfficeContractId } from "../officials/member-office-scope.ts";
 
 type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
@@ -40,7 +39,7 @@ const RULES = {
   "venue-resolutions": { mode: "EXISTING_DERIVED", reason: "Each meeting pass matches a newly published address to one exact Census street point and promotes the pin through this pointer itself (lib/meetings/venue-publication.ts); no person reviews it." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
   "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
-} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId | FederalDirectoryContractId | MemberOfficeContractId> | StateBallotFamily | "registry-runtime" | "congress-bulk-roster" | "member-offices", Rule>;
+} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId | FederalDirectoryContractId> | StateBallotFamily | "registry-runtime" | "congress-bulk-roster", Rule>;
 
 export interface ManualProducerInvocation {
   readonly id: ManualProductionContractId;
@@ -61,9 +60,8 @@ export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[],
   return MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => {
     const stateContract = parseStateBallotContractId(contract.id);
     const registryState = stateFromRegistryRuntimeContractId(contract.id), directoryState = federalDirectoryStateOf(contract.id);
-    const officeState = memberOfficeStateOf(contract.id);
-    const rule = RULES[registryState ? "registry-runtime" : directoryState ? "congress-bulk-roster" : officeState ? "member-offices" : stateContract?.family ?? contract.id as keyof typeof RULES];
-    const state = registryState ?? directoryState ?? officeState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
+    const rule = RULES[registryState ? "registry-runtime" : directoryState ? "congress-bulk-roster" : stateContract?.family ?? contract.id as keyof typeof RULES];
+    const state = registryState ?? directoryState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
     const applicable = sends.filter(scope => !state || scope.states.includes(state));
     return { id: contract.id, mode: rule.mode,
       instructionIds: [...new Set(applicable.map(scope => scope.decision.receiptId))],

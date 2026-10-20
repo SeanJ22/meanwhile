@@ -1,22 +1,4 @@
-/**
- * The fix list: the one list of broken things and their repairs.
- *
- * Items live on the Admin config row, written through the gateway or by code
- * through `addFixItem`, so an item added in Admin is still there after a reload
- * with nobody's PC on. Shut doors, look flags, slow pages and audit red flags
- * call `addFixItem` too: there is no second repair log.
- *
- * ```
- *   OPEN       added, nobody has started
- *   FIXING     being worked on
- *   FIXED      done: what broke, what changed, who or what changed it, before,
- *              after and, when a record or setting changed, how to undo it
- *   CAME_BACK  fixed and then seen broken again
- * ```
- * Pure functions over the config plus two small async writers that
- * compare-and-set the row (retried once on a concurrent write).
- */
-import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import { RESEARCH_INTENT_LOG_KEY } from "./scheduler/research-policy.ts";
 import { fixSubjectId } from "./fix-queue.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -47,22 +29,12 @@ export interface FixItem {
   readonly cameBackAt?: string;
 }
 
-export const FIX_LIST_CAP = 500;
-
 export function fixItems(config: AdminConfig): readonly FixItem[] {
   return config.fixList ?? [];
 }
 
-function cap(items: readonly FixItem[]): readonly FixItem[] {
-  if (items.length <= FIX_LIST_CAP) return items;
-  // Drop the oldest finished items first; open work is never dropped for room.
-  const finished = items.filter((i) => i.state === "FIXED").sort((a, b) => a.addedAt.localeCompare(b.addedAt));
-  const drop = new Set(finished.slice(0, items.length - FIX_LIST_CAP).map((i) => i.id));
-  return items.filter((i) => !drop.has(i.id));
-}
-
 function put(config: AdminConfig, items: readonly FixItem[], at: string): AdminConfig {
-  return { ...config, fixList: cap(items), updatedAt: at };
+  return { ...config, fixList: items, updatedAt: at };
 }
 
 /** Add an item. A gap already on the list that is not finished is left alone; a FIXED one that is reported again CAME_BACK. */
@@ -102,48 +74,37 @@ export function withFixCompleted(config: AdminConfig, id: string, done: FixCompl
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
-async function mutateItem(repos: Repos, id: string, at: string, change: (c: AdminConfig) => AdminConfig): Promise<void> {
-  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
-  const write = repos.adminConfig.compareAndSetArrayItem?.bind(repos.adminConfig);
-  if (!read || !write) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
+async function mutate(repos: Repos, at: string, ids: readonly string[], change: (c: AdminConfig) => AdminConfig): Promise<AdminConfig> {
   for (let attempt = 0; ; attempt++) {
-    const held = await read(ADMIN_CONFIG_ID, "fixList", {match: {path: ["id"], value: id}, limit: 1});
-    if (!held) { await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(at), at); continue; }
-    const current = {...defaultAdminConfig(at), fixList: held.values as readonly FixItem[]};
+    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { ids } });
+    const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
     const next = change(current);
-    if (next === current) return;
+    if (next === current) return current;
     try {
-      await write(ADMIN_CONFIG_ID, held.revision, "fixList", ["id"], id, fixItems(next).find(item => item.id === id) ?? null, at,
-        {limit: FIX_LIST_CAP, discardPath: ["state"], discardValue: "FIXED", oldestPath: ["addedAt"]});
-      return;
+      await repos.adminConfig.save(held, next, at);
+      return next;
     } catch (error) {
       if (attempt >= 1) throw error;
     }
   }
 }
 
-/**
- * The one way code adds a broken thing to the fix list. `by` names the part of
- * the factory in plain words. Returns the item id.
- */
 export async function addFixItem(repos: Repos, add: { where: string; says: string; by: string; at: string; sourceKey?: string; technical?: readonly string[] }): Promise<string> {
-  const id = fixSubjectId(add.where, add.sourceKey ?? add.says);
-  await mutateItem(repos, id, add.at, (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
-  return id;
+  await mutate(repos, add.at, [fixSubjectId(add.where, add.sourceKey ?? add.says)], (c) => withFixAdded(c, { where: add.where, says: add.says, addedBy: add.by, at: add.at, sourceKey: add.sourceKey, technical: add.technical }));
+  return fixSubjectId(add.where, add.sourceKey ?? add.says);
 }
 
-
 export async function startFixItem(repos: Repos, id: string, at: string): Promise<void> {
-  await mutateItem(repos, id, at, (c) => withFixStarted(c, id, at));
+  await mutate(repos, at, [id], (c) => withFixStarted(c, id, at));
 }
 
 export async function completeFixItem(repos: Repos, id: string, done: FixCompletion, at: string): Promise<void> {
-  await mutateItem(repos, id, at, (c) => withFixCompleted(c, id, done, at));
+  await mutate(repos, at, [id], (c) => withFixCompleted(c, id, done, at));
 }
 
 /** Attach the fleet's durable dispatch to a data repair; engineering stays owned by the team. */
 export async function recordFixDispatch(repos: Repos, id: string, dispatch: NonNullable<FixItem["dispatch"]>): Promise<void> {
-  await mutateItem(repos, id, dispatch.at, c => put(c, fixItems(c).map(item => item.id === id
+  await mutate(repos, dispatch.at, [id], c => put(c, fixItems(c).map(item => item.id === id
     ? { ...item, state: "FIXING" as const, startedAt: dispatch.at, dispatch } : item), dispatch.at));
 }
 
@@ -157,37 +118,22 @@ export function fixDispatchNote(where: string, says: string, kind?: unknown, pla
 }
 
 export async function markFixQueueImported(repos: Repos, at: string): Promise<void> {
-  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {});
-  if (!held) { await repos.adminConfig.put(ADMIN_CONFIG_ID, {...defaultAdminConfig(at), legacyFixQueueImportedAt: at}, at); return; }
-  if (!repos.adminConfig.compareAndSetFields) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
-  await repos.adminConfig.compareAndSetFields(ADMIN_CONFIG_ID, held.revision, {legacyFixQueueImportedAt: at, updatedAt: at}, at);
+  await mutate(repos, at, [], c => ({ ...c, legacyFixQueueImportedAt: at, updatedAt: at }));
 }
 
-let honorCursor = 0;
-/** BR-04: the standing timer reads a bounded part of pending dispatches on each tick. */
+let honorCursor = "";
+/** Rotate through pending dispatches so an unfinished repair cannot starve later acknowledgments. */
 export async function refreshFixDispatchHonors(repos: Pick<ControlPlaneRepositories,"adminConfig"|"researchIntents">, at: string): Promise<void> {
-  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
-  if (!read) throw new Error("FIX_LIST_SCOPED_ARRAY_STORE_REQUIRED");
-  const pending: FixItem[] = [];
-  let cursor = honorCursor, wrapped = false;
-  while (pending.length < 16) {
-    const page = await read(ADMIN_CONFIG_ID, "fixList", {after: cursor, limit: 16, projection: {id: true, dispatch: true}});
-    if (!page) break;
-    for (const item of page.values as FixItem[]) if (item.dispatch && !item.dispatch.honoredAt) pending.push(item);
-    if (page.next === null) {
-      if (wrapped || honorCursor === 0) { cursor = 0; break; }
-      wrapped = true; cursor = 0;
-    } else cursor = page.next;
-    if (wrapped && cursor >= honorCursor) break;
-  }
-  honorCursor = cursor;
-  if (!pending.length) return;
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { pending: true, afterId: honorCursor, limit: 16 } });
+  const pending = held && isAdminConfig(held.value) ? fixItems(held.value).filter(i=>i.dispatch && !i.dispatch.honoredAt) : [];
+  if (!pending.length) { honorCursor=""; return; }
   const changes = new Map<string, { intentId:string; honoredAt:string; honoredDetail:string }>();
-  for (const item of pending.slice(0,16)) {
+  for (const item of pending) {
     const rows=await repos.researchIntents.readRecentWhere(RESEARCH_INTENT_LOG_KEY,["honors"],item.dispatch!.intentId,1,{kind:true,honoredAt:true,detail:true});
     const honored=rows[0] as {kind?:unknown;honoredAt?:unknown;detail?:unknown}|undefined;
     if (honored?.kind === "HONORED" && typeof honored.honoredAt === "string") changes.set(item.id,{intentId:item.dispatch!.intentId,honoredAt:honored.honoredAt,honoredDetail:typeof honored.detail === "string" ? honored.detail : ""});
   }
-  for (const [id] of changes) await mutateItem(repos,id,at,c=>put(c,fixItems(c).map(item=>item.dispatch && changes.get(item.id)?.intentId === item.dispatch.intentId
+  honorCursor=pending.length < 16 ? "" : pending[pending.length - 1].id;
+  if (changes.size) await mutate(repos,at,[...changes.keys()],c=>put(c,fixItems(c).map(item=>item.dispatch && changes.get(item.id)?.intentId === item.dispatch.intentId
     ? {...item,dispatch:{...item.dispatch,...changes.get(item.id)!}} : item),at));
 }

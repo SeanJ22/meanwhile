@@ -8,8 +8,6 @@ import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";
 import { aggregateModelSpend } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate } from "../lib/control-plane/expansion/membership.ts";
 import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
-import type { CostEntry } from "../lib/control-plane/cost.ts";
-import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 /** The holds table's rows (schema v24), live or not yet deleted: the memory store's view of `cp_spend_holds`. */
 const heldRows = (r: { readonly spendHolds?: unknown }) => (r.spendHolds as InProcessSpendHoldStore).rows();
 
@@ -61,11 +59,8 @@ test("editing the current hunt preserves its accounting start; an explicit separ
 
 test("Brave and Exa costs do not consume the Anthropic token-only cap", () => {
   const since = "2026-09-01T00:00:00.000Z", until = "2026-09-26T08:00:00.000Z";
-  const row = (role: CostEntry["role"], source: string, usd: number): CostEntry => ({
-    attemptId: `attempt:${source}`, workItemId: "hunt", routeTaskId: null, routeId: null, jurisdiction: null,
-    project: "hunt", role, source, recordedAt: until, cost: { ...ZERO_COST, usd },
-  });
-  const out = aggregateModelSpend([row("SCOUT","api.anthropic.com",12), row("DISCOVERY_SEARCH","api.search.brave.com",5), row("DISCOVERY_SEARCH","api.exa.ai",8), row("ACQUIRER","neon.tech",20), row("ACQUIRER","api.github.com",10), row("ACQUIRER","api.netlify.com",15)], since, until);
+  const row = (role: string, source: string, usd: number) => ({ role, source, recordedAt: until, cost: { usd, inputTokens: null, outputTokens: null } });
+  const out = aggregateModelSpend([row("SCOUT","api.anthropic.com",12), row("DISCOVERY_SEARCH","api.search.brave.com",5), row("DISCOVERY_SEARCH","api.exa.ai",8), row("FETCH","neon.tech",20), row("FETCH","api.github.com",10), row("FETCH","api.netlify.com",15)] as never, since, until);
   assert.equal(out.usd, 12);
   assert.equal(out.measured, 1);
 });

@@ -337,9 +337,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ];
       }).sort((left, right) => left.key.localeCompare(right.key));
     case "PRL_PROFILE":
-      return Array.isArray(root.releases)
-        ? array(root.releases).map(record => ({ key: "profile-release", record }))
-        : keyed("profile", array(root.profiles), ["bioguideId"]).sort((left, right) => left.key.localeCompare(right.key));
+      return keyed("profile", array(root.profiles), ["bioguideId"])
+        .sort((left, right) => left.key.localeCompare(right.key));
     case "CENSUS_REFERENCE":
       return [
         ...keyed("zcta", array(root.zcta), ["code"]),
@@ -479,8 +478,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("federal", array(root.records), ["id"]),
       ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
-      if (root.kind === "meeting-doors") return keyed("meeting-door", array(root.doors), ["doorId"])
-        .sort((left, right) => left.key.localeCompare(right.key));
       return keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"])
         .sort((left, right) => left.key.localeCompare(right.key));
     case "STATE_CAMPAIGN_FINANCE":
@@ -514,7 +511,6 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((a, b) => a.key.localeCompare(b.key));
     }
     case "DOTGOV_REFERENCE":
-      if (root.release) return [{ key: "release", record: root.release }];
       return keyed("domain", array(root.domains), ["domain"]);
     case "OPERATIONAL_REFERENCE": {
       const registries = object(root.registries) ?? {};

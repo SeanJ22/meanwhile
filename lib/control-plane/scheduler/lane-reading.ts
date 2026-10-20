@@ -67,15 +67,15 @@ export interface DueRow {
 /** The reading while the cycle runs: no reason is counted yet, and the plain-code lane records none in flight. */
 export function lanesInFlight(input: {
   readonly at: string;
-  readonly deterministicRows: Iterable<DueRow> & { readonly length: number };
-  readonly modelRows: Iterable<DueRow> & { readonly length: number };
+  readonly deterministicRows: readonly DueRow[];
+  readonly modelRows: readonly DueRow[];
   readonly deterministicDispatched: number;
   readonly modelDispatched: number;
   readonly startedIds: ReadonlySet<string>;
   readonly runningIds: ReadonlySet<string>;
   readonly debtFor?: (obligationId: string) => QueueDebt | null | undefined;
 }): QueueLanes {
-  const oldest = (rows: Iterable<DueRow>, since: (row: DueRow) => string): string | null => {
+  const oldest = (rows: readonly DueRow[], since: (row: DueRow) => string): string | null => {
     let held: string | null = null;
     for (const row of rows) {
       if (input.startedIds.has(row.obligation.id) || input.runningIds.has(row.obligation.id)) continue;
@@ -86,8 +86,7 @@ export function lanesInFlight(input: {
   };
   const nextDue = (row: DueRow): string => row.nextDueAt;
   const queuedSince = (row: DueRow): string => waitingSince(row, input.debtFor?.(row.obligation.id));
-  let running = 0;
-  for (const row of input.modelRows) if (input.runningIds.has(row.obligation.id)) running++;
+  const running = input.modelRows.filter((r) => input.runningIds.has(r.obligation.id)).length;
   return {
     at: input.at,
     final: false,
@@ -113,10 +112,9 @@ export function lanesInFlight(input: {
 
 export interface CoordinatorPass {
   readonly considered: number;
-  readonly decisions: Iterable<{ readonly workItemId: string; readonly action: string; readonly task: unknown; readonly reason: string }>;
-  readonly dispatches?: { readonly length: number };
-  readonly dispatched?: number;
-  readonly deferred: Iterable<{ readonly workItemId: string; readonly reason: string }>;
+  readonly decisions: readonly { readonly workItemId: string; readonly action: string; readonly task: unknown; readonly reason: string }[];
+  readonly dispatches: readonly unknown[];
+  readonly deferred: readonly { readonly workItemId: string; readonly reason: string }[];
 }
 
 export function coordinatorDecisionCode(decision: { readonly action: string; readonly task: unknown; readonly reason: string }): string {
@@ -132,7 +130,6 @@ export function coordinatorDecisionCode(decision: { readonly action: string; rea
  * with no task) counts under its decision's code — those were silent before.
  */
 export function coordinatorLane(pass: CoordinatorPass): QueueLaneReading {
-  const dispatched = pass.dispatched ?? pass.dispatches?.length ?? 0;
   const skippedBy: Record<string, number> = {};
   for (const d of pass.deferred) skippedBy[d.reason] = (skippedBy[d.reason] ?? 0) + 1;
   for (const d of pass.decisions) {
@@ -143,9 +140,9 @@ export function coordinatorLane(pass: CoordinatorPass): QueueLaneReading {
   }
   return {
     due: pass.considered,
-    dispatched,
+    dispatched: pass.dispatches.length,
     active: 0,
-    waiting: Math.max(0, pass.considered - dispatched),
+    waiting: Math.max(0, pass.considered - pass.dispatches.length),
     skippedBy,
     oldestWaitingDueAt: null,
   };

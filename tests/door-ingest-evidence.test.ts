@@ -24,7 +24,7 @@ const status = async (repos: Awaited<ReturnType<typeof setup>>) => {
   return row.value.status;
 };
 const items = async (repos: Awaited<ReturnType<typeof setup>>) => {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: true });
   return held && isAdminConfig(held.value) ? fixItems(held.value) : [];
 };
 

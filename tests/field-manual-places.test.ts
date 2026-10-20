@@ -48,7 +48,6 @@ test("a brief for a place marks what works there, what is untried there, and lea
   assert.doesNotMatch(text, /fails one/);
   assert.match(text, /a plain note/);
   assert.doesNotMatch(here.lines.find((l) => l.includes("a plain note"))!, /\[/);
-  assert.equal(here.leftOutFailingHere, 1);
   assert.equal(here.entryIds.includes("fails"), false);
   const elsewhere = projectFieldManual(store, { ocdIds: ["ocd-division/country:us/state:nh/place:y"] });
   assert.ok(elsewhere.entryIds.includes("fails"), "a method that fails in one place is still offered in another");

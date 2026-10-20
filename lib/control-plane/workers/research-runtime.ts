@@ -27,9 +27,9 @@ export async function authorizeInheritedHeldArtifact(repos: ControlPlaneReposito
   readonly artifactId: string; readonly originWorkItemId: string;
   readonly childWorkItemId: string; readonly project: string;
 }, siblingRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
-  readonly childWorkItemId:string;readonly project:string})=>string|null): Promise<boolean> {
+  readonly childWorkItemId:string;readonly project:string})=>string|null|Promise<string|null>): Promise<boolean> {
   if (input.originWorkItemId === input.childWorkItemId) return false;
-  const linkedRoot = siblingRootFor?.(input) ?? null;
+  const linkedRoot = await siblingRootFor?.(input) ?? null;
   const linkedAncestorId = linkedRoot ?? input.originWorkItemId;
   const child = (await repos.workItems.read(input.childWorkItemId))?.value;
   if (!child || child.project !== input.project) return false;
@@ -104,7 +104,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
         }});
       measuredToolkit = toolkit;
       result = await runAcquirer({...spec.acquisition,attemptId,worker,project:item.project,workItemId,grant,now:tools.now},
-        {toolkit,sourceReliability:await readSourceReliability(tools.repos,spec.acquisition.route.url),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
+        {toolkit,sourceReliability:await readSourceReliability(tools.repos),readVault:researchVaultResolver(tools.repos,tools.store,item.project),
           authorizeInheritedHeld: inherited => authorizeInheritedHeldArtifact(tools.repos,inherited,tools.siblingHeldRootFor)});
       requestCount = toolkit.requestCount; bytesFetched = toolkit.bytesFetched;
       assertFleetResult(result,spec.role,attemptId);

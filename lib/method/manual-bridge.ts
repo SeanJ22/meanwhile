@@ -58,11 +58,11 @@ export function methodVersionFromManual(store: FieldManualStore): number | null 
 
 /** The current method version, read from the live manual. Null when the manual is unreadable or not seeded: the caller says so rather than guessing. */
 export async function readMethodVersion(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<number | null> {
-  try { const { readRuntimeMethodVersion } = await import("./runtime-manual.ts"); return await readRuntimeMethodVersion(repos); }
-  catch { return null; }
+  const read = await readFieldManual(repos, METHOD_ROWS);
+  return read.error ? null : methodVersionFromManual(read.store);
 }
 
-/** Complete method rows for explicit authoring/claim analysis; live workers use runtime-manual projections. */
+/** The rows the method store lives in: its routes and its base version, wherever they were learned. */
 const METHOD_ROWS: FieldManualQuery = { kinds: [ROUTE_ENTRY_KIND, METHOD_VERSION_KIND], everywhere: true };
 
 /** A manual `ROUTE` payload that is a whole route record, not just a pointer an agent wrote. */
@@ -92,7 +92,7 @@ export function methodKnowledgeFromManual(store: FieldManualStore): MethodKnowle
   return { version, updatedOn: (base?.payload as { updatedOn?: string | null } | undefined)?.updatedOn ?? null, routes: [...routes.values()] };
 }
 
-/** Complete method knowledge for explicit whole-store analysis. Runners use the shared runtime catalog instead. An unreadable or unseeded manual throws. */
+/** The method knowledge from the live manual. An unreadable or unseeded manual THROWS: an empty store would read as "we know nothing" and send every route to the bounded worker. */
 export async function readMethodKnowledge(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<MethodKnowledge> {
   const read = await readFieldManual(repos, METHOD_ROWS);
   if (read.error) throw new Error(read.error);

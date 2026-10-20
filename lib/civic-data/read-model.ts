@@ -1,7 +1,6 @@
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
-import { federalRollPublicationPriorProof } from "./federal-roll-publication-base.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -10,6 +9,7 @@ import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnl
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 
 import type {
+  CandidateEvent,
   CandidateVersionRecord,
   PromotedPointerIdentity,
   PromotedProjection,
@@ -962,7 +962,9 @@ export interface ProvenCivicDataHistory<T> {
 
 export interface ProvenCivicDataHistoryOptions {
   readonly store?: Pick<RoutineDataStore, "readCandidate" | "events"> &
-    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents">>;
+    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents" | "pointerMoveChain" | "historicalVoteBillVersions">>;
+  /** A filtered federal bill lookup; selected versions retain full promotion proof. */
+  readonly voteBill?: string;
   readonly cursor?: string | null;
   /** Payloads per page, not a cap on the historical chain. */
   readonly pageSize?: number;
@@ -990,7 +992,7 @@ export async function readPromotedCivicDataPredecessors<T>(
   if (cursor !== null && (!cursor || cursor.length > 256 || /\s/.test(cursor))) {
     return { versions: [], complete: false, nextVersionId: null, issue: "Historical continuation is malformed." };
   }
-  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}`;
+  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}|${options.voteBill ?? ""}`;
   if (!options.store && !options.bypassCache) {
     const cached = historicalPages.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) return cached.value as ProvenCivicDataHistory<T>;
@@ -998,13 +1000,16 @@ export async function readPromotedCivicDataPredecessors<T>(
     if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
-    const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
-    const { readPointerMoveEvents } = await import("./store.ts");
+    const { PostgresRoutineDataStore, readPointerMoveEvents } = await import("./store.ts");
+    const store = options.store ?? new PostgresRoutineDataStore();
+    let chain: readonly CandidateEvent[] | null = null;
+    const eventsById = new Map<string, CandidateEvent[]>();
+
     const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
     const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
     const seen = new Set<string>();
     const link = async (id: string): Promise<{ readonly previous: string | null; readonly at: string } | null> => {
-      const events = await readPointerMoveEvents(store, id);
+      const events = chain === null ? await readPointerMoveEvents(store, id) : eventsById.get(id) ?? [];
       const prefix = `Atomic pointer ${key} moved from `;
       const suffix = ` to ${id}.`;
       const matched = events.filter((event) => event.state === "PROMOTED" &&
@@ -1019,6 +1024,10 @@ export async function readPromotedCivicDataPredecessors<T>(
     const moves = new Map<string, { readonly previous: string | null; readonly at: string }>();
     const pageIds: string[] = [];
     try {
+      chain = typeof store.pointerMoveChain === "function" ? await store.pointerMoveChain(key, currentId) : null;
+      for (const event of chain ?? []) eventsById.set(event.candidateId, [...eventsById.get(event.candidateId) ?? [], event]);
+      const matchingVersions = options.voteBill && recordClass === "FEDERAL_ROLL_CALL" && chain && store.historicalVoteBillVersions
+        ? new Set(await store.historicalVoteBillVersions([...eventsById.keys()], options.voteBill)) : null;
       // Rewalk the exact anchored links on a continuation. No caller-supplied
       // version can jump into an unrelated candidate's history.
       for (;;) {
@@ -1040,7 +1049,7 @@ export async function readPromotedCivicDataPredecessors<T>(
         const move = await link(id);
         if (!move) return fail(`Historical pointer-move proof is missing or ambiguous at ${id}.`);
         moves.set(id, move);
-        pageIds.push(id);
+        if (!matchingVersions || matchingVersions.has(id)) pageIds.push(id);
         if (move.previous === null) { next = null; break; }
         next = move.previous;
         id = next;
@@ -1217,16 +1226,15 @@ export function promotionProofIssue<T>(
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
   const scoped = statePublicationScope(scope);
   const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
-  const sharedRollPrior = federalRollPublicationPriorProof(candidate, projection);
-  const readModelHash = sharedRollPrior?.readModelHash ?? indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
+  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
     !SHA256.test(candidate.normalization.normalizedHash) ||
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
-  const normalizedPayloadHash = sharedRollPrior?.normalizedPayloadHash ?? (indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
-    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload));
+  const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
+    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1236,8 +1244,8 @@ export function promotionProofIssue<T>(
   if (!projectionReceipt || !candidateReceipt) return "the pointer or candidate receipt is malformed";
   if (projectionReceipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD") return "the pointer is not backed by a GOOD receipt";
   const sourceCheck = candidateReceipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY");
-  if (indexedPrior || sharedRollPrior) {
-    if ((indexedPrior ?? sharedRollPrior)!.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
+  if (indexedPrior) {
+    if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
   } else if (candidate.bootstrapImport) {
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
@@ -1395,6 +1403,25 @@ export function clearPromotedReadModelCache(): void {
 
 const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
 
+/** The reviewed national question catalog stays whole; only the requested
+ * members' position cells cross the wire. Generic geographic slicing would
+ * mistake the catalog's entry IDs for place IDs and discard every question. */
+export const FEDERAL_KEY_VOTE_READER_PAYLOAD = `(SELECT jsonb_set(full_value, '{positions,positions}',
+  coalesce((SELECT jsonb_object_agg(roll_key, coalesce((SELECT jsonb_object_agg(member, position)
+    FROM jsonb_each(member_positions) cells(member, position) WHERE member = ANY($3::text[])), '{}'::jsonb))
+    FROM jsonb_each(full_value#>'{positions,positions}') rolls(roll_key, member_positions)), '{}'::jsonb))
+  #- '{positions,retiredMappings}' FROM (SELECT reader_payload_value(p.payload) AS full_value) decoded)`;
+
+/** Find the requested source filer, without joining their name to an official
+ * or ballot identity. The normal reader still validates the selected holding. */
+export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
+  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+    FROM reader_payload_members(header->'records') members
+    WHERE EXISTS (SELECT 1 FROM jsonb_path_query(reader_payload_node(item),'$.**') cell(v) WHERE cell.v#>>'{}'=ANY($3::text[]))
+      OR EXISTS (SELECT 1 FROM unnest($3::text[]) wanted(name) WHERE name LIKE 'ask-money-name:%'
+        AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
+          @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
+  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
 /** Keep a place's complete selected slice when later card reads add aliases to its selection. */
 export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<PromotedEdgeEntry> {
   const selection = currentReaderSelection();
@@ -1409,6 +1436,7 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   void read.catch(() => undefined);
   return read;
 }
+
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);
@@ -1431,13 +1459,16 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
   const query = readerDatabaseQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
-  const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const money = recordClass === "STATE_CAMPAIGN_FINANCE";
+  const payload = recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD : money ? STATE_MONEY_READER_PAYLOAD
+    : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
     ${payload} payload,
     c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
     JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys], ...(window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
+      ...(recordClass === "FEDERAL_KEY_VOTE" || money ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;

@@ -9,17 +9,16 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { readSetting } from "../settings.ts";
 import { writeFieldManual } from "../field-manual.ts";
 import {
-  weekDayKeys, CORRECTIONS_KEY, recordAuditCorrection, recordLiveAuditPull, recordLiveAuditResult, type LiveAuditRepos,
+  readAuditWeek, recordAuditCorrection, recordLiveAuditPull, recordLiveAuditResult, type LiveAuditRepos,
 } from "../live-audit-log.ts";
 import { transitionWorkItem } from "../repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { completedWorkerResults } from "../repository/worker-completion.ts";
-import { forEachAggregate, withHistoryIndex } from "./streamed-history.ts";
+import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import {
-  runLiveAuditPass, type LiveAuditPassDeps, type LiveAuditPassSummary, type LiveFactCatalog,
+  runLiveAuditPass, type LiveAuditPassDeps, type LiveAuditPassSummary, type LiveAuditResult, type LiveFactCatalog,
 } from "./live-audit.ts";
 import {
-  originFromPublications, respondToRedFlag, type FactOrigin, type RedFlagOutcome, type RedFlagWriters,
+  fixedAfterReaudit, originFromPublications, respondToRedFlag, type FactOrigin, type RedFlagOutcome, type RedFlagWriters,
 } from "./live-audit-response.ts";
 
 /** Who the fix list names as having found a red flag. */
@@ -46,23 +45,20 @@ export interface LiveAuditCycleOutcome {
 
 /**
  * The trace for worker-published facts: the work item whose publication admitted the fact's member, read
- * only when a red flag needs it, and the reopen as a recorded REOPENED transition, the way a
+ * only when a red flag needs it (once per cycle), and the reopen as a recorded REOPENED transition, the way a
  * BROKE audit reopens its work. `hostOf` gives the fact's page host for the lesson.
  */
 export function workItemTrace(repos: ControlPlaneRepositories, hostOf: (factId: string) => string | null): NonNullable<LiveAuditCycleDeps["trace"]> {
+  let held: Promise<{ items: import("../work-item.ts").WorkItem[]; parsers: readonly import("./types.ts").WorkerResultRecord[] }> | null = null;
+  const load = () => (held ??= (async () => {
+    const [items, parsers] = await Promise.all([repos.workItems.list(), readCompletedWorkerResults(repos)]);
+    return { items: items.map((row) => row.value), parsers };
+  })());
   return {
     originOf: async (factId) => {
       const memberId = factId.slice(factId.indexOf(":") + 1);
-      let origin: FactOrigin | null = null;
-      await forEachAggregate(repos.workItems, async ({value: item}) => {
-        const outcome = item.publicationOutcome;
-        if (origin || !outcome || outcome.status === "HELD" || !outcome.recordChanges?.some(change => change.readerId === memberId)) return;
-        const records = await repos.workerResults.readWhere(item.id, ["id"], outcome.workerResultId);
-        const parsers = await completedWorkerResults(repos, records);
-        const contract = await repos.workItems.readNarrowed(item.id, { autonomousPlan: ["contract"] });
-        origin = originFromPublications({ items: [{...item, ...(contract?.value as Pick<typeof item, "autonomousPlan">)}], parsers, memberId, host: hostOf(factId) ?? "unknown", platform: null });
-      }, { id: true, publicationOutcome: ["status", "workerResultId", "recordChanges"] });
-      return origin;
+      const { items, parsers } = await load();
+      return originFromPublications({ items, parsers, memberId, host: hostOf(factId) ?? "unknown", platform: null });
     },
     reopenWorkItem: async (workItemId, why) => {
       await transitionWorkItem(repos, { workItemId, to: "REOPENED", by: `live-audit:${workItemId}`, why, now: new Date().toISOString() });
@@ -80,36 +76,20 @@ export function combinedCatalog(catalogs: readonly LiveFactCatalog[]): LiveFactC
 
 /** The owner's audit policy from Admin (`audit.policy`); unset, invalid or unreadable reads the code default. */
 export async function auditPolicyFrom(repos: Pick<ControlPlaneRepositories, "adminConfig">): Promise<LiveAuditPolicy> {
-  const row = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, settings: true}).catch(() => null);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null);
   const fallback: LiveAuditPolicy & { readonly [key: string]: number } = { ...LIVE_AUDIT_DEFAULT_POLICY };
   return readSetting(row && isAdminConfig(row.value) ? row.value : null, AUDIT_POLICY_SETTING, fallback);
 }
 
 export async function runLiveAuditCycle(deps: LiveAuditCycleDeps): Promise<LiveAuditCycleOutcome> {
-  return withHistoryIndex(async db => {
   const { repos, now } = deps;
   const policy = deps.policy ?? await auditPolicyFrom(repos);
-  db.exec(`CREATE TABLE latest(fact TEXT PRIMARY KEY,at TEXT NOT NULL);
-    CREATE TABLE greens(fact TEXT NOT NULL,at TEXT NOT NULL); CREATE INDEX greens_by_fact ON greens(fact,at);
-    CREATE TABLE fixed(fact TEXT PRIMARY KEY); CREATE TABLE pulls(sequence INTEGER PRIMARY KEY,fact TEXT NOT NULL,at TEXT NOT NULL)`);
-  const latest = db.prepare("INSERT INTO latest VALUES(?,?) ON CONFLICT(fact) DO UPDATE SET at=MAX(latest.at,excluded.at)");
-  const green = db.prepare("INSERT INTO greens VALUES(?,?)");
-  const fixedFact = db.prepare("INSERT OR IGNORE INTO fixed VALUES(?)");
-  const pull = db.prepare("INSERT INTO pulls VALUES(?,?,?)");
-  const days = new Set(weekDayKeys(now)); let sequence = 0;
-  await repos.liveAudits.readChangedSince(null, undefined, {projection: {kind: true, result: ["factId", "checkedAt", "verdict"], correction: true}, page: rows => {
-    for (const {key, record} of rows) {
-      if (days.has(key) && record.kind === "RESULT") {
-        latest.run(record.result.factId, record.result.checkedAt);
-        if (record.result.verdict === "GREEN") green.run(record.result.factId, record.result.checkedAt);
-      }
-      if (key === CORRECTIONS_KEY && record.kind === "CORRECTION") {
-        if (record.correction.action === "FIXED") fixedFact.run(record.correction.factId);
-        else pull.run(sequence++, record.correction.factId, record.correction.at);
-      }
-    }
-  }});
-  const lastAudited = db.prepare("SELECT at FROM latest WHERE fact=?");
+  const week = await readAuditWeek(repos, now);
+  const lastAudited = new Map<string, string>();
+  for (const result of week.results) {
+    const held = lastAudited.get(result.factId);
+    if (!held || result.checkedAt > held) lastAudited.set(result.factId, result.checkedAt);
+  }
   const lessonErrors: string[] = [];
   const writers: RedFlagWriters = {
     originOf: deps.trace?.originOf ?? (async () => null),
@@ -123,25 +103,21 @@ export async function runLiveAuditCycle(deps: LiveAuditCycleDeps): Promise<LiveA
     },
     recordCorrection: (correction) => recordAuditCorrection(repos, correction),
   };
+  const fresh: LiveAuditResult[] = [];
   const redFlags: RedFlagOutcome[] = [];
   const summary = await runLiveAuditPass({
     ...deps,
     policy,
-    lastAuditedAt: (factId) => lastAudited.get(factId)?.at ?? null,
+    lastAuditedAt: (factId) => lastAudited.get(factId) ?? null,
     record: async (result) => {
       await recordLiveAuditResult(repos, result);
-      if (result.verdict === "GREEN") green.run(result.factId, result.checkedAt);
+      fresh.push(result);
       if (result.verdict === "RED") redFlags.push(await respondToRedFlag(result, writers, now));
     },
   });
-  for (const flag of redFlags) if (flag.status === "PULLED_AND_REOPENED") pull.run(sequence++, flag.factId, now);
-  let fixed = 0;
-  for (const row of db.prepare(`SELECT p.fact,(SELECT MIN(g.at) FROM greens g WHERE g.fact=p.fact AND g.at>p.at) AS back
-    FROM pulls p LEFT JOIN fixed f ON f.fact=p.fact WHERE f.fact IS NULL ORDER BY p.sequence`).iterate()) {
-    if (!row.back) continue;
-    await recordAuditCorrection(repos, {factId: row.fact, action: "FIXED", at: row.back, summary: "The corrected value is back on the page and checks out."});
-    fixed++;
-  }
-  return { summary, redFlags, fixed, lessonErrors };
-  });
+  const pulledNow = redFlags.flatMap((o) => (o.status === "PULLED_AND_REOPENED"
+    ? [{ factId: o.factId, action: "PULLED" as const, at: now, summary: "" }] : []));
+  const fixed = fixedAfterReaudit([...week.corrections, ...pulledNow], [...week.results, ...fresh]);
+  for (const correction of fixed) await recordAuditCorrection(repos, correction);
+  return { summary, redFlags, fixed: fixed.length, lessonErrors };
 }

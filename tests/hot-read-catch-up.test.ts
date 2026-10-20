@@ -5,7 +5,6 @@ import test from "node:test";
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
   HOT_READ_CATCH_UP_RECHECK_MS,
-  createHotReadRepairGuard,
   hotReadCatchUpAdmission,
   hotReadCatchUpReadWorstCaseMs,
   repairDomainRacesHotReads,
@@ -41,7 +40,6 @@ import {
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import { ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS, routineSupervisorOuterEvidence } from "../lib/civic-data/runner-receipt.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
-import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 const MIN = 60_000;
 const T0 = Date.parse("2026-10-12T15:00:00.000Z");
@@ -139,69 +137,6 @@ function catchUpOver(input: {
     },
   });
 }
-
-test("a requested repair waits for its own active read while unrelated states keep reading", async () => {
-  const domains = routineReaderRepairDomains();
-  const az = domains.find(domain => domain.mode === "MEETING_AGGREGATE" && domain.state === "AZ")!;
-  const nj = domains.find(domain => domain.mode === "MEETING_AGGREGATE" && domain.state === "NJ")!;
-  const task = meetingTasks.find(task => task.id === "meetings:derived:US-AZ")!;
-  const other = meetingTasks.find(task => task.id === "meetings:derived:US-NJ")!;
-  assert.ok(task && other && az && nj);
-  const guard = createHotReadRepairGuard();
-  const end = guard.beginRead(task);
-  let started = false;
-  const ready = guard.beforeRepair(az).then(() => { started = true; });
-  await Promise.resolve();
-  assert.equal(started, false, "the same place's active publication must settle first");
-  assert.equal(guard.canRead(task), false, "the requested repair has priority over later reads");
-  assert.equal(guard.canRead(other), true, "another state's repair queue never delays this place");
-  await guard.beforeRepair(nj);
-  guard.finishRepair(nj);
-  assert.equal(started, false, "unrelated repair settlement does not release the active place");
-  assert.throws(() => guard.beginRead(task), /HOT_READ_REPAIR_CONFLICT/);
-  end();
-  await ready;
-  assert.equal(started, true);
-  assert.equal(guard.canRead(task), false, "a running repair continues to protect its own publication");
-  guard.finishRepair(az);
-  assert.equal(guard.canRead(task), true);
-  const single = domains.find(domain => domain.id === "reader-readback:pima-legistar-outcomes")!;
-  const outcome = ROUTINE_SOURCE_TASKS.find(task => task.id === "pima-legistar-outcomes")!;
-  await guard.beforeRepair(single);
-  assert.equal(guard.canRead(outcome), false);
-  assert.equal(guard.canRead(task), true, "a single Reader protects only its own contract");
-  guard.finishRepair(single);
-});
-
-test("own-state repair settlement wakes a due read immediately between minute ticks", async () => {
-  const fake = new FakeClock(T0);
-  const task = meetingTasks.find(task => task.id === "meetings:derived:US-AZ")!;
-  const domain = routineReaderRepairDomains().find(domain => domain.mode === "MEETING_AGGREGATE" && domain.state === "AZ")!;
-  const guard = createHotReadRepairGuard();
-  await guard.beforeRepair(domain);
-  const releasedAt = T0 + 12_345;
-  const release = fake.sleepUntil(releasedAt).then(() => guard.finishRepair(domain));
-  const candidate = candidateFor(task, hotClock(T0 - 60 * MIN));
-  let startedAt: number | undefined;
-  const result = runHotReadCatchUp({
-    work: fake.sleepUntil(T0 + 10 * MIN), unblocked: Promise.resolve(), changed: guard.changed,
-    now: fake.now, sleepUntil: fake.sleepUntil, concurrency: 1,
-    admit: (nowMs, slots, busyLanes) => hotReadCatchUpAdmission({
-      nowMs, candidates: startedAt === undefined && guard.canRead(task) ? [candidate] : [],
-      clockReads: [{ task, ok: true, clock: candidate.clock }], statedEnds: new Map(),
-      laneLastEndedMs: new Map(), busyLanes, slots, limitMs: Number.POSITIVE_INFINITY,
-    }),
-    read: async (_task, atMs) => {
-      const end = guard.beginRead(task);
-      try { startedAt = atMs; await fake.sleepUntil(atMs + 1_000); }
-      finally { end(); }
-    },
-  });
-  await fake.runUntil(result);
-  await release;
-  assert.equal(startedAt, releasedAt);
-  assert.deepEqual((await result).reads, [{ atMs: releasedAt, taskId: task.id }]);
-});
 
 test("C6: a due hourly read is admitted within its deadline while a long Reader repair is in flight", async () => {
   const task = meetingTasks[0]!;
@@ -489,23 +424,19 @@ test("C6: catch-up reads reserve repair time without restoring the retired pilot
   assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, ROUTINE_CHILD_CONCURRENCY / 2, "four pass children plus two reads at the peak");
 });
 
-test("C6: state repairs run through the native pool and exclude only conflicting catch-up publications", () => {
+test("C6: the repairs a catch-up read could race run first", () => {
   const domains = routineReaderRepairDomains();
   const hot = new Set(ROUTINE_SOURCE_TASKS.filter((task) => task.contract.schedule?.kind === "SITTING_WINDOW").map(({ id }) => id));
   const racing = domains.filter((domain) => repairDomainRacesHotReads(domain, hot)).map(({ id }) => id);
-  assert.deepEqual(new Set(domains.filter(domain => domain.mode === "MEETING_AGGREGATE").map(domain => domain.state)), new Set(REGISTRY_STATES));
-  assert.ok(racing.includes("reader-readback:meetings:AZ"));
+  assert.ok(racing.includes("reader-readback:meetings-aggregate"));
   assert.ok(racing.includes("reader-readback:pima-legistar-outcomes"), "the outcome routine follows the Board's sittings");
-  assert.ok(!racing.some(id => id.startsWith("reader-readback:fec-funding:")), "funding readback never delays a meeting read");
+  assert.ok(!racing.includes("reader-readback:fec-funding"));
+  assert.ok(racing.length < domains.length / 4, "most repairs never delay catch-up");
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
   assert.match(runner, /const readerPass = runBoundedChildPass\(\s*readerLaunch\.map/);
-  assert.match(runner, /await hotReadRepairGuard\.beforeRepair\(readerLaunch\[index\]!\)/);
-  assert.match(runner, /hotReadRepairGuard\.finishRepair\(domain\)/);
-  assert.match(runner, /hotReadRepairGuard\.canRead\(task\)/);
-  assert.match(runner, /return \{ repair: readerPass, unblocked: Promise\.resolve\(\), changed: hotReadRepairGuard\.changed \};/);
-  assert.doesNotMatch(runner, /racingRepairs|hotReadCatchUpOpen/);
+  assert.match(runner, /return \{ repair: readerPass, unblocked: hotReadCatchUpOpen \};/);
   assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: sourcePass,\s*startRepair: startReaderRepair,/);
   assert.match(runner, /onSettled: async \(result\) => settlePendingRun\(run, result\)/, "catch-up reads settle exactly as the pass's own");
   assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");

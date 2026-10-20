@@ -1,19 +1,32 @@
-import { installFundingFixture } from "./helpers/funding-fixture.ts";
+import {currentReaderAuthorityEdge} from "../lib/registry/runtime-edge.ts";
+import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
 import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
-import { installFederalVotes, installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installFederalVotes, installPimaLocalFinance, installPromotedValue, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
+import { installPimaOutcomes } from "./helpers/reader-fixtures.ts";
 await installRegistryAuthority();
 await installFederalVotes();
-import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+await installPimaOutcomes();
+for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-contests","candidate-profiles","candidate-corpus"] as const) {
+  const contract=requiredManualProductionContract(stateBallotContractId(family,state));
+  installAbsent(contract.recordClass,contract.scope);
+}
+
+for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
+await installPimaLocalFinance();
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("@/app/api/ask/grounded/route");
 
 test("normal Ask detail requests fetch every registered FEC page and deliver each filed PAC row and source", async () => {
-  await installFundingFixture("AZ");
-  const contract = requiredRoutineContract("fec-funding:AZ");
+  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
+  const contract = requiredRoutineContract("fec-funding");
   installPromotedValue({ recordClass: "FEC_FUNDING", scope: contract.scope, sourceId: contract.sourceId,
     versionId: "test:ask-finance-detail", value: getFundingSnapshot() });
   const candidate = getFundingSnapshot().candidates.find(c => c.name.toLowerCase().includes("ciscomani"))!;
@@ -36,10 +49,10 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
   };
   try {
     resetGroundedState();
-    const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
+    const response = await withReaderAuthorityEdge({...currentReaderAuthorityEdge(),edgeOnly:true}, () => POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
       headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ballot-ca36-route" },
       body: JSON.stringify({ question: "List every PAC that gave to Juan Ciscomani this year", today: "2026-10-05", ocdIds: ["ocd-division/country:us/state:az"],
-        activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) }));
+        activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) })));
     const body = await response.json();
     assert.equal(response.status, 200, JSON.stringify(body));
     assert.equal(body.subject?.kind, "PERSON", JSON.stringify(body)); assert.equal(calls, 1, JSON.stringify(body));

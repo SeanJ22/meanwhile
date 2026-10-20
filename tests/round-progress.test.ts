@@ -1,18 +1,12 @@
-import { runLeaseWorkerProcesses } from "./helpers/worker-pool-results.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { RUNTIME_NO_PROGRESS_MS, runRuntimeChildren as runChildren } from "../scripts/pilot-runtime-child.mts";
+import { RUNTIME_NO_PROGRESS_MS, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
 import { answerStallProbes, roundProgressReporter, RESEARCH_STALL_PROBE, STALL_REPORT_PREFIX } from "../lib/control-plane/scheduler/round-progress.ts";
-
-
-// Clock/process fixtures control admission independently from the production measurement running beside them.
-const runRuntimeChildren: typeof runChildren = (commands, options) => runChildren(commands, {
-  ...options, slots: { acquire: async () => () => {} },
-});
+import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
 
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);

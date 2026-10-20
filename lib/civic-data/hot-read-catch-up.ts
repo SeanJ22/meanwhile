@@ -20,8 +20,7 @@ import {
   routineRunnerOuterTimeoutMs,
   type RoutineRunnerOuterBounds,
 } from "./bounded-child-pass.ts";
-import { sittingWindowSourceIds, type MeetingPartitionContract } from "./meeting-partitions.ts";
-import { registryJurisdictions } from "./state-scopes.ts";
+import { sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS } from "./runner-receipt.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
@@ -144,8 +143,6 @@ export interface HotReadCatchUpRead {
 export interface HotReadCatchUpInput<R> {
   readonly work: Promise<R>;
   readonly unblocked: Promise<void>;
-  /** Wake immediately when a repair of the asking place settles. */
-  readonly changed?: () => Promise<void>;
   readonly now: () => number;
   readonly sleepUntil: (atMs: number) => Promise<void>;
   readonly concurrency: number;
@@ -188,7 +185,6 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
   };
   await Promise.race([input.unblocked.then(() => undefined, () => undefined), workEnded]);
   while (!workDone && error === undefined) {
-    const changed = input.changed?.();
     const nowMs = input.now();
     let recheckAtMs: number;
     try {
@@ -211,7 +207,7 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
       fail(cause);
       break;
     }
-    await Promise.race([workEnded, input.sleepUntil(recheckAtMs), ...running.keys(), ...(changed ? [changed] : [])]);
+    await Promise.race([workEnded, input.sleepUntil(recheckAtMs), ...running.keys()]);
   }
   await Promise.all(running.keys());
   const work = await workSettled;
@@ -222,13 +218,13 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
  * One routine pass: its source reads, then its Reader repair, with catch-up
  * reads for as long as either holds the pass open. `startRepair` is called
  * once the source reads and every catch-up read begun beside them have
- * settled; repairs then exclude only the reads whose publications they use.
- * A catch-up defect in the source
+ * settled; it launches the repair and returns the gate that opens when no
+ * running repair can race a meeting promotion. A catch-up defect in the source
  * phase stops catch-up for the rest of the pass.
  */
 export async function runRoutinePassWithHotReadCatchUp<S, R>(input: {
   readonly source: Promise<S>;
-  readonly startRepair: (source: S) => { readonly repair: Promise<R>; readonly unblocked: Promise<void>; readonly changed?: () => Promise<void> };
+  readonly startRepair: (source: S) => { readonly repair: Promise<R>; readonly unblocked: Promise<void> };
   readonly now: () => number;
   readonly sleepUntil: (atMs: number) => Promise<void>;
   readonly concurrency: number;
@@ -248,13 +244,12 @@ export async function runRoutinePassWithHotReadCatchUp<S, R>(input: {
     unblocked: Promise.resolve(),
     admit: (nowMs, slots, running) => input.admit("SOURCE", nowMs, slots, running),
   });
-  const { repair, unblocked, changed } = input.startRepair(during.work);
+  const { repair, unblocked } = input.startRepair(during.work);
   const after = during.error === undefined
     ? await runHotReadCatchUp({
         ...common,
         work: repair,
         unblocked,
-        changed,
         admit: (nowMs, slots, running) => input.admit("REPAIR", nowMs, slots, running),
       })
     : { work: await repair, reads: [] as const };
@@ -319,57 +314,13 @@ export function routinePassSourceCatchUpDeadlineMs(
 }
 
 /**
- * Repair domains which can race any sitting-window publication. These run
- * first, but only a requested repair of the same place excludes a read.
+ * The repair domains a catch-up read could race: the meeting aggregate (it
+ * composes every partition) and the single repair of any task catch-up may read.
+ * The runner launches these first and resumes catch-up once they settle.
  */
 export function repairDomainRacesHotReads(
   domain: Pick<RoutineReaderRepairDomain, "mode" | "contracts">,
   hotTaskIds: ReadonlySet<string>,
 ): boolean {
   return domain.mode === "MEETING_AGGREGATE" || domain.contracts.some(({ id }) => hotTaskIds.has(id));
-}
-
-function repairRacesTask(domain: RoutineReaderRepairDomain, task: RoutineSourceTask): boolean {
-  if (domain.mode === "SINGLE") return domain.contracts.some(({ id }) => id === task.id);
-  const partition = task.contract as Partial<Pick<MeetingPartitionContract, "derivedFamily" | "ocdId" | "bodyId">>;
-  const state = registryJurisdictions(partition?.derivedFamily ?? partition?.ocdId ?? partition?.bodyId ?? task.scope)[0];
-  // An unidentified place must not publish through a potentially conflicting repair.
-  return !domain.state || !state || domain.state === state;
-}
-
-/**
- * Mutual exclusion only for a repair's own publications. A queued repair has
- * no lock. Once its child slot is ready, it claims priority and waits for any
- * already running read of that place; other places keep their hourly cadence.
- * Only active children and catch-up reads are retained here.
- */
-export function createHotReadRepairGuard(tasks?: readonly RoutineSourceTask[]) {
-  const repairs = new Map<string, RoutineReaderRepairDomain>();
-  const reads = new Map<string, { readonly task: RoutineSourceTask; readonly ended: Promise<void> }>();
-  let notify: () => void = () => undefined;
-  let change: Promise<void>;
-  const nextChange = () => { change = new Promise<void>((resolve) => { notify = resolve; }); };
-  nextChange();
-  const changed = () => change;
-  const signal = () => { notify(); nextChange(); };
-  const canRead = (task: RoutineSourceTask) => ![...repairs.values()].some(domain => repairRacesTask(domain, task));
-  return {
-    changed,
-    canRead,
-    beginRead(task: RoutineSourceTask): () => void {
-      if (!canRead(task) || reads.has(task.id)) throw new Error(`HOT_READ_REPAIR_CONFLICT:${task.id}`);
-      let end: () => void = () => undefined;
-      reads.set(task.id, { task, ended: new Promise<void>((resolve) => { end = resolve; }) });
-      return () => { reads.delete(task.id); end(); };
-    },
-    async beforeRepair(domain: RoutineReaderRepairDomain): Promise<void> {
-      if (tasks && !tasks.some(task => repairRacesTask(domain, task))) return;
-      if (repairs.has(domain.id)) throw new Error(`HOT_READ_REPAIR_DUPLICATE:${domain.id}`);
-      repairs.set(domain.id, domain);
-      await Promise.all([...reads.values()].filter(read => repairRacesTask(domain, read.task)).map(read => read.ended));
-    },
-    finishRepair(domain: RoutineReaderRepairDomain): void {
-      if (repairs.delete(domain.id)) signal();
-    },
-  };
 }

@@ -1,4 +1,3 @@
-import { encodeVerifiedReplay } from "../../sources/verified-replay.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { browseWithPlaywright } from "../../../scripts/scout-browse.mts";
 import { join } from "node:path";
@@ -14,7 +13,7 @@ function call<T>(kind: string, body: unknown): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     replies.set(id, { resolve: value => resolve(value as T), reject });
     if (!process.send || !process.connected) { replies.delete(id); reject(new Error("NATIONAL_WORKER_BROKER_DISCONNECTED")); return; }
-    process.send({ kind, id, body: encodeVerifiedReplay(body) });
+    process.send({ kind, id, body });
   });
 }
 process.on("disconnect", () => {

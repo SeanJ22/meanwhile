@@ -5,8 +5,6 @@ import type { GovernmentJoin, PortalBinding } from "./normalize.ts";
 import { openDataFetch } from "./acquire.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 export const STATE_DIRECTORY_URL="https://www.usa.gov/state-governments";
-export interface PortalDomainIndex { has(domain: string): boolean; withinHost(host: string): Iterable<string> }
-type PortalDomains = ReadonlySet<string> | PortalDomainIndex;
 /** USA.gov publishes postal IDs on its directory anchors, followed by the state's own government link. */
 export function stateDirectoryPage(html:string, postal:string):string|null {
   for(const match of html.matchAll(/<a\b([^>]+)>[\s\S]*?<\/a>/gi)) {
@@ -29,12 +27,12 @@ export async function readStateGovernmentWebsite(postal:string,signal:AbortSigna
 }
 
 /** Read the government's own published link; names and guessed host/state abbreviations never join. */
-export function portalBindingsFromPage(government:RegistrationGovernmentListing, url:string, html:string, domains:PortalDomains):PortalBinding[] {
+export function portalBindingsFromPage(government:RegistrationGovernmentListing, url:string, html:string, domains:ReadonlySet<string>):PortalBinding[] {
   if (!isOfficialSource(url)) return [];
   const linked=new Map<string,string>();
   // A publisher's .gov DNS namespace is its native portal identity, including its subdomains.
   const governmentHost=new URL(url).hostname.replace(/^www\./,"");
-  if(governmentHost.endsWith(".gov"))for(const domain of "withinHost" in domains ? domains.withinHost(governmentHost) : domains)
+  if(governmentHost.endsWith(".gov"))for(const domain of domains)
     if(domain===governmentHost || domain.endsWith(`.${governmentHost}`))linked.set(domain,"");
   for (const match of html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)) {
     try { const href=new URL(match[1].replaceAll("&amp;","&"),url); if(domains.has(href.hostname) && isOfficialSource(href.href,{url,html})) linked.set(href.hostname,match[0]); } catch { /* Not a public URL. */ }
@@ -44,7 +42,7 @@ export function portalBindingsFromPage(government:RegistrationGovernmentListing,
     bodyIds:government.bodyIds,nativeIds:{...government.nativeIds,ocd_id:association.divisionId,geoid:association.geoid},
     official:true,linkingUrl:url,linkingHtml})));
 }
-export async function discoverGovernmentPortals(governments:readonly RegistrationGovernmentListing[], domains:PortalDomains, signal:AbortSignal) {
+export async function discoverGovernmentPortals(governments:readonly RegistrationGovernmentListing[], domains:ReadonlySet<string>, signal:AbortSignal) {
   const results=await runBoundedWorkPool(governments.filter(g=>g.website && g.associations.length && isOfficialSource(g.website)),16,async government=>{
     try {
       const url=new URL(government.website!);if(url.protocol==="http:")url.protocol="https:";

@@ -1,8 +1,3 @@
-/**
- * Typed settings on `AdminConfig.settings`, changed through one gateway action with every change logged for
- * undo. Each lane registers its keys with `registerSetting`; the runner reads them from the config it re-reads
- * every pass. A change names its maker only when factory code made it. Pure.
- */
 import type { AdminConfig } from "./gateway/admin-config.ts";
 
 export type SettingValue = null | boolean | number | string | readonly SettingValue[] | { readonly [key: string]: SettingValue };
@@ -40,9 +35,6 @@ export interface SettingChange {
   readonly undoOf?: string;
 }
 
-/** The log keeps the newest changes; older ones fall off the end. Undo only ever needs a key's newest change. */
-export const SETTING_HISTORY_MAX = 500;
-
 const KEY_PATTERN = /^[a-z][a-zA-Z0-9]*(?:\.[a-zA-Z][a-zA-Z0-9]*)+$/;
 const definitions = new Map<string, SettingDefinition>();
 
@@ -57,7 +49,6 @@ export function registerSetting<T extends SettingValue>(definition: SettingDefin
   definitions.set(definition.key, definition as unknown as SettingDefinition);
 }
 
-
 /** The checklist items a county's residents most need, whose arrival the Scoreboard times from a mission's start. Changing it changes what the "time to core information live" figure waits for. */
 export const CORE_ITEMS_SETTING = "scorecard.coreItems";
 export const CORE_ITEMS_DEFAULT: readonly string[] = ["GOV-01", "GOV-02", "OFF-04", "MTG-06"];
@@ -67,16 +58,11 @@ registerSetting({
     && value.every((id) => typeof id === "string" && /^[A-Z]{2,4}-[A-Za-z0-9]{1,6}$/.test(id)),
 });
 
-/**
- * Controls that existed before the settings map keep their own field and action,
- * and log into the same history so the Settings view shows their changes and undo.
- */
 export const SPEND_CEILING_LOG_KEY = "fleet.spendCeilingUsd";
 export const ALERTS_ON_SETTING = "alerts.on";
 export const BRIEF_TIME_SETTING = "brief.time";
 registerSetting({key:ALERTS_ON_SETTING,label:"Show alerts",defaultValue:false,readerFacing:false,control:"boolean",validate:(v):v is boolean=>typeof v==="boolean"});
 registerSetting({key:BRIEF_TIME_SETTING,label:"Daily brief time (Eastern, HH:mm; blank for off)",defaultValue:"",readerFacing:false,control:"text",validate:(v):v is string=>typeof v==="string"&&(v===""||/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v))});
-
 
 export function settingDefinition(key: string): SettingDefinition | null { return definitions.get(key) ?? null; }
 export function settingDefinitions(): readonly SettingDefinition[] { return [...definitions.values()]; }
@@ -101,12 +87,6 @@ export function settingLog(config: AdminConfig | null, key: string): readonly Se
   return (config?.settingHistory ?? []).filter((entry) => entry.key === key).reverse();
 }
 
-
-function appendHistory(history: readonly SettingChange[], entry: SettingChange): readonly SettingChange[] {
-  const next = [...history, entry];
-  return next.length > SETTING_HISTORY_MAX ? next.slice(next.length - SETTING_HISTORY_MAX) : next;
-}
-
 /** Set a registered key and log it. Replaying the same change id changes nothing. */
 export function withSetting(config: AdminConfig, change: Omit<SettingChange, "before">): AdminConfig {
   const definition = settingDefinition(change.key);
@@ -118,14 +98,14 @@ export function withSetting(config: AdminConfig, change: Omit<SettingChange, "be
   }
   const before = readSetting(config, change.key, definition.defaultValue);
   return { ...config, settings: { ...config.settings, [change.key]: change.after },
-    settingHistory: appendHistory(history, { ...change, before }), updatedAt: change.at };
+    settingHistory: [...history, { ...change, before }], updatedAt: change.at };
 }
 
 /** Log a change to a control that keeps its own field (the spend ceiling). Replaying the same id changes nothing. */
 export function withLoggedChange(config: AdminConfig, change: SettingChange): AdminConfig {
   const history = config.settingHistory ?? [];
   if (history.some((entry) => entry.id === change.id)) return config;
-  return { ...config, settingHistory: appendHistory(history, change) };
+  return { ...config, settingHistory: [...history, change] };
 }
 
 /** The undo for a change: only a key's newest change can be undone, so an undo never jumps over a later change. */
@@ -141,7 +121,6 @@ export function readerSettings(config: AdminConfig | null): Readonly<Record<stri
     .map((definition) => [definition.key, readSetting(config, definition.key, definition.defaultValue)]));
 }
 
-
 /** What the runner applied on a pass, written into its heartbeat so Admin can say a value is in force. */
 export interface RunnerSettingsApplied {
   /** When the runner read the config it applied: that pass's start. */
@@ -155,7 +134,6 @@ export function runnerSettingsEcho(config: AdminConfig | null, appliedAt: string
   return { appliedAt, values: Object.fromEntries(settingDefinitions().filter((definition) => !definition.readerFacing)
     .map((definition) => [definition.key, readSetting(config, definition.key, definition.defaultValue)])) };
 }
-
 
 /** A value in plain words for Admin. */
 export function settingValueWords(value: SettingValue, unit?: string, choices?: SettingDefinition["choices"]): string {

@@ -1,4 +1,3 @@
-import { fecFundingScope } from "../civic-data/fec-state-scope.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePackage, readStateDistricts, primeStateDistrictPointers } from "../reader/state.ts";
@@ -112,5 +111,5 @@ export async function primeBallotFundingRead(set: BallotSet, contests: readonly 
   for (const lineup of set.generalLineup?.contests ?? []) if (ids.has(lineup.contestId)) {
     keys.push(...lineup.nominees.map(nominee => `${lineup.contestId}|${nominee.name}`));
   }
-  if (keys.length) await primeReaderProjection("FEC_FUNDING", fecFundingScope(set.election.state), keys);
+  if (keys.length) await primeReaderProjection("FEC_FUNDING", requiredRoutineContract("fec-funding").scope, keys);
 }

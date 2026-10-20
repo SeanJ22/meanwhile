@@ -1,16 +1,3 @@
-import { runRecordedCycle as runCycle } from "./helpers/recorded-cycle.ts";
-/**
- * The Scout lane orders due rows by reader-impact band, and within a band by
- * longest wait, so a row whose Scouts keep failing cannot return to the head of
- * its band each time its backoff ends. These tests replay the lane offline on a
- * moving clock with the scheduler's own pure functions and the runner's
- * comparator (`compareReaderImpact` over `orderableDueRow`):
- * - Under the old order, a never-tried row starves behind rows that keep
- *   failing.
- * - Under the new order, it runs within ⌈(A + 1) / c⌉ cycles of the rows
- *   ahead of it in its band.
- * - The band order is unchanged.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -26,7 +13,7 @@ test("standing place ranks reuse one order version and rebuild overlapping membe
   const snippet = transpileModule(source.slice(start, end), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None },
   }).outputText;
-  const make = new Function("expansionPlan", "plannerMap", "planner", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
+  const make = new Function("expansionPlan", `let placeOrder = ['receipt:a', 'receipt:b']; ${snippet}
     return { rank: placeRankFor, replace: value => { placeOrder = value; } };`);
   let scopeReads = 0;
   const scopes = [
@@ -34,7 +21,7 @@ test("standing place ranks reuse one order version and rebuild overlapping membe
     { get kind() { scopeReads++; return "RESOLVED"; }, decision: { receiptId: "receipt:b" }, members: new Set(["b", "shared"]) },
     { kind: "UNRESOLVED", decision: { receiptId: "receipt:missing" }, members: new Set(["unresolved"]) },
   ];
-  const ranks = make({ scopes }, () => new Map(), {});
+  const ranks = make({ scopes });
   for (let query = 0; query < 1000; query++) {
     assert.equal(ranks.rank("shared"), 0);
     assert.equal(ranks.rank("b"), 1);
@@ -58,10 +45,10 @@ test("a failed priority refresh is not re-read until work changes its order vers
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let reads = 0;
   const plan = { scopes: [{ kind: "RESOLVED", members: new Set(["ocd-division/example"]), decision: { receiptId: "receipt" } }] };
-  const repos = { adminConfig: { readNarrowed: async () => { reads++; throw new Error("forced one priority read failure"); } } };
-  const make = new Function("expansionPlan", "repos", "readRuntimeAdminConfig", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", `${snippet}
+  const repos = { adminConfig: { read: async () => { reads++; throw new Error("forced one priority read failure"); } } };
+  const make = new Function("expansionPlan", "repos", "ADMIN_CONFIG_ID", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", "planningSections", `${snippet}
     return { refresh: refreshPlaceOrder, changed: () => { placeOrderDirty = true; } };`);
-  const priority = make(plan, repos, async (repo: typeof repos) => repo.adminConfig.readNarrowed(), async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} });
+  const priority = make(plan, repos, "admin", async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} }, { placeTargets: true });
   for (let selection = 0; selection < 20; selection++) await priority.refresh();
   assert.equal(reads, 1, "one refused refresh keeps the last order without twenty repeated store reads");
   priority.changed();
@@ -74,7 +61,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { compareReaderImpact, orderableDueRow, orderByReaderImpact, TIE_BREAK, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import { recordFailure, retryable, type FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import { dueNow, scheduleAll, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { runCycle, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 test("place-order read failure keeps the last priority and does not poison sibling selection", async () => {
   const ran: string[] = [];
@@ -112,12 +99,6 @@ function row(id: string, firstOwed: string, subjectId = `nj:2026:${id}`): Freshn
   };
 }
 
-/**
- * All band 2:
- * - four failing rows owed since August;
- * - four failing rows at the tie whose ids sort first;
- * - one never-tried row at the tie whose id sorts last.
- */
 const EARLY = Array.from({ length: 4 }, (_, i) => row(`aug-walled-${i + 1}`, OWED_SINCE_AUG));
 const AT_TIE = Array.from({ length: 4 }, (_, i) => row(`a-walled-${i + 1}`, TIE));
 const NEVER_TRIED = row("z-never-tried", TIE);
@@ -283,6 +264,6 @@ test("NOT SLOWED: a row with no failing debt never has more rows ahead of it tha
 
 test("the standing runner builds the recorded queue through orderableDueRow with the debt it carried in", () => {
   const src = readFileSync(join(import.meta.dirname, "..", "scripts", "freshness-shadow.mts"), "utf8");
-  assert.match(src, /orderableDueRow\(row, registry\.providerOf\(row\.obligation\.id\), debtAtCycleStart\.get\(row\.obligation\.id\)\)/, "the recorded queue");
-  assert.ok(src.indexOf("const debtAtCycleStart") < src.indexOf("const modelOrderTable = "), "the debt map is built before the order reads it");
+  assert.match(src, /\.\.\.orderableDueRow\(d, registry\.providerOf\(d\.obligation\.id\), debtAtCycleStart\.get\(d\.obligation\.id\)\)/, "the recorded queue");
+  assert.ok(src.indexOf("const debtAtCycleStart") < src.indexOf("const modelOrder = orderByReaderImpact("), "the debt map is built before the order reads it");
 });

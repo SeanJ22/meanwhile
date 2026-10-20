@@ -1,4 +1,3 @@
-import { VerifiedReplayFiles } from "../../sources/verified-replay.ts";
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /** The hunter's research tools. robots.txt is read and recorded, never a refusal;
@@ -39,8 +38,7 @@ import {
 import { decodeEntities, visibleText } from "../../extract/visible-text.ts";
 
 /** The ordinary public-page reader for collectors: held bytes, then HTTP, then the existing browser. */
-export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number;replayFiles?:VerifiedReplayFiles}={}) {
-  const files=options.replayFiles??new VerifiedReplayFiles();
+export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:number}={}) {
   const fresh=(at:string)=>{
     const age=Date.parse(context.now())-Date.parse(at);
     return Number.isFinite(age) && age>=0 && age<=(options.maxAgeMs??Infinity);
@@ -51,9 +49,9 @@ export function savedPageReader(context:ScoutToolContext,options:{maxAgeMs?:numb
   const toolkit=buildScoutToolkit({...context,vault:async(artifact,text)=>{
     const saved=await context.vault(artifact,text);
     if(saved.stored && artifact.tier!=='RESTRICTED_RAW' && artifact.retentionPolicy!=='DIAGNOSTIC' &&
-      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,files.text({artifact,text},'text',artifact.contentHash));
+      ['scout:fetch_public','scout:browse'].includes(artifact.methodRouteId))captured.set(artifact.id,{artifact,text});
     return saved;
-  }}, {replayFiles:files});
+  }});
   return async(url:string):Promise<{url:string;text:string;contentType:string|null;collectedAt:string;artifactId:string;artifacts:readonly WorkArtifact[]}>=>{
     for(const saved of captured.values()) {
       if((requestedArtifacts.get(url)===saved.artifact.id || saved.artifact.canonicalUrl===url || saved.artifact.retrievalUrl===url) && saved.artifact.httpStatus===200 &&
@@ -301,40 +299,37 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
   }
   try {
     /* A COPY: pdfjs takes ownership of the buffer it is handed and detaches it. */
-    const loadingTask = getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false });
-    const pages: string[] = [];
-    const tables: ExtractedTable[] = [];
-    let numPages: number;
+    const doc = await getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false }).promise;
     try {
-      const doc = await loadingTask.promise;
-      numPages = doc.numPages;
-      for (let i = 1; i <= numPages; i += 1) {
+      const pages: string[] = [];
+      const tables: ExtractedTable[] = [];
+      for (let i = 1; i <= doc.numPages; i += 1) {
         const page = await doc.getPage(i);
         const content = await page.getTextContent();
         pages.push(content.items.map((item) => ("str" in item ? item.str : "")).join(" "));
         tables.push(...tablesFromRows(rowsFromItems(content.items.flatMap(item => "str" in item && item.str.trim()
           ? [{ x: item.transform[4], y: item.transform[5], width: item.width, text: item.str }] : [])).map(cellsFromRow), i));
       }
-    } finally {
-      await loadingTask.destroy();
-    }
-    const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
-    let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
-    if (empty.length) {
-      const scanned = await ocr(new Uint8Array(bytes), "vaulted PDF");
-      if (scanned.outcome === "EXTRACTED" && scanned.counts.pages === numPages) {
-        const byPage = new Map(scanned.items.map(page => [page.page, page.text]));
-        for (const index of empty) pages[index] = byPage.get(index + 1) ?? "";
-        const unresolved = empty.filter(index => !pages[index].trim());
-        extractionNote = `OCR used on ${empty.length} page(s) without a text layer. ${unresolved.length ? `No text recognized on page(s) ${unresolved.map(index => index + 1).join(", ")}; this does not prove blank source pages. ` : ""}OCR is an unverified transcription; normal independent verification remains required.`;
-      } else {
-        const why = scanned.outcome === "EXTRACTED" ? "OCR page count disagrees with the PDF" : scanned.reason;
-        if (empty.length === pages.length) return { kind: "EXTRACTION_FAILED", why: `Scanned PDF OCR incomplete: ${why}` };
-        extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
+      const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
+      let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
+      if (empty.length) {
+        const scanned = await ocr(new Uint8Array(bytes), "vaulted PDF");
+        if (scanned.outcome === "EXTRACTED" && scanned.counts.pages === doc.numPages) {
+          const byPage = new Map(scanned.items.map(page => [page.page, page.text]));
+          for (const index of empty) pages[index] = byPage.get(index + 1) ?? "";
+          const unresolved = empty.filter(index => !pages[index].trim());
+          extractionNote = `OCR used on ${empty.length} page(s) without a text layer. ${unresolved.length ? `No text recognized on page(s) ${unresolved.map(index => index + 1).join(", ")}; this does not prove blank source pages. ` : ""}OCR is an unverified transcription; normal independent verification remains required.`;
+        } else {
+          const why = scanned.outcome === "EXTRACTED" ? "OCR page count disagrees with the PDF" : scanned.reason;
+          if (empty.length === pages.length) return { kind: "EXTRACTION_FAILED", why: `Scanned PDF OCR incomplete: ${why}` };
+          extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
+        }
       }
+      return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(),
+        pages: doc.numPages, tables, complete: pages.every(text => text.trim().length >= 2), extractionNote };
+    } finally {
+      await doc.cleanup();
     }
-    return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(),
-      pages: numPages, tables, complete: pages.every(text => text.trim().length >= 2), extractionNote };
   } catch (error) {
     return { kind: "EXTRACTION_FAILED", why: error instanceof Error ? error.message : String(error) };
   }
@@ -447,8 +442,7 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
   }
 }
 
-export function buildScoutToolkit(ctx: ScoutToolContext, options: { readonly replayFiles?: VerifiedReplayFiles } = {}): ScoutToolkit {
-  const files = options.replayFiles ?? new VerifiedReplayFiles();
+export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
@@ -583,8 +577,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext, options: { readonly rep
     const held=saved.artifact;
     if(saved.stored && held.tier!=='RESTRICTED_RAW' && held.retentionPolicy!=='DIAGNOSTIC' &&
       held.methodRouteId!=='scout:read_permission' && !held.methodRouteId.endsWith(':network-observation')) {
-      savedPages.set(held.id,files.text({artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
-        retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId},"text",held.contentHash));
+      savedPages.set(held.id,{artifactId:held.id,contentHash:held.contentHash,text,canonicalUrl:held.canonicalUrl,
+        retrievalUrl:held.retrievalUrl,retrievedAt:held.retrievedAt,methodRouteId:held.methodRouteId});
     }
     return {...saved,text:saved.stored && held.tier!=='RESTRICTED_RAW'?text:''};
   }
@@ -1141,7 +1135,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext, options: { readonly rep
         if (held.artifactId !== raw.artifactId || contentHash(held.text) !== held.contentHash) return refusal("the saved copy did not match its fingerprint.");
         page = { artifactId: held.artifactId, contentHash: held.contentHash, text: held.text, canonicalUrl: held.canonicalUrl,
           retrievalUrl: held.provenance?.retrievalUrl ?? held.canonicalUrl, retrievedAt: held.retrievedAt, methodRouteId: held.methodRouteId };
-        page = files.text(page, "text", page.contentHash);
         savedPages.set(page.artifactId, page);
       } catch (error) { return refusal(`the saved page could not be read: ${error instanceof Error ? error.message : String(error)}`); }
     }

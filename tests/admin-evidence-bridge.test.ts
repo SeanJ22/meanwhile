@@ -16,10 +16,9 @@ import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { mkdtemp, rm, writeFile, appendFile, open, readFile } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { openAdminMirrorCursor } from "../lib/control-plane/evidence/admin-mirror-cursor.ts";
 
 const bytes = new TextEncoder().encode("<html><body>Official public meeting record</body></html>");
 const hash = contentHash(bytes);
@@ -136,21 +135,8 @@ test("ordinary reconciliation rotates past a failed first capture and copies the
   };
   const input = { repos, vaultRoot: root, cursorPath, remote,
     env: { WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: "1" }, maxExamined: 1 };
-  repos.artifacts.readAll = async () => { throw new Error("country artifact read forbidden"); };
-  repos.attempts.list = async () => { throw new Error("country attempt read forbidden"); };
-  repos.workItems.list = async () => { throw new Error("country work read forbidden"); };
-  const readOwner = repos.workItems.readNarrowed.bind(repos.workItems);
-  const readAttempt = repos.attempts.read.bind(repos.attempts);
-  const selectedAttempts: string[] = [];
-  repos.workItems.readNarrowed = async (id, projection) => {
-    assert.equal(id, work.id, "only the capture's exact work routing fields cross the repository");
-    assert.ok(!Object.hasOwn(projection, "id"));
-    return readOwner(id, projection);
-  };
-  repos.attempts.read = async id => { selectedAttempts.push(id); return readAttempt(id); };
   const failed = await runAdminEvidenceMirror(input);
   assert.equal(failed.refused, 1);
-  assert.equal(selectedAttempts.length, 1, "queue construction does not fetch the country's attempts");
   const next = await runAdminEvidenceMirror(input);
   assert.equal(next.copied, 1, "a first failing capture cannot starve the next capture");
   assert.equal(remote.rows.size, 1);
@@ -232,53 +218,4 @@ test("exact-hunt and recent captures advance with historical backfill across dur
   assert.equal(stopped.copied, 0);
   assert.match(stopped.failures[0], /ADMIN_EVIDENCE_MIRROR_DEADLINE/);
   console.log(`ADMIN_MIRROR stalledReadElapsedMs=${(performance.now() - started).toFixed(2)} copied=${stopped.copied}`);
-});
-
-test("the existing cursor streams a national legacy membership file into disk storage and preserves lane turns and rechecks", async t => {
-  const root = await mkdtemp(join(tmpdir(), "admin-evidence-cursor-"));
-  t.after(() => rm(root, { recursive: true, force: true }));
-  const file = join(root, "cursor.json"), now = Date.parse("2026-10-20T12:00:00Z");
-  const key = (i: number) => `freshness/work-${i}/${"captured-source-identity-".repeat(20)}`;
-  await writeFile(file, '{"version":2,"nextByLane":{"original":4,"recent":5,"history":6},"turn":3,"verifiedAt":{');
-  for (let first = 0; first < 6000; first += 100) {
-    const chunk = Array.from({ length: 100 }, (_, offset) => {
-      const i = first + offset; return `${i ? "," : ""}${JSON.stringify(key(i))}:${i === 0 ? now - 7 * 86_400_000 : now}`;
-    }).join("");
-    await appendFile(file, chunk);
-  }
-  await appendFile(file, ',"not-a-freshness-key":1}}');
-  const cursor = await openAdminMirrorCursor(file, now);
-  assert.deepEqual(cursor.nextByLane, { original: 4, recent: 5, history: 6 });
-  assert.equal(cursor.turn, 3);
-  assert.equal(cursor.hasVerified(key(0)), false, "the original seven-day recheck boundary is preserved");
-  assert.equal(cursor.hasVerified(key(5999)), true);
-  assert.equal(cursor.hasVerified("not-a-freshness-key"), false);
-  cursor.nextByLane.history = 12; cursor.turn = 4;
-  cursor.markVerified("freshness/new/immutable/capture/hash", now); cursor.save(); cursor.close();
-  const header = Buffer.alloc(16), handle = await open(file, "r");
-  try { await handle.read(header, 0, 16, 0); } finally { await handle.close(); }
-  assert.equal(header.toString(), "SQLite format 3\0", "the existing cursor is replaced, with no second durable ledger");
-  const resumed = await openAdminMirrorCursor(file, now);
-  try { assert.equal(resumed.nextByLane.history, 12); assert.equal(resumed.turn, 4); assert.ok(resumed.hasVerified("freshness/new/immutable/capture/hash")); }
-  finally { resumed.close(); }
-  const old = join(root, "old.json"); await writeFile(old, '{"next":9}');
-  const migratedOld = await openAdminMirrorCursor(old, now);
-  try { assert.deepEqual(migratedOld.nextByLane, { original: 0, recent: 0, history: 9 }); } finally { migratedOld.close(); }
-  const corrupt = join(root, "corrupt.json"), invalid = '{"version":2,"verifiedAt":{}}'; await writeFile(corrupt, invalid);
-  await assert.rejects(openAdminMirrorCursor(corrupt, now), /CURSOR_INVALID/);
-  assert.equal(await readFile(corrupt, "utf8"), invalid, "a failed migration keeps the original cursor intact");
-});
-
-test("every failed capture diagnostic streams immediately while the mirror retains only a finite report sample", async t => {
-  const root = await mkdtemp(join(tmpdir(), "admin-evidence-failures-"));
-  t.after(() => rm(root, { recursive: true, force: true }));
-  const repos = createMemoryRepositories(), seen: string[] = [];
-  for (let i = 0; i < 40; i++) await repos.artifacts.append("history", `invalid-${i}`,
-    { ...record, artifactId: `invalid-${i}` }, record.recordedAt);
-  const report = await runAdminEvidenceMirror({ repos, vaultRoot: root, cursorPath: join(root, "cursor.json"),
-    remote: new MemoryPrivateStore(), env: { WTP_ADMIN_EVIDENCE_MIRROR_ENABLED: "1" }, onFailure: detail => { seen.push(detail); } });
-  assert.equal(report.refused, 40); assert.equal(report.examined, 0);
-  assert.equal(seen.length, 40); assert.equal(new Set(seen).size, 40);
-  assert.deepEqual(report.failures, seen.slice(0, 8));
-  assert.ok(seen.every(detail => detail.endsWith(":INVALID_RECORD_IDENTITY")));
 });

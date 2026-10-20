@@ -1,11 +1,9 @@
-/** One connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
-import { readAuditWeek } from "./helpers/live-audit.ts";
+import { readAuditWeek, readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { curatedReaderCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
 import { combinedCatalog, runLiveAuditCycle } from "../lib/control-plane/workers/live-audit-run.ts";
@@ -31,7 +29,7 @@ test("every result is kept by day; a red flag unpulled for want of a trace goes 
   const week = await readAuditWeek(repos, NOW);
   assert.equal(week.results.length, 3);
   assert.deepEqual(out.redFlags.map((r) => [r.factId, r.status]), [["comment-access:b", "ORIGIN_UNKNOWN"]]);
-  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { fixList: true })).value as AdminConfig;
   const items = fixItems(config);
   assert.equal(items.length, 1);
   assert.equal(items[0].where, "comment-access:b");

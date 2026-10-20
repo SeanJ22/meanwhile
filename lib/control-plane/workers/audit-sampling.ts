@@ -5,17 +5,15 @@
  * back to the field manual so the next Parser skips a tier that broke for that publisher.
  */
 
-import { createHash,randomUUID } from "node:crypto";
-import { newFieldManualEntry, type FieldManualEntry, type FieldManualStore } from "../field-manual.ts";
+import { createHash } from "node:crypto";
+import { newFieldManualEntry, readFieldManual, type FieldManualEntry, type FieldManualStore } from "../field-manual.ts";
+import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { ModelClass } from "../scheduler/model-routing.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { needsSecondSource } from "../promotion/section3.ts";
 import { parseLearningEntries } from "./model-parser.ts";
 import { emptyFieldManual } from "../field-manual.ts";
 import type { AuditCoverage, AuditorResult, CivicExtractionContract, WorkerResultRecord, WorkerTaskSpec } from "./types.ts";
-import { stratumOf,type AuditStratumContract } from "./audit-stratum.ts";
-import { withIndexedAuditSample,type AuditHistoryRepositories } from "./audit-history-index.ts";
-export { stratumOf } from "./audit-stratum.ts";
 
 export const AUDIT_LEARNING_SOURCE = "auditor-learning";
 
@@ -33,6 +31,14 @@ export interface AuditSamplePolicy {
 }
 
 export const DEFAULT_AUDIT_SAMPLE_POLICY: AuditSamplePolicy = { ratio: 0.1, quotedRatio: 0.25, floorPerStratum: 3, survivedAfterBreak: 5, boostMultiplier: 3 };
+
+/** A record class from one publisher: the unit the sample must reach. */
+export function stratumOf(contract: CivicExtractionContract): string {
+  const url = contract.schemaVersion === 2 ? contract.sourceScope.canonicalUrls[0] : undefined;
+  let host = contract.schemaVersion === 2 ? contract.sourceScope.publisher : contract.publisherSlug;
+  if (url) { try { host = new URL(url).host.toLowerCase(); } catch { /* keep the named publisher */ } }
+  return `${contract.recordClass}|${host}`;
+}
 
 function auditorRecords(results: readonly WorkerResultRecord[]): WorkerResultRecord[] {
   return results.filter((r) => r.result.role === "ADVERSARIAL_AUDITOR");
@@ -125,7 +131,7 @@ export function stableFraction(key: string): number {
  * and whether the parse was model-quoted.
  */
 export function sampleDecision(
-  spec: AuditSampleSpec,
+  spec: Pick<WorkerTaskSpec, "artifactId" | "contract" | "auditEscalation" | "producerResultId">,
   history: AuditHistory,
   quoted: boolean,
   policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY,
@@ -155,30 +161,25 @@ export function sampleDecision(
  * its own count as it decides, so a burst of new results from one stratum does not
  * all count as "the first".
  */
-export type AuditSampleSpec=Pick<WorkerTaskSpec,"artifactId"|"producerResultId">&{readonly auditEscalation?:boolean|WorkerTaskSpec["auditEscalation"];readonly contract:AuditStratumContract&{readonly requiredFields?:readonly string[]}};
-export interface AuditSampleRequest{readonly samplerId:string;readonly spec:AuditSampleSpec;readonly policy:AuditSamplePolicy}
-
-export async function indexedModelAuditSample(repos:AuditHistoryRepositories,request:AuditSampleRequest):Promise<boolean>{
-  return withIndexedAuditSample(repos,{samplerId:request.samplerId,stratum:stratumOf(request.spec.contract),producerResultId:request.spec.producerResultId},(history,quoted)=>{
-    const decision=sampleDecision(request.spec,history?new Map([[stratumOf(request.spec.contract),history]]):new Map(),quoted,request.policy);
-    return{value:decision.sample,count:decision.sample&&!request.spec.auditEscalation};
-  });
-}
-
-export function createModelAuditSampler(repos: AuditHistoryRepositories, policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY) {
-  const samplerId=randomUUID();
+export function createModelAuditSampler(repos: Pick<ControlPlaneRepositories, "workerResults"> & Partial<Pick<ControlPlaneRepositories, "fieldManual">>, policy: AuditSamplePolicy = DEFAULT_AUDIT_SAMPLE_POLICY) {
+  let loaded: Promise<{ history: Map<string, StratumHistory>; parsers: Map<string, WorkerResultRecord> }> | null = null;
+  const load = () => (loaded ??= Promise.all([
+    repos.workerResults.readAll(),
+    repos.fieldManual ? readFieldManual({ fieldManual: repos.fieldManual }, { kinds: ["AUDIT_STRATUM"], everywhere: true }).then((r) => r.store) : Promise.resolve(emptyFieldManual()),
+  ]).then(([all, manual]) => ({
+    // The results are the more exact record; the manual covers strata they no longer show.
+    history: new Map([...auditHistoryFromManual(manual), ...auditHistoryFrom(all)]),
+    parsers: new Map(all.filter((r) => r.result.role === "PARSER").map((r) => [r.id, r] as const)),
+  })));
   return async (spec: WorkerTaskSpec): Promise<boolean> => {
-    const contract:AuditSampleSpec["contract"]=spec.contract.schemaVersion===2?{schemaVersion:2,recordClass:spec.contract.recordClass,
-      requiredFields:spec.contract.requiredFields,sourceScope:{publisher:spec.contract.sourceScope.publisher,canonicalUrls:spec.contract.sourceScope.canonicalUrls}}:
-      {schemaVersion:1,recordClass:spec.contract.recordClass,requiredFields:spec.contract.requiredFields,publisherSlug:spec.contract.publisherSlug};
-    const request:AuditSampleRequest={samplerId,spec:{artifactId:spec.artifactId,contract,auditEscalation:spec.auditEscalation?true:undefined,producerResultId:spec.producerResultId},policy};
-    if(process.env.WTP_WORKER_TOOLS_URL){
-      const response=await fetch(process.env.WTP_WORKER_TOOLS_URL,{method:"POST",headers:{"content-type":"application/json",authorization:process.env.WTP_WORKER_TOOLS_TOKEN??""},
-        body:JSON.stringify({kind:"audit-history",body:request})});
-      if(!response.ok)throw new Error(`SHARED_AUDIT_HISTORY_FAILED:${response.status}`);
-      const value=await response.json();if(typeof value!=="boolean")throw new Error("SHARED_AUDIT_HISTORY_INVALID");return value;
+    const { history, parsers } = await load();
+    const quoted = parsers.get(spec.producerResultId ?? "")?.modelParse !== undefined;
+    const decision = sampleDecision(spec, history, quoted, policy);
+    if (decision.sample && !spec.auditEscalation) {
+      const h = history.get(decision.stratum);
+      history.set(decision.stratum, { reviewed: (h?.reviewed ?? 0) + 1, survivedSinceBreak: h?.survivedSinceBreak ?? 0, everBroken: h?.everBroken ?? false });
     }
-    return indexedModelAuditSample(repos,request);
+    return decision.sample;
   };
 }
 

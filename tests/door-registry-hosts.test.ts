@@ -23,7 +23,7 @@ describe("DB-16: allowed hosts come from each door", () => {
     assert.equal(refused.ok, false);
     assert.equal(refused.ok === false ? refused.code : "", "FINAL_ROUTE_NOT_REGISTERED");
 
-    const pass = await refreshDoorsForPass(repos.doors, { state: "AZ" });
+    const pass = await refreshDoorsForPass(repos.doors);
     assert.equal(pass.reason, null);
     assert.equal(authorityFor("meetings-public-bodies", "MEETING", NEW_URL).ok, true);
     // Only HTTPS, only this source, only a host a door names.

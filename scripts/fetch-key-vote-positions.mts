@@ -24,11 +24,9 @@ import {
   federalKeyVotesCandidate,
   type FederalKeyVotePositions,
   type FederalKeyVotesSnapshot,
-  heldAcquisitions,
-  type HeldAcquisition,
+  type OfficialAcquisition,
 } from "../lib/votes/data-plane.ts";
 import { federalKeyVoteSelectionV1Snapshot } from "../lib/votes/key-vote-selection-v1.ts";
-import { loadVoteIdentityBridge, withVoteWorkingSet } from "../lib/votes/working-set.ts";
 import type { VotePosition } from "../lib/votes/types.ts";
 
 if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this command has no tracked-output mode");
@@ -36,13 +34,12 @@ prepareProductionCivicDataWrite();
 
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 const SPACING_MS = 350;
-await withVoteWorkingSet(async working => {
 const store = new PostgresRoutineDataStore();
 
 // The question/roll denominator is reviewed software input. Canonical runtime
 // data supplies LKG, never the authority to add or replace a selected roll.
 const snapshot = federalKeyVoteSelectionV1Snapshot(new Date().toISOString());
-const acquisitions: HeldAcquisition[] = [];
+const acquisitions: OfficialAcquisition[] = [];
 const failures: string[] = [];
 
 async function blocked(detail: string): Promise<never> {
@@ -70,11 +67,22 @@ async function getOfficial(url: string): Promise<string | null> {
       return null;
     }
     const body = await response.text();
-    acquisitions.push(...heldAcquisitions([{ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body }]));
+    acquisitions.push({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body });
     return body;
   } catch (error) {
     failures.push(`${url} -> ${error instanceof Error ? error.message : "fetch failed"}`);
     return null;
+  }
+}
+
+async function getIdentityBridge(): Promise<string> {
+  const url = "https://unitedstates.github.io/congress-legislators/legislators-current.json";
+  try {
+    const response = await fetch(url, { headers: { "user-agent": UA } });
+    if (!response.ok) return blocked(`Current federal identity bridge ${url} returned HTTP ${response.status}.`);
+    return response.text();
+  } catch (error) {
+    return blocked(`Current federal identity bridge failed: ${error instanceof Error ? error.message : "unknown failure"}.`);
   }
 }
 
@@ -106,8 +114,10 @@ function mapPosition(raw: string): VotePosition | null {
   return null;
 }
 
-try { await loadVoteIdentityBridge(working); } catch(error) { await blocked(`Current federal identity bridge failed: ${String(error)}`); }
-const heldRefs = new Set<string>();
+const legislators = JSON.parse(await getIdentityBridge()) as { id: { bioguide: string; lis?: string } }[];
+const currentBioguides = new Set(legislators.map((person) => person.id.bioguide));
+const lisToBioguide = new Map(legislators.flatMap((person) => person.id.lis ? [[person.id.lis, person.id.bioguide] as const] : []));
+const byRef = new Map<string, Record<string, VotePosition>>();
 
 let refsSeen = 0;
 let houseSeen = 0;
@@ -138,7 +148,7 @@ for (const entry of snapshot.entries) {
       if (chamber === "house") {
         for (const match of xml.matchAll(/<recorded-vote>\s*<legislator name-id="([^"]+)"[^>]*>[\s\S]*?<\/legislator>\s*<vote>([^<]+)<\/vote>\s*<\/recorded-vote>/g)) {
           houseSeen += 1;
-          if (!working.hasBioguide(match[1])) continue;
+          if (!currentBioguides.has(match[1])) continue;
           houseCurrent += 1;
           const position = mapPosition(match[2]);
           if (position) positions[`congress:${match[1]}`] = position;
@@ -146,7 +156,7 @@ for (const entry of snapshot.entries) {
       } else {
         for (const match of xml.matchAll(/<member>[\s\S]*?<vote_cast>([^<]+)<\/vote_cast>[\s\S]*?<lis_member_id>([^<]+)<\/lis_member_id>[\s\S]*?<\/member>/g)) {
           senateSeen += 1;
-          const bioguide = working.bioguideForLis(match[2]);
+          const bioguide = lisToBioguide.get(match[2]);
           if (!bioguide) continue;
           senateCurrent += 1;
           const position = mapPosition(match[1]);
@@ -161,8 +171,7 @@ for (const entry of snapshot.entries) {
       ref.question = question;
       ref.tally = tally;
       ref.verifiedAt = new Date().toISOString().slice(0, 10);
-      for(const [member,position] of Object.entries(positions)) working.position(member,key,position);
-      heldRefs.add(key);
+      byRef.set(key, positions);
     }
   }
 }
@@ -172,25 +181,15 @@ const positions: FederalKeyVotePositions = {
   formatVersion: 1,
   fetchedAt: retrievedAt,
   note: "Official per-roll positions for sitting members, keyed by reviewed question/chamber/roll identity. Missing members remain unknown, never DID_NOT_VOTE.",
-  positions: Object.fromEntries([...heldRefs].map(key=>[key,{}])),
+  positions: Object.fromEntries(byRef),
 };
 const refreshedSnapshot: FederalKeyVotesSnapshot = { ...snapshot, fetchedAt: retrievedAt };
-// Reconcile every source roll before advancing any member; a failed source keeps every prior GOOD pointer.
 const candidate = federalKeyVotesCandidate({ acquisitions, retrievedAt, snapshot: refreshedSnapshot, positions });
-if(candidate.semantics.violations.length===0) {
-  for(const member of working.members()) {
-    const memberPositions: FederalKeyVotePositions={...positions,positions:Object.fromEntries([...heldRefs].map(key=>[key,{}]))};
-    for(const row of working.positionsForMember(member)) memberPositions.positions[row.voteId][member]=row.position;
-    const memberCandidate=federalKeyVotesCandidate({acquisitions,retrievedAt,snapshot:refreshedSnapshot,positions:memberPositions,officeholderId:member});
-    const result=await processRegisteredManualCandidate(store,"federal-key-votes",memberCandidate,retrievedAt);
-    if(!result.promoted&&!result.confirmed) throw new Error(`FEDERAL_KEY_VOTE_MEMBER_REFUSED:${member}:${result.candidate.failureCode ?? result.candidate.state}`);
-  }
-}
 const outcome = await processRegisteredManualCandidate(store, "federal-key-votes", candidate, retrievedAt);
 printSourceRunnerReceipt("federal-key-votes", candidate, outcome);
 
 console.log([
-  `refs: ${heldRefs.size} acquired of ${refsSeen} selected`,
+  `refs: ${byRef.size} acquired of ${refsSeen} selected`,
   `house: ${houseCurrent} current of ${houseSeen} recorded positions`,
   `senate: ${senateCurrent} current of ${senateSeen} recorded positions`,
   `candidate: ${candidate.id} ${outcome.candidate.state}`,
@@ -199,5 +198,3 @@ for (const failure of failures) console.log(`  HELD ${failure}`);
 if (outcome.candidate.state !== "PROMOTED") {
   throw new Error(`FEDERAL_KEY_VOTE_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
 }
-
-});

@@ -1,121 +1,89 @@
 import { createHash } from "node:crypto";
-import { closeSync, createReadStream, mkdirSync, openSync, readFileSync, writeSync, writeFileSync, renameSync, rmSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { closeSync, mkdirSync, openSync, readFileSync, writeSync, writeFileSync, renameSync, rmSync } from "node:fs";
+import { join } from "node:path";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { streamCsvRecords } from "../lib/sources/prl/streaming.ts";
-import { withHistoryIndex, type HistoryIndex } from "../lib/control-plane/workers/streamed-history.ts";
+import { parseCsv } from "../lib/reference/index.ts";
 import type { StateReference, StateReferenceIndex } from "../lib/control-plane/expansion/state-references.ts";
 import { unitShareKey } from "../lib/control-plane/expansion/membership.ts";
 import { ruledDistrictTerritory, DISTRICT_TERRITORIES } from "../lib/control-plane/expansion/district-territory.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import { censusGovernmentContacts } from "../lib/registration/census-contacts.ts";
 
-async function* sourceChunks(path: string, digest?: ReturnType<typeof createHash>): AsyncGenerator<string> {
-  for await (const chunk of createReadStream(path, { encoding: "utf8" })) {
-    const text = String(chunk);
-    digest?.update(text);
-    yield text;
+const root = process.cwd();
+const out = join(root, "data", "derived", "place-reference");
+const shards = new Map<string, StateReference>();
+function shardFor(state: string): StateReference {
+  const key = state.toUpperCase();
+  let shard = shards.get(key);
+  if (!shard) {
+    shard = { formatVersion: 1, state: key, units: [], zips: {}, facts: {}, censusSource: "", exactShares: {}, listings: [] };
+    shards.set(key, shard);
   }
-}
-
-/** The national CSVs become an ordered disk inventory; only one state's records are opened for emission. */
-async function indexSources(root: string, db: HistoryIndex, states: ReadonlySet<string>): Promise<string> {
-  db.exec(`PRAGMA synchronous=OFF;
-    CREATE TABLE census_rows(sequence INTEGER PRIMARY KEY,state TEXT NOT NULL,pid6 TEXT NOT NULL,unit TEXT NOT NULL,fact TEXT NOT NULL,listing TEXT NOT NULL);
-    CREATE INDEX census_states ON census_rows(state,sequence);
-    CREATE TABLE nces_rows(sequence INTEGER PRIMARY KEY,state TEXT NOT NULL,listing TEXT NOT NULL);
-    CREATE INDEX nces_states ON nces_rows(state,sequence)`);
-  const census = db.prepare("INSERT INTO census_rows(state,pid6,unit,fact,listing) VALUES(?,?,?,?,?)");
-  const nces = db.prepare("INSERT INTO nces_rows(state,listing) VALUES(?,?)");
-  const sourceIndex = JSON.parse(readFileSync(join(root, "data", "derived", "registration", "index.json"), "utf8")) as { source: string };
-  const sources: string[] = [];
-  for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_dependent_school_systems.csv"]) {
-    const digest = createHash("sha256");
-    let header: string[] | undefined;
-    let pid = -1, web = -1, county = -1, state = -1;
-    db.exec("BEGIN");
-    try {
-      for await (const row of streamCsvRecords(sourceChunks(join(root, "data", "reference", file), digest))) {
-        if (!header) {
-          header = row;
-          pid = header.indexOf("census_id_pid6"); web = header.indexOf("web_address"); county = header.indexOf("county_area_name"); state = header.indexOf("state");
-          if ([pid, web, county, state].some(index => index < 0)) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE:${file}`);
-          continue;
-        }
-        const value = (name: string) => (row[header!.indexOf(name)] ?? "").trim();
-        const postal = row[state]?.toUpperCase() || FIPS_TO_STATE[value("fips_state")]?.postal;
-        if (!row[pid] || !postal || !states.has(postal)) continue;
-        const fact = { city: value("city"), web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim(),
-          countyFips: /^\d{2}$/.test(value("fips_state")) && /^\d{3}$/.test(value("fips_county")) ? value("fips_state") + value("fips_county") : null };
-        const type = value("gov_type");
-        const st = value("fips_state"), countyCode = value("fips_county"), placeCode = value("fips_place");
-        const key = type === "COUNTY" && /^\d{3}$/.test(countyCode) ? `county GEOID ${st}${countyCode}`
-          : type === "MUNICIPAL" && /^\d{5}$/.test(placeCode) ? `place GEOID ${st}${placeCode}`
-          : type === "TOWNSHIP" && /^\d{3}$/.test(countyCode) && /^\d{5}$/.test(placeCode) ? `cousub GEOID ${st}${countyCode}${placeCode}` : "No source-established service geography";
-        const unit = { pid6: row[pid], name: value("unit_name"), type, state: postal, zips: [], method: key };
-        const listing: RegistrationGovernmentListing = {
-          id: governmentNativeId(postal, "cog", row[pid]), aliases: [], jurisdictionId: null, state: postal,
-          name: value("unit_name"), kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT",
-          governmentClass: type, nativeIds: { census_pid6: row[pid] }, status: value("is_active") || null, sourceVintage: "2022 Census of Governments",
-          ...censusGovernmentContacts((...fields) => fields.map(field => value(field.toLowerCase())).find(Boolean) ?? ""),
-          officePhone: null, officeAddress: null,
-          countyFips: /^\d{2}$/.test(value("fips_state")) && /^\d{3}$/.test(value("fips_county")) ? value("fips_state") + value("fips_county") : null,
-          associations: [], bodyIds: [], provenance: { sourceUrl: "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP", sourceOrg: "U.S. Census Bureau", collectedAt: "2026-09-23", verifiedAt: null },
-        };
-        census.run(postal, row[pid], JSON.stringify(unit), JSON.stringify(fact), JSON.stringify(listing));
-      }
-      if (!header) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE:${file}`);
-      const source = `${file} (sha256 ${digest.digest("hex")})`;
-      if (!sourceIndex.source.includes(source)) throw new Error(`REGISTRATION_CENSUS_FILE_DRIFT:${file}`);
-      sources.push(`data/reference/${source}`);
-      db.exec("COMMIT");
-    } catch (error) { db.exec("ROLLBACK"); throw error; }
-  }
-  let header: string[] | undefined;
-  db.exec("BEGIN");
-  try {
-    for await (const row of streamCsvRecords(sourceChunks(join(root, "data", "reference", "nces_ccd_lea_directory_2025_26.csv")))) {
-      if (!header) { header = row; continue; }
-      const value = (name: string) => (row[header!.indexOf(name)] ?? "").trim();
-      const sourceState = value("state").toUpperCase();
-      const state = states.has(sourceState) ? sourceState : value("location_state").toUpperCase();
-      const leaid = value("nces_leaid");
-      if (!states.has(state) || !/^\d{7}$/.test(leaid)) continue;
-      const website = value("website");
-      const listing: RegistrationGovernmentListing = {
-        id: governmentNativeId(state, "nces", leaid), aliases: [], jurisdictionId: null, state,
-        name: value("lea_name"), kind: "EDUCATION_AGENCY", governmentClass: value("lea_type"),
-        nativeIds: { nces_leaid: leaid, state_leaid: value("state_leaid"), source_state: sourceState,
-          nces_lea_type: value("lea_type_code"), nces_charter_lea: value("charter_lea_code"),
-          nces_lea_status: value("updated_status") || value("sy_status") },
-        status: value("updated_status") || value("sy_status") || null, sourceVintage: "NCES CCD 2025–26 preliminary, 2026-05-06",
-        website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
-        officePhone: value("phone") || null,
-        officeAddress: ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"].map(value).filter(Boolean).join(", ") || null,
-        mailingAddress: ["mailing_street1", "mailing_street2", "mailing_street3", "mailing_city", "mailing_state", "mailing_zip"].map(value).filter(Boolean).join(", ") || null,
-        countyFips: null, associations: [], bodyIds: [],
-        provenance: { sourceUrl: "https://nces.ed.gov/ccd/files.asp", sourceOrg: "National Center for Education Statistics", collectedAt: "2026-08-19", verifiedAt: null },
-      };
-      nces.run(state, JSON.stringify(listing));
-    }
-    db.exec("COMMIT");
-  } catch (error) { db.exec("ROLLBACK"); throw error; }
-  return sources.join(" and ");
-}
-
-function readIndexedState(db: HistoryIndex, state: string, censusSource: string): StateReference {
-  const shard: StateReference = { formatVersion: 1, state, units: [], zips: {}, facts: {}, censusSource, exactShares: {}, listings: [] };
-  for (const row of db.prepare("SELECT pid6,unit,fact,listing FROM census_rows WHERE state=? ORDER BY sequence").iterate(state)) {
-    shard.units.push(JSON.parse(row.unit));
-    shard.facts[row.pid6] = JSON.parse(row.fact);
-    shard.listings!.push(JSON.parse(row.listing));
-  }
-  for (const row of db.prepare("SELECT listing FROM nces_rows WHERE state=? ORDER BY sequence").iterate(state)) shard.listings!.push(JSON.parse(row.listing));
   return shard;
 }
-
-function writeStateReference(root: string, out: string, shard: StateReference): void {
+for (const state of Object.values(FIPS_TO_STATE)) shardFor(state.postal);
+const sourceIndex = JSON.parse(readFileSync(join(root, "data", "derived", "registration", "index.json"), "utf8")) as { source: string };
+const sources: string[] = [];
+for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_dependent_school_systems.csv"]) {
+  const text = readFileSync(join(root, "data", "reference", file), "utf8");
+  const source = `${file} (sha256 ${createHash("sha256").update(text).digest("hex")})`;
+  if (!sourceIndex.source.includes(source)) throw new Error(`REGISTRATION_CENSUS_FILE_DRIFT:${file}`);
+  sources.push(`data/reference/${source}`);
+  const [header = [], ...rows] = parseCsv(text);
+  const pid = header.indexOf("census_id_pid6"), web = header.indexOf("web_address"), county = header.indexOf("county_area_name"), state = header.indexOf("state");
+  if ([pid, web, county, state].some(index => index < 0)) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE:${file}`);
+  const value = (row: string[], name: string) => (row[header.indexOf(name)] ?? "").trim();
+  for (const row of rows) {
+    const postal = row[state]?.toUpperCase() || FIPS_TO_STATE[value(row, "fips_state")]?.postal;
+    if (!row[pid] || !postal || !shards.has(postal)) continue;
+    const shard = shardFor(postal);
+    shard.facts[row[pid]] = { city: value(row, "city"), web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim(),
+      countyFips: /^\d{2}$/.test(value(row, "fips_state")) && /^\d{3}$/.test(value(row, "fips_county")) ? value(row, "fips_state") + value(row, "fips_county") : null };
+    const type = value(row, "gov_type");
+    const st = value(row, "fips_state"), countyCode = value(row, "fips_county"), placeCode = value(row, "fips_place");
+    const key = type === "COUNTY" && /^\d{3}$/.test(countyCode) ? `county GEOID ${st}${countyCode}`
+      : type === "MUNICIPAL" && /^\d{5}$/.test(placeCode) ? `place GEOID ${st}${placeCode}`
+      : type === "TOWNSHIP" && /^\d{3}$/.test(countyCode) && /^\d{5}$/.test(placeCode) ? `cousub GEOID ${st}${countyCode}${placeCode}` : "No source-established service geography";
+    shard.units.push({ pid6: row[pid], name: value(row, "unit_name"), type, state: postal, zips: [], method: key });
+    shard.listings!.push({
+      id: governmentNativeId(postal, "cog", row[pid]), aliases: [], jurisdictionId: null, state: postal,
+      name: value(row, "unit_name"), kind: type === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT",
+      governmentClass: type, nativeIds: { census_pid6: row[pid] }, status: value(row, "is_active") || null, sourceVintage: "2022 Census of Governments",
+      ...censusGovernmentContacts((...fields) => fields.map(field => value(row, field.toLowerCase())).find(Boolean) ?? ""),
+      officePhone: null, officeAddress: null,
+      countyFips: /^\d{2}$/.test(value(row, "fips_state")) && /^\d{3}$/.test(value(row, "fips_county")) ? value(row, "fips_state") + value(row, "fips_county") : null,
+      associations: [], bodyIds: [], provenance: { sourceUrl: "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP", sourceOrg: "U.S. Census Bureau", collectedAt: "2026-09-23", verifiedAt: null },
+    });
+  }
+}
+{
+  const [header, ...rows] = parseCsv(readFileSync(join(root, "data", "reference", "nces_ccd_lea_directory_2025_26.csv"), "utf8"));
+  const value = (row: string[], name: string) => (row[header.indexOf(name)] ?? "").trim();
+  for (const row of rows) {
+    const sourceState = value(row, "state").toUpperCase();
+    const state = shards.has(sourceState) ? sourceState : value(row, "location_state").toUpperCase();
+    const leaid = value(row, "nces_leaid");
+    if (!shards.has(state) || !/^\d{7}$/.test(leaid)) continue;
+    const website = value(row, "website");
+    const listing: RegistrationGovernmentListing = {
+      id: governmentNativeId(state, "nces", leaid), aliases: [], jurisdictionId: null, state,
+      name: value(row, "lea_name"), kind: "EDUCATION_AGENCY", governmentClass: value(row, "lea_type"),
+      nativeIds: { nces_leaid: leaid, state_leaid: value(row, "state_leaid"), source_state: sourceState,
+        nces_lea_type: value(row, "lea_type_code"), nces_charter_lea: value(row, "charter_lea_code"),
+        nces_lea_status: value(row, "updated_status") || value(row, "sy_status") },
+      status: value(row, "updated_status") || value(row, "sy_status") || null, sourceVintage: "NCES CCD 2025–26 preliminary, 2026-05-06",
+      website: website ? (/^https?:\/\//i.test(website) ? website : `http://${website}`) : null,
+      officePhone: value(row, "phone") || null,
+      officeAddress: ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"].map(field => value(row, field)).filter(Boolean).join(", ") || null,
+      mailingAddress: ["mailing_street1", "mailing_street2", "mailing_street3", "mailing_city", "mailing_state", "mailing_zip"].map(field => value(row, field)).filter(Boolean).join(", ") || null,
+      countyFips: null, associations: [], bodyIds: [],
+      provenance: { sourceUrl: "https://nces.ed.gov/ccd/files.asp", sourceOrg: "National Center for Education Statistics", collectedAt: "2026-08-19", verifiedAt: null },
+    };
+    shardFor(state).listings!.push(listing);
+  }
+}
+mkdirSync(out, { recursive: true });
+for (const shard of shards.values()) {
   // Retain the exact previously held identity mapping for existing reviewed
   // registry callers. A saved alias does not establish a service boundary.
   const reference = JSON.parse(readFileSync(join(root, "data", "derived", "registration", `${shard.state.toLowerCase()}.json`), "utf8")) as {
@@ -132,6 +100,7 @@ function writeStateReference(root: string, out: string, shard: StateReference): 
       adjacent.set(key, neighbors);
     }
   }
+  shard.censusSource = sources.join(" and ");
   const temporaryData = join(out, `${shard.state.toLowerCase()}.${process.pid}.tmp`);
   const fd = openSync(temporaryData, "wx");
   const digest = createHash("sha256");
@@ -194,18 +163,4 @@ function writeStateReference(root: string, out: string, shard: StateReference): 
     throw error;
   }
 }
-
-export async function projectPlaceReferences(root = process.cwd()): Promise<number> {
-  const out = join(root, "data", "derived", "place-reference");
-  const states = [...new Set(Object.values(FIPS_TO_STATE).map(state => state.postal))];
-  await withHistoryIndex(async db => {
-    const censusSource = await indexSources(root, db, new Set(states));
-    mkdirSync(out, { recursive: true });
-    for (const state of states) writeStateReference(root, out, readIndexedState(db, state, censusSource));
-  });
-  return states.length;
-}
-
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  console.log(`Projected held place references into ${await projectPlaceReferences()} state indexes and seekable data files.`);
-}
+console.log(`Projected held place references into ${shards.size} state indexes and seekable data files.`);

@@ -6,11 +6,6 @@
  * 429 or 5xx, or sends Retry-After, is left alone by every reader until then.
  * One row per website (`cp_website_pacing`); each take is one atomic statement.
  */
-import { createRequire } from "node:module";
-import { mkdtempSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { temporaryPath } from "../civic-data/temporary-path.ts";
 
 export const WEBSITE_WINDOW_MS = 3_600_000;
 
@@ -26,73 +21,39 @@ export interface WebsitePacing {
   take(site: string, limit: number, nowMs: number): Promise<WebsiteTake>;
   /** Leave the site alone until `until`; a later hold already in place stands. */
   hold(site: string, until: number, nowMs: number): Promise<void>;
-  /** The requested site's active hold, or null. */
-  heldUntil(site: string, nowMs: number): Promise<number | null>;
+  /** The sites held at `nowMs`, with when each may be asked again. */
+  heldUntil(nowMs: number): Promise<ReadonlyMap<string, number>>;
   /** Reserve the next send for `key`, sends `intervalMs` apart for every reader: when this one may go. */
   reserve(key: string, intervalMs: number, nowMs: number): Promise<number>;
 }
 
-function openLocalPacing() {
-  const directory = mkdtempSync(join(tmpdir(), "meanwhile-website-pacing-"));
-  const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as typeof import("node:sqlite");
-  const db = new DatabaseSync(temporaryPath(join(directory, "pacing.sqlite")));
-  db.exec(`PRAGMA cache_size=-1024; PRAGMA temp_store=FILE; PRAGMA journal_mode=OFF;
-    CREATE TABLE requests(sequence INTEGER PRIMARY KEY, owner INTEGER NOT NULL, site TEXT NOT NULL, at REAL NOT NULL);
-    CREATE INDEX requests_site ON requests(owner,site,at);
-    CREATE TABLE sites(owner INTEGER NOT NULL, site TEXT NOT NULL, hold_until REAL, paced_until REAL, PRIMARY KEY(owner,site));`);
-  return {db, directory,
-    expire: db.prepare("DELETE FROM requests WHERE owner=? AND site=? AND at<=?"),
-    count: db.prepare("SELECT count(*) AS count FROM requests WHERE owner=? AND site=?"),
-    oldest: db.prepare("SELECT at FROM requests WHERE owner=? AND site=? ORDER BY sequence LIMIT 1"),
-    take: db.prepare("INSERT INTO requests(owner,site,at) VALUES(?,?,?)"),
-    hold: db.prepare(`INSERT INTO sites(owner,site,hold_until) VALUES(?,?,?)
-      ON CONFLICT(owner,site) DO UPDATE SET hold_until=MAX(COALESCE(sites.hold_until,excluded.hold_until),excluded.hold_until)`),
-    held: db.prepare("SELECT hold_until FROM sites WHERE owner=? AND site=? AND hold_until>?"),
-    reserve: db.prepare(`INSERT INTO sites(owner,site,paced_until) VALUES(?,?,?+?)
-      ON CONFLICT(owner,site) DO UPDATE SET paced_until=MAX(COALESCE(sites.paced_until,?),?)+? RETURNING paced_until`),
-    forgetRequests: db.prepare("DELETE FROM requests WHERE owner=?"),
-    forgetSites: db.prepare("DELETE FROM sites WHERE owner=?"),
-  };
-}
-let localPacing: ReturnType<typeof openLocalPacing> | null = null;
-let nextLocalOwner = 0;
-const localPacingOwners = new FinalizationRegistry<number>(owner => {
-  localPacing?.forgetRequests.run(owner);
-  localPacing?.forgetSites.run(owner);
-});
-process.once("exit", () => {
-  if (!localPacing) return;
-  localPacing.db.close();
-  rmSync(temporaryPath(localPacing.directory), {recursive: true, force: true});
-  localPacing = null;
-});
-
-/** Process-local pacing, including tests and the file store. Host state stays in scratch storage with a fixed page cache. */
+/** Pacing held in this process: tests, the file store, and a reader with no shared store. */
 export function memoryWebsitePacing(): WebsitePacing {
-  const owner = nextLocalOwner++;
-  const database = () => localPacing ??= openLocalPacing();
-  const pacing: WebsitePacing = {
+  const requests = new Map<string, number[]>();
+  const holds = new Map<string, number>();
+  const paced = new Map<string, number>();
+  return {
     async take(site, limit, nowMs) {
-      const db = database();
-      db.expire.run(owner, site, nowMs - WEBSITE_WINDOW_MS);
-      if (Number(db.count.get(owner, site)?.count) >= limit)
-        return {ok: false, until: Number(db.oldest.get(owner, site)?.at) + WEBSITE_WINDOW_MS};
-      db.take.run(owner, site, nowMs);
+      const recent = (requests.get(site) ?? []).filter((at) => nowMs - at < WEBSITE_WINDOW_MS);
+      if (recent.length >= limit) {
+        requests.set(site, recent);
+        return { ok: false, until: recent[0]! + WEBSITE_WINDOW_MS };
+      }
+      requests.set(site, [...recent, nowMs]);
       return { ok: true };
     },
     async hold(site, until) {
-      database().hold.run(owner, site, until);
+      holds.set(site, Math.max(holds.get(site) ?? 0, until));
     },
-    async heldUntil(site, nowMs) {
-      const held = localPacing?.held.get(owner, site, nowMs)?.hold_until;
-      return typeof held === "number" ? held : null;
+    async heldUntil(nowMs) {
+      return new Map([...holds].filter(([, until]) => until > nowMs));
     },
     async reserve(key, intervalMs, nowMs) {
-      return Number(database().reserve.get(owner, key, nowMs, intervalMs, nowMs, nowMs, intervalMs)?.paced_until) - intervalMs;
+      const at = Math.max(nowMs, paced.get(key) ?? 0);
+      paced.set(key, at + intervalMs);
+      return at;
     },
   };
-  localPacingOwners.register(pacing, owner);
-  return pacing;
 }
 
 export const WEBSITE_PACING_DDL: readonly string[] = [
@@ -120,7 +81,7 @@ ON CONFLICT (site) DO UPDATE SET hold_until = GREATEST(COALESCE(p.hold_until, $2
 const WEBSITE_RESERVE_SQL = `INSERT INTO cp_website_pacing AS p (site, paced_until, updated_at) VALUES ($1, $2::timestamptz + $3::double precision * interval '1 millisecond', $2::timestamptz)
 ON CONFLICT (site) DO UPDATE SET paced_until = GREATEST(COALESCE(p.paced_until, $2::timestamptz), $2::timestamptz) + $3::double precision * interval '1 millisecond', updated_at = $2::timestamptz
 RETURNING paced_until`;
-export const WEBSITE_HELD_SQL = "SELECT hold_until FROM cp_website_pacing WHERE site=$1 AND hold_until>$2::timestamptz";
+const WEBSITE_HELD_SQL = "SELECT site, hold_until FROM cp_website_pacing WHERE hold_until > $1::timestamptz";
 
 type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -137,8 +98,8 @@ export type WebsiteAdmission =
 /** One request a reader is about to send: a held website waits for every reader; a small one takes from its shared hour. */
 export async function admitWebsiteRequest(pacing: WebsitePacing, url: string, limit: number | null, nowMs: number): Promise<WebsiteAdmission> {
   const site = websiteOf(url);
-  const held = await pacing.heldUntil(site, nowMs);
-  if (held !== null && held > nowMs) return { ok: false, until: held, why: "ASKED_TO_WAIT" };
+  const held = (await pacing.heldUntil(nowMs)).get(site);
+  if (held !== undefined && held > nowMs) return { ok: false, until: held, why: "ASKED_TO_WAIT" };
   if (limit === null) return { ok: true };
   const took = await pacing.take(site, limit, nowMs);
   return took.ok ? took : { ok: false, until: took.until, why: "HOURLY_ALLOWANCE" };
@@ -171,9 +132,8 @@ export function createWebsitePacing(query: Query): WebsitePacing {
     async hold(site, until, nowMs) {
       await query(WEBSITE_HOLD_SQL, [site, iso(until), iso(nowMs)]);
     },
-    async heldUntil(site, nowMs) {
-      const held = (await query(WEBSITE_HELD_SQL, [site, iso(nowMs)]))[0]?.hold_until;
-      return held == null ? null : ms(held);
+    async heldUntil(nowMs) {
+      return new Map((await query(WEBSITE_HELD_SQL, [iso(nowMs)])).map((row) => [String(row.site), ms(row.hold_until)] as const));
     },
     async reserve(key, intervalMs, nowMs) {
       return ms((await query(WEBSITE_RESERVE_SQL, [key, iso(nowMs), intervalMs]))[0]?.paced_until) - intervalMs;

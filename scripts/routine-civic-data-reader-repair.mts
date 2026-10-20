@@ -10,7 +10,6 @@ import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
-  fanOutReaderRepairRecord,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
   repairMeetingReaderProjectionReadbacks,
@@ -24,8 +23,6 @@ import { installFatalLine } from "../lib/ops/fatal-line.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
 import { assignment, present, requiredAssignment } from "./cli-args.mts";
 import { readerVerifierClosureAttestor } from "./lib/verifier-attestation.ts";
-import { requireRegistryState, registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
-import { repairFanOutReaderReadbacks } from "../lib/civic-data/fanout-reader-repair.ts";
 function safeFailure(value: string): string {
   return value
     .replace(/(postgres(?:ql)?:\/\/)[^@\s]+@/gi, "$1[credentials-redacted]@")
@@ -72,10 +69,9 @@ const store = stage
   : new PostgresRoutineDataStore();
 
 step = "reading the meeting doors";
-if (meetingAggregate || contractId?.startsWith("meetings:")) {
+{
   // The meeting partitions read back here are the published doors' partitions; other contracts do not need them.
-  const state = requireRegistryState(requiredAssignment(argv, "state", "READER_REPAIR_STATE_REQUIRED"));
-  const doors = await ensureMeetingDoors({ state });
+  const doors = await ensureMeetingDoors();
   if (!doors.ready && (meetingAggregate || contractId?.startsWith("meetings:"))) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 }
 
@@ -84,9 +80,7 @@ let failed = false;
 const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
   const selectedIds = assignment(argv, "contracts")?.split(",") ?? null;
-  const state = requireRegistryState(requiredAssignment(argv, "state", "READER_REPAIR_STATE_REQUIRED"));
-  const stateContracts = MEETING_PARTITION_CONTRACTS.filter(contract => registryJurisdictions(contract.derivedFamily ?? contract.ocdId ?? contract.bodyId).includes(state));
-  const selectedContracts = selectedIds === null ? stateContracts : stateContracts.filter(contract => selectedIds.includes(contract.id));
+  const selectedContracts = selectedIds === null ? MEETING_PARTITION_CONTRACTS : MEETING_PARTITION_CONTRACTS.filter(contract => selectedIds.includes(contract.id));
   if (selectedIds && (selectedIds.length !== selectedContracts.length || selectedContracts.length === 0)) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
   const results = await repairMeetingReaderProjectionReadbacks(
     store,
@@ -122,18 +116,12 @@ if (meetingAggregate) {
   }
   try {
     stage?.("readback repair started");
-    if ("fanOut" in contract && contract.fanOut === true) {
-      const result = await repairFanOutReaderReadbacks({ store, contract, now: observedAt, attestor });
-      failed ||= result.failed > 0;
-      console.log(serializeRoutineReaderRepairRecord(fanOutReaderRepairRecord(contract, result)));
-    } else {
     const result = await repairRoutineReaderProjectionReadback(store, contract, observedAt, undefined, { attestor });
     stage?.(`readback repair ${result.kind}`);
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,
       { ok: true, value: result },
     )));
-    }
   } catch (error) {
     stage?.("readback repair failed");
     failed = true;

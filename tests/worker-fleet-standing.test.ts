@@ -13,9 +13,7 @@ import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { computeRouteFloor } from "../lib/control-plane/preflight.ts";
 import { beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { projectAggregate, type ArtifactRecord, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { DiskRows } from "../lib/control-plane/scheduler/disk-rows.ts";
-import { createPlannerSpool } from "../lib/control-plane/scheduler/planner-spool.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { createRouteTask, denyByPolicy, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
@@ -47,9 +45,7 @@ test("held planning enqueues every captured document without running a computati
   const h = await harness(t);
   for (let id = 1; id <= 20; id++) await h.hold(feed(id));
   const before = (await h.repos.attempts.list()).length;
-  const exits = process.listenerCount("exit");
   const tasks = await planHeldWorkerFleet(ROOT, h.runtime, true);
-  assert.equal(process.listenerCount("exit"), exits, "the default planner disposes its own scratch state");
   assert.equal(tasks.length, 20);
   assert.ok(tasks.every(task => task.workerTask?.role === "PARSER" && task.state === "PENDING"));
   assert.equal((await h.repos.attempts.list()).length, before);
@@ -65,70 +61,9 @@ test("the round's legacy held plan runs only when a registered event capture sti
   await h.hold(feed(1));
   assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), true, "a registered event capture with no Parser result is owed");
   const round = readFileSync(path.join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(round, /await legacyHeldWorkOwed\(ROOT, fleet\) \? await planHeldWorkerFleet\(ROOT, fleet, true, planner\) : \[\]/,
+  assert.match(round, /await legacyHeldWorkOwed\(ROOT, fleet\) \? await planHeldWorkerFleet\(ROOT, fleet, true\) : \[\]/,
     "the round plans legacy held work only when it is owed, with no switch");
   assert.doesNotMatch(round, /WTP_HELD_FLEET_PLAN/);
-});
-
-test("held planning keeps country queue identities on the shared round disk and reads only each task's admission history", async t => {
-  const h = await harness(t);
-  const artifact = await h.hold(feed(1));
-  const template = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, role: "PARSER", artifactId: artifact.artifactId,
-    contract: heldEventContract(ROOT, artifact)!, now: h.now() });
-  const empty = createMemoryRepositories(), planner = await createPlannerSpool();
-  const count = 2_000;
-  const taskAt = (index: number): RouteTask => ({ ...template, id: `held:${index}`, workItemId: `place:${index}`,
-    state: index % 4 === 1 ? "RESULT_RECORDED" : index % 4 === 2 ? "RECLAIMABLE" : index % 4 === 3 ? "CLAIMED" : "PENDING" });
-  const fail = async (): Promise<never> => { throw new Error("COUNTRY_HELD_ROWS_MATERIALIZED"); };
-  let historyReads = 0;
-  const repos: ControlPlaneRepositories = { ...empty,
-    routeTasks: { ...empty.routeTasks, list: fail, listNarrowed: fail, listWhere: fail,
-      listChangedSince: async (_since, _held, options) => {
-        assert.ok(options?.page);
-        assert.deepEqual(options.projection?.workerTask, { role: true, artifactId: true, contract: ["subjectId", "schemaVersion"] });
-        assert.equal(options.projection?.attemptIds, undefined);
-        for (let start = 0; start < count; start += 32) {
-          const rows = Array.from({ length: Math.min(32, count - start) }, (_, offset) => {
-            const task = taskAt(start + offset);
-            return { id: task.id, revision: 1, updatedAt: START, value: projectAggregate(task, options.projection!) as RouteTask };
-          });
-          await options.page(rows);
-        }
-        return { rows: [], through: START };
-      } },
-    attempts: { ...empty.attempts, list: fail, listWhere: fail,
-      listWhereNarrowed: async (path, key, projection) => {
-        assert.deepEqual(path, ["routeTaskId"]);
-        assert.deepEqual(Object.keys(projection).sort(), ["abortReason", "endedAt", "id", "outcome", "routeTaskId", "startedAt"]);
-        const index = Number(key.split(":")[1]), task = taskAt(index);
-        historyReads++;
-        const attempt = attemptFor(task, 1, index % 4 === 2 ? "CRASHED" : index % 4 === 3 ? null : "COMPLETED", "PROCESS_CRASHED");
-        return index % 4 === 0 ? [] : [{ id: attempt.id, revision: 1, updatedAt: START, value: projectAggregate(attempt, projection) }];
-      } },
-  };
-  const runtime = { ...h.runtime, repos, now: () => "2027-01-01T00:00:00.000Z" };
-  try {
-    const first = await planHeldWorkerFleet(ROOT, runtime, true, planner);
-    assert.ok(first instanceof DiskRows);
-    assert.equal(first.length, count / 2);
-    let position = 0;
-    for (const task of first) {
-      assert.equal(task.id, `held:${position * 2}`);
-      assert.deepEqual(Object.keys(task).sort(), ["createdAt", "id", "routeId", "state", "workItemId", "workerTask"]);
-      position++;
-    }
-    const second = await planHeldWorkerFleet(ROOT, runtime, true, planner);
-    assert.equal(second.length, count / 2);
-    assert.equal(first.length, count / 2, "a second plan cannot overwrite rows an earlier round consumer is iterating");
-    assert.deepEqual(first.slice(0, 3).map(task => task.id).reduce<string[]>((ids, id) => [...ids, id], []), ["held:0", "held:2", "held:4"]);
-    assert.equal(historyReads, count * 2);
-    const broken = { ...runtime, repos: { ...repos, routeTasks: { ...repos.routeTasks, listChangedSince: fail } } };
-    await assert.rejects(planHeldWorkerFleet(ROOT, broken, true, planner), /COUNTRY_HELD_ROWS_MATERIALIZED/);
-    assert.equal(first.length, count / 2, "failure does not dispose the shared round planner");
-  } finally { await planner.close(); }
-  const exits = process.listenerCount("exit");
-  await assert.rejects(planHeldWorkerFleet(ROOT, { ...runtime, repos: { ...repos, routeTasks: { ...repos.routeTasks, listChangedSince: fail } } }, true), /COUNTRY_HELD_ROWS_MATERIALIZED/);
-  assert.equal(process.listenerCount("exit"), exits, "failure disposes the default planner's scratch state");
 });
 
 function feed(id: number, wrongDate = false) {

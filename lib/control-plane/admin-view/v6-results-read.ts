@@ -46,7 +46,7 @@ export type PipelineStageName = (typeof PIPELINE_STAGE_ORDER)[number];
 const SNAPSHOT_ARRAY = (path: string) => `CASE WHEN jsonb_typeof(${path}) = 'array' THEN ${path} ELSE '[]'::jsonb END`;
 const PENDING = "s.value->'deliveryTrail'->'pending'";
 const PROMOTIONS = "s.value->'deliveryTrail'->'promotions'";
-const WITNESSES = "coalesce(s.value->'servedReader',s.value->'servedReaderReadback')->'witnesses'";
+const WITNESSES = "s.value->'servedReaderReadback'->'witnesses'";
 
 export const PIPELINE_HEAD_SQL = `SELECT s.updated_at AS published_at, s.revision AS revision,
   jsonb_typeof(${PENDING}) AS pending_kind, jsonb_typeof(${PROMOTIONS}) AS promotions_kind,
@@ -64,8 +64,8 @@ export const PIPELINE_APPROVED_SQL = `SELECT p->>'recordClass' AS record_class, 
   FROM cp_owner_snapshots s
   CROSS JOIN LATERAL jsonb_array_elements(${SNAPSHOT_ARRAY(PROMOTIONS)}) AS p
   LEFT JOIN LATERAL (SELECT e->>'state' AS state, (e->>'checkedAt')::timestamptz AS checked_at, e->>'url' AS url
-    FROM cp_owner_snapshots observation,jsonb_array_elements(${SNAPSHOT_ARRAY("coalesce(observation.value->'servedReader',observation.value->'servedReaderReadback')->'witnesses'")}) AS e
-    WHERE (observation.id='current' OR observation.id LIKE 'readback:%') AND e->>'approvalId' = p->>'version' ORDER BY (e->>'checkedAt')::timestamptz DESC LIMIT 1) AS w ON true
+    FROM jsonb_array_elements(${SNAPSHOT_ARRAY(WITNESSES)}) AS e
+    WHERE e->>'approvalId' = p->>'version' ORDER BY (e->>'checkedAt')::timestamptz DESC LIMIT 1) AS w ON true
   WHERE s.id = 'current' AND p->>'recordClass' IS NOT NULL GROUP BY 1, 2, 3`;
 
 export interface PipelineGroupRow { readonly recordClass: string; readonly stage: PipelineStageName; readonly prefix: string; readonly n: number }
@@ -208,7 +208,7 @@ function stageRank(r: AdminV6Result): number {
 export const ZIP_WITNESS_SQL = `SELECT DISTINCT ON (e->>'readerKey') e->>'readerKey' AS reader_key, e->>'state' AS state,
   (e->>'checkedAt')::timestamptz AS checked_at, e->>'url' AS url
   FROM cp_owner_snapshots s, jsonb_array_elements(${SNAPSHOT_ARRAY(WITNESSES)}) AS e
-  WHERE (s.id = 'current' OR s.id LIKE 'readback:%') AND e->>'url' = $1 AND e->>'readerKey' IS NOT NULL
+  WHERE s.id = 'current' AND e->>'url' = $1 AND e->>'readerKey' IS NOT NULL
   ORDER BY e->>'readerKey', (e->>'checkedAt')::timestamptz DESC`;
 
 export interface ZipWitnessRow { readonly readerKey: string; readonly state: "CONFIRMED" | "NOT_OBSERVED"; readonly checkedAt: string; readonly url: string }

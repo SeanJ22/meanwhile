@@ -1,14 +1,6 @@
-/**
- * Every round, each method that works somewhere is tried wherever a door has
- * the same kind of website (`planSpread`). The free try runs now, by plain
- * code, at every matching place (`plainTrier`); its result goes into the fix
- * map, the fix list and the method's own record in the field manual. Where the
- * free try cannot decide, a worker there is offered the method with where it
- * worked, and a paid try is allowed only inside places the owner has sent
- * money to. A place with a result is never tried again by the spread.
- */
 
-import { isTransferableMethod, placeLabel, type FieldManualEntry } from "../control-plane/field-manual.ts";
+
+import { isTransferableMethod, placeLabel, saveFieldManualEntries, type FieldManualEntry, type FieldManualRepos } from "../control-plane/field-manual.ts";
 import { recordAttemptsKeepingHistory } from "../control-plane/fix-history.ts";
 import type { AssignmentMembership } from "../control-plane/expansion/assignment-budget.ts";
 import type { BudgetScope } from "../control-plane/expansion/membership.ts";
@@ -19,10 +11,6 @@ import type { ProbeFetch } from "../doors/probe.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import type { FixMapRow } from "./fix-map.ts";
-import { forEachAggregate } from "../control-plane/workers/streamed-history.ts";
-import { createPlannerSpool, plannerSet, type PlannerSpool } from "../control-plane/scheduler/planner-spool.ts";
-import { recordFieldManualPlaceResult } from "../control-plane/field-manual-place-result.ts";
-import { READING_LIST_CAP } from "../control-plane/expansion/reading.ts";
 import type { MethodAttempt } from "./fix-map-record.ts";
 import { subjectDivisionOf } from "./method-places.ts";
 import { plainTrier, type PlainTry } from "./method-try.ts";
@@ -32,25 +20,19 @@ import { planSpread, SPREAD_ATTEMPT, type SpreadPlace } from "./spread.ts";
 /** At most this many free tries a round; the rest stay queued for the next. */
 export const FREE_TRIES_PER_ROUND = 200;
 
-/**
- * The places the owner has sent money to: members of a Send, and of an area with a budget, each as the division the
- * spread keys on. A member that is a registry government is read to its own division; a member that is no place
- * (a candidate, an office) funds no door.
- */
-let nextSpreadPass = 0;
-export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }, planner?: PlannerSpool): ReadonlySet<string> {
-  const out = planner ? plannerSet(planner, `sent-money-${nextSpreadPass++}`) : new Set<string>();
+
+export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }): ReadonlySet<string> {
+  const out = new Set<string>();
   for (const scope of input.areas ?? []) {
     if (scope.resolved && scope.budgetUsd > 0) for (const member of scope.members) { const at = subjectDivisionOf(member); if (at !== null) out.add(at); }
   }
   for (const members of input.sends?.byKey.values() ?? []) {
-    for (const member of (function* () { yield* members.created.values(); yield* members.reordered.values(); })()) { const at = subjectDivisionOf(member.subjectId); if (at !== null) out.add(at); }
+    for (const member of [...members.created.values(), ...members.reordered.values()]) { const at = subjectDivisionOf(member.subjectId); if (at !== null) out.add(at); }
   }
   return out;
 }
 
 export interface SpreadPassInput {
-  readonly planner?: PlannerSpool;
   readonly repos: Pick<ControlPlaneRepositories, "fieldManual" | "fixMap" | "doors" | "adminConfig">;
   readonly now: string;
   readonly sendPlaceIds: ReadonlySet<string>;
@@ -76,11 +58,8 @@ export interface SpreadMethodReport {
   /** Tried and undecided: a worker there is offered it. */
   readonly leftForWorker: readonly { readonly place: string; readonly note: string }[];
   readonly waiting: readonly { readonly place: string; readonly note: string }[];
-  readonly waitingCount: number;
   readonly paidAllowed: readonly string[];
-  readonly paidAllowedCount: number;
   readonly paidRefused: readonly { readonly place: string; readonly reason: string }[];
-  readonly paidRefusedCount: number;
 }
 
 export interface SpreadPassResult {
@@ -114,25 +93,21 @@ const sameWebsite = (target: SpreadPlace): string => target.why === "door kind" 
 
 /** One round of the spread. Never throws for one method or one place; failed writes are reported. */
 export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassResult> {
-  const planner = input.planner ?? await createPlannerSpool();
-  try { return await spreadPass(input, planner); }
-  finally { if (!input.planner) await planner.close(); }
-}
-
-async function spreadPass(input: SpreadPassInput, planner: PlannerSpool): Promise<SpreadPassResult> {
-  const { repos, now } = input, prefix = `spread-pass-${nextSpreadPass++}`;
+  const { repos, now } = input;
   const working = await repos.fixMap.workingMethods(1000);
+  const workedIn = new Map(working.map((row) => [row.methodId, placeLabel(row.placeId)] as const));
+  const methods = working.length === 0 ? [] : (await repos.fieldManual.readMany([...workedIn.keys()])).map((row) => row.value).filter((entry: FieldManualEntry) => isTransferableMethod(entry));
   const empty: SpreadPassResult = { methods: 0, perMethod: [], tried: { works: 0, fails: 0, undecided: 0 }, waiting: 0, paid: 0, paidSkipped: 0, robots: {}, requests: 0, writeError: null };
-  if (working.length === 0) return empty;
-  const doors = planner.table<DoorRecord>(`${prefix}-doors`, door => door.doorId, "key");
-  await forEachAggregate(repos.doors, row => doors.add(row.value), { doorId: true, kind: true, ocdId: true, hosts: true, config: true, status: true });
+  if (methods.length === 0) return empty;
+  const doors = (await repos.doors.list()).map((row) => row.value);
+  const doorById = new Map<string, DoorRecord>(doors.map((door) => [door.doorId, door] as const));
+  const platformOf = new Map(doors.map((door) => [door.doorId, platformsOf(door)] as const));
   const perMethod: SpreadMethodReport[] = [];
   const trier = plainTrier({ fetch: input.fetch });
   const tried = { works: 0, fails: 0, undecided: 0 };
   const robots: Partial<Record<PermissionVerdict, number>> = {};
   const attempts: MethodAttempt[] = [];
-  const titles = new Map<string, string>();
-  let methodCount = 0;
+  const results = new Map<string, FieldManualEntry>();
   let left = Math.max(0, Math.floor(input.paidTriesLeft));
   let freeLeft = FREE_TRIES_PER_ROUND;
   let waiting = 0, paid = 0, paidSkipped = 0;
@@ -145,47 +120,30 @@ async function spreadPass(input: SpreadPassInput, planner: PlannerSpool): Promis
     }
   };
 
-  for (const source of working) {
-    // A transferable procedure needs none of its country-sized place history.
-    const heldMethod = await repos.fieldManual.readNarrowed(source.methodId, { id: true, role: true, kind: true, title: true, summary: true,
-      recordClasses: true, platforms: true, outcome: true, url: true, source: true, observedAt: true, tier: true, reach: ["method"], payload: ["procedure"] });
-    if (!heldMethod || !isTransferableMethod(heldMethod.value as FieldManualEntry)) continue;
-    const method = { ...(heldMethod.value as FieldManualEntry), states: [] };
-    methodCount += 1; titles.set(method.id, method.title);
-    const worked = placeLabel(source.placeId);
-    const fixes = planner.table<FixMapRow>(`${prefix}-fixes-${method.id}`, row => row.placeId);
-    let after: string | null = null;
-    for (;;) {
-      const page = await repos.fixMap.forMethodPage(method.id, after, 200);
-      for (const row of page) fixes.add(row);
-      if (page.length < 200) break;
-      const next = page.at(-1)!.placeId;
-      if (next === after) throw new Error("FIX_MAP_PAGE_DID_NOT_ADVANCE");
-      after = next;
-    }
-    const plan = planSpread({ planner,
+  for (const method of methods) {
+    const worked = workedIn.get(method.id) ?? "another place";
+    const plan = planSpread({
       method: { methodId: method.id, doorKind: method.platforms[0] ?? null, platforms: method.platforms },
-      doors: doors.rows, detectedPlatformsFor: platformsOf, fixMapRows: fixes.rows,
+      doors, detectedPlatforms: (doorId) => platformOf.get(doorId) ?? [],
+      fixMapRows: await repos.fixMap.forPlaces(method.id, doors.flatMap(door => door.ocdId === null ? [] : [door.ocdId])),
       ...(input.sizeFor ? { sizeFor: (host: string) => input.sizeFor!(`https://${host}/`) } : {}),
       sendPlaceIds: input.sendPlaceIds, paidTriesLeft: left,
     });
     const report = { methodId: method.id, title: method.title, platforms: method.platforms, workedIn: worked, matchingDoors: plan.matchingDoors,
       matchingPlaces: plan.matching, alreadyTried: plan.alreadyTried, freeTries: 0,
       worked: [] as { place: string; note: string }[], didNotFit: [] as { place: string; note: string }[], leftForWorker: [] as { place: string; note: string }[],
-      waiting: [] as { place: string; note: string }[], waitingCount: 0, paidAllowedCount: plan.paid.length, paidRefusedCount: plan.paidSkipped.length,
-      paidAllowed: Array.from(plan.paid.slice(0, READING_LIST_CAP).map((p) => p.placeId)),
-      paidRefused: Array.from(plan.paidSkipped.slice(0, READING_LIST_CAP).map((skip) => ({ place: skip.place.placeId, reason: skip.reason }))) };
+      waiting: [] as { place: string; note: string }[], paidAllowed: plan.paid.map((p) => p.placeId),
+      paidRefused: plan.paidSkipped.map((skip) => ({ place: skip.place.placeId, reason: skip.reason })) };
     perMethod.push(report);
     const queue = (target: SpreadPlace, why: string) =>
       put(untried(method.id, target, SPREAD_ATTEMPT.QUEUED, `Queued: it worked in ${worked}, and this place has ${sameWebsite(target)}; ${why}.`, now));
 
     for (const target of plan.plain) {
-      const door = doors.read(target.doorId);
+      const door = doorById.get(target.doorId);
       if (door === undefined) continue;
       if (freeLeft <= 0) {
         waiting += 1;
-        report.waitingCount += 1;
-        if (report.waiting.length < READING_LIST_CAP) report.waiting.push({ place: target.placeId, note: "the round's free tries are used; it waits for the next round" });
+        report.waiting.push({ place: target.placeId, note: "the round's free tries are used; it waits for the next round" });
         await queue(target, "a free try waits for the next round");
         continue;
       }
@@ -194,8 +152,7 @@ async function spreadPass(input: SpreadPassInput, planner: PlannerSpool): Promis
       if (got.robots !== null) robots[got.robots] = (robots[got.robots] ?? 0) + 1;
       if (got.outcome === "WAITING") {
         waiting += 1;
-        report.waitingCount += 1;
-        if (report.waiting.length < READING_LIST_CAP) report.waiting.push({ place: target.placeId, note: got.note });
+        report.waiting.push({ place: target.placeId, note: got.note });
         await queue(target, `a free try waits: ${got.note}`);
       } else if (got.outcome === "UNDECIDED") {
         report.freeTries += 1;
@@ -209,16 +166,14 @@ async function spreadPass(input: SpreadPassInput, planner: PlannerSpool): Promis
         tried[got.outcome === "WORKS" ? "works" : "fails"] += 1;
         attempts.push({ kind: "ROUTE_RUN", attemptId: `${SPREAD_ATTEMPT.PLAIN_TRIED}:${now}`, placeId: target.placeId, methodIds: [method.id],
           outcome: got.outcome === "WORKS" ? "SUCCEEDED" : "FAILED", cause: `Tried by plain code: ${got.note}.`, at: now });
-        try {
-          await recordFieldManualPlaceResult(repos.fieldManual, method.id, { place: target.placeId,
-            outcome: got.outcome === "WORKS" ? "YIELDED" : "FAILED", observedAt: now }, now);
-        } catch (error) { writeError ??= `the field manual was not updated: ${error instanceof Error ? error.message : String(error)}`; }
+        const held = results.get(method.id) ?? { ...method, placeResults: [] };
+        results.set(method.id, { ...held, placeResults: [...(held.placeResults ?? []),
+          { place: target.placeId, outcome: got.outcome === "WORKS" ? "YIELDED" : "FAILED", observedAt: now }] });
       }
     }
     for (const target of plan.plainWaiting) {
       waiting += 1;
-      report.waitingCount += 1;
-      if (report.waiting.length < READING_LIST_CAP) report.waiting.push({ place: target.placeId, note: "this small publisher's hourly allowance is used this round" });
+      report.waiting.push({ place: target.placeId, note: "this small publisher's hourly allowance is used this round" });
       await queue(target, "a free try waits for this small publisher's hourly allowance");
     }
     left -= plan.paid.length;
@@ -231,12 +186,17 @@ async function spreadPass(input: SpreadPassInput, planner: PlannerSpool): Promis
   }
 
   if (attempts.length > 0) {
+    const titles = new Map(methods.map((method) => [method.id, method.title] as const));
     const done = await recordAttemptsKeepingHistory(repos.fixMap, { adminConfig: repos.adminConfig }, attempts, (id) => titles.get(id) ?? null)
       .catch((error: unknown) => ({ failed: 1, error }));
     if (done.failed > 0) writeError ??= `the fix map was not updated for ${done.failed} free tr${done.failed === 1 ? "y" : "ies"}`;
   }
+  if (results.size > 0) {
+    const saved = await saveFieldManualEntries(repos as FieldManualRepos, [...results.values()], now);
+    if (saved.error !== undefined) writeError ??= `the field manual was not updated: ${saved.error}`;
+  }
   const requests = [...trier.requests.values()].reduce((sum, n) => sum + n, 0);
-  return { methods: methodCount, perMethod, tried, waiting, paid, paidSkipped, robots, requests, writeError };
+  return { methods: methods.length, perMethod, tried, waiting, paid, paidSkipped, robots, requests, writeError };
 }
 
 /** One line for the round's log. */

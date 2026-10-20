@@ -784,7 +784,7 @@ test("PDC-13: tied latest attempts cannot be ordered by UUID or database return 
 });
 
 test("PDC-13: one source refusal cannot alter another source's Admin disposition", () => {
-  const fec = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "fec-funding:AZ")!;
+  const fec = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "fec-funding")!;
   const nh = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "nh-members")!;
   const fecLkg = candidateRow(fec, { id: "fec-isolated-lkg", at: "2026-09-07T00:00:00.000Z" });
   const fecFailure = candidateRow(fec, {

@@ -179,8 +179,7 @@ test("the census reads all state governments independently; research retirement 
   assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}\)/);
   assert.match(census, /runCensusState\(\{ repos, state, needs: reading\.needs/);
   assert.doesNotMatch(runner, /runMeetingsDiscovery|MEETINGS_DISCOVERY_MAX_WALKS|missionMeetingsDiscoveryNeeds/);
-  assert.match(runner, /for \(const state of states\) \{\s*await meetingPartitions\.readStates\(\[state\]\)/, "retirement reads one state's government routes at a time");
-  assert.match(runner, /for \(const id of heldCalendarRouteBodies\(rows\)\) held\.add\(id\)/);
+  assert.match(runner, /const held = heldCalendarRouteBodies\(rows\)/);
   assert.match(runner, /: planHeldRouteRetirement\(\{/, "old meetings rows retire on held routes");
   assert.doesNotMatch(runner, /gapLedger|GAP_LEDGER|gap-ledger/, "the runner no longer reads the ledger");
   for (const path of ["scripts/build-gap-ledger.mts", "docs/gap-ledger.md", "data/derived/gap-ledger.json"]) {
@@ -206,12 +205,12 @@ test("PLAN: a meetings row retires only when its government's exact body holds a
     { obligationId: meetingsRow(AVONDALE), reason: heldCalendarRouteReason(AVONDALE, bodyOf(AVONDALE)) },
     { obligationId: meetingsRow(BENSON, 2), reason: heldCalendarRouteReason(BENSON, bodyOf(BENSON)) },
   ]);
-  assert.match(Array.from(plan.retire)[0].reason, /^CALENDAR ROUTE HELD: az:city:city-of-avondale's body ocd-division\/country:us\/state:az\/place:city-of-avondale#governing has a held calendar route/);
+  assert.match(plan.retire[0].reason, /^CALENDAR ROUTE HELD: az:city:city-of-avondale's body ocd-division\/country:us\/state:az\/place:city-of-avondale#governing has a held calendar route/);
   assert.deepEqual(plan.heldBack.map((h) => [h.obligationId, h.code]), [
     [meetingsRow(UNLISTED), "NO_HELD_CALENDAR_ROUTE"],
     [meetingsRow(NOBODY), "NO_EXACT_BODY"],
   ]);
-  assert.match(Array.from(plan.heldBack)[0].why, /place:town-nowhere#governing holds no calendar route/);
+  assert.match(plan.heldBack[0].why, /place:town-nowhere#governing holds no calendar route/);
   assert.deepEqual(
     [...plan.owned].sort(),
     [meetingsRow("az:city:already-retired"), meetingsRow(AVONDALE), meetingsRow(BENSON, 2), meetingsRow(UNLISTED), meetingsRow(NOBODY)].sort(),
@@ -237,7 +236,7 @@ test("PLAN: unread owed rows or a provider that did not read cleanly retire noth
   });
   assert.deepEqual(unreadable.retire, []);
   assert.deepEqual(unreadable.heldBack.map((h) => h.code), ["ROUTES_UNREAD", "ROUTES_UNREAD"]);
-  assert.match(Array.from(unreadable.heldBack)[0].why, /STORE_UNREACHABLE/);
+  assert.match(unreadable.heldBack[0].why, /STORE_UNREACHABLE/);
 
   const failing = planHeldRouteRetirement({
     outside,

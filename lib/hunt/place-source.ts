@@ -1,5 +1,5 @@
 import { requireRegistryState, registryJurisdictions } from "../civic-data/state-scopes.ts";
-import { readFieldManual } from "../control-plane/field-manual.ts";
+import { readFieldManual,readFieldManualSourceHints } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { divisionsForZip, type GeographyReadOptions, type PlaceDivision } from "../control-plane/expansion/national-geography.ts";
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
@@ -18,7 +18,6 @@ export interface NationalPlacePublicationInput {
   readonly sources: NationalPlaceSources;
 }
 
-
 export async function runPlaceSource(input: {
   readonly repos: ControlPlaneRepositories;
   readonly store: RoutineDataStore;
@@ -29,7 +28,7 @@ export async function runPlaceSource(input: {
   readonly readSource: (url: string, knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<HeldSourcePage>;
   readonly knowledge?: Awaited<ReturnType<typeof readFieldManual>>;
   readonly publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
-  /** Worker brokers serialize shared-pointer writes while acquisition runs in parallel. */
+
   readonly publishElection?: (fields: NationalPlaceSources["electionFields"], now: string) => ReturnType<typeof publishElectionFields>;
   readonly geography?: GeographyReadOptions;
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
@@ -41,9 +40,8 @@ export async function runPlaceSource(input: {
   const divisions = (input.divisions ?? await divisionsForZip(input.zip, input.geography)).filter(division => {
     const states = registryJurisdictions(division.id); return !states.length || states.includes(state);
   });
-  // Every acquisition for the ZIP inherits what the bank holds for its divisions.
-  // A failed bank read remains visible without holding verified facts.
-  const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id) });
+
+  const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id),limit:40 });
   const ids = divisions.map(division => division.id);
   const readHeld = input.readHeld ?? (divisionIds => readHeldPlaceCapture(divisionIds,
     { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));
@@ -54,24 +52,20 @@ export async function runPlaceSource(input: {
   let families = null as NationalSourceFamilies | null;
   const plan = await planPlaceHunt({ repos: input.repos, divisions, zips: [input.zip], now: input.now, clock: input.clock, knowledge, readHeld,
     acquireNational: async blanks => {
-      // Read only the families that still have an open blank; a second pass on a place with nothing open reads nothing.
+
       families = openNationalFamilies(blanks);
-      // One pointer is updated serially, while source reads remain parallel.
-      // A ready official never waits behind the state's election-page walk.
+
       let publicationQueue = Promise.resolve();
       let publishedBatches = 0;
-      let geographyOffered=false;
       const publish = (ready: NationalPlaceSources) => {
         publicationQueue = publicationQueue.then(async () => {
-          const publishRegistry=!geographyOffered||ready.officials.length>0;
-          if(publishRegistry)try {
-            geographyOffered=true;
+          try {
             publication = await input.publish({ store: input.store, now: input.clock?.() ?? input.now, divisions,
               geographyCaptures: input.geographyCaptures, sources: ready });
           } catch (error) {
             publication = { error: error instanceof Error ? error.message : String(error) };
           }
-          if(publishRegistry)publications.push(publication);
+          publications.push(publication);
           if (ready.electionFields.length) {
             try {
               const now = input.clock?.() ?? input.now;
@@ -86,14 +80,13 @@ export async function runPlaceSource(input: {
         });
         return publicationQueue;
       };
-      sources = await collectNationalPlaceSources({ divisions, now: input.now, knowledge,
+      sources = await collectNationalPlaceSources({ divisions, now: input.now,sourceHints:url=>readFieldManualSourceHints(input.repos,{ocdIds:ids},url),
         read: url => input.readSource(url, knowledge), onSources: publish, families });
       if (!publishedBatches) await publish(sources);
       await publicationQueue;
-      // Re-read the canonical pointer after publication. Do not substitute a
-      // successful function return or a collected field for a published value.
+
       return { ...await readHeld(ids), replacesHeld: true };
     } });
-  // Acquisition never ran when nothing was open, so every family was skipped.
+
   return { ...plan, zip: input.zip, families: families ?? { officials: false, elections: false }, divisions, sources: sources as NationalPlaceSources | null, publication, publications, electionPublications };
 }

@@ -2,13 +2,12 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { CostEntry } from "../cost.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { WorkItem } from "../work-item.ts";
-import type { AppendOnlyRepository, ArtifactRecord, ControlPlaneRepositories, DispositionCommit, RecordedTransition } from "../repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, RecordedTransition } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { PromotionPipelineRecord } from "../promotion/types.ts";
 import { assertFleetResult, type WorkerResultRecord } from "./types.ts";
 import { assertResearchWalk, type EvidenceWalkStep, type ResearchWalkState } from "./research-types.ts";
-import { canonicalJson } from "../repository/types.ts";
-import { readArtifactsById } from "./scoped-history.ts";
+import { canonicalJson, readByKeys, type AppendOnlyRepository } from "../repository/types.ts";
 
 export interface AutonomousActivitySnapshot {
   readonly workItems: readonly WorkItem[];
@@ -103,14 +102,7 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
     };
     const itemPipelineIds = new Set(facts.promotion.map(p => p.itemId));
     const fullFacts = { ...facts, promotion: orderedFor(promotionByItem, itemPipelineIds) };
-    const references=new Set(facts.workers.flatMap(record=>record.inputArtifactIds));
-    for(const task of facts.routeTasks) {
-      const spec=task.workerTask;
-      if(!spec)continue;
-      references.add(spec.artifactId);
-      if(spec.acquisition) {references.add(spec.acquisition.route.observation.artifactId); for(const span of spec.acquisition.route.publisherSubjectEvidence)references.add(span.artifactId);}
-      if(spec.contract.schemaVersion===2) for(const id of [...spec.contract.sourceScope.observationArtifactIds,...spec.contract.verification.authorities.flatMap(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds])]) references.add(id);
-    }
+    const references = referencedArtifactIds(facts.routeTasks, facts.workers);
     const referencedArtifacts=orderedFor(artifactsById,references).filter(artifact=>artifact.workItemId!==workItemId);
     const referencedAttempts=orderedFor(attemptsById,new Set(referencedArtifacts.map(artifact=>artifact.attemptId)))
       .filter(attempt=>attempt.workItemId!==workItemId);
@@ -191,56 +183,59 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   }).sort((a,b) => a.workItem.id.localeCompare(b.workItem.id));
 }
 
-/** Indexed predicates are applied before logs cross the connection, including mixed legacy log keys. */
-async function matchingLog<T>(repo: AppendOnlyRepository<T>, path: readonly string[], values: readonly string[]): Promise<T[]> {
-  const keys = new Set<string>(), ids = [...new Set(values)].sort();
-  for (const id of ids) for (const key of await repo.keysWhere(path, id)) keys.add(key);
-  const rows: T[] = [];
-  for (const key of [...keys].sort()) for (const id of ids) rows.push(...await repo.readWhere(key, path, id));
-  return rows;
+function referencedArtifactIds(tasks: readonly RouteTask[], workers: readonly WorkerResultRecord[]): Set<string> {
+  const references = new Set(workers.flatMap(record => record.inputArtifactIds));
+  for (const task of tasks) {
+    const spec = task.workerTask;
+    if (!spec) continue;
+    references.add(spec.artifactId);
+    if (spec.acquisition) {
+      references.add(spec.acquisition.route.observation.artifactId);
+      for (const span of spec.acquisition.route.publisherSubjectEvidence) references.add(span.artifactId);
+    }
+    if (spec.contract.schemaVersion === 2) for (const id of [...spec.contract.sourceScope.observationArtifactIds,
+      ...spec.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])]) references.add(id);
+  }
+  return references;
 }
 
-/** Read explicit obligations only. Country-wide callers visit one ID at a time and retain report counters. */
+async function matchingKeys<T>(log: AppendOnlyRepository<T>, path: readonly string[], values: readonly string[]): Promise<string[]> {
+  if (!log.keysWhere) throw new Error("ACTIVITY_INDEXED_LOOKUP_UNAVAILABLE");
+  const keys = new Set<string>();
+  for (const value of new Set(values)) for (const key of await log.keysWhere(path, value)) keys.add(key);
+  return [...keys].sort();
+}
+
 export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds: readonly string[], options: {
   readonly observedAt?: string;
-} = {}): Promise<readonly AutonomousObligationActivity[]> {
-  const activities: AutonomousObligationActivity[] = [];
-  for (const id of [...new Set(workItemIds)].sort()) {
-    const item = await repos.workItems.read(id);
-    if (!item) throw new Error(`AUTONOMOUS_ACTIVITY_WORK_ITEM_MISSING:${id}`);
-    const [tasks, attempts, transitions, dispositions, artifacts, costs, scouts, workers] = await Promise.all([
-      repos.routeTasks.listWhere(["workItemId"], id), repos.attempts.listWhere(["workItemId"], id),
-      matchingLog(repos.transitions, ["workItemId"], [id]), matchingLog(repos.dispositions, ["workItemId"], [id]),
-      matchingLog(repos.artifacts, ["workItemId"], [id]), matchingLog(repos.costs, ["workItemId"], [id]),
-      matchingLog(repos.scoutResults, ["workItemId"], [id]), matchingLog(repos.workerResults, ["workItemId"], [id]),
-    ]);
-    const leases: ExecutionLease[] = [];
-    for (const task of tasks) leases.push(...(await repos.leases.listWhere(["routeTaskId"], task.id)).map(row => row.value));
-    const referencedIds = new Set(workers.flatMap(record => record.inputArtifactIds));
-    for (const task of tasks) {
-      const spec = task.value.workerTask;
-      if (!spec) continue;
-      referencedIds.add(spec.artifactId);
-      if (spec.acquisition) {
-        referencedIds.add(spec.acquisition.route.observation.artifactId);
-        for (const span of spec.acquisition.route.publisherSubjectEvidence) referencedIds.add(span.artifactId);
-      }
-      if (spec.contract.schemaVersion === 2) for (const artifactId of [...spec.contract.sourceScope.observationArtifactIds,
-        ...spec.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])]) referencedIds.add(artifactId);
-    }
-    const referencedArtifacts: ArtifactRecord[] = [];
-    for (const artifactId of referencedIds) referencedArtifacts.push(...(await readArtifactsById(repos, artifactId)).filter(row => row.workItemId !== id));
-    const referencedAttempts: Attempt[] = [];
-    for (const attemptId of new Set(referencedArtifacts.map(row => row.attemptId))) {
-      const attempt = await repos.attempts.read(attemptId);
-      if (attempt && attempt.value.workItemId !== id) referencedAttempts.push(attempt.value);
-    }
-    const seeds = await matchingLog(repos.promotionPipeline, ["source", "attemptId"], attempts.map(row => row.id));
-    const promotion = await matchingLog(repos.promotionPipeline, ["itemId"], seeds.filter(row => row.stage === "SCOUTED").map(row => row.itemId));
-    activities.push(...projectAutonomousActivity({ workItems: [item.value], routeTasks: tasks.map(row => row.value),
-      attempts: [...attempts.map(row => row.value), ...referencedAttempts], leases, transitions, dispositions,
-      artifacts: [...artifacts, ...referencedArtifacts], costs, scouts, workers, promotion,
-    }, { observedAt: options.observedAt ?? new Date().toISOString() }));
+  readonly workItems?: readonly WorkItem[];
+  readonly scouts?: readonly ScoutResult[];
+} = {}) {
+  const ids = [...new Set(workItemIds)].sort();
+  const selected = new Set(ids);
+  const records = async <T,>(log: AppendOnlyRepository<T>, keys: readonly string[]) => [...(await readByKeys(log, keys)).values()].flat();
+  const [items, tasks, ownAttempts, transitions, costs, workers, scoutKeys] = await Promise.all([
+    options.workItems ? Promise.resolve(options.workItems.filter(item => selected.has(item.id))) : Promise.all(ids.map(id => repos.workItems.mustRead(id))).then(rows => rows.map(row => row.value)),
+    Promise.all(ids.map(id => repos.routeTasks.listWhere(["workItemId"], id))).then(groups => groups.flat().map(row => row.value)),
+    Promise.all(ids.map(id => repos.attempts.listWhere(["workItemId"], id))).then(groups => groups.flat().map(row => row.value)),
+    records(repos.transitions, ids), records(repos.costs, ids), records(repos.workerResults, ids),
+    options.scouts ? Promise.resolve([]) : matchingKeys(repos.scoutResults, ["workItemId"], ids),
+  ]);
+  const [leases, dispositions, referenceKeys, scouts, promotionKeys] = await Promise.all([
+    Promise.all(tasks.map(task => repos.leases.read(task.id))).then(rows => rows.filter(row => row !== null).map(row => row.value)),
+    records(repos.dispositions, tasks.map(task => task.id)),
+    matchingKeys(repos.artifacts, ["artifactId"], [...referencedArtifactIds(tasks, workers)]),
+    options.scouts ?? records(repos.scoutResults, scoutKeys),
+    matchingKeys(repos.promotionPipeline, ["source", "attemptId"], ownAttempts.map(attempt => attempt.id)),
+  ]);
+  const [artifacts, promotion] = await Promise.all([
+    records(repos.artifacts, [...new Set([...ids, ...referenceKeys])].sort()), records(repos.promotionPipeline, promotionKeys),
+  ]);
+  const attempts = new Map(ownAttempts.map(attempt => [attempt.id, attempt]));
+  for (const id of new Set(artifacts.filter(artifact => !selected.has(artifact.workItemId)).map(artifact => artifact.attemptId))) {
+    if (!attempts.has(id)) { const row = await repos.attempts.read(id); if (row) attempts.set(id, row.value); }
   }
-  return activities;
+  return projectAutonomousActivity({ workItems: items, routeTasks: tasks,
+    attempts: [...attempts.values()].sort((a, b) => a.id.localeCompare(b.id)), leases, transitions, dispositions,
+    artifacts, costs, scouts, workers, promotion }, { observedAt: options.observedAt ?? new Date().toISOString() });
 }

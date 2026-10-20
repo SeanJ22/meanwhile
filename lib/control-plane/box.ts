@@ -6,7 +6,6 @@ import { completedWorkerResults } from "./repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
-import { readChangedLogRecord } from "./workers/streamed-history.ts";
 
 /** References into the existing result and artifact stores, never another evidence store. */
 export interface BoxOrigin {
@@ -257,23 +256,20 @@ async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutR
   return indexed;
 }
 
-/** Indexes the Scout and Detective results recorded since the last pass. The first pass replays every result once, one log key at a time. */
-export async function backfillBox(repos: BackfillRepositories, now: string): Promise<number> {
-  const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
+export async function backfillBox(repos: BackfillRepositories, now: string, cursorId = BACKFILL_CURSOR): Promise<number> {
+  const cursor = await repos.passCursors.read(cursorId);
   const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : null;
   let indexed = 0;
-  const scouts = await repos.scoutResults.readChangedSince(since, undefined, { projection: { attemptId: true }, page: async rows => {
-    for (const row of rows) indexed += await indexResults(repos,
-      [await readChangedLogRecord(repos.scoutResults, row, ["attemptId"], row.record.attemptId)], [], now);
+  const scouts = await repos.scoutResults.readChangedSince(since, [], { page: async records => {
+    indexed += await indexResults(repos, records.map(({ record }) => record), [], now);
   } });
-  const workers = await repos.workerResults.readChangedSince(since, undefined, { projection: { id: true }, page: async rows => {
-    for (const row of rows) indexed += await indexResults(repos, [],
-      [await readChangedLogRecord(repos.workerResults, row, ["id"], row.record.id)], now);
+  const workers = await repos.workerResults.readChangedSince(since, [], { page: async records => {
+    indexed += await indexResults(repos, [], records.map(({ record }) => record), now);
   } });
   const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
   if (through) {
-    if (cursor) await repos.passCursors.compareAndSet(BACKFILL_CURSOR, cursor.revision, { through }, now);
-    else await repos.passCursors.put(BACKFILL_CURSOR, { through }, now);
+    if (cursor) await repos.passCursors.compareAndSet(cursorId, cursor.revision, { through }, now);
+    else await repos.passCursors.put(cursorId, { through }, now);
   }
   return indexed;
 }

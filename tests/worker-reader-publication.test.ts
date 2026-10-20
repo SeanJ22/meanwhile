@@ -102,8 +102,6 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   return store;
 }
 
-
-/** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
 function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R {
   const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
   return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
@@ -167,7 +165,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
     ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  // The Validator is the last stage for facts that are not judgment calls.
+
   for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
@@ -226,7 +224,7 @@ test("verified directory bodies publish through the normal registry door and cre
   assert.throws(() => workerBodyDirectoryPackage({ ...checked, plan: { ...f.ready, directorySubject: { ...f.ready.directorySubject!, divisionId: "unsupported-division" } } }), /CENSUS_DIVISION_UNRESOLVED/);
   assert.throws(() => workerBodyDirectoryPackage({ ...checked, captures: captures.map(c => ({ ...c, observedAt: "2026-07-01T00:00:00.000Z" })) }), /OUTSIDE_FRESHNESS_WINDOW/);
   const altered = { ...parser, result: parser.result.role === "PARSER" ? { ...parser.result, records: parser.result.records.map(row => ({ ...row, fields: { ...row.fields, coverage: "countywide" } })) } : parser.result };
-  // A value that does not replay from its source row stays open instead of publishing; the rest of the row still can.
+
   assert.equal(verifiedWorkerRecords({ ...checked, parser: altered }).extraction.records.every(row => row.fields.coverage === undefined), true);
 });
 
@@ -506,7 +504,6 @@ test("local government finance runs through the existing worker publisher and sc
     "a revenue record cannot claim an adopted budget");
 });
 
-
 test("completed polling workers publish every registered site through the existing task dispatch and retain their exact work outcome", async () => {
   const f = await workerFixture("voting-sites", (prior, bodyId) => {
     const body = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
@@ -536,7 +533,6 @@ test("completed polling workers publish every registered site through the existi
   assert.deepEqual((await f.h.repos.workItems.mustRead(item.id)).value.publicationOutcome, report[0].outcome);
 });
 
-
 test("normal complete candidate workers publish their whole contest into general readers and the candidate work inventory",async()=>{
   const facts=["Avery Example","Jordan Sample"].map(candidateName=>({election:"2026 General election",electionDate:"2026-11-03",office:"County Council",candidateName,givenName:candidateName.split(" ")[0],familyName:candidateName.split(" ")[1]}));
   const f=await workerFixture("ballot-contests",facts);
@@ -558,7 +554,6 @@ test("normal complete candidate workers publish their whole contest into general
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));
 });
 
-
 test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
   const f = await workerFixture("ballot-navigation", { state: "AZ", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
@@ -571,7 +566,7 @@ test("publication jobs reuse supplied repositories and return independent receip
   assert.ok(published.receipt.delivered.records > 0);
   assert.equal(published.report[0].outcome.status, "PUBLISHED");
   assert.equal(process.exitCode, exitCode);
-  // An empty concurrent job cannot poison another job's process exit code.
+
   const empty = await runWorkerPublicationJob({ ...job, workItemIds: [] });
   assert.deepEqual([empty.exitCode, empty.receipt], [2, null]);
   assert.equal(process.exitCode, exitCode);

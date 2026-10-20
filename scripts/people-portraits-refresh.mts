@@ -21,7 +21,6 @@ import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-sup
 import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
@@ -40,7 +39,7 @@ function portraitPerson(person:Officeholder):Officeholder {
       ...(person.fieldSources?.photo ? {photo:person.fieldSources.photo} : {})}};
 }
 
-async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[];gaps:PortraitAttempt[];at:string}):Promise<DerivedInputRef[]> {
+async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
   const contracts=[...ROUTINE_SOURCE_CONTRACTS,...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
     .filter(row=>row.sourceId !== "people-portraits" && ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass) &&
       (row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
@@ -51,20 +50,10 @@ async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:
       const saved=await store.readCandidate(promotion.versionId);
       const captures=(saved?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
       for(const row of captures){
-        // A national directory is a route index; own-page portrait evidence comes from the person's government.
-        const sourceUrl=new URL(row.finalUrl);
-        if(row.indexOnly || !isOfficialSource(row.finalUrl) || sourceUrl.hostname === "api.govinfo.gov" &&
-          (/^\/collections\/CDIR\//.test(sourceUrl.pathname) || /^\/packages\/[^/]+\/granules\/?$/.test(sourceUrl.pathname)))continue;
-        try {
-          const text=await capturedText(linking.vault,row);
-          linking.captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
-            observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:contract.sourceId,
-              contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
-        } catch(error) {
-          linking.gaps.push({key:`held-portrait-source:${row.finalUrl}`,code:"PEOPLE_PORTRAIT_HELD_SOURCE_UNAVAILABLE",
-            detail:`The held portrait linking page could not be read; the current own-page reader still runs: ${error instanceof Error ? error.message : String(error)}`,
-            record:{sourceUrl:row.finalUrl,vaultKey:row.capture.vaultKey,attemptedAt:linking.at}});
-        }
+        const text=await capturedText(linking.vault,row);
+        linking.captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
+          observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:contract.sourceId,
+            contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
       }
     }
     return promotedInputRef(contract.recordClass,contract.scope,promotion.versionId,promotion.payload,promotion.promotedAt);
@@ -97,11 +86,9 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
   if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
   const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
-  const sourceGaps:PortraitAttempt[]=[];
+  const priorFacts=previous?.candidate.excludedFacts ?? [];
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
-  const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures,gaps:sourceGaps,at:clock()});
-  const unavailable=new Set(sourceGaps.map(gap=>gap.key));
-  const priorFacts=[...(previous?.candidate.excludedFacts ?? []).filter(fact=>!unavailable.has(fact.key)),...sourceGaps];
+  const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
   let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
   let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),batchStarted=Date.now(),queue=Promise.resolve();
   const publish=async(continuation:readonly PortraitAttempt[]|null)=>{
@@ -113,13 +100,12 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
       const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
       if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
       const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
-      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>fact.code !== "PEOPLE_PORTRAIT_HELD_SOURCE_UNAVAILABLE" &&
-        !people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
         !(continuation && fact.code.endsWith("_WORK_REMAINS")));
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
         derivedInputs:[...sources,...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
-        excludedFacts:[...kept,...sourceGaps,...batch.flatMap(row=>row.facts),...continuation ?? []],confirmUnchanged:true});
+        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...continuation ?? []],confirmUnchanged:true});
       if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
       if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
       last=publication;return;

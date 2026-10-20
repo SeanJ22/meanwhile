@@ -76,10 +76,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
-    WHERE $8::text[] IS NULL AND record_class='DOTGOV_REFERENCE' AND
-      (key='DOTGOV_REFERENCE:cisa-dotgov-registry:'||$1||':domains' OR
-       (key='DOTGOV_REFERENCE:US:current-full:domains' AND NOT EXISTS (
-         SELECT 1 FROM civic_data_promotions WHERE key='DOTGOV_REFERENCE:cisa-dotgov-registry:'||$1||':domains')))
+    WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
 ), domains AS MATERIALIZED (
   SELECT d,${normalizedGovernmentSql("d->>'organization'")} AS identity,source FROM dotgov,
     LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=$1

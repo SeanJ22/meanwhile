@@ -1,12 +1,4 @@
-/**
- * The standing hunter lane's process. The runner
- * starts it only with WTP_CONTINUOUS_HUNTERS=1; the design note is in
- * lib/control-plane/workers/hunter-lane.ts. It is the one process that admits
- * paid model requests while the switch is on: the research round plans,
- * queues, and holds its own model lane closed.
- *
- *   node --experimental-strip-types scripts/hunter-lane.mts [--provider=postgres]
- */
+import { PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
@@ -26,12 +18,11 @@ import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport,
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
   stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
-import { ensureWorkerToolsHost } from "./worker-tools-host.mts";
 
 readFromHeldCopies();
 
 const ROOT = process.cwd();
-/** Every line this process prints; the counts it reports are the lane loop's (hunter-lane.ts). */
+
 const say = (line: string): void => { console.log(line); };
 const nowIso = (): string => new Date().toISOString();
 const wantsPostgres = process.argv.includes("--provider=postgres");
@@ -57,18 +48,31 @@ if (wantsPostgres) {
   repos = await createFileRepositories(store);
 }
 
-const workerToolsHost = await ensureWorkerToolsHost({ repos });
-let exitCode = 1;
-try {
-const armingPath = hunterLaneArmingPath(ROOT);
-const queuePath = hunterQueuePath(armingPath);
+let stateIndex=-1;
+let state="system";
+let armingPath=hunterLaneArmingPath(ROOT,state);
+let queuePath=hunterQueuePath(armingPath);
+const selectedVersions=new Map<string,string>();
+const selectQueue=():string=>{
+  for(let count=0;count<PLANNING_STATES.length;count++) {
+    stateIndex=(stateIndex+1)%PLANNING_STATES.length;
+    const next=PLANNING_STATES[stateIndex];
+    const path=hunterLaneArmingPath(ROOT,next);
+    const queue=readHunterQueue(hunterQueuePath(path));
+    if("unread" in queue || queue.taskIds.length===0 || selectedVersions.get(next)===queue.writtenAt)continue;
+    state=next;armingPath=path;queuePath=hunterQueuePath(path);
+    selectedVersions.set(state,queue.writtenAt);
+    break;
+  }
+  return state;
+};
 const providerQueue = new ModelProviderQueue({
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const messages = anthropicTransport(workerKey, fetch, undefined, { onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const batch = backgroundBatchTransport({ apiKey: workerKey });
 const ownSpend = new LaneOwnSpend();
-/** The controller the last refresh built; its circuits carry into the next. */
+
 let lastFleet: ArmedHunterLane["fleetSafety"] = null;
 
 const lane = hunterLane({
@@ -77,10 +81,11 @@ const lane = hunterLane({
   stopRequested: () => drain,
   log: say,
   readQueue: () => readHunterQueue(queuePath),
+  selectQueue,
   arm: async () => {
-    const armed = await armHunterLane({ repos, now: nowIso, armingPath, messages, batch, credentialConfigured: workerKey.length > 0,
+    const armed = await armHunterLane({ repos,state, now: nowIso, armingPath, messages, batch, credentialConfigured: workerKey.length > 0,
       credentialVar: WORKER_CREDENTIAL_VAR, providerQueue, ownSpend,
-      /* The lane's own latches outlive a refresh: it is the one process sending paid requests. */
+
       circuits: lastFleet === null ? null : lastFleet.snapshot(nowIso()).providerCircuits,
       ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),
       onCondition: sentence => say(`hunter lane: ${sentence}`) });
@@ -89,11 +94,9 @@ const lane = hunterLane({
   },
   runWave: async ({ queue, paidOpen, deadlineMs, absorb }) => {
     const armed = lane.current();
-    const queues = [queue];
-    let latestQueue = queue;
-    const isPlain = (id: string): boolean => queues.some(held => held.isPlain(id));
-    const isFundedSubject = (subject: string): boolean => lane.current().arming?.lifetimeHuntSubjects.has(subject) ?? false;
-    /* Paid search, under the owner's switch and the same durable budget the round uses; admitted by the lane's current Fleet controller. */
+    const plain = new Set(queue.plainTaskIds);
+    const funded = new Set(armed.arming?.lifetimeHuntSubjects ?? []);
+
     const search = (() => {
       if (!paidOpen || !armed.discoverySearchOn || armed.fleetSafety === null) return null;
       const admitted = () => {
@@ -107,38 +110,38 @@ const lane = hunterLane({
     })();
     const slots = reportingWorkerSlots(workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
       { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !drain && Date.now() < deadlineMs }));
-    const taskIds = paidOpen ? queue.taskIds : queue.plainTaskIds;
-    /* A queue the round writes while this wave runs joins it: its tasks go to fresh workers, in its order, and nothing waits for the slowest worker. */
-    const moreTasks = (): Iterable<string> => {
+    const taskIds = paidOpen ? queue.taskIds : queue.taskIds.filter(id => plain.has(id));
+    const order = new Map(queue.taskIds.map((id, index) => [id, index] as const));
+
+    const moreTasks = (): readonly string[] => {
       const next = absorb();
       if (next === null) return [];
-      queues.push(next); latestQueue = next;
-      return paidOpen ? next.taskIds : next.plainTaskIds;
+      for (const id of next.plainTaskIds) plain.add(id);
+      order.clear();
+      next.taskIds.forEach((id, index) => order.set(id, index));
+      return paidOpen ? next.taskIds : next.taskIds.filter(id => plain.has(id));
     };
     const progress = hunterLaneProgress({ log: say });
-    /* No dispatch deadline: a worker is never ended mid-task by the lane's life. At the end of its life, or on a release drain,
-       the lane starts no worker and hands out no further task; each worker finishes the task it holds. */
+
     const handingOut = (): boolean => !drain && Date.now() < deadlineMs;
     return runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
-      /* Each worker has its own progress clock: a stuck one is ended alone, and says so, before the runner's no-progress
-         limit could end the lane; a working one runs on, task after task, retiring at its age and walled beyond that. */
+
       childTimeoutMs: HUNTER_WORKER_WALL_MS,
       standing: { moreTasks, quietMs: HUNTER_JOB_QUIET_MS, retireAfterMs: HUNTER_WORKER_RETIRE_MS, onMoved: progress.step,
         onStuck: worker => { progress.stuck(); say(stuckWorkerLine(worker)); } },
       slots,
       config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
-        get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [] },
-      isFundedSubject,
-      capacity: count => {
+        get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [...funded] },
+      capacity: () => {
         const current = lane.current();
-        const paid = current.guards === null ? 0 : current.guards.paidWorkerCapacity(count);
-        return Math.min(count, queues.reduce((sum, held) => sum + held.plainTaskIds.length, 0) + paid);
+        const paid = current.guards === null ? 0 : current.guards.paidWorkerCapacity(taskIds.length);
+        return Math.min(taskIds.length, taskIds.filter(id => plain.has(id)).length + paid);
       },
       transportFor: laneWorkerTransport(lane.current, ownSpend, nowIso),
-      ...(search === null ? {} : { searchFor: (subject: string) => isFundedSubject(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
-      /* While paid work is held, only plain-code tasks are handed out; the round's order otherwise. */
-      orderPending: async ids => !handingOut() ? [] : ids.filter(id => lane.current().closed === null || isPlain(id))
-        .sort((a, b) => latestQueue.rank(a) - latestQueue.rank(b)),
+      ...(search === null ? {} : { searchFor: (subject: string) => funded.has(subject) ? search.lifetime : search.normal, searchBudget: search.budget }),
+
+      orderPending: async ids => !handingOut() ? [] : ids.filter(id => order.has(id) && (lane.current().closed === null || plain.has(id)))
+        .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
       onDispatched: result => {
         progress.taskDone();
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
@@ -154,13 +157,8 @@ const lane = hunterLane({
 
 process.on("uncaughtException", error => {
   console.error(`hunter lane: crashed: ${error instanceof Error ? error.stack ?? error.message : String(error)}`);
-  void lane.releaseAll(nowIso()).finally(async () => {
-    try { await workerToolsHost.close(); }
-    finally { process.exit(1); }
-  });
+  void lane.releaseAll(nowIso()).finally(() => process.exit(1));
 });
 
 const run = await lane.run();
-exitCode = run.releaseFailures.length > 0 ? 1 : 0;
-} finally { await workerToolsHost.close(); }
-process.exit(exitCode);
+process.exit(run.releaseFailures.length > 0 ? 1 : 0);

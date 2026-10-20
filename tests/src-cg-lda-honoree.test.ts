@@ -11,7 +11,6 @@ import { ldaHonoreeCaptures, seedSrcCgRoster, SRC_CG_NOW } from "./helpers/src-c
 import { readFileSync } from "node:fs";
 import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import type { FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
-import { disposeLdaRosterIndex, readLdaRosterVersion } from "../lib/sources/congress/lda-roster.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -39,11 +38,6 @@ test("the federal directory candidate holds roster references, and the LDA roste
   assert.equal("body" in held, false); assert.equal(held.raw.byteLength, Buffer.byteLength(body));
   assert.equal(await readRawCaptureText(own, held.raw), body);
   assert.ok(roster.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
-  store.readCandidate = async () => { throw new Error("A filing must use the disk index after the source's one bounded pass"); };
-  const selected = await readLdaRosterVersion(store, own, roster.versionId, { honoreeNames: ["Sen. Bernie Sanders"] });
-  assert.deepEqual(selected?.members.map(row => row.bioguideId), ["S000033"]);
-  assert.deepEqual((await readLdaRosterVersion(store, own, roster.versionId, { bioguideIds: ["C001056"] }))?.members.map(row => row.state), ["TX"]);
-  assert.deepEqual((await readLdaRosterVersion(store, own, roster.versionId, {}))?.members, [], "an unnamed filing does not load anyone else's roster");
 });
 
 test("chamber and state conflicts, ambiguous names, missing honorees and inferred nicknames never publish a member link", async () => {
@@ -154,22 +148,6 @@ test("a newly available roster reopens the retained unjoined history, and an unc
   unchanged = true;
   const checked = await refreshFederalSource(options); assert.equal(checked.ok, true); assert.deepEqual(checked.counts, joined.counts);
   assert.equal(urls[2].searchParams.get("filing_dt_posted_after"), "2026-10-13T04:19:59.000Z");
-});
-
-test("an unavailable held roster document keeps its source filings and reports the join failure", async t => {
-  t.mock.method(console, "log", () => {});
-  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
-  await seedSrcCgRoster(store, own); await disposeLdaRosterIndex(store);
-  const stream = own.stream.bind(own);
-  own.stream = async key => {
-    if (key.includes("/source/congress-directory-project/")) throw new Error("Controlled held roster source outage");
-    return stream(key);
-  };
-  const filing = JSON.parse(ldaHonoreeCaptures()[0].body).results[0];
-  const result = await refreshFederalSource({ vault: own, source: "senate-lda", store, now: () => SRC_CG_NOW, sleep: async () => {},
-    fetchImpl: (async () => Response.json({ count: 1, results: [filing], next: null })) as typeof fetch });
-  assert.equal(result.ok, true); assert.equal(result.counts.loaded, 1);
-  assert.equal(result.counts.unjoinedReasons?.ROSTER_UNAVAILABLE, 1); assert.equal(result.counts.joinReadFailures, 1);
 });
 
 test("an interrupted LDA backfill resumes its next page and keeps the original posting watermark", async t => {

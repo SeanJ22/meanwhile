@@ -18,14 +18,13 @@ import { ROUTINE_RECORD_CLASSES, type RoutineRecordClass } from "../civic-data/t
 
 export interface Measured {
   readonly value: number;
-  /** What the value is out of. Never omitted, never inferred, never guessed. */
+
   readonly denominator: number;
-  /** What this number licenses the reader to conclude. Prose, required. */
+
   readonly contract: string;
   readonly denominatorSource: string;
 }
 
-/** Build a {@link Measured}, refusing the shapes that would mislead. */
 export function measured(
   value: number,
   denominator: number,
@@ -61,14 +60,12 @@ export function measured(
 
 export type GapOwner = "OURS" | "THEIRS" | "UNKNOWABLE_NOW";
 
-/** A value we do not have, rendered as the specific reason we do not have it. */
 export interface Gap {
   readonly whose: GapOwner;
-  /** Plain language, for the owner. No enum value, no NO_SOURCE_FOUND. */
+
   readonly says: string;
 }
 
-/** A value, or the named gap where it would have been. Never a bare null. */
 export type Held<T> = { readonly held: true; readonly value: T } | { readonly held: false; readonly gap: Gap };
 
 export function held<T>(value: T): Held<T> {
@@ -86,7 +83,7 @@ export function gap<T>(whose: GapOwner, says: string): Held<T> {
 }
 
 export interface CountClaim {
-  /** What the page said, in prose, e.g. "7 decisions await you". */
+
   readonly label: string;
   readonly stated: number;
   readonly rendered: number;
@@ -153,7 +150,6 @@ export function auditRenderedNumbers(numbers: readonly RenderedNumber[]): Render
   };
 }
 
-/** Field names refused anywhere inside an owner-surface record: reader identity columns and free text. */
 export const FORBIDDEN_RECORD_FIELDS: readonly string[] = [
   "email",
   "ip",
@@ -179,7 +175,6 @@ export const FORBIDDEN_RECORD_FIELDS: readonly string[] = [
   "comment",
 ];
 
-/** Recursive: a reader-level field is refused at any depth. */
 export function assertAggregateOnly(record: unknown, context: string): void {
   const seen = new Set<unknown>();
   const walk = (node: unknown, path: string): void => {
@@ -209,31 +204,31 @@ export const OWNER_SURFACE_FORMAT_VERSION = 1;
 
 export interface RunnerHeartbeat {
   readonly formatVersion: number;
-  /** Written by the runner at the end of every cycle. */
+
   readonly beatAt: string;
   readonly lastCycleStartedAt: string | null;
   readonly lastCycleFinishedAt: string | null;
-  /** When the runner itself believes the next cycle is due. */
+
   readonly nextCycleDueAt: string | null;
   readonly nextCycleReason?: string | null;
   readonly lastCycleOk: boolean | null;
-  /** The SHA the runner was executing at. */
+
   readonly testedSha: string | null;
   readonly host: string;
-  /** Set while the runner idles on PAUSE_RUNNER; null on a working beat. */
+
   readonly pause?: {
     readonly intentId: string;
     readonly since: string;
     readonly note: string | null;
   } | null;
-  /** Raw main, the executable head and the SHA this runner executed, with the consistency verdict between them. */
+
   readonly codeIdentity?: CodeIdentity | null;
   readonly intakeRuntime?: IntakeRuntimeObservation | null;
   readonly discoverySearch?: DiscoverySearchApplied | null;
   readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;
-  /** Host memory at this beat (`hostMemoryReading` in worker-slots.ts). */
+
   readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
-  /** Neon bytes the runner's processes received, by calling code: the last full UTC hour and the hour so far. */
+
   readonly neonBytes?: {
     readonly lastFullHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;
     readonly currentHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;
@@ -241,21 +236,19 @@ export interface RunnerHeartbeat {
 }
 
 export interface DiscoverySearchApplied {
-  /** The receipt of the owner's decision it applied, or null when none was ever made (the default: off). */
+
   readonly receiptId: string | null;
   readonly enabled: boolean;
-  /** The caps it enforced: the env caps, or the code's defaults. */
+
   readonly perCycle: number;
   readonly perDay: number;
   readonly appliedAt: string;
-  /** Why it is on or off, in the runner's words (including "could not be read", which is off). */
+
   readonly detail: string;
 }
 
-/** Derived from the beat and the clock, never stored. */
 export type RunnerLiveness = "ALIVE" | "LATE" | "SILENT" | "NEVER_BEAT";
 
-/** Past this, a runner that should beat every cycle has missed several. */
 export const HEARTBEAT_LATE_MINUTES = 90;
 export const HEARTBEAT_SILENT_MINUTES = 360;
 
@@ -296,19 +289,13 @@ export interface OwnerDigestRecord {
   readonly digestId: string;
   readonly writtenAt: string;
   readonly headline: string;
-  /** The digest body, line by line, exactly as the runner emitted it. */
+
   readonly lines: readonly string[];
   readonly cycleOk: boolean | null;
   readonly testedSha: string | null;
   readonly huntSourceProgress?: HuntSourceProgress;
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
-  readonly freshnessDetails?: {
-    readonly cycleId: string;
-    readonly section: string;
-    readonly page: number;
-    readonly rows: readonly unknown[];
-  };
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
@@ -316,7 +303,6 @@ export interface OwnerDigestRecord {
     | MapTilerUsageCollectionOutcome;
 }
 
-/** Separate key in the existing log so task activity never replaces the runner's latest cycle digest. */
 export const HUNT_SOURCE_PROGRESS_LOG_KEY = "hunt-source-progress";
 
 export interface HuntSourceProgress {
@@ -341,7 +327,7 @@ export interface MapTilerUsageCollectionOutcome {
   readonly host: string;
   readonly provider: string;
   readonly durable: boolean;
-  /** Exact provider-attempt provenance; a failed classifier remains visible. */
+
   readonly attempt: MapTilerUsageAttempt;
   readonly candidate: {
     readonly canonicalSha256: string;
@@ -365,7 +351,6 @@ export interface MapTilerUsageCollectionOutcome {
   };
 }
 
-/** Liveness may be projected from the latest observation, but a later healthy beat never erases an earlier ATTENTION/UNREADABLE row. */
 export interface IntakeRuntimeObservationOutcome {
   readonly kind: "INTAKE_RUNTIME_OBSERVATION";
   readonly state: IntakeRuntimeOutcome;
@@ -385,7 +370,6 @@ export interface IntakeRuntimeObservationOutcome {
   };
 }
 
-/** A supervisor failure with no source-authored receipt: an operations fact, never a candidate disposition. */
 export interface RoutineCivicDataTaskReceiptReference {
   readonly taskId: string;
   readonly sourceId: string;
@@ -403,7 +387,6 @@ export type RoutineCivicDataReaderReadbackDisposition =
   | "BACKOFF"
   | "FAILED_BACKOFF"
   | "RECORDED"
-  | "PARTITIONS"
   | "REPAIR_FAILED";
 
 export interface RoutineCivicDataReaderReadbackReference {
@@ -413,8 +396,7 @@ export interface RoutineCivicDataReaderReadbackReference {
   readonly scope: string;
   readonly projectionId: string | null;
   readonly disposition: RoutineCivicDataReaderReadbackDisposition;
-  readonly partitions?: { readonly total: number; readonly passed: number; readonly failed: number; readonly deferred: number };
-  /** Present for CURRENT, FAILED_BACKOFF and RECORDED; absent by contract otherwise. */
+
   readonly receipt: ReaderProjectionReadbackReceipt | null;
 }
 
@@ -424,7 +406,7 @@ export interface RoutineCivicDataSupervisorOutcome {
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
-  /** Source holds are contained data-plane outcomes; only supervisor faults make this FAILED. */
+
   readonly state: "SUCCEEDED" | "FAILED";
   readonly cycleId: string;
   readonly startedAt: string;
@@ -451,7 +433,7 @@ export interface RoutineCivicDataSupervisorOutcome {
     readonly code: string;
     readonly detail: string;
   }[];
-  /** Started source children that died without a receipt; each task's work waits its own retry clock. */
+
   readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly attributionBoundary: {
     readonly sourceReceiptAuthority: "SOURCE_ACQUISITION_CHILD_ONLY";
@@ -514,7 +496,6 @@ function parsedReaderReadbackReceipt(value: unknown): ReaderProjectionReadbackRe
   }
 }
 
-/** Aggregate counts cannot prove Reader delivery on their own; an issue is an UNKNOWN Admin state. */
 export function routineReaderReadbackEvidenceIssue(
   outcome: RoutineCivicDataSupervisorOutcome,
 ): string | null {
@@ -535,7 +516,6 @@ export function routineReaderReadbackEvidenceIssue(
     "BACKOFF",
     "FAILED_BACKOFF",
     "RECORDED",
-    "PARTITIONS",
     "REPAIR_FAILED",
   ];
   const contractIds: string[] = [];
@@ -549,16 +529,6 @@ export function routineReaderReadbackEvidenceIssue(
       !allowedDispositions.includes(reference.disposition)
     ) return "A Reader readback reference has a malformed contract identity or disposition.";
     contractIds.push(reference.contractId);
-    if (reference.partitions !== undefined) {
-      const counts = reference.partitions;
-      if (![counts.total, counts.passed, counts.failed, counts.deferred].every(value => Number.isSafeInteger(value) && value >= 0) ||
-        counts.total !== counts.passed + counts.failed + counts.deferred ||
-        (reference.disposition !== "PARTITIONS" && reference.disposition !== "REPAIR_FAILED") ||
-        (reference.disposition === "PARTITIONS" && counts.failed !== 0) ||
-        (reference.disposition === "REPAIR_FAILED" && counts.failed === 0) || reference.receipt !== null) {
-        return "A partitioned Reader repair does not reconcile its completed, failed and deferred scopes.";
-      }
-    } else if (reference.disposition === "PARTITIONS") return "A partitioned Reader repair is missing its scope counts.";
     if (reference.disposition === "NOT_APPLICABLE") {
       if (reference.projectionId !== null || reference.receipt !== null) {
         return "A non-applicable Reader contract fabricated projection/readback evidence.";
@@ -637,7 +607,6 @@ export function routineReaderReadbackEvidenceIssue(
   return null;
 }
 
-/** Never green from an absent or contradictory structured outcome. */
 export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAttention {
   const outcome = digest.runtimeOutcome;
   if (outcome === undefined) {
@@ -872,7 +841,7 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
       action: null,
     };
   }
-  /* An older report kind this code no longer writes: history, not a signal. */
+
   return {
     level: "UNKNOWN",
     headline: "Earlier runner report",
@@ -880,26 +849,6 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
     needsYou: false,
     action: null,
   };
-}
-
-/** Exact cycle rows live in bounded records under the existing owner-history log. */
-export interface FreshnessDetailReference {
-  readonly cycleId: string;
-  readonly logKey: string;
-  readonly section: string;
-  readonly rows: number;
-  readonly pages: number;
-}
-export type FreshnessDetailRows<T> = readonly T[] | FreshnessDetailReference;
-
-export interface FreshnessIncidentSummary {
-  readonly cause: string;
-  readonly target: string;
-  readonly obligationsAffected: number;
-  readonly nextRetryAt?: string;
-  readonly oldestHours?: number;
-  /** Number of exact target incidents represented by this cause summary. */
-  readonly incidents?: number;
 }
 
 export interface FreshnessCycleOutcome {
@@ -931,29 +880,27 @@ export interface FreshnessCycleOutcome {
   readonly debtPersisted: number | null;
   readonly debtCleared: number | readonly string[] | null;
   readonly scheduled: number | null;
-  readonly unscheduled: FreshnessDetailRows<{ readonly id?: string; readonly reason?: string }>;
+  readonly unscheduled: readonly { readonly id?: string; readonly reason?: string }[];
   readonly dueCount: number | null;
   readonly dispatched: number | null;
-  readonly worked: FreshnessDetailRows<string>;
-  readonly dispositions: FreshnessDetailRows<{
+  readonly worked: readonly string[];
+  readonly workedCount?:number;
+  readonly dispositionCounts?:Readonly<Record<string,number>>;
+  readonly incidentCount?:number;
+  readonly stateCycles?:readonly {state:string;cycleId:string}[];
+  readonly dispositions: readonly {
     readonly obligationId: string;
     readonly disposition: string | null;
     readonly artifacts: number;
-  }>;
-  readonly dispatchDetails: FreshnessDetailRows<{
+  }[];
+  readonly dispatchDetails: readonly {
     readonly obligationId: string;
     readonly attemptId: string | null;
     readonly outcome: string | null;
     readonly disposition: string | null;
     readonly detail: string;
-  }>;
+  }[];
   readonly research: {
-    readonly runtimeConditionCount?: number;
-    readonly runtimeConditionDetails?: FreshnessDetailReference;
-    readonly runtimeConditionDetailsUnavailable?: string | null;
-    readonly assignmentDetails?: FreshnessDetailReference;
-    readonly cycleLogLineCount?: number;
-    readonly cycleLogDetails?: FreshnessDetailReference;
     readonly lanes: {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
       readonly model?: { readonly due?: number; readonly dispatched?: number; readonly deferred?: number };
@@ -961,29 +908,31 @@ export interface FreshnessCycleOutcome {
   } | null;
   readonly deferred: number | null;
   readonly debts: number | null;
-  readonly incidents: FreshnessDetailRows<FreshnessIncidentSummary>;
-  readonly incidentSummary?: readonly FreshnessIncidentSummary[];
+  readonly incidents: readonly {
+    readonly cause: string;
+    readonly target: string;
+    readonly obligationsAffected: number;
+    readonly nextRetryAt?: string;
+  }[];
   readonly risk: Readonly<Record<string, unknown>> | null;
   readonly health: Readonly<Record<string, unknown>> | null;
   readonly promotedToReaderTruth: boolean | null;
   readonly failure: { readonly code: string; readonly detail: string } | null;
 }
 
-/** RECORDING_NOT_WIRED is distinct from NOT_YET_OBSERVED: an unwired path cannot testify to an absence. Probe traffic is never `prod-ask`. */
 export type CacheObservationState = "OBSERVED" | "NOT_YET_OBSERVED" | "RECORDING_NOT_WIRED";
 
-/** The owner's wording, kept verbatim. Do not paraphrase this string. */
 export const ORGANIC_PROD_ASK_NOT_YET = "organic prod-ask cache read: not yet observed";
 
 export interface CacheObservationRecord {
   readonly formatVersion: number;
   readonly state: CacheObservationState;
-  /** Set only when state is OBSERVED. */
+
   readonly firstObservedAt: string | null;
-  /** Token counts only — never the request, the question, or the answer. */
+
   readonly cacheReadInputTokens: number | null;
   readonly cacheCreationInputTokens: number | null;
-  /** Separates NOT_YET_OBSERVED from RECORDING_NOT_WIRED. */
+
   readonly recorderLastSeenAt: string | null;
 }
 
@@ -1013,7 +962,6 @@ export function renderCacheObservation(record: CacheObservationRecord | null): {
   };
 }
 
-/** An owner decision is stored as data and stands as soon as it is recorded. */
 export type OwnerDecisionState =
   | "RECORDED"
   | "PENDING_CANONICALIZATION"
@@ -1030,18 +978,16 @@ export interface OwnerDecisionIntent {
   readonly state: OwnerDecisionState;
   readonly canonicalRef: string | null;
   readonly refusedReason: string | null;
-  /** The owner's admin session id; never a reader identity. */
+
   readonly adminSessionRef: string;
-  /** Not `answerText`/`freeText`/`comment`: `assertAggregateOnly` refuses those names. Absent reads as null. */
+
   readonly ownerAnswer?: string | null;
   readonly openedWork?: readonly { readonly id: string; readonly title: string }[];
   readonly subjectTitle?: string | null;
 }
 
-/** The longest answer the dashboard accepts in the owner's own words. */
 export const OWNER_ANSWER_MAX_CHARS = 2000;
 
-/** A literal rather than an empty string, so a record never looks like a decision with nothing chosen. */
 export const ANSWERED_IN_OWN_WORDS = "Answered in my own words";
 
 export interface OwnerContractReading {
@@ -1049,7 +995,7 @@ export interface OwnerContractReading {
   readonly state: string;
   readonly reason: string;
   readonly denominator: Held<Measured>;
-  /** SESSION_MEASURED or INDEPENDENTLY_REPRODUCED — the proof class shown. */
+
   readonly proofClass: string;
   readonly runSha: string | null;
   readonly runAt: string | null;
@@ -1071,23 +1017,22 @@ export interface OwnerDecisionCard {
   readonly whatIsNeeded: string;
   readonly whyNoMachineCanDecide: string;
   readonly options: readonly { readonly option: string; readonly consequence: string }[];
-  /** Null when unmeasured, never a zero. */
+
   readonly blockedDescendants: number | null;
   readonly openedOn: string | null;
   readonly ageDays: number | null;
   readonly priority: string;
-  /** The predicate, or an explicit NOT_MACHINE_VERIFIABLE marking. */
+
   readonly verifiability: "PREDICATE" | "NOT_MACHINE_VERIFIABLE";
-  /** Absent reads as DECISION. */
+
   readonly kind?: OwnerDecisionCardKind;
-  /** BLOCKED_WHILE only: the predicate's blocker sentence. */
+
   readonly blocker?: string | null;
-  /** BLOCKED_WHILE only: what the last tracker generation found when it rechecked. */
+
   readonly checkedThisRun?: string | null;
   readonly lastVerified?: string | null;
 }
 
-/** The kind of a card, tolerating a snapshot written before the field existed. */
 export function decisionCardKind(card: OwnerDecisionCard): OwnerDecisionCardKind {
   if (card.kind) return card.kind;
   return card.verifiability === "PREDICATE" ? "BLOCKED_WHILE" : "DECISION";
@@ -1099,9 +1044,9 @@ export interface OwnerCostRow {
   readonly metering?: MeteringCounts;
   readonly attemptsMeasured?: number;
   readonly attemptsUnmeasured?: number;
-  /** MEASURED, FREE_BY_DESIGN (ran without a paid model) or UNMEASURED (a model ran and reported no dollars). */
+
   readonly kind?: "MEASURED" | "FREE_BY_DESIGN" | "UNMEASURED";
-  /** What a deterministic role does carry: requests, bytes and time. */
+
   readonly nonDollar?: {
     readonly requests: number;
     readonly bytes: number;
@@ -1111,8 +1056,6 @@ export interface OwnerCostRow {
   readonly meaning?: string;
 }
 
-/** One aggregate rather than several, so the panels agree about one instant. */
-/** One state's rows of the snapshot, in `current:<state>`: every assignment's index row by the span it holds, every body's publication attempt, spend by jurisdiction. */
 export interface OwnerSnapshotState {
   readonly builtAt: string;
   readonly allRowsIndex: readonly import("./assignment-view.ts").IndexSegment[];
@@ -1123,7 +1066,7 @@ export interface OwnerSnapshotState {
 export const ownerSnapshotStateId = (state: string): string => `current:${state}`;
 
 export interface OwnerSnapshot {
-  /** Daily completeness, freshness and delivery counts for each place with a saved scope, newest last. Counts only; it never gates publishing. */
+
   readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;
   readonly formatVersion: number;
   readonly publishedAt: string;
@@ -1143,16 +1086,14 @@ export interface OwnerSnapshot {
     readonly target: string;
     readonly obligationsAffected: number;
     readonly oldestHours: number | null;
-    readonly incidents?: number;
   }[];
-  readonly incidentDetails?: FreshnessDetailReference;
 
   readonly costByRole: readonly OwnerCostRow[];
   readonly costByModel: readonly OwnerCostRow[];
   readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured>; readonly health?: CacheCallerHealth }[];
   readonly deterministicShare: Held<Measured>;
   readonly costPerVerifiedRecord: Held<Measured>;
-  /** Null on a snapshot published before the publisher passed its clock. */
+
   readonly costCapacity?: ScoutCapacity | null;
   readonly monthlySpend?: MonthlySpendView | null;
   readonly costSummary?: {
@@ -1162,7 +1103,6 @@ export interface OwnerSnapshot {
     readonly entries: number;
   };
 
-  /** HELD only when the run record attributes results to ZIPs. */
   readonly zipRows: Held<readonly OwnerZipRow[]>;
 
   readonly intakeFolder: Held<string>;
@@ -1170,22 +1110,18 @@ export interface OwnerSnapshot {
   readonly intakeItemsProcessed: Held<Measured>;
   readonly intakeUnidentifiable: Held<Measured>;
 
-  /** Candidate slug to name as filed. Render by this map; never re-derive a name from a slug. */
   readonly candidateNames?: Readonly<Record<string, string>>;
 
   readonly spendByDay?: readonly { readonly day: string; readonly usd: number; readonly attempts: number }[];
 
-  /** Spend by place over the whole ledger. Absent renders as the missing wire, never an empty list. */
   readonly spendByPlace?: SpendByPlaceView;
 
   readonly servedReaderReadback?: import("./served-reader.ts").ServedReaderReadback | null;
 
-  /** Every unit of work counted by state, lane and cost, with a bounded ordered list of rows. Absent renders as the missing wire. */
   readonly assignments?: import("./assignment-view.ts").AssignmentPublication | null;
 
-  /** The map provider's own usage. Absent or NOT_CONNECTED never renders as zero usage. */
   readonly maptiler?: MapTilerUsageSnapshot | null;
-  /** Cached GET-only billing reports, written by the existing standing publisher. */
+
   readonly providerBilling?: import("./provider-billing.ts").ProviderBillingSnapshot | null;
   readonly billingAttribution?: import("./provider-billing-attribution.ts").BillingAttribution | null;
 }
@@ -1202,7 +1138,7 @@ export function countClaimsFor(snapshot: OwnerSnapshot): readonly CountClaim[] {
       stated: snapshot.decisionCards.length,
       rendered: snapshot.decisionCards.length,
     },
-    { label: "incidents", stated: ownerIncidentCount(snapshot.incidents), rendered: ownerIncidentCount(snapshot.incidents) },
+    { label: "incidents", stated: snapshot.incidents.length, rendered: snapshot.incidents.length },
     {
       label: "ZIP rows",
       stated: snapshot.zipRows.held ? snapshot.zipRows.value.length : 0,
@@ -1211,26 +1147,20 @@ export function countClaimsFor(snapshot: OwnerSnapshot): readonly CountClaim[] {
   ];
 }
 
-export function ownerIncidentCount(rows: readonly { readonly incidents?: number }[]): number {
-  return rows.reduce((count, row) => count + (row.incidents ?? 1), 0);
-}
-
-/** A display band for a contract or the rollup. Never a stored health verdict. */
 export type HealthLevel = "GREEN" | "AMBER" | "RED" | "UNKNOWN";
 
-/** One contract, projected for the compact card. Raw SHAs/proof class stay off it. */
 export interface ContractCard {
   readonly contract: string;
   readonly level: HealthLevel;
-  /** A two-word plain headline: Met / Failing / Not yet proven / Awaiting data. */
+
   readonly headline: string;
-  /** The contract's denominator (num/denom) or its named gap. */
+
   readonly denominator: Held<Measured>;
-  /** Proof age in plain words, from the run's timestamp. */
+
   readonly proofAge: string;
-  /** The contract's own reason sentence (already plain language). */
+
   readonly reason: string;
-  /** The genuine next action, or null when the contract is met. */
+
   readonly nextAction: string | null;
 }
 
@@ -1240,8 +1170,6 @@ export interface PilotHealthView {
   readonly cards: readonly ContractCard[];
 }
 
-/** Map a contract's four-state reading to a display band. RED is a measured
- *  failure; AMBER is "not proven yet" (NOT_READY) or "awaiting data". */
 export function contractHealthLevel(state: string): HealthLevel {
   switch (state) {
     case "GREEN":

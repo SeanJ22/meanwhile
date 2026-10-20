@@ -11,9 +11,9 @@ const count = async (repos: ReturnType<typeof createMemoryRepositories>) =>
 test('exhausted writes count once, successful retries count no error', async () => {
   const repos = createMemoryRepositories();
   let failLesson = true;
-  const wrapped = { fieldManual: { ...repos.fieldManual, compareAndSetMergedEntry: async (...args: Parameters<typeof repos.fieldManual.compareAndSetMergedEntry>) => {
-    if (args[0] === entry.id && failLesson) throw new Error('contention');
-    return repos.fieldManual.compareAndSetMergedEntry(...args);
+  const wrapped = { fieldManual: { ...repos.fieldManual, put: async (id: string, value: Parameters<typeof repos.fieldManual.put>[1], now: string) => {
+    if (id === entry.id && failLesson) throw new Error('contention');
+    return repos.fieldManual.put(id, value, now);
   } } };
   const failed = await writeFieldManual(wrapped, [entry], '2026-10-04T00:00:00Z');
   assert.equal(failed.error, 'contention');
@@ -28,8 +28,7 @@ test('store outage buffers the error and saves it on the next successful write',
   let down = true;
   const wrapped = { fieldManual: { ...repos.fieldManual,
     read: async (id: string) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.read(id); },
-    readNarrowed: async (...args: Parameters<typeof repos.fieldManual.readNarrowed>) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.readNarrowed(...args); },
-    compareAndSetMergedEntry: async (...args: Parameters<typeof repos.fieldManual.compareAndSetMergedEntry>) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.compareAndSetMergedEntry(...args); } } };
+    readMany: async (ids: readonly string[]) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.readMany(ids); } } };
   assert.equal((await writeFieldManual(wrapped, [entry], '2026-10-04T00:00:00Z')).error, 'store unavailable');
   down = false;
   await writeFieldManual(wrapped, [entry], '2026-10-04T00:01:00Z');

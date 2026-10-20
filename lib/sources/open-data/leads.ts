@@ -6,7 +6,7 @@ import type { OpenDataFact } from "./model.ts";
 /** Catalog contents are concrete source leads; a listing never pretends its rows have been extracted. */
 export async function saveSocrataLeads(repos:ControlPlaneRepositories, rows:readonly OpenDataFact[], now:string) {
   const datasets=rows.filter(row=>row.kind==="SOCRATA_DATASET");
-  const saved=await writeFieldManual(repos,datasets.map(row=>newFieldManualEntry("socrata-discovery",`${row.state??"UNRESOLVED"}:${row.id}`,{
+  const saved=await writeFieldManual(repos,datasets.map(row=>newFieldManualEntry("socrata-discovery",row.id,{
     role:"SHARED",kind:"SOURCE_LEAD",title:row.title,summary:row.description || `Read ${row.title} from ${row.sourceOrg}`,
     outcome:"REFERENCE",url:row.sourceUrl,observedAt:row.capturedAt,ocdIds:[...row.divisionIds],states:row.state?[row.state.toLowerCase()]:[],
     recordClasses:["PUBLIC_RECORD"],platforms:["SOCRATA"],portable:false,

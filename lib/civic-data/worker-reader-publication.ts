@@ -1,4 +1,3 @@
-import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
@@ -21,7 +20,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { auditPull, captureIntact, jobWorkerResults, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
-import { readValidatorOfficialLinks, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
+import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
@@ -34,7 +33,7 @@ import { workerBallotContestsPackage, publishWorkerBallotContestsResults } from 
 import { stanceRowFrom } from "./stance-rows.ts";
 import { DEFAULT_STANCE_TOPICS, STANCE_TOPICS_SETTING, validStanceTopics } from "../stances/topics.ts";
 import { readSetting, type SettingValue } from "../control-plane/settings.ts";
-import { type AdminConfig } from "../control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, type AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { campaignSiteFor } from "../officials/campaign-sites.ts";
 import { currentDerivedCampaignSiteRecords } from "./derived-campaign-sites.ts";
 import { EVERYDAY_TOPIC_IDS, everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
@@ -214,11 +213,12 @@ export async function publishWorkerReaderResults(input: {
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
       readHeld }));
   }
+  const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
   let stanceTopicIds: readonly string[] | null = null;
   const readStanceTopicIds = async (): Promise<readonly string[]> => {
     if (stanceTopicIds) return stanceTopicIds;
-    const config = ((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null) as AdminConfig | null;
+    const config = ((await input.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null) as AdminConfig | null;
     const topics = readSetting<SettingValue>(config, STANCE_TOPICS_SETTING, DEFAULT_STANCE_TOPICS as unknown as SettingValue);
     stanceTopicIds = (validStanceTopics(topics) ? topics : DEFAULT_STANCE_TOPICS).map(topic => topic.id);
     return stanceTopicIds;
@@ -236,7 +236,7 @@ export async function publishWorkerReaderResults(input: {
     let workerChecksComplete = false, captures: WorkerPublicationCapture[] = [], wentLive = 0;
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
         ...(contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });

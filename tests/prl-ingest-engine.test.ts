@@ -95,10 +95,8 @@ test("state profile ingestion leaves an absent source measurement date unknown",
   const { store, cleanup } = tempStore();
   try {
     const csv = "openstates_id,name,state,party,position,district,communication_count,communication_attack_personal_mean,communication_attack_policy_mean,communication_outcome_creditclaiming_mean,communication_policy_mean,communication_outcome_bipartisanship_mean\nocd-person/04f7bd8e-094b-433c-9e91-7ebe64c75604,Tim,AL,Republican,lower,14,1200,5.5,10.2,3.1,60.4,2.0\n";
-    const receipt = await ingestDataset({ dataset: requiredPrlDataset("profiles-state"), archive: store, now: NOW, priorReceipt: null, open: source(csv) });
-    const held = JSON.parse(new TextDecoder().decode((await store.get(`${receipt.objectRoot}/people/${prlSubjectShard("ocd-person/04f7bd8e-094b-433c-9e91-7ebe64c75604")}/profile.json`))!));
-    assert.equal(held.profile.measuredAt, null);
-    assert.equal(receipt.profiles, null);
+    const receipt = await ingestDataset({ dataset: requiredPrlDataset("profiles-state"), now: NOW, priorReceipt: null, open: source(csv) });
+    assert.equal((receipt.profiles![0] as { measuredAt: string | null }).measuredAt, null);
     assert.equal(receipt.coverageThrough, null);
   } finally { cleanup(); }
 });

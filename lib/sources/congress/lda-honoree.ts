@@ -19,7 +19,7 @@ function honoreeScope(raw: string) {
   return { name, chamber, state };
 }
 
-export function ldaRosterNameForms(name: string) {
+function forms(name: string) {
   const result: { form: string; rules: string[] }[] = nameForms(name.replace(/\(([^)]+)\)/g, '"$1"'));
   for (const form of [...result]) {
     const words = form.form.split(" ");
@@ -29,8 +29,6 @@ export function ldaRosterNameForms(name: string) {
   }
   return result;
 }
-const forms = ldaRosterNameForms;
-export function ldaHonoreeLookupForms(raw: string): string[] { return forms(honoreeScope(raw).name).map(row => row.form); }
 type RosterForm = { member: LdaRoster["members"][number]; name: string; rules: string[]; initials: string[] };
 const indexes = new WeakMap<LdaRoster, Map<string, RosterForm[]>>();
 function rosterIndex(roster: LdaRoster) {

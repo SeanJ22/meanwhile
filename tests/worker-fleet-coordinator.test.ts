@@ -1,8 +1,7 @@
-import { orderedAutonomousWorkIds } from "./helpers/ordered-autonomous-work.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_NOW, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
+import { fairAutonomousWorkIds, nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
 import { readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
@@ -15,13 +14,12 @@ import { writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { methodFixture, knowledgeEntries, methodVersionEntry } from "./method-store-fixture.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { runLeaseWorkerProcesses, runNationalPlaceWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { claimRouteTask, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { createPlannerSpool, plannerMap, plannerSet } from "../lib/control-plane/scheduler/planner-spool.ts";
+import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
 
 test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
@@ -61,34 +59,6 @@ test("PDC: the production standing runtime refuses queued or newly due legacy me
   assert.deepEqual(h.calls, [], "even an already queued legacy task cannot cross the production dispatch boundary");
 });
 
-test("a national child timeout after an empty publication stays failed instead of returning the prior receipt", async () => {
-  const root = await mkdtemp(join(tmpdir(), "wtp-national-timeout-"));
-  try {
-    await mkdir(join(root, "scripts"), { recursive: true });
-    await mkdir(join(root, "lib/control-plane/workers"), { recursive: true });
-    await writeFile(join(root, "scripts/register-test-loader.mjs"), "export {};\n");
-    await writeFile(join(root, "lib/control-plane/workers/national-worker.ts"), `
-      process.on('message', message => {
-        if (message.id) return;
-        process.send({kind:'national-publication',id:'one',body:{now:'2026-10-20T00:00:00Z',divisions:[],geographyCaptures:[],sources:{zip:'10001',officials:[]}}});
-        setInterval(() => {}, 1000);
-      });
-    `);
-    let publications = 0, reports = 0;
-    await assert.rejects(runNationalPlaceWorkerProcesses({ root,
-      places: [{ id: "national-place:10001", zip: "10001", state: "NY" }], capacity: () => 1,
-      childTimeoutMs: 1000, store: new MemoryRoutineDataStore(),
-      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000 * 1024 * 1024,
-        headroomBytes: 100 * 1024 * 1024, peakBytes: () => 600 * 1024 * 1024 }),
-      publish: async () => { publications++; return { candidateId: null, promotedVersionId: null, divisions: [], bodies: [], members: [] }; },
-      publishElection: async () => { throw new Error("No election was sent"); },
-      onResult: () => { reports++; },
-    }), /work remains owed/);
-    assert.equal(publications, 1);
-    assert.equal(reports, 0);
-  } finally { await rm(root, { recursive: true, force: true }); }
-});
-
 test("50 hunts share admission before a larger priority hunt takes its second item", async () => {
   const h = await autonomousHarness();
   const items = Array.from({ length: 50 }, (_, i) => ({ ...h.item, id: `hunt-${i}:first`,
@@ -96,13 +66,13 @@ test("50 hunts share admission before a larger priority hunt takes its second it
   const extra = Array.from({ length: 80 }, (_, i) => ({ ...items[0], id: `hunt-0:extra-${i}` }));
   const priorities = items.map((_, i) => ({ receiptId: `hunt-${i}`, priority: i }));
   const byId = new Map([...extra, ...items].map(item => [item.id, item]));
-  const ordered = await orderedAutonomousWorkIds([...extra, ...items], new Map(), priorities);
+  const ordered = fairAutonomousWorkIds([...extra, ...items], new Map(), priorities);
   assert.equal(new Set(ordered.slice(0, 50).map(id => byId.get(id)!.autonomousPlan.ownerInstructions[0])).size, 50);
   const served = new Map([[ordered[0], FIXTURE_NOW]]);
-  const resumed = await orderedAutonomousWorkIds([...extra, ...items], served, priorities);
+  const resumed = fairAutonomousWorkIds([...extra, ...items], served, priorities);
   assert.equal(byId.get(resumed[0])!.autonomousPlan.ownerInstructions[0], "hunt-0", "owner place rank precedes earlier service");
   const equalRanks = priorities.map(row => ({ ...row, priority: 0 }));
-  assert.equal(byId.get((await orderedAutonomousWorkIds([...extra, ...items], served, equalRanks))[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
+  assert.equal(byId.get(fairAutonomousWorkIds([...extra, ...items], served, equalRanks)[0])!.autonomousPlan.ownerInstructions[0], "hunt-1");
   assert.equal(new Set(resumed).size, items.length + extra.length);
 });
 
@@ -215,22 +185,19 @@ test("coordinator selection hands out canonical tasks without running tools or o
   const h = await autonomousHarness();
   const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
   await h.repos.workItems.put(legacy.id, legacy, h.now());
+  const heldTask = (await h.repos.routeTasks.listWhere(["workItemId"],h.item.id))[0]!;
+  await h.repos.routeTasks.put("legacy-held-task",{...heldTask.value,id:"legacy-held-task",workItemId:legacy.id,state:"PENDING"},h.now());
   const before = (await h.repos.attempts.list()).length;
   let snapshotCalls = 0;
   let snapshot: readonly WorkItem[] = [];
-  let accepted = 0;
   const planned = await runAutonomousCoordinator(h.runtime, { planOnly: true,
     onSelectionSnapshot: items => { snapshotCalls++; snapshot = items; },
     acceptsWorkItem: item => {
-      accepted++;
-      assert.equal(item.id,h.item.id,"acceptance sees the complete one-place work item");
-      assert.ok(item.autonomousPlan?.sources,"source instructions are present during this place's selection");
+      assert.equal(item, snapshot.find(row => row.id === item.id), "ordering receives the exact selection rows, without another read or clone");
       return true;
     },
   });
   assert.equal(snapshotCalls, 1);
-  assert.equal(accepted,1);
-  assert.equal(snapshot.find(item=>item.id===h.item.id)?.autonomousPlan?.sources,undefined,"ordering retains only scheduling metadata after the place was selected");
   assert.deepEqual(snapshot.map(item => item.id).sort(), [h.item.id, legacy.id].sort());
   assert.equal(snapshot.find(item => item.id === legacy.id)?.autonomousPlan, undefined, "held work without an autonomous plan is also available for ordering");
   assert.equal(planned.decisions[0]?.action, "WORKER");
@@ -253,12 +220,10 @@ test("coordinator selection hands out canonical tasks without running tools or o
     await registerRouteTask(repos, second, h.now());
     const pids: number[] = [];
     let pulls = 0;
-    const results: DispatchResult[] = [];
-    const summary = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [selected.task!.id, second.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 2, onStarted: pid => pids.push(pid),
-      onDispatched: result => { results.push(result); },
       orderPending: async ids => { pulls++; return [...ids].reverse(); },
       transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     assert.equal(pids.length, 2);
@@ -268,8 +233,6 @@ test("coordinator selection hands out canonical tasks without running tools or o
     assert.equal(attempts.length, 1);
     assert.equal(attempts[0]!.outcome, "COMPLETED", "the selected task is a plain acquisition");
     assert.equal(results.filter(row => row.attemptId !== null).length, 2);
-    assert.deepEqual(summary, { dispatched: 2, attempted: 2, worked: 1, scoutsAdmitted: 1 },
-      "the plain acquisition works and the policy-denied Scout still contributes its admitted Attempt");
     assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === second.id).length, 1);
     // Model the late sibling arriving after a denial released its lease.
     await assert.rejects(claimRouteTask(repos, { routeTaskId: second.id,
@@ -285,19 +248,14 @@ test("memory wait rechecks the emptied wave before forking queued lease workers"
   try {
     await mkdir(join(root, "scripts"));
     await writeFile(join(root, "scripts/register-test-loader.mjs"), "");
-    await writeFile(join(root, "worker.mjs"), `let sequence=0; let current;
-      process.on('message', message => {
-        if (!message.id) current=message.taskIds[0]; else current=message.body;
-        if (current===null) { process.send({kind:'finished',body:[]});process.disconnect();return; }
-        process.send({kind:'task-skipped',body:current});
-        process.send({kind:'next-task',id:String(++sequence),body:null});
-      });`);
+    await writeFile(join(root, "worker.mjs"), `process.on('message', config => {
+      process.send({ kind: 'finished', body: config.taskIds }); process.disconnect();
+    });`);
     let forks = 0;
     await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
       taskIds: Array.from({ length: 40 }, (_, i) => `task:${i}`), modelEnabled: false, searchEnabled: false,
       ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 40,
-      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000 * 1024 * 1024, headroomBytes: 0, peakBytes: () => 600 * 1024 * 1024 }),
-      deadlineMs: Date.now() + 10_000,
+      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000, headroomBytes: 0, peakBytes: () => 1 }),
       onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
   } finally { await rm(root, { recursive: true, force: true }); }
@@ -318,13 +276,11 @@ test("a worker kill timer defers unfinished work and ends only its owned process
     const input = { entry: "worker.mjs", childTimeoutMs: 1000, config: { root, postgres: false,
       taskIds: ["owed"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } };
-    const results: DispatchResult[] = [];
-    const summary = await runLeaseWorkerProcesses({ ...input, onDispatched: result => { results.push(result); } });
+    const results = await runLeaseWorkerProcesses(input);
     assert.equal(results.length, 1);
     assert.equal(results[0]!.outcome, "FAILED");
     assert.match(results[0]!.detail, /WORKER_CHILD_TIMEOUT/);
     assert.equal(results[0]!.dispositionCommitted, false);
-    assert.deepEqual(summary, { dispatched: 1, attempted: 0, worked: 0, scoutsAdmitted: 0 });
     const descendant = Number(await readFile(join(root, "descendant.pid"), "utf8"));
     if (process.platform === "win32") assert.throws(() => process.kill(descendant, 0));
     assert.doesNotThrow(() => process.kill(process.pid, 0), "the parent and unrelated trees remain alive");
@@ -333,18 +289,17 @@ test("a worker kill timer defers unfinished work and ends only its owned process
 
 test("the autonomous wave loop stops at its dispatch slice even while waves keep working", async () => {
   const source = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  const start = source.indexOf("async function runAutonomousProcesses(");
+  const start = source.indexOf("async function runAutonomousProcesses()");
   const end = source.indexOf("let campaignSites", start);
   assert.ok(start >= 0 && end > start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let calls = 0, now = 0;
-  const wave = async () => { calls++; now += 20; return { dispatched: 1, attempted: 1, worked: calls <= 3 ? 1 : 0,
-    scoutsAdmitted: 1, scoutsLimitedAdmitted: 1 }; };
+  const wave = async () => { calls++; now += 20; return { dispatches: [{ outcome: calls <= 3 ? "WORKED" : "FAILED" }],
+    scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 }; };
   const run = new Function("runAutonomousWave", "releaseDrainRequested", "dispatchDeadlineMs", "Date", `${snippet} return runAutonomousProcesses;`)(wave, false, 30, { now: () => now });
   const report = await run();
   assert.equal(calls, 2);
-  assert.deepEqual(report, { dispatched: 2, attempted: 2, worked: 2, scoutsAdmitted: 2, scoutsLimitedAdmitted: 2 },
-    "completed work and Scout admissions remain counted when the slice defers later waves");
+  assert.equal(report.dispatches.length, 2, "completed work is retained when the slice defers later waves");
 
   const h = await autonomousHarness();
   const legacy = { ...h.item, id: "work:legacy-held", subject: "subject:legacy", autonomousPlan: undefined };
@@ -355,32 +310,29 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   const held = [task(legacy.id, "legacy:first"), task(legacy.id, "legacy:second"), task("work:missing", "dangling")];
   const plannedTask = task(current.id, "planned:first");
   const placeOrder = ["hunt:legacy", "hunt:planned"];
-  const snapshotStart = source.indexOf("const waveKey =", source.indexOf("async function runAutonomousWave("));
-  const snapshotEnd = source.indexOf("let queueFailures =", snapshotStart);
+  const snapshotStart = source.indexOf("const workItemsById =", source.indexOf("async function runAutonomousWave()"));
+  const snapshotEnd = source.indexOf("const plainTaskIds =", snapshotStart);
   const queueStart = source.indexOf("const readTaskQueue =", snapshotEnd);
   const queueEnd = source.indexOf("let taskQueue:", queueStart);
   assert.ok(snapshotStart >= 0 && snapshotEnd > snapshotStart && queueStart > snapshotEnd && queueEnd > queueStart);
   const ordering = transpileModule(`return (async () => {
-    let plannerOrderSequence = 0;
     ${source.slice(snapshotStart, snapshotEnd)}
     ${source.slice(queueStart, queueEnd)}
     return { taskIds, metadata, remainingSnapshotItems: workItemsById.size, readTaskQueue };
   })();`, { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   let orderingReads = 0;
   const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
-  const planner = await createPlannerSpool();
-  try {
   const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
-    "placeRankFor", "planner", "plannerMap", "plannerSet", "CONTINUOUS_HUNTERS", "repos", "squadReading", ordering)(held, {},
+    "placeRankFor", "huntRoundComparator", "repos", "squadReading", ordering)(held, {},
     async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
       options.onSelectionSnapshot([legacy, current]);
-      return { decisions: [{ action: "WORKER", task: plannedTask }], squadWeights: [] };
+      return { decisions: [{ action: "WORKER", task: plannedTask }] };
     }, placeOrder, () => 1,
     (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
-    planner, plannerMap, plannerSet, false, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
   assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
-  assert.deepEqual(selected.metadata.get(held[0]!.id), JSON.parse(JSON.stringify(legacy)));
-  assert.deepEqual(selected.metadata.get(plannedTask.id), current);
+  assert.equal(selected.metadata.get(held[0]!.id), legacy);
+  assert.equal(selected.metadata.get(plannedTask.id), current);
   assert.equal(selected.metadata.get(held[2]!.id), undefined, "a dangling task has no fabricated metadata and remains for the child's fresh read");
   placeOrder.reverse(); // The first child asks after the owner priority refresh.
   const queue = selected.readTaskQueue();
@@ -392,7 +344,6 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   assert.ok(ordered.includes(held[2]!.id), "ordering does not drop unresolved tasks or claim that they are absent");
   assert.ok(queue.compareRound(held[1]!.id, plannedTask.id) > 0, "removing a completed first task does not reset the hunt's second round");
   assert.equal(orderingReads, 0);
-  } finally { await planner.close(); }
 });
 
 test("pool returns a completed dispatch and records unfinished work when a child exits unsuccessfully", async () => {
@@ -402,20 +353,17 @@ test("pool returns a completed dispatch and records unfinished work when a child
     await writeFile(join(root, "scripts/register-test-loader.mjs"), "");
     const completed = { ...workerDispatchFailure("one", "fixture"), outcome: "WORKED",
       claimed: true, dispositionCommitted: true, disposition: "INGESTED", attemptId: "attempt:one" };
-    await writeFile(join(root, "worker.mjs"), `process.on('message', config => {
-      if (config.taskIds[0] === 'one') process.send({ kind: 'result', body: ${JSON.stringify(completed)} });
+    await writeFile(join(root, "worker.mjs"), `process.on('message', () => {
+      process.send({ kind: 'result', body: ${JSON.stringify(completed)} });
       process.exitCode = 1; process.disconnect();
     });`);
-    const results: DispatchResult[] = [];
-    const summary = await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
+    const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
       taskIds: ["one", "two"], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
-      onDispatched: result => { results.push(result); },
       capacity: () => 1, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.deepEqual(results.map(row => [row.routeTaskId, row.outcome]), [["one", "WORKED"], ["two", "FAILED"]]);
     assert.match(results[1]!.detail, /LEASE_WORKER_EXIT/);
     assert.equal(results[1]!.claimed, false);
     assert.equal(results[1]!.dispositionCommitted, false);
-    assert.deepEqual(summary, { dispatched: 2, attempted: 1, worked: 1, scoutsAdmitted: 0 });
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
@@ -431,12 +379,10 @@ test("one work-item read failure costs one task and the same lease child reaches
       routeLabel: "Unreadable work item", target: "https://example.gov/", inherited: false, now: h.now() });
     await repos.routeTasks.put(unreadable.id, unreadable, h.now());
     let forks = 0;
-    const results: DispatchResult[] = [];
-    const summary = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
+    const results = await withPromotedFixturesInChildren(() => runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts",
       config: { root: process.cwd(), fileStoreRoot: root, postgres: false, taskIds: [unreadable.id, selected.task!.id],
         modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] },
       capacity: () => 1, onStarted: () => { forks++; }, orderPending: async ids => ids,
-      onDispatched: result => { results.push(result); },
       transportFor: () => async () => { throw new Error("unexpected paid call"); } }));
     const failedRead = results.find(row => row.routeTaskId === unreadable.id)!;
     assert.equal(failedRead.outcome, "FAILED");
@@ -448,7 +394,6 @@ test("one work-item read failure costs one task and the same lease child reaches
     assert.equal((await repos.attempts.list()).filter(row => row.value.routeTaskId === selected.task!.id).length, 1);
     assert.equal((await repos.routeTasks.mustRead(unreadable.id)).value.state, "PENDING");
     assert.equal(forks, 1);
-    assert.deepEqual(summary, { dispatched: 2, attempted: 1, worked: 1, scoutsAdmitted: 0 });
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
@@ -494,10 +439,9 @@ test("ZIP process reports return after parent registry and election publication,
       active--; published.push(kind);
       return { kind };
     };
-    const reports: import("../lib/control-plane/workers/process-pool.ts").NationalPlaceReport[] = [];
-    const summary = await runNationalPlaceWorkerProcesses({ root, places: ["10001", "10002", "10003"].map(zip => ({ id: `national-place:${zip}`, zip, state: "NY" })), capacity: () => 2, store,
+    const reports = await runNationalPlaceWorkerProcesses({ root, places: ["10001", "10002", "10003"].map(zip => ({ id: `national-place:${zip}`, zip, state: "NY" })), capacity: () => 2, store,
       orderPending: async ids => [...ids].reverse(),
-      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000 * 1024 * 1024, headroomBytes: 100 * 1024 * 1024, peakBytes: () => 600 * 1024 * 1024 }),
+      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
       onStarted: pid => {
         if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
         pids.push(pid);
@@ -512,9 +456,8 @@ test("ZIP process reports return after parent registry and election publication,
       },
       publishElection: async () => { await write("election"); return { candidateId: "candidate:election",
         promotedVersionId: `election:${registryCalls}`, fields: ["same-deadline"], gaps: [] }; },
-      onResult: report => { reports.push(report); if ("deferred" in report) assert.fail(report.deferred);
+      onResult: report => { if ("deferred" in report) assert.fail(report.deferred);
         delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
-    assert.equal(summary.reported, 3);
     assert.equal(pids.length, 3);
     assert.equal(peak, 1, "registry and election callbacks share the parent critical section");
     assert.equal(published.length, 6, "one failure does not poison later pointer writes");

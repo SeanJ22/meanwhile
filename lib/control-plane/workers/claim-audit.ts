@@ -1,8 +1,4 @@
-/**
- * Weekly, a sample of claimed wins and Proven labels is recomputed from the source records and marked confirmed
- * or wrong. A wrong claim raises a fix-list item and a lesson; a claim whose records are gone or changed is
- * "could not check", never confirmed. A controlled run writes nothing and is never shown as real.
- */
+
 import { createHash } from "node:crypto";
 
 import { newFieldManualEntry, writeFieldManual, type FieldManualEntry } from "../field-manual.ts";
@@ -11,8 +7,8 @@ import { ADMIN_CONFIG_ID, isAdminConfig, type AdminConfig } from "../gateway/adm
 import { readRecentClaimPasses, recordClaimPass, type LiveAuditRepos } from "../live-audit-log.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { UpdateRecord } from "../updates.ts";
-import type { FixMapRepository, FixMapRow } from "../../method/fix-map.ts";
-import { fixProof, readFixProofBar, type MethodStanding } from "../../method/fix-status.ts";
+import type { FixMapRepository, MethodStatistics } from "../../method/fix-map.ts";
+import { proofFromStatistics, readFixProofBar, type MethodStanding } from "../../method/fix-status.ts";
 
 export type ClaimVerdict = "CONFIRMED" | "WRONG" | "COULD_NOT_CHECK";
 
@@ -77,17 +73,11 @@ export function sampleClaims(claims: readonly Claim[], week: string, k: number =
 }
 
 const places = (k: number): string => `${k.toLocaleString("en-US")} place${k === 1 ? "" : "s"}`;
-const tried = (r: FixMapRow): number => Date.parse(r.triedAt ?? r.updatedAt);
 
 /** "Proven: worked in X places, failed in Y", recomputed from the fix map as it stood when it was said. */
-export function checkProvenCount(update: UpdateRecord, map: readonly FixMapRow[]): ClaimCheck {
+export function checkProvenCount(update: UpdateRecord, counts: MethodStatistics): ClaimCheck {
   const c = update.claim!;
-  const at = Date.parse(update.at);
-  const before = map.filter((r) => r.state !== "UNTRIED" && tried(r) <= at);
-  // A place whose result was replaced since cannot say what it read then.
-  const since = map.filter((r) => r.state !== "UNTRIED" && tried(r) > at).length;
-  const works = before.filter((r) => r.state === "WORKS").length;
-  const failed = before.filter((r) => r.state === "FAILS").length;
+  const { beforeWorks: works, beforeFails: failed, since } = counts;
   const recomputed = `The fix map shows ${places(works)} working and ${places(failed)} failing then${since > 0 ? `, and ${places(since)} tried again since` : ""}.`;
   const base = { claimId: update.id, claimed: update.what, recomputed };
   if (since === 0) {
@@ -102,8 +92,8 @@ export function checkProvenCount(update: UpdateRecord, map: readonly FixMapRow[]
 }
 
 /** A Proven label on a fix, recomputed from the fix map against today's bar. */
-export function checkProvenLabel(standing: MethodStanding, map: readonly FixMapRow[], config: AdminConfig | null): ClaimCheck {
-  const proof = fixProof(map, readFixProofBar(config));
+export function checkProvenLabel(standing: MethodStanding, counts: MethodStatistics, config: AdminConfig | null): ClaimCheck {
+  const proof = proofFromStatistics(counts, readFixProofBar(config), false);
   const base = { claimId: `proven-label:${standing.methodId}`, claimed: `${standing.title} is Proven.`,
     recomputed: `The fix map shows it working in ${places(proof.works)} of ${places(proof.tried)} tried, across ${proof.states} state${proof.states === 1 ? "" : "s"}.` };
   return proof.status === "PROVEN"
@@ -126,31 +116,27 @@ export function checkFixDone(update: UpdateRecord, items: readonly FixItem[]): C
 
 export interface ClaimAuditInput {
   readonly config: AdminConfig;
-  readonly fixMap: Pick<FixMapRepository, "forMethod">;
+  readonly fixMap: Pick<FixMapRepository, "statistics">;
   readonly now: string;
   readonly synthetic?: boolean;
   readonly k?: number;
-  readonly claims?: readonly Claim[];
-  readonly readFixItem?: (id: string) => Promise<FixItem | null>;
 }
 
 /** Draws the week's sample and recomputes each claim. Reads only; the caller records the pass and answers red flags. */
 export async function auditClaims(input: ClaimAuditInput): Promise<ClaimPass> {
   const week = weekOf(input.now);
-  let heldMethod: string | null = null, heldMap: readonly FixMapRow[] = [];
-  const mapOf = async (methodId: string) => {
-    if (heldMethod !== methodId) { heldMap = await input.fixMap.forMethod(methodId, 1000); heldMethod = methodId; }
-    return heldMap;
+  const counts = new Map<string, MethodStatistics>();
+  const countsOf = async (methodId: string, at?: string) => {
+    const key = `${methodId}|${at ?? ""}`;
+    if (!counts.has(key)) counts.set(key, await input.fixMap.statistics(methodId, undefined, at));
+    return counts.get(key)!;
   };
   const checks: ClaimCheck[] = [];
-  for (const claim of sampleClaims(input.claims ?? claimsOf(input.config, input.now), week, input.k)) {
+  for (const claim of sampleClaims(claimsOf(input.config, input.now), week, input.k)) {
     try {
-      if (claim.type === "PROVEN_LABEL") checks.push(checkProvenLabel(claim.standing, await mapOf(claim.standing.methodId), input.config));
-      else if (claim.update.claim?.kind === "FIX_PROVEN") checks.push(checkProvenCount(claim.update, await mapOf(claim.update.claim.methodId)));
-      else {
-        const exact = input.readFixItem ? await input.readFixItem(fixItemIdOf(claim.update)!) : null;
-        checks.push(checkFixDone(claim.update, input.readFixItem ? exact ? [exact] : [] : fixItems(input.config)));
-      }
+      if (claim.type === "PROVEN_LABEL") checks.push(checkProvenLabel(claim.standing, await countsOf(claim.standing.methodId), input.config));
+      else if (claim.update.claim?.kind === "FIX_PROVEN") checks.push(checkProvenCount(claim.update, await countsOf(claim.update.claim.methodId, claim.update.at)));
+      else checks.push(checkFixDone(claim.update, fixItems(input.config)));
     } catch {
       // Records that cannot be read confirm nothing.
       checks.push({ claimId: idOf(claim), claimed: claim.type === "UPDATE" ? claim.update.what : `${claim.standing.title} is Proven.`,
@@ -198,30 +184,15 @@ export function reportAccuracy(passes: readonly ClaimPass[]): ReportAccuracyRead
 
 export type ClaimAuditRepos = LiveAuditRepos & Pick<ControlPlaneRepositories, "adminConfig" | "fieldManual">;
 
-/**
- * The weekly pass: once per week (a rerun in the same week does nothing), draw
- * the sample, recompute it, keep the pass, and answer each wrong claim with a
- * red flag and a lesson. A lesson the Bank refuses is reported, never thrown.
- */
-export async function runClaimAuditWeek(repos: ClaimAuditRepos, fixMap: Pick<FixMapRepository, "forMethod">, now: string):
+
+export async function runClaimAuditWeek(repos: ClaimAuditRepos, fixMap: Pick<FixMapRepository, "statistics">, now: string):
   Promise<{ readonly ran: boolean; readonly pass: ClaimPass | null; readonly lessonErrors: readonly string[] }> {
   const week = weekOf(now);
   if ((await readRecentClaimPasses(repos, [week])).length > 0) return { ran: false, pass: null, lessonErrors: [] };
-  const held = await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID, {apiFallback: true, settings: true, updates: true});
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: true, methodStandings: true, fixList: true });
   const config = held && isAdminConfig(held.value) ? held.value : null;
   if (!config) return { ran: false, pass: null, lessonErrors: [] };
-  const read = repos.adminConfig.readArrayPage?.bind(repos.adminConfig);
-  if (!read) throw new Error("CLAIM_AUDIT_SCOPED_ARRAY_STORE_REQUIRED");
-  let claims = sampleClaims(claimsOf(config, now), week);
-  let after = 0;
-  for (;;) {
-    const page = await read(ADMIN_CONFIG_ID, "methodStandings", {after, match: {path: ["status"], value: "PROVEN"}});
-    if (!page) break;
-    for (const standing of page.values as MethodStanding[]) claims = sampleClaims([...claims, {type: "PROVEN_LABEL", standing}], week);
-    if (page.next === null) break; after = page.next;
-  }
-  const pass = await auditClaims({ config, claims, fixMap, now, readFixItem: async id =>
-    (await read(ADMIN_CONFIG_ID, "fixList", {match: {path: ["id"], value: id}, limit: 1}))?.values[0] as FixItem | undefined ?? null });
+  const pass = await auditClaims({ config, fixMap, now });
   await recordClaimPass(repos, pass);
   const lessonErrors: string[] = [];
   for (const check of pass.checks.filter((c) => c.verdict === "WRONG")) {

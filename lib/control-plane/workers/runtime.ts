@@ -4,7 +4,7 @@ import { ZERO_COST, type AttemptCost, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability, type CapabilityGrant } from "../capability.ts";
 import { contentHash, fingerprint } from "../ids.ts";
 import type { ParserInput } from "../evidence/parser-boundary.ts";
-import { evidenceProjection, releaseAuditContextEvidence, workerEvidenceMetadata } from "./evidence-projection.ts";
+import { evidenceProjection } from "./evidence-projection.ts";
 export { evidenceProjection } from "./evidence-projection.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
@@ -12,7 +12,7 @@ import { readCompletedWorkerResult, reconcileWorkerCompletions, type Uncommitted
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
-import { ceilingPermits, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits } from "../scheduler/research-policy.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
@@ -24,7 +24,6 @@ import { writeFieldManual } from "../field-manual.ts";
 import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicExtractionContract, type FleetInput,
   type FleetRole, type IndependentAuditContext, type ParserWorkerInput, type WorkerResultRecord, type WorkerTaskSpec, type WorkerUsage } from "./types.ts";
 import { readSpendWindow } from "../spend-window.ts";
-import { forEachAggregate } from "./streamed-history.ts";
 
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
@@ -62,7 +61,6 @@ export interface FleetRuntime {
   /** Exact subjects whose model calls reserve the selected lifetime hunt budget durably. */
   readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   readonly rollingCeilingUsd?: number;
-  /** History reads scoped to the task's own work item, subject and lineage (`scoped-history.ts`). Absent: whole-table reads. */
   readonly now?: () => string;
   /** The parser's fallback when no parsing rule exists: a model pulls the fields with exact quotes and code confirms each quote is in the saved document (model-parser.ts). */
   readonly parseReasoner?: ReturnType<typeof modelParseReasoner>;
@@ -99,10 +97,6 @@ export async function enqueueWorkerTask(repos: ControlPlaneRepositories, input: 
   return (await registerRouteTask(repos, task, input.now)).value;
 }
 
-/**
- * `modelAudit`: whether the model's adversarial review runs on this audit. The deterministic audit runs on every
- * validated record; the model review is sampled across strata (audit-sampling.ts), on the cheapest tier.
- */
 export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: string, modelAudit = true): DeclaredExecutor {
   const spec = task.workerTask;
   if (!spec) throw new Error("WORKER_TASK_SPEC_MISSING");
@@ -145,21 +139,13 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
         model = await runtime.auditReasoner.review(independent, attemptId, spec.auditEscalation);
       }
     }
-    const evidence = role === "ADVERSARIAL_AUDITOR"
-      ? independent?.evidence.find(held => held.artifactId === spec.artifactId)
-      : evidenceProjection(await runtime.readEvidence(spec.artifactId));
-    if (!evidence) throw new Error("WORKER_EXACT_ARTIFACT_BINDING_REFUSED");
+    const evidence = evidenceProjection(await runtime.readEvidence(spec.artifactId));
     if (evidence.artifactId !== spec.artifactId) throw new Error("WORKER_EXACT_ARTIFACT_BINDING_REFUSED");
     const inputs: string[] = [];
     let input: FleetInput = { attemptId, worker, evidence, contract: spec.contract };
     if (role !== "PARSER") {
       if (!spec.producerResultId) throw new Error("WORKER_PRODUCER_REFERENCE_MISSING");
-      const heldResults = await runtime.repos.workerResults.read(workItemId);
-      const heldRepos = { ...runtime.repos, workerResults: { ...runtime.repos.workerResults, readAll: async () => heldResults } };
-      // Keep the exact producer validation and its current Attempt read. Only a
-      // successfully read batch can fall back to classify an absent/foreign id.
-      const readResult = (id: string) => readCompletedWorkerResult(
-        heldResults.some(record => record.id === id) ? heldRepos : runtime.repos, id);
+      const readResult = (id: string) => readCompletedWorkerResult(runtime.repos, id);
       const producer = await readResult(spec.producerResultId);
       if (producer.record.result.role !== "PARSER" || producer.record.result.verdict !== "EXTRACTED" ||
           producer.record.workItemId !== workItemId || producer.record.result.artifactId !== spec.artifactId ||
@@ -220,9 +206,9 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       semanticHash: contentHash(canonicalJson(result.role === "PARSER" ? normalizedParserResult(result) : result)), result,
       implementationHash: contentHash(await bundleProcedure(role)),
       ...(independent ? { auditContext: { ...independent,
-        evidence: independent.evidence.map(workerEvidenceMetadata),
-        surfaceEvidence: (independent.surfaceEvidence ?? []).map(workerEvidenceMetadata),
-        authorityEvidence: (independent.authorityEvidence ?? []).map(workerEvidenceMetadata) } } : {}),
+        evidence: independent.evidence.map(({ text: _text, ...metadata }) => metadata),
+        surfaceEvidence: (independent.surfaceEvidence ?? []).map(({ text: _text, ...metadata }) => metadata),
+        authorityEvidence: (independent.authorityEvidence ?? []).map(({ text: _text, ...metadata }) => metadata) } } : {}),
       ...(model ? { modelReview: model.review } : {}),
       ...(parsed ? { modelParse: parsed.review } : {}),
     };
@@ -239,7 +225,7 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
           usd: partial ? partial.usd : model?.usd ?? parsed?.usd ?? null,
           requestCount: partial ? partial.byModel.reduce((sum, share) => sum + share.requestCount, 0) : modelRequested && !denied ? 1 : 0,
           ...(partial?.metering ?? model?.metering ?? parsed?.metering ?? {}) } };
-    } finally { releaseAuditContextEvidence(independent); }
+    }
   } };
 }
 
@@ -253,11 +239,6 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
       "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: meeting-partition contracts built from the meeting doors are the only standing acquisition authorities",
     );
   }
-  await reconcileWorkerCompletions(runtime.repos, { workItemIds: [task.workItemId] });
-  return dispatchRecoveredWorkerTask(runtime, task);
-}
-
-async function dispatchRecoveredWorkerTask(runtime: FleetRuntime, task: RouteTask): Promise<DispatchResult> {
   const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined
     ? (runtime.modelAuditSample ? await runtime.modelAuditSample(task.workerTask) : true) : false;
   return dispatchAdmittedWorkerTask(runtime, task, modelAudit);
@@ -291,7 +272,7 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   let reason: string | null = null;
   if (denial.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") && runtime.auditReasoner) reason = "The configured model transport is now available; the current capability and rolling-cost policy will be evaluated again.";
   if (denial.reason.includes("AUDIT_ROLLING_COST_CEILING")) {
-    const spend = researchSpendInWindow(await readSpendWindow(runtime.repos, now), now);
+    const spend = await readSpendWindow(runtime.repos, now);
     if (runtime.lifetimeHuntSubject?.(task.workerTask.contract.subjectId)) reason = "The selected lifetime hunt uses its durable reservation ledger; current policy will be checked again.";
     else if (ceilingPermits(spend.windowUsd, (runtime.rollingCeilingUsd ?? 0)).permits) reason = "The existing rolling-cost window now permits admission; no ceiling or grant was changed.";
   }
@@ -307,28 +288,31 @@ export async function drainWorkerQueue(
   accepts: (task: RouteTask) => boolean = () => true,
   admitDispatch: (task: RouteTask) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string } = () => ({ admit: true }),
 ): Promise<readonly DispatchResult[]> {
-  await reconcileWorkerCompletions(runtime.repos);
   const out: DispatchResult[] = [];
-  await forEachAggregate(runtime.repos.routeTasks, async row => {
-    if (out.length >= maximum) return;
+  let snapshot = await runtime.repos.dispatchState.readOpen();
+  const workIds = [...new Set([...snapshot.routeTasks.values()].map(row => row.value.workItemId))];
+  await reconcileWorkerCompletions(runtime.repos, workIds);
+  snapshot = await runtime.repos.dispatchState.readOpen();
+  const attempts = (await Promise.all(workIds.map(id => runtime.repos.attempts.listWhere(["workItemId"], id)))).flat().map(row => row.value);
+  for (const row of snapshot.routeTasks.values()) {
     let task = row.value;
     if (
       runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
       task.workerTask?.role === "ACQUIRER" &&
       isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
-    ) return;
-    if (!accepts(task)) return;
-    const attempts = (await runtime.repos.attempts.listWhere(["workItemId"], task.workItemId)).map(a=>a.value);
+    ) continue;
+    if (!accepts(task)) continue;
+    if (out.length >= maximum) break;
     const now = (runtime.now ?? (() => new Date().toISOString()))();
     const admission = workerTaskAdmission(task, attempts, now);
-    if (!admission.due) return;
+    if (!admission.due) continue;
     if (admission.requiresPolicyRecheck) {
       const reauthorized = await reauthorizeWorkerTask(runtime, task, now);
-      if (!reauthorized) return;
+      if (!reauthorized) continue;
       task = reauthorized;
     }
-    if (!admitDispatch(task).admit) return;
-    out.push(await dispatchRecoveredWorkerTask(runtime, task));
-  });
+    if (!admitDispatch(task).admit) continue;
+    out.push(await dispatchWorkerTask(runtime, task));
+  }
   return out;
 }

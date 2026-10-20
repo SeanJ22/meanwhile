@@ -128,8 +128,8 @@ test("a registry publication failure leaves its fields open while later election
       assert.equal(fields[0].kind, "registration_deadline");
       return { candidateId: "election-candidate", promotedVersionId: "election-version", fields: ["deadline"], gaps: [] };
     } });
-  assert.equal(offers, 1, "an election-only batch does not re-offer unchanged registry geography after the first refusal");
-  assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }]);
+  assert.equal(offers, 2, "later publication batches survive the earlier rejected call");
+  assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }, { error: "Registry temporarily unavailable" }]);
   assert.equal(result.electionPublications.length, 1);
 });
 
@@ -142,8 +142,8 @@ test("a place inherits other jobs' published fields before national acquisition"
   const name = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-01")!;
   const contact = owed.find(i => i.subject.id === subject.id && i.checklistId === "GOV-08")!;
   const seen: string[] = [];
-  const bank = repos.fieldManual.visitSlice.bind(repos.fieldManual);
-  repos.fieldManual.visitSlice = async (query, visit) => { seen.push("knowledge"); return bank(query, visit); };
+  const bank = repos.fieldManual.select.bind(repos.fieldManual);
+  repos.fieldManual.select = async query => { seen.push("knowledge"); return bank(query); };
   const result = await planPlaceHunt({ repos, divisions: [division], now,
     readHeld: async ids => {
       seen.push("held"); assert.deepEqual(ids, [division.id]);
@@ -168,9 +168,6 @@ test("a place inherits other jobs' published fields before national acquisition"
     readHeld: async () => { throw Error("Shared holdings unavailable"); },
     acquireNational: async () => { throw Error("Must not acquire from a failed empty read"); } }), /Shared holdings unavailable/);
 });
-
-
-
 
 const here = dirname(fileURLToPath(import.meta.url));
 const HOLDINGS_ROOT = join(here, "..");
@@ -203,10 +200,8 @@ function coverageFor(zip: string, meetingCount: number) {
   );
 }
 
-/** The 2022 Census of Governments count for the three clip counties: municipalities plus the county governments. */
 const COG_GENERAL_PURPOSE = 74;
 
-/** Per-county, from the same federal source. */
 const COG_BY_COUNTY: Record<string, number> = {
   "Pima AZ": 5,
   "Merrimack NH": 27,
@@ -215,7 +210,6 @@ const COG_BY_COUNTY: Record<string, number> = {
 
 const bodyOcdIds = new Set(registry.bodies.map((b) => b.ocdId));
 
-/** Average of every exterior-ring vertex. Good enough to place a municipality in its county. */
 function _centroid(feature: GeoFeature): [number, number] {
   const polys =
     feature.geometry.type === "Polygon"
@@ -235,8 +229,6 @@ function _centroid(feature: GeoFeature): [number, number] {
 }
 
 test("the clip counties hold exactly the 74 governments Census enumerates", () => {
-
-
 
   const measuredCounties = registry.divisions.filter(d => d.divisionType === "county" && Object.hasOwn(COG_BY_COUNTY, `${d.label.replace(/ County$/, "")} ${d.state}`));
   const countyLabel = new Map(measuredCounties.map(d => [d.geoid!, `${d.label.replace(/ County$/, "")} ${d.state}`]));
@@ -260,7 +252,6 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
     }
   }
 
-  /* The widened extent draws municipal governments outside the clip counties; both numbers are reported. */
   console.log(
     `COG cross-check: ${Object.values(perCounty).reduce((a, b) => a + b, 0)} municipal ` +
       `bodies inside the three primary counties · ${outsideThePrimaries} held in the ` +
@@ -273,7 +264,6 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
     `municipal counts per county disagree with the Census of Governments: ${JSON.stringify(perCounty)}`,
   );
 
-  /* The county term is the clip counties only; other county divisions are real but outside this cross-check. */
   const clipFips = new Set(measuredCounties.map(d => d.geoid));
   const clipCountyRows = registry.divisions.filter(
     (d) => d.divisionType === "county" && d.geoid !== null && clipFips.has(d.geoid),
@@ -291,8 +281,7 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
 });
 
 test("a government listed in both layers keeps the real row, not the fictitious one", () => {
-  // Census marks the duplicate itself: the place row is FUNCSTAT=A and the county-subdivision row is FUNCSTAT=F.
-  // The surviving row must be the place row, because officeholders and meetings join on that key.
+
   const concord = registry.divisions.filter(
     (d) => d.divisionType === "place" && /concord/.test(d.ocdId) && d.state === "NH",
   );
@@ -315,7 +304,7 @@ test("a government listed in both layers keeps the real row, not the fictitious 
 });
 
 test("every fictitious row is suppressed, and only fictitious rows are", () => {
-  /* Counted across the clip extent. If this moves, the second assertion tells a rule change from a data change. */
+
   const municipal = registry.divisions.filter((d) => d.divisionType === "place");
   const fictitious = municipal.filter((d) => d.funcstat === "F");
 
@@ -333,8 +322,7 @@ test("every fictitious row is suppressed, and only fictitious rows are", () => {
 });
 
 test("Rockaway borough and township both survive as separate governments", () => {
-  // Two municipalities with two councils: one a flat place row, one a county subdivision, plus a fictitious
-  // duplicate of the first.
+
   const rockaway = registry.divisions.filter((d) => /place:rockaway/.test(d.ocdId));
   const governing = rockaway.filter((d) => bodyOcdIds.has(d.ocdId)).map((d) => d.ocdId);
 
@@ -347,7 +335,7 @@ test("Rockaway borough and township both survive as separate governments", () =>
 });
 
 test("85701 keeps the City of Tucson and is not called unincorporated", () => {
-  // The city place and a statistical Census County Division cover the same ground; the CCD must not drop the city.
+
   const coverage = coverageFor("85701", 0);
 
   assert.equal(
@@ -356,7 +344,6 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
     "downtown Tucson has a city government",
   );
 
-  // Exactly one municipal government; the division's curated boards and commissions must not read as another.
   const municipal = coverage.bodies.filter(
     (b) => b.divisionType === "place" && b.name === null,
   );
@@ -369,7 +356,7 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
 });
 
 test("85641 states the unincorporated fact and still names its government", () => {
-  // A CDP has no municipal government; the answer names the county and the school district and says so.
+
   const coverage = coverageFor("85641", 0);
 
   assert.equal(coverage.state, "NONE_SCHEDULED");
@@ -392,8 +379,7 @@ test("85641 states the unincorporated fact and still names its government", () =
 });
 
 test("nobody is ever told they have no representation", () => {
-  // Whatever the coverage state, a zip always resolves at least a county board, a school board, and state and
-  // federal seats.
+
   for (const zip of ["85701", "85641", "07866", "03255"]) {
     const coverage = coverageFor(zip, 0);
     assert.ok(
@@ -411,7 +397,7 @@ test("nobody is ever told they have no representation", () => {
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
   assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
-  // An unwired commission must not read as a government whose calendar is missing; the sidebar still counts it.
+
   const rockaway = coverageFor("07866", 0);
   assert.equal(rockaway.state, "NONE_SCHEDULED");
   assert.ok(
@@ -429,8 +415,7 @@ test("finding meetings and finding nothing are different states", () => {
 });
 
 test("a body's name is never invented for display", () => {
-  // A DERIVED body's own name is null until something sources it. A CURATED row may carry a name, and then it must
-  // cite the page the name was read off.
+
   const coverage = coverageFor("07866", 0);
   assert.ok(coverage.bodies.length > 0);
 
@@ -450,7 +435,7 @@ test("a body's name is never invented for display", () => {
 });
 
 test("07866 counts its two school districts separately", () => {
-  // A K-8 district and a regional high school district are two governments with two boards.
+
   const coverage = coverageFor("07866", 0);
   const schools = coverage.bodies.filter((b) => b.divisionType === "school_district");
 
@@ -461,8 +446,7 @@ test("07866 counts its two school districts separately", () => {
 });
 
 test("03255 resolves the town, deduped to one municipal division", () => {
-  // A town that is a county subdivision, absent from the place file, survives the dedupe as one division with many
-  // bodies; the dedupe is of the division, not the body count.
+
   const coverage = coverageFor("03255", 0);
   const municipal = coverage.bodies.filter((b) => b.divisionType === "place");
   const divisions = new Set(municipal.map((b) => b.divisionLabel));

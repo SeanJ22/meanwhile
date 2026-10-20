@@ -17,10 +17,6 @@ import { fileURLToPath } from "node:url";
 import { CivicDataStoreUnavailableError } from "../lib/civic-data/read-model.ts";
 import { CONTROL_PLANE_CONNECT_MAX_ATTEMPTS } from "../lib/control-plane/repository/connect-retry.ts";
 import { isRetryableStartupReadError, retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
-import { readOperationalReferenceStateIndex, readOperationalReferenceState, type OperationalAuthorityRead } from "../lib/civic-data/operational-reference-state-read.ts";
-import { JURISDICTION_REFERENCE_SCOPE, JURISDICTION_REFERENCE_VERSION } from "../lib/civic-data/operational-references.ts";
-import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 
 type UnavailableCode = CivicDataStoreUnavailableError["result"]["code"];
 
@@ -206,44 +202,6 @@ test("nothing is retried while the Neon circuit is latched", async () => {
 test("freshness-shadow routes its startup reads through retryStartupRead", () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const src = readFileSync(join(root, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(src, /const readStartupAuthority = <T,>\(read: \(\) => Promise<T>\): Promise<T> => retryStartupRead\(read, \(\) => null, startupReadRetry\);/);
-  assert.match(src, /await readOperationalReferenceStateIndex\(undefined, readStartupAuthority\)/);
-  assert.equal(src.match(/readReviewedState: state => readOperationalReferenceState\(state, undefined, readStartupAuthority\)/g)?.length, 2,
-    "provider enumeration and later territory/DISPATCH hydration both retry the exact reviewed state read");
-  assert.doesNotMatch(src, /preload(?:Az)?OperationalReferenceBundle\(/, "no whole-country startup bundle is materialized");
-});
-
-test("bounded state metadata and authority reads retry the original transient before it becomes a fallback diagnostic", async () => {
-  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/jurisdiction-registries.json", import.meta.url), "utf8")) as Record<string, JurisdictionRegistry>;
-  for (const kind of ["index", "state"] as const) {
-    const r = recorder(), scopes: string[] = []; let calls = 0;
-    const readAuthority: OperationalAuthorityRead = read => retryStartupRead(read, neverUnreachable, r.options);
-    const query: ReadOnlyQuery = async statements => statements.map(statement => {
-      scopes.push(String(statement.params[1]));
-      if (statement.params[1] !== JURISDICTION_REFERENCE_SCOPE) return [];
-      assert.deepEqual(statement.params[2], kind === "index" ? ["registries"] : ["registries", "nh"]);
-      calls++;
-      if (calls === 1) throw storeUnavailable();
-      return [{ row_kind: "publication", value: { published: true, normalized_hash: "a".repeat(64),
-        source_id: "fixture", source_version: JURISDICTION_REFERENCE_VERSION, current_version_id: "fixture-version" } },
-      { row_kind: "record", value: kind === "index" ? ["nh"] : fixtures.nh }];
-    });
-    if (kind === "index") assert.deepEqual((await readOperationalReferenceStateIndex(query, readAuthority)).states, ["nh"]);
-    else assert.equal((await readOperationalReferenceState("nh", query, readAuthority)).registry.stateCode, fixtures.nh.stateCode);
-    assert.equal(calls, 2, `${kind}: the same narrowed read recovers after one failed store read`);
-    assert.equal(r.retries.length, 1);
-    assert.ok(scopes.every(scope => scope.includes("jurisdiction") || scope === JURISDICTION_REFERENCE_SCOPE));
-  }
-});
-
-test("bounded state authority reads keep deterministic refusals and a latched circuit out of the retry loop", async () => {
-  for (const latched of [false, true]) {
-    const r = recorder(); let calls = 0;
-    const failure = latched ? storeUnavailable() : new Error("PUBLISHED_ARRAY_SLICE_POINTER_INVALID");
-    const readAuthority: OperationalAuthorityRead = read => retryStartupRead(read, neverUnreachable,
-      { ...r.options, circuitLatched: () => latched });
-    const query: ReadOnlyQuery = async () => { calls++; throw failure; };
-    await assert.rejects(readOperationalReferenceState("nh", query, readAuthority), /OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:nh:/);
-    assert.equal(calls, 1); assert.deepEqual(r.delays, []); assert.deepEqual(r.retries, []);
-  }
+  assert.match(src, /retryStartupRead\(\s*\(\)\s*=>\s*preloadOperationalReferenceBundle\(/);
+  assert.doesNotMatch(src, /^await preloadOperationalReferenceBundle\(/m);
 });

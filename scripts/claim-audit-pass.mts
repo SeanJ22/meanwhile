@@ -49,7 +49,7 @@ const broke = await recheckProvenFixes(fixMap, repos, now).catch((error: unknown
   console.error(`proven recheck: could not be done: ${error instanceof Error ? error.message : String(error)}`);
   return null;
 });
-if (broke !== null) console.log(`proven recheck: ${broke} proven fix${broke === 1 ? "" : "es"} no longer hold${broke === 1 ? "s" : ""} today`);
+if (broke !== null) console.log(`proven recheck: ${broke.length} proven fix${broke.length === 1 ? "" : "es"} no longer hold${broke.length === 1 ? "s" : ""} today`);
 const out = await runClaimAuditWeek(repos, fixMap, now);
 if (!out.ran || out.pass === null) {
   console.log("claim audit: this week is already checked, or there is no config row; nothing to do");

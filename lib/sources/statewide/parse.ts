@@ -66,14 +66,8 @@ function personName(label:string,officeTitles:readonly string[]):string|null {
   return name;
 }
 export function parseStatewideAssociation(html:string,source:StatewideReferenceSource,sourceUrl:string,collectedAt:string,state?:string):{leads:StatewideLead[];gaps:StatewideGap[]} {
-  return associationBlocks(htmlEvidenceBlocks(html).map(row=>row.html),source,sourceUrl,collectedAt,state);
-}
-export function parseStatewideAssociationBlock(block:string,source:StatewideReferenceSource,sourceUrl:string,collectedAt:string,state:string):{leads:StatewideLead[];gaps:StatewideGap[]} {
-  return associationBlocks([block],source,sourceUrl,collectedAt,state);
-}
-function associationBlocks(blocks:Iterable<string>,source:StatewideReferenceSource,sourceUrl:string,collectedAt:string,state?:string):{leads:StatewideLead[];gaps:StatewideGap[]} {
   const leads:StatewideLead[]=[],gaps:StatewideGap[]=[];
-  for(const block of blocks){
+  for(const {html:block} of htmlEvidenceBlocks(html)){
     const text=statewidePageText(block);
     const headingStates=[...new Set([...block.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]\s*>/gi)].flatMap(heading=>namedStates(statewidePageText(heading[1]))))];
     // Postal addresses can contain another state's name (Washington Street).

@@ -1,8 +1,18 @@
+import { MANUAL_SOURCE_INDEX_DDL } from "./manual-source-index.ts";
+import {MANUAL_METHOD_INDEX_DDL} from "./manual-method-index.ts";
+import { PLANNING_CONTROL_DDL } from "../scheduler/state-planning.ts";
+import { HUNT_ORDER_DDL } from "../hunt-orders.ts";
+import { CONTROL_READS_BACKFILL_DDL } from "./control-reads-backfill.ts";
+import { ADMIN_SECTION_TABLES, ADMIN_SECTIONS_DDL, ADMIN_SECTION_INDEXES, ADMIN_SCOPED_SAVE_DDL } from "./admin-config.ts";
+import { MODEL_CHARGES_DDL } from "./model-charges.ts";
+import { DISPATCH_STATE_DDL, DISPATCH_ARCHIVE_TABLES } from "./dispatch-state.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
+import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
 
-/** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
 export const BOOTSTRAP_VERSION = 34;
+export const CP_MIGRATIONS_DDL = `CREATE TABLE IF NOT EXISTS cp_migrations (
+  id text PRIMARY KEY, hash text NOT NULL, completed_at timestamptz NOT NULL)`;
 
 export const AGGREGATE_KINDS = [
   "work_items",
@@ -17,19 +27,17 @@ export const AGGREGATE_KINDS = [
   "runner_heartbeat",
   "cache_observations",
   "research_state",
-  "spend_window",
-  /* Method-candidate lifecycle is runtime state, never a tracked Git file. */
+
   "method_candidates",
   "readiness_snapshots",
   "admin_config",
-  "field_manual",
-  /** The field manual, one row per entry. */
+
   "field_manual_entries",
   "ask_gap_observations",
   "doors",
-  /** Original-byte copy requests; never source acquisition or a second scheduler. */
+
   "admin_evidence_copy_requests",
-  /** The owner's research-lead uploads, one row per order. */
+
   "lead_orders",
   "box_findings",
   "pass_cursors",
@@ -57,9 +65,9 @@ export const APPEND_ONLY_LOGS = [
   "live_audits",
 ] as const;
 
-/** Every table this schema declares, for the drift check. */
 export const DECLARED_TABLES: readonly string[] = [
   "cp_schema_version",
+  "cp_migrations",
   "cp_log_heads",
   "cp_admin_action_history_projection",
   "cp_admin_action_history_scope_ref",
@@ -69,12 +77,23 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_spend_holds",
   "cp_vital_signs",
   "cp_fix_map",
+  "cp_manual_method_meta",
+  "cp_manual_method_rank",
+  "cp_manual_source_facts",
+  "cp_manual_source_classes",
+  "cp_model_charges",
+  "cp_control_backfill_jobs",
+  "cp_hunt_orders",
+  "cp_planning_controls",
+  "cp_dispatch_cursors",
+  "cp_lineage_cache",
+  ...DISPATCH_ARCHIVE_TABLES,
+  ...ADMIN_SECTION_TABLES,
   "cp_website_pacing",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
 
-/** One statement per entry: the HTTP driver prepares every query, and Postgres refuses multiple commands in a prepared statement. */
 function aggregateTable(name: string): readonly string[] {
   return [
     `CREATE TABLE IF NOT EXISTS cp_${name} (
@@ -87,7 +106,6 @@ function aggregateTable(name: string): readonly string[] {
   ];
 }
 
-/** Unique per log key, enforced by the database: concurrent inserts under READ COMMITTED could otherwise share a position and make replay order ambiguous. */
 function appendOnlyTable(name: string): readonly string[] {
   return [
     `CREATE TABLE IF NOT EXISTS cp_log_${name} (
@@ -107,7 +125,6 @@ function appendOnlyTable(name: string): readonly string[] {
 export const ARTIFACT_SOURCE_INDEX_DDL = `CREATE INDEX CONCURRENTLY IF NOT EXISTS cp_log_artifacts_source_url
      ON cp_log_artifacts (md5(record->>'canonicalUrl'), (record->>'recordedAt') DESC NULLS LAST, (record->>'artifactId') ASC);`;
 
-/** One index the bootstrap builds online, with the name its catalog status is read by. */
 export interface OnlineIndex { readonly name: string; readonly ddl: string; readonly inProgressCode: string }
 
 export const ARTIFACT_SOURCE_INDEX: OnlineIndex = { name: "cp_log_artifacts_source_url", ddl: ARTIFACT_SOURCE_INDEX_DDL,
@@ -117,7 +134,6 @@ function onlineIndex(name: string, on: string): OnlineIndex {
   return { name, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${name} ON ${on};`, inProgressCode: "CONTROL_PLANE_INDEX_BUILD_IN_PROGRESS" };
 }
 
-/** The scoped history reads' indexes, each on the exact expression its read sends. */
 export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_work_item", "cp_attempts ((value #>> '{workItemId}'))"),
   onlineIndex("cp_route_tasks_work_item", "cp_route_tasks ((value #>> '{workItemId}'))"),
@@ -132,6 +148,11 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_scout_results_subject", "cp_log_scout_results ((record #>> '{subjectId}'))"),
   onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),
   onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
+  onlineIndex("cp_log_scout_results_attempt", "cp_log_scout_results ((record->>'attemptId'))"),
+  onlineIndex("cp_leases_released", "cp_leases ((value #>> '{released}'))"),
+  onlineIndex("cp_log_scout_results_work_item", "cp_log_scout_results ((record #>> '{workItemId}'))"),
+  onlineIndex("cp_log_promotion_pipeline_attempt", "cp_log_promotion_pipeline ((record #>> '{source,attemptId}'))"),
+  onlineIndex("cp_log_worker_results_id", "cp_log_worker_results ((record #>> '{id}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
   onlineIndex("cp_work_items_publication_contract", "cp_work_items ((value #>> '{autonomousPlan,publication,contractId}'))"),
   onlineIndex("cp_work_items_publication_body", "cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'))"),
@@ -141,13 +162,11 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_box_findings_reason", "cp_box_findings ((value #>> '{waitingFor,reason}'), id) WHERE value->>'state' = 'waiting'"),
 ];
 
-/** Every aggregate and log table this schema declares, each of which carries `changed_at`. */
 export const CHANGED_AT_TABLES: readonly string[] = [
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
 
-/** The trigger function that stamps `changed_at` with the database clock on every UPDATE. */
 export const CHANGED_AT_TOUCH_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_touch_changed_at() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -155,7 +174,6 @@ BEGIN
   RETURN NEW;
 END $$;`;
 
-/** The catalog is asked first, so a current database takes no lock; otherwise the ALTER is metadata only. */
 export function changedAtColumnDdl(table: string): string {
   if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
   return `DO $$ BEGIN
@@ -174,14 +192,12 @@ FOR EACH ROW EXECUTE FUNCTION cp_touch_changed_at();
 END $$;`;
 }
 
-/** The `changed_at` indexes for the tables the runner reads whole, built online. */
 export const CHANGED_AT_INDEXES: readonly OnlineIndex[] = [
   "cp_work_items", "cp_attempts", "cp_route_tasks", "cp_occurrences", "cp_leases", "cp_obligations", "cp_debts",
   "cp_log_artifacts", "cp_log_scout_results", "cp_log_worker_results", "cp_log_costs", "cp_log_dispositions",
   "cp_log_promotion_pipeline",
 ].map(table => onlineIndex(`${table}_changed_at`, `${table} (changed_at)`));
 
-/** Refuses what a changed-since read could not see: rewriting or deleting a log record, or deleting an aggregate. */
 export const REJECT_REWRITE_FUNCTION_DDL = `CREATE OR REPLACE FUNCTION cp_reject_rewrite() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -189,7 +205,6 @@ BEGIN
     USING ERRCODE = 'restrict_violation';
 END $$;`;
 
-/** A log refuses UPDATE and DELETE; an aggregate refuses DELETE (its updates are compare-and-sets that stamp `changed_at`). */
 export function rejectRewriteDdl(table: string): string {
   if (!/^cp_[a-z0-9_]+$/.test(table)) throw new Error(`unsafe control-plane table name ${JSON.stringify(table)}`);
   const refused = table.startsWith("cp_log_") ? "UPDATE OR DELETE" : "DELETE";
@@ -204,13 +219,11 @@ FOR EACH ROW EXECUTE FUNCTION cp_reject_rewrite();
 END $$;`;
 }
 
-/** The RouteTask lookups, on the exact expression `listWhere(["routeTaskId"])` sends. */
 export const ROUTE_TASK_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_route_task", "cp_attempts ((value #>> '{routeTaskId}'))"),
   onlineIndex("cp_leases_route_task", "cp_leases ((value #>> '{routeTaskId}'))"),
 ];
 
-/** The hourly vital signs row the runner upserts (`vital-signs.ts` VITAL_SIGNS_UPSERT). */
 export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs (
      hour                  timestamptz PRIMARY KEY,
      facts_live            integer,
@@ -231,7 +244,6 @@ export const VITAL_SIGNS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_vital_signs 
      written_at            timestamptz NOT NULL
    );`;
 
-/** One row per spend hold. `cost_recorded_at` is null until the hold's job is settled. */
 export const SPEND_HOLDS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_spend_holds (
      hold_id          text PRIMARY KEY,
      job_id           text NOT NULL,
@@ -246,7 +258,6 @@ export const SPEND_HOLDS_TABLE_DDL = `CREATE TABLE IF NOT EXISTS cp_spend_holds 
      changed_at       timestamptz NOT NULL DEFAULT now()
    );`;
 
-/** Each index is created only when the catalog lacks it, so a current database takes no lock. */
 export const SPEND_HOLDS_INDEXES: readonly { readonly name: string; readonly on: string }[] = [
   { name: "cp_spend_holds_keys", on: "cp_spend_holds USING gin (keys)" },
   { name: "cp_spend_holds_job", on: "cp_spend_holds (job_id)" },
@@ -261,7 +272,6 @@ ${SPEND_HOLDS_INDEXES.map(i => `  IF to_regclass('${i.name}') IS NULL THEN
   END IF;`).join("\n")}
 END $do$;`;
 
-/** A hold row as the `SpendHold` JSON every reader takes, instants as `toISOString()` writes them. */
 export function spendHoldJsonSql(alias: string): string {
   const iso = (column: string) => `to_char(${alias}.${column} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`;
   return `jsonb_build_object('holdId', ${alias}.hold_id, 'jobId', ${alias}.job_id, 'obligationId', ${alias}.obligation_id, ` +
@@ -275,17 +285,14 @@ export function spendHoldLiveSql(alias: string, windowStart: string, staleBefore
     `CASE WHEN ${alias}.cost_recorded_at IS NULL THEN ${alias}.held_at >= ${staleBefore} ELSE ${alias}.cost_recorded_at >= ${keptSince} END)`;
 }
 
-/** Exactly NOT `spendHoldLiveSql`, written as the disjunction its indexes serve. */
 export function spendHoldDeadSql(alias: string, windowStart: string, staleBefore: string, keptSince: string): string {
   return `((${alias}.cost_recorded_at IS NULL AND ${alias}.held_at < ${staleBefore}) OR ` +
     `(${alias}.cost_recorded_at IS NOT NULL AND ${alias}.cost_recorded_at < ${keptSince}) OR ` +
     `(cardinality(${alias}.lifetime_keys) = 0 AND ${alias}.held_at < ${windowStart}))`;
 }
 
-/** The marker the bootstrap looks for in the installed body; move it whenever the function's body moves. */
 export const ADMIT_SPEND_HOLD_MARKER = "cp_admit_spend_hold body v1";
 
-// Round to nanodollars so SQL and the budget reader make identical decisions.
 const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'historicalUsd')::numeric + coalesce(sum(
         CASE WHEN h.cost_recorded_at IS NULL THEN h.usd
              WHEN h.cost_recorded_at > (l->>'historyReadAt')::timestamptz THEN h.settled_usd
@@ -294,7 +301,6 @@ const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'histor
       WHERE h.keys @> ARRAY[l->>'key'] AND ${spendHoldLiveSql("h", "win", "stale", "kept")}
         AND (coalesce((l->>'lifetime')::boolean, false) OR h.held_at >= win))`;
 
-// Missing amounts must refuse admission rather than compare as NaN.
 export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'cp_admit_spend_hold'
       AND pronamespace = current_schema()::regnamespace AND prosrc LIKE '%${ADMIT_SPEND_HOLD_MARKER}%') THEN
@@ -374,7 +380,6 @@ export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   END IF;
 END $do$;`;
 
-/** One transaction: lock the ledger row, copy its holds (existing ids kept), empty `spendHolds` and bump the revision. */
 export const SPEND_HOLDS_MOVE_DDL = `DO $do$
 DECLARE held jsonb;
 BEGIN
@@ -396,13 +401,62 @@ BEGIN
     WHERE id = 'shared-budget-ledger';
 END $do$;`;
 
-/** Reads by kind (method knowledge, playbooks, official links) take only their rows. */
 export const FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL =
   "CREATE INDEX IF NOT EXISTS cp_field_manual_entries_kind ON cp_field_manual_entries ((value->>'kind'));";
 
-/** Every index the bootstrap builds online, by its DDL statement. */
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
   [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
+
+const WORK_ITEM_PUBLICATION_INDEXES = [...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES].filter(index =>
+  ["cp_work_items_publication_contract", "cp_work_items_publication_body", "cp_work_items_contract_subject", "cp_work_items_changed_at"].includes(index.name));
+
+export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
+  CP_MIGRATIONS_DDL,
+  ...aggregateTable("pass_cursors"),
+  ...FIX_MAP_DDL,
+  ...MODEL_CHARGES_DDL,
+  ...ADMIN_SECTIONS_DDL,
+  ...ADMIN_SECTION_INDEXES,
+  ADMIN_SCOPED_SAVE_DDL,
+  ...HUNT_ORDER_DDL,
+  ...WORK_ITEM_PUBLICATION_INDEXES.map(index => index.ddl.replace(" CONCURRENTLY", "")),
+  ...DISPATCH_STATE_DDL,
+  ...CONTROL_READS_BACKFILL_DDL,
+  ...PLANNING_CONTROL_DDL,
+  ...MANUAL_ORDER_INDEXES,
+  ...MANUAL_METHOD_INDEX_DDL,
+  ...MANUAL_SOURCE_INDEX_DDL,
+  ...DISPATCH_ARCHIVE_TABLES.map(changedAtColumnDdl),
+  ...WORK_ITEM_PUBLICATION_INDEXES.map(index => `DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_index WHERE indrelid = 'cp_work_items_archive'::regclass AND indisvalid AND indpred IS NULL
+      AND pg_get_indexdef(indexrelid, 1, true) = pg_get_indexdef('${index.name}'::regclass, 1, true)) THEN
+      ${index.ddl.replace(" CONCURRENTLY", "").replaceAll("cp_work_items", "cp_work_items_archive")}
+    END IF;
+  END $$;`),
+  ...["cp_work_items", "cp_work_items_archive"].map(table => `CREATE INDEX IF NOT EXISTS ${table}_autonomous_followup ON ${table} (id)
+    WHERE value->'autonomousPlan' IS NOT NULL AND value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
+      AND (jsonb_array_length(coalesce(value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
+        OR jsonb_array_length(coalesce(value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0);`),
+  ...["cp_work_items", "cp_work_items_archive"].map(table => `CREATE INDEX IF NOT EXISTS ${table}_adapter_subject ON ${table}
+    ((value #>> '{subject}'), (CASE WHEN value #>> '{autonomousPlan,capability}'='hunt-packet' THEN 0 ELSE 1 END),
+      (value->>'createdAt') DESC, id DESC) WHERE value->'autonomousPlan' IS NOT NULL;`),
+  "CREATE INDEX IF NOT EXISTS cp_log_promotion_pipeline_state_item ON cp_log_promotion_pipeline (cp_control_state(coalesce(record->'offered',record)),log_key) WHERE record->>'stage'='SCOUTED' OR record #>> '{offered,stage}'='SCOUTED';",
+  "CREATE INDEX IF NOT EXISTS cp_log_scout_results_subject_latest ON cp_log_scout_results ((record #>> '{subjectId}'), (record->>'recordClass'), (record->>'recordedAt') DESC, log_key DESC, position DESC);",
+  "CREATE INDEX IF NOT EXISTS cp_log_scout_results_adapter_pending ON cp_log_scout_results ((record #>> '{subjectId}'), (record->>'recordClass'), (record->>'recordedAt') DESC, log_key DESC, position DESC) WHERE record->>'outcome'='NEEDS_ADAPTER' AND record->'refusal'='null'::jsonb;",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_reach_places ON cp_field_manual_entries USING gin ((coalesce(value->'reach'->'places', '[]'::jsonb)));",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_reach_states ON cp_field_manual_entries USING gin ((coalesce(value->'reach'->'states', '[]'::jsonb)));",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_reach_platforms ON cp_field_manual_entries USING gin ((coalesce(value->'reach'->'platforms', '[]'::jsonb)));",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_everywhere ON cp_field_manual_entries (id) WHERE coalesce((value->'reach'->>'everywhere')::boolean, false);",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_transferable ON cp_field_manual_entries (id) WHERE ((value->>'kind' IN ('METHOD','ROUTE','MANIFEST_BRANCH') AND (value->>'url' IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb)) > 0)) OR coalesce((value->'reach'->>'method')::boolean,false));",
+  "CREATE INDEX IF NOT EXISTS cp_field_manual_platform_reach ON cp_field_manual_entries (id) WHERE jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb)) > 0;",
+  "CREATE STATISTICS IF NOT EXISTS cp_field_manual_reach_statistics ON (coalesce((value->'reach'->>'everywhere')::boolean,false)), (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))), (coalesce((value->'reach'->>'method')::boolean,false)), (value->>'kind'), (value->>'role'), (jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))) FROM cp_field_manual_entries;",
+
+  "CREATE INDEX IF NOT EXISTS cp_log_scout_results_attempt ON cp_log_scout_results ((record->>'attemptId'));",
+  "CREATE INDEX IF NOT EXISTS cp_leases_released ON cp_leases ((value #>> '{released}'));",
+  "CREATE INDEX IF NOT EXISTS cp_log_scout_results_work_item ON cp_log_scout_results ((record #>> '{workItemId}'));",
+  "CREATE INDEX IF NOT EXISTS cp_log_promotion_pipeline_attempt ON cp_log_promotion_pipeline ((record #>> '{source,attemptId}'));",
+  "CREATE INDEX IF NOT EXISTS cp_log_worker_results_id ON cp_log_worker_results ((record #>> '{id}'));",
+];
 
 export const BOOTSTRAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
@@ -410,7 +464,7 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      version     integer NOT NULL,
      applied_at  timestamptz NOT NULL
    );`,
-  // Row locks serialize allocations without relying on HTTP connection sessions.
+
   `CREATE TABLE IF NOT EXISTS cp_log_heads (
      log_table     text NOT NULL,
      log_key       text NOT NULL,
@@ -595,7 +649,7 @@ AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
   END IF;
 END $$;`,
-  // Concurrent creation keeps writes running; exact URL comparison guards against hash collisions.
+
   ARTIFACT_SOURCE_INDEX_DDL,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position
@@ -604,7 +658,7 @@ END $$;`,
      ON cp_route_tasks ((value->>'state'));`,
   `CREATE INDEX IF NOT EXISTS cp_leases_expiry
      ON cp_leases ((value->>'expiresAt'));`,
-  /* Due-time index: "which obligations are due?" is a range scan. */
+
   `CREATE INDEX IF NOT EXISTS cp_obligations_next_due
      ON cp_obligations ((value->>'nextDueAt'))
      WHERE (value->>'active')::boolean;`,
@@ -624,12 +678,12 @@ END $$;`,
   ADMIT_SPEND_HOLD_FUNCTION_DDL,
   SPEND_HOLDS_MOVE_DDL,
   VITAL_SIGNS_TABLE_DDL,
-  ...FIX_MAP_DDL,
+  ...CONTROL_READS_EXPAND_DDL,
+
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,
 ];
 
-/** Run before the unique index is created, so a duplicate is reported by log and position. */
 export function duplicatePositionQuery(log: string): string {
   return `SELECT log_key, position, count(*) AS n
           FROM cp_log_${log}
@@ -637,7 +691,6 @@ export function duplicatePositionQuery(log: string): string {
           HAVING count(*) > 1`;
 }
 
-/** The statement that records which version the database is now at. */
 export function recordVersionStatement(version: number, nowIso: string): string {
   return `INSERT INTO cp_schema_version (singleton, version, applied_at)
           VALUES (true, ${version}, '${nowIso}')
@@ -646,7 +699,6 @@ export function recordVersionStatement(version: number, nowIso: string): string 
                 applied_at = CASE WHEN EXCLUDED.version >= cp_schema_version.version THEN EXCLUDED.applied_at ELSE cp_schema_version.applied_at END;`;
 }
 
-/** What the gate found, and every field is a fact it read rather than assumed. */
 export interface SchemaVerdict {
   readonly configured: boolean;
   readonly reachable: boolean;
@@ -657,7 +709,6 @@ export interface SchemaVerdict {
   readonly problems: readonly string[];
 }
 
-/** Pure. An unreachable database is not a pass. */
 export function judgeSchema(input: {
   readonly configured: boolean;
   readonly reachable: boolean;
@@ -698,7 +749,7 @@ export function judgeSchema(input: {
 
   const live = new Set(input.liveTables);
   const missingTables = DECLARED_TABLES.filter((t) => !live.has(t));
-  /* Only `cp_`-prefixed tables are judged. */
+
   const unexpectedTables = [...live].filter(
     (t) => t.startsWith("cp_") && !DECLARED_TABLES.includes(t),
   );

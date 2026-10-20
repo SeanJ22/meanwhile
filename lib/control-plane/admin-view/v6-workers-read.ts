@@ -1,8 +1,3 @@
-/**
- * A job is running only when its Attempt is open and its own lease is unreleased and unexpired at read time. A heartbeat
- * or lease renewal is only "switched on", never progress. A job is placed only through its exact Send or declared scope
- * divisions; a read that reached its row limit gives lower bounds.
- */
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { openControlPlane, readAdminConfig, RUNNER_ID } from "../admin-data.ts";
@@ -58,7 +53,6 @@ const REFUSAL_WORDS: Readonly<Record<string, string>> = {
   PROVIDER_CIRCUIT_BROKEN: "the provider is failing",
 };
 
-/** Structurally `WorkerStatus` in app/(admin)/_mw/admin-v6/model.ts. */
 export interface V6WorkerStatus {
   readonly lastCheckIn: string | null;
   readonly lastUsefulProgress: { readonly at: string; readonly what: string } | null;
@@ -73,7 +67,7 @@ export interface V6WorkerStatus {
   readonly databaseReads?: V6DatabaseReads | null;
   readonly unread: readonly string[];
 }
-/** The database bytes the runner's processes read in its last full hour, largest callers first, from its check-in. */
+
 interface V6DatabaseReads {
   readonly hour: string;
   readonly controlPlaneBytes: number;
@@ -89,7 +83,7 @@ export interface V6WorkerEvent {
   readonly tone: "good" | "info" | "warn";
 }
 export type V6WorkerStage = "finding" | "collecting" | "extracting" | "checking" | "publishing";
-/** Structurally `WorkerJob` in model.ts. A figure the lease and attempt do not carry is "—". */
+
 export interface V6WorkerJob {
   readonly id: string;
   readonly stage: V6WorkerStage;
@@ -109,7 +103,7 @@ export interface V6WorkerJob {
 export interface V6WorkersRunning {
   readonly count: number;
   readonly system: number;
-  /** True when the read reached its row limit: both counts are then lower bounds. */
+
   readonly lowerBound: boolean;
 }
 export interface AdminV6WorkersView {
@@ -175,9 +169,9 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
   const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
-    readAdminConfig(repos),
+    readAdminConfig(repos,scope && scope.kind!=="country"?scope.state:undefined),
     point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, { ...RUNNER_PROGRESS_HEARTBEAT_FIELDS, neonBytes: ["lastFullHour"] })),
-    point<Record<string, unknown>>(() => repos.researchState.readNarrowed(RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
+    point<Record<string, unknown>>(() => repos.researchState.readNarrowed(scope && scope.kind!=="country"?`${RESEARCH_STATE_ID}:${scope.state}`:RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
     repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, WORKERS_SOURCE_EVENT_LIMIT)
       .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
     repos.activeWorkClaims.readRunningJobs({ nowIso: readAt })
@@ -223,7 +217,7 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
 }
 
 const EASTERN = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-/** Eastern time, despite the name. */
+
 const mstWords = (iso: string) => `${EASTERN.format(new Date(iso))} ET`;
 
 function modelWords(version: unknown): string {
@@ -292,7 +286,6 @@ function namesOf(binding: Binding, sends: readonly { key: string; ref: string }[
 
 type ScoutState = "RUNNING" | "EXPIRED" | "ENDED" | "UNKNOWN";
 
-/** Running only with an open Attempt and its own unreleased, unexpired lease at `now`. */
 export function scoutState(evidence: ScoutEvidence, now: string): ScoutState {
   if (evidence.attempt.state !== "READ") return "UNKNOWN";
   const a = evidence.attempt.value;
@@ -398,7 +391,6 @@ export function unboundScope(scopeKey: string): V6Refusal {
     says: `${scopeKey} is not a place this section can bind yet; governing-body identities and overlaps are not proven.`, dependency: "DEP-SCOPE-IDENTITIES" };
 }
 
-/** A list is empty only when every read that would fill it succeeded and found nothing here. */
 export function v6WorkersSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope | null; readonly sources: V6WorkersSources }):
   AdminV6SectionEnvelope<AdminV6WorkersView> | V6Refusal {
   const { scopeKey, scope, sources } = input;
@@ -421,7 +413,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const missing: string[] = [];
   const unread: string[] = [];
 
-  /* status: the heartbeat says "switched on", never "made progress" */
   const hb = sources.heartbeat.state === "READ" && clock(sources.heartbeat.value.beatAt) ? sources.heartbeat.value as CycleHeartbeat : null;
   const cycle = runnerCycleOf(hb?.cycle);
   if (sources.heartbeat.state === "UNREAD" || (sources.heartbeat.state === "READ" && hb === null)) unread.push("the workers' last check-in");
@@ -456,7 +447,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     missing.push(`Only the newest ${WORKERS_SOURCE_EVENT_LIMIT} source receipts are read (back to ${mstWords(oldest)}). Older changes are not shown here.`);
   }
 
-  /* last useful progress: a publication or a promotion, never a check-in */
   const useful: { at: string; what: string }[] = [];
   for (const x of inScope) if (x.row.p.stage === "PUBLISHED" || x.row.p.stage === "REUSED") useful.push({ at: x.row.at,
     what: `${sourceName(x.row.p.sourceId)} for ${namesOf(binding, x.sends)} ${SOURCE_STAGE[x.row.p.stage].says}.` });
@@ -546,8 +536,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     title: `${plural(g.waiting, "task")} waiting: ${g.name.toLowerCase()}`,
     why: g.blockedBy ? g.blockedBy : "—",
     nextTime: g.oldestWaitingDueAt ? `Oldest due ${mstWords(g.oldestWaitingDueAt)}` : nextTime, owner: "Workers", applies, actions: [] });
-  // "Nothing is waiting" is provable only for the whole country, from the queue counts. In a place,
-  // work not sent to a hunt cannot be placed, so an empty list there would be a guess.
+
   const waitingComplete = binding.all && gauges !== null && sources.sourceEvents.state === "READ";
   if (!binding.all) missing.push(`Only work sent to a hunt is split by place. Other queued work is counted for the whole system only, in the lane counts.`);
   if (!binding.all && sends === null) missing.push("The runner's per-hunt reading of finished and unfinished tasks could not be read.");
@@ -576,7 +565,6 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     tone: window.promoted !== null && window.promoted > 0 ? "good" : "info",
     text: `From ${mstWords(window.since)} to ${mstWords(window.through)}: ${window.promoted === null ? "— records promoted" : `${plural(window.promoted, "record")} promoted`}; ${window.visible === null ? "— records visible to readers" : `${plural(window.visible, "record")} visible to readers`}.` });
   events.sort((a, b) => Date.parse(b.iso) - Date.parse(a.iso) || a.text.localeCompare(b.text));
-  // Plain-code jobs record no change this section can read, so no scope can claim "no recorded changes".
 
   if (nextDue) next.push(Date.parse(nextDue) > Date.parse(now) ? `Next round due ${mstWords(nextDue)}.` : `Next round was due ${mstWords(nextDue)}.`);
   let jobs: V6WorkerJob[] | null = null;
@@ -598,7 +586,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
     .find(outcome => outcome && outcome.state !== "SUCCEEDED");
   const migrationAt = clock(migrationRecord?.writtenAt) ? migrationRecord.writtenAt : null;
   if (sources.migration && !Array.isArray(sources.migration)) missing.push("The production migration outcome could not be read.");
-  // The face says what happened in words; the migration's own output lines are kept behind "Technical details".
+
   const stepWords = (phase: string) => phase === "expand" ? "the step that runs before new code goes live" : phase === "contract" ? "the step that runs after new code is serving" : `the ${phase} step`;
   const update: UpdateCard | null = migration && migrationAt ? {
     title: "The latest database update", checkedAt: migrationAt,

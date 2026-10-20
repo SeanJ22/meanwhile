@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { canonicalCivicDataJson } from "../../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
-import { processRegisteredRoutineCandidate, processRegisteredFanOutCandidate } from "../../civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { OPEN_DATA_PARSER, openDataScope, openDataFactIssue, type OpenDataFact, type OpenDataSource, type OpenDataProjection, type OpenDataReport,type OpenDataPartitionRef } from "./model.ts";
@@ -15,8 +15,7 @@ export function assertOpenDataProjection(value:OpenDataProjection, source:OpenDa
   if(value.partitions && (new Set(value.partitions.map(p=>p.id)).size!==value.partitions.length || value.partitions.some(p=>!p.id ||
     p.key!==`project/freshness/source/${source}/reader/${p.sha256}.json` || !/^[a-f0-9]{64}$/.test(p.sha256) || !Number.isSafeInteger(p.count) || p.count<0)))throw Error("Open-data manifest has invalid immutable reader references.");
 }
-export async function readOpenDataProjection(source:OpenDataSource, partition="release", options:PromotedCivicDataReadOptions={}) {
-  if (partition === "national") throw new Error("OPEN_DATA_AREA_REQUIRED");
+export async function readOpenDataProjection(source:OpenDataSource, partition="national", options:PromotedCivicDataReadOptions={}) {
   const read = await readPromotedCivicData<OpenDataProjection>("CURATED_READER_RECORD",openDataScope(source,partition),options);
   if(read.kind==="PROMOTED")assertOpenDataProjection(read.value,source);
   return read;
@@ -29,12 +28,10 @@ export interface OpenDataCapture {
   readonly archive?: {readonly sha256:string;readonly member:string;readonly publishedAt:string|null};
 }
 export function openDataCandidate(input:{source:OpenDataSource;partition?:string;rows:readonly OpenDataFact[];
-  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];stateScopes?:readonly string[];
-  archive?:OpenDataProjection["archive"];captures:readonly OpenDataCapture[];now:string}):RoutineCandidate {
+  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];captures:readonly OpenDataCapture[];now:string}):RoutineCandidate {
   const scope=openDataScope(input.source,input.partition), reports=input.reports ?? openDataReports(input.rows);
-  const records=input.partitions||input.stateScopes?reports.reduce((n,r)=>n+r.loaded,0):input.rows.length;
-  const readModel:OpenDataProjection={kind:"open-data",sourceId:input.source,records:input.rows,reports,...(input.partitions?{partitions:input.partitions}: {}),
-    ...(input.stateScopes?{stateScopes:input.stateScopes}:{}),...(input.archive?{archive:input.archive}:{})};
+  const records=input.partitions?reports.reduce((n,r)=>n+r.loaded,0):input.rows.length;
+  const readModel:OpenDataProjection={kind:"open-data",sourceId:input.source,records:input.rows,reports,...(input.partitions?{partitions:input.partitions}: {})};
   const normalizedPayload={captures:input.captures};
   const rawHash=hash(input.captures.map(c=>c.rawHash)), normalizedHash=hash(readModel);
   const last=input.captures.at(-1);
@@ -58,19 +55,20 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
     dependentChecks:[{consumer:"Government and place cards and Ask",passed:bound && new Set(input.rows.map(r=>r.id)).size===input.rows.length,detail:"Every projected row binds an exact saved source row; unjoined rows remain held."}],
     normalizedPayload,readModel};
 }
-export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore}) {
-  if(input.partition==="national")throw Error("OPEN_DATA_AREA_REQUIRED");
-  if((input.partition===undefined||input.partition==="release")&&(input.rows.length||input.partitions?.length))throw Error("OPEN_DATA_RELEASE_COUNTS_ONLY");
-  const state=/^state:([A-Z]{2})$/.exec(input.partition??"")?.[1];
-  if(state&&(input.rows.some(row=>row.state!==state)||(input.reports??[]).some(row=>row.state!==state)||(input.partitions??[]).some(row=>{
-    const named=/:state:([A-Z]{2})(?::|$)/.exec(row.id)?.[1]??/^division:ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(row.id)?.[1]?.toUpperCase();
-    return named!==undefined&&named!==state;
-  })))throw Error("OPEN_DATA_STATE_BOUNDARY_MISMATCH");
-  const candidate=openDataCandidate(input);
-  const prior=await input.store.readPromotionIdentity(candidate.recordClass,candidate.scope);
-  const outcome=input.partition===undefined||input.partition==="release"
-    ? await processRegisteredRoutineCandidate(input.store,input.source,candidate,input.now,prior?.versionId??null)
-    : await processRegisteredFanOutCandidate(input.store,input.source,candidate,input.now,prior?.versionId??null,{confirmUnchanged:true});
+export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean}) {
+  if(input.partition && input.partition!=="national")throw Error("SRC-SO publishes one canonical national manifest per source.");
+  const prior=await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now,bypassCache:true});
+  if(prior.kind==="STORE_UNREACHABLE")throw Error("Open-data prior could not be read; prior facts remain live.");
+  const priorCandidate=prior.kind==="PROMOTED"?await input.store.readCandidate(prior.metadata.versionId!):null;
+  const priorCaptures=(priorCandidate?.candidate.normalizedPayload as {captures?:OpenDataCapture[]}|null)?.captures ?? [];
+  const rows=[...new Map([...(input.replace?[]:prior.kind==="PROMOTED"?prior.value.records:[]),...input.rows].map(r=>[r.id,r])).values()].sort((a,b)=>a.id.localeCompare(b.id));
+  const referenced=new Set(rows.map(r=>hash(r.sourceRow)));
+  const captures=[...new Map([...priorCaptures,...input.captures].map(c=>{
+    const filtered={...c,sourceRows:c.sourceRows.filter(row=>referenced.has(hash(row)))};
+    return [hash(filtered),filtered] as const;
+  })).values()].filter(c=>c.sourceRows.length || !rows.length);
+  const candidate=openDataCandidate({...input,rows,captures});
+  const outcome=await processRegisteredRoutineCandidate(input.store,input.source,candidate,input.now,prior.kind==="PROMOTED"?prior.metadata.versionId:null);
   if(!outcome.promoted && !outcome.confirmed)throw Error(`Open-data publication held: ${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
   return {candidate,outcome};
 }

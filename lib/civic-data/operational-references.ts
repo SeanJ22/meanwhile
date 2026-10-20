@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 
 import type { JurisdictionRegistry } from "../hunt/jurisdiction-universe.ts";
-import { jurisdictionMatchesSubject } from "../hunt/jurisdiction-identity.ts";
 import {
   JURISDICTION_REFERENCE_HTTP_SOURCES,
   type JurisdictionReferenceAcquisitionFailure,
@@ -185,38 +184,6 @@ export function clearOperationalReferenceBundle(): void {
   installedBundle = null;
   installedAzBundle = null;
   installReviewedRegistryStates([]);
-}
-
-/** A planner installs one reviewed state while enumerating it, retaining only the reviewed state names globally. */
-export function installOperationalReferenceState(registry: JurisdictionRegistry, reviewedStates: readonly string[]): void {
-  const state = registry.stateCode.toLowerCase(), issues = registryIssues({ [state]: registry }, [state]);
-  if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_STATE_INVALID:${issues.join(",")}`);
-  installState(registry, reviewedStates);
-}
-
-/** A task's view can contain no reviewed row when its registered body is the canonical subject. */
-export function installOperationalReferenceSubjects(registry: JurisdictionRegistry, reviewedStates: readonly string[], subjectIds: readonly string[]): void {
-  const state = registry.stateCode.toLowerCase(), subjects = new Set(subjectIds);
-  const issues = registryIssues({ [state]: registry }, [state]).filter(issue => issue !== `${state}:ZERO_JURISDICTIONS`);
-  if (!subjects.size || registry.jurisdictions.some(row => !subjectIds.some(id => jurisdictionMatchesSubject(row, id)))) issues.push(`${state}:SUBJECT_SCOPE_MISMATCH`);
-  if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_SUBJECTS_INVALID:${issues.join(",")}`);
-  installState(registry, reviewedStates);
-}
-
-function installState(registry: JurisdictionRegistry, reviewedStates: readonly string[]): void {
-  const state = registry.stateCode.toLowerCase();
-  installedBundle = { formatVersion: 1, sourceVersion: JURISDICTION_REFERENCE_VERSION,
-    registries: { [state]: structuredClone(registry) } as OperationalReferenceBundle["registries"] };
-  installedAzBundle = null;
-  installReviewedRegistryStates(reviewedStates);
-  installedRegistration.delete(state); refusedRegistration.delete(state);
-}
-
-/** Release native rows after the state's pass; reviewed-state metadata still prevents a registration fallback. */
-export function releaseOperationalReferenceState(): void { installedBundle = null; installedAzBundle = null; }
-
-export function installedOperationalReferenceStateCodes(): readonly string[] {
-  return [...new Set([...Object.keys(installedBundle?.registries ?? {}), ...Object.keys(installedAzBundle?.registries ?? {})])].sort();
 }
 
 export function installAzOperationalReferenceBundle(bundle: AzOperationalReferenceBundle): void {

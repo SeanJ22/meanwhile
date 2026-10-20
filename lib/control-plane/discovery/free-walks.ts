@@ -18,7 +18,6 @@
 import type { DiscoveryOutcome } from "../../hunt/meetings-site-discovery.ts";
 import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
 import type { FreeDiscoveryWalks, FreeWalkOutcome } from "../scheduler/provider-inputs.ts";
-import { plannerMap, plannerSet, type PlannerSpool } from "../scheduler/planner-spool.ts";
 
 /** The fields of a walk the paid lane reads; nothing else of the record travels. */
 export const FREE_WALK_PROJECTION: RecordProjection = { outcome: true, finishedAt: true, leads: true };
@@ -94,29 +93,13 @@ export function freeWalkBrief(subject: FreeWalkSubject | undefined, latest: Free
  */
 export async function readFreeDiscoveryWalks(
   repos: Pick<ControlPlaneRepositories, "discoveryAttempts">,
-  subjects: Iterable<FreeWalkSubject>,
-  planner?: PlannerSpool,
+  subjects: readonly FreeWalkSubject[],
 ): Promise<FreeDiscoveryWalks> {
-  const byId = planner ? plannerMap<FreeWalkSubject>(planner, "free-walk-subjects") : new Map<string, FreeWalkSubject>();
-  const records = planner ? plannerMap<FreeWalkRecord>(planner, "free-walk-records") : new Map<string, FreeWalkRecord>();
-  const unreadable = planner ? plannerSet(planner, "free-walk-unreadable") : new Set<string>();
-  let toRead = 0;
+  const byId = new Map(subjects.map((s) => [s.jurisdictionId, s]));
+  const toRead = subjects.filter((s) => s.walkable === true).map((s) => s.jurisdictionId);
+  let latest: ReadonlyMap<string, unknown>;
   try {
-    let keys: string[] = [];
-    const read = async () => {
-      if (!keys.length) return;
-      for (const [jurisdictionId, value] of await repos.discoveryAttempts.readLatest(keys, FREE_WALK_PROJECTION)) {
-        const record = asFreeWalkRecord(value);
-        if (record === null) unreadable.add(jurisdictionId); else records.set(jurisdictionId, record);
-      }
-      keys = [];
-    };
-    for (const subject of subjects) {
-      byId.set(subject.jurisdictionId, subject);
-      if (subject.walkable !== true) continue;
-      toRead++; keys.push(subject.jurisdictionId); if (keys.length === 32) await read();
-    }
-    await read();
+    latest = toRead.length === 0 ? new Map() : await repos.discoveryAttempts.readLatest(toRead, FREE_WALK_PROJECTION);
   } catch (error) {
     const why = error instanceof Error ? error.message : String(error);
     return {
@@ -125,13 +108,20 @@ export async function readFreeDiscoveryWalks(
       source: `the discovery-attempt log could not be read (${why}), so every dispatched discovery row stays held`,
     };
   }
+  const records = new Map<string, FreeWalkRecord>();
+  const unreadable = new Set<string>();
+  for (const [jurisdictionId, value] of latest) {
+    const record = asFreeWalkRecord(value);
+    if (record === null) unreadable.add(jurisdictionId);
+    else records.set(jurisdictionId, record);
+  }
   return {
     latestFor: (jurisdictionId) =>
       unreadable.has(jurisdictionId) ? "UNREAD" : freeWalkOutcome(byId.get(jurisdictionId), records.get(jurisdictionId)),
     evidenceFor: (jurisdictionId) =>
       unreadable.has(jurisdictionId) ? null : freeWalkBrief(byId.get(jurisdictionId), records.get(jurisdictionId)),
     source:
-      `the discovery-attempt log, newest walk of ${toRead} dispatched government(s) with a site to walk` +
+      `the discovery-attempt log, newest walk of ${toRead.length} dispatched government(s) with a site to walk` +
       (unreadable.size === 0 ? "" : `; ${unreadable.size} walk record(s) could not be read, and their rows stay held`),
   };
 }

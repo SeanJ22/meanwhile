@@ -1,8 +1,3 @@
-import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
-import { CONTROL_PLANE_QUERY_CONCURRENCY } from "../control-plane/repository/pg-store.ts";
-import { scheduledBlackoutAt } from "../control-plane/fleet-safety.ts";
-import { isFundedHunt } from "../control-plane/scheduler/hunt-continuation.ts";
-import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
 import { requireRegistryState, registryJurisdictions, stateRegistryRuntimeContractId } from "../civic-data/state-scopes.ts";
@@ -18,13 +13,14 @@ import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "./place-source-reader.ts";
-import { nationalPlaceWorkReading } from "../control-plane/expansion/dispatch-work.ts";
+import { nationalPlaceBelowTarget } from "../control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../coverage/place-owed.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { heldDivisionsForZip } from "../control-plane/expansion/national-geography.ts";
 import { expansionScopesOf } from "../control-plane/expansion/scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
+import { readExpansionScopesForZips } from "../control-plane/expansion/runner-load.ts";
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 
 export interface NationalPlaceTask {
@@ -38,7 +34,6 @@ export interface NationalPlaceSendRequest {
   readonly instructions: readonly string[];
 }
 
-/** One ordinary source command per place; the existing occurrence owns its lease and resume clock. */
 export function nationalPlaceJobs(places: readonly NationalPlaceTask[], owner?: NationalPlaceSendRequest): RoutineSourceTask[] {
   if (places.some(place => !/^\d{5}$/.test(place.zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   return places.map(place => {
@@ -55,7 +50,6 @@ export function nationalPlaceJobs(places: readonly NationalPlaceTask[], owner?: 
   });
 }
 
-/** A saved Send applies only to the ZIPs it actually resolved. Edits retain the hunt's request time. */
 export function nationalPlaceSendRequests(scopes: readonly ResolvedScope[], zips: readonly string[], now: string): Map<string, NationalPlaceSendRequest> {
   const requests = new Map<string, NationalPlaceSendRequest>();
   const selected = new Set(zips);
@@ -77,41 +71,20 @@ export function nationalPlaceSendRequests(scopes: readonly ResolvedScope[], zips
   return requests;
 }
 
-/** Workers re-read the same saved instruction; CLI invocation time never creates a Send. */
 export async function readNationalPlaceSendRequests(repos: ControlPlaneRepositories, zips: readonly string[], now: string, config?: unknown) {
-  const value = config === undefined ? (await readRuntimeAdminConfig(repos, ["expansionScopes", "placeTargets"]))?.value : config;
-  const decisions = expansionScopesOf(value ?? null);
+  if (!zips.length) return new Map<string, NationalPlaceSendRequest>();
+  const decisions = config === undefined ? {scopes:(await readExpansionScopesForZips(repos,zips)).scopes,malformed:0} : expansionScopesOf(config ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   const sends = decisions.scopes.filter(scope => scope.sourceWorkVersion === 1);
   if (!sends.length || !zips.length) return new Map<string, NationalPlaceSendRequest>();
-  const { readPublishedPlaceMemberships } = await import("../census-geography/area-lookup.ts");
-  const requests=new Map<string,NationalPlaceSendRequest>();
-  const admitted=sends.filter(decision=>!scheduledBlackoutAt(now)||isFundedHunt(decision));
-  for(let start=0;start<zips.length;start+=128){
-    const memberships=await readPublishedPlaceMemberships(zips.slice(start,start+128));
-    const countyZips=new Set(memberships.filter(row=>row.type==="county").map(row=>row.zip));
-    for(const decision of admitted){
-      const g=decision.geography;
-      const matched=new Set(memberships.filter(row=>g.type==="zcta"?row.zip===g.geoid&&countyZips.has(row.zip)&&g.version===`zcta:${row.zctaTabulation}`:
-        g.type==="state"?row.type==="county"&&row.state===g.stateAbbr&&g.version===`state:${row.version.split(":")[1]}`:
-        row.type===g.type&&row.geoid===g.geoid&&row.version===g.version).map(row=>row.zip));
-      for(const zip of matched){
-        const requestedAt=decision.budgetStartedAt??decision.decidedAt,at=Date.parse(requestedAt);
-        if(!decision.receiptId||!Number.isFinite(at)||at>Date.parse(now))continue;
-        const prior=requests.get(zip);requests.set(zip,{requestedAt:prior&&Date.parse(prior.requestedAt)>at?prior.requestedAt:requestedAt,
-          instructions:[...new Set([...(prior?.instructions??[]),decision.receiptId])]});
-      }
-    }
-  }
-  return requests;
+  const { resolveNationalPlaceSendScopes } = await import("./place-source-admission.ts");
+  return nationalPlaceSendRequests(await resolveNationalPlaceSendScopes(sends, zips), zips, now);
 }
 
-/** The national source families this pass left unread because nothing in them was open. */
 export function skippedFamilies(families: { readonly officials: boolean; readonly elections: boolean } | null | undefined): string[] {
   return families ? (Object.keys(families) as (keyof typeof families)[]).filter(family => !families[family]) : [];
 }
 
-/** Compare reader facts, excluding observation times and publication versions. */
 export function placeMadeProgress(before: readonly PlaceOwedItem[], after: readonly PlaceOwedItem[]): boolean {
   const facts = (items: readonly PlaceOwedItem[]) => new Map(items.filter(item => item.state === "published" || item.state === "unpublished")
     .map(item => [item.id, canonicalJson({ state: item.state, values: [...new Set(item.held.filter(field => field.state === item.state)
@@ -120,7 +93,6 @@ export function placeMadeProgress(before: readonly PlaceOwedItem[], after: reado
   return [...facts(after)].some(([id, value]) => prior.get(id) !== value);
 }
 
-/** A target continues until its latest settled hunt explicitly reports no progress. */
 export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row: StandingObligation, now: string, belowTarget: boolean, send?: NationalPlaceSendRequest) {
   const scheduled = scheduleObligation(row, Date.parse(now));
   if (!("cadenceHours" in scheduled)) return scheduled;
@@ -144,7 +116,6 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
   return { ...scheduled, nextDueAt: now, basis: "The place is below its owner target and its last hunt has not reported no progress." };
 }
 
-/** Read the existing clocks before assigning processes; untouched places lead. */
 export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, places: readonly NationalPlaceTask[], now: string, sendRequests?: ReadonlyMap<string, NationalPlaceSendRequest>): Promise<string[]> {
   const unique = [...new Set(places.map(place => place.zip))];
   const ids = new Map(places.map(place => {
@@ -154,23 +125,21 @@ export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, plac
   }));
   if (unique.length !== places.length) throw new Error("NATIONAL_PLACE_TASK_DUPLICATE_ZIP");
   if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
-  const targets = (await readRuntimeAdminConfig(repos, ["expansionScopes", "placeTargets"]))?.value as { placeTargets?: unknown[] } | undefined;
-  const requests = sendRequests ?? await readNationalPlaceSendRequests(repos, unique, now, targets ?? null);
-  const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(repos, unique, now)).belowTarget : new Set<string>();
+  const held = new Map((await repos.obligations.listWhere(["routeId"], "national-place-sources")).map(row => [row.id, row.value]));
+  const requests = sendRequests ?? await readNationalPlaceSendRequests(repos, unique, now);
+  const belowTarget = await nationalPlaceBelowTarget(repos, unique, now);
   const nowMs = Date.parse(now);
-  const due=new Set<string>(),ages=new Map<string,number>();
-  await runPool(unique,CONTROL_PLANE_QUERY_CONCURRENCY,async zip=>{
-    const read=await repos.obligations.readNarrowed(ids.get(zip)!,{id:true,subjectId:true,routeId:true,recordClass:true,active:true,
-      readerImpactAt:true,observedChangeRateHours:true,declaredCycleHours:true,lastWorkedAt:true,nextDueAt:true,occurrenceCount:true,absentUntil:true});
-    const row=read?.value as StandingObligation|undefined;
-    ages.set(zip,Date.parse(row?.lastWorkedAt??"")||0);
-    if(!row||row.routeId!=="national-place-sources"){due.add(zip);return;}
-    const scheduled=await scheduleNationalPlace(repos,row,now,belowTarget.has(zip),requests.get(zip));
-    if("cadenceHours"in scheduled&&Date.parse(scheduled.nextDueAt)<=nowMs)due.add(zip);
+  const due = await Promise.all(unique.map(async zip => {
+    const row = held.get(ids.get(zip)!);
+    if (!row) return true;
+    const scheduled = await scheduleNationalPlace(repos, row, now, belowTarget.has(zip), requests.get(zip));
+    return "cadenceHours" in scheduled && Date.parse(scheduled.nextDueAt) <= nowMs;
+  }));
+  return unique.filter((_, index) => due[index]).sort((a, b) => {
+    const age = (zip: string) => Date.parse(held.get(ids.get(zip)!)?.lastWorkedAt ?? "") || 0;
+    return age(a) - age(b) || a.localeCompare(b);
   });
-  return unique.filter(zip=>due.has(zip)).sort((a,b)=>(ages.get(a)??0)-(ages.get(b)??0)||a.localeCompare(b));
 }
-
 
 export async function runNationalPlaceTask(input: {
   tools: ResearchRuntimeTools;
@@ -179,7 +148,7 @@ export async function runNationalPlaceTask(input: {
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
   acquire?: typeof runPlaceSource;
-  /** Reuse an already scoped geography read when the caller has one. */
+
   readPublished?: typeof heldDivisionsForZip;
 }) {
   if (new Set(input.places.map(place => requireRegistryState(place.state))).size > 1) throw new Error("NATIONAL_PLACE_CHILD_STATE_MISMATCH");
@@ -194,29 +163,27 @@ export async function runNationalPlaceTask(input: {
     const definition = { id: place.id, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER" as const,
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
     const synced = await syncObligations(tools.repos, [definition], now, { exactReads: true });
-    let prior = await resumeOpenOccurrence(tools.repos, synced.all[0]);
+    let prior = await resumeOpenOccurrence(tools.repos, synced.all[0], await tools.repos.dispatchState.readOpen({ obligationIds: [synced.all[0].id] }));
     if (prior?.kind === "SETTLED") {
       await closeSettledOccurrence(tools.repos, { settled: prior.settled, now });
       prior = null;
     }
-    // Settlement can advance the clock, and another worker may have worked it
-    // since admission. Always schedule the durable row, never a fresh null anchor.
+
     const durable = (await tools.repos.obligations.mustRead(definition.id)).value;
-    const targets = (await readRuntimeAdminConfig(tools.repos, ["expansionScopes", "placeTargets"]))?.value as { placeTargets?: unknown[] } | undefined;
-    const requests = await readNationalPlaceSendRequests(tools.repos, [zip], now, targets ?? null);
-    const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(tools.repos, [zip], now)).belowTarget.has(zip) : false;
+    const requests = await readNationalPlaceSendRequests(tools.repos, [zip], now);
+    const belowTarget = (await nationalPlaceBelowTarget(tools.repos, [zip], now)).has(zip);
     const scheduled = await scheduleNationalPlace(tools.repos, durable, now, belowTarget, requests.get(zip));
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
-    const publishedGeography = deferred ? [] : (await (input.readPublished ?? heldDivisionsForZip)(zip, undefined, undefined, state)).filter(division => {
+    const publishedGeography = deferred ? [] : (await (input.readPublished ?? heldDivisionsForZip)(zip)).filter(division => {
       const states = registryJurisdictions(division.id); return !states.length || states.includes(state);
     });
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state, ocdIds: publishedGeography.map(division => division.id) });
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state, ocdIds: publishedGeography.map(division => division.id),limit:40 });
     const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
-    // A renewable ownership lease, independent of how long acquisition takes.
+
     const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;
     let before: PlaceOwedItem[] | undefined;
@@ -231,8 +198,7 @@ export async function runNationalPlaceTask(input: {
             cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
           const saved = await placeSourceReader({ tools, project: "freshness", context: {
             obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
-            // Plain-code national APIs finish their walk; qualified small
-            // sites keep the shared size-based request limit.
+
             bound: RESEARCH_BOUNDS.perDispatch,
           } });
           try {
@@ -252,8 +218,7 @@ export async function runNationalPlaceTask(input: {
             if (!(error instanceof PlaceSourceDeferred)) throw error;
             deferred = error.message;
           }
-          // Collectors retain ordinary source gaps, so also observe a bound
-          // they caught while publishing already verified fields.
+
           deferred ??= saved.deferred?.message ?? null;
           assertLeaseHealthy?.();
           if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
@@ -268,7 +233,7 @@ export async function runNationalPlaceTask(input: {
                 routeOnlyCount: null, earliest: null, latest: null },
               note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
                 JSON.stringify({ placeProgress: placeMadeProgress(before ?? [], report.items), inherited: report.inherited,
-                  // The families with nothing open were not read; the count is of saved pages this pass actually read.
+
                   families: report.families, skippedFamilies: skippedFamilies(report.families), sourcesRead: report.sources?.documents.length ?? 0, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
                   electionPublications: report.electionPublications }) },
             cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },

@@ -14,7 +14,6 @@ import {
   FEDERAL_VOTES_PARSER_VERSION,
   FEDERAL_VOTES_SOURCE_ID,
   federalKeyVotesCandidate,
-  federalKeyVoteMemberScope,
   federalMemberVotesCandidate,
   federalRollCallsCandidate,
   heldAcquisitions,
@@ -28,7 +27,7 @@ import {
   federalKeyVoteSelectionV1Issue,
   federalKeyVoteSelectionV1Snapshot,
 } from "../lib/votes/key-vote-selection-v1.ts";
-import { readFederalKeyVotesProjection, readFederalKeyVoteMemberProjection } from "../lib/votes/key-votes-projection.ts";
+import { readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
 import {
   billSummariesForRollCallAcquisition,
   readFederalMemberVotes,
@@ -500,33 +499,13 @@ test("a roll-call acquisition with an answered absent pointer refuses rather tha
   );
 });
 
-test("the live federal commands use the bounded held window without a circular key-vote prerequisite", () => {
+test("the two live federal acquisition commands have no circular canonical-pointer prerequisite", () => {
   const rollCalls = readFileSync("scripts/fetch-votes.mts", "utf8");
-  assert.match(rollCalls, /await store\.readFederalRollCallPublicationBase\(\)/);
-  assert.match(rollCalls, /if \(!previous\.current\) throw/);
-  assert.match(rollCalls, /const billSummaries = heldRolls\.billSummaries/);
-  assert.doesNotMatch(rollCalls, /readFederalRollCallsProjection/);
+  assert.match(rollCalls, /billSummariesForRollCallAcquisition\(previous\)/);
   assert.doesNotMatch(rollCalls, /previous\.kind\s*!==\s*"PROMOTED"/);
 
   const keyVotes = readFileSync("scripts/fetch-key-vote-positions.mts", "utf8");
   assert.doesNotMatch(keyVotes, /readFederalKeyVotesProjection/);
   assert.doesNotMatch(keyVotes, /current\.kind\s*!==\s*"PROMOTED"/);
   assert.match(keyVotes, /federalKeyVoteSelectionV1Snapshot/);
-});
-
-
-test("key-vote member publications hold only that member while preserving every selected roll", async()=>{
-  const seed=await keyVoteSeed(),member="congress:A000001",other="congress:B000002";
-  const positions:FederalKeyVotePositions={...seed.positions,positions:Object.fromEntries(Object.keys(seed.positions.positions).map(key=>[key,{[member]:"YES" as const}]))};
-  const candidate=federalKeyVotesCandidate({acquisitions:heldAcquisitions(acquisitionsForKeyVotes(seed.snapshot)),retrievedAt:T0,snapshot:seed.snapshot,positions,officeholderId:member});
-  assert.equal(candidate.scope,federalKeyVoteMemberScope(member));
-  const store=new MemoryRoutineDataStore();
-  const outcome=await processRegisteredManualCandidate(store,"federal-key-votes",candidate,T0);
-  assert.equal(outcome.candidate.state,"PROMOTED");
-  assert.equal(outcome.readerReadback?.status,"PASS");
-  const read=await readFederalKeyVoteMemberProjection(member,{store,bypassCache:true,now:T0});
-  assert.equal(read.kind,"PROMOTED");
-  if(read.kind==="PROMOTED") assert.equal(Object.keys(read.value.positions.positions).length,Object.keys(seed.positions.positions).length);
-  const bad=structuredClone(positions); Object.values(bad.positions)[0][other]="NO";
-  assert.ok(federalKeyVotesCandidate({acquisitions:acquisitionsForKeyVotes(seed.snapshot),retrievedAt:T0,snapshot:seed.snapshot,positions:bad,officeholderId:member}).semantics.violations.includes("KEY_VOTE_POSITION_UNDER_ANOTHER_MEMBER"));
 });

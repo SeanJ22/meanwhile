@@ -1,38 +1,4 @@
-/**
- * Which work is in which scope, in what order, and whether its budget allows
- * one more paid Scout.
- *
- * A scope is a set of ZCTAs (`zctasForGrouping`, each with its area share).
- * Touching a common ZCTA is not enough (counties tile a state and share border
- * ZCTAs), so a government is in the scope only when the two must overlap:
- *
- * ```
- *   the government touches a ZCTA that lies wholly inside the scope, or
- *   inside one ZCTA, the government's share + the scope's share > 1 + margin
- *   (the margin absorbs the difference between sampled and exact area)
- * ```
- *
- * A government's territory is its Census of Governments unit's ZCTA set, with
- * source-established intersections and area shares. Registry rows join units by
- * state and native Census government ID. A subject the join cannot place is UNPLACED, never guessed.
- * ZCTAs are not USPS ZIP codes.
- *
- * Order: the owner's DISPATCH first, then due rows in a selected scope by
- * scope priority (a row in two scopes takes the better), each keeping its
- * existing order.
- *
- * Budget: a paid Scout is admitted only if, for every scope the subject is in,
- * attributed rolling-24h spend + this cycle's spend and reservations + one
- * worst case fits the scope's budget. An unresolved or unmeasured scope binds
- * every subject in its state (and unknown-state subjects). The budget only
- * restricts; the Fleet ceiling is checked elsewhere.
- *
- * Pure. Every input is handed in.
- */
-
-import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
-import { filterIterable } from "../spend-scratch.ts";
-import { plannerMap, plannerSet, type PlannerSpool } from "../scheduler/planner-spool.ts";
+import type { SpendRepository, SpendTotals, SpendQuery } from "../spend-window.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../../hunt/jurisdiction-universe.ts";
 import {
   MEMBERSHIP_METHOD,
@@ -77,10 +43,6 @@ export interface Territory {
 /* The certain-overlap rule itself lives in `overlap.ts` (so Admin's Send preview can apply it alone); re-exported here. */
 export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
-/**
- * The sampled-overlap key a unit's ZCTAs were derived from (`county:<geoid>`,
- * `place:<geoid>`, `unsd:…`), or null when its method names no single layer GEOID.
- */
 export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
   const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");
   return m === null ? null : `${m[1]}:${m[2]}`;
@@ -97,26 +59,12 @@ export interface TerritoryIndex {
   readonly statewide: ReadonlySet<string>;
   /** Census units in states NO registry covers, for the "not registered" count. Keyed by state (upper). */
   readonly unregisteredUnitsByState: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
-  /**
-   * Census units in a covered state that no registry row joined: governments the
-   * registry does not carry, counted as blocked, never as work. Keyed by state
-   * (upper). Optional for older indexes.
-   */
+
   readonly unjoinedUnitsByState?: ReadonlyMap<string, readonly CensusUnitTerritory[]>;
   /** A unit's share of each of its ZCTAs, where the sampled overlap was loaded for it. */
   readonly unitShares?: (unit: CensusUnitTerritory) => ReadonlyMap<string, number> | undefined;
 }
 
-/**
- * Join the covered-jurisdiction registries to the Census unit territories.
- * `units` covers every state, so a scope in an unregistered state can still say
- * which governments it holds. A unit without shares can only be placed by a
- * whole-inside ZCTA.
- *
- * A registration-read registry places each government by its sourced division
- * association (`divisionTerritory`) or a held statutory district rule.
- * Unassociated governments remain listed and geographically unresolved.
- */
 export function buildTerritoryIndex(
   registries: readonly JurisdictionRegistry[],
   units: readonly CensusUnitTerritory[],
@@ -224,12 +172,6 @@ export function buildTerritoryIndex(
   return { bySubject, byDivision, unplaced, statewide, unregisteredUnitsByState, unjoinedUnitsByState, unitShares };
 }
 
-/**
- * The Census units (of those given) that certainly overlap the scope, by the
- * same rule as a registered government: a whole-inside ZCTA, or shares that
- * sum past the whole. A unit whose shares were not loaded can only be placed by
- * a whole-inside ZCTA, so the count is a floor and never a guess.
- */
 export function unitsCertainlyIn(
   scope: ScopeZctas,
   units: readonly CensusUnitTerritory[],
@@ -270,8 +212,8 @@ export function scopeMembers(
   scope: ScopeZctas,
   subjects: Iterable<string>,
   index: TerritoryIndex,
-  members: Set<string> = new Set<string>(),
 ): Set<string> {
+  const members = new Set<string>();
   for (const subject of subjects) {
     const territory = index.bySubject.get(subject);
     if (territory !== undefined && certainlyOverlaps(territory, scope)) members.add(subject);
@@ -281,10 +223,6 @@ export function scopeMembers(
 
 /* ------------------------------------------------------------ order */
 
-/**
- * A subject's placement: the index (0 = first) of the best-priority resolved
- * scope it is in, or null when it is in none. Scopes arrive in run order.
- */
 export function placementIndex(
   scopes: readonly { readonly members: ReadonlySet<string> }[],
 ): (subjectId: string) => number | null {
@@ -294,11 +232,6 @@ export function placementIndex(
   };
 }
 
-/**
- * Stable reorder: the owner's DISPATCH rows first, then rows in a scope by that
- * scope's run order, then everything else — each group keeping the order it
- * came in. Pure; never adds, drops or duplicates a row.
- */
 export function orderByPlacement<T>(
   rows: readonly T[],
   rankOf: (row: T) => number | null,
@@ -312,31 +245,9 @@ export function orderByPlacement<T>(
   return ranked.map((r) => r.row);
 }
 
-/* ------------------------------------------------------------ spend */
-
-/** Attributed model spend for a scope's subjects in a window (the Fleet's own model-backed rule). */
-export function scopeModelSpend(
-  charges: Iterable<PricedCharge>,
-  members: ReadonlySet<string>,
-  since: string,
-  until: string,
-): { readonly usd: number | null; readonly measured: number; readonly unmeasured: number } {
-  return aggregatePricedSpend(
-    filterIterable(charges, (entry) => entry.jurisdiction !== null && members.has(entry.jurisdiction)),
-    since,
-    until,
-  );
-}
-
 /* ------------------------------------------------------------ budget */
 
 export const SCOPE_BUDGET_CODE = "SCOPE_BUDGET";
-
-/** Membership may be an indexed disk view; admission needs only a point lookup and streaming traversal. */
-export interface IndexedMembership extends Iterable<string> {
-  readonly size: number;
-  has(subject: string): boolean;
-}
 
 export interface BudgetScope {
   readonly lifetime?: boolean;
@@ -348,7 +259,7 @@ export interface BudgetScope {
   /** True when the scope's ZCTAs were resolved against the published lookup. */
   readonly resolved: boolean;
   /** The subjects in it (resolved scopes only). */
-  readonly members: IndexedMembership;
+  readonly members: ReadonlySet<string>;
   /** States it spans, upper-case; binds unknown-state subjects too when unresolved. */
   readonly states: readonly string[];
   /** Attributed rolling-24h model spend at cycle start. Null when unmeasured or unresolved. */
@@ -359,12 +270,6 @@ export type BudgetAdmission =
   | { readonly admit: true }
   | { readonly admit: false; readonly code: typeof SCOPE_BUDGET_CODE; readonly why: string };
 
-/**
- * The per-scope admission gate for paid Scouts. An admitted Scout holds its
- * worst case against every scope it is in until settled; an unsettled
- * admission keeps its reservation for the rest of the cycle.
- */
-/** A state hint as a state: a bare postal code (`AZ`) or any id `stateOfSubject` reads; null when it says none. */
 function stateOfHint(hint: string | null | undefined): string | null {
   if (typeof hint !== "string" || hint.trim() === "") return null;
   const h = hint.trim();
@@ -417,20 +322,12 @@ export class ScopeBudgetGate {
     return funded.length ? funded : binding;
   }
 
-  /** A selected hunt authorizes its own work, including explicitly shared
-   * members. Opening the model lane for that hunt must not start unrelated
-   * geographic acquisition. Legacy rolling-only selections keep their rules. */
   private outsideSelectedHunts(binding: readonly BudgetScope[]): Extract<BudgetAdmission, { admit: false }> | null {
     return this.scopes.some(scope => scope.lifetime) && !binding.some(scope => scope.lifetime)
       ? { admit: false, code: SCOPE_BUDGET_CODE, why: "This work is outside the selected hunts. Paid model acquisition waits for an applicable hunt instruction; plain-code work is unchanged." }
       : null;
   }
 
-  /**
-   * The area budget lines a paid job on this subject is held against
-   * (`spend-holds.ts`): every binding scope must have room, or the refusal when
-   * a scope's budget cannot be checked. No lines: no area budget applies.
-   */
   linesFor(subjectId: string, stateHint?: string | null): { readonly lines: readonly BudgetLine[] } | { readonly refusal: Extract<BudgetAdmission, { admit: false }> } {
     if (this.heldForMalformed > 0) {
       return {
@@ -519,12 +416,9 @@ export class ScopeBudgetGate {
   }
 }
 
-
 /* ------------------------------------------------------------ the plan */
 
 export interface ExpansionPlanInput {
-  /** The runner's round-local disk index; native collections remain useful for place-sized callers. */
-  readonly planner?: PlannerSpool;
   readonly declaredMembers?: ReadonlyMap<string, ReadonlySet<string>>;
   readonly now: string;
   readonly scopes: readonly ResolvedScope[];
@@ -534,7 +428,7 @@ export interface ExpansionPlanInput {
   readonly territory: TerritoryIndex | null;
   readonly territoryDetail: string | null;
   /** Every registered standing obligation: id and subject. */
-  readonly obligations: Iterable<{ readonly id: string; readonly subjectId: string }> & { readonly length: number };
+  readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
 }
 
 export type PlannedScope = ResolvedScope & { readonly members: ReadonlySet<string> };
@@ -553,52 +447,41 @@ export interface ExpansionPlan {
 
 const DAY_MS = 24 * 3_600_000;
 
-let nextExpansionPlan = 0;
-
-/** A sorted reading sample, bounded independently of the territory's size. */
-function sample<T>(held: T[], value: T, cap: number, compare: (a: T, b: T) => number): void {
-  if (held.length === cap && compare(value, held[held.length - 1]) >= 0) return;
-  held.push(value); held.sort(compare); if (held.length > cap) held.pop();
+function countBy<T>(items: Iterable<T>, keyOf: (item: T) => string): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const item of items) out[keyOf(item)] = (out[keyOf(item)] ?? 0) + 1;
+  return out;
 }
 
-/**
- * What the scope holds: the registered governments that certainly overlap it,
- * which carry standing work, the scope ZCTAs those touch, and the gap. Census
- * units in unregistered states are counted by the same rule.
- */
 function coverageOf(
   scope: ScopeZctas,
   states: readonly string[],
   index: TerritoryIndex,
   subjectsWithWork: ReadonlySet<string>,
-  covered: Set<string>,
 ): ScopeCoverageReading {
-  let registered = 0, withWork = 0, notRegistered = 0, gap = 0;
-  const registeredByClass: Record<string, number> = {}, notRegisteredByType: Record<string, number> = {};
-  const withWorkSample: ScopeCoverageReading["withWorkSample"][number][] = [], gapSample: string[] = [];
+  const registered: Territory[] = [];
   for (const territory of index.bySubject.values()) {
-    if (!certainlyOverlaps(territory, scope)) continue;
-    registered += 1;
-    registeredByClass[territory.govClass] = (registeredByClass[territory.govClass] ?? 0) + 1;
-    if (!subjectsWithWork.has(territory.subjectId)) continue;
-    withWork += 1;
-    sample(withWorkSample, { subjectId: territory.subjectId, name: territory.name, govClass: territory.govClass }, READING_LIST_CAP, (a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-    for (const z of territory.zctas) if (scope.zctas.has(z)) covered.add(z);
+    if (certainlyOverlaps(territory, scope)) registered.push(territory);
   }
-  for (const z of scope.zctas) if (!covered.has(z)) { gap += 1; sample(gapSample, z, READING_LIST_CAP * 2, (a, b) => a < b ? -1 : a > b ? 1 : 0); }
-  for (const state of states) for (const unit of unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], index.unitShares)) {
-    notRegistered += 1; notRegisteredByType[unit.type] = (notRegisteredByType[unit.type] ?? 0) + 1;
-  }
+  const withWork = registered.filter((t) => subjectsWithWork.has(t.subjectId));
+  const covered = new Set<string>();
+  for (const t of withWork) for (const z of t.zctas) if (scope.zctas.has(z)) covered.add(z);
+  const gap = [...scope.zctas].filter((z) => !covered.has(z)).sort();
+  const notRegistered: CensusUnitTerritory[] = [];
+  for (const state of states) notRegistered.push(...unitsCertainlyIn(scope, index.unregisteredUnitsByState.get(state) ?? [], index.unitShares));
   return {
-    registeredJurisdictions: registered,
-    registeredByClass,
-    withWork,
-    withWorkSample,
-    notRegisteredCensusUnits: notRegistered,
-    notRegisteredByType,
+    registeredJurisdictions: registered.length,
+    registeredByClass: countBy(registered, (t) => t.govClass),
+    withWork: withWork.length,
+    withWorkSample: withWork
+      .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
+      .slice(0, READING_LIST_CAP)
+      .map((t) => ({ subjectId: t.subjectId, name: t.name, govClass: t.govClass })),
+    notRegisteredCensusUnits: notRegistered.length,
+    notRegisteredByType: countBy(notRegistered, (u) => u.type),
     zctasWithLocalWork: covered.size,
-    gapZctas: gap,
-    gapSample,
+    gapZctas: gap.length,
+    gapSample: gap.slice(0, READING_LIST_CAP * 2),
   };
 }
 
@@ -610,16 +493,10 @@ function unresolvedBudgetSays(budgetUsd: number, states: readonly string[]): str
   );
 }
 
-/**
- * Step one, at the top of the cycle: membership, order and coverage. Needs no
- * spend, so it runs before the dispatch order is decided.
- */
 export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
-  const prefix = `expansion-${nextExpansionPlan++}`;
-  const set = (name: string) => input.planner ? plannerSet(input.planner, `${prefix}-${name}`) : new Set<string>();
-  const subjectsWithWork = set("work-subjects");
-  const obligationsBySubject = input.planner ? plannerMap<number>(input.planner, `${prefix}-obligation-counts`) : new Map<string, number>();
-  for (const o of input.obligations) { subjectsWithWork.add(o.subjectId); obligationsBySubject.set(o.subjectId, (obligationsBySubject.get(o.subjectId) ?? 0) + 1); }
+  const subjectsWithWork = new Set(input.obligations.map((o) => o.subjectId));
+  const obligationsBySubject = new Map<string, number>();
+  for (const o of input.obligations) obligationsBySubject.set(o.subjectId, (obligationsBySubject.get(o.subjectId) ?? 0) + 1);
 
   const scopes: PlannedScope[] = input.scopes.map((scope) => {
     if (scope.kind !== "RESOLVED" || input.territory === null) {
@@ -629,13 +506,13 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
           : `the territory index could not be built (${input.territoryDetail ?? "no detail"}), so nothing can be placed in it`;
       return { kind: "UNRESOLVED" as const, decision: scope.decision, why, states: scope.states, members: new Set<string>() };
     }
-    const members = scopeMembers(scope, subjectsWithWork, input.territory, set(`members-${scope.decision.key}`));
+    const members = scopeMembers(scope, subjectsWithWork, input.territory);
     for (const subject of input.declaredMembers?.get(scope.decision.key) ?? []) members.add(subject);
     for (const subject of input.territory.statewide) if (scope.states.includes(stateOfSubject(subject) ?? "")) members.add(subject);
     return { ...scope, members };
   });
   const placementOf = placementIndex(scopes.map((s) => ({ members: s.members })));
-  const placedSubjects = set("placed-subjects");
+  const placedSubjects = new Set<string>();
   for (const s of scopes) for (const m of s.members) placedSubjects.add(m);
 
   const readings: ExpansionScopeReading[] = scopes.map((scope) => {
@@ -659,39 +536,30 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
         budgetSays: unresolvedBudgetSays(d.budgetUsd, scope.states),
       };
     }
+    const members = [...scope.members].sort();
     const subjectCap = READING_LIST_CAP * 8;
-    let registeredObligations = 0;
-    const subjectIds: string[] = [];
-    for (const member of scope.members) {
-      registeredObligations += obligationsBySubject.get(member) ?? 0;
-      sample(subjectIds, member, subjectCap, (a, b) => a < b ? -1 : a > b ? 1 : 0);
-    }
     return {
       ...base,
       resolution: { kind: "RESOLVED" as const, zctaCount: scope.zctas.size },
       work: {
-        registeredObligations,
-        subjects: scope.members.size,
-        subjectIds,
-        subjectIdsComplete: scope.members.size <= subjectCap,
+        registeredObligations: members.reduce((n, s) => n + (obligationsBySubject.get(s) ?? 0), 0),
+        subjects: members.length,
+        subjectIds: members.slice(0, subjectCap),
+        subjectIdsComplete: members.length <= subjectCap,
         dueThisCycle: 0,
         scoutRowsPlacedFirst: 0,
         scoutAdmitted: null,
       },
       spend: null,
-      coverage: input.territory === null ? null : coverageOf(scope, scope.states, input.territory, subjectsWithWork, set(`covered-${scope.decision.key}`)),
+      coverage: input.territory === null ? null : coverageOf(scope, scope.states, input.territory, subjectsWithWork),
       budgetSays: "Spend in this scope has not been read yet this cycle.",
     };
   });
 
   const territory = input.territory;
-  const declaredPlaced = set("declared-placed");
-  for (const members of input.declaredMembers?.values() ?? []) for (const member of members) declaredPlaced.add(member);
-  let placed = 0, statewideSubjects = 0;
-  if (territory !== null) for (const subject of subjectsWithWork) {
-    if (territory.statewide.has(subject)) statewideSubjects += 1;
-    else if (territory.bySubject.has(subject) || declaredPlaced.has(subject)) placed += 1;
-  }
+  const declaredPlaced = new Set([...(input.declaredMembers?.values() ?? [])].flatMap(members => [...members]));
+  const placed = territory === null ? 0 : [...subjectsWithWork].filter((s) => !territory.statewide.has(s) && (territory.bySubject.has(s) || declaredPlaced.has(s))).length;
+  const statewideSubjects = territory === null ? 0 : [...subjectsWithWork].filter((s) => territory.statewide.has(s)).length;
   const reading: ExpansionCycleReading = {
     formatVersion: 1,
     at: input.now,
@@ -715,17 +583,32 @@ export function planExpansion(input: ExpansionPlanInput): ExpansionPlan {
   return { scopes, placementOf, placedSubjects, malformedScopes: input.malformedScopes, reading };
 }
 
-/**
- * Step two, once the cost ledger is read: each scope's attributed spend, the
- * budget verdict, and the gate the Scout admission consults. `charges` null means
- * the ledger could not be read — every budgeted scope then holds its paid work.
- */
+export interface ScopeSpendHistory { readonly day: SpendTotals; readonly week: SpendTotals; readonly budget: SpendTotals }
+
+export function scopeSpendQueries(plan: ExpansionPlan, now: string): ReadonlyMap<string, { day: SpendQuery; week: SpendQuery; budget: SpendQuery }> {
+  const day = new Date(Date.parse(now) - DAY_MS).toISOString();
+  const week = new Date(Date.parse(now) - 7 * DAY_MS).toISOString();
+  return new Map(plan.scopes.filter(scope => scope.kind === "RESOLVED").map(scope => {
+    const query = (since: string): SpendQuery => ({ since, until: now, jurisdictions: [...scope.members] });
+    return [scope.decision.key, { day: query(day), week: query(week), budget: query(scope.decision.budgetStartedAt ?? day) }];
+  }));
+}
+
+export async function readScopeHistory(spend: SpendRepository, plan: ExpansionPlan, now: string): Promise<ReadonlyMap<string, ScopeSpendHistory>> {
+  const history = new Map<string, ScopeSpendHistory>();
+  for (const [key, query] of scopeSpendQueries(plan, now)) {
+    const day = await spend.aggregate(query.day);
+    const week = await spend.aggregate(query.week);
+    const budget = query.budget.since === query.day.since ? day : await spend.aggregate(query.budget);
+    history.set(key, { day, week, budget });
+  }
+  return history;
+}
+
 export function armExpansionBudget(
   plan: ExpansionPlan,
-  input: { readonly now: string; readonly charges: Iterable<PricedCharge> | null; readonly worstCaseUsd: number },
+  input: { readonly now: string; readonly history: ReadonlyMap<string, ScopeSpendHistory> | null; readonly worstCaseUsd: number },
 ): { readonly gate: ScopeBudgetGate; readonly reading: ExpansionCycleReading } {
-  const since24 = new Date(Date.parse(input.now) - DAY_MS).toISOString();
-  const since7 = new Date(Date.parse(input.now) - 7 * DAY_MS).toISOString();
   const budgetScopes: BudgetScope[] = [];
   const readings = plan.reading.scopes.map((reading, i) => {
     const scope = plan.scopes[i];
@@ -735,10 +618,10 @@ export function armExpansionBudget(
         lifetime: Boolean(d.budgetStartedAt), budgetStartedAt: d.budgetStartedAt, receiptId: d.receiptId });
       return reading;
     }
-    const spend24 = input.charges === null ? null : scopeModelSpend(input.charges, scope.members, since24, input.now);
-    const budgetSpend = d.budgetStartedAt && input.charges !== null ? scopeModelSpend(input.charges, scope.members, d.budgetStartedAt, input.now) : spend24;
+    const spend24 = input.history?.get(d.key)?.day ?? null;
+    const budgetSpend = input.history?.get(d.key)?.budget ?? null;
     const period = d.budgetStartedAt ? "for this hunt (Anthropic tokens)" : "in the rolling 24 hours";
-    const spend7 = input.charges === null ? null : scopeModelSpend(input.charges, scope.members, since7, input.now);
+    const spend7 = input.history?.get(d.key)?.week ?? null;
     budgetScopes.push({
       key: d.key,
       label: d.geography.label,

@@ -44,7 +44,7 @@ test("committed runner acknowledgments are visible during unchanged hint polls",
     readWakeEtag: async () => etag,
     query: async (_sql, params) => {
       calls++;
-      positions = params[4] as string;
+      positions = params[3] as string;
       const research = rows.filter(row => !contains(row.position));
       if (finishQuery !== null) await new Promise<void>(resolve => { finishQuery = resolve; });
       return [{ research, windows: [], config: "same", state: "same" }];
@@ -110,12 +110,7 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   let lastPositions = "{}";
   const contained = (position: string, ranges: string) => [...ranges.matchAll(/\[(\d+),(\d+)\)/g)]
     .some(([, start, end]) => BigInt(position) >= BigInt(start) && BigInt(position) < BigInt(end));
-  repos.adminConfig.read = async () => { throw new Error("whole config should never be transferred"); };
-  repos.adminConfig.readNarrowed = async (_id, projection) => {
-    assert.equal(projection.fixList, undefined);
-    assert.equal(projection.latestBrief, undefined);
-    configReads++; return null;
-  };
+  repos.adminConfig.read = async () => { configReads++; return null; };
   repos.researchState.readNarrowed = async () => { stateReads++; return null; };
   repos.researchIntents.read = async () => { throw new Error("whole log should never be transferred"); };
   const reader = runnerControlReader("unused", repos, {
@@ -123,9 +118,9 @@ test("runner control reads coalesce polls and retain later-committed lower posit
     query: async (sql, params) => {
       calls++;
       if (fail) throw new Error("unreachable");
+      assert.match(sql, /position <@ \$4::int8multirange/);
       assert.match(sql, /position <@ \$5::int8multirange/);
-      assert.match(sql, /position <@ \$6::int8multirange/);
-      lastPositions = params[4] as string;
+      lastPositions = params[3] as string;
       return [{ research: rows.filter(row => !contained(row.position, lastPositions)), windows: [], config: revision, state: "same relevant fields" }];
     },
   });
@@ -140,11 +135,11 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   const late = await reader.read();
   assert.deepEqual(late.research, [low, high]);
   assert.equal(configReads, 1);
-  assert.equal(stateReads, 1);
+  assert.equal(stateReads, 0);
   revision = "2";
   await reader.read(true);
   assert.equal(configReads, 2);
-  assert.equal(stateReads, 1, "heartbeat-only revisions do not transfer assignments again");
+  assert.equal(stateReads, 0, "wake checks read state revision metadata without transferring any national assignments");
   now += 60_000;
   fail = true;
   await assert.rejects(reader.read(), /unreachable/);
@@ -154,8 +149,6 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   assert.equal(calls, 5, "failed reads are retried without waiting for the cache period");
   assert.equal(lastPositions, "{[1,3)}");
 
-  // History length does not put every old intent ID back on the wire. A gap
-  // (including a burned allocation) stays open until its row actually arrives.
   rows = Array.from({ length: 10_000 }, (_, i) => ({ id: `history-${i}`, position: String(i + 4), record: high }));
   await reader.read(true);
   await reader.read(true);
@@ -233,4 +226,26 @@ test("runner wakes on changed etags without minute-by-minute SQL and survives mi
   assert.equal(calls, 8, "a forced boundary coalesces with an in-flight hint read");
   assert.equal(runnerWakeReaderFromEnv({}), null);
   assert.equal(runnerWakeReaderFromEnv({ WTP_VAULT_PROVIDER: "netlify", WTP_BLOBS_SITE_ID: "site" }), null);
+});
+
+test("independent place orders and their runner acknowledgements invalidate the published Admin inputs",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const {BOOTSTRAP_DDL}=await import("../lib/control-plane/repository/pg-schema.ts");
+  const db=new PGlite();
+  try {
+    for(const ddl of BOOTSTRAP_DDL)await db.exec(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
+    await db.query("INSERT INTO cp_admin_config(id,revision,updated_at,value) VALUES('current',1,now(),'{}'::jsonb)");
+    const signature=async()=>(await db.query<{signature:string}>(CONSOLE_INPUT_SQL)).rows[0].signature;
+    const before=await signature();
+    await db.query("INSERT INTO cp_admin_place_targets(config_id,id,updated_at,value) VALUES('current','st:az',now(),'{\"key\":\"st:az\",\"goalPercent\":90}'::jsonb)");
+    const ordered=await signature();assert.notEqual(ordered,before);
+    assert.equal((await db.query<{revision:number}>("SELECT revision FROM cp_admin_config WHERE id='current'")).rows[0].revision,1);
+    await db.query("UPDATE cp_planning_controls SET applied_revision=revision,applied_at=now() WHERE state='az'");
+    assert.notEqual(await signature(),ordered);
+    const control=runnerControlReader("unused",createMemoryRepositories(),{query:async(sql,params)=>(await db.query(sql,params)).rows as Record<string,unknown>[]});
+    assert.equal((await control.read(true)).planningPending,true,"unfinished state backfills wake a planning round even without paid research");
+    await db.query("INSERT INTO cp_control_backfill_jobs(state,kind,completed) VALUES('system','complete',true)");
+    assert.equal((await control.read(true)).planningPending,false);
+
+  }finally{await db.close();}
 });

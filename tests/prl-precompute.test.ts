@@ -4,9 +4,13 @@ import test from "node:test";
 import { parseCsv } from "../lib/sources/prl/index.ts";
 import { PRL_FORBIDDEN_COLUMN_PATTERN } from "../lib/sources/prl/types.ts";
 import {
-  createPrimaryAggregator,
+  aggregatePrimaryRhetoric,
   normalizeStateProfiles,
 } from "../lib/sources/prl/precompute.ts";
+
+async function* one(text: string): AsyncGenerator<string> {
+  yield text;
+}
 
 const STATE_HEADER = [
   "openstates_id", "name", "state", "party", "position", "district", "communication_count",
@@ -68,7 +72,7 @@ function primaryRow(candidateId: string, flags: { ap?: number; apo?: number; bip
   ].join(",");
 }
 
-test("primary rhetoric: one candidate's PRL labels are aggregated without retaining another person", () => {
+test("primary rhetoric: per-candidate shares are our aggregate of PRL's 0/1 labels", async () => {
   const csv = [
     PRIMARY_HEADER,
     primaryRow("H6AZ01371", { pol: 1 }, "t1"),
@@ -77,21 +81,14 @@ test("primary rhetoric: one candidate's PRL labels are aggregated without retain
     primaryRow("S6AL00484", { cc: 1 }, "t4"),
     primaryRow("not-fec", { pol: 1 }, "t5"),
   ].join("\n");
-  const [header, ...rows] = parseCsv(csv);
-  const nativeRows = rows.map(row => Object.fromEntries(header.map((key, index) => [key, row[index]])));
-  const aggregator = createPrimaryAggregator("H6AZ01371");
-  for (const row of nativeRows.filter(row => row.candidate_id !== "S6AL00484")) aggregator.add(row);
-  const result = aggregator.result("2026-09-18");
-  assert.equal(result.counts.candidates, 1);
+  const result = await aggregatePrimaryRhetoric(one(csv), "2026-09-18");
+  assert.equal(result.counts.candidates, 2);
   assert.equal(result.counts.droppedNoIdentity, 1);
   const az = result.profiles.find((p) => p.candidateId === "H6AZ01371")!;
   assert.equal(az.statementCount, 3);
   assert.equal(az.shares.policy, 66.67, "2 of 3 tweets policy");
   assert.equal(az.shares["attack-personal"], 33.33, "1 of 3 tweets personal attack");
   assert.equal(az.shares.creditclaiming, 0);
-  assert.throws(() => aggregator.add(nativeRows.find(row => row.candidate_id === "S6AL00484")!), /CROSSES_NATIVE_PERSON/);
-  const second = createPrimaryAggregator("S6AL00484");
-  second.add(nativeRows.find(row => row.candidate_id === "S6AL00484")!);
-  const al = second.result("2026-09-18").profiles[0];
+  const al = result.profiles.find((p) => p.candidateId === "S6AL00484")!;
   assert.equal(al.shares.creditclaiming, 100);
 });

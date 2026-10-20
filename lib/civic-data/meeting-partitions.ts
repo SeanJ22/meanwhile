@@ -15,7 +15,7 @@ import {
 
 import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
-import { derivedRequestedUrl } from "./derived-request.ts";
+import { derivedRequestedUrl } from "./derived-door.ts";
 import { meetingPartitionId } from "../meetings/body-scope.ts";
 export { meetingPartitionId } from "../meetings/body-scope.ts";
 
@@ -311,7 +311,13 @@ export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = 
   const skipped: string[] = [];
   try {
     const contracts = buildMeetingPartitions(wirings, skipped);
-    installMeetingPartitionSchedules(contracts);
+    const held = buildHeldMeetingPartitions(contracts);
+    const sources = buildSittingWindowSources(contracts);
+    MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
+    HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
+    SITTING_WINDOW_SOURCES.clear();
+    for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
+    for (const listener of refreshListeners) listener();
     return { refreshed: true, partitions: contracts.length, reason: null, skipped };
   } catch (error) {
     return {
@@ -321,17 +327,6 @@ export function refreshMeetingPartitions(wirings: readonly BodySourceWiring[] = 
       skipped,
     };
   }
-}
-
-/** Supervisors retain commands and source scopes; a source child reads its own state's door configuration. */
-export function installMeetingPartitionSchedules(contracts: readonly MeetingPartitionContract[]): void {
-  const held = buildHeldMeetingPartitions(contracts);
-  const sources = buildSittingWindowSources(contracts);
-  MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
-  HELD_MEETING_PARTITIONS.splice(0, HELD_MEETING_PARTITIONS.length, ...held);
-  SITTING_WINDOW_SOURCES.clear();
-  for (const [id, ids] of sources) SITTING_WINDOW_SOURCES.set(id, ids);
-  for (const listener of refreshListeners) listener();
 }
 
 export function sittingWindowSourceIds(taskId: string): readonly string[] {

@@ -128,7 +128,7 @@ export async function readAgentRuns(sql: Sql, nowIso: string): Promise<readonly 
        a.value->>'workItemId' AS work_item_id, w.value->>'project' AS project, (a.value->'cost'->>'usd')::float8 AS attempt_usd,
        jsonb_array_length(COALESCE(a.value->'artifactIds', '[]'::jsonb)) AS artifact_count
      FROM (SELECT value, updated_at FROM cp_attempts ORDER BY updated_at DESC LIMIT ${AGENT_RUN_LIMIT}) a
-     LEFT JOIN cp_work_items w ON w.id = a.value->>'workItemId' ORDER BY a.updated_at DESC`, []) as readonly Record<string, unknown>[];
+     LEFT JOIN cp_work_items_history w ON w.id = a.value->>'workItemId' ORDER BY a.updated_at DESC`, []) as readonly Record<string, unknown>[];
   const ids = runsRaw.map((r) => String(r.id));
   if (ids.length === 0) return [];
   const [costsRaw, artifactsRaw, scoutsRaw, workersRaw] = await Promise.all([

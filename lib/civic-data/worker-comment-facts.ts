@@ -1,9 +1,8 @@
-import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { readValidatorOfficialLinks } from "../control-plane/promotion/validator-manual.ts";
+import { readValidatorManual } from "../control-plane/promotion/validator-manual.ts";
 import { factClocks } from "../facts/clocks.ts";
 import { publishCommentFacts } from "../facts/comment-facts.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
@@ -24,9 +23,10 @@ export async function publishOwedCommentFacts(input: {
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
   if (!input.workItemIds.length) return [];
-  const clocks = factClocks((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
+  const clocks = factClocks((await input.repos.adminConfig.read("current"))?.value ?? null);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
+  const manual = await readValidatorManual(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
@@ -42,7 +42,7 @@ export async function publishOwedCommentFacts(input: {
     let captures: WorkerPublicationCapture[] = [];
     try {
       const extraction = parser.result;
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
       const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);

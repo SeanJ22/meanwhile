@@ -4,7 +4,6 @@ import test from "node:test";
 
 import { meetingOutcomeEvidenceFor, type HeldMeetingAction } from "../lib/ask/meeting-outcomes.ts";
 import { composeSittingAnswer, composeSittingAnswerWithBasis, type ComposableSitting, type SittingAnswerInput, type SittingGap } from "../lib/ask/sitting-answer.ts";
-import { measureAnswer } from "../lib/ask/length-contract.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import { useOutcomeSnapshotForTests as installOutcomeSnapshot } from "../lib/outcomes/store.ts";
@@ -32,11 +31,9 @@ function packOf(subject: { id: string; name: string }, records: readonly Evidenc
   return { question: QUESTION, intent: "PAST_MEETING", temporal: { kind: "LAST" }, subject: { kind: "BODY", ...subject }, records: [...records], gaps: [], denominators: {}, today: "2026-09-25" };
 }
 
-/** The described actions: the phrases after "Recorded actions described here: N of M — ", up to that sentence's end. */
+/** Each result sentence keeps its source item attached. */
 function describedPhrases(answer: string): string[] {
-  const from = answer.slice(answer.indexOf(" — ") + 3);
-  const end = from.search(/["a-z]\.(?= [A-Z]|$)/);
-  return from.slice(0, end + 1).split("; ");
+  return answer.replace(/\.$/, "").split(/\. (?="[^"]+":)/);
 }
 
 /** Each "..." span of a composed answer, with a cut marker and the composer's quote swap undone. */
@@ -107,13 +104,13 @@ test("a motion with no result recorded is SAID to have none — never read as pa
     assert.deepEqual(outcome.actions.map((action) => action.resultState), ["ABSENT", "CONTRADICTORY", "STATED"]);
     const composed = composeSittingAnswer({ ...pimaInput(chosen, outcome), records: [meetingRecord(chosen, PIMA, "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1824"), ...outcome.records] });
     assert.ok(composed);
-    assert.match(composed.answer, /recorded 3 actions, each in the records with this answer; published result "Pass": 1 of 3; without a published result: 1 of 3; with a published result that contradicts itself: 1 of 3\. Recorded actions described here: \d of 3 — /, "every result state is counted over the same actions");
+    assert.doesNotMatch(composed.answer, /recorded 3 actions|records with this answer|described here/);
     const phrases = describedPhrases(composed.answer);
     const absentPhrase = phrases.find((phrase) => phrase.includes(`"${absent.action}"`));
     assert.ok(absentPhrase, `the action with no result is described: ${composed.answer}`);
-    assert.match(absentPhrase, /, without a published result$/, "…and said to have none");
+    assert.match(absentPhrase, /we don't have the result yet$/, "…and said to have none");
     assert.doesNotMatch(absentPhrase, /Pass|pass(?:ed)?\b|fail|carried|approved/i, "nothing is inferred for it");
-    assert.ok(phrases.some((phrase) => phrase.startsWith("\"Second reading of") && phrase.endsWith("its published result contradicts itself")), "a record that contradicts itself is never given either result");
+    assert.ok(phrases.some((phrase) => phrase.startsWith("\"Second reading of") && phrase.endsWith("the published result contradicts itself")), "a record that contradicts itself is never given either result");
     assert.equal(phrases.findIndex((phrase) => phrase.startsWith("\"Second reading of")), 0, "the contradictory result leads");
   } finally {
     installOutcomeSnapshot(null);
@@ -172,23 +169,16 @@ test("Mesa: the council's decisions from its own minutes — each motion and its
     const records = [meetingRecord(sitting, MESA, "https://mesa.legistar.com/MeetingDetail.aspx?ID=1336059"), ...outcome.records];
     const composed = composeSittingAnswer({ shape: "MEETING_OUTCOME", subjectName: "Mesa City Council", sittings: [sitting], records, sittingGaps: [], now: NOW, questionClass: "WHAT_WAS_DECIDED", actions: outcome.actions });
     assert.ok(composed);
-    // Results the clerk wrote as sentences are quoted per motion, never repeated as count labels.
-    const lead = /^At its Monday, July 27th, 2026 meeting, the Mesa City Council recorded 15 actions, each in the records with this answer\. Recorded actions described here: (\d+) of 15 — /.exec(composed.answer);
-    assert.ok(lead, composed.answer);
-    // The first described motion is the first the council took up off its consent agenda: the item's own first
-    // sentence, the motion and the result, in the minutes' words.
-    assert.match(composed.answer, / — Item 5-c, "A resolution extending Falcon Field Airport’s landing fee implementation date\.": "that Resolution No\. 12559 be adopted", result "Mayor Freeman declared the motion carried by majority vote\."/);
-    assert.match(composed.answer, /\. Published as the council's minutes \("Minutes"\)\. No later sitting we hold records approving them, so they are not described as approved\.$/, "minutes not seen approved are never presented as the approved record");
+    assert.match(composed.answer, /^"A resolution extending Falcon Field Airport/);
+    assert.match(composed.answer, /"that Resolution No\. 12559 be adopted"; "Mayor Freeman declared the motion carried by majority vote\."/);
+    assert.doesNotMatch(composed.answer, /records with this answer|Recorded actions described|No later sitting we hold/);
     const pack = packOf({ id: MESA, name: "Mesa City Council" }, records);
     assert.equal(validateAnswer(composed.answer, composed.citedUrls, pack).kind, "PASSED");
     assert.ok(composed.citedUrls.includes(outcome.records[0]!.sourceUrl!), "the minutes document itself is cited");
-    const shown = Number(lead[1]);
     for (const phrase of describedPhrases(composed.answer)) {
-      const action = outcome.actions.find((held) => held.itemReference && phrase.startsWith(`Item ${held.itemReference}, `));
-      assert.ok(action, `the phrase names a held action: ${phrase}`);
-      assert.ok(phrase.endsWith(`result "${action.result}"`), "the minutes' own result");
+      assert.ok(outcome.actions.some(action => action.result && phrase.endsWith(`"${action.result}"`)), "each described decision retains a source result");
     }
-    assertGrounded(composed.answer, records, [27, 2026, 15, shown]);
+    assertGrounded(composed.answer, records, []);
   } finally {
     installOutcomeSnapshot(null);
   }
@@ -210,7 +200,6 @@ test("composition steps aside — and the model writes — whenever the records 
   const { sitting, outcome, input } = mesaHeld();
   try {
     assert.ok(composeSittingAnswer(input), "precondition: the whole input composes");
-    const other: ComposableSitting = { ...sitting, id: `${sitting.id}-other`, title: "Special Meeting", startsAt: sitting.startsAt.replace(/T\d{2}:/, "T13:") };
     const actionRecords = input.records.filter((record) => record.kind === "MEETING_ACTION");
     const cases: [string, Partial<SittingAnswerInput>][] = [
       ["no held action read beside the records", { actions: [] }],
@@ -222,7 +211,6 @@ test("composition steps aside — and the model writes — whenever the records 
       ["a sitting still to come", { now: Date.parse("2026-07-01T12:00:00Z") }],
       ["an unrecorded time zone", { sittings: [{ ...sitting, timeZone: null }] }],
       ["an unresolved calendar listing", { records: input.records.map((record) => record.kind === "MEETING" ? { ...record, meetingListingIdentity: { uniqueMeetingCount: null } as EvidenceRecord["meetingListingIdentity"] } : record) }],
-      ["a same-day sitting with neither an action nor a named outcome gap", { sittings: [sitting, other], records: [...input.records, meetingRecord(other, MESA, "https://mesa.legistar.com/x")] }],
       ["no described action passes the validator on its own", { admissible: () => false }],
     ];
     for (const [why, change] of cases) assert.equal(composeSittingAnswer({ ...input, ...change }), null, why);
@@ -234,7 +222,7 @@ test("composition steps aside — and the model writes — whenever the records 
   } finally { installOutcomeSnapshot(null); }
 });
 
-test("a same-day sitting is counted beside the chosen one, or its named outcome gap is said for it", () => {
+test("a question about the selected sitting omits unrelated same-day sittings and gaps", () => {
   const first = mesaSitting("1336059");
   const earlierHeld = { ...first, meetingId: `${first.meetingId}-earlier`, startsAt: first.startsAt!.replace(/T\d{2}:\d{2}/, "T13:00") };
   const { sitting, outcome, input } = mesaHeld([earlierHeld]);
@@ -244,11 +232,11 @@ test("a same-day sitting is counted beside the chosen one, or its named outcome 
     assert.ok(theirs.actions.length > 0, "precondition: the earlier sitting holds recorded actions");
     const records = [meetingRecord(sitting, MESA, "https://mesa.legistar.com/1336059"), meetingRecord(earlier, MESA, "https://mesa.legistar.com/earlier"), ...outcome.records, ...theirs.records];
     const both = composeSittingAnswer({ ...input, sittings: [sitting, earlier], records, actions: [...outcome.actions, ...theirs.actions] });
-    assert.match(both?.answer ?? "", /^At its Monday, July 27th, 2026 meeting \("City Council Meeting"\), the Mesa City Council recorded 15 actions/, "the chosen sitting is named when the day holds two");
-    assert.match(both?.answer ?? "", new RegExp(`The "City Council Study Session" sitting earlier that day recorded ${theirs.actions.length} more actions?\\.`));
+    assert.ok(both);
+    assert.equal(both.answer, composeSittingAnswer(input)?.answer, "a question about the selected meeting does not narrate another sitting");
     const gap: SittingGap = { role: "OUTCOME", meetingId: earlier.id, gap: { whose: "THEIRS", statement: "We read that sitting's agenda items and the body's own record shows no action recorded against them." } };
     const withGap = composeSittingAnswer({ ...input, sittings: [sitting, earlier], records: records.filter((record) => !theirs.records.includes(record)), sittingGaps: [gap] });
-    assert.match(withGap?.answer ?? "", /For the "City Council Study Session" sitting earlier that day: We read that sitting's agenda items and the body's own record shows no action recorded against them\./);
+    assert.equal(withGap?.answer, composeSittingAnswer(input)?.answer);
   } finally { installOutcomeSnapshot(null); }
 });
 

@@ -47,7 +47,7 @@ test("an automatic match promotes its own pin, and the next pass keeps it (no pe
   const two = await publishVenueResolutions({ store, package: second.package, now: T2 });
   assert.ok(two.outcome?.promoted, JSON.stringify(two.outcome?.candidate.receipt));
 
-  const read = await readCuratedReaderProjection("venue-resolutions", { state: "AZ", store, now: T2, bypassCache: true });
+  const read = await readCuratedReaderProjection("venue-resolutions", { store, now: T2, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.records.map((row) => row.address).sort(), ["1415 Melody Ln Bisbee AZ 85603", "22 Cactus Ln Bisbee AZ 85603"]);
@@ -64,7 +64,7 @@ test("a pass with no new match, or a refused one, changes nothing and never thro
   const held = await publishVenueResolutions({ store, package: bad, now: T1 });
   assert.equal(held.outcome?.promoted ?? null, null);
   assert.ok(held.held);
-  const read = await readCuratedReaderProjection("venue-resolutions", { state: "AZ", store, now: T1, bypassCache: true });
+  const read = await readCuratedReaderProjection("venue-resolutions", { store, now: T1, bypassCache: true });
   assert.notEqual(read.kind, "PROMOTED");
 });
 

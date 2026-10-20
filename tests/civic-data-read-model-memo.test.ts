@@ -194,11 +194,11 @@ function spyStore(
 beforeEach(() => clearPromotedReadModelCache());
 
 test("the single read proves a version once, then attests without re-reading the candidate", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts } = spyStore(pointers);
 
-  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
-  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
 
   assert.equal(first.kind, "PROMOTED");
   assert.equal(second.kind, "PROMOTED");
@@ -212,18 +212,18 @@ test("the single read proves a version once, then attests without re-reading the
 });
 
 test("a pointer move to a new version is fetched and re-proved, never masked by the memo", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts, advance } = spyStore(pointers);
 
-  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
   assert.equal(first.kind, "PROMOTED");
   if (first.kind === "PROMOTED") assert.equal(first.value.answer, 1);
 
   // A new promotion advances the pointer to v-b. The instance still holds v-a as
   // proven — the memo must NOT serve it. The freshly read pointer names v-b.
-  advance("US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-b", { answer: 2 }));
+  advance("federal-supported", version("federal-supported", "v-b", { answer: 2 }));
 
-  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
   assert.equal(second.kind, "PROMOTED");
   if (second.kind === "PROMOTED") {
     assert.equal(second.value.answer, 2, "the new version is served — a pointer move is honored");
@@ -232,11 +232,11 @@ test("a pointer move to a new version is fetched and re-proved, never masked by 
 });
 
 test("a bypassCache read never uses the memo — it re-proves the version every time", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts } = spyStore(pointers);
 
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true });
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
 
   assert.equal(counts.readCandidate, 2, "the verification path re-fetches and re-proves each time");
 });
@@ -278,12 +278,12 @@ test("the batch read hauls only the moved partition's envelope when one pointer 
 });
 
 test("an unmoved pointer is served from this store's proof after asking only its identity", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts } = spyStore(pointers, { identity: true });
 
-  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
-  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
-  const third = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const first = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const second = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
+  const third = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
 
   assert.equal(first.kind, "PROMOTED");
   assert.deepEqual(second, first, "the proved result is served unchanged");
@@ -294,12 +294,12 @@ test("an unmoved pointer is served from this store's proof after asking only its
 });
 
 test("a moved pointer is read whole and proved again, never served from the old proof", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts, advance } = spyStore(pointers, { identity: true });
 
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store });
-  advance("US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-b", { answer: 2 }));
-  const moved = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  advance("federal-supported", version("federal-supported", "v-b", { answer: 2 }));
+  const moved = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
 
   assert.equal(moved.kind, "PROMOTED");
   if (moved.kind === "PROMOTED") assert.equal(moved.value.answer, 2, "the new version is served");
@@ -307,30 +307,30 @@ test("a moved pointer is read whole and proved again, never served from the old 
   assert.equal(counts.readPromotion, 2, "the moved pointer's payload is read");
   assert.equal(counts.readCandidate, 2, "the new version is proved");
 
-  const again = await readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const again = await readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
   if (again.kind === "PROMOTED") assert.equal(again.value.answer, 2);
   assert.equal(counts.readPromotion, 2, "the new proof is the one re-served");
 });
 
 test("a pointer whose identity changed in any field is read whole", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts, advance } = spyStore(pointers, { identity: true });
 
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store });
-  const same = version("US-AZ:fec-funding:v1", "v-a", { answer: 1 });
-  advance("US-AZ:fec-funding:v1", { ...same, projection: { ...same.projection, promotedAt: "2026-09-03T00:00:00.000Z" } });
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  const same = version("federal-supported", "v-a", { answer: 1 });
+  advance("federal-supported", { ...same, projection: { ...same.projection, promotedAt: "2026-09-03T00:00:00.000Z" } });
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
 
   assert.equal(counts.readPromotion, 2, "a different promotedAt is not the proved pointer");
 });
 
 test("a bypassCache read never asks the identity and always proves again", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { store, counts } = spyStore(pointers, { identity: true });
 
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store });
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true });
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
+  await readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true });
 
   assert.equal(counts.readPromotionIdentity, 0, "the verification path never takes the shortcut");
   assert.equal(counts.readPromotion, 3);
@@ -338,12 +338,12 @@ test("a bypassCache read never asks the identity and always proves again", async
 });
 
 test("a proof is served only to the store that made it", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const a = spyStore(pointers, { identity: true });
   const b = spyStore(pointers, { identity: true });
 
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store: a.store });
-  await readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store: b.store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store: a.store });
+  await readPromotedCivicData(CLASS, "federal-supported", { store: b.store });
 
   assert.equal(b.counts.readPromotionIdentity, 0, "store b has proved nothing yet");
   assert.equal(b.counts.readPromotion, 1, "store b reads its own pointer whole");
@@ -406,11 +406,11 @@ function opened(): { gate: Promise<void>; open: () => void } {
 }
 
 test("concurrent readers of a cold scope share one read and one proof", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { gate, open } = opened();
   const { store, counts } = spyStore(pointers, { identity: true, gate });
 
-  const readers = [1, 2, 3].map(() => readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store }));
+  const readers = [1, 2, 3].map(() => readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store }));
   open();
   const results = await Promise.all(readers);
 
@@ -422,12 +422,12 @@ test("concurrent readers of a cold scope share one read and one proof", async ()
 });
 
 test("a shared read that fails decides nothing: a waiting reader reads for itself", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { gate, open } = opened();
   const { store, counts } = spyStore(pointers, { identity: true, gate, failFirstReads: 1 });
 
-  const first = readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store });
-  const second = readPromotedCivicData<{ answer: number }>(CLASS, "US-AZ:fec-funding:v1", { store });
+  const first = readPromotedCivicData(CLASS, "federal-supported", { store });
+  const second = readPromotedCivicData<{ answer: number }>(CLASS, "federal-supported", { store });
   open();
   const [failed, recovered] = await Promise.all([first, second]);
 
@@ -438,13 +438,13 @@ test("a shared read that fails decides nothing: a waiting reader reads for itsel
 });
 
 test("verification reads never share a read", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { gate, open } = opened();
   const { store, counts } = spyStore(pointers, { identity: true, gate });
 
   const reads = [
-    readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true }),
-    readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store, bypassCache: true }),
+    readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true }),
+    readPromotedCivicData(CLASS, "federal-supported", { store, bypassCache: true }),
   ];
   open();
   await Promise.all(reads);
@@ -454,14 +454,14 @@ test("verification reads never share a read", async () => {
 });
 
 test("readers of different stores never share a read", async () => {
-  const pointers = new Map([["US-AZ:fec-funding:v1", version("US-AZ:fec-funding:v1", "v-a", { answer: 1 })]]);
+  const pointers = new Map([["federal-supported", version("federal-supported", "v-a", { answer: 1 })]]);
   const { gate, open } = opened();
   const a = spyStore(pointers, { identity: true, gate });
   const b = spyStore(pointers, { identity: true, gate });
 
   const reads = [
-    readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store: a.store }),
-    readPromotedCivicData(CLASS, "US-AZ:fec-funding:v1", { store: b.store }),
+    readPromotedCivicData(CLASS, "federal-supported", { store: a.store }),
+    readPromotedCivicData(CLASS, "federal-supported", { store: b.store }),
   ];
   open();
   await Promise.all(reads);

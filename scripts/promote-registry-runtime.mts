@@ -1,4 +1,3 @@
-import { readRuntimeAdminConfig } from "../lib/control-plane/runtime-admin-config.ts";
 import { requireRegistryState, registryJurisdictions, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
@@ -19,7 +18,7 @@ import { runNationalPlaceWorkerProcesses } from "../lib/control-plane/workers/pr
 import { orderNationalPlaceWork } from "../lib/control-plane/expansion/dispatch-work.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
-import { nationalDelivery, createNationalPlacePublisher, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
+import { nationalDelivery, publishNationalPlaceSources, type NationalPlacePublication } from "../lib/civic-data/worker-national-publication.ts";
 
 async function main(): Promise<void> {
   const state = requireRegistryState(assignment(process.argv, "state") ?? "");
@@ -53,8 +52,7 @@ async function main(): Promise<void> {
       inherited: unknown; electionPublications: unknown } | { zip: string; deferred: string })[] = [];
     const failures: string[] = [];
     if (nationalZips) {
-      const facts = readerFactDb(), clocks = factClocks((await readRuntimeAdminConfig(repos, ["settings"]))?.value ?? null);
-      const publishPlace=createNationalPlacePublisher(store,state);
+      const facts = readerFactDb(), clocks = factClocks((await repos.adminConfig.read("current"))?.value ?? null);
       try {
         const zips = [...new Set(nationalZips.split(",").filter(Boolean))];
         const taskId = assignment(process.argv, "place-task");
@@ -62,7 +60,7 @@ async function main(): Promise<void> {
         await runNationalPlaceWorkerProcesses({ root: process.cwd(), store, places: [{ zip: zips[0]!, state, id: taskId }],
           orderPending: ready => orderNationalPlaceWork(repos, ready, new Date().toISOString()),
           capacity: () => zips.length, publish: async input => {
-            const publication = await publishPlace({ ...input, state, facts, clocks,
+            const publication = await publishNationalPlaceSources({ ...input, state, facts, clocks,
               divisions: input.divisions.filter(row => row.sourceDataset && registryJurisdictions(row.id).includes(state)).map(row => ({ ...row, sourceDataset: row.sourceDataset! })),
               sources: { ...input.sources, officials: input.sources.officials.filter(row => registryJurisdictions(row.divisionId).includes(state)) } });
             nationalPublications.push(publication);
@@ -87,8 +85,8 @@ async function main(): Promise<void> {
       delivery.versionId = pointer?.versionId ?? null;
       delivery.candidateId = pointer?.versionId ?? null;
     }
-    if (failures.length) throw new Error(failures.join("; "));
     await printWorkerPublicationReceipt(store, contractId, [], delivery, now);
+    if (failures.length && !nationalVersion) throw new Error(failures.join("; "));
     return;
   }
   const packagePath = assignment(process.argv, "package");

@@ -172,14 +172,13 @@ export function contentHashOf(bytes: Uint8Array): string {
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {
   // Imported lazily so only actual retrieval pays for the PDF engine.
   const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const loadingTask = getDocument({
+  const doc = await getDocument({
     data: bytes,
-    // Node's main-thread PDF worker still owns a document transport until destroy().
+    // No worker in Node; extraction runs on the main thread.
     useWorkerFetch: false,
-  });
+  }).promise;
 
   try {
-    const doc = await loadingTask.promise;
     const pages: string[] = [];
     for (let i = 1; i <= doc.numPages; i++) {
       const page = await doc.getPage(i);
@@ -192,7 +191,7 @@ export async function extractPdfText(bytes: Uint8Array): Promise<string> {
     }
     return pages.join("\n").replace(/[ \t]+/g, " ").trim();
   } finally {
-    await loadingTask.destroy();
+    await doc.cleanup();
   }
 }
 

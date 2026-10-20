@@ -12,9 +12,6 @@ import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
-import { memberOfficeContractId, memberOfficeScope } from "../officials/member-office-scope.ts";
-import { readMemberOfficeProjection } from "../officials/member-office-projection.ts";
-import { readVenueResolutionRecords, type VenueResolutionReadOptions } from "../meetings/venue-projection.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -41,12 +38,6 @@ export interface CampaignSiteProjectionRecord {
 
 const states = new Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>();
 const selectedStates = new WeakMap<object, Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>>();
-const venueRecords = new WeakMap<object, CuratedReaderProjection["records"]>();
-let processVenueRecords: CuratedReaderProjection["records"] = [];
-function installVenueRecords(records: CuratedReaderProjection["records"]): void {
-  const selection = currentReaderSelection();
-  if (selection) venueRecords.set(selection, records); else processVenueRecords = records;
-}
 function readerStates() {
   const selection = currentReaderSelection();
   if (!selection) return states;
@@ -57,7 +48,6 @@ function readerStates() {
 
 
 function initial(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
-  if (id === "member-offices") return civicDataReadNotInitialized("CURATED_READER_RECORD", "member-offices:state", "Select a state before reading member offices.");
   const contract = requiredManualProductionContract(id);
   return civicDataReadNotInitialized(
     contract.recordClass,
@@ -78,24 +68,8 @@ function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, v
 
 export async function readCuratedReaderProjection(
   id: CuratedReaderContractId,
-  options: VenueResolutionReadOptions = {},
+  options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
-  if (id === "venue-resolutions") {
-    const state = options.state ?? currentReaderSelection()?.states?.[0];
-    if (!state) throw new Error("VENUE_RESOLUTION_STATE_REQUIRED");
-    const selected = await readVenueResolutionRecords(state, options);
-    installVenueRecords(selected.records);
-    readerStates().set(id, selected.read);
-    return selected.read;
-  }
-  if (id === "member-offices") {
-    const selected = options.state ?? currentReaderSelection()?.states?.[0];
-    if (!selected) return initial(id);
-    const result = await readMemberOfficeProjection(selected, options);
-    if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
-    readerStates().set(id, result);
-    return result;
-  }
   const contract = requiredManualProductionContract(id);
   const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
@@ -112,7 +86,7 @@ export async function readElectionFieldsForDivisions(divisions: readonly string[
 
 export async function refreshCuratedReaderProjection(
   id: CuratedReaderContractId,
-  options: VenueResolutionReadOptions = {},
+  options: PromotedCivicDataReadOptions = {},
 ): Promise<string> {
   const result = await readCuratedReaderProjection(id, options);
   if (result.kind === "NOT_RECORDED") throw new Error(`The ${id} store answered without a canonical promoted projection.`);
@@ -128,10 +102,7 @@ export function primeCuratedReaderProjection(
   versionId: string,
 ): void {
   validateOnce(id, value, versionId, () => validate(id, value, versionId));
-  if (id === "venue-resolutions") installVenueRecords(value.records);
-  const officeState = currentReaderSelection()?.states?.[0] ?? (value.records[0]?.office as { state?: string } | undefined)?.state;
-  if (id === "member-offices" && !officeState) throw new Error("MEMBER_OFFICE_STATE_REQUIRED");
-  const contract = requiredManualProductionContract(id === "member-offices" ? memberOfficeContractId(officeState!) : id);
+  const contract = requiredManualProductionContract(id);
   readerStates().set(id, {
     kind: "BOOTSTRAP",
     value,
@@ -164,14 +135,13 @@ export const settleBallotNavigationRead = (): Promise<string> =>
   readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
-export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions & { readonly state?: string } = {}) =>
+export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("member-offices", options);
-export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {
-  const state = currentReaderSelection()?.states?.[0];
-  return state ? readPromotedEdgeFirst("CURATED_READER_RECORD", memberOfficeScope(state),
-    options => readCuratedReaderProjection("member-offices", { ...options, state }), "The state legislators' offices") : Promise.resolve(initial("member-offices"));
-};
-export const refreshVenueResolutionsFromPromoted = (options: VenueResolutionReadOptions = {}) =>
+const MEMBER_OFFICES = requiredManualProductionContract("member-offices");
+export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
+  readPromotedEdgeFirst(MEMBER_OFFICES.recordClass, MEMBER_OFFICES.scope,
+    options => readCuratedReaderProjection("member-offices", options), "The state legislators' offices");
+export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
 
 export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
@@ -184,10 +154,7 @@ export function currentCuratedReaderRecords<T>(
   testSeed: readonly T[],
 ): readonly T[] {
   const state = readerStates().get(id) ?? initial(id);
-  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") {
-    if (id === "venue-resolutions") return (currentReaderSelection() ? venueRecords.get(currentReaderSelection()!) ?? [] : processVenueRecords) as readonly T[];
-    return state.value.records as readonly T[];
-  }
+  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value.records as readonly T[];
   if (mayUseTestFixture()) return testSeed;
   throw new Error(`${id} projection is ${state.kind}; initialize its canonical read before using the synchronous Reader projection.`);
 }

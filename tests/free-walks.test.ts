@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { createPlannerSpool } from "../lib/control-plane/scheduler/planner-spool.ts";
 
 import {
   FREE_WALK_PROJECTION,
@@ -151,35 +150,11 @@ test("THE BRIEF STARTS FROM THE LEADS: the brief names the walk's outcome and wh
 
 test("THE RUNNER IS WIRED: it reads the walk before dispatch", () => {
   const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects, planner)");
+  const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects)");
   const dispatch = runner.indexOf("const cycle = await runCycle({");
   assert.ok(read > 0 && dispatch > read, "the reading is taken before dispatch");
-  assert.match(runner.slice(0, read), /const freeWalkSubjects = freeWalkSubjectRows\.rows;/, "the runner passes the repeatable disk-backed subjects");
   const census = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
   assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}/);
   assert.match(census, /runCensusState\(\{ repos, state, needs: reading.needs/);
   assert.match(runner, /const dispatchedDiscoveryIds = sync\.all\.filter\(row => row\.materializedBy === OWNER_DISPATCH\)/, "free standing inventory is never mistaken for an explicit paid dispatch");
-});
-
-test("disk-backed free walks read every dispatched government in bounded projected batches", async () => {
-  const planner = await createPlannerSpool();
-  try {
-    const subjects = planner.table<FreeWalkSubject>("fixture-dispatched-walks", row => row.jurisdictionId), keys: string[] = [];
-    for (let index = 0; index < 65; index++) {
-      const jurisdictionId = `oh:city:fixture-${index}`; keys.push(jurisdictionId); subjects.add({ jurisdictionId, walkable: true });
-    }
-    subjects.add({ jurisdictionId: "oh:city:no-site", walkable: false });
-    subjects.add({ jurisdictionId: "oh:city:unread", walkable: null });
-    const calls: string[][] = [];
-    const repos = { discoveryAttempts: { readLatest: async (batch: readonly string[], projection: unknown) => {
-      assert.deepEqual(projection, FREE_WALK_PROJECTION); calls.push([...batch]);
-      return new Map(batch.map(id => [id, { outcome: "FOUND", finishedAt: "2026-09-24T01:00:00.000Z", leads: [] }]));
-    } } } as unknown as Pick<ControlPlaneRepositories, "discoveryAttempts">;
-    const walks = await readFreeDiscoveryWalks(repos, subjects.rows, planner);
-    assert.deepEqual(calls.map(batch => batch.length), [32, 32, 1]);
-    assert.deepEqual(calls.flat(), keys, "all dispatched governments are read once without a backlog cap");
-    for (const key of keys) assert.equal(walks.latestFor(key), "FOUND");
-    assert.equal(walks.latestFor("oh:city:no-site"), "NO_SITE_TO_WALK");
-    assert.equal(walks.latestFor("oh:city:unread"), "UNREAD");
-  } finally { await planner.close(); }
 });

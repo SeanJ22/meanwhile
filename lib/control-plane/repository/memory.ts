@@ -1,3 +1,6 @@
+import type { HuntOrder } from "../hunt-orders.ts";
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -8,15 +11,14 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-import { aggregateArrayPage, replaceAggregateArrayItem } from "./aggregate-array.ts";
 import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
-/** In-process double with the same rules as `file-store.ts`. Never durable. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import type { PricedCharge } from "../fleet-safety.ts";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -37,7 +39,7 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
-import { mergeEntry,type FieldManualEntry } from "../field-manual.ts";
+import type { FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
@@ -50,7 +52,6 @@ import {
   ConcurrentModification,
   RepositoryLockHeld,
   UnknownAggregate,
-  canonicalJson,
   heldSlotKeys,
   jsonTextAtPath,
   projectAggregate,
@@ -62,7 +63,6 @@ import {
   type AppendOutcome,
   type ArtifactRecord,
   type ChangedReadOptions,
-  type ChangedLogReadOptions,
   type ChangedRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
@@ -75,17 +75,15 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/** Stand-in for the database clock behind `changed_at`: a process-wide counter, monotonic, never the wall clock. */
 let changeClockMs = Date.parse("2000-01-01T00:00:00.000Z");
 const changeClock = { tick: (): number => (changeClockMs += 1), now: (): number => changeClockMs };
 const changeIso = (ms: number): string => new Date(ms).toISOString();
 
-/** One in-memory aggregate store with the full CAS contract. */
 export function memoryAggregateRepository<T>(kind: string): AggregateRepository<T> {
   const rows = new Map<string, Persisted<T>>();
-  /** Each row's `changed_at`, moved on every put that creates and every compare-and-set. */
+
   const changedAt = new Map<string, number>();
-  /** Revision-1 values: `put` compares against the creation, not the latest state. */
+
   const origins = new Map<string, T>();
 
   const read = async (id: string): Promise<Persisted<T> | null> => {
@@ -101,34 +99,6 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
   return {
     read,
 
-    readArrayType: async (id, path, expectedRevision) => {
-      const row = rows.get(id); if (!row) return null;
-      if (expectedRevision !== undefined && row.revision !== expectedRevision) throw new ConcurrentModification(kind, id, expectedRevision, row.revision);
-      let value: unknown = row.value;
-      for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
-      return Array.isArray(value);
-    },
-    readArrayPage: async (id, field, query = {}) => {
-      const row = rows.get(id);
-      return row ? {id, revision: row.revision, updatedAt: row.updatedAt, ...jsonCopy(aggregateArrayPage(row.value, field, query))} : null;
-    },
-    compareAndSetFields: async (id, revision, fields, now) => {
-      const row = rows.get(id);
-      if (!row || row.revision !== revision) throw new ConcurrentModification(kind, id, revision, row?.revision ?? null);
-      rows.set(id, {...row, revision: revision + 1, updatedAt: now, value: {...row.value, ...jsonCopy(fields)} as T});
-      changedAt.set(id, changeClock.tick());
-      return {id, revision: revision + 1, updatedAt: now, value: jsonCopy(fields)};
-    },
-    compareAndSetArrayItem: async (id, revision, field, keyPath, key, next, now, retention, fields) => {
-      const row = rows.get(id);
-      if (!row || row.revision !== revision) throw new ConcurrentModification(kind, id, revision, row?.revision ?? null);
-      const value = {...replaceAggregateArrayItem(row.value as Record<string, unknown>, field, keyPath, key, jsonCopy(next), now, retention), ...jsonCopy(fields ?? {}), updatedAt: now} as T;
-      rows.set(id, {...row, revision: revision + 1, updatedAt: now, value});
-      changedAt.set(id, changeClock.tick());
-      return {id, revision: revision + 1, updatedAt: now, value: jsonCopy(next)};
-    },
-
-    /* `AggregateRepository.readMany`: the named rows that exist, in id order, as Postgres answers it. */
     readMany: async (ids: readonly string[]): Promise<readonly Persisted<T>[]> =>
       [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: jsonCopy(row.value) }]; }),
 
@@ -147,7 +117,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       const existing = rows.get(id);
       const origin = origins.get(id);
       if (existing !== undefined && origin !== undefined) {
-        // Throws IdentityCollision when the creation values differ; a no-op when created from exactly these inputs.
+
         reconcileIdempotentPut(kind, id, origin, value);
         return { created: false, persisted: { ...existing, value: jsonCopy(existing.value) } };
       }
@@ -186,16 +156,10 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
-    /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
-    listWherePrefix:async(jsonPath,prefix,projection)=>{
-      const selected:Persisted<unknown>[]=[];
-      for(const row of rows.values())if(jsonTextAtPath(row.value,jsonPath)?.startsWith(prefix))selected.push({...row,value:projectAggregate(jsonCopy(row.value),projection)});
-      return selected.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
-    },
 
     readManyNarrowed: async (ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: projectAggregate(jsonCopy(row.value), projection) }]; }),
@@ -225,13 +189,10 @@ interface LoggedRecord<T> {
   readonly changedAt: number;
 }
 
-/** One in-memory append-only log, partitioned by key. */
 export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository<T> {
   const partitions = new Map<string, LoggedRecord<T>[]>();
   /** Every record in `readAll()` order with the coordinates and clocks a changed-since read answers with. */
-  const coordinates = (keys?: readonly string[]) => [...(keys === undefined ? partitions.entries() : [...new Set(keys)].flatMap(key => {
-    const entries = partitions.get(key); return entries === undefined ? [] : [[key, entries] as const];
-  }))]
+  const coordinates = () => [...partitions.entries()]
     .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
     .flatMap(([key, entries]) => entries.map((entry, position) => ({ key, position, entry,
       changed: { key, recordId: entry.recordId, position, record: jsonCopy(entry.record), changedAt: changeIso(entry.changedAt), stampedAt: entry.at } })));
@@ -246,7 +207,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       const partition = partitions.get(key) ?? [];
       const existing = partition.find((entry) => entry.recordId === recordId);
       if (existing !== undefined) {
-        // Throws AppendOnlyViolation on a rewrite; a byte-identical retry is a no-op success.
+
         reconcileIdempotentAppend(log, recordId, existing.record, record);
         return {
           appended: false,
@@ -267,11 +228,6 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     read: async (key: string): Promise<readonly T[]> =>
       (partitions.get(key) ?? []).map((entry) => jsonCopy(entry.record)),
-
-    readRecord: async (key: string, recordId: string): Promise<T | null> => {
-      const entry = (partitions.get(key) ?? []).find(row => row.recordId === recordId);
-      return entry === undefined ? null : jsonCopy(entry.record);
-    },
 
     readWhere: async (
       key: string,
@@ -336,13 +292,11 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
 
     keys: async (): Promise<readonly string[]> => [...partitions.keys()].sort(),
 
-    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedLogReadOptions<T> = {}) => {
+    readChangedSince: async (since: string | null, held?: HeldSlots, read: ChangedReadOptions<ChangedRecord<T>> = {}) => {
       const through = changeIso(changeClock.now());
       const from = since === null ? null : Date.parse(since);
       const skip = heldSlotKeys(held);
-      const records = coordinates(read.keys).filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
-        .filter(({ changed }) => read.recordTimeAtOrAfter === undefined ||
-          Date.parse(jsonTextAtPath(changed.record, read.recordTimeAtOrAfter.path) ?? "") >= Date.parse(read.recordTimeAtOrAfter.at))
+      const records = coordinates().filter(({ entry, key, position }) => !((from !== null && entry.changedAt < from) || skip.has(`${key}\n${position}`)))
         .map(({ changed }) => read.projection ? { ...changed, record: projectRecord(changed.record, read.projection) as T } : changed);
       if (!read.page) return { through, records };
       await read.page(records);
@@ -369,7 +323,6 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
   };
 }
 
-/** Refuses rather than waits, like the file store. */
 export function memoryLockManager(): LockManager {
   const held = new Set<string>();
   return {
@@ -387,21 +340,22 @@ export function memoryLockManager(): LockManager {
   };
 }
 
-/** The full bundle, in memory. Never durable, and says so. */
 export function createMemoryRepositories(): ControlPlaneRepositories {
   const locks = memoryLockManager();
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
   const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
   const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
+  const scoutResults = memoryAppendOnlyRepository<ScoutResult>("scout_results");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
     async adminActionHistoryPage(query) {
-      // Positions belong to the append log, so new rows do not shift an older cursor.
+
       return (await adminReceipts.read("admin-action")).map((receipt, position) => ({ receipt, position }))
         .filter(row => (query.scope === "us" || row.receipt.subject === query.scope || row.receipt.requestedSubject === query.scope) &&
           (query.beforePosition == null || row.position < query.beforePosition))
         .sort((a, b) => b.position - a.position).slice(0, query.limit);
     },
+    dispatchState: createDispatchState(() => repositories),
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
     routeTasks: memoryAggregateRepository<RouteTask>("RouteTask"),
     attempts: memoryAggregateRepository<Attempt>("Attempt"),
@@ -429,31 +383,21 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
     ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
-    fieldManual: (()=>{
-      const base=memoryAggregateRepository<FieldManualEntry>("FieldManualEntry");
-      return fieldManualRows(base,{async compareAndSetMergedEntry(id,revision,entry,now){
-        if(id!==entry.id)throw new Error("FIELD_MANUAL_MERGE_ID_MISMATCH");
-        const prior=await base.read(id);
-        if((prior?.revision??null)!==revision)throw new ConcurrentModification("FieldManualEntry",id,revision??0,prior?.revision??null);
-        const next=mergeEntry(prior?.value??null,entry);
-        if(prior&&canonicalJson(next)===canonicalJson(prior.value))return{revision:prior.revision,changed:false};
-        const saved=prior?await base.compareAndSet(id,prior.revision,next,now):(await base.put(id,next,now)).persisted;
-        return{revision:saved.revision,changed:true};
-      }});
-    })(),
+    fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
+    huntOrders: (() => { const base=memoryAggregateRepository<HuntOrder>("HuntOrder"); return {...base,request:async(orders:readonly HuntOrder[],at:string)=>{for(const order of orders)await base.put(order.id,order,at);},latestStop:async(state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.scopeKey===null).sort((a,b)=>b.value.requestedAt.localeCompare(a.value.requestedAt))[0]??null,pending:async (state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.confirmedAt===null)}; })(),
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
-    spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
+    spend: storedSpendRepository(memoryAggregateRepository<PricedCharge>("ModelCharge"), scoutResults),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: listedBoxRepository(memoryAggregateRepository<BoxFinding>("BoxFinding")),
     passCursors: memoryAggregateRepository<PassCursor>("PassCursor"),
-    scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+    scoutResults,
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
@@ -464,7 +408,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     liveAudits: memoryAppendOnlyRepository<LiveAuditLogRow>("live_audits"),
-    adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
+    adminConfig: storedAdminConfigRepository(memoryAggregateRepository<AdminConfig>("AdminConfig"), Object.fromEntries(Object.keys(ADMIN_SECTIONS).map(key => [key, memoryAggregateRepository<StoredAdminSection>(key)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     leadOrders: memoryAggregateRepository<LeadOrder>("LeadOrder"),
@@ -474,4 +418,5 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     describe: () => "in-memory control-plane repositories (lost when this process ends)",
     durable: false,
   };
+  return repositories;
 }

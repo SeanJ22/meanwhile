@@ -1,14 +1,13 @@
-import type { ProgressionMethodSnapshot } from "../method/runtime-manual.ts";
 import type { MethodCandidate } from "../method/candidate.ts";
 import type { ConclusionRecord } from "../method/conclusions.ts";
-import type { MethodRoute } from "../method/knowledge.ts";
+import type { MethodKnowledge, MethodRoute } from "../method/knowledge.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { TransitionRecord } from "./promotion/types.ts";
 import { deriveItemState, isPipelineRecord, validateTransition } from "./promotion/pipeline.ts";
 import { isWindowRunRecord } from "./promotion/window.ts";
 import { readAutonomousActivity, type AutonomousObligationActivity } from "./workers/activity.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
-import { forEachAggregate } from "./workers/streamed-history.ts";
+import type { ScoutResult } from "./scheduler/scout-result.ts";
 
 export const RESEARCH_MILESTONES = ["discovered", "acquired", "extracted", "canonicallyLinked", "verified", "audited", "promotionReady"] as const;
 export type ResearchMilestone = (typeof RESEARCH_MILESTONES)[number];
@@ -79,7 +78,7 @@ export function projectResearchProgression(input: {
   readonly activities: readonly AutonomousObligationActivity[];
   readonly excludedUnclassifiedWorkItems: number;
   readonly candidates: readonly MethodCandidate[];
-  readonly knowledge: ProgressionMethodSnapshot;
+  readonly knowledge: MethodKnowledge;
   readonly conclusions: readonly ConclusionRecord[];
 }): ResearchWindowProgression {
   const start = instant(input.since), end = instant(input.through);
@@ -203,78 +202,22 @@ export function projectResearchProgression(input: {
     candidateMethods,bottlenecks,evidenceGaps:[...gaps].sort() };
 }
 
-/** Replay one obligation at a time; only reporting IDs/counts survive each canonical snapshot. */
+/** Uses completed window boundaries and canonical research logs. No new store. */
 export async function readResearchProgression(repos: ControlPlaneRepositories, input: {
   readonly windowId: string; readonly through: string; readonly candidates: readonly MethodCandidate[];
-  readonly knowledge: ProgressionMethodSnapshot; readonly conclusions: readonly ConclusionRecord[];
+  readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];
   /** A completed research cycle supplies its own canonical boundary; it is not a promotion window. */
   readonly researchBoundary?: { readonly since: string; readonly previousCompletedWindowId: string | null };
+  /** The same completed finalization read used by research metrics. */
+  readonly scouts?: readonly ScoutResult[];
 }): Promise<ResearchWindowProgression> {
-  const end = instant(input.through);
-  let previous: { windowId: string; finishedAt: string } | undefined, oldest: string | undefined, excluded = 0;
-  if (!input.researchBoundary) await repos.windowRuns.readChangedSince(null, undefined, {
-    projection: { formatVersion: true, windowId: true, localDate: true, finishedAt: true, stages: true }, page: records => {
-    for (const { record } of records) if (isWindowRunRecord(record) && record.windowId !== input.windowId &&
-      Number.isFinite(Date.parse(record.finishedAt)) && instant(record.finishedAt) < end &&
-      (!previous || record.finishedAt >= previous.finishedAt)) previous = record;
-  } });
-  const metadata = { createdAt: true, autonomousPlan: ["version"] } as const;
-  await forEachAggregate(repos.workItems, row => {
-    if (!oldest || row.value.createdAt < oldest) oldest = row.value.createdAt;
-    if (!row.value.autonomousPlan) excluded++;
-  }, metadata);
+  const [items,windows] = await Promise.all([repos.workItems.list(),input.researchBoundary?Promise.resolve([]):repos.windowRuns.readAll()]);
+  const completed = windows.filter(isWindowRunRecord).filter(w => w.windowId !== input.windowId && Number.isFinite(Date.parse(w.finishedAt)) && instant(w.finishedAt) < instant(input.through)).sort((a,b) => a.finishedAt.localeCompare(b.finishedAt));
+  const previous = completed.at(-1);
+  const ids = items.filter(w => w.value.autonomousPlan).map(w => w.id);
+  const activities = await readAutonomousActivity(repos,ids,{observedAt:input.through,
+    workItems:items.map(row => row.value), ...(input.scouts === undefined ? {} : { scouts: input.scouts })});
+  const oldest = items.map(w => w.value.createdAt).sort()[0];
   const since = input.researchBoundary?.since ?? previous?.finishedAt ?? (oldest ? new Date(instant(oldest)-1).toISOString() : input.through);
-  const common = { ...input, since, windowKind: input.researchBoundary ? "RESEARCH_CYCLE" as const : "NIGHTLY_PROMOTION" as const,
-    previousCompletedWindowId: input.researchBoundary?.previousCompletedWindowId ?? previous?.windowId ?? null };
-  const base = projectResearchProgression({ ...common, activities: [], excludedUnclassifiedWorkItems: excluded });
-  const milestones = Object.fromEntries(RESEARCH_MILESTONES.map(stage => [stage,
-    { unit: "DISTINCT_OBLIGATIONS" as const, newlyReached: 0, reachedByWindowEnd: 0, evidence: [] as MilestoneEvidence[] },
-  ])) as Record<ResearchMilestone, { unit: "DISTINCT_OBLIGATIONS"; newlyReached: number; reachedByWindowEnd: number; evidence: MilestoneEvidence[] }>;
-  let obligations = 0, worked = 0;
-  const artifacts = new Set<string>(), gaps = new Set(base.evidenceGaps);
-  const completed = new Map<string, { role: string; verdict: string; ids: Set<string> }>();
-  const reopened: ResearchWindowProgression["reopened"][number][] = [], regressions: ResearchWindowProgression["regressions"][number][] = [];
-  const bottlenecks = new Map<string, { first: ResearchBottleneck; states: Set<string>; classes: Set<string>; subjects: Set<string>;
-    rows: ResearchBottleneck["drillDown"][number][]; oldest: string }>();
-  await forEachAggregate(repos.workItems, async row => {
-    if (!row.value.autonomousPlan) return;
-    const activities = await readAutonomousActivity(repos, [row.id], { observedAt: input.through });
-    const report = projectResearchProgression({ ...common, activities, candidates: [], conclusions: [], excludedUnclassifiedWorkItems: 0 });
-    obligations += report.scope.obligations;
-    worked += report.activity.obligationsWorked;
-    for (const stage of RESEARCH_MILESTONES) {
-      milestones[stage].newlyReached += report.milestones[stage].newlyReached;
-      milestones[stage].reachedByWindowEnd += report.milestones[stage].reachedByWindowEnd;
-      milestones[stage].evidence.push(...report.milestones[stage].evidence);
-    }
-    // Count original artifact identities, including the same held capture reused by two obligations.
-    for (const activity of activities) if (activity.workItem.autonomousPlan && instant(activity.workItem.createdAt) <= end) {
-      for (const artifact of activity.facts.artifacts) if (instant(artifact.recordedAt) > instant(since) && instant(artifact.recordedAt) <= end &&
-        activity.facts.attempts.some(attempt => attempt.id === artifact.attemptId && attempt.outcome === "COMPLETED" && attempt.endedAt && instant(attempt.endedAt) <= end)) artifacts.add(artifact.artifactId);
-    }
-    for (const result of report.activity.completedResults) {
-      const key = `${result.role}:${result.verdict}`, group = completed.get(key) ?? { role: result.role, verdict: result.verdict, ids: new Set<string>() };
-      for (const id of result.evidenceIds) group.ids.add(id);
-      completed.set(key, group);
-    }
-    reopened.push(...report.reopened); regressions.push(...report.regressions);
-    for (const gap of report.evidenceGaps) gaps.add(gap);
-    for (const block of report.bottlenecks) {
-      const group = bottlenecks.get(block.code) ?? { first: block, states: new Set<string>(), classes: new Set<string>(), subjects: new Set<string>(), rows: [], oldest: block.oldestObligationAt };
-      block.states.forEach(state => group.states.add(state)); block.recordClasses.forEach(recordClass => group.classes.add(recordClass));
-      block.drillDown.forEach(detail => { group.subjects.add(detail.subject); group.rows.push(detail); });
-      if (block.oldestObligationAt < group.oldest) group.oldest = block.oldestObligationAt;
-      bottlenecks.set(block.code, group);
-    }
-  }, metadata);
-  for (const stage of RESEARCH_MILESTONES) milestones[stage].evidence.sort((a,b) => a.at.localeCompare(b.at) || a.evidenceId.localeCompare(b.evidenceId));
-  return { ...base, scope: { ...base.scope, obligations }, milestones,
-    activity: { obligationsWorked: worked, newEvidenceArtifacts: artifacts.size, completedResults: [...completed.values()].map(group =>
-      ({ role: group.role, verdict: group.verdict, count: group.ids.size, evidenceIds: [...group.ids].sort() })).sort((a,b) => a.role.localeCompare(b.role) || a.verdict.localeCompare(b.verdict)) },
-    reopened: reopened.sort((a,b) => a.workItemId.localeCompare(b.workItemId)), regressions: regressions.sort((a,b) => a.workItemId.localeCompare(b.workItemId)),
-    bottlenecks: [...bottlenecks.values()].map(group => ({ ...group.first, affectedObligationCount: group.rows.length,
-      states: [...group.states].sort(), bodiesOrAuthorities: group.subjects.size, recordClasses: [...group.classes].sort(),
-      oldestObligationAt: group.oldest, oldestAgeHours: (end-instant(group.oldest))/3600000,
-      drillDown: group.rows.sort((a,b) => a.workItemId.localeCompare(b.workItemId)),
-    })).sort((a,b) => b.affectedObligationCount-a.affectedObligationCount || a.code.localeCompare(b.code)), evidenceGaps: [...gaps].sort() };
+  return projectResearchProgression({...input,activities,since,windowKind:input.researchBoundary?"RESEARCH_CYCLE":"NIGHTLY_PROMOTION",previousCompletedWindowId:input.researchBoundary?.previousCompletedWindowId ?? previous?.windowId ?? null,excludedUnclassifiedWorkItems:items.length-ids.length});
 }

@@ -5,8 +5,6 @@ import {
   OWNER_SURFACE_FORMAT_VERSION,
   assertAggregateOnly,
   type FreshnessCycleOutcome,
-  type FreshnessIncidentSummary,
-  type FreshnessDetailReference,
   intakeRuntimeObservationOutcomeIssue,
   type IntakeRuntimeObservationOutcome,
   type MapTilerUsageCollectionOutcome,
@@ -17,7 +15,6 @@ import {
   type RoutineCivicDataTaskReceiptReference,
 } from "./owner-surface.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "./repository/types.ts";
-import { readFreshnessIncidentReference } from "./admin-view/freshness-report-read.ts";
 import type { MapTilerUsageSnapshot } from "./maptiler/types.ts";
 import {
   intakeRuntimeObservationCycleId,
@@ -91,9 +88,9 @@ interface RoutineCivicDataSupervisorOutcomeInput {
   readonly verifiedSourceFailures: number;
   readonly failures: RoutineCivicDataSupervisorOutcome["failures"];
   readonly crashedTasks?: RoutineCivicDataSupervisorOutcome["crashedTasks"];
-  /** Omitted only by the outer crash/timeout fallback that cannot recover exact child JSON. */
+
   readonly taskReceipts?: readonly RoutineCivicDataTaskReceiptReference[];
-  /** Omitted only by an outer fallback that never received the child's exact registry pass. */
+
   readonly readerReadback?: RoutineCivicDataReaderReadbackOutcomeInput;
 }
 
@@ -103,10 +100,10 @@ type RuntimeDigestInput =
   | IntakeRuntimeObservationDigestInput
   | MapTilerUsageCollectionDigestInput;
 
-/** Append-only: the record identity makes an uncertain retry idempotent. */
 async function appendRuntimeDigest(
   repos: ControlPlaneRepositories,
   input: RuntimeDigestInput,
+  logKey=DIGEST_LOG_KEY,
 ): Promise<OwnerDigestRecord> {
   const record: OwnerDigestRecord = {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
@@ -122,7 +119,7 @@ async function appendRuntimeDigest(
     runtimeOutcome: input.outcome,
   };
   assertAggregateOnly(record, "runtime outcome digest");
-  await repos.ownerDigests.append(DIGEST_LOG_KEY, record.digestId, record, record.writtenAt);
+  await repos.ownerDigests.append(logKey, record.digestId, record, record.writtenAt);
   return record;
 }
 
@@ -130,7 +127,7 @@ export async function appendFreshnessCycleDigest(
   repos: ControlPlaneRepositories,
   input: FreshnessCycleDigestInput,
 ): Promise<OwnerDigestRecord> {
-  return appendRuntimeDigest(repos, input);
+  return appendRuntimeDigest(repos, input,repos.planningState?`${DIGEST_LOG_KEY}:${repos.planningState}`:DIGEST_LOG_KEY);
 }
 
 export async function appendRoutineCivicDataSupervisorDigest(
@@ -140,7 +137,6 @@ export async function appendRoutineCivicDataSupervisorDigest(
   return appendRuntimeDigest(repos, input);
 }
 
-/** Append intake runtime truth before updating the replaceable heartbeat projection. */
 export async function appendIntakeRuntimeObservationDigest(
   repos: ControlPlaneRepositories,
   input: IntakeRuntimeObservationDigestInput,
@@ -148,7 +144,6 @@ export async function appendIntakeRuntimeObservationDigest(
   return appendRuntimeDigest(repos, input);
 }
 
-/** Append every provider attempt before replacing the current/LKG projection. */
 export async function appendMapTilerUsageCollectionDigest(
   repos: ControlPlaneRepositories,
   input: MapTilerUsageCollectionDigestInput,
@@ -342,32 +337,16 @@ export function routineSupervisorCycleIsolationIssue(
   return null;
 }
 
-/** The fields of the newest cycle outcome that the owner snapshot shows. */
-export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk"> & {
-  readonly incidents: readonly FreshnessIncidentSummary[];
-  readonly incidentDetails?: FreshnessDetailReference;
-};
+export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
 
-/** The newest freshness cycle only, narrowed by the store; on the runner a held copy answers it. */
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
 ): Promise<{ readonly digestId: string; readonly outcome: LatestFreshnessCycle } | null> {
   const [digest] = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE", 1,
-    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidentSummary"] }) as
-    readonly { readonly digestId?: string; readonly runtimeOutcome?: Omit<LatestFreshnessCycle, "incidents"> & {
-      readonly incidentSummary?: readonly FreshnessIncidentSummary[];
-    } }[];
+    { digestId: true, runtimeOutcome: ["kind", "cycleId", "registry", "risk", "incidents"] }) as
+    readonly { readonly digestId?: string; readonly runtimeOutcome?: LatestFreshnessCycle }[];
   const outcome = digest?.runtimeOutcome;
-  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") {
-    const { incidentSummary, ...summary } = outcome;
-    const count = Number(outcome.risk?.incidents ?? 0);
-    const incidents = incidentSummary ?? (count > 0 ? [{
-      cause: "DETAILS_NOT_SUMMARIZED", target: "Recorded in the earlier cycle report", incidents: count,
-      obligationsAffected: Number(outcome.risk?.debtRows ?? 0),
-    }] : []);
-    const incidentDetails = await readFreshnessIncidentReference(repos, outcome.cycleId);
-    return { digestId: digest.digestId, outcome: { ...summary, incidents, ...(incidentDetails ? { incidentDetails } : {}) } };
-  }
+  if (typeof digest?.digestId === "string" && outcome?.kind === "FRESHNESS_CYCLE") return { digestId: digest.digestId, outcome };
   return null;
 }
 

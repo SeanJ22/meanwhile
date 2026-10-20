@@ -1,8 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import type { LossReading } from "../lib/method/study-all-losses.ts";
-import { lessonKinds, lossRows, studyAllLosses } from "./helpers/loss-study.ts";
+import { lessonKinds, lossRows, studyAllLosses, type LossReading } from "../lib/method/study-all-losses.ts";
 import type { PlaceTraits } from "../lib/method/study-losses.ts";
 
 const AT = "2026-10-06T03:00:00.000Z";
@@ -58,8 +57,7 @@ describe("DP-29: every kind of loss is studied", () => {
 
 describe("DP-29: where each kind of loss is read from", () => {
   it("doors, hunts, holds, audits and look checks become readings, with traits from what we hold", async () => {
-    const { absenceReadings, auditReadings, doorReadings, holdReadings, lookReadings } = await import("../lib/method/loss-readings.ts");
-    const { placeTraitsFrom } = await import("./helpers/loss-study.ts");
+    const { absenceReadings, auditReadings, doorReadings, holdReadings, lookReadings, placeTraitsFrom } = await import("../lib/method/loss-readings.ts");
     const { lossLessonUpdates } = await import("../lib/method/study-all-losses.ts");
     const div = (s: string, c: string) => `ocd-division/country:us/state:${s}/county:${c}`;
     const doors = [

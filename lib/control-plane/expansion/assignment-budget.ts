@@ -1,43 +1,13 @@
-/**
- * A budget on one assignment (owner Send), honoured by the runner. An
- * assignment is a selected geography (keyed by its scope key) or a DISPATCH
- * (`dispatch:<intent id>`); membership is read from the obligations' own
- * `assignments`, never re-joined by place.
- *
- * ```
- *   budget     a geography's rolling 24-hour budget, or the budget a DISPATCH
- *              was sent with; none otherwise (only the Fleet ceiling bounds it)
- *   spent      every model-backed charge in the rolling window on a member
- *              obligation, at or after it joined. A charge naming no obligation
- *              counts against every assignment with work on its subject
- *   held       worst cases reserved for Scouts admitted and not yet settled
- *   left       budget − spent − held
- * ```
- *
- * A charge counts toward every Send its obligation belongs to. A Scout is
- * admitted while any budgeted Send it belongs to has room for one more worst
- * case (running under the most recent such Send) and its worst case is held
- * against all of them. Sends without a budget add no limit.
- *
- * Fail closed: an unreadable ledger, an unmeasured charge, or unreadable owner
- * instructions for DISPATCH work hold the Scout, by name.
- *
- */
-
-import { setImmediate as cooperate } from "node:timers/promises";
 import type { AssignmentCompletion } from "../assignment-completion.ts";
-import type { FreshnessDetailReference } from "../owner-surface.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
-import { filterIterable, spendScratch } from "../spend-scratch.ts";
+import type { SpendQuery, SpendRepository } from "../spend-window.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
 import type { ExpansionScopeDecision } from "./scopes.ts";
 import type { BudgetLine } from "./spend-holds.ts";
 import { instructionReceiptKey } from "../scheduler/obligation.ts";
-import { plannerMap, plannerSet, type PlannerSpool } from "../scheduler/planner-spool.ts";
-import { DiskRows } from "../scheduler/disk-rows.ts";
 
 export const ASSIGNMENT_BUDGET_CODE = "ASSIGNMENT_BUDGET";
 export const ASSIGNMENT_BUDGET_FORMAT_VERSION = 1;
@@ -74,73 +44,45 @@ export interface MalformedAssignmentBudget {
 }
 
 /** Every DISPATCH whose budget field is present and unreadable. */
-let assignmentSpecSequence = 0;
-export function malformedAssignmentBudgetsOf(intents: Iterable<ResearchIntent>, planner: PlannerSpool): DiskRows<MalformedAssignmentBudget>;
-export function malformedAssignmentBudgetsOf(intents: Iterable<ResearchIntent>): MalformedAssignmentBudget[];
-export function malformedAssignmentBudgetsOf(intents: Iterable<ResearchIntent>, planner?: PlannerSpool): DiskRows<MalformedAssignmentBudget> | MalformedAssignmentBudget[] {
-  let sequence = 0;
-  const disk = planner?.table<{ sequence: number; value: MalformedAssignmentBudget }>(`assignment-malformed:${assignmentSpecSequence++}`, row => String(row.sequence));
+export function malformedAssignmentBudgetsOf(intents: readonly ResearchIntent[]): MalformedAssignmentBudget[] {
   const out: MalformedAssignmentBudget[] = [];
   for (const i of intents) {
     if (i.kind !== "INTENT" || i.action !== "DISPATCH" || !("budgetUsd" in i) || i.budgetUsd === undefined) continue;
     const b: unknown = i.budgetUsd;
     if (typeof b === "number" && Number.isFinite(b) && b >= 0) continue;
     const words = (i.note ?? "").replace(/\s+/g, " ").trim();
-    const value = { key: dispatchAssignmentKey(i.intentId), label: words === "" ? i.intentId : words.slice(0, LABEL_MAX), raw: JSON.stringify(b) ?? String(b) };
-    if (disk) disk.add({ sequence: sequence++, value }); else out.push(value);
+    out.push({ key: dispatchAssignmentKey(i.intentId), label: words === "" ? i.intentId : words.slice(0, LABEL_MAX), raw: JSON.stringify(b) ?? String(b) });
   }
-  return disk ? disk.rows.map(row => row.value) : out;
+  return out;
 }
 
 /** One budget line a hold is checked against: `send:<assignment key>` (see `spend-holds.ts`). */
 export const sendBudgetKey = (assignmentKey: string): string => `send:${assignmentKey}`;
 
-/**
- * The budgets in force: every selected scope's, and every DISPATCH the owner
- * sent with one (honored or not — an honored Send's work still belongs to it).
- */
-interface AssignmentBudgetsInput {
-  readonly scopes: Iterable<ExpansionScopeDecision>;
-  readonly intents: Iterable<ResearchIntent>;
-}
-export function assignmentBudgetsOf(input: AssignmentBudgetsInput, planner: PlannerSpool): DiskRows<AssignmentBudgetSpec>;
-export function assignmentBudgetsOf(input: AssignmentBudgetsInput): AssignmentBudgetSpec[];
-export function assignmentBudgetsOf(input: AssignmentBudgetsInput, planner?: PlannerSpool): AssignmentBudgetSpec[] | DiskRows<AssignmentBudgetSpec> {
-  let sequence = 0;
-  const disk = planner?.table<{ sequence: number; value: AssignmentBudgetSpec }>(`assignment-specs:${assignmentSpecSequence++}`, row => String(row.sequence));
-  const out: AssignmentBudgetSpec[] = [];
-  const add = (value: AssignmentBudgetSpec) => { if (disk) disk.add({ sequence: sequence++, value }); else out.push(value); };
-  for (const d of input.scopes) add({
-    key: d.key, kind: "SCOPE", label: d.geography.label, ref: d.receiptId,
-    budgetUsd: d.budgetUsd, sentAt: d.decidedAt,
+export function assignmentBudgetsOf(input: {
+  readonly scopes: readonly ExpansionScopeDecision[];
+  readonly intents: readonly ResearchIntent[];
+}): AssignmentBudgetSpec[] {
+  const out: AssignmentBudgetSpec[] = input.scopes.map((d) => ({
+    key: d.key,
+    kind: "SCOPE",
+    label: d.geography.label,
+    ref: d.receiptId,
+    budgetUsd: d.budgetUsd,
+    sentAt: d.decidedAt,
     ...(d.budgetStartedAt ? { budgetStartedAt: d.budgetStartedAt } : {}),
-  });
+  }));
   for (const i of input.intents) {
     if (i.kind !== "INTENT" || i.action !== "DISPATCH") continue;
     if (typeof i.budgetUsd !== "number" || !Number.isFinite(i.budgetUsd) || i.budgetUsd < 0) continue;
     const words = (i.note ?? "").replace(/\s+/g, " ").trim();
     const label = words === "" ? i.intentId : words.length > LABEL_MAX ? `${words.slice(0, LABEL_MAX - 1).trimEnd()}…` : words;
-    add({ key: dispatchAssignmentKey(i.intentId), kind: "DISPATCH", label, ref: i.intentId, budgetUsd: i.budgetUsd, sentAt: i.requestedAt });
+    out.push({ key: dispatchAssignmentKey(i.intentId), kind: "DISPATCH", label, ref: i.intentId, budgetUsd: i.budgetUsd, sentAt: i.requestedAt });
   }
-  return disk ? disk.rows.map(row => row.value) : out;
+  return out;
 }
 
 /* ------------------------------------------------------------ membership */
-let nextMembership = 0;
-function memberSample(keys: Iterable<string>): string[] {
-  const sample: string[] = [];
-  for (const key of keys) { sample.push(key); sample.sort(); if (sample.length > READING_LIST_CAP) sample.pop(); }
-  return sample;
-}
-
-async function memberSampleCooperatively(keys: Iterable<string>): Promise<string[]> {
-  const sample: string[] = []; let batch = 0;
-  for (const key of keys) {
-    sample.push(key); sample.sort(); if (sample.length > READING_LIST_CAP) sample.pop();
-    if (++batch % 64 === 0) await cooperate();
-  }
-  return sample;
-}
 
 export interface AssignmentMember {
   readonly obligationId: string;
@@ -153,7 +95,6 @@ export interface AssignmentMembers {
   readonly created: ReadonlyMap<string, AssignmentMember>;
   readonly reordered: ReadonlyMap<string, AssignmentMember>;
 }
-type MutableAssignmentMembers = { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> };
 
 export interface AssignmentMembership {
   readonly byKey: ReadonlyMap<string, AssignmentMembers>;
@@ -163,39 +104,11 @@ export interface AssignmentMembership {
   readonly refsOf: ReadonlyMap<string, readonly { readonly key:string; readonly ref:string }[]>;
 }
 
-/** Only a requested Send constructs member views; the country's Send identities remain on disk. */
-function memberSlots(planner: PlannerSpool, name: string,
-  slotOf: (key: string) => { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }) {
-  const index = plannerMap<string>(planner, name);
-  const view = {
-    [Symbol.toStringTag]: "Map",
-    get size() { return index.size; }, has: (key: string) => index.has(key),
-    get: (key: string) => { const identity = index.get(key); return identity === undefined ? undefined : slotOf(identity); },
-    set(key: string, _value: AssignmentMembers) { index.set(key, `${name}:${key}`); return view; },
-    delete: (key: string) => index.delete(key), clear: () => index.clear(),
-    keys() { return Iterator.from((function* () { for (const [key] of index) yield key; })()); },
-    values() { return Iterator.from((function* () { for (const [, identity] of index) yield slotOf(identity); })()); },
-    entries() { return Iterator.from((function* (): IterableIterator<[string, AssignmentMembers]> { for (const [key, identity] of index) yield [key, slotOf(identity)]; })()); },
-    [Symbol.iterator]() { return view.entries(); },
-    forEach(visit: (value: AssignmentMembers, key: string, map: ReadonlyMap<string, AssignmentMembers>) => void, receiver?: unknown) {
-      for (const [key, identity] of index) visit.call(receiver, slotOf(identity), key, view as ReadonlyMap<string, AssignmentMembers>);
-    },
-  };
-  return view;
-}
-
-/**
- * Who belongs to which Send, from the obligations' own records (and anything
- * this cycle recorded after they were read). A row a Send both reordered and
- * later created counts once, as created.
- */
 export function assignmentMembership(
   rows: Iterable<{ readonly id: string; readonly subjectId: string; readonly assignments?: readonly ObligationAssignment[] }>,
-  recorded: Iterable<{ readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }> = [],
-  planner?: PlannerSpool,
+  recorded: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[] = [],
 ): AssignmentMembership {
-  const prefix = `assignment-members-${nextMembership++}`;
-  const entries = planner ? plannerMap<{ subjectId: string; list: ObligationAssignment[] }>(planner, `${prefix}-entries`) : new Map<string, { subjectId: string; list: ObligationAssignment[] }>();
+  const entries = new Map<string, { subjectId: string; list: ObligationAssignment[] }>();
   const add = (obligationId: string, subjectId: string, entry: ObligationAssignment): void => {
     const held = entries.get(obligationId) ?? { subjectId, list: [] };
     held.list.push(entry);
@@ -204,12 +117,10 @@ export function assignmentMembership(
   for (const row of rows) for (const entry of row.assignments ?? []) add(row.id, row.subjectId, entry);
   for (const r of recorded) add(r.obligationId, r.subjectId, r.entry);
 
-  const keysOf = planner ? plannerMap<string[]>(planner, `${prefix}-keys`) : new Map<string, string[]>();
-  const refsOf = planner ? plannerMap<{key:string;ref:string}[]>(planner, `${prefix}-refs`) : new Map<string, {key:string;ref:string}[]>();
-  const slotOf = (identity: string) => ({ created: planner ? plannerMap<AssignmentMember>(planner, `${prefix}-${identity}-created`) : new Map<string, AssignmentMember>(),
-    reordered: planner ? plannerMap<AssignmentMember>(planner, `${prefix}-${identity}-reordered`) : new Map<string, AssignmentMember>() });
-  const byKey = planner ? memberSlots(planner, `${prefix}-key`, slotOf) : new Map<string, MutableAssignmentMembers>();
-  const byInstruction = planner ? memberSlots(planner, `${prefix}-instruction`, slotOf) : new Map<string, MutableAssignmentMembers>();
+  const byKey = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
+  const byInstruction = new Map<string, { created: Map<string, AssignmentMember>; reordered: Map<string, AssignmentMember> }>();
+  const keysOf = new Map<string, string[]>();
+  const refsOf = new Map<string, {key:string;ref:string}[]>();
   for (const [obligationId, { subjectId, list }] of entries) {
     const keys = [...new Set(list.map((e) => e.assignmentKey))];
     keysOf.set(obligationId, keys);
@@ -219,7 +130,7 @@ export function assignmentMembership(
       const mine=list.filter(mark=>mark.assignmentKey===key && mark.ref===ref);
       const member:AssignmentMember={obligationId,subjectId,joinedAt:mine.map(mark=>mark.at).sort()[0]??""};
       const identity=instructionReceiptKey(key,ref);
-      const slot=byInstruction.get(identity)??slotOf(planner ? `${prefix}-instruction:${identity}` : `instruction-${identity}`);
+      const slot=byInstruction.get(identity)??{created:new Map(),reordered:new Map()};
       if (mine.some(mark=>mark.relation==="CREATED")) slot.created.set(obligationId,member);
       else slot.reordered.set(obligationId,member);
       byInstruction.set(identity,slot);
@@ -228,7 +139,7 @@ export function assignmentMembership(
       const mine = list.filter((e) => e.assignmentKey === key);
       const joinedAt = mine.map((e) => e.at).sort()[0] ?? "";
       const member: AssignmentMember = { obligationId, subjectId, joinedAt };
-      const slot = byKey.get(key) ?? slotOf(planner ? `${prefix}-key:${key}` : `key-${key}`);
+      const slot = byKey.get(key) ?? { created: new Map(), reordered: new Map() };
       if (mine.some((e) => e.relation === "CREATED")) slot.created.set(obligationId, member);
       else slot.reordered.set(obligationId, member);
       byKey.set(key, slot);
@@ -249,27 +160,26 @@ export interface AssignmentSpend {
 }
 
 /** One assignment's model-backed spend in a window, by the rule in the header. */
-export function assignmentSpend(charges: Iterable<PricedCharge>, members: AssignmentMembers, since: string, until: string): AssignmentSpend {
-  const scratch = spendScratch(), {db, owner} = scratch;
-  const addObligation = db.prepare("INSERT INTO members VALUES(?,?,?) ON CONFLICT(owner,id) DO UPDATE SET at=excluded.at");
-  const addSubject = db.prepare("INSERT INTO members VALUES(?,?,?) ON CONFLICT(owner,id) DO UPDATE SET at=MIN(members.at,excluded.at)");
-  const joinedAt = db.prepare("SELECT at FROM members WHERE owner=? AND id=?");
-  try {
-  for (const m of (function* () {yield* members.created.values(); yield* members.reordered.values();})()) {
+export function assignmentSpend(charges: readonly PricedCharge[], members: AssignmentMembers, since: string, until: string): AssignmentSpend {
+  const joinedAt = new Map<string, number>();
+  const subjectJoinedAt = new Map<string, number>();
+  for (const m of [...members.created.values(), ...members.reordered.values()]) {
     const t = Date.parse(m.joinedAt);
-    addObligation.run(owner, `o:${m.obligationId}`, t);
-    addSubject.run(owner, `s:${m.subjectId}`, t);
+    joinedAt.set(m.obligationId, t);
+    subjectJoinedAt.set(m.subjectId, Math.min(subjectJoinedAt.get(m.subjectId) ?? Number.POSITIVE_INFINITY, t));
   }
-  const byObligation = filterIterable(charges, entry => {
+  const byObligation: PricedCharge[] = [];
+  const bySubject: PricedCharge[] = [];
+  for (const entry of charges) {
     const at = Date.parse(entry.at);
-    const joined = entry.obligationId === null ? undefined : joinedAt.get(owner, `o:${entry.obligationId}`);
-    return joined !== undefined && at >= Number(joined.at);
-  });
-  const bySubject = filterIterable(charges, entry => {
-    if (entry.obligationId !== null || entry.jurisdiction === null) return false;
-    const joined = joinedAt.get(owner, `s:${entry.jurisdiction}`);
-    return joined !== undefined && Date.parse(entry.at) >= Number(joined.at);
-  });
+    if (entry.obligationId !== null) {
+      const joined = joinedAt.get(entry.obligationId);
+      if (joined !== undefined && at >= joined) byObligation.push(entry);
+      continue;
+    }
+    const joined = entry.jurisdiction === null ? undefined : subjectJoinedAt.get(entry.jurisdiction);
+    if (joined !== undefined && at >= joined) bySubject.push(entry);
+  }
   /* The Fleet's own model-backed and window rule, for both halves. */
   const named = aggregatePricedSpend(byObligation, since, until);
   const unnamed = aggregatePricedSpend(bySubject, since, until);
@@ -279,7 +189,6 @@ export function assignmentSpend(charges: Iterable<PricedCharge>, members: Assign
     unmeasured: named.unmeasured + unnamed.unmeasured,
     bySubject: unnamed.measured + unnamed.unmeasured,
   };
-  } finally { scratch.release(); }
 }
 
 /* ------------------------------------------------------------ the gate */
@@ -300,13 +209,6 @@ export interface AssignmentBudgetState {
   readonly refused: number;
 }
 
-/**
- * The per-assignment admission gate for paid Scouts, in the Fleet
- * controller's holdback pattern: history + this cycle + held + one worst case
- * must fit the budget. `check` decides without reserving; `admit` decides and
- * reserves; `settle` releases the hold and books what the Scout measured.
- */
-let assignmentGateSequence = 0;
 export class AssignmentBudgetGate {
   private readonly specs: ReadonlyMap<string, AssignmentBudgetSpec>;
   private readonly keysOf: ReadonlyMap<string, readonly string[]>;
@@ -315,18 +217,18 @@ export class AssignmentBudgetGate {
   private readonly worstCaseUsd: number;
   private readonly costsReadable: boolean;
   private readonly intentsReadable: boolean;
-  private readonly cycleUsd: Map<string, number>;
-  private readonly cycleUnmeasured: Set<string>;
-  private readonly reserved: Map<string, number>;
-  private readonly reservations: Map<string, readonly string[]>;
-  private readonly admittedBy: Map<string, number>;
-  private readonly refusedBy: Map<string, number>;
+  private readonly cycleUsd = new Map<string, number>();
+  private readonly cycleUnmeasured = new Set<string>();
+  private readonly reserved = new Map<string, number>();
+  private readonly reservations = new Map<string, readonly string[]>();
+  private readonly admittedBy = new Map<string, number>();
+  private readonly refusedBy = new Map<string, number>();
   private readonly malformed: ReadonlyMap<string, MalformedAssignmentBudget>;
   private readonly reachedThisCycle: ReadonlyMap<string, readonly string[]>;
   private readonly historyReadAt: string;
 
   constructor(input: {
-    readonly specs: Iterable<AssignmentBudgetSpec>;
+    readonly specs: readonly AssignmentBudgetSpec[];
     readonly membership: AssignmentMembership;
     /** Rolling-window spend per budgeted assignment at cycle start. Absent for a key: nothing measured, so it cannot be checked. */
     readonly historical: ReadonlyMap<string, AssignmentSpend>;
@@ -335,40 +237,24 @@ export class AssignmentBudgetGate {
     /** False when the owner's instruction log could not be read: no DISPATCH budget can then be known. */
     readonly intentsReadable: boolean;
     /** DISPATCHes whose budget field is unreadable: the work they reach is held. */
-    readonly malformed?: Iterable<MalformedAssignmentBudget>;
+    readonly malformed?: readonly MalformedAssignmentBudget[];
     /** The Sends this cycle's reading reached each obligation under. A budgeted Send missing from the row's record is held. */
     readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
     /** When `historical` was read (the cycle's instant). */
     readonly historyReadAt?: string;
-    readonly planner?: PlannerSpool;
   }) {
-    const prefix = `assignment-gate:${assignmentGateSequence++}`;
-    const map = <V>(name: string, rows: Iterable<readonly [string, V]> = []): Map<string, V> =>
-      input.planner ? plannerMap(input.planner, `${prefix}:${name}`, rows) : new Map(rows);
-    this.specs = map("specs", (function* () { for (const spec of input.specs) yield [spec.key, spec] as const; })());
-    this.keysOf = input.planner ? map("keys", input.membership.keysOf) : input.membership.keysOf;
-    this.refsOf = input.planner ? map("refs", input.membership.refsOf) : input.membership.refsOf;
-    this.historical = input.planner ? map("historical", input.historical) : input.historical;
-    this.cycleUsd = map("cycle-usd");
-    this.cycleUnmeasured = input.planner ? plannerSet(input.planner, `${prefix}:unmeasured`) : new Set();
-    this.reserved = map("reserved");
-    this.reservations = map("reservations");
-    this.admittedBy = map("admitted");
-    this.refusedBy = map("refused");
+    this.specs = new Map(input.specs.map((s) => [s.key, s]));
+    this.keysOf = input.membership.keysOf;
+    this.refsOf = input.membership.refsOf;
+    this.historical = input.historical;
     this.worstCaseUsd = input.worstCaseUsd;
     this.costsReadable = input.costsReadable;
     this.intentsReadable = input.intentsReadable;
-    this.malformed = map("malformed", (function* () { for (const bad of input.malformed ?? []) yield [bad.key, bad] as const; })());
-    this.reachedThisCycle = input.planner ? map("reached", input.reachedThisCycle ?? []) : input.reachedThisCycle ?? new Map();
+    this.malformed = new Map((input.malformed ?? []).map((m) => [m.key, m]));
+    this.reachedThisCycle = input.reachedThisCycle ?? new Map();
     this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
-  /**
-   * The fail-closed conditions that hold an obligation's paid work whatever
-   * the dollars say, or null: a Send the cycle reached it under whose record on
-   * the row is missing, a Send whose budget is unreadable, a DISPATCH whose
-   * budget cannot be known because the owner's instructions were unreadable.
-   */
   private failClosed(obligationId: string, keys: readonly string[]): AssignmentRefusal | null {
     const reached = this.reachedThisCycle.get(obligationId) ?? [];
     for (const key of keys) {
@@ -397,11 +283,6 @@ export class AssignmentBudgetGate {
     return null;
   }
 
-  /**
-   * The budget lines a paid job on this obligation is held against
-   * (`spend-holds.ts`): every budgeted Send it belongs to, most recent first, or
-   * the refusal when the budget cannot be checked. No lines: no Send budget applies.
-   */
   linesFor(obligationId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: AssignmentRefusal } {
     const keys = this.keysOf.get(obligationId) ?? [];
     const closed = this.failClosed(obligationId, keys);
@@ -429,12 +310,9 @@ export class AssignmentBudgetGate {
   }
 
   /** What this gate was armed with: the Sends and their spend at the read. */
-  armedReading(): { readonly specs: DiskRows<AssignmentBudgetSpec>; readonly historical: ReadonlyMap<string, AssignmentSpend> | null; readonly reached: ReadonlyMap<string, readonly string[]> } {
-    return { specs: new DiskRows(() => this.specs.values(), () => this.specs.size), historical: this.costsReadable ? this.historical : null, reached: this.reachedThisCycle };
+  armedReading(): { readonly specs: readonly AssignmentBudgetSpec[]; readonly historical: ReadonlyMap<string, AssignmentSpend> | null; readonly reached: ReadonlyMap<string, readonly string[]> } {
+    return { specs: [...this.specs.values()], historical: this.costsReadable ? this.historical : null, reached: this.reachedThisCycle };
   }
-
-  /** The exact charge snapshot used to arm this Send; publication never scans it again. */
-  historicalSpend(key: string): AssignmentSpend | null { return this.costsReadable ? this.historical.get(key) ?? null : null; }
 
   /** The budgeted Sends an obligation belongs to, most recent first. */
   budgetedFor(obligationId: string): AssignmentBudgetSpec[] {
@@ -539,51 +417,49 @@ export class AssignmentBudgetGate {
   }
 }
 
-/**
- * Arm the gate at cycle start: each budget's rolling-window spend from the
- * canonical ledger. `costs` null means the ledger could not be read.
- */
-function chargesForInstruction(charges:Iterable<PricedCharge>, spec:AssignmentBudgetSpec):Iterable<PricedCharge> {
-  // A charge with a different exact receipt does not belong here. Older rows
-  // without receipts are counted by membership and time.
-  return filterIterable(charges,cost=>cost.assignmentRefs===undefined ||
-    cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
+export function assignmentSpendQueries(now: string, specs: readonly AssignmentBudgetSpec[], membership: AssignmentMembership): ReadonlyMap<string, SpendQuery> {
+  const since = new Date(Date.parse(now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
+  return new Map(specs.map(spec => {
+    const members = membership.byInstruction.get(instructionReceiptKey(spec.key, spec.ref));
+    const rows = members ? [...members.created.values(), ...members.reordered.values()] : [];
+    const subjects = new Map<string, string>();
+    for (const row of rows) {
+      const previous = subjects.get(row.subjectId);
+      if (previous === undefined || Date.parse(row.joinedAt) < Date.parse(previous)) subjects.set(row.subjectId, row.joinedAt);
+    }
+    return [spec.key, { since: spec.budgetStartedAt ?? since, until: now,
+      assignment: { key: spec.key, ref: spec.ref,
+        obligations: rows.map(row => ({ id: row.obligationId, since: row.joinedAt })),
+        subjects: [...subjects].map(([id, joinedAt]) => ({ id, since: joinedAt })) } }];
+  }));
+}
+
+export async function readAssignmentHistory(spend: SpendRepository, now: string, specs: readonly AssignmentBudgetSpec[], membership: AssignmentMembership): Promise<ReadonlyMap<string, AssignmentSpend>> {
+  const history = new Map<string, AssignmentSpend>();
+  for (const [key, query] of assignmentSpendQueries(now, specs, membership)) history.set(key, await spend.aggregate(query));
+  return history;
 }
 
 export function armAssignmentBudget(input: {
   readonly now: string;
-  readonly specs: Iterable<AssignmentBudgetSpec>;
+  readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: Iterable<PricedCharge> | null;
+  readonly history: ReadonlyMap<string, AssignmentSpend> | null;
   readonly worstCaseUsd: number;
   readonly intentsReadable: boolean;
-  readonly malformed?: Iterable<MalformedAssignmentBudget>;
+  readonly malformed?: readonly MalformedAssignmentBudget[];
   readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
-  readonly planner?: PlannerSpool;
 }): AssignmentBudgetGate {
-  const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
-  const prefix = `assignment-history:${assignmentGateSequence++}`;
-  let sequence = 0;
-  const snapshot = input.planner?.table<{ sequence: number; value: AssignmentBudgetSpec }>(`${prefix}:specs`, row => String(row.sequence));
-  const native: AssignmentBudgetSpec[] = [];
-  for (const value of input.specs) { if (snapshot) snapshot.add({ sequence: sequence++, value }); else native.push(value); }
-  const specs = snapshot ? snapshot.rows.map(row => row.value) : native;
-  const historical = input.planner ? plannerMap<AssignmentSpend>(input.planner, prefix) : new Map<string, AssignmentSpend>();
-  if (input.charges !== null) {
-    const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of specs) historical.set(spec.key, assignmentSpend(chargesForInstruction(input.charges,spec), input.membership.byInstruction.get(instructionReceiptKey(spec.key,spec.ref)) ?? empty, spec.budgetStartedAt ?? since, input.now));
-  }
   return new AssignmentBudgetGate({
-    specs,
+    specs: input.specs,
     membership: input.membership,
-    historical,
+    historical: input.history ?? new Map(),
     worstCaseUsd: input.worstCaseUsd,
-    costsReadable: input.charges !== null,
+    costsReadable: input.history !== null,
     intentsReadable: input.intentsReadable,
     malformed: input.malformed ?? [],
     reachedThisCycle: input.reachedThisCycle ?? new Map(),
     historyReadAt: input.now,
-    planner: input.planner,
   });
 }
 
@@ -634,11 +510,6 @@ export interface AssignmentCycleReading {
   /** The rule for work several Sends reached, in the words the page prints. */
   readonly rule: string;
   readonly assignments: readonly AssignmentReading[];
-  /** When present, the array contains examples; every exact Send is in this existing owner-history report. */
-  readonly details?: FreshnessDetailReference;
-}
-export interface StreamedAssignmentCycleReading extends Omit<AssignmentCycleReading, "assignments" | "details"> {
-  readonly assignments: AsyncIterable<AssignmentReading> & { readonly length: number };
 }
 
 export const SHARED_WORK_RULE =
@@ -647,43 +518,29 @@ export const SHARED_WORK_RULE =
   "Among rolling-window Sends, shared work may run under the most recent one with room. Other service costs are tracked separately.";
 
 /** The reading the runner writes onto the research state, and the instruction view reads. */
-export interface AssignmentCycleReadingInput {
+export function assignmentCycleReading(input: {
   readonly at: string;
   readonly now: string;
   readonly gate: AssignmentBudgetGate;
-  readonly specs: Iterable<AssignmentBudgetSpec>;
+  readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: Iterable<PricedCharge> | null;
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
   /** The completion of one assignment, or null when it cannot be evaluated this cycle. */
   readonly completionFor?: (key: string) => AssignmentCompletion | null;
-}
-let assignmentReadingSequence = 0;
-type StreamedAssignmentCycleReadingInput = Omit<AssignmentCycleReadingInput, "completionFor"> & {
-  readonly planner: PlannerSpool;
-  readonly completionFor?: (key: string) => AssignmentCompletion | null | Promise<AssignmentCompletion | null>;
-};
-export function assignmentCycleReading(input: StreamedAssignmentCycleReadingInput): StreamedAssignmentCycleReading;
-export function assignmentCycleReading(input: AssignmentCycleReadingInput): AssignmentCycleReading;
-export function assignmentCycleReading(input: AssignmentCycleReadingInput | StreamedAssignmentCycleReadingInput): AssignmentCycleReading | StreamedAssignmentCycleReading {
+}): AssignmentCycleReading {
   const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
-  const prefix = `assignment-reading:${assignmentReadingSequence++}`;
-  const planner = "planner" in input ? input.planner : undefined;
-  const specRows = (function* () { for (const spec of input.specs) yield [spec.key, spec] as const; })();
-  const specs = planner ? plannerMap(planner, `${prefix}:specs`, specRows) : new Map(specRows);
-  const allKeys = (function* () { yield* specs.keys(); yield* input.membership.byKey.keys(); })();
-  const keys = planner ? plannerSet(planner, `${prefix}:keys`, allKeys) : [...new Set(allKeys)].sort();
+  const specs = new Map(input.specs.map((s) => [s.key, s]));
+  const keys = [...new Set([...input.specs.map((s) => s.key), ...input.membership.byKey.keys()])].sort();
   const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-  const disk = planner?.table<AssignmentReading>(`${prefix}:rows`, row => row.key);
-  const members = (key: string, spec: AssignmentBudgetSpec | null) => spec
-    ? input.membership.byInstruction.get(instructionReceiptKey(key, spec.ref)) ?? empty : input.membership.byKey.get(key) ?? empty;
-  function rowFor(key: string, spec: AssignmentBudgetSpec | null, m: AssignmentMembers,
-    spend: AssignmentSpend | null, samples: { created: string[]; reordered: string[] }, completion: AssignmentCompletion | null): AssignmentReading {
+  const assignments = keys.map((key): AssignmentReading => {
+    const spec = specs.get(key) ?? null;
+    const m = spec ? input.membership.byInstruction.get(instructionReceiptKey(key,spec.ref)) ?? empty : input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
+    const spend = spec === null ? null : input.gate.armedReading().historical?.get(key) ?? null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
-    const reading: AssignmentReading = {
+    return {
       key,
       kind,
       label: spec?.label ?? input.labels?.get(key) ?? null,
@@ -691,8 +548,8 @@ export function assignmentCycleReading(input: AssignmentCycleReadingInput | Stre
       members: {
         created: m.created.size,
         reordered: m.reordered.size,
-        createdSample: samples.created,
-        reorderedSample: samples.reordered,
+        createdSample: [...m.created.keys()].sort().slice(0, READING_LIST_CAP),
+        reorderedSample: [...m.reordered.keys()].sort().slice(0, READING_LIST_CAP),
       },
       budget:
         spec === null || state === null
@@ -720,43 +577,10 @@ export function assignmentCycleReading(input: AssignmentCycleReadingInput | Stre
               ? "sent without a budget of its own, so only the Fleet ceiling bounds paid work on it"
               : "the owner's instructions could not be read, so whether it carries a budget is not known; paid work it reached is held"
             : "this geography is no longer selected, so no budget of its stands",
-      completion,
+      completion: input.completionFor?.(key) ?? null,
     };
-    return reading;
-  }
-  const header: Omit<AssignmentCycleReading, "assignments" | "details"> = { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.charges !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE };
-  if (disk) {
-    const assignments = {
-      get length() { return (keys as Set<string>).size; },
-      async *[Symbol.asyncIterator](): AsyncIterableIterator<AssignmentReading> {
-        // An outstanding lease's native repository callback gets its event-loop turn
-        // before publication starts, and after each bounded member batch below.
-        await cooperate();
-        for (const key of keys) {
-          const cached = disk.read(key);
-          if (cached) { yield cached; continue; }
-          const spec = specs.get(key) ?? null, m = members(key, spec);
-          const samples = { created: await memberSampleCooperatively(m.created.keys()), reordered: await memberSampleCooperatively(m.reordered.keys()) };
-          const reading = rowFor(key, spec, m, spec ? input.gate.historicalSpend(key) : null, samples,
-            await input.completionFor?.(key) ?? null);
-          disk.add(reading);
-          yield reading;
-          await cooperate();
-        }
-      },
-    };
-    return { ...header, assignments };
-  }
-  const assignments: AssignmentReading[] = [];
-  for (const key of keys) {
-    const spec = specs.get(key) ?? null, m = members(key, spec);
-    const completion = input.completionFor?.(key) ?? null;
-    if (completion instanceof Promise) throw new Error("ASYNC_ASSIGNMENT_READING_REQUIRES_PLANNER");
-    assignments.push(rowFor(key, spec, m,
-      spec && input.charges !== null ? assignmentSpend(chargesForInstruction(input.charges, spec), m, spec.budgetStartedAt ?? since, input.now) : null,
-      { created: memberSample(m.created.keys()), reordered: memberSample(m.reordered.keys()) }, completion));
-  }
-  return { ...header, assignments };
+  });
+  return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.gate.armedReading().historical !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };
 }
 
 /** A value on the research state that is not a reading reads as none, never as "no assignments". */

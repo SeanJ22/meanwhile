@@ -309,8 +309,6 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
   const states = new Map<string, OwnerSnapshotState>();
   for (const state of Object.keys(totals.assignments!.states)) states.set(state, json((await repos.ownerSnapshotStates.read(ownerSnapshotStateId(state)))!.value));
   const spend = fold.spendByPlace();
-  const publications:string[]=[];
-  for(const state of fold.publicationStates()) publications.push(...(await fold.publications(state)).map(w=>w.id));
   const panels = {
     costPanel: costPanelOf(fold.costs.ledger, fold.costs.scouts, { cacheByRole: null, share: null, verifiedRecords: fold.pipeline.verified, nowIso: now }),
     spendByDay: spendByDayOf(fold.costs.days),
@@ -318,7 +316,7 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
     attribution,
     searches: fold.costs.searches[now.slice(0, 7)] ?? {},
     obligationsByState: fold.obligationsByState(),
-    publications: publications.sort(),
+    publications: fold.publications().map((w) => w.id).sort(),
     rows: rowsAt(states, now),
   };
   if (priorRow === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, now);

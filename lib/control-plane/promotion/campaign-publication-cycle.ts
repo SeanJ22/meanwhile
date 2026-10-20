@@ -17,11 +17,6 @@ export const CANDIDATE_PUBLICATION_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 export const CANDIDATE_PUBLICATION_CAPTURES_PER_URL = 100;
 /** Per-key reads in flight at once while the pass loads its scope. */
 export const CANDIDATE_PUBLICATION_READ_CONCURRENCY = 8;
-export interface DueCandidatePublication {
-  readonly candidacyId: string;
-  readonly url: string;
-  readonly lastAttemptAt: number | null;
-}
 
 export interface CandidatePublicationCycleReport {
   readonly inventoried: number;
@@ -60,9 +55,6 @@ export async function runCandidatePublicationCycle(input: {
   readonly recheckMs?: number;
   /** The round's dispatch cutoff: no page read starts after it, and an unread page stays owed. */
   readonly deadlineMs?: number;
-  /** The coordinator keeps only source IDs and due times while releasing each place's bytes. */
-  readonly onDue?: (links: readonly DueCandidatePublication[]) => void;
-  readonly onlyReadUrls?: ReadonlySet<string>;
 }): Promise<CandidatePublicationCycleReport> {
   const empty = { inventoried: 0, due: 0, acquired: 0, deferred: 0, failed: 0, outcomes: [] } as const;
   if (!input.eligibleCandidacyIds.size) return empty;
@@ -74,9 +66,7 @@ export async function runCandidatePublicationCycle(input: {
   const stop = () => input.deadlineMs !== undefined && input.clock() >= input.deadlineMs;
   const stopped = (step: string): CandidatePublicationCycleReport => ({ ...empty, stoppedLoading: step });
   if (stop()) return stopped("the approved campaign sites");
-  const states = await readPipelineStatesWhere(input.repos, [...input.eligibleCandidacyIds].flatMap(value => [
-    { path: ["subjectId"], value }, { path: ["offered", "subjectId"], value },
-  ]));
+  const states = await readPipelineStatesWhere(input.repos, [{ path: ["campaignSite", "field"], value: CAMPAIGN_SITE_FIELD }]);
   const sourceReads = new Map<string, Awaited<ReturnType<NonNullable<ControlPlaneRepositories["artifactsByCanonicalUrl"]>>>>();
   const sourceRecords = async (url: string) => {
     const cached = sourceReads.get(url);
@@ -88,7 +78,7 @@ export async function runCandidatePublicationCycle(input: {
   };
   const approvals = states.flatMap(state => {
     const row = state.byStage.APPROVED_FOR_PROMOTION;
-    return row && "campaignSite" in row && (row as CampaignSiteApprovedRecord).campaignSite.field === CAMPAIGN_SITE_FIELD && input.eligibleCandidacyIds.has(state.subjectId ?? "")
+    return row && "campaignSite" in row && input.eligibleCandidacyIds.has(state.subjectId ?? "")
       ? [row as CampaignSiteApprovedRecord] : [];
   });
   const hosts = new Map<string, Set<string>>();
@@ -182,13 +172,11 @@ export async function runCandidatePublicationCycle(input: {
     const aKey = `${a.source.candidacyId}\u0000${a.url}`, bKey = `${b.source.candidacyId}\u0000${b.url}`;
     return (lastAttemptByLink.get(aKey) ?? -Infinity) - (lastAttemptByLink.get(bKey) ?? -Infinity) || aKey.localeCompare(bKey);
   });
-  input.onDue?.(due.map(link => ({ candidacyId: link.source.candidacyId, url: link.url,
-    lastAttemptAt: lastAttemptByLink.get(`${link.source.candidacyId}\u0000${link.url}`) ?? null })));
   let acquired = 0, failed = 0, deferred = 0;
   const limit = input.maxReads ?? CANDIDATE_PUBLICATION_MAX_READS;
   let readsUsed = 0;
   for (const link of due) {
-    if (readsUsed >= limit || input.onlyReadUrls && !input.onlyReadUrls.has(link.url)) {
+    if (readsUsed >= limit) {
       deferred += 1; outcomes.push({ candidacyId: link.source.candidacyId, url: link.url, code: "NOT_READ_BOUNDED", artifactId: null });
       continue;
     }

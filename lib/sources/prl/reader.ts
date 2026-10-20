@@ -6,8 +6,6 @@ import { requiredPrlDataset } from "./inventory.ts";
 import { isVisibleAsOf } from "./future-date.ts";
 import { PRL_RHETORIC_ATTRIBUTION } from "./types.ts";
 import type { PrlPrimaryProfile, PrlStateProfile } from "./precompute.ts";
-import { readPublishedArraySlice } from "../../civic-data/published-array-slice.ts";
-import type { PrlIngestReceipt } from "./receipt.ts";
 
 export interface PrlPersonKeys { bioguideId?: string | null; openstatesId?: string | null; candidateId?: string | null }
 export interface PrlPersonStatement {
@@ -31,43 +29,6 @@ const sourceUrl = (value: unknown) => {
   catch { return null; }
 };
 
-/** One immutable native-person profile, never a bucket listing or a national receipt. */
-export async function readPrlProfileObject(archive: PrlArchiveStore, root: string, subject: string): Promise<Record<string, unknown> | null> {
-  if (!/^[a-z-]+\/[a-f0-9]{64}\/prl-ingest-3$/.test(root)) throw new Error("PRL_PROFILE_ROOT_INVALID");
-  const key = `${root}/people/${createHash("sha256").update(subject).digest("hex")}/profile.json`;
-  const meta = await archive.head(key);
-  if (!meta) return null;
-  if (meta.size > 64 * 1024) throw new Error("PRL_PROFILE_OBJECT_TOO_LARGE");
-  const bytes = await archive.get(key);
-  if (!bytes || bytes.byteLength !== meta.size) throw new Error("PRL_PROFILE_OBJECT_INCOMPLETE");
-  const saved = object(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)));
-  if (saved?.subject !== subject || !object(saved.profile)) throw new Error("PRL_PROFILE_OBJECT_IDENTITY_MISMATCH");
-  return object(saved.profile);
-}
-
-async function legacyProfile(datasetId: string, native: string) {
-  return readPublishedArraySlice<Record<string, unknown>>({ recordClass: "PRL_ARCHIVE", scope: "US:prl:known-archives",
-    path: ["datasets", datasetId, "profiles"], statePath: [datasetId === "profiles-state" ? "openstatesId" : "candidateId"],
-    statePattern: `^${native.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$` });
-}
-
-export async function legacyPrlArchives(keys: { bioguide: string | null; statePerson: string | null; candidate: string | null } = { bioguide: null, statePerson: null, candidate: null },
-  missing?: readonly string[]): Promise<PrlArchiveProjection | null> {
-  const datasets: Record<string, PrlIngestReceipt> = {};
-  for (const id of ["profiles-state", "primary-rhetoric", "state-rhetoric", "statements-national", "newsletters", "press-releases", "floor-speeches"]) {
-    if (missing && !missing.includes(id)) continue;
-    const read = await readPublishedArraySlice<PrlIngestReceipt>({ recordClass: "PRL_ARCHIVE", scope: "US:prl:known-archives",
-      path: ["datasets", id], statePath: [], statePattern: ".*", objectRecord: true, omitKeys: ["profiles", "objectKeys", "newObjectKeys"] });
-    const receipt = read?.records[0];
-    if (!receipt) continue;
-    if (read?.sourceId !== "prl") throw new Error("PRL_ARCHIVE_SOURCE_MISMATCH");
-    const native = id === "profiles-state" ? keys.statePerson : id === "primary-rhetoric" ? keys.candidate : null;
-    const profile = native ? await legacyProfile(id, native) : null;
-    datasets[id] = { ...receipt, profiles: profile?.records ?? null, objectKeys: [], newObjectKeys: [] };
-  }
-  return Object.keys(datasets).length ? { formatVersion: 1, datasets } : null;
-}
-
 /** Native person lookup only. A request never lists a bucket or opens a national source. */
 export async function readPrlPerson(keys: PrlPersonKeys, options: Omit<PromotedCivicDataReadOptions, "now"> & {
   archive?: PrlArchiveStore; projection?: PrlArchiveProjection; now?: number;
@@ -80,28 +41,24 @@ export async function readPrlPerson(keys: PrlPersonKeys, options: Omit<PromotedC
   let projection = options.projection;
   if (!projection) {
     const held = await readPrlArchiveProjection({ ...options, now: options.now === undefined ? undefined : new Date(options.now).toISOString() });
-    projection = held.kind === "PROMOTED" ? held.value : await legacyPrlArchives({ bioguide, statePerson, candidate }) ?? undefined;
-    if (!projection) return { ...out, gaps: ["We are still acquiring archived statements for this person."] };
+    if (held.kind !== "PROMOTED") return { ...out, gaps: ["We are still acquiring archived statements for this person."] };
+    projection = held.value;
   }
-  let archive: PrlArchiveStore | null = options.archive ?? null;
-  if (!archive) try { archive = resolveS3ArchiveStore(); } catch { /* Legacy per-person measurements remain independently usable. */ }
   for (const [datasetId, kind, native, field] of [
     ["profiles-state", "state", statePerson, "openstatesId"],
     ["primary-rhetoric", "primary", candidate, "candidateId"],
   ] as const) {
     if (!native) continue;
     const receipt = projection.datasets[datasetId];
-    const saved = receipt?.objectRoot && receipt.parserVersion === "prl-ingest/3" && archive
-      ? await readPrlProfileObject(archive, receipt.objectRoot, native).catch(() => null) : null;
-    if (saved && saved[field] !== native) out.gaps.push("Some archived measurements are temporarily unavailable.");
-    const profiles = saved && saved[field] === native ? [saved] : receipt?.profiles?.filter(row => object(row)?.[field] === native) ??
-      (receipt && receipt.parserVersion !== "prl-ingest/3" ? (await legacyProfile(datasetId, native))?.records ?? [] : []);
+    const profiles = receipt?.profiles?.filter(row => object(row)?.[field] === native) ?? [];
     if (profiles.length !== 1) continue;
     const common = { sourceUrl: receipt.sourceUrl, retrievedAt: receipt.fetchedAt, attribution: PRL_RHETORIC_ATTRIBUTION };
     if (kind === "state") out.summaries.push({ kind, profile: profiles[0] as PrlStateProfile, ...common });
     else out.summaries.push({ kind, profile: profiles[0] as PrlPrimaryProfile, ...common });
   }
-  if (!archive) { out.gaps.push("Archived statement text is temporarily unavailable."); return out; }
+  let archive: PrlArchiveStore;
+  try { archive = options.archive ?? resolveS3ArchiveStore(); }
+  catch { out.gaps.push("Archived statement text is temporarily unavailable."); return out; }
   const selections: [string, string][] = [
     ...(bioguide ? ["statements-national", "press-releases", "newsletters", "floor-speeches"].map(id => [id, bioguide] as [string, string]) : []),
     ...(statePerson ? [["state-rhetoric", statePerson] as [string, string]] : []),

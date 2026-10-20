@@ -2,10 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { closeAuditHistoryIndex } from "../lib/control-plane/workers/audit-history-index.ts";
-import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { PGlite } from "@electric-sql/pglite";
-import { pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";
 import {
   auditCoverageReport, boostReason, auditHistoryFrom, auditHistoryFromManual, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
 } from "../lib/control-plane/workers/audit-sampling.ts";
@@ -75,8 +71,7 @@ test("a stratum that broke stays under review until it has survived several audi
 
 test("an escalation is always reviewed, and the sampler counts its own decisions so a burst from a new stratum is not all 'first'", async () => {
   assert.equal(sampleDecision(spec("www.a.gov", "x", { auditEscalation: { previousResultId: "r", from: "haiku", to: "sonnet", reason: "r" } }), new Map(), false).reason, "ESCALATION");
-  const repos=createMemoryRepositories();
-  const sampler = createModelAuditSampler({...repos,workerResults:{...repos.workerResults,readAll:async()=>{throw new Error("COUNTRY_RESULT_READ");}}});
+  const sampler = createModelAuditSampler({ workerResults: { readAll: async () => [] } } as never);
   const decisions: boolean[] = [];
   for (let i = 0; i < 40; i++) decisions.push(await sampler(spec("www.new.gov", `burst-${i}`)));
   assert.deepEqual(decisions.slice(0, DEFAULT_AUDIT_SAMPLE_POLICY.floorPerStratum), [true, true, true]);
@@ -104,9 +99,9 @@ test("what the manual remembers of a stratum keeps it under review after its res
   const h = auditHistoryFromManual(store);
   assert.equal(h.get("PLANNING_MEETING|www.broke.gov")!.everBroken, true);
   assert.equal(sampleDecision(spec("www.broke.gov", "x"), new Map([...h]), false, { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1 }).reason, "BROKEN_STRATUM");
-  const repos=createMemoryRepositories();
-  for(const entry of store.entries)await repos.fieldManual.put(entry.id,entry,"2026-10-20T12:00:00Z");
-  const sampler = createModelAuditSampler({...repos,fieldManual:{...repos.fieldManual,list:async()=>{throw new Error("COUNTRY_MANUAL_READ");}}},
+  const repos = createMemoryRepositories();
+  for (const entry of store.entries) await repos.fieldManual.put(entry.id, entry, "2026-09-20T00:00:00.000Z");
+  const sampler = createModelAuditSampler(repos,
     { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1, ratio: 0, quotedRatio: 0 });
   assert.equal(await sampler(spec("www.broke.gov", "a1")), true, "a stratum the manual says broke is reviewed");
   assert.equal(await sampler(spec("www.fine.gov", "a2")), false, "a stratum the manual says was reviewed and held is not new");
@@ -168,62 +163,4 @@ test("CP-10: official portraits use ordinary sampling, while other portraits rem
     assert.equal(decision.reason === "JUDGMENT_CALL", judgment);
     assert.equal(decision.sample, judgment);
   }
-});
-
-test("disk sampling preserves full-history ordering, quoted-producer lookup and interleaved burst counts",async()=>{
-  const repos=createMemoryRepositories(),records=[auditRecord("a.gov","SURVIVED","2026-09-20T00:00:00Z"),
-    auditRecord("a.gov","BROKE","2026-09-01T00:00:00Z"),auditRecord("a.gov","INCONCLUSIVE","2026-09-21T00:00:00Z",false),
-    auditRecord("b.gov","SURVIVED","2026-09-20T00:00:00Z")];
-  const parser={id:"quoted-producer",endedAt:"2026-09-20T00:00:00Z",result:{role:"PARSER",verdict:"EXTRACTED",records:[{narrative:"must stay in store"}]},modelParse:{responseText:"must stay in store"}}as unknown as WorkerResultRecord;
-  for(const [at,record]of [...records,parser].entries())await repos.workerResults.append(at%2?"b":"a",record.id,record,"2026-10-20T12:00:00Z");
-  const fixture=await repos.workerResults.readAll(),history=auditHistoryFrom(fixture),policy={...DEFAULT_AUDIT_SAMPLE_POLICY,survivedAfterBreak:1};
-  const scoped={...repos,workerResults:{...repos.workerResults,readAll:async()=>{throw new Error("COUNTRY_PAYLOADS");}}};
-  const sampler=createModelAuditSampler(scoped,policy);
-  try{
-    for(let at=0;at<90;at++){
-      const input=spec(at%3===1?"b.gov":"a.gov",`interleaved-${at}`,{producerResultId:at%4===0?"quoted-producer":null});
-      const expected=sampleDecision(input,history,at%4===0,policy);
-      assert.equal(await sampler(input),expected.sample);
-      if(expected.sample&&!input.auditEscalation){const prior=history.get(expected.stratum);history.set(expected.stratum,{reviewed:(prior?.reviewed??0)+1,survivedSinceBreak:prior?.survivedSinceBreak??0,everBroken:prior?.everBroken??false});}
-    }
-  }finally{await closeAuditHistoryIndex(scoped);}
-});
-
-test("one shared host cold-scans audit metadata once and keeps each worker's burst snapshot separate",async()=>{
-  const repos=createMemoryRepositories(),read=repos.workerResults.readChangedSince.bind(repos.workerResults);
-  let cold=0,incremental=0;
-  const shared={...repos,workerResults:{...repos.workerResults,readAll:async()=>{throw new Error("FULL_AUDIT_SCAN");},readChangedSince:async(...args:Parameters<typeof read>)=>{
-    if(args[0]===null)cold++;else incremental++;
-    assert.deepEqual(args[2]?.projection?.modelReview,[]);return read(...args);
-  }}};
-  const policy={...DEFAULT_AUDIT_SAMPLE_POLICY,floorPerStratum:0,ratio:0,quotedRatio:0};
-  for(let i=0;i<3;i++){const record=auditRecord("a.gov","SURVIVED",`2026-09-2${i}T00:00:00Z`);await repos.workerResults.append("a",record.id,record,"2026-10-20T12:00:00Z");}
-  const oldUrl=process.env.WTP_WORKER_TOOLS_URL,oldToken=process.env.WTP_WORKER_TOOLS_TOKEN;
-  const host=await startWorkerToolsHost({repos:shared,browse:async()=>{throw new Error("NO_BROWSER_NEEDED");}});
-  try{
-    const worker={workerResults:{readChangedSince:async()=>{throw new Error("WORKER_MUST_USE_SHARED_INDEX");}}}as never;
-    const first=createModelAuditSampler(worker,policy);assert.equal(await first(spec("a.gov","first")),false);
-    const broken=auditRecord("a.gov","BROKE","2026-10-19T00:00:00Z");await repos.workerResults.append("a",broken.id,broken,"2026-10-20T12:01:00Z");
-    assert.equal(await first(spec("a.gov","same-snapshot")),false,"new durable audits do not double-count this worker's initial burst snapshot");
-    assert.equal(await createModelAuditSampler(worker,policy)(spec("a.gov","new-worker")),true,"a new worker sees the newly broken stratum");
-    assert.equal(cold,1);assert.equal(incremental,1);
-    const burst=createModelAuditSampler(worker,{...policy,floorPerStratum:3});
-    const decisions=await Promise.all(Array.from({length:30},(_,i)=>burst(spec(i%2?"new-b.gov":"new-a.gov",`burst-${i}`))));
-    assert.equal(decisions.filter(Boolean).length,6,"concurrent A→B→A calls reserve only each stratum's first three reviews");
-  }finally{await host.close();if(oldUrl===undefined)delete process.env.WTP_WORKER_TOOLS_URL;else process.env.WTP_WORKER_TOOLS_URL=oldUrl;if(oldToken===undefined)delete process.env.WTP_WORKER_TOOLS_TOKEN;else process.env.WTP_WORKER_TOOLS_TOKEN=oldToken;}
-});
-
-test("Postgres audit history transfers nested contract identity and flags, with no result bodies or narratives",async()=>{
-  const pg=new PGlite(),transferred:unknown[]=[];
-  try{
-    await pg.exec("CREATE TABLE cp_log_worker_results(log_key text,record_id text,position integer,record jsonb,changed_at timestamptz,recorded_at timestamptz)");
-    const record={...auditRecord("a.gov","SURVIVED","2026-10-19T00:00:00Z"),modelReview:{responseText:"UNNEEDED_MODEL_NARRATIVE"},result:{role:"ADVERSARIAL_AUDITOR",verdict:"SURVIVED",findings:[{detail:"UNNEEDED_FINDING"}]},completion:{completedTask:{workerTask:spec("a.gov","a"),disposition:{note:"UNNEEDED_DISPOSITION"}}}};
-    await pg.query("INSERT INTO cp_log_worker_results VALUES('a','append-id',0,$1,now(),now())",[JSON.stringify(record)]);
-    const sql={async query(text:string,params:readonly unknown[]=[]){const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;transferred.push(rows);return rows;}};
-    const repos={workerResults:pgAppendOnlyRepository<WorkerResultRecord>(sql,"worker_results")};
-    try{
-      assert.equal(await createModelAuditSampler(repos,{...DEFAULT_AUDIT_SAMPLE_POLICY,floorPerStratum:1,ratio:0,quotedRatio:0})(spec("a.gov","a")),false);
-      assert.ok(!JSON.stringify(transferred).includes("UNNEEDED_"));
-    }finally{await closeAuditHistoryIndex(repos);}
-  }finally{await pg.close();}
 });

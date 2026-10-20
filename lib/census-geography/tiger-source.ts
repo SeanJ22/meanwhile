@@ -143,7 +143,7 @@ async function saveChunks(archive: string, store: EvidenceStore, prefix: string,
 }
 /** Conditional source checks never download an unchanged archive. Each caller
  * gets its own temporary file; disposing it leaves immutable vault bytes held. */
-export async function censusSourceFile(url: string, options: CensusSourceOptions, validate: (path: string) => Promise<void>): Promise<CensusTigerArchive> {
+export async function censusTigerArchive(url: string, options: CensusSourceOptions, validate: (path: string) => Promise<void>): Promise<CensusTigerArchive> {
   const origin = publicUrl(url), signal = options.signal ?? new AbortController().signal;
   signal.throwIfAborted();
   const { store, locks } = await resolveKnownReleaseCache(options.cache);
@@ -188,7 +188,7 @@ export async function censusSourceFile(url: string, options: CensusSourceOptions
       if (response.status === 304) {
         await response.body?.cancel().catch(() => {});
         if (!held || !prior) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "Census TIGER archive 304 without held bytes");
-        await validate(path);
+        await validateArchive(path, signal, validate);
         index = { ...prior, checkedAt, parserVersion: TIGER_ARCHIVE_PARSER };
         reused = true;
       } else {
@@ -198,7 +198,7 @@ export async function censusSourceFile(url: string, options: CensusSourceOptions
           throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `Census TIGER archive returned HTTP ${response.status}`);
         }
         const downloaded = await stage(file => stageResponse(response, file, signal));
-        await validate(path);
+        await validateArchive(path, signal, validate);
         reused = !!held && prior?.sha256 === downloaded.sha256;
         const retrievedAt = reused && prior ? prior.retrievedAt : checkedAt;
         const chunks = reused && prior ? prior.chunks : await saveChunks(path, store, prefix, url, finalUrl, retrievedAt, signal);
@@ -213,9 +213,4 @@ export async function censusSourceFile(url: string, options: CensusSourceOptions
     });
     return { path, ...result, dispose };
   } catch (error) { await dispose(); throw error; }
-}
-
-export function censusTigerArchive(url: string, options: CensusSourceOptions, validate: (path: string) => Promise<void>): Promise<CensusTigerArchive> {
-  const signal = options.signal ?? new AbortController().signal;
-  return censusSourceFile(url, options, path => validateArchive(path, signal, validate));
 }

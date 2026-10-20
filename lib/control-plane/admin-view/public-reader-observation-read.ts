@@ -9,10 +9,10 @@ export const EXACT_SERVED_WITNESS_SQL = `
   SELECT entry.witness
   FROM cp_owner_snapshots AS snapshot
   CROSS JOIN LATERAL jsonb_array_elements(
-    CASE WHEN jsonb_typeof(coalesce(snapshot.value->'servedReader',snapshot.value->'servedReaderReadback')->'witnesses') = 'array'
-      THEN coalesce(snapshot.value->'servedReader',snapshot.value->'servedReaderReadback')->'witnesses' ELSE '[]'::jsonb END
+    CASE WHEN jsonb_typeof(snapshot.value->'servedReaderReadback'->'witnesses') = 'array'
+      THEN snapshot.value->'servedReaderReadback'->'witnesses' ELSE '[]'::jsonb END
   ) AS entry(witness)
-  WHERE (snapshot.id = 'current' OR snapshot.id LIKE 'readback:%')
+  WHERE snapshot.id = 'current'
     AND entry.witness->>'itemId' = $1
     AND entry.witness->>'approvalId' = $2
     AND entry.witness->>'versionId' = $3

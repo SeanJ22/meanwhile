@@ -19,9 +19,8 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { routineFreshnessMs } from "../civic-data/contracts.ts";
+import { requiredRoutineContract, routineFreshnessMs } from "../civic-data/contracts.ts";
 import type { AcsPopulationRow } from "../sources/census-acs-population/index.ts";
-import { acsContractId, acsPopulationScope } from "../sources/census-acs-population/publication.ts";
 
 export interface PopulationRow {
   readonly name: string;
@@ -37,7 +36,8 @@ export interface PopulationTable {
 
 let zctaCache: PopulationTable | null = null;
 let stateCache: PopulationTable | null = null;
-const ACS_SCOPE = "acs-population";
+const ACS_CONTRACT = requiredRoutineContract("census-acs-population");
+const ACS_SCOPE = ACS_CONTRACT.scope;
 
 export interface PromotedAcsPopulation {
   readonly formatVersion: 1;
@@ -67,13 +67,13 @@ function validatePopulation(payload: PromotedAcsPopulation, versionId: string): 
 
 /** Typed ACS read outcome. */
 export async function readPopulationProjection(
-  options: PromotedCivicDataReadOptions & { readonly state?: string } = {},
+  options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<PromotedAcsPopulation>> {
   const now = options.now ?? new Date().toISOString();
-  const result = await readPromotedCivicData<PromotedAcsPopulation>("CENSUS_REFERENCE", options.state ? acsPopulationScope(options.state) : ACS_SCOPE, {
+  const result = await readPromotedCivicData<PromotedAcsPopulation>("CENSUS_REFERENCE", ACS_SCOPE, {
     ...options,
     now,
-    maxAgeMs: options.maxAgeMs ?? (options.state ? routineFreshnessMs(acsContractId(options.state), now) : 30 * 24 * 3_600_000),
+    maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(ACS_CONTRACT.id, now),
   });
   readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {

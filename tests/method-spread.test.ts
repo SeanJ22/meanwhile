@@ -1,11 +1,3 @@
-/**
- * A method that works somewhere is tried, by plain code, wherever the same
- * kind of website is: the free try runs at every matching place, paced for
- * small publishers, with robots.txt recorded and never obeyed as a block. Its
- * result goes into the fix map, the method's standing in Admin and the field
- * manual. A paid try is allowed only where the free try could not decide,
- * inside places the owner has sent money to and within the budget dial.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -23,8 +15,6 @@ import type { WebsiteSizeForUrl } from "../lib/control-plane/scheduler/host-supe
 import { planSpread, SPREAD_ATTEMPT } from "../lib/method/spread.ts";
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import type { FixMapRow } from "../lib/method/fix-map.ts";
-import { placeResultsOf } from "../lib/control-plane/field-manual-places.ts";
-import { recordFieldManualPlaceResult } from "../lib/control-plane/field-manual-place-result.ts";
 
 const NOW = "2026-10-07T12:00:00.000Z";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -45,10 +35,7 @@ const works = (methodId: string, placeId: string, at = NOW): FixMapRow =>
 const plainTried = (methodId: string, placeId: string): FixMapRow =>
   ({ methodId, placeId, state: "UNTRIED", triedAt: null, attemptId: SPREAD_ATTEMPT.PLAIN_TRIED, cause: "x", updatedAt: NOW });
 
-/**
- * A website double behind the shared paced fetch: each address answers what the table says; anything else is a 404.
- * Every request that reached the website is kept.
- */
+
 function websites(table: Record<string, { status: number; body?: string; retryAfter?: string }>,
   options: { readonly pacing?: WebsitePacing; readonly sizeFor?: WebsiteSizeForUrl } = {}) {
   const calls: string[] = [];
@@ -127,7 +114,7 @@ test("a working method is tried by plain code at every matching place, and every
 
   const saved = (await repos.fieldManual.read(method.id))!.value;
   assert.deepEqual(saved.placeResults!.filter((r) => r.place.startsWith("ocd-division/") && r.place !== PIMA).map((r) => [r.place, r.outcome]).sort(), [[MARICOPA, "YIELDED"], [MORRIS, "FAILED"]].sort());
-  const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as AdminConfig;
+  const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true }))!.value as AdminConfig;
   assert.ok(methodStandings(config).some((s) => s.methodId === method.id), "the method's standing in Admin is re-measured");
   assert.match(spreadLine(result), /^1 working method\(s\) tried elsewhere by plain code: 1 worked, 1 did not fit, 0 left for a worker, 1 waiting/);
 
@@ -177,43 +164,4 @@ test("a small publisher gets at most ten requests an hour, counted with every ot
   assert.equal(site.calls.length, 6, "four requests another reader made leave six: robots.txt and five pages");
   assert.equal(site.calls.filter((url) => url.endsWith("/robots.txt")).length, 1);
   assert.deepEqual(outcomes.slice(5), Array(7).fill("WAITING"));
-});
-
-test("the spread streams every door and every method-history page, retaining only bounded waiting samples", async () => {
-  const repos = createMemoryRepositories();
-  const method = newFieldManualEntry("bounded-spread", "method", { role: "SHARED", kind: "METHOD", title: "legistar", summary: "GET {door}",
-    outcome: "YIELDED", platforms: ["legistar"], observedAt: NOW, payload: { procedure: "GET {door}" } });
-  await repos.fieldManual.put(method.id, method, NOW);
-  for (let n = 0; n < 1_600; n += 1) {
-    const place = `${PIMA}-${String(n).padStart(4, "0")}`;
-    await repos.doors.put(`door:${n}`, door(`door:${n}`, place, "legistar", "all.legistar.com"), NOW);
-    if (n < 1_300) await repos.fixMap.put(works(method.id, place));
-  }
-  repos.doors.list = async () => { throw Error("country door array forbidden"); };
-  repos.fieldManual.readMany = async () => { throw Error("method country histories forbidden"); };
-  repos.fieldManual.read = async () => { throw Error("full method row forbidden"); };
-  const original = repos.fixMap.forMethodPage.bind(repos.fixMap); let pages = 0;
-  repos.fixMap.forMethodPage = async (...args) => { pages += 1; return original(...args); };
-  const result = await runSpreadPass({ repos, now: NOW, sendPlaceIds: new Set(), paidTriesLeft: 0, fetch: websites({
-    "https://all.legistar.com/robots.txt": { status: 503 },
-  }).fetch });
-  assert.ok(pages > 1);
-  assert.equal(result.perMethod[0].matchingPlaces, 1_600);
-  assert.equal(result.perMethod[0].alreadyTried, 1_300);
-  assert.equal(result.waiting, 300);
-  assert.equal(result.perMethod[0].waitingCount, 300);
-  assert.ok(result.perMethod[0].waiting.length < 300);
-  assert.equal(result.writeError, null);
-});
-
-test("point method results preserve a legacy method's implicit working places and apply timestamp ties conservatively", async () => {
-  const repos = createMemoryRepositories();
-  const method = newFieldManualEntry("legacy-spread", "method", { role: "SHARED", kind: "METHOD", title: "legacy", summary: "GET {door}",
-    outcome: "YIELDED", platforms: ["legistar"], ocdIds: [PIMA], observedAt: NOW });
-  await repos.fieldManual.put(method.id, method, NOW);
-  await recordFieldManualPlaceResult(repos.fieldManual, method.id, { place: MORRIS, outcome: "YIELDED", observedAt: NOW }, NOW);
-  await recordFieldManualPlaceResult(repos.fieldManual, method.id, { place: MORRIS, outcome: "FAILED", observedAt: NOW }, NOW);
-  const held = (await repos.fieldManual.mustRead(method.id)).value;
-  assert.equal(held.placeResultsPartial, true);
-  assert.deepEqual(placeResultsOf(held).map(row => [row.place, row.outcome]).sort(), [[PIMA, "YIELDED"], [MORRIS, "FAILED"]].sort());
 });

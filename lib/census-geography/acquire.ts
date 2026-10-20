@@ -2,14 +2,11 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
-import { buildCbsaScope, readCbsaDelineationFile, type CbsaDelineation } from "./cbsa.ts";
+import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScopes, congressionalTarget, discoverGrfReleases, GRF_CD120, GRF_SLDU2026, GRF_SLDL2026, legislativeTarget, planApplicability, type GrfTarget } from "./grf.ts";
-import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, heldSourcesUnchanged, type CensusSourceOptions } from "./source-release.ts";
+import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { acquireTigerScopes, discoverTigerDistrictFiles } from "./tiger-acquire.ts";
-import { createReadStream } from "node:fs";
-import { createInterface } from "node:readline";
-import { censusSourceFile } from "./tiger-source.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
 
@@ -78,47 +75,38 @@ export interface AcquireOptions extends CensusSourceOptions {
 }
 
 async function buildScope(src: Source, options: AcquireOptions): Promise<BuiltScope> {
-  const held = options.previousDataset?.scopes.find(scope =>
+  const held = options.previousDataset?.coverage.startsWith("national") ? options.previousDataset.scopes.find(scope =>
     scope.version === src.version && scope.type === src.type && scope.versionMeta.retrievalComplete !== false &&
-    scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" && scope.versionMeta.provenance.sourceUrls.includes(src.url));
+    scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" && scope.versionMeta.provenance.sourceUrls.includes(src.url)) : undefined;
   if (held && await heldSourcesUnchanged(held.versionMeta.provenance, [src.url], options)) return held;
   const filename = src.url.split("/").pop() ?? src.url;
-  const parse = async (path: string): Promise<ScopeAccumulator> => {
-    const lines = createInterface({ input: createReadStream(path), crlfDelay: Infinity });
-    let header: string[] | null = null, acc: ScopeAccumulator | null = null;
-    let geoColumn = -1, sourceRows = 0;
-    for await (const line of lines) {
-      options.signal?.throwIfAborted();
-      if (!header) {
-        header = parseTab20Header(line);
-        const columns = resolveTab20Columns(header, src.geoTag);
-        geoColumn = columns.geoGeoid; acc = new ScopeAccumulator(src, columns); continue;
-      }
+  const parse = (bytes: Uint8Array): ScopeAccumulator => {
+    const lines = new TextDecoder().decode(bytes).split(/\r?\n/);
+    const header = parseTab20Header(lines.shift() ?? "");
+    const acc = new ScopeAccumulator(src, resolveTab20Columns(header, src.geoTag));
+    for (const line of lines) {
       if (line.trim() === "") continue;
       const fields = line.split("|");
       if (fields.length !== header.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 malformed row in ${src.url}`);
-      sourceRows++;
-      if (!options.states || options.states.has(fields[geoColumn].slice(0, 2))) acc!.add(fields);
+      acc.add(fields);
     }
-    if (!acc || !sourceRows) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
+    if (acc.stats().rows === 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
     return acc;
   };
   let parsed: ScopeAccumulator | undefined;
-  const source = await censusSourceFile(src.url, options, async path => { parsed = await parse(path); });
-  try {
+  const source = await censusSourceRelease(src.url, options, bytes => { parsed = parse(bytes); });
   const versionMeta: GeographyVersion = {
     key: src.version, type: src.type as GeographyType, plan: src.plan, zctaTabulation: "2020", effectiveFor: src.effectiveFor,
     applicability: planApplicability(src.version), retrievalComplete: true,
     provenance: {
       sourceUrls: [src.url], sourceDataset: "CENSUS_TAB20_REL2020", sourceFiles: [filename], sourceChecksums: [source.sha256],
-      sourceValidators: [source.sourceValidator], parserVersion: CENSUS_ACQUISITION_PARSER,
+      sourceValidators: [sourceValidator(source)], parserVersion: CENSUS_ACQUISITION_PARSER,
       method: `Census 2020-tabulation ZCTA↔${src.geoTag.replace(/_20$/, "")} relationship file (${filename}); ` +
         `a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).`,
       computedAt: new Date().toISOString(),
     },
   };
-  return parsed!.finish(versionMeta);
-  } finally { await source.dispose(); }
+  return (parsed ?? parse(source.bytes)).finish(versionMeta);
 }
 
 /** Discover the exact ZCTA relationship publication for new TIGER district plans. */
@@ -204,16 +192,13 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
 
   if (keys.includes("cbsa")) {
     const countyFull = scopes.get("county:2020") ?? await buildScope(CENSUS_GEO_SOURCES.county, options);
-    let delineation: CbsaDelineation | undefined;
-    const source = await censusSourceFile(CBSA_DELINEATION.url, options, async path => { delineation = await readCbsaDelineationFile(path, options.states); });
-    try {
+    const source = await censusSourceRelease(CBSA_DELINEATION.url, options, bytes => { parseCbsaDelineation(Buffer.from(bytes)); });
     const metadata = cbsaVersionMeta(countyFull, CBSA_DELINEATION.url, source.sha256);
-    const cbsa = buildCbsaScope(countyFull, delineation!, {
+    const cbsa = buildCbsaScope(countyFull, parseCbsaDelineation(Buffer.from(source.bytes)), {
       ...metadata, provenance: { ...metadata.provenance, parserVersion: CENSUS_ACQUISITION_PARSER,
-        sourceValidators: [source.sourceValidator, ...countyFull.versionMeta.provenance.sourceValidators ?? []] },
-    }, options.states?.size === 1 ? [...options.states][0] : undefined);
+        sourceValidators: [sourceValidator(source), ...countyFull.versionMeta.provenance.sourceValidators ?? []] },
+    });
     scopes.set(cbsa.version, cbsa);
-    } finally { await source.dispose(); }
   }
 
   const targets = keys.flatMap(key => GRF_SCOPES[key] ? [GRF_SCOPES[key]] : []);

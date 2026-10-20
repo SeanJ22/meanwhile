@@ -18,8 +18,8 @@ import {
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, RECONCILE_APPEND_SLACK_MS, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
-import { projectRecord, UnknownAggregate, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, reconcileWorkerCompletions } from "../lib/control-plane/repository/worker-completion.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
 import {
@@ -41,11 +41,11 @@ const CONTRACT: CivicExtractionContract = {
   expectedSourceDate: null,
 };
 
-async function harness(repos: ControlPlaneRepositories = createMemoryRepositories(), store: EvidenceStore = new MemoryEvidenceStore(), label = "") {
+async function harness(repos: ControlPlaneRepositories = createMemoryRepositories(), store: EvidenceStore = new MemoryEvidenceStore()) {
   let clock = Date.parse(START);
   const now = () => new Date(clock += 1_000).toISOString();
   const item = createWorkItem({ project: PROJECT, subject: CONTRACT.subjectId,
-    obligation: "Extract and independently verify the captured Pima event representation" + label,
+    obligation: "Extract and independently verify the captured Pima event representation",
     why: "The evidence owed to readers must survive disposable worker execution.",
     contract: { requiresValidation: true, requiresAudit: true }, now: START });
   await registerWorkItem(repos, item, START);
@@ -118,55 +118,47 @@ async function run(h: Harness, artifact: Artifact, role: FleetRole, options: {
   return records[0];
 }
 
-test("scoped completion recovery replays only named keys and cannot advance another item's or the parent's cursor", async () => {
-  const repos = createMemoryRepositories();
-  const reads: { since: string | null; keys: readonly string[] | undefined }[] = [];
-  let clock = Date.parse(START);
-  const observed: ControlPlaneRepositories = { ...repos, workerResults: { ...repos.workerResults,
-    readChangedSince: async (since, _held, options) => {
-      reads.push({ since, keys: options?.keys });
-      assert.ok(options?.page);
-      return { records: [], through: new Date(clock += 60_000).toISOString() };
-    },
-  } };
-  await reconcileWorkerCompletions(observed, { workItemIds: ["place-a", "place-a"] });
-  await reconcileWorkerCompletions(observed, { workItemIds: ["place-b"] });
-  await reconcileWorkerCompletions(observed);
-  const parentThrough = new Date(clock).toISOString();
-  await reconcileWorkerCompletions(observed, { workItemIds: ["place-a"] });
-  await reconcileWorkerCompletions(observed, { workItemIds: [] });
-  await reconcileWorkerCompletions(observed);
-  assert.deepEqual(reads, [
-    { since: null, keys: ["place-a"] },
-    { since: null, keys: ["place-b"] },
-    { since: null, keys: undefined },
-    { since: null, keys: ["place-a"] },
-    { since: new Date(Date.parse(parentThrough) - RECONCILE_APPEND_SLACK_MS).toISOString(), keys: undefined },
-  ]);
-});
-
-test("a scoped recovery cannot inherit or discard the parent's pending completions", async () => {
-  const h = await harness();
-  const artifact = await h.hold(CAPTURE);
-  const result = await run(h, artifact, "PARSER");
-  let hideCost = true;
-  const pendingReads: string[] = [];
-  const observed: ControlPlaneRepositories = { ...h.repos,
-    costs: { ...h.repos.costs, read: async key => {
-      if (hideCost) { hideCost = false; return []; }
-      return h.repos.costs.read(key);
-    } },
-    workerResults: { ...h.repos.workerResults, readWhere: async (...args) => {
-      pendingReads.push(args[0]);
-      return h.repos.workerResults.readWhere(...args);
-    } },
-  };
-  await reconcileWorkerCompletions(observed);
-  await reconcileWorkerCompletions(observed, { workItemIds: ["unrelated-place"] });
-  assert.deepEqual(pendingReads, [], "a child cannot carry the parent's pending work into its place");
-  await reconcileWorkerCompletions(observed);
-  assert.deepEqual(pendingReads, [h.item.id], "the parent's pending commit survives the scoped pass");
-  assert.equal((await h.repos.costs.read(h.item.id)).filter(cost => cost.attemptId === result.attemptId).length, 1);
+test("fleet promotion retains exact Validator transitions without artifact or unrelated work scans", async () => {
+  const {projectFleetPipeline}=await import("../lib/control-plane/workers/pipeline.ts");
+  const {appendTransition,scoutResultItemId}=await import("../lib/control-plane/promotion/pipeline.ts");
+  const h=await harness(),artifact=await h.hold(CAPTURE),parser=await run(h,artifact,"PARSER");
+  const validator=await run(h,artifact,"VALIDATOR",{producerResultId:parser.id});
+  assert.equal(validator.result.role,"VALIDATOR");
+  assert.equal(validator.result.verdict,"PASS");
+  const itemId=scoutResultItemId({attemptId:"held-scout"},null);
+  const logs=[];
+  for(const narrow of [false,true]) {
+    const log=createMemoryRepositories().promotionPipeline;
+    const fail=async():Promise<never>=>{throw new Error("unrelated history read");};
+    const repos:ControlPlaneRepositories={...h.repos,promotionPipeline:log,...(narrow?{
+      artifacts:{...h.repos.artifacts,readAll:fail},
+      attempts:{...h.repos.attempts,list:fail},
+      workItems:{...h.repos.workItems,list:fail},
+    }:{})};
+    await appendTransition(repos,{formatVersion:1,recordId:`${itemId}:scouted`,itemId,at:START,
+      actor:{role:"SCOUT",lane:"BOUNDED_MODEL_WORKER",instance:"held-scout"},stage:"SCOUTED",
+      source:{kind:"SCOUT_RESULT",attemptId:"held-scout",obligationId:"held",outcome:"EVIDENCE_FOUND",routeId:null},
+      recordClass:CONTRACT.recordClass,subjectId:CONTRACT.subjectId,canonicalUrl:artifact.canonicalUrl,
+      artifactIds:[artifact.id],scoutAttemptId:"held-scout",summary:"Held official events"},
+      {},START);
+    await projectFleetPipeline(repos);
+    const records=await log.readAll();
+    assert.deepEqual(records.map(record=>record.stage),["SCOUTED","VERIFIED"]);
+    assert.equal(records[1].stage==="VERIFIED"&&records[1].workerResultId,validator.id);
+    await projectFleetPipeline(repos);
+    assert.deepEqual(await log.readAll(),records);
+    logs.push(records);
+  }
+  assert.deepEqual(logs[1],logs[0]);
+  const log=createMemoryRepositories().promotionPipeline;
+  await log.append(itemId,logs[0][0].recordId,logs[0][0],START);
+  await projectFleetPipeline({...h.repos,promotionPipeline:log,workItems:{...h.repos.workItems,
+    readNarrowed:async(id,projection)=>{
+      assert.equal(id,h.item.id);
+      assert.deepEqual(projection,{autonomousPlan:["publication"]});
+      return {id,revision:1,updatedAt:START,value:{autonomousPlan:{publication:{contractId:"registry-runtime:AZ"}}}};
+    }}});
+  assert.deepEqual(await log.readAll(),[logs[0][0]]);
 });
 
 test("completed worker history recovers with bulk reads and no per-result replay calls", async () => {
@@ -176,66 +168,51 @@ test("completed worker history recovers with bulk reads and no per-result replay
   const records = await h.repos.workerResults.readAll();
   const fail = async (): Promise<never> => { throw new Error("historical result caused a point read or write"); };
   const observed: ControlPlaneRepositories = { ...h.repos,
-    workerResults: { ...h.repos.workerResults, readAll: fail, readSince: fail,
-      readChangedSince: async (_since, _held, options) => {
-        assert.ok(options?.page, "Recovery must consume bounded store pages.");
-        for (let page = 0; page < 30; page++) await options.page(Array.from({ length: 50 }, (_, position) => ({
-          key: records[0].workItemId, recordId: records[0].id, position, record: records[0],
-        })));
-        return { records: [], through: START };
-      } },
+    workerResults: { ...h.repos.workerResults, readAll: fail, readKeys: async keys => new Map(keys.map(key => [key, Array.from({ length: 1500 }, () => records[0])])) },
     attempts: { ...h.repos.attempts, read: fail, mustRead: fail, compareAndSet: fail },
     routeTasks: { ...h.repos.routeTasks, read: fail, mustRead: fail, compareAndSet: fail },
     leases: { ...h.repos.leases, read: fail, compareAndSet: fail },
     costs: { ...h.repos.costs, append: fail },
     workItems: { ...h.repos.workItems, read: fail, mustRead: fail, compareAndSet: fail },
   };
-  await reconcileWorkerCompletions(observed);
+  await reconcileWorkerCompletions(observed, [h.item.id]);
   const costs = await h.repos.costs.readAll();
   const historicalCosts = costs.map(({ model: _model, tier: _tier, ...cost }) => cost);
-  /* Recovery reads each result's cost rows under its work item, never the whole cost log. */
+
   await reconcileWorkerCompletions({ ...observed,
     costs: { ...observed.costs, readAll: fail, read: async (key: string) => historicalCosts.filter(cost => cost.workItemId === key) },
-  });
+  }, [h.item.id]);
   assert.deepEqual(await h.repos.costs.readAll(), costs, "Recovery preserves immutable historical charge content.");
-  // Losing the cost append is a real partial commit, even with both aggregates
-  // present. It must reach recovery, never the historical-success fast path.
+
   await assert.rejects(reconcileWorkerCompletions({ ...observed,
     costs: { ...observed.costs, readAll: fail, read: async () => [] },
-  }), /historical result caused/);
+  }, [h.item.id]), /historical result caused/);
   assert.equal((await h.repos.attempts.mustRead(parser.attemptId)).value.outcome, "COMPLETED");
 });
 
-test("lifetime worker history validates 1500 producers in bounded pages and rejects missing or divergent producers", async () => {
+test("inherited worker history reads only its producers' Attempts for 1500 results and rejects missing or divergent producers", async () => {
   const h = await harness();
   const artifact = await h.hold(CAPTURE);
   const parser = await run(h, artifact, "PARSER");
   const attempts = await h.repos.attempts.list();
-  const records = [...Array.from({ length: 1500 }, () => parser),
-    { ...parser, id: "missing-producer", attemptId: "absent" },
-    { ...parser, id: "divergent-producer", completion: { ...parser.completion,
-      closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
-  for (const record of records.slice(-2)) await h.repos.workerResults.append(record.workItemId, record.id, record, START);
   let calls = 0;
   const observed: ControlPlaneRepositories = { ...h.repos,
-    workerResults: { ...h.repos.workerResults, readAll: async () => { throw new Error("whole cp_worker_results read"); },
-      readChangedSince: async (_since, _held, options) => {
-        assert.ok(options?.page);
-        assert.ok(options.projection);
-        for (let at = 0; at < records.length; at += 64) await options.page(records.slice(at, at + 64).map((record, position) => ({
-          key: record.workItemId, recordId: record.id, position, record: projectRecord(record, options.projection!) as typeof record,
-        })));
-        return { records: [], through: START };
-      } },
+    workerResults: { ...h.repos.workerResults, readAll: async () => {
+      calls += 1;
+      return [...Array.from({ length: 1500 }, () => parser),
+        { ...parser, id: "missing-producer", attemptId: "absent" },
+        { ...parser, id: "divergent-producer", completion: { ...parser.completion,
+          closedAttempt: { ...parser.completion.closedAttempt, endedAt: "2026-09-15T00:00:00.000Z" } } }];
+    } },
     attempts: { ...h.repos.attempts, list: async () => { throw new Error("whole cp_attempts listed"); },
-      readMany: async (ids: readonly string[]) => { calls += 1; assert.ok(ids.length <= 32); return attempts.filter(row => ids.includes(row.id)); },
+      readMany: async (ids: readonly string[]) => { calls += 1; return attempts.filter(row => ids.includes(row.id)); },
       read: async () => { throw new Error("N+1 point read"); },
       mustRead: async () => { throw new Error("N+1 point read"); } },
   };
-  let inherited = 0;
-  await visitCompletedWorkerResults(observed, record => { inherited += 1; assert.equal(record.id, parser.id); });
-  assert.equal(inherited, 1500);
-  assert.equal(calls, 47);
+  const inherited = await readCompletedWorkerResults(observed);
+  assert.equal(inherited.length, 1500);
+  assert.ok(inherited.every(record => record.id === parser.id));
+  assert.equal(calls, 2);
 });
 
 test("every runtime grant denies promotion/restricted reads, and Parser/Validator deny network", () => {
@@ -286,38 +263,37 @@ test("stale producer contract and prior Validator Attempt cannot certify a diffe
   const foreignParserDispatch = await dispatchWorkerTask(h.runtime, foreignParserTask);
   assert.equal(foreignParserDispatch.outcome, "WORKED", foreignParserDispatch.detail);
   const foreignParser = (await h.repos.workerResults.read(foreignItem.id))[0]!;
-  let fallbackReads = 0;
+  let broadReads = 0;
   let batchReads = 0;
   const observedRuntime = { ...h.runtime, repos: { ...h.repos, workerResults: { ...h.repos.workerResults,
-    read: async (id: string) => { batchReads++; return h.repos.workerResults.read(id); },
-    readAll: async () => { throw new Error("country worker results read"); },
-    keysWhere: async (path: readonly string[], value: string) => { fallbackReads++; return h.repos.workerResults.keysWhere(path, value); },
+    keysWhere: async (path: readonly string[], value: string) => { batchReads++; return h.repos.workerResults.keysWhere!(path, value); },
+    readAll: async () => { broadReads++; return h.repos.workerResults.readAll(); },
   } } };
   const foreignTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
     role: "VALIDATOR", contract: CONTRACT, producerResultId: foreignParser.id, now: h.now() });
   const foreign = await dispatchWorkerTask(observedRuntime, foreignTask);
   assert.equal(foreign.outcome, "FAILED");
   assert.match(foreign.detail, /WORKER_EXACT_CANDIDATE_BINDING_REFUSED/);
-  assert.equal(fallbackReads, 1, "A foreign reference retains the exact cross-work refusal through the original point helper.");
+  assert.equal(broadReads, 0, "A foreign reference retains exact ownership refusal through the indexed lookup.");
   const missingTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
     role: "VALIDATOR", contract: CONTRACT, producerResultId: "wr-absent-producer", now: h.now() });
   const missing = await dispatchWorkerTask(observedRuntime, missingTask);
   assert.equal(missing.outcome, "FAILED");
   assert.match(missing.detail, /WORKER_RESULT_MISSING/);
-  assert.equal(fallbackReads, 2, "An absent reference keeps its original failure classification.");
+  assert.equal(broadReads, 0, "An absent reference keeps its failure classification without reading history.");
   assert.equal(batchReads, 2);
   const unreadableTask = await enqueueWorkerTask(h.repos, { workItemId: h.item.id, artifactId: artifact.id,
     role: "VALIDATOR", contract: CONTRACT, producerResultId: first.id, replayLabel: "unreadable-batch", now: h.now() });
   let failedBatchReads = 0;
   const unreadable = await dispatchWorkerTask({ ...observedRuntime, repos: { ...observedRuntime.repos,
     workerResults: { ...observedRuntime.repos.workerResults,
-      read: async () => { failedBatchReads++; throw new Error("RESULT_BATCH_UNREADABLE"); },
+      readKeys: async () => { failedBatchReads++; throw new Error("RESULT_BATCH_UNREADABLE"); },
     },
   } }, unreadableTask);
   assert.equal(unreadable.outcome, "FAILED");
   assert.match(unreadable.detail, /RESULT_BATCH_UNREADABLE/);
   assert.equal(failedBatchReads, 1, "A failed read is neither retried nor treated as an absent result.");
-  assert.equal(fallbackReads, 2, "An unreadable batch never falls back to a whole-history read.");
+  assert.equal(broadReads, 0, "An unreadable batch fails without reading whole history.");
   for (const failed of [stale, changed, foreign, missing, unreadable]) {
     assert.equal(failed.dispositionCommitted, false);
     assert.equal((await h.repos.attempts.mustRead(failed.attemptId!)).value.outcome, "ABORTED");
@@ -376,7 +352,7 @@ async function temporaryStore<T>(runTest: (root: string) => Promise<T>): Promise
   }
 }
 
-for (const scoped of [false, true]) test(`file-provider restart ${scoped ? "scoped recovery" : "global recovery"} reconciles a committed result before an expired-lease sweep can manufacture failure`, async () => temporaryStore(async (root) => {
+test("file-provider restart reconciles a committed result before an expired-lease sweep can manufacture failure", async () => temporaryStore(async (root) => {
   const storePath = path.join(root, "control-plane");
   const h = await harness(await createFileRepositories(storePath), new DurableEvidenceStore(path.join(root, "vault")));
   const artifact = await h.hold(CAPTURE);
@@ -395,23 +371,10 @@ for (const scoped of [false, true]) test(`file-provider restart ${scoped ? "scop
   const reopened = await createFileRepositories(storePath);
   const lease = (await reopened.leases.mustRead(task.id)).value;
   const afterExpiry = new Date(Date.parse(lease.expiresAt) + 60_000).toISOString();
-  const fail = async (): Promise<never> => { throw new Error("UNRELATED_RECOVERY_HISTORY_READ"); };
-  const selected: ControlPlaneRepositories = { ...reopened,
-    workerResults: { ...reopened.workerResults, readAll: fail, readChangedSince: async (...args) => {
-      assert.deepEqual(args[2]?.keys, [h.item.id]);
-      return reopened.workerResults.readChangedSince(...args);
-    } },
-    routeTasks: { ...reopened.routeTasks, list: fail, listChangedSince: fail },
-    attempts: { ...reopened.attempts, list: fail, listChangedSince: fail },
-    leases: { ...reopened.leases, list: fail, listChangedSince: fail },
-    costs: { ...reopened.costs, readAll: fail },
-  };
-  const recoveryRepos = scoped ? selected : reopened;
-  const sweep = await sweepExpiredLeases(recoveryRepos, { now: afterExpiry, observedBy: "restarted-supervisor",
-    ...(scoped ? { workItemIds: [h.item.id] } : {}) });
+  const sweep = await sweepExpiredLeases(reopened, { now: afterExpiry, observedBy: "restarted-supervisor" });
   assert.deepEqual(sweep.reclaimed, [], "An appended result is already committed; lease expiry cannot rewrite it to LEASE_EXPIRED.");
   assert.deepEqual(sweep.refused, []);
-  await reconcileWorkerCompletions(recoveryRepos, scoped ? { workItemIds: [h.item.id] } : undefined);
+  await reconcileWorkerCompletions(reopened, [h.item.id]);
   const readback = await readCompletedWorkerResult(reopened, committed.id);
   assert.equal(readback.attempt.outcome, "COMPLETED");
   assert.equal((await reopened.routeTasks.mustRead(task.id)).value.state, "RESULT_RECORDED");
@@ -421,59 +384,6 @@ for (const scoped of [false, true]) test(`file-provider restart ${scoped ? "scop
   assert.equal(item.state, "AWAITING_VALIDATION");
   assert.equal(item.transitions.filter((transition) => transition.by === `worker-result:${committed.id}`).length, 1);
 }));
-
-test("global recovery reports an orphan result, continues other work and retries it beyond the cursor; scoped recovery still refuses its missing owner", async () => {
-  const repos = createMemoryRepositories(), store = new MemoryEvidenceStore();
-  const orphan = await harness(repos, store, " orphan history"), independent = await harness(repos, store, " independent history");
-  const orphanResult = await run(orphan, await orphan.hold(CAPTURE), "PARSER");
-  const artifact = await independent.hold(CAPTURE);
-  const task = await enqueueWorkerTask(repos, { workItemId: independent.item.id, role: "PARSER", artifactId: artifact.id, contract: CONTRACT, now: independent.now() });
-  const crashing: ControlPlaneRepositories = { ...repos, attempts: { ...repos.attempts, compareAndSet: async (...args) => {
-    if (args[2].workItemId === independent.item.id && args[2].outcome === "COMPLETED") throw Error("SEEDED_CRASH_AFTER_RESULT_COMMIT");
-    return repos.attempts.compareAndSet(...args);
-  } } };
-  await assert.rejects(dispatchWorkerTask({ ...independent.runtime, repos: crashing }, task), /SEEDED_CRASH_AFTER_RESULT_COMMIT/);
-  const independentResult = (await repos.workerResults.read(independent.item.id))[0];
-  assert.ok(independentResult);
-  const readWorkItems = repos.workItems.readMany;
-  if (typeof readWorkItems !== "function") throw Error("The actual memory provider must support batched work-item reads");
-  let absent = true, globalReads = 0, pendingReads = 0;
-  const observed: ControlPlaneRepositories = { ...repos,
-    workItems: { ...repos.workItems,
-      read: async id => absent && id === orphan.item.id ? null : repos.workItems.read(id),
-      readMany: async ids => (await readWorkItems.call(repos.workItems, ids)).filter(row => !absent || row.id !== orphan.item.id),
-      mustRead: async id => { if (absent && id === orphan.item.id) throw new UnknownAggregate("WorkItem", id); return repos.workItems.mustRead(id); },
-    },
-    workerResults: { ...repos.workerResults,
-      readWhere: async (...args) => { if (args[0] === orphan.item.id) pendingReads++; return repos.workerResults.readWhere(...args); },
-      readChangedSince: async (...args) => {
-        if (args[2]?.keys) return repos.workerResults.readChangedSince(...args);
-        if (globalReads++ === 0) return repos.workerResults.readChangedSince(...args);
-        assert.ok(args[0], "The global source cursor advances even while a missing owner stays pending.");
-        return { records: [], through: "2026-12-01T00:00:00.000Z" };
-      },
-    },
-  };
-  const later = "2026-12-02T00:00:00.000Z";
-  const first = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
-  assert.equal(first.refused.length, 1); assert.equal(first.refused[0].routeTaskId, orphanResult.routeTaskId);
-  assert.match(first.refused[0].why, new RegExp(orphanResult.id)); assert.match(first.refused[0].why, new RegExp(orphan.item.id));
-  assert.deepEqual(first.reclaimed, []);
-  assert.equal((await readCompletedWorkerResult(repos, independentResult.id)).attempt.outcome, "COMPLETED");
-  assert.equal((await repos.workItems.mustRead(independent.item.id)).value.state, "AWAITING_VALIDATION");
-  assert.equal((await repos.costs.read(independent.item.id)).filter(row => row.attemptId === independentResult.attemptId).length, 1);
-  await assert.rejects(reconcileWorkerCompletions(observed, { workItemIds: [orphan.item.id] }), error =>
-    error instanceof UnknownAggregate && error.kind === "WorkItem" && error.id === orphan.item.id);
-  const second = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
-  assert.equal(second.refused.length, 1); assert.ok(pendingReads > 0);
-  absent = false;
-  const recovered = await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
-  assert.deepEqual(recovered.refused, []);
-  const readsAfterRecovery = pendingReads;
-  await sweepExpiredLeases(observed, { now: later, observedBy: "orphan-regression" });
-  assert.equal(pendingReads, readsAfterRecovery, "Successfully reconciled owner history leaves the retry set.");
-  assert.equal((await repos.costs.read(orphan.item.id)).filter(row => row.attemptId === orphanResult.attemptId).length, 1);
-});
 
 test("partial computation lost before commit stays nonterminal, then lease recovery runs a fresh Parser", async () => temporaryStore(async (root) => {
   const storePath = path.join(root, "control-plane");
@@ -486,8 +396,7 @@ test("partial computation lost before commit stays nonterminal, then lease recov
     worker: { role: "PARSER", provider: "we-the-people", version: FLEET_IMPLEMENTATION_VERSION, instance: "lost-parser" },
     now: at, methodVersion: METHOD_VERSION, policyVersion: FLEET_POLICY_VERSION });
   await assert.rejects(runIsolatedSource('const partial = JSON.parse(INPUT_JSON).slice(0, 4); if(partial.length) throw new Error("SEEDED_PARSER_CRASH_AFTER_PARTIAL");', JSON.parse(CAPTURE), 2_000), /SEEDED_PARSER_CRASH_AFTER_PARTIAL/);
-  // The supervisor is deliberately abandoned here; the worker never writes its
-  // own crash outcome. A fresh repository observes an expired execution lease.
+
   const reopened = await createFileRepositories(storePath);
   assert.equal((await reopened.attempts.mustRead(attempt.id)).value.outcome, null);
   assert.equal((await reopened.workerResults.readAll()).length, 0);

@@ -60,10 +60,7 @@ async function main(): Promise<void> {
   try {
     receipt = await withPublisherAcquisitionDeadline("Census of Governments (2022)", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, (signal) => acquireRegistrationSource({ signal }));
     confirmedBy = receipt.confirmedBy;
-    if (receipt.release) {
-      try { refreshed = await registrationReferenceFromRelease(reference, receipt.release); }
-      finally { await receipt.release.dispose(); }
-    }
+    if (receipt.release) refreshed = registrationReferenceFromRelease(reference, receipt.release);
   } catch (error) {
     sourceFailure = error;
     sourceFailedAt = new Date().toISOString();
@@ -76,15 +73,13 @@ async function main(): Promise<void> {
     try {
       const release = await withPublisherAcquisitionDeadline(`NCES ${kind}`, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, signal => acquireSchoolRelease(kind, { signal,
         onSourceUrl: url => { schoolUrl = url; } }));
-      try {
       const listings = referenceGovernmentListings(refreshed);
       if (kind === "lea-directory") {
         const updated = new Map(listings.map(row => [row.id, row]));
-        for (const row of await schoolListingsFromRelease(refreshed, release)) updated.set(row.id, row);
+        for (const row of schoolListingsFromRelease(refreshed, release)) updated.set(row.id, row);
         refreshed = { ...refreshed, listings: [...updated.values()] };
-      } else refreshed = { ...refreshed, listings: await applyF33NativeCrosswalk(listings, release) };
+      } else refreshed = { ...refreshed, listings: applyF33NativeCrosswalk(listings, release) };
       schoolChecks.push(knownReleaseSourceCheck(release));
-      } finally { await release.dispose(); }
     } catch (error) {
       const detail = `NCES ${kind}: ${error instanceof Error ? error.message : String(error)}`;
       capabilityGaps.push(detail);

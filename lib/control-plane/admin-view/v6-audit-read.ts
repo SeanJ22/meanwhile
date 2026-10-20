@@ -1,6 +1,6 @@
 /** Percentage over facts the audit could judge; an unreadable page is counted apart; a fact audited twice counts once; nothing audited reads "—", never 0%. */
 import type { AuditCoverageReport } from "../workers/audit-sampling.ts";
-import type { PickReason } from "../workers/live-audit.ts";
+import type { LiveAuditResult, PickReason } from "../workers/live-audit.ts";
 
 export const AUDIT_WEEK_DAYS = 7;
 
@@ -46,13 +46,39 @@ export function coverageLineFrom(report: AuditCoverageReport | null | undefined)
   return `${parts.join(", ")}.`;
 }
 
-/** Counts and the week's correction metadata; saved source values never need to enter this reading. */
-export function auditAccuracyFromCounts(input: Pick<AuditAccuracyReading, "audited"|"stillRight"|"wrong"|"couldNotJudge"|"fixed"|"pulled"|"fixedFacts"|"byReason"> & {
-  readonly now: string; readonly coverage?: AuditCoverageReport|null;
+export function weeklyAuditAccuracy(input: {
+  readonly results: readonly LiveAuditResult[];
+  readonly corrections: readonly AuditCorrection[];
+  readonly now: string;
+  readonly coverage?: AuditCoverageReport | null;
 }): AuditAccuracyReading {
-  const {audited, stillRight, wrong, couldNotJudge, fixed, pulled, fixedFacts, byReason} = input;
-  const to = input.now, from = new Date(Date.parse(to) - AUDIT_WEEK_DAYS * 86_400_000).toISOString();
+  const to = input.now;
+  const fromMs = Date.parse(to) - AUDIT_WEEK_DAYS * 86_400_000;
+  const from = new Date(fromMs).toISOString();
+  const inWeek = (at: string) => Date.parse(at) > fromMs && Date.parse(at) <= Date.parse(to);
+
+  const latest = new Map<string, LiveAuditResult>();
+  for (const result of [...input.results].filter((r) => inWeek(r.checkedAt)).sort((a, b) => a.checkedAt.localeCompare(b.checkedAt))) {
+    latest.set(result.factId, result);
+  }
+  const week = [...latest.values()];
+  const stillRight = week.filter((r) => r.verdict === "GREEN").length;
+  const wrong = week.filter((r) => r.verdict === "RED").length;
+  const couldNotJudge = week.filter((r) => r.verdict === "INCONCLUSIVE").length;
+  const audited = stillRight + wrong;
+
+  const byFact = new Map(input.results.map((r) => [r.factId, r] as const));
+  const corrections = [...input.corrections].filter((c) => inWeek(c.at)).sort((a, b) => a.at.localeCompare(b.at));
+  const fixedFacts: FixedFact[] = corrections.map((c) => {
+    const known = byFact.get(c.factId);
+    return { factId: c.factId, family: known?.family ?? "—", area: known?.area ?? "—", action: c.action, at: c.at, summary: c.summary };
+  });
+  const byReason: Record<PickReason, number> = { PAST_REFRESH: 0, DEMAND: 0, SINGLE_SOURCE: 0, ROUTINE: 0 };
+  for (const r of week) byReason[r.pickedBecause] += 1;
+
   const accuratePercent = audited > 0 ? Math.round((100 * stillRight) / audited) : null;
+  const fixed = fixedFacts.filter((f) => f.action === "FIXED").length;
+  const pulled = fixedFacts.filter((f) => f.action === "PULLED").length;
   const handled = fixed + pulled;
   const sentence = accuratePercent === null
     ? "—"

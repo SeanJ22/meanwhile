@@ -9,9 +9,6 @@ import { dirname, join } from "node:path";
 
 import { runtimePackageManagerCommand } from "./runtime-release-handoff.ts";
 import { carryBackRuntimeState, linkRuntimeState } from "./runtime-release-switch.ts";
-import { routineProcessSlots, type WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
-import { endOwnedProcessTree } from "../../scripts/pilot-runtime-child.mts";
-import { sanitizedErrorDiagnostic } from "./error-diagnostic.ts";
 
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 const GIT_TIMEOUT_MS = 2 * 60_000;
@@ -38,45 +35,27 @@ export interface AsyncCommandResult {
 export type AsyncRunCommand = (
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv; readonly memoryEntry?: string },
+  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv },
 ) => Promise<AsyncCommandResult>;
 
 /** Asynchronous so the runner's admission clocks keep ticking while Git and the install run. */
-export function admittedAsyncRunCommand(slots: WorkerProcessSlots = routineProcessSlots()): AsyncRunCommand {
-  return async (executable, args, options) => {
-  const deadline = Date.now() + options.timeoutMs;
-  let release: Awaited<ReturnType<WorkerProcessSlots["acquire"]>>;
-  try { release = await slots.acquire(options.memoryEntry ?? "runtime-release-command.mjs", deadline); }
-  catch (error) { return { status: null, stdout: "", stderr: sanitizedErrorDiagnostic(error) }; }
-  try {
-    if (Date.now() >= deadline) return { status: null, stdout: "", stderr: "WORKER_MEMORY_DEADLINE: release command remains owed" };
-    return await new Promise<AsyncCommandResult>(resolve => {
-    const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? process.env,
-      detached: process.platform !== "win32", windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+export const defaultAsyncRunCommand: AsyncRunCommand = (executable, args, options) =>
+  new Promise(resolve => {
+    const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? process.env, stdio: ["ignore", "pipe", "pipe"] });
     const stdout: Buffer[] = [];
     let stdoutBytes = 0;
     let overflow = false;
     let stderr = "";
-    let terminating: Promise<void> | null = null;
-    const stop = () => terminating ??= endOwnedProcessTree(child).catch(error => { stderr += `\n${sanitizedErrorDiagnostic(error)}`; child.kill("SIGKILL"); });
-    const timer = setTimeout(() => { void stop(); }, Math.max(1, deadline - Date.now()));
-    child.once("spawn", () => release.observe?.(child.pid!));
+    const timer = setTimeout(() => child.kill("SIGKILL"), options.timeoutMs);
     child.stdout.on("data", chunk => {
       stdoutBytes += chunk.length;
-      if (stdoutBytes > 16 * 1024 * 1024) { overflow = true; void stop(); }
+      if (stdoutBytes > 16 * 1024 * 1024) { overflow = true; child.kill("SIGKILL"); }
       else stdout.push(Buffer.from(chunk));
     });
     child.stderr.on("data", chunk => { stderr = (stderr + String(chunk)).slice(-64_000); });
-    child.on("error", error => { stderr += error.message; });
-    child.on("close", status => { clearTimeout(timer); void (async () => {
-      if (terminating) await terminating;
-      resolve({ status: overflow ? null : status, stdout: overflow ? "" : Buffer.concat(stdout).toString("utf8"), stderr: overflow ? `${stderr}\nCOMMAND_STDOUT_LIMIT_EXCEEDED` : stderr });
-    })(); });
-    });
-  } finally { release(); }
-  };
-}
-export const defaultAsyncRunCommand: AsyncRunCommand = admittedAsyncRunCommand();
+    child.on("error", error => { clearTimeout(timer); resolve({ status: null, stdout: "", stderr: `${stderr}${error.message}` }); });
+    child.on("close", status => { clearTimeout(timer); resolve({ status: overflow ? null : status, stdout: overflow ? "" : Buffer.concat(stdout).toString("utf8"), stderr: overflow ? `${stderr}\nCOMMAND_STDOUT_LIMIT_EXCEEDED` : stderr }); });
+  });
 
 export function stagedReleaseDirectory(root: string, targetSha: string): string {
   return join(root, STAGED_RELEASES_RELATIVE_DIR, targetSha.toLowerCase());
@@ -185,8 +164,7 @@ export async function stageRuntimeRelease(input: {
 
   const command = runtimePackageManagerCommand();
   if (command === null) return fail("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry");
-  const installed = await run(command.executable, command.args, { cwd: directory, timeoutMs: INSTALL_TIMEOUT_MS,
-    env: { ...process.env, CI: "true" }, memoryEntry: "runtime-release-install.mjs" });
+  const installed = await run(command.executable, command.args, { cwd: directory, timeoutMs: INSTALL_TIMEOUT_MS, env: { ...process.env, CI: "true" } });
   if (installed.status !== 0) return fail("FROZEN_INSTALL_FAILED", concise(installed));
 
   const head = await run("git", ["rev-parse", "HEAD"], { cwd: directory, timeoutMs: GIT_TIMEOUT_MS });

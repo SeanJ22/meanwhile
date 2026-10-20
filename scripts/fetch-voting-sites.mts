@@ -1,4 +1,3 @@
-import { replayBytesAs } from "../lib/sources/verified-replay.ts";
 import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 /* @freshness-reads-here */
 import { createHash } from "node:crypto";
@@ -16,7 +15,6 @@ import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import { votingSitesCandidate, votingSitesContract, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { disposeVotingFetchRuntime } from "../lib/ballot/voting-source-fetch.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -134,7 +132,7 @@ export function votingSourceEvidence(vault: EvidenceStore, door: VotingSourceDoo
   const links = new Set<string>();
   for (let page = door.officialLinkingPage; page; page = page.linkingPage ?? undefined) {
     links.add(page.url);
-    if (!bodies.has(page.url)) bodies.set(page.url, replayBytesAs(page, "html", { url: page.url, contentType: "text/html" }));
+    if (!bodies.has(page.url)) bodies.set(page.url, { url: page.url, contentType: "text/html", bytes: new TextEncoder().encode(page.html) });
   }
   for (const capture of captures) if (links.has(capture.url) || capture.url === door.url) bodies.set(capture.url, capture);
   return holdVotingRawEvidence(vault, { rawBodies: [...bodies.values()] });
@@ -224,7 +222,6 @@ async function main() {
           geocodes.set(address, point); return point;
         },
       };
-      try {
       const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = [], persistent = true) => {
         if (door.scope.state !== state) throw new Error("Voting source crossed its state publication scope.");
         if (reads.has(door.id)) return;
@@ -325,7 +322,6 @@ async function main() {
         jurisdictions: held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) });
       await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now() });
       console.log(`${state}: ${[...observations.values()].filter(kind => kind === "DOOR").length} publishing doors, ${[...observations.values()].filter(kind => kind === "EVIDENCE").length} evidence captures, ${[...observations.values()].filter(kind => kind === "SKIP").length} skips, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
-      } finally { disposeVotingFetchRuntime(runtime); }
     }
     if (!publications) throw new Error("No official voting-source result could be published; prior facts and open hunter work are retained.");
   } catch (error) {

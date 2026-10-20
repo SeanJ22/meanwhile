@@ -4,7 +4,7 @@
  * Scout work stays durably owed, deferred by name.
  */
 
-import type { FreshnessDetailReference, RunnerHeartbeat } from "../owner-surface.ts";
+import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
 import { MODEL_FOR_CLASS, SCOUT_STEPS } from "./model-routing.ts";
@@ -134,11 +134,8 @@ export interface ResearchState {
     readonly lanes?: import("./lane-reading.ts").QueueLanes | null;
   };
   readonly running: readonly RunningScout[];
-  /** Finite examples; exact condition history is retained in the referenced report. */
+  /** Named runtime conditions preventing eligible Scout work from dispatching. Empty when none. */
   readonly runtimeConditions: readonly string[];
-  readonly runtimeConditionCount?: number;
-  readonly runtimeConditionDetails?: FreshnessDetailReference;
-  readonly runtimeConditionDetailsUnavailable?: string | null;
   readonly cyclePhases?: readonly import("./cycle-phases.ts").CyclePhase[];
   readonly methodCandidates: {
     readonly proposed: number;
@@ -308,7 +305,7 @@ export function scoutSpendInWindow(
 }
 
 /** Both model lanes consume the existing rolling research ceiling, read from the spend window's priced charges. */
-export function researchSpendInWindow(charges: Iterable<PricedCharge>, nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: Iterable<SpendHold> = []) {
+export function researchSpendInWindow(charges: readonly PricedCharge[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours, spendHolds: readonly SpendHold[] = []) {
   const spend = aggregatePricedSpend(charges,
     new Date(Date.parse(nowIso) - windowHours * 3_600_000).toISOString(), nowIso, spendHolds);
   return { windowUsd: spend.usd, knownUsd: spend.knownUsd, measured: spend.measured, unmeasured: spend.unmeasured };
@@ -458,13 +455,11 @@ export function deriveLevel1(input: {
   }
 
   const runtime = input.state?.runtimeConditions ?? [];
-  const runtimeCount = input.state?.runtimeConditionCount ?? runtime.length;
   conditions.push({
     name: "no known runtime condition preventing eligible Scout work from dispatching",
-    ok: runtimeCount === 0,
+    ok: runtime.length === 0,
     required: false,
-    reason: runtimeCount === 0 ? "none reported by the last cycle" :
-      `${runtimeCount} runtime conditions${runtimeCount > Math.min(runtime.length, 12) ? `; first ${Math.min(runtime.length, 12)} shown, full history in the cycle report` : ""}: ${runtime.slice(0, 12).join("; ")}`,
+    reason: runtime.length === 0 ? "none reported by the last cycle" : runtime.join("; "),
   });
 
   const failingRequired = conditions.filter((c) => c.required && !c.ok);

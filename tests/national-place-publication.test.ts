@@ -9,7 +9,7 @@ import { factDb } from "./helpers/fact-db.ts";
 import sharp from "sharp";
 
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { nationalDelivery, publishNationalPlaceSources,createNationalPlacePublisher, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
+import { nationalDelivery, publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
@@ -28,7 +28,6 @@ import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts"
 import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
-import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 
 function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
   const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
@@ -75,7 +74,6 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   return store;
 }
 
-
 const NOW = "2026-09-29T20:00:00.000Z";
 const OH = "ocd-division/country:us/state:oh";
 
@@ -95,19 +93,6 @@ async function seeded() {
 async function store() {
   return stateRegistryRuntimeStore("OH");
 }
-
-test("one state publisher reuses its genuine base for empty callbacks and emits no invented confirmation",async()=>{
-  const s=await store(),facts=await seeded(),read=s.readPromotion.bind(s),identity=s.readPromotionIdentity.bind(s);
-  let fullReads=0,identityReads=0;
-  s.readPromotion=async<T>(recordClass:RoutineRecordClass,scope:string)=>{fullReads++;return read<T>(recordClass,scope);};
-  s.readPromotionIdentity=async(...args)=>{identityReads++;return identity(...args);};
-  const publish=createNationalPlacePublisher(s,"OH"),input={state:"OH",store:s,facts,clocks,now:NOW,divisions:[],geographyCaptures:[],sources:{officials:[]}};
-  const first=await publish(input),initialReads=fullReads;
-  for(let n=0;n<25;n++)assert.deepEqual(await publish(input),first);
-  assert.equal(initialReads,1);assert.equal(fullReads,initialReads);assert.equal(identityReads,25);
-  assert.deepEqual(first,{candidateId:null,promotedVersionId:null,divisions:[],bodies:[],members:[],gaps:[]});
-  assert.throws(()=>publish({...input,state:"AZ"}),/PUBLISHER_STATE_MISMATCH/);
-});
 
 const placeUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?geometry=43215";
 const houseUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/2/query?geometry=43215";
@@ -137,8 +122,7 @@ test("national place publication keeps legislative people on their single state 
 test("statewide successor identities and candidacy checks cannot inherit the prior actor",async()=>{
   const s=await store(),facts=await seeded();
   const official=(name:string)=>({discoveryId:"governor",divisionId:OH,name,officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:capture(`<h1>Governor ${name}</h1><p>Governor of Ohio</p>`,governorUrl)}});
-  const publish=createNationalPlacePublisher(s,"OH");
-  const run=(name:string)=>publish({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
+  const run=(name:string)=>publishNationalPlaceSources({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
   const first=await run("Mike DeWine");assert.deepEqual(first.gaps,[]);
   const old=(await readRegistryRuntimePrior(s,NOW,"OH"))!.payload.statewideExecutives.find(row=>row.stateOcdId===OH)!;
   const same=await run("Mike DeWine");assert.equal(same.candidateId,null);

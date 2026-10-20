@@ -1,6 +1,6 @@
-import { readRuntimeAdminConfig } from "../control-plane/runtime-admin-config.ts";
 import { canonicalModelId } from "../models.ts";
 import { randomUUID } from "node:crypto";
+import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { costEntryWithModel } from "../control-plane/cost.ts";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { WORKER_SAFETY_FRAME, rolePlaybook, readRolePlaybookRow, type RolePlaybookEntry } from "../control-plane/playbooks.ts";
@@ -14,7 +14,7 @@ import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-record
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-type TranslationCostRepos = FieldManualRepos & Partial<Pick<ControlPlaneRepositories, "costs">>;
+type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spend">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
 import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
@@ -55,17 +55,15 @@ function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTra
     const response = await send(request);
     const usage = readMeteredUsage(response.usage, response.batch === true);
     const at = new Date().toISOString(), id = `translation:${randomUUID()}`;
-    if (repos.costs) {
-      const checker = request.tools[0]?.name.startsWith("check_") === true;
-      const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
-        source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
-        costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
-        cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
-          inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
-          outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
-          durationMs: Math.round(performance.now() - started) } }, response.model);
-      await repos.costs.append(subjectId, id, entry, at);
-    }
+    const checker = request.tools[0]?.name.startsWith("check_") === true;
+    const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
+      source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+      costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
+      cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
+        inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
+        outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
+        durationMs: Math.round(performance.now() - started) } }, response.model);
+    await recordCost(repos, entry, at);
     return response;
   };
 }
@@ -184,7 +182,7 @@ export async function translateMeasure(input: {
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
-  const kinds = runtimeKinds((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
+  const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
     sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
     partKinds: kinds.measurePart }));

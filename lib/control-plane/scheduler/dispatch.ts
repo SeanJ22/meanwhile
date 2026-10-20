@@ -1,11 +1,4 @@
-/**
- * Hands due work to disposable workers: claim, decide the executor, run, record, compute next due.
- * Leases and reclaim belong to the coordinator. Nothing here closes an Attempt in a `finally`: a killed
- * process runs none, so death is observed from outside by an expired lease (`sweepExpiredLeases`).
- */
-
-import { type AttemptCost, type AttemptOutcome, type ExecutionLease, type WorkerRef } from "../attempt.ts";
-import { forEachAggregate } from "../workers/streamed-history.ts";
+import { isExpired, type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
 import {
   abandonAttempt,
   beginAttemptFor,
@@ -23,7 +16,6 @@ import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerR
 import { PolicyRefusal } from "../capability.ts";
 import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare, type ModelRequestBound } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
-import { DiskRows } from "./disk-rows.ts";
 
 import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
 
@@ -93,11 +85,6 @@ export function chooseExecutor(
   };
 }
 
-/**
- * The one executor-decision rule: a machine-executable shape (declared, or graduated since) runs
- * DETERMINISTIC; genuine novelty with no shape to replay runs BOUNDED_MODEL_WORKER. A disagreement between
- * the declaration and the method store, or a declaration contradicting its own opening, is recorded.
- */
 export interface ExecutorDecision {
   readonly kind: ExecutorKind;
   readonly why: string;
@@ -305,10 +292,6 @@ function unanswered(outcome: WorkOutcome | undefined): Pick<CostEntry, "modelReq
   return bound ? { modelRequestBound: bound, requestedModel: bound.model } : {};
 }
 
-/**
- * Claim one obligation's due work and run it through the canonical lifecycle: claim, begin Attempt, run,
- * record artifacts, dispose, close Attempt, release lease, record cost. A losing claim is a normal outcome.
- */
 export async function dispatchOne(
   repos: ControlPlaneRepositories,
   input: {
@@ -316,9 +299,7 @@ export async function dispatchOne(
     readonly routeTaskId: string | null;
     readonly holder: string;
     readonly now: string;
-    /** Actual wall time for claim, Attempt start and terminal writes. `now`
-     * remains the cycle's scheduling observation. Omission keeps deterministic
-     * legacy callers on their supplied timestamp. */
+
     readonly clock?: () => string;
     readonly leaseTtlMs: number;
     readonly bound?: WorkerBound;
@@ -378,9 +359,7 @@ export async function dispatchOne(
       ttlMs: input.leaseTtlMs,
     });
   } catch (error) {
-    /* A live foreign lease — the other worker has it — or a settled route the
-       coordinator refuses (`RouteTaskSettled`). Either way nothing was claimed,
-       no Attempt opens, and this one moves on. */
+
     return {
       obligationId,
       routeTaskId: input.routeTaskId,
@@ -415,11 +394,7 @@ export async function dispatchOne(
     policyVersion: input.policyVersion ?? "unversioned",
   });
   const attemptId = attempt.value.id;
-  /*
-   * `executor` is filled in per return with what the worker REPORTED, so the
-   * chosen kind cannot leak into the record as the fact. `base` deliberately
-   * does not carry it.
-   */
+
   const base = {
     obligationId,
     routeTaskId: input.routeTaskId,
@@ -526,9 +501,6 @@ export async function dispatchOne(
     await renewal;
   }
 
-  // The executor's measured end is authoritative when it supplies one. A
-  // missing end uses the injected wall clock. An invalid/backward reported end
-  // is named and replaced only by a separately valid wall-clock observation.
   const observedEnd=input.clock?.()??input.now;
   // A worker-result record's own endedAt is the time completeWorkerTask will
   // persist; a separate outcome end must never mask a malformed record clock.
@@ -593,10 +565,6 @@ export async function dispatchOne(
       artifactIds: record.inputArtifactIds, cost: record.cost, detail: outcome.detail };
   }
 
-  /*
-   * Artifacts are recorded first so a disposition can cite them. An artifact the log refuses (same content
-   * under another canonical URL) is recorded by name and does not leave the Attempt open.
-   */
   const artifactIds: string[] = [];
   const artifactRefusals: string[] = [];
   const seenArtifactIds = new Set<string>();
@@ -742,50 +710,33 @@ export async function dispatchOne(
 }
 
 /** Reclaim every route whose holder stopped renewing. A live lease is skipped, never forced. */
-type ReclaimRows<T, D extends boolean> = D extends true ? DiskRows<T> : readonly T[];
-export interface ReclaimSweep<D extends boolean = false> {
-  readonly reclaimed: ReclaimRows<string, D>;
+export interface ReclaimSweep {
+  readonly reclaimed: readonly string[];
   /** Expired leases on routes already disposed, released as dead state; each appears once. */
-  readonly releasedSettled: ReclaimRows<string, D>;
-  readonly stillLive: ReclaimRows<string, D>;
-  readonly refused: ReclaimRows<{ readonly routeTaskId: string; readonly why: string }, D>;
+  readonly releasedSettled: readonly string[];
+  readonly stillLive: readonly string[];
+  readonly refused: readonly { readonly routeTaskId: string; readonly why: string }[];
 }
-interface ReclaimOutput<T> { readonly rows: DiskRows<T>; add(value: T): void }
-export interface ReclaimSink {
-  readonly reclaimed: ReclaimOutput<string>;
-  readonly releasedSettled: ReclaimOutput<string>;
-  readonly stillLive: ReclaimOutput<string>;
-  readonly refused: ReclaimOutput<{ readonly routeTaskId: string; readonly why: string }>;
-}
-type ReclaimInput = { readonly now: string; readonly observedBy: string; readonly workItemIds?: readonly string[] };
-export function sweepExpiredLeases(repos: ControlPlaneRepositories, input: ReclaimInput & { readonly sink: ReclaimSink }): Promise<ReclaimSweep<true>>;
-export function sweepExpiredLeases(repos: ControlPlaneRepositories, input: ReclaimInput & { readonly sink?: undefined }): Promise<ReclaimSweep<false>>;
+
 export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
-  input: ReclaimInput & { readonly sink?: ReclaimSink },
-): Promise<ReclaimSweep<boolean>> {
-  const output = <T>(sink: ReclaimOutput<T> | undefined) => {
-    if (sink) {
-      let count = 0;
-      return { rows: new DiskRows<T>(() => sink.rows, () => count), add: (row: T) => { sink.add(row); count++; } };
-    }
-    const rows: T[] = []; return { rows, add: (row: T) => { rows.push(row); } };
-  };
-  const reclaimed = output(input.sink?.reclaimed), releasedSettled = output(input.sink?.releasedSettled);
-  const stillLive = output(input.sink?.stillLive), refused = output(input.sink?.refused);
-  // A missing historical owner refuses that result, remains pending for retry,
-  // and cannot prevent other committed workers from being recovered.
-  // A scoped task still throws when its own required WorkItem is absent.
-  await reconcileWorkerCompletions(repos, input.workItemIds === undefined ? undefined : { workItemIds: input.workItemIds }, row => refused.add({
-    routeTaskId: row.routeTaskId, why: `Worker completion ${row.resultId} remains pending: ${row.why}`,
-  }));
+  input: { readonly now: string; readonly observedBy: string },
+): Promise<ReclaimSweep> {
+  // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
+  const leases = await repos.leases.listWhere(["released"], "false");
+  const tasks = await Promise.all(leases.map(row => repos.routeTasks.mustRead(row.value.routeTaskId)));
+  await reconcileWorkerCompletions(repos, [...new Set(tasks.map(row => row.value.workItemId))]);
+  const reclaimed: string[] = [];
+  const releasedSettled: string[] = [];
+  const stillLive: string[] = [];
+  const refused: { routeTaskId: string; why: string }[] = [];
 
-  const visitLease = async (row: { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> }) => {
+  for (const row of await repos.leases.listWhere(["released"], "false")) {
     const lease = row.value;
-    if (lease.released) return;
-    if (!(Date.parse(lease.expiresAt) <= Date.parse(input.now))) {
-      stillLive.add(lease.routeTaskId);
-      return;
+    if (lease.released) continue;
+    if (!isExpired(lease, input.now)) {
+      stillLive.push(lease.routeTaskId);
+      continue;
     }
     try {
       const outcome = await reclaimRouteTask(repos, {
@@ -793,24 +744,15 @@ export async function sweepExpiredLeases(
         now: input.now,
         observedBy: input.observedBy,
       });
-      (outcome.settled ? releasedSettled : reclaimed).add(lease.routeTaskId);
+      (outcome.settled ? releasedSettled : reclaimed).push(lease.routeTaskId);
     } catch (error) {
       /* NothingToReclaim is the honest case where a lease expired before any
          Attempt opened. Recorded, never swallowed. */
-      refused.add({
+      refused.push({
         routeTaskId: lease.routeTaskId,
         why: error instanceof Error ? error.message : String(error),
       });
     }
-  };
-  const projection = { released: true, expiresAt: true, routeTaskId: true } as const;
-  if (input.workItemIds === undefined) await forEachAggregate(repos.leases, visitLease, projection);
-  else for (const workItemId of new Set(input.workItemIds)) {
-    const tasks = await repos.routeTasks.listWhereNarrowed(["workItemId"], workItemId, {});
-    for (const task of tasks) {
-      const lease = await repos.leases.readNarrowed(task.id, projection);
-      if (lease) await visitLease(lease as { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> });
-    }
   }
-  return { reclaimed: reclaimed.rows, releasedSettled: releasedSettled.rows, stillLive: stillLive.rows, refused: refused.rows };
+  return { reclaimed, releasedSettled, stillLive, refused };
 }

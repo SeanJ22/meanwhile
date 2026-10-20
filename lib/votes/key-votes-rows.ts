@@ -53,8 +53,8 @@ export function keyVoteRowsFor(
     held: boolean;
     breakdown: string | null;
   },
-  snapshot: KeyVotesSnapshot = getKeyVotesSnapshot(),
 ): KeyVoteRowData[] {
+  const snapshot = getKeyVotesSnapshot();
   return snapshot.entries.map((entry) => {
     // The member's OWN chamber only; the other array is never read here.
     const refs = chamber === "house" ? entry.house : entry.senate;

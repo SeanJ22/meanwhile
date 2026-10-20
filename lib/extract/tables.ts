@@ -117,21 +117,17 @@ export async function extractTables(
   }
 
   let doc;
-  let loadingTask: ReturnType<(typeof import("pdfjs-dist/legacy/build/pdf.mjs"))["getDocument"]> | undefined;
   try {
     const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-    loadingTask = getDocument({ data: bytes, useWorkerFetch: false });
-    doc = await loadingTask.promise;
+    doc = await getDocument({ data: bytes, useWorkerFetch: false }).promise;
   } catch (error) {
-    await loadingTask?.destroy();
     return cannotRun("TABLES", source, `the PDF engine refused the file: ${(error as Error).message}`);
   }
 
   const tables: ExtractedTable[] = [];
-  const numPages = doc.numPages;
   let candidateRows = 0;
   try {
-    for (let p = 1; p <= numPages; p += 1) {
+    for (let p = 1; p <= doc.numPages; p += 1) {
       const page = await doc.getPage(p);
       const content = await page.getTextContent();
       const items: PositionedItem[] = [];
@@ -153,11 +149,11 @@ export async function extractTables(
       tables.push(...tablesFromRows(cellRows, p));
     }
   } finally {
-    await loadingTask!.destroy();
+    await doc.cleanup();
   }
 
   const counts = {
-    pages: numPages,
+    pages: doc.numPages,
     candidateRows,
     tables: tables.length,
     tableRows: tables.reduce((n, t) => n + t.rows.length, 0),
@@ -168,7 +164,7 @@ export async function extractTables(
       "TABLES",
       source,
       bytes.length,
-      `${candidateRows} text row(s) were reconstructed across ${numPages} page(s) ` +
+      `${candidateRows} text row(s) were reconstructed across ${doc.numPages} page(s) ` +
         `and none formed a run of ${MIN_TABLE_ROWS}+ rows with a consistent column ` +
         "count. LIMITS OF THIS LAYER, so this is read as what it is: no ruling-line " +
         "detection, no spanned-cell merging, no table joined across a page break. A " +

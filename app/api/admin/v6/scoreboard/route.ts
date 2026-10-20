@@ -11,8 +11,8 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admi
 import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
 import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
-import { readWeeklyAuditAccuracy } from "@/lib/control-plane/admin-view/weekly-audit-accuracy.ts";
-import { readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
+import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
+import { readAuditWeek, readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
 import { reportAccuracy, weekOf } from "@/lib/control-plane/workers/claim-audit.ts";
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID)) : null;
+    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 }, methodStandings: true })) : null;
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const doorList = opened ? await attempt(async () => (await listDoors(opened.doors)).doors) : null;
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
         budgetMs: 10_000,
       }))),
       // The week's live audits, read by day key (seven keys), never the whole log.
-      attempt(async () => (url ? readWeeklyAuditAccuracy(neon(url), observedAt) : null)),
+      attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // The latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
       // Where each reusable fix stands, from the config row.

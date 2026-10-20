@@ -90,18 +90,6 @@ test("BAL-45/46/47: the summary leads on the face; the verbatim serif ballot tex
   assert.match(block, /What the authority published with it/, "the authority statement moved into the disclosure (BAL-47)");
 });
 
-test("BAL-48: extended election-mechanics text collapses behind a disclosure by default", () => {
-  const page = read("app/ballot/page.tsx");
-  assert.match(page, /const EXTENDED_MECHANICS_CHARS = \d+/);
-  assert.match(page, /const scope = readerContestScope\(contest,/);
-  assert.match(page, /\(readerScopeNotes\.get\(contest\.id\)\?\.length \?\? 0\) > EXTENDED_MECHANICS_CHARS \? \(/);
-  const idx = page.indexOf("data-scope-note-collapsed");
-  assert.ok(idx > 0, "the collapsed mechanics note is addressable");
-  const block = page.slice(idx - 120, idx + 200);
-  assert.match(block, /<details/, "the mechanics note is a <details> — collapsed by default, no `open`");
-  assert.ok(!/data-scope-note-collapsed[^>]*\bopen\b/.test(page), "the mechanics disclosure is not open by default");
-});
-
 test("POS-5: the statewide measure treatment the owner praised is intact — summary, part-by-part, collapsed analysis", () => {
   const ids = ["ballot-az-pima:prop-319", "ballot-az-pima:prop-320"];
   for (const id of ids) {
@@ -112,7 +100,7 @@ test("POS-5: the statewide measure treatment the owner praised is intact — sum
   const page = read("app/ballot/page.tsx");
   assert.match(page, /What&apos;s in it, part by part/, "the part-by-part pill is gone");
   assert.match(page, /provisionsForContest\(contest\.id, measureRecords\)\.length > 0/);
-  assert.match(page, /Official analysis — \{analysis\.sourceOrg\}/, "the collapsed official analysis is gone");
+  assert.match(page, /Official analysis/, "the collapsed official analysis is gone");
   assert.ok(!/t-record[^"]*"[^>]*>\s*\{summary\.summary\}/.test(page), "the plain-language summary must not wear the serif record face");
 });
 

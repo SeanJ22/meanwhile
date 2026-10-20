@@ -175,9 +175,9 @@ test("MISSION BLANKS: every government in a mission place whose body holds no ro
 test("the census reads all state governments independently; research retirement still reads held routes", async () => {
   const { readFileSync, existsSync } = await import("node:fs");
   const runner = readFileSync("scripts/freshness-shadow.mts", "utf8");
-  const census = readFileSync("scripts/platform-census-runner.mts", "utf8");
-  assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}\)/);
-  assert.match(census, /runCensusState\(\{ repos, state, needs: reading\.needs/);
+  const census = readFileSync("lib/control-plane/discovery/platform-census-runtime.ts", "utf8");
+  assert.match(census, /REGISTRATION_TARGETS.map/);
+  assert.match(census, /runPlatformCensusPass\(/);
   assert.doesNotMatch(runner, /runMeetingsDiscovery|MEETINGS_DISCOVERY_MAX_WALKS|missionMeetingsDiscoveryNeeds/);
   assert.match(runner, /const held = heldCalendarRouteBodies\(rows\)/);
   assert.match(runner, /: planHeldRouteRetirement\(\{/, "old meetings rows retire on held routes");

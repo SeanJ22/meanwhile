@@ -38,6 +38,7 @@ import type { ReportingMeetingSource } from "../types.ts";
 
 import { feedKindWiringType, installedFeedKinds, makeFeedKindSource } from "../feed-kinds.ts";
 import { CompositeSource } from "./index.ts";
+import { platformPublisherFetch } from "../../doors/platform-publisher.ts";
 
 type ChildFactory = (rows: BodySourceWiring[], fetchImpl?: typeof fetch) => ReportingMeetingSource<unknown>;
 
@@ -70,7 +71,7 @@ export const CAPABILITIES: Array<{
 
     name: "legistar-insite",
     types: ["LEGISTAR"],
-    make: (rows) => makeLegistarInSiteSource({ tenants: inSiteTenantsFromWiring(rows) }) as ReportingMeetingSource<unknown>,
+    make: (rows, fetchImpl) => makeLegistarInSiteSource({ tenants: inSiteTenantsFromWiring(rows), fetchImpl }) as ReportingMeetingSource<unknown>,
   },
   {
     name: "civicplus",
@@ -212,6 +213,7 @@ export const STANDING_PARTITION_ACQUISITION_TIMEOUT_MS = 120_000;
 export interface MeetingPartitionSelection {
   readonly sourceName: string;
   readonly bodyId: string;
+  readonly route?: string;
 }
 
 export function wiringForSelectedMeetingSource(
@@ -221,13 +223,14 @@ export function wiringForSelectedMeetingSource(
   const wired = wiringForMeetingSource(sourceName);
   if (selections === undefined) return wired;
   const requested = selections.filter((selection) => selection.sourceName === sourceName);
+  const matches = (row: BodySourceWiring, selection: MeetingPartitionSelection) => row.bodyId === selection.bodyId
+    && row.config.partitionRoute === selection.route;
   for (const selection of requested) {
-    if (!wired.some((row) => row.bodyId === selection.bodyId)) {
+    if (!wired.some((row) => matches(row, selection))) {
       throw new Error(`MEETING_PARTITION_SELECTION_NOT_WIRED:${selection.sourceName}:${selection.bodyId}`);
     }
   }
-  const selectedBodies = new Set(requested.map((selection) => selection.bodyId));
-  return wired.filter((row) => selectedBodies.has(row.bodyId));
+  return wired.filter((row) => requested.some(selection => matches(row, selection)));
 }
 
 export function buildCompositeSource(
@@ -263,9 +266,10 @@ export function buildCompositeSource(
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;
+    const fetchImpl = platformPublisherFetch(rows, options.fetchImpl);
     const child = capability.name === 'official-page-events'
-      ? makeOfficialPageEventsSource(rows,options.fetchImpl,url=>officialLinkingPageFrom(url,options.officialPages ?? [])) as ReportingMeetingSource<unknown>
-      : capability.make(rows, options.fetchImpl);
+      ? makeOfficialPageEventsSource(rows,fetchImpl,url=>officialLinkingPageFrom(url,options.officialPages ?? [])) as ReportingMeetingSource<unknown>
+      : capability.make(rows, fetchImpl);
     if (child.name !== capability.name) {
       // The capability name is what maps a snapshot's per-source report back
       // to the bodies it serves; a drift here would misattribute failures.

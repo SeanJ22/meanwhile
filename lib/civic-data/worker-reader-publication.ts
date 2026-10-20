@@ -21,7 +21,7 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { auditPull, captureIntact, jobWorkerResults, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
-import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
+import { readValidatorOfficialLinks, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
@@ -214,7 +214,6 @@ export async function publishWorkerReaderResults(input: {
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
       readHeld }));
   }
-  const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
   let stanceTopicIds: readonly string[] | null = null;
   const readStanceTopicIds = async (): Promise<readonly string[]> => {
@@ -237,7 +236,7 @@ export async function publishWorkerReaderResults(input: {
     let workerChecksComplete = false, captures: WorkerPublicationCapture[] = [], wentLive = 0;
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds });
       const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
         ...(contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });

@@ -10,7 +10,7 @@ import type { ScoutToolContext } from "../scheduler/scout-contract.ts";
 import { hostSpacer } from "../scheduler/http-executor.ts";
 import { VAULT_DIR } from "../scheduler/vault.ts";
 import { standingFleetRuntime } from "./standing.ts";
-import { readMethodKnowledge } from "../../method/manual-bridge.ts";
+import { openRuntimeMethod, requireRuntimeMethodVersion } from "../../method/runtime-manual.ts";
 import { scoutStateHint } from "../scheduler/field-manual-scout.ts";
 import { researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { durableResearchTools } from "./durable-research-tools.ts";
@@ -61,7 +61,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     siblingHeldRootFor: held=>siblingHeldRootFor(held),
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{}),
     ...(input.openBytesFor?{openBytesFor:input.openBytesFor}:{})};
-  const knowledge=await readMethodKnowledge(input.repos);
+  const knowledge=await openRuntimeMethod(input.repos);
+  try {
   const heldRuntime = standingFleetRuntime({...input,method:knowledge,siblingHeldRootFor: held=>siblingHeldRootFor(held)});
 
   const readRepairCapture = researchVaultResolver(input.repos, tools.store, "freshness");
@@ -97,7 +98,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       sharedOriginByRoot.get(row.rootWorkItemId)?.has(`${held.originWorkItemId}\u0000${held.artifactId}`));
     return lineage?.rootWorkItemId??null;
   };
-  const runtime:AutonomousCoordinatorRuntime={...heldRuntime,
+  const runtime:AutonomousCoordinatorRuntime={...heldRuntime, close: () => knowledge.close(),
     beginTask:async (task)=>{
       if (!mayUseTestFixture()) {
         const item = await input.repos.workItems.read(task.workItemId);
@@ -143,19 +144,20 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         ...(search?{search}:{}),...(input.environment?{environment:input.environment}:{}),readHeldArtifact},item,task);
     }}:{})};
   return runtime;
+  } catch (error) { await knowledge.close(); throw error; }
 }
 
 /** The round's upkeep streams one source log or work page; lease workers do only their place's work. */
 export async function maintainAutonomousStandingRuntime(input: Parameters<typeof autonomousStandingRuntime>[0]): Promise<void> {
   const now = input.now ?? (() => new Date().toISOString());
-  const knowledge = await readMethodKnowledge(input.repos);
+  const methodVersion = await requireRuntimeMethodVersion(input.repos);
   const update = async (rows: readonly import("../repository/types.ts").Persisted<WorkItem>[]) => {
     for (const row of rows) {
       const plan = row.value.autonomousPlan;
       if (plan?.contract.schemaVersion !== 2 || plan.contract.methodVersion !== 0 ||
         plan.contract.extraction.format !== "UNSUPPORTED" || plan.contract.sourceScope.observationArtifactIds.length) continue;
       await input.repos.workItems.compareAndSet(row.id, row.revision, { ...row.value,
-        autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion: knowledge.version } } }, now());
+        autonomousPlan: { ...plan, contract: { ...plan.contract, methodVersion } } }, now());
     }
   };
   await forEachAggregate(input.repos.workItems, row => update([row]));

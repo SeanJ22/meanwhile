@@ -45,6 +45,8 @@ export interface FieldManualReach {
 }
 
 export interface FieldManualEntry {
+  /** Read-adapter shape proof; never part of a persisted manual observation. */
+  readonly methodRouteShape?: { readonly outcomesArray: boolean };
   /** Deterministic from (source, key): a re-import updates rather than duplicates. */
   readonly id: string;
   readonly role: FieldManualRole;
@@ -229,11 +231,15 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
+  /** Include raw route-shape proof in an explicit catalog projection, before national history leaves the provider. */
+  readonly methodRouteShape?: boolean;
   /** Scout context ranks these blanks before unrelated notes while streaming its bounded page. */
   readonly recordClasses?: readonly string[];
   readonly preferredRecordClasses?: readonly string[];
   /** Parser routing folds publisher observations into tier counts instead of retaining every publisher. */
   readonly parserHost?: string;
+  /** Exact learned source host; other publishers' observations stay in the provider. */
+  readonly payloadHost?: string;
   readonly withinState?: string;
   /** Exact research subject for saved exhausted walks; they are never portable failures. */
   readonly subjectId?: string;
@@ -314,6 +320,7 @@ function reachOfStored(entry: FieldManualEntry): FieldManualReach {
 
 /** Whether a stored row is one the job could use: the read's exact rule (the stores may return more). */
 export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): boolean {
+  if (query.payloadHost !== undefined && (entry.payload as { host?: unknown } | null)?.host !== query.payloadHost) return false;
   if (query.withinState !== undefined && !entry.states.includes(query.withinState.toLowerCase())) return false;
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;

@@ -1144,7 +1144,7 @@ async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
 }
 
 /** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
-const FIELD_MANUAL_SLICE_WHERE = `
+const fieldManualSliceWhere = (payloadHost = false) => `
   WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
     AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
@@ -1157,7 +1157,9 @@ const FIELD_MANUAL_SLICE_WHERE = `
         OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
     AND ($9::text IS NULL OR value->'states' ? $9::text)
     AND ($10::text IS NULL OR id > $10::text)
+    ${payloadHost ? "AND value#>>'{payload,host}'=$11::text" : ""}
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
+const FIELD_MANUAL_SLICE_WHERE = fieldManualSliceWhere();
 export const FIELD_MANUAL_SLICE_SQL = `${manualSliceProjectionSql()}${FIELD_MANUAL_SLICE_WHERE}`;
 
 /** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
@@ -1208,11 +1210,15 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
       return rows;
     },
     async visitSlice(query, visit, projection) {
+      if (query.methodRouteShape && !projection) throw new Error("METHOD_ROUTE_SHAPE_REQUIRES_PROJECTION");
       const params = fieldManualSliceParams(query);
-      const selected = projection ? `SELECT id,revision,updated_at,${Object.keys(projection).length ? recordProjectionSql("cp_field_manual_entries",projection,"value") : "'{}'::jsonb"} AS value FROM cp_field_manual_entries${FIELD_MANUAL_SLICE_WHERE}` : FIELD_MANUAL_SLICE_SQL;
+      const where = fieldManualSliceWhere(query.payloadHost !== undefined);
+      const projected = projection ? Object.keys(projection).length ? recordProjectionSql("cp_field_manual_entries",projection,"value") : "'{}'::jsonb" : "";
+      const shape = query.methodRouteShape ? "||jsonb_build_object('methodRouteShape',jsonb_build_object('outcomesArray',COALESCE(jsonb_typeof(value->'payload'->'outcomes')='array',false)))" : "";
+      const selected = projection ? `SELECT id,revision,updated_at,(${projected})${shape} AS value FROM cp_field_manual_entries${where}` : `${manualSliceProjectionSql()}${where}`;
       let afterId: string | null = null;
       for (;;) {
-        const rows = (await run("slice", "PAGE", selected, [...params, afterId])) as Record<string, unknown>[];
+        const rows = (await run("slice", "PAGE", selected, [...params, afterId, ...(query.payloadHost === undefined ? [] : [query.payloadHost])])) as Record<string, unknown>[];
         for (const row of rows) {
           await visit({ id: String(row.id), revision: Number(row.revision), updatedAt: new Date(row.updated_at as string).toISOString(),
             value: parseValue<FieldManualEntry>(row.value, `cp_field_manual_entries id ${String(row.id)}`) });

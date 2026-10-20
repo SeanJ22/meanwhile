@@ -15,7 +15,7 @@ import test from "node:test";
 import { copyFieldManualDocument, copiedReach, type SingleDocumentManual } from "../lib/control-plane/field-manual-copy.ts";
 import { fieldManualLine, readFieldManual, type FieldManualEntry, type FieldManualRead } from "../lib/control-plane/field-manual.ts";
 import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
-import { readValidatorManual } from "../lib/control-plane/promotion/validator-manual.ts";
+import { readValidatorOfficialLinks } from "../lib/control-plane/promotion/validator-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { Persisted } from "../lib/control-plane/repository/types.ts";
 import { engineerJob } from "../lib/control-plane/workers/engineering-adapter.ts";
@@ -74,8 +74,10 @@ async function renderAfter(repos: ReturnType<typeof createMemoryRepositories>) {
     const translator = await readFieldManual(repos, { kinds:["PLAYBOOK"], everywhere:true });
     put("TRANSLATOR", job.key, { prompt: translationPlaybook(translator.store.entries).writerText, manual: [] }, translator);
   }
-  const validator = await readValidatorManual(repos);
-  put("VALIDATOR", "pass", { prompt: "", manual: [...validator.officialLinks].map(([host, ids]) => `${host}: ${ids.join(",")}`).sort() },
+  const validatorHosts = [...new Set(document.entries.filter(entry => entry.kind === "OFFICIAL_LINK")
+    .map(entry => (entry.payload as { host: string }).host))];
+  const validator = await Promise.all(validatorHosts.map(async host => [host, (await readValidatorOfficialLinks(repos, host)).artifactIds] as const));
+  put("VALIDATOR", "pass", { prompt: "", manual: validator.filter(([, ids]) => ids.length).map(([host, ids]) => `${host}: ${ids.join(",")}`).sort() },
     await readFieldManual(repos, { role: "VALIDATOR", kinds: ["OFFICIAL_LINK"], everywhere: true }));
   put("AUDITOR", "audit", { prompt: (await readRolePlaybook(repos, "AUDITOR")).text, manual: [] },
     await readFieldManual(repos, { role: "AUDITOR", kinds: ["PLAYBOOK"], everywhere: true }));

@@ -190,7 +190,7 @@ import {
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
-import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { requireRuntimeMethodVersion, readMethodProgressionSnapshot } from "../lib/method/runtime-manual.ts";
 import { candidateCounts as countMethodCandidates, emptyCandidateStore } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
@@ -1163,7 +1163,7 @@ const scoutOrder = expansionPlan === null
 
 let roundMethodVersionRead: Promise<number> | null = null;
 const roundMethodVersion = (): Promise<number> => {
-  roundMethodVersionRead ??= readMethodKnowledge(repos).then((knowledge) => knowledge.version,
+  roundMethodVersionRead ??= requireRuntimeMethodVersion(repos).then((version) => version,
     (error: unknown) => { roundMethodVersionRead = null; throw error; });
   return roundMethodVersionRead;
 };
@@ -2214,6 +2214,7 @@ async function runAutonomousWave(label: string) {
   placeOrderDirty = true;
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
+  try {
   /* The legacy held-evidence plan runs only when schema-1 held work is owed: a registered event
      capture whose Parser, Validator, Auditor chain has a step left. Both reads come from the round's incremental copy. */
   const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true, planner) : [];
@@ -2347,7 +2348,9 @@ async function runAutonomousWave(label: string) {
     onExited: (pid, why) => console.log(`  lease worker process ended: pid ${pid}; ${why}`) });
   return { ...planned, ...workerDispatches, dispatched: queueFailures + workerDispatches.dispatched,
     scoutsLimitedAdmitted: workerDispatches.scoutsAdmitted };
+  } finally { await fleet.close?.(); }
 }
+
 async function runAutonomousProcesses(label = "worker fleet") {
   let report = await runAutonomousWave(label);
   while (!releaseDrainRequested && Date.now() < dispatchDeadlineMs && report.worked > 0) {
@@ -2594,14 +2597,17 @@ if (discoveryLaneRun !== null) {
 
 // These independent final reads share the existing repository transport limit.
 // Join failures too: neither finalization view retries an unchanged failed read.
+const finalMethodCandidatesRead = canary ? null : repos.methodCandidates.read("live").then(row => row?.value ?? emptyCandidateStore());
 const finalizationReads = canary ? null : Promise.allSettled([
   readScoutMetricSummary(repos),
   readSpendWindow(repos, nowIso()),
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  repos.methodCandidates.read("live").then(row => row?.value ?? emptyCandidateStore()),
-  dry ? Promise.resolve(null) : readMethodKnowledge(repos),
+  finalMethodCandidatesRead!,
+  dry ? Promise.resolve(null) : finalMethodCandidatesRead!.then(candidates => readMethodProgressionSnapshot(repos, (function* () {
+    for (const candidate of candidates.candidates) if (candidate.admission?.effect === "LEARNED") yield candidate.admission.admittedAs;
+  })())),
 ] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
   const [resultsRead, costsRead, historyRead, candidatesRead] = (await finalizationReads)!;
@@ -2686,16 +2692,19 @@ if (!dry && !canary) {
     if (candidatesRead.status === "rejected") throw candidatesRead.reason;
     if (knowledgeRead.status === "rejected") throw knowledgeRead.reason;
     if (knowledgeRead.value === null) throw new Error("the final method knowledge snapshot is unavailable");
+    const methodSnapshot = knowledgeRead.value;
+    try {
     researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt,
       candidates: candidatesRead.value.candidates,
-      knowledge: knowledgeRead.value,
+      knowledge: methodSnapshot,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
       researchBoundary: {
         since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
         previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
       },
     });
+    } finally { await methodSnapshot.close(); }
   } catch (error) {
     researchProgressionFailure = error instanceof Error ? error.message : String(error);
     runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
@@ -3100,6 +3109,7 @@ if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
     console.error(`  private Admin evidence mirror unavailable or unverified; original vault unchanged: ${error instanceof Error ? error.message : "unknown failure"}`);
   }
 }
+await maturity.close();
 await standaloneWorkerToolsHost?.close();
 await cycle.close();
 await vault.close();

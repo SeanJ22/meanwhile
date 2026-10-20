@@ -1,6 +1,7 @@
+import type { ProgressionMethodSnapshot } from "../method/runtime-manual.ts";
 import type { MethodCandidate } from "../method/candidate.ts";
 import type { ConclusionRecord } from "../method/conclusions.ts";
-import type { MethodKnowledge, MethodRoute } from "../method/knowledge.ts";
+import type { MethodRoute } from "../method/knowledge.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { TransitionRecord } from "./promotion/types.ts";
 import { deriveItemState, isPipelineRecord, validateTransition } from "./promotion/pipeline.ts";
@@ -78,7 +79,7 @@ export function projectResearchProgression(input: {
   readonly activities: readonly AutonomousObligationActivity[];
   readonly excludedUnclassifiedWorkItems: number;
   readonly candidates: readonly MethodCandidate[];
-  readonly knowledge: MethodKnowledge;
+  readonly knowledge: ProgressionMethodSnapshot;
   readonly conclusions: readonly ConclusionRecord[];
 }): ResearchWindowProgression {
   const start = instant(input.since), end = instant(input.through);
@@ -205,7 +206,7 @@ export function projectResearchProgression(input: {
 /** Replay one obligation at a time; only reporting IDs/counts survive each canonical snapshot. */
 export async function readResearchProgression(repos: ControlPlaneRepositories, input: {
   readonly windowId: string; readonly through: string; readonly candidates: readonly MethodCandidate[];
-  readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];
+  readonly knowledge: ProgressionMethodSnapshot; readonly conclusions: readonly ConclusionRecord[];
   /** A completed research cycle supplies its own canonical boundary; it is not a promotion window. */
   readonly researchBoundary?: { readonly since: string; readonly previousCompletedWindowId: string | null };
 }): Promise<ResearchWindowProgression> {

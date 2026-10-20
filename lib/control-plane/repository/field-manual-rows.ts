@@ -15,7 +15,23 @@ export function fieldManualRows(base: AggregateRepository<FieldManualEntry>, nat
       return rows;
     },
     async visitSlice(query, visit, projection) {
+      if (query.methodRouteShape && !projection) throw new Error("METHOD_ROUTE_SHAPE_REQUIRES_PROJECTION");
       await forEachAggregate(base, async slot => {
+        if (projection && query.everywhere) {
+          const eligibility = await base.readNarrowed(slot.id, { role: true, kind: true, recordClasses: true, platforms: true, states: true,
+            ...(query.payloadHost === undefined ? {} : { payload: ["host"] }) });
+          if (eligibility && entryInSlice(eligibility.value as FieldManualEntry, query)) {
+            const row = await base.readNarrowed(slot.id, projection);
+            if (row) {
+              if (query.methodRouteShape) {
+                if (!base.readArrayType) throw new Error("METHOD_ROUTE_SHAPE_PROVIDER_REQUIRED");
+                await visit({ ...row, value: { ...(row.value as FieldManualEntry),
+                  methodRouteShape: { outcomesArray: await base.readArrayType(row.id, ["payload", "outcomes"], row.revision) === true } } });
+              } else await visit(row as Persisted<FieldManualEntry>);
+            }
+          }
+          return;
+        }
         const row = await projectManualRow(base, slot.id, query);
         if (row && entryInSlice(row.value, query)) {
           const selected = projection ? await base.readNarrowed(row.id, projection) : row;

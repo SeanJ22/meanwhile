@@ -47,6 +47,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => subject === fundedSubject,
     endsAt, progress: () => broker.send("progress", "", null) });
   let id: string | null = config.taskIds[0] ?? null;
+  try {
   while (id !== null) {
     if (!await broker.call<boolean>("accept-task", id)) break;
     try {
@@ -72,6 +73,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     }
     id = Date.now() >= endsAt ? null : await broker.call<string | null>("next-task", null);
   }
+  } finally { await shared?.close?.(); }
   broker.send("finished", "", []);
   process.disconnect();
 }

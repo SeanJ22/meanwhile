@@ -11,8 +11,8 @@ interface ScanOptions {
   readonly watchRoot?:readonly{readonly path:readonly string[];readonly observe:(value:unknown)=>void}[];
 }
 const text=(value:unknown)=>value===null||typeof value==='object'?null:String(value);
-export async function scanAggregateFile(file:string,options:ScanOptions={}):Promise<Persisted<unknown>&{values:unknown[];next:number|null;nextKey?:string|null}>{
-  const cursor=new JsonFileCursor(file),metadata:Record<string,unknown>={},values:unknown[]=[],projected:string[]=[];let sawValue=false,last=options.query?.after??0,scalarValue:unknown;
+export async function scanAggregateFile(file:string,options:ScanOptions={}):Promise<Persisted<unknown>&{values:unknown[];next:number|null;nextKey?:string|null;isArray?:boolean}>{
+  const cursor=new JsonFileCursor(file),metadata:Record<string,unknown>={},values:unknown[]=[],projected:string[]=[];let isArray=false,sawValue=false,last=options.query?.after??0,scalarValue:unknown;
   const keepsValue=options.valueProjection!==undefined&&Object.keys(options.valueProjection).length>0;
   const limit=options.query?arrayPageLimit(options.query):0;
   const ordered:{key:string;ordinal:number;value:unknown}[]=[];
@@ -31,6 +31,7 @@ export async function scanAggregateFile(file:string,options:ScanOptions={}):Prom
         if(path.length===1&&path[0]==="value"&&keepsValue){await input.value(part=>{projected.push(part);});return true;}
         const field = typeof options.field === "string" ? [options.field] : options.field;
         if(!field||path.length!==field.length+1||path[0]!=="value"||field.some((key,index)=>path[index+1]!==key))return false;
+        isArray=true;
         await input.array(async index=>{
           const ordinal=index+1,scalars=new Map<string,string|null>(),parts:string[]=[];
           const wanted=!!options.query&&(options.query.order!==undefined||ordinal>(options.query.after??0)&&values.length<limit);
@@ -53,6 +54,7 @@ export async function scanAggregateFile(file:string,options:ScanOptions={}):Prom
     if(options.query?.order)values.push(...ordered.map(row=>row.value));
     return{id:metadata.id,revision:Number(metadata.revision),updatedAt:metadata.updatedAt,value:projected.length?JSON.parse(projected.join("")):scalarValue!==undefined?scalarValue:{},values,
       next:options.query&&!options.query.order&&values.length===limit?last:null,
+      ...options.field?{isArray}:{},
       ...options.query?.order?{nextKey:ordered.length===limit?ordered.at(-1)!.key:null}:{}};
   }finally{await cursor.close();}
 }

@@ -275,6 +275,12 @@ export function fileAggregateRepository<T>(
     try{const {values:_values,next:_next,...row}=await scanAggregateFile(file,{valueProjection:projection});return row;}
     catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
   };
+  const readArrayType=async(id:string,path:readonly string[],expectedRevision?:number):Promise<boolean|null>=>{
+    const revisions=await revisionsOf(id);if(!revisions.length)return null;
+    const file=fileForRevision(id,expectedRevision??revisions.at(-1)!);
+    try{return (await scanAggregateFile(file,{field:path})).isArray??false;}
+    catch(error){throw new CorruptPersistedState(file,(error as Error).message);}
+  };
 
   const latestFiles=async()=>{
     const names = (await listDirectory(root, dir)).filter((n) => n.endsWith(".json"));
@@ -374,6 +380,7 @@ export function fileAggregateRepository<T>(
     },
 
     readNarrowed,
+    readArrayType,
 
     mustRead: async (id: string): Promise<Persisted<T>> => {
       const row = await read(id);

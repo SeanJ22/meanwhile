@@ -101,6 +101,13 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
   return {
     read,
 
+    readArrayType: async (id, path, expectedRevision) => {
+      const row = rows.get(id); if (!row) return null;
+      if (expectedRevision !== undefined && row.revision !== expectedRevision) throw new ConcurrentModification(kind, id, expectedRevision, row.revision);
+      let value: unknown = row.value;
+      for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
+      return Array.isArray(value);
+    },
     readArrayPage: async (id, field, query = {}) => {
       const row = rows.get(id);
       return row ? {id, revision: row.revision, updatedAt: row.updatedAt, ...jsonCopy(aggregateArrayPage(row.value, field, query))} : null;

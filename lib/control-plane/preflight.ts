@@ -1,13 +1,12 @@
 /** The inherited route floor, computed before any Attempt runs, so a worker cannot silently forget a known route. */
 
-import type { MethodKnowledge } from "../method/knowledge.ts";
+import type { MethodRoute } from "../method/knowledge.ts";
 import {
   gradeApplicability,
   type ApplicabilityDimension,
   type ApplicabilityGrade,
   type Jurisdiction,
 } from "../method/portability.ts";
-import { projectMethodFor, type MethodProjection } from "../method/projection.ts";
 import { createRouteTask, type RouteTask } from "./route-task.ts";
 import type { WorkItem } from "./work-item.ts";
 import { withRouteTasks } from "./work-item.ts";
@@ -82,32 +81,44 @@ export interface AdapterRouteDeclaration {
   readonly target: string;
 }
 
-/** An empty `fields` list means no narrowing, the widest reading. */
-export function computeRouteFloor(input: {
-  knowledge: MethodKnowledge;
+/** The floor needs route applicability, not the country's observation or claim history. */
+export type FloorMethodRoute = Pick<MethodRoute, "id" | "title" | "fields" | "applicability" | "retiredOn"> & {
+  readonly claims?: readonly unknown[];
+};
+export interface FloorMethodSource { readonly version: number; readonly routes: Iterable<FloorMethodRoute> }
+export interface RouteFloorInput {
+  readonly knowledge: FloorMethodSource;
   jurisdiction: Jurisdiction;
   fields: readonly string[];
   adapterRoutes: readonly AdapterRouteDeclaration[];
-}): RouteFloor {
-  const projection: MethodProjection = projectMethodFor(input.knowledge, input.jurisdiction);
-  const byId = new Map<string, FloorRoute>();
+}
+export type AuditRouteFloor = Pick<RouteFloor, "routes" | "methodVersion">;
 
-  for (const route of projection.routes) {
-    const id = route.identity;
+/** An empty `fields` list means no narrowing, the widest reading. */
+export function computeRouteFloor(input: RouteFloorInput): RouteFloor {
+  return foldRouteFloor(input, true);
+}
+/** Audit workers receive only their place's route expectations, not country exclusion diagnostics. */
+export function computeAuditRouteFloor(input: RouteFloorInput): AuditRouteFloor {
+  return foldRouteFloor(input, false);
+}
+function foldRouteFloor(input: RouteFloorInput, reporting: true): RouteFloor;
+function foldRouteFloor(input: RouteFloorInput, reporting: false): AuditRouteFloor;
+function foldRouteFloor(input: RouteFloorInput, reporting: boolean): RouteFloor | AuditRouteFloor {
+  const byId = new Map<string, FloorRoute>();
+  const excluded: ExcludedRoute[] = [];
+  let legacyUnclassifiedCount = 0;
+  for (const id of input.knowledge.routes) {
+    if (id.retiredOn) continue;
+    const verdict = gradeApplicability(id.applicability, input.jurisdiction);
+    if (verdict.grade === "EXCLUDED") {
+      if (reporting) excluded.push({ routeId: id.id, reason: verdict.reason });
+      continue;
+    }
+    if (!id.claims?.length) legacyUnclassifiedCount++;
     const matchedFields = id.fields.filter((f) => input.fields.includes(f));
     if (input.fields.length > 0 && matchedFields.length === 0) continue;
 
-    const verdict = gradeApplicability(
-      {
-        portability: id.portability,
-        states: id.states,
-        governmentTypes: id.governmentTypes,
-        platforms: id.platforms,
-        publishers: id.publishers,
-        note: "",
-      },
-      input.jurisdiction,
-    );
     const proven = verdict.grade === "PROVEN";
 
     byId.set(id.id, {
@@ -158,16 +169,9 @@ export function computeRouteFloor(input: {
   }
 
   const routes = [...byId.values()];
+  if (!reporting) return { routes, methodVersion: input.knowledge.version };
   const required = routes.filter((r) => r.obligation === "REQUIRED");
   const exploratory = routes.filter((r) => r.obligation === "EXPLORATORY");
-
-  /* A reporting read only: it makes no inheritance decision. */
-  const excluded: ExcludedRoute[] = [];
-  for (const r of input.knowledge.routes) {
-    if (r.retiredOn) continue;
-    const v = gradeApplicability(r.applicability, input.jurisdiction);
-    if (v.grade === "EXCLUDED") excluded.push({ routeId: r.id, reason: v.reason });
-  }
 
   return {
     routes,
@@ -178,7 +182,7 @@ export function computeRouteFloor(input: {
     allRouteIds: routes.map((r) => r.routeId),
     excluded,
     methodVersion: input.knowledge.version,
-    legacyUnclassifiedCount: projection.routes.filter((r) => r.legacyUnclassified).length,
+    legacyUnclassifiedCount,
     jurisdiction: input.jurisdiction,
   };
 }

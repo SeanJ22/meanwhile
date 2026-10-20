@@ -5,9 +5,10 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { DiagnosticModelBudget, RH01_DIAGNOSTIC_LIMITS } from "../scripts/rh01-model-budget.mts";
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { diagnosticModelCalls } from "../scripts/rh01-read-accounting.mts";
 
 const request = (text = "actual source context"): ModelRequest => ({ model: RH01_DIAGNOSTIC_LIMITS.model,max_tokens:8192,
   system:[],tools:[],messages:[{role:"user",content:text}] });
@@ -45,6 +46,14 @@ test("one shared SQLite ledger enforces both phases, native calls and the five d
     assert.equal(sent,4);assert.equal(rows.length,4);
     assert.ok(rows.reduce((sum,row)=>sum+Number(row.reservedUsd),0)<=5);
     assert.ok(rows.every(row=>row.actualUsd!==null&&row.usageJson!==null));
+    const descriptor=join(directory,"broker.json");await writeFile(descriptor,JSON.stringify({budgetPath:file}));
+    const beforeReport=await diagnosticModelCalls(descriptor,"before",0),afterReport=await diagnosticModelCalls(descriptor,"after",0);
+    assert.deepEqual(beforeReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR"]);
+    assert.deepEqual(afterReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR"]);
+    assert.ok([...beforeReport,...afterReport].every(row=>row.usd!==null&&row.usd>0&&row.usage!==null));
+    assert.deepEqual(await diagnosticModelCalls(descriptor,"before",Date.now()+1000),[]);
+    assert.deepEqual(await diagnosticModelCalls(undefined,"before",0),[]);
+    assert.equal(first.snapshot().calls.length,4,"read-only component reporting must not reset the shared cap");
   }finally{first.close();second.close();await rm(directory,{recursive:true,force:true});}
 });
 

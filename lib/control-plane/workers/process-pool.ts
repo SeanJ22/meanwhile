@@ -1,3 +1,4 @@
+import { methodCatalogRequest, closeMethodCatalogHost, releaseRuntimeMethodProcess, type MethodCatalogRequest } from "../../method/runtime-manual.ts";
 import { reviveVerifiedReplay } from "../../sources/verified-replay.ts";
 import { taskIdentityQueue } from "./task-identity-queue.ts";
 import { requireRegistryState } from "../../civic-data/state-scopes.ts";
@@ -31,6 +32,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos&Part
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
       const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
+        : message.kind === "method" ? await methodCatalogRequest(input.repos, message.body as MethodCatalogRequest)
         : message.kind === "audit-history"&&input.repos.workerResults ? await indexedModelAuditSample(input.repos as AuditHistoryRepositories,message.body as AuditSampleRequest)
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
@@ -46,6 +48,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos&Part
   return { close: async () => {
     delete process.env.WTP_WORKER_TOOLS_URL; delete process.env.WTP_WORKER_TOOLS_TOKEN;
     await new Promise<void>(resolve => server.close(() => resolve()));
+    await closeMethodCatalogHost(input.repos);
     if(input.repos.workerResults)await closeAuditHistoryIndex(input.repos as AuditHistoryRepositories);
   } };
 }
@@ -451,7 +454,13 @@ export async function runLeaseWorkerProcesses(input: {
         }
       }
       for (const [id, pid] of inFlight) if (pid === child.pid) inFlight.delete(id);
-      if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
+      if (child.pid) {
+        input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
+        completion = completion.then(async () => {
+          try { await releaseRuntimeMethodProcess(child.pid!); }
+          catch (error) { console.error(`Shared method snapshot cleanup for exited worker ${child.pid} failed: ${error instanceof Error ? error.message : String(error)}`); }
+        });
+      }
       const finish = () => { void completion.then(() => {
         if (terminationError) reject(terminationError);
         else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));

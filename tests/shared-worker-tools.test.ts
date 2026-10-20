@@ -261,6 +261,143 @@ test("parent and nested job high-water growth includes their own unmanaged child
   const release = await slots.acquire("next-job", Date.now() + 500); release();
 });
 
+test("independent parent samples retain full growth before PID binding and transfer only the proved child tree", async () => {
+  const nativeRequire = createRequire(import.meta.url), mib = 1048576;
+  const root = await mkdtemp(join(tmpdir(), "s18-binding-race-"));
+  const source = ts.transpileModule(readFileSync(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  type SlotsModule = { workerMemoryHost: typeof workerMemoryHost; workerProcessSlots: typeof workerProcessSlots;
+    memoryReading: typeof memoryReading; workerMemoryPeakKey: typeof workerMemoryPeakKey };
+  const loadParent = (pid: number): SlotsModule => {
+    const loaded: Record<string, unknown> = {}, parentProcess = Object.create(process) as typeof process;
+    Object.defineProperty(parentProcess, "pid", { value: pid });
+    parentProcess.kill = () => true;
+    parentProcess.env = { ...process.env, WTP_WORKER_MEMORY_RELEASE: "binding-race" };
+    delete parentProcess.env.WTP_WORKER_HOST_MEMORY_MIB;
+    runInNewContext(source, { exports: loaded, process: parentProcess, console, Buffer,
+      setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask,
+      require: (name: string) => name === "node:os" ? { ...nativeRequire(name), platform: () => "win32", tmpdir: () => root } : nativeRequire(name),
+    });
+    return loaded as unknown as SlotsModule;
+  };
+  const first = loadParent(100000), second = loadParent(100010);
+  let rows = [{ pid: 100000, parentPid: 1, rss: 200 * mib, peakRss: 200 * mib },
+    { pid: 100010, parentPid: 1, rss: 100 * mib, peakRss: 100 * mib }];
+  const host = first.workerMemoryHost({ shared: true, processes: () => rows });
+  let bindingBlocked = false;
+  const delayedHost: typeof host = { transact: (operation, sample) => bindingBlocked ? false : host.transact(operation, sample) };
+  const otherHost = second.workerMemoryHost({ shared: true, processes: () => rows });
+  const memory = { availableBytes: () => 5000 * mib, headroomBytes: 768 * mib };
+  const ownSlots = first.workerProcessSlots(() => 10, { ...memory, host: delayedHost, parentPeakBytes: 250 * mib, peakBytes: () => 800 * mib });
+  const otherSlots = second.workerProcessSlots(() => 10, { ...memory, host: otherHost, parentPeakBytes: 150 * mib, peakBytes: () => 300 * mib });
+  const releases: (() => void)[] = [];
+  try {
+    const child = await ownSlots.acquire("managed-child.mts"); releases.push(child);
+    rows.push({ pid: 100001, parentPid: 100000, rss: 700 * mib, peakRss: 900 * mib },
+      { pid: 100002, parentPid: 100000, rss: 40 * mib, peakRss: 150 * mib },
+      { pid: 100003, parentPid: 100001, rss: 20 * mib, peakRss: 80 * mib });
+    const beforeBinding = await otherSlots.acquire("before-spawn-callback"); releases.push(beforeBinding);
+    otherHost.transact(state => {
+      const parent = state.parents.find(row => row.pid === 100000)!;
+      assert.equal(parent.peak, 250 * mib, "an unclassified child is not committed as the parent's permanent peak");
+      const reading = second.memoryReading({ at: "2026-10-20T00:00:00Z", totalBytes: 8192 * mib, availableBytes: 5000 * mib,
+        rootPid: 100000, rows, state });
+      assert.equal(reading.parents.find(row => row.pid === 100000)?.peakBytes, 1330 * mib,
+        "the complete own, child, and both unmanaged-browser high waters remain reserved before proof");
+      assert.equal(reading.headroomBytes, 768 * mib);
+    }, false);
+    for (let index = 1; index <= 8; index++) {
+      rows = rows.map(row => row.pid === 100001 ? { ...row, peakRss: (900 + index) * mib } : row);
+      const raised = await otherSlots.acquire("same-topology-new-high-water"); releases.push(raised); raised();
+    }
+    otherHost.transact(state => {
+      assert.equal(state.parents.find(row => row.pid === 100000)?.pendingPeaks?.length, 1,
+        "changing VmHWM within one PID/parent topology coalesces instead of retaining poll history");
+    }, false);
+    rows = rows.filter(row => row.pid !== 100002 && row.pid !== 100003);
+    bindingBlocked = true;
+    child.observe!(100001);
+    const duringBinding = await otherSlots.acquire("while-observe-lock-busy"); releases.push(duringBinding);
+    otherHost.transact(state => {
+      assert.equal(state.reservations.find(row => row.entry === "managed-child.mts")?.pid, null);
+      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 250 * mib);
+      assert.equal(state.parents.find(row => row.pid === 100000)?.pendingPeaks?.length, 2,
+        "a changed browser topology preserves its earlier proved memory rather than replacing that observation");
+    }, false);
+    bindingBlocked = false;
+    await new Promise(resolve => setTimeout(resolve, 80));
+    beforeBinding(); duringBinding();
+    otherHost.transact(state => {
+      const parent = state.parents.find(row => row.pid === 100000)!;
+      const admitted = state.reservations.find(row => row.entry === "managed-child.mts")!;
+      assert.equal(parent.peak, 350 * mib, "the parent's genuine unmanaged browser remains in its confirmed peak");
+      assert.equal(parent.pendingPeaks, undefined);
+      assert.equal(admitted.pid, 100001);
+      assert.equal(admitted.peak, 988 * mib, "the proved child receives its own peak and its own unmanaged browser");
+      assert.equal(admitted.observedPeak, 988 * mib);
+    }, false);
+    rows = rows.filter(row => row.pid !== 100002 && row.pid !== 100003);
+    const later = await otherSlots.acquire("after-browsers-exit"); releases.push(later); later();
+    otherHost.transact(state => {
+      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 350 * mib);
+      assert.equal(state.reservations.find(row => row.entry === "managed-child.mts")?.peak, 988 * mib);
+      const reading = second.memoryReading({ at: "2026-10-20T00:00:01Z", totalBytes: 8192 * mib, availableBytes: 5000 * mib,
+        rootPid: 100000, rows, state });
+      assert.equal(reading.reservedGrowthBytes, 488 * mib, "real prior browser peaks remain reserved after the browsers exit");
+    }, false);
+    rows = rows.filter(row => row.pid !== 100001);
+    child();
+    otherHost.transact(state => {
+      assert.equal(state.peaks?.[first.workerMemoryPeakKey("managed-child.mts")!]?.[0], 988 * mib,
+        "adaptive script peaks receive the child's corrected observation, never the ancestor's combined tree");
+    }, false);
+    const unstarted = await ownSlots.acquire("unstarted.mts"); releases.push(unstarted);
+    rows.push({ pid: 100004, parentPid: 100000, rss: 20 * mib, peakRss: 180 * mib });
+    const sample = await otherSlots.acquire("unmanaged-during-unstarted-offer"); releases.push(sample); sample();
+    unstarted();
+    otherHost.transact(state => {
+      assert.equal(state.parents.find(row => row.pid === 100000)?.peak, 380 * mib,
+        "releasing an unstarted offer preserves every unproved process as genuinely unmanaged");
+    }, false);
+  } finally {
+    bindingBlocked = false;
+    releases.forEach(release => release());
+    await new Promise(resolve => setTimeout(resolve, 80));
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("a process sample returning after child release keeps its proved ownership and genuine browser peaks", async () => {
+  const mib = 1048576;
+  let rows = [{ pid: process.pid, parentPid: process.ppid, rss: 200 * mib, peakRss: 200 * mib }];
+  let holdSample = false, finishSample: ((sampleRows: typeof rows) => void) | undefined;
+  const host = workerMemoryHost({ processes: () => holdSample ? new Promise<typeof rows>(resolve => { finishSample = resolve; }) : rows });
+  const memory = { host, availableBytes: () => 5000 * mib, headroomBytes: 768 * mib, parentPeakBytes: 250 * mib, peakBytes: () => 300 * mib };
+  const own = workerProcessSlots(() => 10, memory), other = workerProcessSlots(() => 10, memory);
+  const child = await own.acquire("sampled-child.mts");
+  rows.push({ pid: 100001, parentPid: process.pid, rss: 700 * mib, peakRss: 900 * mib },
+    { pid: 100002, parentPid: process.pid, rss: 40 * mib, peakRss: 150 * mib });
+  child.observe!(100001);
+  const before = await other.acquire("before-release"); before();
+  holdSample = true;
+  const pending = other.acquire("sample-returning-late");
+  await yieldToEventLoop();
+  assert.ok(finishSample);
+  const captured = rows;
+  rows = rows.filter(row => row.pid === process.pid);
+  child();
+  holdSample = false;
+  finishSample(captured);
+  const release = await pending;
+  try {
+    host.transact(state => {
+      assert.equal(state.parents.find(row => row.pid === process.pid)?.peak, 350 * mib,
+        "the exited managed child cannot become a parent's permanent high water, while the real browser peak stays");
+    }, false);
+  } finally { child(); release(); }
+});
+
 test("concurrent workers share a browser and close only their own contexts", async () => {
   let launches = 0, pages = 0, contextsClosed = 0, browsersClosed = 0;
   const browser = sharedScoutBrowser(async () => {

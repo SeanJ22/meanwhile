@@ -15,8 +15,7 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
-import { physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
-import { DatabaseSync } from "node:sqlite";
+import { diagnosticModelCalls, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -187,6 +186,8 @@ function terminateTree(root: number | undefined): void {
 }
 
 const environment: NodeJS.ProcessEnv = { ...process.env, WTP_RH01_DIRECTORY: directory, WTP_RH01_SHARED_STATE_DIRECTORY: directory, WTP_RH01_CODE_ROOT: codeRoot, WTP_RH01_HARNESS_ROOT: harnessRoot, NODE_USE_ENV_PROXY: "1", WTP_VITAL_SIGNS_REPORT: "1" };
+const modelBroker = arg("model-broker") ?? environment.WTP_RH01_MODEL_BROKER;
+if (modelBroker) environment.WTP_RH01_MODEL_BROKER = resolve(modelBroker);
 // An archive has no .git: its caller supplies the exact archived commit instead of inheriting this checkout's identity.
 const codeRevision = arg("release-sha") ?? execFileSync("git", ["rev-parse", "HEAD"], { cwd: codeRoot, encoding: "utf8" }).trim();
 if (!/^[a-f0-9]{40}$/.test(codeRevision)) throw Error("RH01 --release-sha must name the full immutable code snapshot SHA");
@@ -203,7 +204,7 @@ if (process.argv.includes("--runtime-controlled")) {
 }
 if (activePima) {
   if (!process.argv.includes("--runtime-controlled") || !savedInventory) throw Error("RH01 active diagnostic requires controlled authority and the saved exact inventory");
-  const descriptor = arg("model-broker") ?? environment.WTP_RH01_MODEL_BROKER;
+  const descriptor = environment.WTP_RH01_MODEL_BROKER;
   if (!descriptor || JSON.parse(await readFile(descriptor, "utf8")).authorized !== true) throw Error("RH01 active diagnostic requires the explicitly authorized shared broker");
   environment.WTP_RH01_MODEL_BROKER = resolve(descriptor);
   environment.WTP_RH01_MODEL_PHASE = phase;
@@ -558,15 +559,7 @@ if (existsSync(completionDirectory)) for (const file of readdirSync(completionDi
   const row = JSON.parse(await readFile(join(completionDirectory, file), "utf8")) as WorkerCompletion;
   if (row.endedAt && Date.parse(row.endedAt) >= startedAt) workerCompletions.push(row);
 }
-let modelDiagnosticCalls: { role: string; usd: number | null; usage: unknown; requestHash: string; sentAt: string }[] = [];
-if (activePima) {
-  const descriptor = JSON.parse(await readFile(environment.WTP_RH01_MODEL_BROKER!, "utf8"));
-  const ledger = new DatabaseSync(descriptor.budgetPath, { readOnly: true });
-  try { modelDiagnosticCalls = ledger.prepare("SELECT role,actual_usd,usage_json,request_hash,sent_at FROM calls WHERE phase=? AND sent_at>=? ORDER BY id")
-    .all(phase, new Date(startedAt).toISOString()).map(row => ({ role: String(row.role), usd: typeof row.actual_usd === "number" ? row.actual_usd : null,
-      usage: typeof row.usage_json === "string" ? JSON.parse(row.usage_json) : null, requestHash: String(row.request_hash), sentAt: String(row.sent_at) })); }
-  finally { ledger.close(); }
-}
+const modelDiagnosticCalls = await diagnosticModelCalls(environment.WTP_RH01_MODEL_BROKER, phase, startedAt);
 const requiredWorkerRoles = ["SCOUT", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER"];
 const roleCoverage = requiredWorkerRoles.map(role => {
   const completed = workerCompletions.filter(row => row.role === role && row.complete);

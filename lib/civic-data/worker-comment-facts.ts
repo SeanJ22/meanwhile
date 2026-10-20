@@ -3,7 +3,7 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { readValidatorManual } from "../control-plane/promotion/validator-manual.ts";
+import { readValidatorOfficialLinks } from "../control-plane/promotion/validator-manual.ts";
 import { factClocks } from "../facts/clocks.ts";
 import { publishCommentFacts } from "../facts/comment-facts.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
@@ -27,7 +27,6 @@ export async function publishOwedCommentFacts(input: {
   const clocks = factClocks((await readRuntimeAdminConfig(input.repos, ["settings"]))?.value ?? null);
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
-  const manual = await readValidatorManual(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
@@ -43,7 +42,7 @@ export async function publishOwedCommentFacts(input: {
     let captures: WorkerPublicationCapture[] = [];
     try {
       const extraction = parser.result;
-      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: manual.officialLinks });
+      captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds });
       const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
       const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);

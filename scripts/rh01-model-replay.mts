@@ -16,8 +16,8 @@ const phase = option("phase"); if (phase !== "before" && phase !== "after") thro
 const root = resolve(option("store") ?? `.scratch/rh01/model-${phase}`), codeRoot = resolve(process.env.WTP_RH01_CODE_ROOT ?? process.cwd());
 const harnessRoot = resolve(process.env.WTP_RH01_HARNESS_ROOT ?? process.cwd());
 const code = (file: string) => import(pathToFileURL(join(codeRoot, file)).href);
-const [{ createFileRepositories }, { readMethodKnowledge }, { refreshDoorsForPass }, { seedMeetingDoors }, { standingFleetRuntime, advanceHeldWorkerFleet }] = await Promise.all([
-  code("lib/control-plane/repository/file-store.ts"), code("lib/method/manual-bridge.ts"), code("lib/doors/install.ts"),
+const [{ createFileRepositories }, methodReader, { refreshDoorsForPass }, { seedMeetingDoors }, { standingFleetRuntime, advanceHeldWorkerFleet }] = await Promise.all([
+  code("lib/control-plane/repository/file-store.ts"), code(phase === "before" ? "lib/method/manual-bridge.ts" : "lib/method/runtime-manual.ts"), code("lib/doors/install.ts"),
   code("lib/doors/seed-meetings.ts"), code("lib/control-plane/workers/standing.ts"),
 ]);
 const manifestPath = join(root, "rh01-model-replay.json"), now = () => new Date().toISOString();
@@ -28,9 +28,9 @@ if (process.argv.includes("--prepare")) {
   await seedMeetingDoors({ repo: repos.doors, wiring: held.rows.filter((row: unknown) => JSON.stringify(row).includes("county:pima")),
     derived: [], deriveInputAt: held.generatedAt, at: held.generatedAt });
   await refreshDoorsForPass(repos.doors, { state: "AZ" });
-  const method = await readMethodKnowledge(repos);
+  const method = phase === "before" ? await methodReader.readMethodKnowledge(repos) : await methodReader.openRuntimeMethod(repos);
   const runtime = standingFleetRuntime({ root: codeRoot, vaultRoot: join(root, "vault"), repos, method, now });
-  await advanceHeldWorkerFleet(codeRoot, runtime);
+  try { await advanceHeldWorkerFleet(codeRoot, runtime); } finally { if (phase === "after") await method.close(); }
   const tasks = await repos.routeTasks.listWhere(["workItemId"], "wi-50b053705662f68e44998333");
   const audit = tasks.map((row: { value: { id: string; state: string; workerTask?: { role: string } } }) => row.value)
     .find((row: { state: string; workerTask?: { role: string } }) => row.workerTask?.role === "ADVERSARIAL_AUDITOR" && row.state === "PENDING");

@@ -38,9 +38,9 @@ if (seedRoot) {
   const control = process.env.WTP_CONTROL_PLANE_DATABASE_URL, reader = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   if (!control || !reader || decodeURIComponent(new URL(control).username) !== "wtp_cp_release_readonly" || decodeURIComponent(new URL(reader).username) !== "readonly") throw Error("RH01 held replay requires actual read-only roles");
   const cp = neon(control), db = neon(reader);
-  const [{ PIMA_LEGISTAR_CONTRACT }, { meetingPartitionScope }, { installDoorRecords }, { retainRecentRoutineMeetingEvidence }, { DurableEvidenceStore }, { readMethodKnowledge }] = await Promise.all([
+  const [{ PIMA_LEGISTAR_CONTRACT }, { meetingPartitionScope }, { installDoorRecords }, { retainRecentRoutineMeetingEvidence }, { DurableEvidenceStore }, methodReader] = await Promise.all([
     code("lib/control-plane/workers/held-meeting-contract.ts"), code("lib/civic-data/meeting-partitions.ts"), code("lib/doors/meeting-doors.ts"),
-    code("lib/control-plane/workers/routine-meeting-intake.ts"), code("lib/control-plane/evidence/durable-store.ts"), code("lib/method/manual-bridge.ts"),
+    code("lib/control-plane/workers/routine-meeting-intake.ts"), code("lib/control-plane/evidence/durable-store.ts"), code(process.env.WTP_RH01_PHASE === "before" ? "lib/method/manual-bridge.ts" : "lib/method/runtime-manual.ts"),
   ]);
   const subject = PIMA_LEGISTAR_CONTRACT.subjectId;
   const doors = await cp.query("SELECT value FROM cp_doors WHERE value->'bodyIds' ? $1", [subject]);
@@ -54,13 +54,13 @@ if (seedRoot) {
   if (!candidates.length) throw Error("RH01 actual production routine has no retained source bytes");
   const manuals = await cp.query("SELECT id,value FROM cp_field_manual_entries WHERE value->>'kind'=ANY($1::text[]) ORDER BY id", [["METHOD_VERSION", "ROUTE", "PLAYBOOK"]]);
   for (const row of manuals) await repos.fieldManual.put(String(row.id), row.value, now());
-  const method = await readMethodKnowledge(repos);
+  const methodVersion = process.env.WTP_RH01_PHASE === "before" ? (await methodReader.readMethodKnowledge(repos)).version : await methodReader.requireRuntimeMethodVersion(repos);
   const retained = await retainRecentRoutineMeetingEvidence({ repos, store: new DurableEvidenceStore(join(root, "vault"), { remote: null }),
-    methodVersion: method.version, candidates, now });
+    methodVersion, candidates, now });
   if (!retained.length) throw Error("RH01 actual source intake did not enqueue a fresh parser");
   const selected = retained.at(-1);
   const manifest = { format: 1, root, source: "actual production retainedSourceResponses", productionCandidateIds: candidates.map(row => row.id),
-    productionDoorIds: doors.map(row => row.value.doorId), methodVersion: method.version, ...selected };
+    productionDoorIds: doors.map(row => row.value.doorId), methodVersion, ...selected };
   await mkdir(root, { recursive: true }); await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
   console.log(`RH01_HELD_PREPARED ${JSON.stringify(manifest)}`);
 } else {

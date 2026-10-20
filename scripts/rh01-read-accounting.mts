@@ -1,8 +1,21 @@
 import { createReadStream } from "node:fs";
 import { createInterface } from "node:readline";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { DatabaseSync } from "node:sqlite";
+
+/** Read actual broker usage for component and parent runs alike; this grants no sending authority. */
+export async function diagnosticModelCalls(descriptorPath: string | undefined, phase: string, startedMs: number) {
+  if (!descriptorPath) return [];
+  const descriptor = JSON.parse(await readFile(descriptorPath, "utf8"));
+  const ledger = new DatabaseSync(descriptor.budgetPath, { readOnly: true });
+  try {
+    return ledger.prepare("SELECT role,actual_usd,usage_json,request_hash,sent_at FROM calls WHERE phase=? AND sent_at>=? ORDER BY id")
+      .all(phase, new Date(startedMs).toISOString()).map(row => ({ role: String(row.role), usd: typeof row.actual_usd === "number" ? row.actual_usd : null,
+        usage: typeof row.usage_json === "string" ? JSON.parse(row.usage_json) : null, requestHash: String(row.request_hash), sentAt: String(row.sent_at) }));
+  } finally { ledger.close(); }
+}
 
 /** A phase never appends to a prior run's accounting identity, including failed preparation. */
 export async function reserveProductionReadRun(path: string, supplied?: string): Promise<string> {

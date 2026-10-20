@@ -20,7 +20,7 @@ import { heldDirectoryReading, materializeBodyDirectoryWork, publishBodyOffice, 
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { auditPull, capturesForPublication, captureIntact, jobWorkerResults, latestParserResult, validatorObservation } from "./worker-publication-evidence.ts";
-import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
+import { readValidatorOfficialLinks, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { readHeldRoster } from "./worker-held-roster.ts";
 import { heldBodySchedule, type HeldBodySchedule } from "./worker-held-meetings.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
@@ -186,7 +186,6 @@ export async function publishOwedRosterFacts(input: {
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
-  const manual = await readValidatorManual(input.repos);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   for (const id of [...new Set(input.workItemIds)]) {
@@ -203,7 +202,7 @@ export async function publishOwedRosterFacts(input: {
       const parser = latestParserResult(records, id);
       const pull = parser ? auditPull(records, parser) : null;
       const captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId,
-        results: records, readCapture, officialLinks: manual.officialLinks }) : [];
+        results: records, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds }) : [];
       reading = parser && !pull?.all ? parserReading(parser, plan.contract, captures) : null;
       if (reading && pull) reading = { ...reading, members: reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
       if (!reading) {
@@ -263,7 +262,6 @@ export async function publishWorkerDirectoryResults(input: {
   let registry: RegistryRuntimePrior | null | undefined, registryState: string | undefined;
   const heldDirectories = new Map<string, Promise<DirectoryReading | null>>();
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
-  const manual = await readValidatorManual(input.repos);
   const learned: ValidatorObservation[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
@@ -281,7 +279,7 @@ export async function publishWorkerDirectoryResults(input: {
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
       parserId = parser?.id ?? null;
-      captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: manual.officialLinks }) : [];
+      captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: async host => (await readValidatorOfficialLinks(input.repos, host)).artifactIds }) : [];
       if (!parser) {
         const government = plan.directorySubject?.jurisdiction.id ?? id;
         if (!heldDirectories.has(government)) heldDirectories.set(government, (async () => {

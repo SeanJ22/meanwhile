@@ -11,6 +11,8 @@ import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, type FleetRunt
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
+import type { RuntimeMethod, MethodFloorRequest } from "../../method/runtime-manual.ts";
+import type { AuditRouteFloor } from "../preflight.ts";
 import { computeRouteFloor } from "../preflight.ts";
 import { fingerprint } from "../ids.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
@@ -221,7 +223,7 @@ export async function resolvedHeldAuditAttribution(input: {
 }
 
 async function generalizedIndependentContext(input: {
-  root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
+  root: string; repos: ControlPlaneRepositories; method: MethodKnowledge | RuntimeMethod; readEvidence: FleetRuntime["readEvidence"];
   artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
 }): Promise<IndependentAuditContext> {
@@ -293,7 +295,7 @@ async function generalizedIndependentContext(input: {
     const held = evidence.filter(reading => reading.methodRouteId === routeId && reading.canonicalUrl === url);
     routes.push({ routeId, canonicalUrl: url, applicable: true, status: held.length ? "HELD" : "OPEN", artifactIds: held.map(reading => reading.artifactId), reason: "Exact source route/URL pair declared by the versioned extraction contract; an unobserved pair remains open." });
   }
-  const floor = computeRouteFloor({ knowledge: input.method, jurisdiction: { state: contract.jurisdiction.state.toLowerCase(), governmentType: subject.govClass.toLowerCase(), publisher: contract.sourceScope.sourceId },
+  const floor = await standingMethodFloor(input.method, { jurisdiction: { state: contract.jurisdiction.state.toLowerCase(), governmentType: subject.govClass.toLowerCase(), publisher: contract.sourceScope.sourceId },
     fields: [...methodFields(owner.autonomousPlan!.capability, contract)],
     adapterRoutes: routes.map(route => ({ routeId: route.routeId, label: route.reason, target: route.canonicalUrl })) });
   for (const route of floor.routes) if (!routes.some(held => held.routeId === route.routeId && held.canonicalUrl === route.target)) {
@@ -307,8 +309,12 @@ async function generalizedIndependentContext(input: {
   return context;
 }
 
+async function standingMethodFloor(method: MethodKnowledge | RuntimeMethod, input: MethodFloorRequest): Promise<AuditRouteFloor> {
+  return "floorFor" in method ? method.floorFor(input) : computeRouteFloor({ ...input, knowledge: method });
+}
+
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
-export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
+export function standingFleetRuntime(input: { root: string; /** A pinned shared method reader; explicit fixture callers may supply their own complete method knowledge. */ method: MethodKnowledge | RuntimeMethod; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
   /** Scope each task's history reads (`scoped-history.ts`). */
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
@@ -344,7 +350,7 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
         const routes: OfficialRouteExpectation[] = evidence.map(held => ({ routeId: held.methodRouteId, canonicalUrl: held.canonicalUrl,
           applicable: true, status: "HELD", artifactIds: [held.artifactId],
           reason: "Exact registered permanent meeting source/body capture, independently read from the evidence vault." }));
-        const floor = computeRouteFloor({ knowledge: method, jurisdiction: { state: "az", governmentType: "county", platform: "legistar", publisher: "webapi.legistar.com" },
+        const floor = await standingMethodFloor(method, { jurisdiction: { state: "az", governmentType: "county", platform: "legistar", publisher: "webapi.legistar.com" },
           fields: ["meeting", "agenda"], adapterRoutes: routes.map(route => ({ routeId: route.routeId, label: route.reason, target: route.canonicalUrl })) });
         for (const route of floor.routes) if (!routes.some(held => held.routeId === route.routeId && held.canonicalUrl === route.target)) {
           routes.push({ routeId: route.routeId, canonicalUrl: route.target, applicable: route.obligation === "REQUIRED", status: "OPEN", artifactIds: [],
@@ -408,7 +414,7 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
           reason: artifact.partial ? "An incomplete capture remains open; it cannot supply a complete evidence reading."
             : "A same-subject first-party representation is held and independently read. Holding bytes does not prove a successful route, an event, or a civic absence." });
       }
-      const floor = computeRouteFloor({ knowledge: method,
+      const floor = await standingMethodFloor(method, {
         jurisdiction: { state: "az", governmentType: "city", platform: "civicclerk", publisher: API_HOST },
         fields: ["meeting", "agenda"], adapterRoutes: routes.filter(r => r.applicable).map(r => ({ routeId: r.routeId, label: r.reason, target: r.canonicalUrl })) });
       for (const route of floor.routes) {

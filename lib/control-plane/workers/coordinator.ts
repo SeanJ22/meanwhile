@@ -37,6 +37,8 @@ import { partOfItem, sendOf, SQUAD_DIFFICULTY_WINDOW_HOURS, type SquadReading, t
 const ROBOTS_ONLY_BLOCKERS: ReadonlySet<string> = new Set(["PERMISSION_DENIED", "PERMISSION_UNKNOWN"]);
 
 export interface AutonomousCoordinatorRuntime extends FleetRuntime {
+  /** Release the shared pinned method snapshot after the runtime is no longer serving tasks. */
+  readonly close?: () => Promise<void>;
   /** Called before a task runs on a runtime built once for the whole process: refreshes only that task's own history. */
   readonly beginTask?: (task: RouteTask, item?: WorkItem) => Promise<void>;
   /** The hunter (or the Exa agent lane) for one hunt packet job. */

@@ -149,25 +149,83 @@ function alive(pid: number): boolean {
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }
 
-interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
-interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[]; peaks?: Record<string, number[]> }
+interface OwnerPeak { pid: number | null; peak: number; observedPeak?: number; pendingPeaks?: WorkerProcessMemory[][] }
+interface MemoryReservation extends OwnerPeak { id: string; owner: number; entry: string; key?: string | null }
+interface ParentPeak extends OwnerPeak { pid: number }
+interface SampleBinding { pid: number; key?: string | null }
+interface HostSample { id: string; owner: number; bindings: SampleBinding[] }
+interface HostState { reservations: MemoryReservation[]; parents: ParentPeak[]; peaks?: Record<string, number[]>;
+  samples?: HostSample[]; sampledBindings?: readonly SampleBinding[] }
 
 /** Every managed process owns its unmanaged descendants; separately admitted children own their own memory. */
-function memoryOwners(state: { readonly reservations: readonly { readonly pid: number | null }[]; readonly parents: readonly { readonly pid: number }[] }, rows: readonly WorkerProcessMemory[]) {
-  const roots = new Set([...state.parents.map(row => row.pid), ...state.reservations.flatMap(row => row.pid === null ? [] : [row.pid])]);
+function memoryOwners(state: { readonly reservations: readonly { readonly pid: number | null }[]; readonly parents: readonly { readonly pid: number }[];
+  readonly sampledBindings?: readonly SampleBinding[] }, rows: readonly WorkerProcessMemory[]) {
+  const roots = new Set([...state.parents.map(row => row.pid), ...state.reservations.flatMap(row => row.pid === null ? [] : [row.pid]),
+    ...(state.sampledBindings ?? []).map(row => row.pid)]);
   const trees = new Map<number, Set<number>>();
   const tree = (pid: number): Set<number> => {
     let ids = trees.get(pid);
     if (!ids) { ids = descendants(pid, rows); trees.set(pid, ids); }
     return ids;
   };
-  const memoryFor = (pid: number | null, peak: boolean): number => {
-    if (pid === null) return 0;
+  const members = (pid: number | null): readonly WorkerProcessMemory[] => {
+    if (pid === null) return [];
     const ids = new Set(tree(pid));
     for (const other of roots) if (other !== pid && ids.has(other)) for (const child of tree(other)) ids.delete(child);
-    return rows.reduce((sum, row) => sum + (ids.has(row.pid) ? peak ? Math.max(row.rss, row.peakRss ?? 0) : row.rss : 0), 0);
+    return rows.filter(row => ids.has(row.pid));
   };
-  return { roots, tree, rss: (pid: number | null) => memoryFor(pid, false), peak: (pid: number | null) => memoryFor(pid, true) };
+  return { roots, tree, members, rss: (pid: number | null) => members(pid).reduce((sum, row) => sum + row.rss, 0),
+    peak: (pid: number | null) => peakSum(members(pid)) };
+}
+
+function peakSum(rows: readonly WorkerProcessMemory[]): number {
+  return rows.reduce((sum, row) => sum + Math.max(row.rss, row.peakRss ?? 0), 0);
+}
+function reservedPeak(row: { readonly peak: number; readonly pendingPeaks?: readonly (readonly WorkerProcessMemory[])[] }): number {
+  return (row.pendingPeaks ?? []).reduce((peak, sample) => Math.max(peak, peakSum(sample)), row.peak);
+}
+function recordOwnerPeak(state: HostState, owner: OwnerPeak, rows: readonly WorkerProcessMemory[]): void {
+  if (owner.pid === null || rows.length === 0) return;
+  if (!state.reservations.some(row => row.owner === owner.pid && row.pid === null)) {
+    owner.observedPeak = Math.max(owner.observedPeak ?? 0, peakSum(rows));
+    owner.peak = Math.max(owner.peak, owner.observedPeak);
+    return;
+  }
+  // A process visible before its spawn callback is not yet proved managed or
+  // unmanaged. Reserve the complete observation now, retaining its identities
+  // only until the admitted child is bound or the unstarted offer is released.
+  const sample = rows.map(row => ({ pid: row.pid, parentPid: row.parentPid, rss: Math.max(row.rss, row.peakRss ?? 0) }))
+    .sort((left, right) => left.pid - right.pid || left.parentPid - right.parentPid);
+  const prior = owner.pendingPeaks?.find(previous => previous.length === sample.length &&
+    previous.every((row, index) => row.pid === sample[index]!.pid && row.parentPid === sample[index]!.parentPid));
+  if (prior) {
+    for (let index = 0; index < sample.length; index++) prior[index] = { ...sample[index]!, rss: Math.max(prior[index]!.rss, sample[index]!.rss) };
+  } else (owner.pendingPeaks ??= []).push(sample);
+}
+/** Move observations only when a separately admitted process proves ownership. */
+function reconcileOwnerPeaks(state: HostState): void {
+  const bindings = [...state.parents.map(row => ({ pid: row.pid } as SampleBinding)),
+    ...state.reservations.flatMap(row => row.pid === null ? [] : [{ pid: row.pid, key: row.key }])];
+  for (const sample of state.samples ?? []) for (const binding of bindings) {
+    const prior = sample.bindings.find(row => row.pid === binding.pid);
+    if (prior) { if (binding.key !== undefined) prior.key = binding.key; }
+    else sample.bindings.push({ ...binding });
+  }
+  for (const owner of [...state.parents, ...state.reservations]) {
+    if (!owner.pendingPeaks?.length || owner.pid === null) continue;
+    const samples = owner.pendingPeaks;
+    delete owner.pendingPeaks;
+    for (const sample of samples) {
+      const ownership = memoryOwners(state, sample);
+      const before = ownership.tree(owner.pid);
+      for (const pid of ownership.roots) {
+        if (pid === owner.pid || !before.has(pid) || !sample.some(row => row.pid === pid)) continue;
+        const recipient = state.reservations.find(row => row.pid === pid) ?? state.parents.find(row => row.pid === pid);
+        if (recipient) recordOwnerPeak(state, recipient, ownership.members(pid));
+      }
+      recordOwnerPeak(state, owner, ownership.members(owner.pid));
+    }
+  }
 }
 
 /** How often a running reserved child's high-water memory is read. */
@@ -209,8 +267,8 @@ export interface WorkerMemoryHost {
 export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]> } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
-  let sampling: Promise<readonly WorkerProcessMemory[]> | undefined;
-  const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[]): boolean => {
+  let sampling: { id: string; work: Promise<readonly WorkerProcessMemory[]>; waiting: number } | undefined;
+  const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[], sampleId?: string): boolean => {
     const path = join(tmpdir(), "meanwhile-worker-memory.json");
     const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
     const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
@@ -229,7 +287,21 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
-      operation(local, rows);
+      local.samples = local.samples?.filter(row => alive(row.owner));
+      local.sampledBindings = local.samples?.find(row => row.id === sampleId)?.bindings;
+      try {
+        reconcileOwnerPeaks(local);
+        operation(local, rows);
+        reconcileOwnerPeaks(local);
+        // A released child's proof lasts through every OS probe that could
+        // still return it. Its final observed peak belongs to that script.
+        const owners = memoryOwners(local, rows);
+        for (const binding of local.sampledBindings ?? []) {
+          if (!binding.key || local.reservations.some(row => row.pid === binding.pid) || local.parents.some(row => row.pid === binding.pid)) continue;
+          const bytes = owners.peak(binding.pid);
+          if (bytes > 0) (local.peaks ??= {})[binding.key] = [Math.max(bytes, ...local.peaks[binding.key] ?? [])];
+        }
+      } finally { delete local.sampledBindings; }
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
       }
@@ -239,13 +311,38 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       if (input.shared) unlinkSync(lock);
     }
   };
+  const finishSample = (id: string): void => {
+    const clear = () => {
+      if (!apply(state => { state.samples = state.samples?.filter(row => row.id !== id); }, [])) setTimeout(clear, 50).unref();
+    };
+    clear();
+  };
   return { transact: (operation, sampleProcesses = true) => {
     if (!sampleProcesses) return apply(operation, []);
-    const rows = sampling ?? sample();
-    // Sampling may wait on the OS; the shared lock only protects the state update.
-    if (Array.isArray(rows)) return apply(operation, rows);
-    sampling ??= Promise.resolve(rows).finally(() => { sampling = undefined; });
-    return sampling.then(values => apply(operation, values));
+    if (!sampling) {
+      const id = randomUUID();
+      if (!apply(state => { (state.samples ??= []).push({ id, owner: process.pid, bindings: [] }); }, [])) return false;
+      let rows: readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]>;
+      try { rows = sample(); }
+      catch (error) { finishSample(id); throw error; }
+      // Sampling may wait on the OS; its proof marker, not the shared lock,
+      // keeps released process ownership until all waiting callbacks finish.
+      if (Array.isArray(rows)) {
+        try { return apply(operation, rows, id); }
+        finally { finishSample(id); }
+      }
+      let deadline: ReturnType<typeof setTimeout>;
+      const work = Promise.race([Promise.resolve(rows), new Promise<never>((_resolve, reject) => {
+        deadline = setTimeout(() => reject(new Error("WORKER_MEMORY_SAMPLE_TIMEOUT")), 5000);
+        deadline.unref();
+      })]).finally(() => clearTimeout(deadline));
+      const probe = { id, work, waiting: 0 };
+      sampling = probe;
+      void probe.work.then(() => { if (sampling === probe) sampling = undefined; }, () => { if (sampling === probe) sampling = undefined; });
+    }
+    const probe = sampling;
+    probe.waiting++;
+    return probe.work.then(values => apply(operation, values, probe.id)).finally(() => { if (--probe.waiting === 0) finishSample(probe.id); });
   } };
 }
 const sharedHost = workerMemoryHost({ shared: true });
@@ -313,6 +410,11 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const reservation = state.reservations.find(row => row.pid === process.pid);
     if (reservation) {
       reservation.peak = Math.max(reservation.peak, memory.parentPeakBytes ?? 0);
+      for (const parent of state.parents.filter(parent => parent.pid === process.pid)) {
+        reservation.peak = Math.max(reservation.peak, parent.peak);
+        reservation.observedPeak = Math.max(reservation.observedPeak ?? 0, parent.observedPeak ?? 0);
+        for (const sample of parent.pendingPeaks ?? []) recordOwnerPeak(state, reservation, sample);
+      }
       state.parents = state.parents.filter(parent => parent.pid !== process.pid);
       return;
     }
@@ -356,15 +458,14 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         const owners = memoryOwners(state, rows);
         const rssFor = owners.rss;
         // The OS high-water value survives a brief peak between observer samples.
-        for (const row of state.reservations) row.peak = Math.max(row.peak, owners.peak(row.pid));
-        for (const row of state.parents) row.peak = Math.max(row.peak, owners.peak(row.pid));
+        for (const row of [...state.reservations, ...state.parents]) recordOwnerPeak(state, row, owners.members(row.pid));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[workerMemoryPeakKey(entry) ?? ""];
           return Math.max(peakFor(entry), measured?.length ? measuredReservationBytes(measured) : 0, memory.minimumPeakBytes?.(entry) ?? 0);
         };
         while (active < maximum && waiting.length) {
-          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
-            state.parents.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0);
+          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, reservedPeak(row) - rssFor(row.pid)), 0) +
+            state.parents.reduce((sum, row) => sum + Math.max(0, reservedPeak(row) - rssFor(row.pid)), 0);
           const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
           const participants = new Set([...owners.roots].flatMap(pid => [...owners.tree(pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
@@ -376,33 +477,40 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
           const id = randomUUID();
-          let reserved = reserve(item!.entry);
-          state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry });
+          const reserved = reserve(item!.entry);
+          const key = workerMemoryPeakKey(item!.entry);
+          state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry, key });
           active++;
           let released = false;
           let measured = 0;
+          let observedPid: number | null = null;
           let sampler: ReturnType<typeof setInterval> | undefined;
-          const key = workerMemoryPeakKey(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;
             clearInterval(sampler);
             mutate(state => {
+              const row = state.reservations.find(row => row.id === id);
+              if (row && observedPid !== null) row.pid = observedPid;
+              reconcileOwnerPeaks(state);
+              measured = Math.max(measured, row?.observedPeak ?? 0);
               state.reservations = state.reservations.filter(row => row.id !== id);
               if (key !== null && measured > 0) (state.peaks ??= {})[key] = [Math.max(measured, ...state.peaks[key] ?? [])];
             });
             requestDrain();
           }, { observe: (pid: number) => {
             if (released) return;
+            observedPid = pid;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
             const samplePeak = () => mutate((state, processes) => {
               if (released) return;
               if (!processes.some(row => row.pid === pid)) { clearInterval(sampler); return; }
-              const bytes = memoryOwners(state, processes).peak(pid);
-              measured = Math.max(measured, bytes);
-              reserved = Math.max(reserved, bytes);
               const row = state.reservations.find(row => row.id === id);
-              if (row) row.peak = Math.max(row.peak, reserved);
+              if (!row) return;
+              row.pid = pid;
+              reconcileOwnerPeaks(state);
+              recordOwnerPeak(state, row, memoryOwners(state, processes).members(pid));
+              measured = Math.max(measured, row.observedPeak ?? 0);
             }, true);
             samplePeak();
             sampler = setInterval(samplePeak, PEAK_SAMPLE_MS);
@@ -497,9 +605,9 @@ export function memoryReading(input: {
   const leaseWorkerPeakBytes = input.leaseWorkerPeakBytes ?? WORKER_ENTRY_PEAK_MIB.lease! * MIB;
   const owners = memoryOwners(input.state ?? { parents: [], reservations: [] }, input.rows);
   const runner = descendants(input.rootPid, input.rows);
-  const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: row.peak,
+  const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: reservedPeak(row),
     rssBytes: owners.rss(row.pid) }));
-  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak, rssBytes: owners.rss(row.pid) }));
+  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: reservedPeak(row), rssBytes: owners.rss(row.pid) }));
   const reservedGrowthBytes = [...parents, ...reservations].reduce((sum, row) => sum + Math.max(0, row.peakBytes - row.rssBytes), 0);
   const spare = input.availableBytes - headroomBytes - reservedGrowthBytes;
   return { at: input.at, totalBytes: input.totalBytes, availableBytes: input.availableBytes, headroomBytes,

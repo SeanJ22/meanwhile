@@ -215,6 +215,8 @@ export function reconcileIdempotentAppend<T>(
 
 /** No `update` and no `delete`: every mutation goes through `compareAndSet`. */
 export interface AggregateRepository<T> {
+  /** Structural type only; the array's members never leave the provider. Null means the aggregate is absent. */
+  readArrayType?(id: string, path: readonly string[], expectedRevision?: number): Promise<boolean | null>;
   /** The aggregate, or null when it genuinely is not there. Never null on a failed read. */
   read(id: string): Promise<Persisted<T> | null>;
   /** Narrowed to `projection` by the store before it leaves; null when absent. */

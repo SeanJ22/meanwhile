@@ -113,7 +113,7 @@ test("identity-only door pages count every row without loading door values", asy
     assert.equal(counted, 201);
     assert.equal(pages, 3);
     assert.deepEqual(result.rows, [], "the page visitor must not accumulate the country inventory");
-    assert.ok(Number.isFinite(Date.parse(result.through)));
+    assert.ok(result.through !== null && Number.isFinite(Date.parse(result.through)));
   } finally { await db.close(); }
 });
 

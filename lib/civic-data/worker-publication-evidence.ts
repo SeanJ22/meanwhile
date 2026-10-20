@@ -144,13 +144,14 @@ export function latestParserResult(results: readonly WorkerResultRecord[], workI
 export async function capturesForPublication(input: {
   repos: Pick<ControlPlaneRepositories, "artifacts">; workItemId: string; primaryId: string; results: readonly WorkerResultRecord[];
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
-  officialLinks?: ReadonlyMap<string, readonly string[]>;
+  officialLinks?: (host: string) => Promise<readonly string[]>;
 }): Promise<WorkerPublicationCapture[]> {
   const primary = await input.readCapture(input.primaryId, input.results);
   if (isOfficialSource(primary.evidence.canonicalUrl)) return [primary];
   const own = (await input.repos.artifacts.read(input.workItemId))
     .filter(a => a.artifactId !== input.primaryId && !a.partial && /^(?:text\/(?:html|plain|csv|tab-separated-values)|application\/(?:xhtml\+xml|json|csv))(?:;|$)/i.test(a.contentType)).slice(-10).map(a => a.artifactId);
-  const learned = input.officialLinks?.get(hostOfUrl(primary.evidence.canonicalUrl) ?? "")?.slice(0, 3) ?? [];
+  const host = hostOfUrl(primary.evidence.canonicalUrl);
+  const learned = host && input.officialLinks ? (await input.officialLinks(host).catch(() => [])).slice(0, 3) : [];
   const read = await Promise.all([...new Set([...learned, ...own])].map(id => input.readCapture(id, input.results).catch(() => null)));
   return [primary, ...read.filter((c): c is WorkerPublicationCapture => c !== null)];
 }

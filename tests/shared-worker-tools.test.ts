@@ -434,7 +434,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   release();
   free = Number.MAX_SAFE_INTEGER;
   const votes = await slots.acquire("openstates-votes-ca/openstates-votes-refresh.mts");
-  host.transact(state => { assert.equal(state.reservations[0]!.peak, 3072 * mib); }, false);
+  host.transact(state => { assert.equal(state.reservations[0]!.peak, 3574 * mib); }, false);
   votes();
 });
 

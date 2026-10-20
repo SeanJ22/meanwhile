@@ -35,10 +35,11 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // Provisional existing install-tree measurement: 1,295 MiB including postinstall; verify against the current shipped dependency tree.
   "runtime-release-install.mjs": 1536,
   "runtime-release-command.mjs": WORKER_ENTRY_PEAK_MIB.lease!,
-  // A complete 113 MiB Illinois session peaked at 3,013 MiB;
-  // the host observer also accounts for each worker's descendants.
-  "openstates-votes-refresh.mts": 3072,
-  "legiscan-votes-refresh.mts": 3072,
+  // Complete native migrated-copy runs, including publication: NY OpenStates
+  // peaked at 3,568,775,168 bytes; NY LegiScan at 1,310,093,312 bytes.
+  // Round each measured peak plus 5% up to MiB; the host also charges descendants.
+  "openstates-votes-refresh.mts": 3574,
+  "legiscan-votes-refresh.mts": 1312,
   "federal-money-refresh.mts": 768,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,

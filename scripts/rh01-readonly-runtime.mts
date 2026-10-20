@@ -55,7 +55,7 @@ export async function observeWorkerCompletion(repos: ControlPlaneRepositories, t
       const keys = await repos.scoutResults.keysWhere(["attemptId"], attempt.id);
       const rows = (await Promise.all(keys.map(key => repos.scoutResults.readWhere(key, ["attemptId"], attempt.id)))).flat();
       const result = rows.length === 1 ? rows[0] : null;
-      event = { ...event, complete: result?.stoppedBy === "MODEL" && result.steps.some(step => step.kind === "MODEL") && attempt.cost.usd !== null && Number(attempt.cost.requestCount) > 0,
+      event = { ...event, complete: result?.stoppedBy === "MODEL" && result.steps?.some(step => step.kind === "MODEL") === true && attempt.cost.usd !== null && Number(attempt.cost.requestCount) > 0,
         endedAt: attempt.endedAt, usd: attempt.cost.usd, modelRequests: attempt.cost.requestCount, stoppedBy: result?.stoppedBy ?? null };
     } else {
       const { fingerprint } = await native("lib/control-plane/ids.ts");

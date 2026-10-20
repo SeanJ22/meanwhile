@@ -79,11 +79,8 @@ if(!state){
     const from=process.argv.find(arg=>arg.startsWith("--from="))?.slice(7);
     if(!from){
       await query(`CREATE SCHEMA ${schema}`);
-      for(const file of ["0035_r1_fact_store.sql","0037_r1_fact_scale.sql"]){
-        for(const statement of (await readFile(new URL(`../lib/db/migrations/${file}`,import.meta.url),"utf8")).split("--> statement-breakpoint"))await query(statement);
-      }
-      await query("CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
-      for(const statement of (await readFile(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")).split("--> statement-breakpoint"))if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await query(statement);
+      const {applyCampaignMigrations}=await import("../tests/helpers/campaign-money-db.ts");
+      await applyCampaignMigrations(sql=>query(sql));
       await writeFile(schemaPath,JSON.stringify({schema}));
     }
     const rows:Record<string,unknown>[]=from?await readFile(reportPath,"utf8").then(text=>JSON.parse(text).rows).catch(error=>{if(error.code==="ENOENT")return [];throw error;}):[];
@@ -116,13 +113,13 @@ if(!state){
     const before=await size(),place=US_JURISDICTIONS.find(place=>place.usps===state)!;
     const division=`ocd-division/country:us/${place.prefix}:${place.slug}`;
     const holders=people.map(person=>({id:person.id,personId:person.id,name:person.name,nativeIds:{campaign:person.aliases??[]},provenance:{sourceUrl:person.sourceUrl},memberships:[{current:true,officeId:person.seat,officeTitle:person.office,divisionId:person.division,sourceUrl:person.sourceUrl}]}));
-    await query("DELETE FROM civic_data_promotions WHERE scope=$1",[`US-${state}:test-people`]);
-    await query("INSERT INTO civic_data_promotions VALUES('STATE_LEGISLATOR',$1,$2,$3)",[`US-${state}:test-people`,state,JSON.stringify({roster:{officeholders:holders}})]);
     const facts={query,transaction:async<T,>(work:(query:Query)=>Promise<T>)=>{
       const client=await pool.connect();
       try{await client.query("BEGIN");const value=await work(async(text,params=[])=>{const result=await client.query(text,[...params]);return result.rows;});await client.query("COMMIT");return value;}
       catch(error){await client.query("ROLLBACK");throw error;}finally{client.release();}
     }};
+    const {publishMoneyFixture}=await import("../tests/helpers/campaign-money-db.ts");
+    await publishMoneyFixture(facts,{recordClass:"STATE_LEGISLATOR",scope:`US-${state}:test-people`,payload:{roster:{officeholders:holders}}});
     let bulkDownloads=0;
     const result=await refreshCampaignMoneyState({state,query:productionQuery,facts,doors,vault:new DurableEvidenceStore("/tmp/src-mn-ready2-source-evidence",{remote:null}),directory:"/tmp/src-mn-ready2-source-cache",purge:async()=>({purged:true}),
       ...(process.env.SRC_MN_CHECK_AT?{now:()=>process.env.SRC_MN_CHECK_AT!}:{}),

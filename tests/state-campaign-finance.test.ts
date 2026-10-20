@@ -8,7 +8,7 @@ import { manualPayloadScope, scopedManualContractScope } from "../lib/civic-data
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { acquireCampaignFinanceResource } from "../lib/funding/state-acquisition.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";

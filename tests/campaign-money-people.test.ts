@@ -14,7 +14,7 @@ import { readCampaignFinanceForPlace } from "../lib/funding/state-reader.ts";
 import { stateCampaignEvidence } from "../lib/ask/state-campaign.ts";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { factDb } from "./helpers/fact-db.ts";
+import {campaignDb,publishMoneyFixture} from "./helpers/campaign-money-db.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import {publishCampaignMoneyWork} from "../lib/funding/work-publication.ts";
 import {runCampaignMoneyStates} from "../lib/funding/state-sources.ts";
@@ -28,16 +28,15 @@ const capture={url:resource.url,rawHash:"a".repeat(64),vaultKey:"test",byteLengt
 const row=campaignSourceRecord("WA",resource,raw,capture);
 const person:CampaignMoneyPerson={id:"published-person",name:"Anita Crawford-Willis",seat:division+"/place:seattle#judge",office:raw.office,division:division+"/place:seattle",incumbent:true,sourceUrl:"https://www.seattle.gov/courts"};
 
-async function campaignDb(){
-  const db=await factDb();
-  await db.pg.exec("CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb); CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
-  for(const statement of (await readFile(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")).split("--> statement-breakpoint")){
-    if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
-  }
-  return db;
-}
 async function publishPerson(db:Awaited<ReturnType<typeof campaignDb>>,person:CampaignMoneyPerson){
-  await db.query("INSERT INTO civic_data_promotions VALUES('REGISTRY_RUNTIME_BINDING',$1,$2,$3)",["US-"+(/(?:state|district|territory):([a-z]{2})/.exec(person.division)![1].toUpperCase()),person.id,JSON.stringify({bodyRosters:[{bodyId:person.seat,sourceUrl:person.sourceUrl,members:[{id:person.id,name:person.name,officeTitle:person.office}]}]})]);
+  const scope="US-"+(/(?:state|district|territory):([a-z]{2})/.exec(person.division)![1].toUpperCase());
+  const [current]=await db.query("SELECT reader_payload_value(payload)->'bodyRosters' AS rosters FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING' AND scope=$1",[scope]);
+  const rosters=(current?.rosters??[]) as {bodyId:string;sourceUrl:string;members:{id:string;name:string;officeTitle:string}[]}[];
+  const retained=rosters.map(roster=>({...roster,members:roster.members.filter(member=>member.id!==person.id)}));
+  const body=retained.find(roster=>roster.bodyId===person.seat)??{bodyId:person.seat,sourceUrl:person.sourceUrl,members:[]};
+  body.members.push({id:person.id,name:person.name,officeTitle:person.office});
+  if(!retained.includes(body))retained.push(body);
+  await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope,payload:{bodyRosters:retained}});
 }
 
 test("money requires a published person, exact seat and a filed period from 2020 onward",()=>{
@@ -133,7 +132,7 @@ test("a held source document without a filing period cannot become cycle totals"
   const held={dataClass:"STATE_COMMITTEE",jurisdiction:"WA",filingState:"FILED",committeeId:"committee",registeredName:"Filed committee",agency:"Washington Public Disclosure Commission",
     candidateNameAsFiled:person.name,officeSought:person.office,electionYear:2026,targetKeys:[person.id],filingsUrl:capture.url,checkedAt:at.slice(0,10),
     provenance:{sourceUrl:capture.url,collectedAt:at,verifiedAt:at},match:{allThreeAgree:true},totals:{receipts:100,expenditures:0,cashOnHand:null,coveringPeriod:null as string|null}};
-  const save=async(kind:string)=>{await db.query("DELETE FROM civic_data_promotions WHERE scope='US-WA:campaign-finance'");await db.query("INSERT INTO civic_data_promotions VALUES('CURATED_READER_RECORD','US-WA:campaign-finance','held-period',$1)",[JSON.stringify({records:[{kind,ocdId:person.division,record:held}]})]);};
+  const save=(kind:string)=>publishMoneyFixture(db,{recordClass:"CURATED_READER_RECORD",scope:"US-WA:campaign-finance",payload:{records:[{kind,ocdId:person.division,record:held}]}});
   const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>at,fetch:async()=>new Response("Unavailable",{status:404})};
   try{
     await publishPerson(db,person);await save("CAMPAIGN_FINANCE_DOCUMENT");await refreshCampaignMoneyState(options);
@@ -223,7 +222,7 @@ test("hourly work picks up a newly published person from cached state bytes and 
     now="2026-10-21T02:00:00.000Z";await refreshCampaignMoneyState(options);
     assert.equal((await readCampaignFinanceForPlace(person.division,{query,personId:person.id})).records.length,1);
     assert.equal(downloads,1);
-    await db.query("DELETE FROM civic_data_promotions WHERE current_version_id=$1",[person.id]);
+    await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope:"US-WA",payload:{bodyRosters:[]}});
     assert.equal((await readCampaignFinanceForPlace(person.division,{query,personId:person.id})).records.length,0);
     assert.equal((await stateCampaignEvidence([person.division],person.id,{query})).records.length,0);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}

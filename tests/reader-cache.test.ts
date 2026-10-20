@@ -14,7 +14,7 @@ import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;

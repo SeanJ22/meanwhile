@@ -1,6 +1,7 @@
 import { publisherSizeForState } from "../../sources/publisher-size.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import { scoutStateHint } from "./field-manual-scout.ts";
+import { registeredPublisherWebsite } from "../../doors/platform-publisher.ts";
 
 /** Held facts about the website being requested, never the hunt's jurisdiction. */
 export interface WebsiteSize {
@@ -15,9 +16,10 @@ export type WebsiteSizeForUrl = (url: string) => WebsiteSize | null | undefined;
 export function websiteSizeFromHoldings(states: readonly string[], root = process.cwd()): WebsiteSizeForUrl {
   const readers = [...new Set(states.map(state => state.toLowerCase()))].map(state => publisherSizeForState(state, root));
   return url => {
+    const requested = registeredPublisherWebsite(url) ?? url;
     let found: WebsiteSize | null = null;
     for (const read of readers) {
-      const size = read(url);
+      const size = read(requested);
       if (!size) continue;
       if (found) return null;
       found = size;

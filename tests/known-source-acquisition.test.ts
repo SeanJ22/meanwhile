@@ -3,7 +3,7 @@ import test from "node:test";
 import { createHash } from "node:crypto";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { acquireKnownRelease, type KnownRelease } from "../lib/sources/known-release.ts";
+import { acquireKnownRelease, withKnownReleaseCache, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 
@@ -17,6 +17,20 @@ function harness() {
     fetchImpl: (async (_url, init) => { requests++; return respond(new Headers(init?.headers)); }) as typeof fetch };
   return { options, store, requests: () => requests, time: (value: string) => { at = value; }, response: (fn: typeof respond) => { respond = fn; } };
 }
+test("read-only adapter measurements use isolated evidence and locks without opening the production control plane", async () => {
+  const first = harness(), second = harness();
+  second.response(() => new Response("id,name\n2,B\n"));
+  const acquire = async (h: ReturnType<typeof harness>) => {
+    const { store, locks, ...options } = h.options;
+    return withKnownReleaseCache({ store, locks }, async () => { await Promise.resolve(); return acquireKnownRelease(options); });
+  };
+  const [a, b] = await Promise.all([acquire(first), acquire(second)]);
+  assert.equal(first.requests(), 1);
+  assert.equal(second.requests(), 1);
+  assert.notEqual(a.sha256, b.sha256);
+  assert.equal(new TextDecoder().decode(a.bytes), "id,name\n1,A\n");
+  assert.equal(new TextDecoder().decode(b.bytes), "id,name\n2,B\n");
+});
 test("parallel consumers share one source request and byte identity without re-dating held evidence", async () => {
   const h = harness();
   const results = await Promise.all(Array.from({ length: 8 }, () => acquireKnownRelease(h.options)));

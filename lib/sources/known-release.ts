@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
@@ -77,7 +78,14 @@ export interface KnownReleaseOptions {
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
 const pending = new WeakMap<EvidenceStore, Map<string, Promise<KnownRelease>>>();
 let runtime: Promise<{ store: EvidenceStore; locks: LockManager; repos: ControlPlaneRepositories }> | undefined;
+const scopedCache = new AsyncLocalStorage<{ store: EvidenceStore; locks: LockManager }>();
+/** Replay and read-only measurements retain source bytes with local locks, without writing production acquisition state. */
+export function withKnownReleaseCache<T>(cache: { store: EvidenceStore; locks: LockManager }, work: () => T): T {
+  return scopedCache.run(cache, work);
+}
 function runtimeContext() {
+  const scoped = scopedCache.getStore();
+  if (scoped) return Promise.resolve({ ...scoped, repos: null });
   return runtime ??= (async () => {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("KNOWN_SOURCE_CONTROL_PLANE_UNAVAILABLE");
@@ -220,8 +228,8 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
       await writeIndex(prior);
       return release;
     };
-    if (!heldBytes && (options.readHeld || defaults)) {
-      const inherited = options.readHeld ? await options.readHeld() : await priorCapturedRelease(options, defaults!.repos, store);
+    if (!heldBytes && (options.readHeld || defaults?.repos)) {
+      const inherited = options.readHeld ? await options.readHeld() : await priorCapturedRelease(options, defaults!.repos!, store);
       if (inherited) {
         if (inherited.sourceId !== options.sourceId || inherited.releaseId !== options.releaseId || inherited.requestedUrl !== options.url ||
             inherited.httpStatus !== 200 || !inherited.bytes.byteLength || inherited.bytes.byteLength > options.maxBytes ||

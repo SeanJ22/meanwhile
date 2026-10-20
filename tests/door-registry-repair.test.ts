@@ -20,7 +20,7 @@ async function shutDoor() {
   return repos;
 }
 const fixes = async (repos: Awaited<ReturnType<typeof shutDoor>>) => {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: true });
   return held && isAdminConfig(held.value) ? fixItems(held.value) : [];
 };
 

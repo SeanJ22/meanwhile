@@ -34,7 +34,6 @@ import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 
-
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
   return read.value as T;
@@ -67,8 +66,6 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
   const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
   return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
 }
-
-
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const METHOD = methodFixture();
@@ -148,7 +145,7 @@ test("generalized standing independently retains two subject publisher hosts and
   const unrelated = await h.hold("<p>Park reservation</p>", "https://www.coronafire.org/parks");
   const context = await h.runtime.independentContext({ workItemId: h.item.id, artifactId: primary.artifactId, contract: value, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version });
   assert.deepEqual(context.evidence.map(e => e.artifactId), [primary.artifactId]);
-  // The method only grows (agents add routes), so a plan made under an earlier version is audited against today's floor; one from a later version is not.
+
   const planned = (methodVersion: number) => ({ ...value, methodVersion });
   const auditUnder = (contract: typeof value) => h.setPlan(h.item, contract).then(() => h.runtime.independentContext({ workItemId: h.item.id, artifactId: primary.artifactId, contract, auditScope: "CAPTURED_ARTIFACT", methodVersion: METHOD.version }));
   assert.deepEqual((await auditUnder(planned(METHOD.version - 1))).evidence.map(e => e.artifactId), [primary.artifactId]);

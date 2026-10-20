@@ -1,13 +1,11 @@
-/** One obligation and one work plan per government, keyed by its OCD division,
- * so the work, its blanks and what is held share one id. */
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import { OWNER_DISPATCH, type FreshnessObligation } from "../control-plane/scheduler/obligation.ts";
 import type { RouteDescriptor } from "../control-plane/scheduler/registry.ts";
 import { HUNT_PACKET_CAPABILITY, HUNT_PACKET_RECORD_CLASS, HUNT_PACKET_ROUTE_ID, huntPacketObligationId } from "./packet.ts";
 
-/** `AZ` from `ocd-division/country:us/state:az/...`; `US` for the country. */
 export function stateOfDivision(divisionId: string): string {
-  return /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(divisionId)?.[1]?.toUpperCase() ?? "US";
+  return (/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/i.exec(divisionId)?.[1]
+    ?? /^government:US-([a-z]{2}):/i.exec(divisionId)?.[1])?.toUpperCase() ?? "US";
 }
 
 export function isHuntPacketPlan(plan: Pick<AutonomousWorkPlan, "capability"> | undefined | null): boolean {
@@ -42,7 +40,6 @@ export const HUNT_PACKET_ROUTE: RouteDescriptor = {
   citation: "the State Run Checklist's owed list for this government",
 };
 
-/** The obligation an owner's order materializes for one government. */
 export function huntPacketObligation(governmentId: string): FreshnessObligation {
   return {
     id: huntPacketObligationId(governmentId),

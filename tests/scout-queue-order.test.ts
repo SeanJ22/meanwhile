@@ -1,15 +1,3 @@
-/**
- * The Scout lane orders due rows by reader-impact band, and within a band by
- * longest wait, so a row whose Scouts keep failing cannot return to the head of
- * its band each time its backoff ends. These tests replay the lane offline on a
- * moving clock with the scheduler's own pure functions and the runner's
- * comparator (`compareReaderImpact` over `orderableDueRow`):
- * - Under the old order, a never-tried row starves behind rows that keep
- *   failing.
- * - Under the new order, it runs within ⌈(A + 1) / c⌉ cycles of the rows
- *   ahead of it in its band.
- * - The band order is unchanged.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -58,9 +46,9 @@ test("a failed priority refresh is not re-read until work changes its order vers
   let reads = 0;
   const plan = { scopes: [{ kind: "RESOLVED", members: new Set(["ocd-division/example"]), decision: { receiptId: "receipt" } }] };
   const repos = { adminConfig: { read: async () => { reads++; throw new Error("forced one priority read failure"); } } };
-  const make = new Function("expansionPlan", "repos", "ADMIN_CONFIG_ID", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", `${snippet}
+  const make = new Function("expansionPlan", "repos", "ADMIN_CONFIG_ID", "readHeldPlaceCapture", "nowIso", "runtimeConditions", "console", "planningSections", `${snippet}
     return { refresh: refreshPlaceOrder, changed: () => { placeOrderDirty = true; } };`);
-  const priority = make(plan, repos, "admin", async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} });
+  const priority = make(plan, repos, "admin", async () => ({}), () => "2026-10-02T17:00:00Z", [], { warn: () => {} }, { placeTargets: true });
   for (let selection = 0; selection < 20; selection++) await priority.refresh();
   assert.equal(reads, 1, "one refused refresh keeps the last order without twenty repeated store reads");
   priority.changed();
@@ -111,12 +99,6 @@ function row(id: string, firstOwed: string, subjectId = `nj:2026:${id}`): Freshn
   };
 }
 
-/**
- * All band 2:
- * - four failing rows owed since August;
- * - four failing rows at the tie whose ids sort first;
- * - one never-tried row at the tie whose id sorts last.
- */
 const EARLY = Array.from({ length: 4 }, (_, i) => row(`aug-walled-${i + 1}`, OWED_SINCE_AUG));
 const AT_TIE = Array.from({ length: 4 }, (_, i) => row(`a-walled-${i + 1}`, TIE));
 const NEVER_TRIED = row("z-never-tried", TIE);

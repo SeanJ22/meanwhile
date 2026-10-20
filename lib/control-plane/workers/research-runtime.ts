@@ -27,9 +27,9 @@ export async function authorizeInheritedHeldArtifact(repos: ControlPlaneReposito
   readonly artifactId: string; readonly originWorkItemId: string;
   readonly childWorkItemId: string; readonly project: string;
 }, siblingRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
-  readonly childWorkItemId:string;readonly project:string})=>string|null): Promise<boolean> {
+  readonly childWorkItemId:string;readonly project:string})=>string|null|Promise<string|null>): Promise<boolean> {
   if (input.originWorkItemId === input.childWorkItemId) return false;
-  const linkedRoot = siblingRootFor?.(input) ?? null;
+  const linkedRoot = await siblingRootFor?.(input) ?? null;
   const linkedAncestorId = linkedRoot ?? input.originWorkItemId;
   const child = (await repos.workItems.read(input.childWorkItemId))?.value;
   if (!child || child.project !== input.project) return false;
@@ -82,7 +82,7 @@ export function researchRoleExecutor(runtime: FleetRuntime, tools: ResearchRunti
   const spec = task.workerTask;
   if (!spec || spec.role !== "ACQUIRER") throw new Error("RESEARCH_ROLE_SPEC_MISSING");
   const worker: WorkerRef = {role:spec.role,provider:"we-the-people",version:RESEARCH_WORKER_VERSION,instance:holder};
-  return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId,bound}) => {
+  return {lane:"DETERMINISTIC",workerFor:()=>worker,run:async ({attemptId,workItemId,routeTaskId}) => {
     const started = performance.now();
     const item = (await tools.repos.workItems.mustRead(workItemId)).value;
     const attempt = await tools.repos.attempts.mustRead(attemptId);

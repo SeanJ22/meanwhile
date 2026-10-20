@@ -1,8 +1,3 @@
-/**
- * The newest verified result in one state: a pipeline item that reached APPROVED_FOR_PROMOTION, or a
- * Validator PASS / Auditor SURVIVED worker result. The SQL applies the `stateOfSubject` pattern and the
- * caller re-checks the subject. Null when there is none.
- */
 import { stateOfSubject } from "../expansion/subjects.ts";
 import { boundedQuery } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
@@ -42,7 +37,7 @@ ORDER BY r.record->>'at' DESC LIMIT 1`;
 export const STATE_WORKER_RESULT_SQL = `
 SELECT r.record->>'endedAt' AS at, w.value->>'subject' AS subject, r.record->'result'->>'role' AS detail
 FROM cp_log_worker_results r
-JOIN cp_work_items w ON w.id = r.log_key
+JOIN cp_work_items_history w ON w.id = r.log_key
 WHERE ((r.record->'result'->>'role' = 'VALIDATOR' AND r.record->'result'->>'verdict' = 'PASS')
     OR (r.record->'result'->>'role' = 'ADVERSARIAL_AUDITOR' AND r.record->'result'->>'verdict' = 'SURVIVED'))
   AND lower(w.value->>'subject') ~ $1

@@ -1,3 +1,4 @@
+import { EMPTY_SPEND } from "../spend-window.ts";
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { RepositoryLockHeld } from "../repository/types.ts";
@@ -30,15 +31,13 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   const observer = observeCyclePhases(stores);
   const repos = observer.repos;
   let websiteSize: WebsiteSizeForUrl = () => null;
-  const safety = new FleetSafetyController({ now: new Date().toISOString(), charges: [], rollingCeilingUsd: config.ceilingUsd,
+  const safety = new FleetSafetyController({ now: new Date().toISOString(), spend: EMPTY_SPEND, rollingCeilingUsd: config.ceilingUsd,
     websiteSize: url => websiteSize(url), websitePacing: repos.websitePacing,
     ...(config.hostConcurrency === undefined ? {} : { hostConcurrency: () => config.hostConcurrency! }) });
   // The per-task guards read `current`, so one runtime built once per process serves every task it runs
   // (a process runs one lease at a time). `subject` is only set on the old per-task path.
   let current = "";
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
-  // Each task reads only its own history by default; WTP_SCOPED_TASK_READS=0 restores the whole-table path.
-  const scopedReads = process.env.WTP_SCOPED_TASK_READS !== "0";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
   const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
     browse: browseWithPlaywright,
@@ -47,7 +46,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
       transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
       searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
-    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject), scopedReads,
+    auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject),
     endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);
   // Each process runs one live lease at a time, always pulling current task state.

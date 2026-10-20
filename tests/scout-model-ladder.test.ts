@@ -1,11 +1,5 @@
+import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
 import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
-/**
- * The hunter's model: the cheapest suitable class, the request shape it sends, how long a job may run, and the
- * routing table's ceiling.
- *
- * Offline: a fake transport scripted per model stands in for the provider and a fake toolkit for the network.
- * Nothing here reaches a model or a host.
- */
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -161,7 +155,7 @@ test("a long hunt walks beyond the former turn, tool, token and wall limits unti
     const walks = Array.from({ length: 40 }, (_, i) => [fetchOf("u" + i, `https://source${i}.gov/meetings`)]);
     const script = [...walks, [finish("done")]];
     for (const ceiling of [100, 0.075]) {
-      const controller = new FleetSafetyController({ now: NOW, charges: [], rollingCeilingUsd: ceiling, clock: () => NOW_MS });
+      const controller = new FleetSafetyController({ now: NOW, spend: aggregatePricedSpend([], new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), NOW), rollingCeilingUsd: ceiling, clock: () => NOW_MS });
       const fake = perModelTransport({ [HAIKU]: script }, () => { elapsed += 60_000; return { input_tokens: 20_000, output_tokens: 100 }; });
       const { outcome, result } = await runHunt({ model: HAIKU, transport: controller.guardedModelTransport("anthropic", OBLIGATION.id, fake) });
       assert.ok(fake.requests.length > 18, "long work passes the old model turn cap");

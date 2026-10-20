@@ -71,7 +71,6 @@ function registryFixtureForState(state: string, value: RegistryRuntimeReadModel 
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-
 const now = "2026-10-13T12:00:00.000Z";
 const registry = registryTransferImport().projection.payload;
 const source = "https://elections.example.gov/official-candidates";

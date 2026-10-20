@@ -88,11 +88,11 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
          SELECT a.record FROM unnest($1::text[]) AS sources(url)
          JOIN cp_log_artifacts a ON md5(a.record->>'canonicalUrl') = md5(sources.url) AND a.record->>'canonicalUrl' = sources.url
          UNION
-         SELECT a.record FROM cp_work_items w JOIN cp_log_artifacts a ON a.record #>> '{workItemId}' = w.id
+         SELECT a.record FROM cp_work_items_history w JOIN cp_log_artifacts a ON a.record #>> '{workItemId}' = w.id
          WHERE w.value #>> '{subject}' = ANY($2::text[]))
        SELECT f.record, t.value AS attempt, w.value AS work_item FROM found f
        JOIN cp_attempts t ON t.id = f.record->>'attemptId'
-       JOIN cp_work_items w ON w.id = f.record->>'workItemId'
+       JOIN cp_work_items_history w ON w.id = f.record->>'workItemId'
        ORDER BY f.record->>'canonicalUrl', f.record->>'recordedAt', f.record->>'artifactId'`,
       [[...new Set(links.flatMap(link => [link.url, wwwAlias(link.url)]))], [...new Set(links.map(link => `candidate-publication:${link.source.candidacyId}`))]],
     ) as { record: unknown; attempt: unknown; work_item: unknown }[];

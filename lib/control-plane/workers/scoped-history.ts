@@ -1,9 +1,3 @@
-/**
- * A task's reads of its own work item, subject and lineage, scoped instead of
- * listing whole tables. Each returns exactly what the whole-table read returned
- * after the caller's filter. Opt in with `scopedReads` (runner switch
- * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
- */
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
@@ -12,28 +6,14 @@ import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
 
-/** The Scout logs that ever held a record about one of these subjects. */
-async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[]> {
+export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly ScoutResult[]> {
   const keys = new Set<string>();
   for (const subject of new Set(subjectIds)) for (const key of await repos.scoutResults.keysWhere(["subjectId"], subject)) keys.add(key);
-  return [...keys].sort();
-}
-
-/** Every Scout result in the logs that hold these subjects, in the whole log's key-then-append order; the whole log when not scoped. */
-export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[],
-  scoped: boolean): Promise<readonly ScoutResult[]> {
-  if (!scoped) return repos.scoutResults.readAll();
   const out: ScoutResult[] = [];
-  for (const key of await scoutKeysFor(repos, subjectIds)) out.push(...await repos.scoutResults.read(key));
+  for (const key of [...keys].sort()) out.push(...await repos.scoutResults.read(key));
   return out;
 }
 
-/**
- * An audit's work items and captures (`generalizedIndependentContext`): the owner and every item about the
- * contract's subject, and every capture recorded for one of them, for a work item the owner's plan says it
- * inherited from, or under one of the audit's required artifact IDs. That is every row the audit reads; the
- * logs are read in the whole log's key order so "the first capture of an ID" is the same capture.
- */
 export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
   readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] }> {
   const byId = new Map<string, WorkItem>();
@@ -53,13 +33,6 @@ export async function readAuditHistory(repos: ControlPlaneRepositories, input: {
 
 type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkItemId?: string } };
 
-/**
- * Everything `selectStandingLineages` and `brokeredSiblingCaptures` read for the lineage one work item belongs to:
- * the occurrences of every standing obligation the item (or a repair ancestor) was opened for, the items those
- * occurrences opened and their repair families (found through the version-20 lineage index), and those items'
- * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
- * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
- */
 export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
   const items = new Map<string, WorkItem>();
   const readItem = async (id: string) => {
@@ -100,6 +73,6 @@ export async function readLineageHistory(repos: ControlPlaneRepositories, workIt
   return {
     occurrences: [...occurrences.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, value]) => value),
     workItems: byId(items.values()), artifacts, attempts: byId(attempts.values()), workerResults,
-    scouts: await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))], true),
+    scouts: await readScoutResultsForSubjects(repos, [...new Set([...items.values()].map(item => item.subject))]),
   };
 }

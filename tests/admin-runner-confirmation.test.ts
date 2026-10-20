@@ -16,11 +16,6 @@ import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
 import { followUpDelayMs, liveExecutor } from "../app/(admin)/_mw/admin-v6/executor.ts";
 import { V6_CAPABILITY_VERSION, RECEIPT_LOOKUP_CONTRACT } from "../app/(admin)/_mw/admin-v6/contract.ts";
 
-/**
- * A click is not "done" until the runner says so: a pause is saved (waiting), the runner writes its
- * own honored record as `honorRunnerIntent` does, and only then does the same receipt read done.
- */
-
 const T0 = "2026-09-30T18:00:00.000Z";
 /** A minute after the saves below: an order that has just been saved is waiting, not overdue. */
 const SOON = Date.parse(T0) + 60_000;
@@ -215,11 +210,12 @@ test("follow-up asks are quick at first and stop after about fifteen minutes", (
 /* ------------------------------------------------------------------ a timed-out write is read back */
 
 import { ControlPlaneRequestTimeout } from "@/lib/control-plane/repository/request-bounds.ts";
-import { ADMIN_CONFIG_ID } from "@/lib/control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
+import { withWriteReadback } from "@/lib/control-plane/gateway/write-readback.ts";
 
 const timeout = () => new ControlPlaneRequestTimeout({ operation: "cp_admin_config.compare_and_set", callClass: "POINT", timeoutMs: 1000, kind: "REQUEST", budget: null });
 
-/** A config store whose next compare-and-set times out: after applying it (landed) or before (not landed). */
+/** The next save times out after applying it (landed) or before (not landed). */
 function timingOut(repos: ControlPlaneRepositories, landed: boolean, readbackWorks = true): ControlPlaneRepositories {
   const real = repos.adminConfig;
   let armed = true;
@@ -227,15 +223,15 @@ function timingOut(repos: ControlPlaneRepositories, landed: boolean, readbackWor
     ...repos,
     adminConfig: {
       ...real,
-      async compareAndSet(id, rev, next, now) {
-        if (!armed) return real.compareAndSet(id, rev, next, now);
+      async save(held, next, now) {
+        if (!armed) return real.save(held, next, now);
         armed = false;
-        if (landed) await real.compareAndSet(id, rev, next, now);
+        if (landed) await real.save(held, next, now);
         throw timeout();
       },
-      async read(id) {
+      async read(id, sections) {
         if (!armed && !readbackWorks) throw new Error("read failed");
-        return real.read(id);
+        return real.read(id, sections);
       },
     },
   };
@@ -252,6 +248,30 @@ test("a write that timed out AFTER it landed is reported as saved, because it wa
   assert.equal(out.ok, true, out.receipt.says);
   assert.match(out.receipt.says, /Recorded: the Fleet spend ceiling is now \$55\.00/);
   assert.equal(((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as { fleetSpendCeiling?: { rollingCeilingUsd?: number } }).fleetSpendCeiling?.rollingCeilingUsd, 55);
+  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value.settingHistory?.length, 2);
+});
+
+test("a first settings save that times out after landing is read back from its exact history rows", async () => {
+  const repos = createMemoryRepositories();
+  const out = await submit(ask("config.setFleetSpendCeiling", "ceiling-key-first1", { rollingCeilingUsd: 55 }), deps(timingOut(repos, true)));
+  assert.equal(out.ok, true, out.receipt.says);
+  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value.settingHistory?.length, 1);
+});
+
+test("a timed-out target removal checks that exact row and preserves unrelated places", async () => {
+  const target = (key: string) => ({ key, goalPercent: 75, setAt: T0, decidedBy: "owner", receiptId: key });
+  const repos = createMemoryRepositories();
+  await repos.adminConfig.save(null, { ...defaultAdminConfig(T0), placeTargets: [target("st:az"), target("st:ca")] }, T0);
+  const held = await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { placeTargets: { ids: ["st:az"] } });
+  const next = { ...held.value, placeTargets: [] };
+  await assert.rejects(withWriteReadback(timingOut(repos, false)).adminConfig.save(held, next, T0), /WRITE_NOT_SAVED/);
+  const flaky = timingOut(repos, true);
+  const guarded = { ...flaky, adminConfig: { ...flaky.adminConfig, async read(id: string, sections?: Parameters<typeof flaky.adminConfig.read>[1]) {
+    assert.deepEqual(sections, { placeTargets: { ids: ["st:az"] } });
+    return flaky.adminConfig.read(id, sections);
+  } } };
+  assert.deepEqual((await withWriteReadback(guarded).adminConfig.save(held, next, T0)).value.placeTargets, []);
+  assert.deepEqual((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { placeTargets: true })).value.placeTargets, [target("st:ca")]);
 });
 
 test("a write that timed out BEFORE it landed says it was not saved and is safe to send again", async () => {

@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import type { RoutineRemovalEvidence } from "../lib/civic-data/types.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
@@ -187,7 +188,7 @@ function reconcile(prior: readonly Meeting[], fresh: readonly Meeting[], sourceN
   });
 }
 
-test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting", async () => {
+test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sitting: carried 495 yields to fresh 501, and a reader sees one meeting", async (t) => {
   assert.ok(TUSD, "the Tucson Unified Diligent partition is registered");
   assert.equal(
     TUSD.scope,
@@ -197,6 +198,12 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
   assert.equal(TUSD.wiring!.timeZone, "America/Phoenix");
 
   const store = new MemoryRoutineDataStore();
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
   await seedMeasuredVersion(store);
   assert.deepEqual(atTheSitting(await readerRows(store, MEASURED_READ)), ["diligent:tusd1:495", "diligent:tusd1:501"]);
 
@@ -233,6 +240,7 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
   const composed = await readerRows(store, NEXT_READ);
   assert.deepEqual(atTheSitting(composed), ["diligent:tusd1:501"]);
   assert.equal(composed.counts.total, composed.meetings.length);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });
 
 test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant", async () => {

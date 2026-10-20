@@ -1,11 +1,4 @@
-/**
- * Aggregate unattended-Fleet safety.
- *
- * This is an admission controller over the existing cost ledger and scheduler;
- * it is not a second budget ledger. Historical spend comes only from the
- * spend window the ledger's writes keep (`spend-window.ts`). In-cycle reservations close the race between
- * concurrent model requests until their provider-reported cost is persisted.
- */
+import type { SpendTotals } from "./spend-window.ts";
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
 import { canonicalModelId } from "../models.ts";
@@ -40,13 +33,6 @@ export const FLEET_SAFETY_BOUNDS = {
 /** The largest ceiling the console control accepts: a typo guard, not a spend cap. */
 export const FLEET_SPEND_CEILING_MAX_USD = 10_000;
 
-/**
- * The rolling 24-hour model-spend ceiling in force, given the owner's override
- * (or null). A missing, non-positive or non-finite override falls back to
- * {@link FLEET_SAFETY_BOUNDS}, never "no ceiling". The runner calls this only
- * for a cleanly read row; an unreadable row holds paid work instead
- * (`adminConfigForPaidWork`).
- */
 export function resolveRollingCeiling(
   overrideUsd: number | null | undefined,
 ): { readonly rollingCeilingUsd: number; readonly source: "OVERRIDE" | "FALLBACK"; readonly fallbackUsd: number } {
@@ -229,9 +215,6 @@ function answeredModelPrice(entry: CostEntry): { usd: number | null; knownUsd: n
   return { usd: legacyAsk, knownUsd: 0, measured: false, bounded: legacyAsk !== null };
 }
 
-/** Every recorded model role/identity/usage is accounted for, including a
- * tokenless Scout. Known prices remain visible beside unbounded historical
- * charges; only exact model-backed job identities may consume a hold. */
 export function aggregateModelSpend(
   costs: readonly CostEntry[],
   since: string,
@@ -324,9 +307,6 @@ export class FleetSafetyRefusal extends Error {
   }
 }
 
-/** This wrapper is created only when the Fleet reservation refused before the
- * provider transport was invoked. A same-code refusal after a response (notably
- * incomplete usage) must not release a durable spend hold. */
 export class FleetPreSendRefusal extends FleetSafetyRefusal {
   constructor(source: FleetSafetyRefusal) {
     super(source.code, source.message);
@@ -349,11 +329,6 @@ interface PayloadReservation {
   released: boolean;
 }
 
-/**
- * The total size of the resource a `Content-Range` header describes, or null
- * when it is absent, unknown (`*`), or malformed. Used to tell a 206 that
- * delivered a whole small resource from one that returned only part of it.
- */
 export function parseContentRangeTotal(header: string | null): number | null {
   if (header === null) return null;
   const match = /\/\s*(\d+)\s*$/.exec(header.trim());
@@ -362,12 +337,6 @@ export function parseContentRangeTotal(header: string | null): number | null {
   return Number.isFinite(total) ? total : null;
 }
 
-/**
- * The most one model request can cost: every UTF-8 byte of its body as an
- * input token at the cache-write rate, plus its whole `max_tokens` at the
- * output rate. Null for a model with no stated rate. Reserved against the
- * rolling ceiling and the Send and area budgets.
- */
 export function modelRequestWorstCaseUsd(request: ModelRequest): number | null {
   const rate = rateFor(request.model);
   if (rate === null || !amount(request.max_tokens)) return null;
@@ -386,12 +355,7 @@ export function modelResponseUsd(response: ModelResponse): number | null {
 }
 
 export class FleetSafetyController {
-  /**
-   * The bounds this cycle runs under. `rolling24HourModelUsd` is the owner's
-   * override when passed, else the fallback; assigned here so a live change
-   * governs the very next reservation. Read by `reserveModelRequest` and
-   * `rollingCeilingReached`.
-   */
+
   bounds: FleetSafetyBounds;
   readonly startedAt: string;
   private readonly startedMs: number;
@@ -427,16 +391,10 @@ export class FleetSafetyController {
 
   constructor(input: {
     readonly now: string;
-    readonly charges: readonly PricedCharge[];
-    readonly spendHolds?: readonly SpendHold[];
+    readonly spend: SpendTotals;
     /** The owner's runner-level PAUSE_RUNNER stands. The snapshot says PAUSED, and no model request is reserved. */
     readonly paused?: boolean;
-    /**
-     * Why the cycle's paid model lane is closed, or null/undefined while it is
-     * open. Every model request is refused with this reason: the lane already
-     * builds no paid caller while closed, and this is the second lock, so a
-     * caller added later cannot spend past a pause or an unreadable control.
-     */
+
     readonly modelHold?: string | null;
     readonly circuits?: readonly ProviderCircuit[];
     readonly lastSuccessfulActivity?: string | null;
@@ -469,25 +427,14 @@ export class FleetSafetyController {
     this.hostConcurrency = input.hostConcurrency ?? (() => HOST_CONCURRENCY_DEFAULT);
     this.sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
     this.lastSuccessfulActivity = input.lastSuccessfulActivity ?? null;
-    const nightSpend = aggregatePricedSpend(input.charges, this.night.start, input.now, input.spendHolds);
-    const rollingSpend = aggregatePricedSpend(
-      input.charges,
-      new Date(this.startedMs - 24 * 3_600_000).toISOString(),
-      input.now,
-      input.spendHolds,
-    );
-    this.historicalNightUsd = input.costLedgerReadable === false ? null : nightSpend.usd;
-    this.historicalRollingUsd = input.costLedgerReadable === false ? null : rollingSpend.usd;
-    this.worstCaseCharges = rollingSpend.worstCaseCharges;
+    this.historicalNightUsd = input.costLedgerReadable === false ? null : 0;
+    this.historicalRollingUsd = input.costLedgerReadable === false ? null : input.spend.usd;
+    this.worstCaseCharges = input.spend.worstCaseCharges;
     for (const circuit of input.circuits ?? []) {
       if (this.hardCircuit(circuit) || Date.parse(circuit.eligibleAt) > this.startedMs) this.circuits.set(circuit.provider, circuit);
     }
   }
 
-  /**
-   * The owner's dial moved mid-round: the next reservation and pre-admission
-   * read use the new value. An invalid value falls back, never no ceiling.
-   */
   setRollingCeilingUsd(rollingCeilingUsd: number | null | undefined): void {
     const ceiling = resolveRollingCeiling(rollingCeilingUsd);
     this.bounds = ceiling.source === "OVERRIDE"
@@ -714,13 +661,6 @@ export class FleetSafetyController {
     };
   }
 
-  /**
-   * Whether the rolling-24h ceiling is already reached for one more dispatch:
-   * the pre-admission read of the inequality `reserveModelRequest` enforces,
-   * with `worstCaseUsd` as the reserve, so an admission gate pauses the lane
-   * instead of busy-looping on refusals. Read-only. Unmeasured spend returns
-   * `reached: false` (the caller's ledger-unreadable check owns that case).
-   */
   rollingCeilingReached(
     worstCaseUsd = 0,
     _work = "",
@@ -739,9 +679,7 @@ export class FleetSafetyController {
   }
 
   private async readBoundedResponse(response: Response, cap: number, work: string): Promise<Uint8Array> {
-    // Never hand up a partial document: a truncated CSV still parses. A 206 is
-    // accepted only when `Content-Range` proves the whole resource fit within
-    // the cap; anything else throws.
+
     if (response.status === 206) {
       const total = parseContentRangeTotal(response.headers.get("content-range"));
       if (total === null || total > cap) {
@@ -781,10 +719,6 @@ export class FleetSafetyController {
     return merged;
   }
 
-  /**
-   * One count per website, shared by every reader in every process: a website some reader was asked to leave alone
-   * waits until then, and a small publisher's website takes its hourly allowance across all work and rounds.
-   */
   private async admitWebsiteRequest(url: string, work: string): Promise<void> {
     const site = websiteOf(url);
     const now = this.clock();
@@ -922,10 +856,6 @@ export class FleetSafetyController {
     };
   }
 
-  /**
-   * `followRedirects: false` answers the first hop, with its `location`, so a
-   * caller that must read permission on every new host can walk the chain itself.
-   */
   guardedOpenBytes(
     _provider: string,
     work: string,
@@ -965,9 +895,7 @@ export class FleetSafetyController {
               redirect: "manual",
               headers,
             });
-            // The bounded reader may refuse a partial response before it can
-            // be classified below. Record this actual failed recovery once;
-            // a complete oversized body remains a local memory refusal.
+
             if (observed && this.hardCircuit(observed) && (response.status === 206 || response.headers.has("content-range"))) {
               this.latchProvider(provider, `partial HTTP ${response.status} response`, work,
                 new Date(this.clock()).toISOString(), this.retryAfterMs(response), "TRANSIENT");

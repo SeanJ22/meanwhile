@@ -3,6 +3,15 @@ import type { Attempt } from "../lib/control-plane/attempt.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 
+/** Content identity is shared across acquisitions; an existing first observation keeps its original Attempt. */
+export function savedArtifactFirstObservation(saved: ArtifactRecord, original: ArtifactRecord, canonicalJson: (value: unknown) => string): ArtifactRecord {
+  const { attemptId: _savedAttempt, ...savedCapture } = saved;
+  const { attemptId: _originalAttempt, ...originalCapture } = original;
+  if (saved.partial || original.partial || canonicalJson(savedCapture) !== canonicalJson(originalCapture))
+    throw Error("RH01_SAVED_SOURCE_FIRST_OBSERVATION_DIFFERS");
+  return original;
+}
+
 export function savedSourceTaskFork(input: {
   existing: RouteTask;
   source: RouteTask;

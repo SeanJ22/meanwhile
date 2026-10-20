@@ -5,7 +5,7 @@
  * The result names every incomplete job. Exit zero requires all selected jobs to finish.
  */
 import { spawn, execFileSync } from "node:child_process";
-import { appendFile, mkdir, open, readFile, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createWriteStream, existsSync, readFileSync, readdirSync } from "node:fs";
 import { once } from "node:events";
 import { join, resolve } from "node:path";
@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import { createHash, randomBytes } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
+import { readCompletionLogEvidence } from "./rh01-completion-evidence.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadAdmissionEntry, workloadOffers } from "./rh01-workload.mts";
 import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
@@ -316,13 +317,6 @@ function refreshObserved(): void {
     catch { /* A part can be replaced while sampled. */ }
   }
 }
-async function logTail(file: string): Promise<string> {
-  const handle = await open(file, "r");
-  try {
-    const size = (await handle.stat()).size, buffer = Buffer.alloc(Math.min(size, 262144));
-    await handle.read(buffer, 0, buffer.length, Math.max(0, size - buffer.length)); return buffer.toString("utf8");
-  } finally { await handle.close(); }
-}
 let aggregatePeak = 0;
 let watchdogExceeded = false;
 const workerRoles = new Map<number, { role: string; status: string; taskId: string }>();
@@ -466,20 +460,18 @@ async function runDirect(job: Job): Promise<JobResult> {
     }
     const command = job.command[0].startsWith("scripts/rh01-") ? [join(harnessRoot, job.command[0]), ...job.command.slice(1)] : job.command;
     const child = spawn(process.execPath, [...loaderArgs, ...command], { cwd: codeRoot, env, stdio: ["ignore", "pipe", "pipe"] });
+    let spawnError = "";
     const start = Date.now(), reading = { job, peak: 0, ownPeak: 0, startedAt: start, nested: new Map<number, NestedPeak>() };
     if (child.pid) active.set(child.pid, reading);
     if (child.pid) release.observe?.(child.pid);
-    let stdout = "", stderr = "", refusedOperation = false;
     const stdoutFile = createWriteStream(join(local, "stdout.log")), stderrFile = createWriteStream(join(local, "stderr.log"));
     child.stdout.pipe(stdoutFile); child.stderr.pipe(stderrFile);
     const parts = new Map<string, { pid: number; processes?: readonly string[]; bytes: Record<string, number>; peakRssBytes?: number }>();
-    let sourceReceipt: SourceReceipt | null = null;
     let exceededBudget = false;
     const budget = setTimeout(() => { exceededBudget = true; terminateTree(child.pid); }, Number(arg("job-budget-ms") ?? 180000));
     let workerProtocol = "";
     child.stdout.on("data", chunk => {
-      stdout = (stdout + chunk).slice(-262144); workerProtocol += chunk;
-      refusedOperation ||= /RH01_(?:UNSUPPORTED|REMOTE_.*_BLOCKED)|WRITE_HANDLE_REFUSED|RuntimeAuthorityRefused/.test(String(chunk));
+      workerProtocol += chunk;
       const lines = workerProtocol.split("\n"); workerProtocol = lines.pop() ?? "";
       if (workerProtocol.length > 1048576) workerProtocol = workerProtocol.slice(-1048576);
       for (const line of lines) {
@@ -490,20 +482,18 @@ async function runDirect(job: Job): Promise<JobResult> {
           reading.peak = Math.max(reading.peak, part.peakRssBytes ?? 0);
           if (part.pid === child.pid) reading.ownPeak = Math.max(reading.ownPeak, part.peakRssBytes ?? 0);
         }
-        if (line.startsWith("RCD_RECEIPT=")) sourceReceipt = JSON.parse(line.slice(12));
       }
-    }); child.stderr.on("data", chunk => {
-      stderr = (stderr + chunk).slice(-262144);
-      refusedOperation ||= /RH01_(?:UNSUPPORTED|REMOTE_.*_BLOCKED)|WRITE_HANDLE_REFUSED|RuntimeAuthorityRefused/.test(String(chunk));
     });
     const status = await new Promise<{ code: number | null; signal: NodeJS.Signals | null }>(accept => {
-      child.once("error", error => { stderr += error.message; });
+      child.once("error", error => { spawnError = error.message.slice(0, 4096); });
       child.once("close", (code, signal) => accept({ code, signal }));
     });
     active.delete(child.pid!);
     clearTimeout(budget);
     release();
     await Promise.all([stdoutFile.writableFinished ? undefined : once(stdoutFile, "finish"), stderrFile.writableFinished ? undefined : once(stderrFile, "finish")]);
+    const evidence = await readCompletionLogEvidence({ stdoutFile: join(local, "stdout.log"), stderrFile: join(local, "stderr.log") });
+    const sourceReceipt = evidence.receipt;
     const readerBytes = [...parts.values()].reduce((sum, part) => sum + (part.bytes.reader ?? 0), 0);
     const controlPlaneBytes = [...parts.values()].reduce((sum, part) => sum + (part.bytes["control-plane"] ?? 0), 0);
     const nested = reading.nested;
@@ -512,12 +502,13 @@ async function runDirect(job: Job): Promise<JobResult> {
       nested.set(part.pid, { ...prior, pid: part.pid, names: part.processes ?? prior?.names ?? [], peakRssBytes: Math.max(prior?.peakRssBytes ?? 0, part.peakRssBytes ?? 0),
         readerBytes: (prior?.readerBytes ?? 0) + (part.bytes.reader ?? 0) });
     }
-    const completion = measuredCompletion({ script: job.script, stdout, stderr: stderr + (refusedOperation ? "\nRH01_UNSUPPORTED_RECORDED_OPERATION" : ""), code: status.code, timedOut: exceededBudget, receipt: sourceReceipt });
+    const completion = measuredCompletion({ script: job.script, stdout: evidence.stdout, stderr: evidence.stderr + spawnError, code: status.code, timedOut: exceededBudget, receipt: sourceReceipt });
     try { reading.ownPeak = Math.max(reading.ownPeak, JSON.parse(readFileSync(join(directory, "process-exits", `${child.pid}.json`), "utf8")).peakRssBytes); }
     catch { /* A killed process cannot report its own exit high-water value. */ }
     const result: JobResult = { ...job, peakRssBytes: Math.max(reading.peak, reading.ownPeak), ownPeakRssBytes: reading.ownPeak, nestedProcesses: [...nested.values()], readerBytes, controlPlaneBytes, elapsedMs: Date.now() - start,
       complete: completion.complete, successful: completion.successful, completionReason: completion.reason, sourceReceipt, ...status,
       execution: "DIRECT", actualPid: child.pid, offeredAt: new Date(startedAt).toISOString(),
+      ...(spawnError ? { error: spawnError } : {}),
       ...(exceededBudget ? { error: "RH01 measurement budget ended; full job peak remains unmeasured" } : {}), logDirectory: local };
     return recordResult(result);
 }
@@ -526,10 +517,9 @@ async function resultFromChild(job: Job, child: ObservedChild, ownerId: string):
   const reading = observedMemory.get(child.pid) ?? { peak: 0, ownPeak: 0, nested: new Map<number, NestedPeak>() };
   try { reading.ownPeak = Math.max(reading.ownPeak, JSON.parse(readFileSync(join(directory, "process-exits", `${child.pid}.json`), "utf8")).peakRssBytes); }
   catch { /* A missing exit report is retained as a sampled lower bound. */ }
-  const [stdout, stderr] = child.settled ? await Promise.all([logTail(`${child.file}.stdout.log`), logTail(`${child.file}.stderr.log`)]) : ["", ""];
-  const receiptLine = stdout.split(/\r?\n/).findLast(line => line.startsWith("RCD_RECEIPT="));
-  const receipt = receiptLine ? JSON.parse(receiptLine.slice(12)) as SourceReceipt : null;
-  const completion = measuredCompletion({ script: job.script, stdout, stderr: stderr + (child.refusedOperation ? "\nRH01_UNSUPPORTED_RECORDED_OPERATION" : ""),
+  const evidence = await readCompletionLogEvidence({ stdoutFile: `${child.file}.stdout.log`, stderrFile: `${child.file}.stderr.log` });
+  const receipt = evidence.receipt;
+  const completion = measuredCompletion({ script: job.script, stdout: evidence.stdout, stderr: evidence.stderr + (child.refusedOperation ? "\nRH01_UNSUPPORTED_RECORDED_OPERATION" : ""),
     code: child.status ?? null, timedOut: !child.settled || child.termination === "TIMED_OUT", receipt });
   const pids = new Set([child.pid, ...reading.nested.keys()]);
   const parts = [...allParts.values()].filter(part => pids.has(part.pid));

@@ -4,7 +4,7 @@ import { beginAttempt, claim, endAttempt } from "../lib/control-plane/attempt.ts
 import { createRouteTask, disposeRoute, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { routeTaskId } from "../lib/control-plane/ids.ts";
 import { canonicalJson, type ArtifactRecord } from "../lib/control-plane/repository/types.ts";
-import { savedSourceTaskFork } from "../scripts/rh01-source-fork.mts";
+import { savedArtifactFirstObservation, savedSourceTaskFork } from "../scripts/rh01-source-fork.mts";
 
 function fixture() {
   const at = "2026-10-20T10:00:00.000Z";
@@ -57,4 +57,23 @@ test("fork refuses changed identity, unsupported worker, incomplete Attempt and 
 test("a pending schema2 instruction is never represented as an executed source", () => {
   const input = fixture();
   assert.throws(() => savedSourceTaskFork({ ...input, source: input.existing as RouteTask }), /COMPLETION_MISSING/);
+});
+
+test("content-address dedup preserves the original acquisition metadata and leaves the local replay separate", () => {
+  const original = fixture().artifacts[0];
+  const saved = { ...original, attemptId: "at-a-genuine-separate-local-replay" };
+  const before = canonicalJson(saved);
+  assert.equal(savedArtifactFirstObservation(saved, original, canonicalJson), original);
+  assert.equal(canonicalJson(saved), before);
+  assert.notEqual(saved.attemptId, original.attemptId);
+});
+
+test("first-observation adoption refuses every difference beyond acquiring Attempt and any partial source", () => {
+  const original = fixture().artifacts[0], saved = { ...original, attemptId: "at-local-replay" };
+  const changes: Partial<ArtifactRecord>[] = [{ workItemId: "foreign" }, { routeTaskId: "foreign" }, { contentHash: "foreign" },
+    { byteLength: original.byteLength + 1 }, { canonicalUrl: "https://other.gov/" }, { recordedAt: "different" },
+    { tier: "SANITIZED_DERIVED" }, { contentType: "text/html" }, { partial: true }];
+  for (const change of changes)
+    assert.throws(() => savedArtifactFirstObservation(saved, { ...original, ...change }, canonicalJson), /FIRST_OBSERVATION_DIFFERS/);
+  assert.throws(() => savedArtifactFirstObservation({ ...saved, partial: true }, original, canonicalJson), /FIRST_OBSERVATION_DIFFERS/);
 });

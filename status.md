@@ -26,7 +26,7 @@ heartbeat: 2026-10-20T05:56:21Z
 
 Do not fold the returned commits again. Assess each replacement READY fresh.
 
-- AQ-01 (stream/aq-01), returned READY 6e24f7c44. Four tests that pass on River fail on the candidate, and a fifth fails in the full run: ASK-19 prompt vs validator numbers, audit fiscal periods, the member's recorded votes wording, the adopted-budget publication, and the stopped-hedge cost test. Details: returns/aq-01.md.
+- AQ-01 (stream/aq-01), returned READY da719a61e. It conflicts with River 5307d8b75 in one file, lib/ask/state-campaign.ts, which SRC-MN also edited. The earlier five failing tests (ASK-19 prompt vs validator, audit fiscal periods, recorded votes wording, adopted-budget publication, stopped-hedge cost) must pass on the merged tree. Details: returns/aq-01.md.
 - CP-01 (stream/control-reads), returned READY 9293c19fb. One conflicting file against River 5307d8b75: tests/routine-civic-data-runner.test.ts (SRC-MN edited it too). Everything else merges and passes preflight. It carries a control-plane migration named CP-01 for River to number. Details: returns/control-reads.md.
 - overlay-seats and site-reads stay returned by Sean's order. Details: returns/overlay-seats.md, returns/site-reads.md.
 

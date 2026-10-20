@@ -166,5 +166,6 @@
     "sourceWorkerSeconds": 25.158
   },
   "current_source_commit": "5e22c3491",
-  "database_transactions": 927
+  "database_transactions": 927,
+  "ready_integration_river": "a258e6881136df4a8e2ec00fc8f71666739ecb30"
 }

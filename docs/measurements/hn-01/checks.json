@@ -68,5 +68,66 @@
   ],
   "additionalBuild": "complete-catalog-build.log: 429 app trace files against 430 ceiling; 0 tests traced; reader trace failures []",
   "sourceDuringChecks": "Functional source fixed at 5e22c349165a086482121a2355f426a68b7ef4d3; measurement files and the reference-loader documentation were updated while checks ran.",
-  "headAtCompletion": "b19df51a5230683b2292c4c8f3106925f055d314"
+  "headAtCompletion": "b19df51a5230683b2292c4c8f3106925f055d314",
+  "currentRiverIntegration": {
+    "river": "a258e6881136df4a8e2ec00fc8f71666739ecb30",
+    "checkedCommit": "aedfe0277408a040565fdf3ea68f41f6aa3a4b92",
+    "selectedFiles": [
+      "tests/artifact-reobservation.test.ts",
+      "tests/ask-reader-edge.test.ts",
+      "tests/box-publication.test.ts",
+      "tests/campaign-money-people.test.ts",
+      "tests/campaign-money-retirement.test.ts",
+      "tests/dispatch-work.test.ts",
+      "tests/hunt-exa-agent.test.ts",
+      "tests/hunters-admin-priority.test.ts",
+      "tests/hunters-box-order.test.ts",
+      "tests/hunters-exa-budgets.test.ts",
+      "tests/hunters-exa-publication.test.ts",
+      "tests/hunters-exa-setting.test.ts",
+      "tests/hunters-free-catalog.test.ts",
+      "tests/hunters-held-capture.test.ts",
+      "tests/hunters-held-directory.test.ts",
+      "tests/hunters-no-send-process.test.ts",
+      "tests/hunters-own-calendar.test.ts",
+      "tests/hunters-portrait-order.test.ts",
+      "tests/hunters-read-to-reader.test.ts",
+      "tests/hunters-scoped-bank.test.ts",
+      "tests/hunters-search-lease.test.ts",
+      "tests/hunters-source-origin.test.ts",
+      "tests/hunters-source-shapes.test.ts",
+      "tests/obligation-registry.test.ts",
+      "tests/reader-cache.test.ts",
+      "tests/routine-civic-data-promotion.test.ts",
+      "tests/routine-civic-data-runner.test.ts",
+      "tests/standing-meetings-discovery.test.ts"
+    ],
+    "counts": {
+      "tests": 200,
+      "failed": 0,
+      "passed": 200,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "topLevel": 200,
+      "suites": 0
+    },
+    "elapsedMs": 51818,
+    "gatesInitialRun": {
+      "passed": 7,
+      "failed": [
+        "db:gate"
+      ],
+      "reason": "Stale origin/main included already-shipped SRC-MN migration. No production credential or database contact."
+    },
+    "schemaGateRerun": {
+      "exitCode": 0,
+      "result": "NOT APPLICABLE",
+      "base": "a258e6881136df4a8e2ec00fc8f71666739ecb30",
+      "databaseContacted": false,
+      "note": "Explicitly refreshed origin/main; all 46 established migrations intact, no HN schema change."
+    },
+    "allEightChecksPassedAfterRerun": true,
+    "at": "2026-10-20T14:49:04.568179+00:00"
+  }
 }

@@ -340,11 +340,15 @@ async function main() {
     if (!publications) throw new Error("No official voting-source result could be published; prior facts and open hunter work are retained.");
   } catch (error) {
     const at = now();
-    const candidate = failedAcquisitionCandidate({ sourceId: contract.sourceId, recordClass: contract.recordClass,
-      scope: contract.scope, requestedUrl: seeds[0]?.url ?? "", attemptedAt: at,
-      failureDetail: error instanceof Error ? error.message : String(error), parserVersion: contract.parserVersion });
-    const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at);
-    terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    try {
+      const candidate = failedAcquisitionCandidate({ sourceId: contract.sourceId, recordClass: contract.recordClass,
+        scope: contract.scope, requestedUrl: seeds[0]?.url ?? "", attemptedAt: at,
+        failureDetail: error instanceof Error ? error.message : String(error), parserVersion: contract.parserVersion });
+      const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at);
+      terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    } catch (recordError) {
+      recordVotingFailure({ stage: "failure-record", state }, recordError);
+    }
     throw error;
   } finally {
     // Source publications are already durable. The supervisor requires exactly one terminal receipt.

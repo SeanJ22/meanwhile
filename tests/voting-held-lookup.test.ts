@@ -65,6 +65,9 @@ test("street requests use one Census geocode, held polygons and held sites; ZIP 
     const zip = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", { method: "POST", body: JSON.stringify({ address: "77002" }) })));
     assert.equal(zip.status, 200);
     assert.equal((await zip.json()).jurisdictions[0].sites.length, 3);
+    const postal = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", { method: "POST", body: JSON.stringify({ address: "77201" }) })));
+    assert.equal(postal.status, 200);
+    assert.equal((await postal.json()).jurisdictions[0].sites.length, 3, "the held Houston postal alias must return the same held county sites");
     assert.equal(requests.length, 1);
   } finally { globalThis.fetch = previous; }
 });

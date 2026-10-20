@@ -1,6 +1,7 @@
 import { withReaderRoute, withReaderSelection } from "@/lib/db/reader-route";
 import { readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { indexedZipDivisionEntry } from "@/lib/geo/zip-division-index";
+import { postalArea } from "@/lib/geo/postal";
 import { answerVotingSites, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
 import { addCensusVotingGeographies, censusVotingAddress, votingInputZip, votingPlaceFromZip } from "@/lib/ballot/voting-answer-geography";
 import { recordVotingFailure } from "@/lib/ballot/voting-errors";
@@ -37,7 +38,7 @@ export async function POST(request: Request): Promise<Response> {
       let place: VotingReaderPlace;
       if (zipInput) {
         stage = "zip-membership";
-        const zip = await indexedZipDivisionEntry(zipInput);
+        const zip = await indexedZipDivisionEntry(zipInput) ?? await indexedZipDivisionEntry(postalArea(zipInput)?.zcta ?? null);
         if (!zip) {
           recordVotingFailure({ stage, precision: "ZIP" }, new Error("ZIP membership is not held"));
           return empty();

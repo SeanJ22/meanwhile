@@ -102,6 +102,10 @@ export async function load(url, context, nextLoad) {
     });\n    return context;`);
     add(`import { allowedMeasurementRequest as rhAllowedRequest } from ${JSON.stringify(pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-network.mjs")).href)};`);
   } else if (url.endsWith("/lib/control-plane/workers/lease-worker.ts")) {
+    const dispatch = "const result = await dispatchAutonomousTask(runtime, task);";
+    if (!source.includes(dispatch)) throw Error("RH01 native lease dispatch observation did not match");
+    source = source.replace(dispatch, dispatch + " await rhObserveWorkerCompletion(repos,task,result);");
+    add(`import { observeWorkerCompletion as rhObserveWorkerCompletion } from ${JSON.stringify(runtime)};`);
     source = source.replace('broker.send("task-start", "", id);', 'broker.send("task-start", "", id); process.env.WTP_RH01_WORKER_TASK_ID=id; console.log("RH01_WORKER_ROLE " + JSON.stringify({pid:process.pid,role:task.workerTask?.role ?? "SCOUT",status:"RUNNING",taskId:id}));');
     source = source.replace('broker.send("result", "", { ...result,', 'console.log("RH01_WORKER_ROLE " + JSON.stringify({pid:process.pid,role:task.workerTask?.role ?? "SCOUT",status:"IDLE",taskId:id})); broker.send("result", "", { ...result,');
   } else if (url.endsWith("/scripts/promote-registry-runtime.mts")) {

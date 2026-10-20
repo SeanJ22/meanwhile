@@ -14,6 +14,7 @@ import { AGGREGATE_KINDS, APPEND_ONLY_LOGS } from "../lib/control-plane/reposito
 import { projectedRead, updateRead, shadowRead, type SqlShadow } from "./rh01-sql.mts";
 import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { ReadonlySpendHoldOverlay } from "./rh01-spend-holds.mts";
 
 installMeasurementNetworkBoundary();
 
@@ -37,6 +38,8 @@ let routineSqlite: DatabaseSync | null = null;
 const canonicalVersions = new Set<string>();
 let controlQueue: Promise<unknown> = Promise.resolve();
 let readerQueue: Promise<unknown> = Promise.resolve();
+let spendHolds: ReadonlySpendHoldOverlay | null = null;
+let actionHistoryReady = false;
 const seededControl = new Set<string>();
 const seededSites = new Set<string>();
 const controlTables = new Map<string, readonly string[]>();
@@ -76,6 +79,33 @@ async function controlRemoteRead(text: string, params: readonly unknown[]): Prom
 }
 async function executeControlSql(text: string, params: readonly unknown[]): Promise<Record<string, unknown>[]> {
   const db = await controlDatabase();
+  if (/\bINSERT\s+INTO\s+cp_admin_action_history_projection\b/i.test(text)) {
+    await ensureControlTable("cp_log_heads"); await ensureControlTable("cp_log_admin_receipts");
+    if (!actionHistoryReady) {
+      const schema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
+      for (const ddl of schema.BOOTSTRAP_DDL as readonly string[]) if (ddl.includes("cp_admin_action_history")) await db.exec(ddl);
+      controlTables.set("cp_admin_action_history_projection", ["gateway_receipt_id"]);
+      controlTables.set("cp_admin_action_history_scope_ref", ["gateway_receipt_id", "scope_key"]);
+      controlTables.set("cp_admin_action_history_readiness", ["singleton"]);
+      for (const row of await controlRemoteRead("SELECT * FROM cp_admin_action_history_readiness WHERE singleton=true", []))
+        await db.query("INSERT INTO cp_admin_action_history_readiness SELECT * FROM jsonb_populate_record(NULL::cp_admin_action_history_readiness,$1::jsonb) ON CONFLICT DO NOTHING", [JSON.stringify(row)]);
+      actionHistoryReady = true;
+    }
+    const head = "cp_log_heads:admin-action";
+    if (!seededControl.has(head)) {
+      for (const row of await controlRemoteRead("SELECT * FROM cp_log_heads WHERE log_table=$1 AND log_key=$2", ["cp_log_admin_receipts", "admin-action"]))
+        await db.query("INSERT INTO cp_log_heads SELECT * FROM jsonb_populate_record(NULL::cp_log_heads,$1::jsonb) ON CONFLICT DO NOTHING", [JSON.stringify(row)]);
+      seededControl.add(head);
+    }
+    return (await db.query(text, [...params])).rows as Record<string, unknown>[];
+  }
+  if (/\b(?:cp_spend_holds|cp_admit_spend_hold)\b/.test(text)) {
+    if (!spendHolds) {
+      const schema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
+      spendHolds = new ReadonlySpendHoldOverlay(db, controlRemoteRead, schema);
+    }
+    return spendHolds.execute(text, params);
+  }
   const mutation = /\b(?:INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+"?(cp_[a-z_0-9]+)\b/i.exec(text);
   if (mutation) {
     if (/\bDELETE\s+FROM\b/i.test(text)) throw Error("RH01_UNSUPPORTED_CONTROL_DELETE");

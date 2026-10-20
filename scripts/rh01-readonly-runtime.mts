@@ -39,6 +39,40 @@ export function observeVitalPart(part: { readonly pid?: number; readonly started
   const directory = join(sharedRoot, "observed-byte-parts"); mkdirSync(directory, { recursive: true });
   writeFileSync(join(directory, `${part.pid}-${part.startedMs}-${Date.parse(part.hour)}.json`), JSON.stringify(part));
 }
+
+/** Record only actual committed task results. Observation never changes native dispatch behavior. */
+export async function observeWorkerCompletion(repos: ControlPlaneRepositories, task: { id: string; workItemId: string; workerTask?: { role: string; contract: { schemaVersion: number } } },
+  dispatched: { claimed: boolean; outcome: string; attemptId: string | null }): Promise<void> {
+  if (!dispatched.claimed || dispatched.outcome !== "WORKED" || !dispatched.attemptId) return;
+  const role = task.workerTask?.role ?? "SCOUT", directory = join(sharedRoot, "observed-worker-completions");
+  let event: Record<string, unknown> = { pid: process.pid, role, taskId: task.id, attemptId: dispatched.attemptId, complete: false };
+  try {
+    const native = (file: string) => import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT!, file)).href);
+    const { canonicalJson } = await native("lib/control-plane/repository/types.ts");
+    const attempt = (await repos.attempts.mustRead(dispatched.attemptId)).value;
+    if (attempt.outcome !== "COMPLETED" || !attempt.endedAt) throw Error("Observed native task is not committed");
+    if (role === "SCOUT") {
+      const keys = await repos.scoutResults.keysWhere(["attemptId"], attempt.id);
+      const rows = (await Promise.all(keys.map(key => repos.scoutResults.readWhere(key, ["attemptId"], attempt.id)))).flat();
+      const result = rows.length === 1 ? rows[0] : null;
+      event = { ...event, complete: result?.stoppedBy === "MODEL" && result.steps.some(step => step.kind === "MODEL") && attempt.cost.usd !== null && Number(attempt.cost.requestCount) > 0,
+        endedAt: attempt.endedAt, usd: attempt.cost.usd, modelRequests: attempt.cost.requestCount, stoppedBy: result?.stoppedBy ?? null };
+    } else {
+      const { fingerprint } = await native("lib/control-plane/ids.ts");
+      const { readCompletedWorkerResult } = await native("lib/control-plane/repository/worker-completion.ts");
+      const { record } = await readCompletedWorkerResult(repos, `wr-${fingerprint([attempt.id])}`);
+      if (record.routeTaskId !== task.id || canonicalJson(record.completion.closedAttempt) !== canonicalJson(attempt)) throw Error("Observed native result binding differs");
+      const verdict = record.result.verdict;
+      const complete = role === "PARSER" ? verdict === "EXTRACTED" : role === "VALIDATOR" ? verdict === "PASS"
+        : role === "ADVERSARIAL_AUDITOR" ? record.modelReview !== undefined && record.cost.requestCount > 0 && record.cost.usd !== null
+          : role === "ACQUIRER" ? task.workerTask?.contract.schemaVersion === 2 && verdict === "ACQUIRED" && record.result.artifacts.length > 0 : false;
+      event = { ...event, complete, resultId: record.id, endedAt: record.endedAt, verdict, usd: record.cost.usd,
+        modelRequests: record.cost.requestCount, modelContextHash: record.modelReview?.contextHash ?? null };
+    }
+  } catch (error) { event = { ...event, error: error instanceof Error ? error.name : "ObservationFailed" }; }
+  try { mkdirSync(directory, { recursive: true }); writeFileSync(join(directory, `${dispatched.attemptId}.json`), JSON.stringify(event)); }
+  catch { process.stderr.write("RH01_WORKER_COMPLETION_OBSERVATION_FAILED\n"); }
+}
 const sqlite = new DatabaseSync(join(sharedRoot, "routine.sqlite"));
 sqlite.exec("PRAGMA busy_timeout=10000; PRAGMA journal_mode=WAL; PRAGMA cache_size=-1024; PRAGMA mmap_size=0; CREATE TABLE IF NOT EXISTS held (kind TEXT NOT NULL,id TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY(kind,id)); CREATE TABLE IF NOT EXISTS routine_locks (name TEXT PRIMARY KEY,pid INTEGER NOT NULL,token TEXT NOT NULL)");
 sqlite.exec("CREATE INDEX IF NOT EXISTS held_scope ON held(kind,json_extract(value,'$.candidate.recordClass'),json_extract(value,'$.candidate.scope'),json_extract(value,'$.candidate.sourceId'))");
@@ -127,9 +161,15 @@ export function controlSql<T extends { query: (...args: never[]) => unknown }>(p
   return new Proxy(production, { get(target, name) {
     if (name !== "query") return Reflect.get(target, name);
     return async (text: string, params: readonly unknown[] = []) => {
+      const caller = new Error("RH01 native control SQL caller");
       const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ text, params }) });
       const result = await response.json() as { rows?: unknown[]; error?: string };
-      if (!response.ok) throw Error(result.error ?? "RH01 local control SQL failed");
+      if (!response.ok) {
+        if (result.error?.includes("RH01_")) process.stderr.write(`RH01_REFUSED_SQL ${JSON.stringify({
+          sql: text.replace(/'(?:''|[^'])*'/g, "''"), caller: caller.stack,
+        })}\n`);
+        throw Error(result.error ?? "RH01 local control SQL failed");
+      }
       return result.rows ?? [];
     };
   } });

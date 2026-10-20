@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { allowedMeasurementRequest, assertNeededProductionRead } from "../scripts/rh01-network.mjs";
 import { spawn } from "node:child_process";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { once } from "node:events";
@@ -10,7 +10,7 @@ import { DatabaseSync } from "node:sqlite";
 import { measuredCompletion } from "../scripts/rh01-completion.mts";
 import { projectedRead, updateRead, shadowRead } from "../scripts/rh01-sql.mts";
 import { commandIdentity, workloadOffers } from "../scripts/rh01-workload.mts";
-import { physicalRunReads } from "../scripts/rh01-read-accounting.mts";
+import { physicalRunReads, reserveProductionReadRun } from "../scripts/rh01-read-accounting.mts";
 
 test("all-offer ownership retains exact modes and aliases only identical authority and commands", () => {
   const job = (id: string, command: readonly string[], source = "standing runner") => ({ id, command, source, script: command[0] });
@@ -106,6 +106,7 @@ test("production checks reject whole rows without job scope while allowing exact
   assert.throws(() => assertNeededProductionRead("SELECT * FROM fact WHERE TRUE"), /whole rows require exact job scope/);
   assert.throws(() => assertNeededProductionRead("WITH x AS (DELETE FROM fact RETURNING *) SELECT * FROM x"), /only read SQL/);
   assert.doesNotThrow(() => assertNeededProductionRead("SELECT id,revision,value FROM cp_work_items WHERE id=$1"));
+  assert.doesNotThrow(() => assertNeededProductionRead("SELECT position,record FROM cp_log_worker_results WHERE log_key=$1 AND position>$2 ORDER BY position LIMIT 100"));
   assert.doesNotThrow(() => assertNeededProductionRead("SELECT f.* FROM fact f WHERE f.entity_id=ANY($1::text[])"));
   assert.doesNotThrow(() => assertNeededProductionRead("SELECT id,value->>'state' AS state FROM cp_work_items WHERE id>$1 ORDER BY id LIMIT 32"));
   assert.doesNotThrow(() => assertNeededProductionRead("SELECT current_user,has_table_privilege(current_user,'fact','INSERT') AS can_write"));
@@ -209,6 +210,22 @@ test("physical run totals attribute delegated database bytes once and exclude ot
     assert.equal(totals.reader, 173); assert.equal(totals.control, 10);
     assert.deepEqual(totals.owners.get(7), { reader: 123, control: 10 });
     assert.deepEqual(totals.owners.get(8), { reader: 50, control: 0 }); assert.equal(totals.owners.has(99), false);
+    const phase = await physicalRunReads(path, "measured", 0);
+    assert.equal(phase.reader, 296); assert.equal(phase.control, 10);
+    assert.equal(phase.reader - totals.reader, 123, "setup plus workload equals the phase total once");
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("production accounting reserves fresh identities and rejects reused or invalid phase IDs", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-phase-id-")), path = join(directory, "reads.jsonl");
+  try {
+    const first = await reserveProductionReadRun(path), second = await reserveProductionReadRun(path);
+    assert.notEqual(first, second);
+    assert.equal(await reserveProductionReadRun(path, "exact-before"), "exact-before");
+    await assert.rejects(reserveProductionReadRun(path, "exact-before"), /already reserved/);
+    await writeFile(path, JSON.stringify({ runId: "historical" }) + "\n");
+    await assert.rejects(reserveProductionReadRun(path, "historical"), /already has recorded reads/);
+    await assert.rejects(reserveProductionReadRun(path, "../invalid"), /invalid/);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
@@ -464,4 +481,80 @@ test("temporary facts transactions commit and roll back across independent HTTP 
     }
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("local spend holds execute native SQL, preserve production, and retain released identities", async () => {
+  const [{ PGlite }, schema, { pgSpendHoldRepository }, { ReadonlySpendHoldOverlay }] = await Promise.all([
+    import("@electric-sql/pglite"), import("../lib/control-plane/repository/pg-schema.ts"),
+    import("../lib/control-plane/repository/pg-store.ts"), import("../scripts/rh01-spend-holds.mts"),
+  ]);
+  const production = new PGlite(), local = new PGlite();
+  try {
+    await production.exec(schema.SPEND_HOLDS_TABLE_DDL); await production.exec(schema.ADMIT_SPEND_HOLD_FUNCTION_DDL);
+    const native = pgSpendHoldRepository({ query: async (text, params) => (await production.query(text, [...(params ?? [])])).rows });
+    const at = "2026-10-20T10:00:00.000Z";
+    const lines = { sends: [{ key: "send:pima", label: "Pima diagnostic", budgetUsd: 1, historicalUsd: 0, historyReadAt: at }], areas: [] };
+    const input = (holdId: string, usd: number) => ({ holdId, jobId: holdId, obligationId: "pima", lines, usd, what: "native diagnostic" });
+    await native.admit(input("prior", 0.4), at);
+    await native.admit({ ...input("foreign", 0.7), lines: { sends: [{ ...lines.sends[0], key: "send:foreign" }], areas: [] } }, at);
+    const remote = async (text: string, params: readonly unknown[]) => {
+      assertNeededProductionRead(text);
+      const rows = (await production.query<Record<string, unknown>>(text, [...params])).rows;
+      assert.equal(rows.some(row => row.hold_id === "foreign"), false, "unrelated budget lines cannot enter the replay");
+      return rows;
+    };
+    const overlay = new ReadonlySpendHoldOverlay(local, remote, schema);
+    const measured = pgSpendHoldRepository({ query: (text, params) => overlay.execute(text, params ?? []) });
+    assert.equal((await measured.admit(input("new", 0.5), at)).admit, true);
+    assert.equal((await measured.admit(input("over", 0.2), at)).admit, false);
+    await measured.settle({ jobId: "new", usd: 0.1, costRecordedAt: at }, at);
+    assert.equal((await measured.liveFor(["send:pima"], at)).new.settled?.usd, 0.1);
+    await measured.release("prior", at);
+    assert.equal((await measured.liveFor(["send:pima"], at)).prior, undefined);
+    assert.equal((await measured.admit(input("after-release", 0.8), at)).admit, true);
+    assert.deepEqual(Object.keys(await native.liveFor(["send:pima"], at)), ["prior"]);
+  } finally { await local.close(); await production.close(); }
+});
+
+test("native PG receipt writes with a distinct harness root reach only the local SQL overlay", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-local-receipt-"));
+  try {
+    await mkdir(join(directory, "scripts"));
+    await copyFile("scripts/rh01-readonly-runtime.mts", join(directory, "scripts/rh01-readonly-runtime.mts"));
+    await symlink(join(process.cwd(), "node_modules"), join(directory, "node_modules"), "dir");
+    const source = `import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';import {join} from 'node:path';
+      import {PGlite} from '@electric-sql/pglite';
+      const code=file=>import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT,file)).href);
+      const schema=await code('lib/control-plane/repository/pg-schema.ts');const db=new PGlite();
+      await db.exec(schema.CHANGED_AT_TOUCH_FUNCTION_DDL);await db.exec(schema.REJECT_REWRITE_FUNCTION_DDL);
+      for(const ddl of schema.BOOTSTRAP_DDL)if(/cp_log_heads|cp_log_admin_receipts|cp_admin_action_history|CREATE TABLE IF NOT EXISTS cp_work_items\\b/.test(ddl))await db.exec(ddl);
+      const seen=[];globalThis.fetch=async(url,init)=>{
+        assert.equal(String(url),'http://127.0.0.1:1/control-sql','a native write escaped the local overlay');
+        const request=JSON.parse(init.body);seen.push(request.text);
+        return Response.json({rows:(await db.query(request.text,request.params)).rows});
+      };
+      await import('./scripts/rh01-loader.mjs');
+      const [{createPgRepositories,readPlaceWorkItems},{buildReceipt,findReceipt},{canonicalJson}]=await Promise.all([
+        code('lib/control-plane/repository/pg-store.ts'),code('lib/control-plane/gateway/receipts.ts'),code('lib/control-plane/repository/types.ts')]);
+      const at='2026-10-20T10:00:00.000Z',repos=await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL,at,{skipBootstrap:true});
+      const receipt=buildReceipt({request:{type:'research.resume',subject:'fleet',input:{note:'local fixture'},stateVersion:null,
+        idempotencyKey:'rh01-fixture-receipt',caller:'OPERATOR_CHAT',actorRef:'local-fixture'},label:'Resume paid research',
+        authority:'REVERSIBLE_NONPRODUCTION',subjectKind:'the paid research lane',subject:'RESUME:'+at,startedAt:at,completedAt:at,
+        outcome:'QUEUED',says:'Local fixture only',refusal:null,openedWork:[],readBackAt:'/admin/research',undo:null,codeSha:null});
+      await repos.adminReceipts.append('admin-action',receipt.receiptId,receipt,at);
+      assert.equal(canonicalJson(await findReceipt(repos,receipt.receiptId)),canonicalJson(receipt));
+      assert.deepEqual(await readPlaceWorkItems(repos,['ocd-division/country:us/state:az/county:pima']),[]);
+      assert.ok(seen.some(sql=>sql.includes('INSERT INTO cp_admin_action_history_projection')));
+      await db.close();console.log('native receipt CTE committed locally; no production endpoint called');`;
+    const child = spawn(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", source], {
+      cwd: process.cwd(), env: { ...process.env, WTP_RH01_CODE_ROOT: process.env.WTP_RH01_FIXTURE_CODE_ROOT ?? process.cwd(),
+        WTP_RH01_HARNESS_ROOT: directory, WTP_RH01_DIRECTORY: directory, WTP_RH01_SHARED_STATE_DIRECTORY: directory,
+        WTP_RH01_FACTS_URL: "http://127.0.0.1:1/query", DATABASE_URL: "postgresql://readonly:fixture@ep-reader.neon.invalid/fixture",
+        WTP_PRODUCTION_DATABASE_URL_READONLY: "postgresql://readonly:fixture@ep-reader.neon.invalid/fixture",
+        WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://wtp_cp_release_readonly:local-only@127.0.0.1:1/rh01" },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "", stderr = ""; child.stdout.on("data", data => { stdout += data; }); child.stderr.on("data", data => { stderr += data; });
+    const [status] = await once(child, "close"); assert.equal(status, 0, stderr); assert.match(stdout, /no production endpoint called/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });

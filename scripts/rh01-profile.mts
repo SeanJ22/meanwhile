@@ -15,13 +15,15 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
-import { physicalRunReads } from "./rh01-read-accounting.mts";
+import { physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
+import { DatabaseSync } from "node:sqlite";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const harnessRoot = process.cwd(), codeRoot = resolve(arg("code-root") ?? harnessRoot);
 const phase = arg("phase") ?? "after", directory = resolve(arg("out") ?? `.scratch/rh01/${phase}`);
 const activePima = process.argv.includes("--active-pima-diagnostic");
+let activePreparation: { status: "NOT_REQUESTED" | "SUCCEEDED" | "FAILED"; code?: number | null; detail?: string } = { status: "NOT_REQUESTED" };
 const only = arg("only")?.split(",");
 const hostBytes = Number(arg("host-bytes") ?? 8326938624);
 const admissionCode = await import(pathToFileURL(join(codeRoot, "lib/control-plane/workers/worker-slots.ts")).href);
@@ -29,6 +31,10 @@ const leaseBytes = Number(arg("lease-bytes") ?? admissionCode.WORKER_ENTRY_PEAK_
 const observationMs = Number(arg("observe-ms") ?? 0), watchdogBytes = Number(arg("watchdog-bytes") ?? hostBytes - 768 * 1024 * 1024);
 const output = join(directory, "results.json");
 await mkdir(directory, { recursive: true });
+process.env.WTP_RH01_PRODUCTION_READ_LEDGER ??= join(harnessRoot, ".scratch/rh01/production-read-bytes.jsonl");
+process.env.WTP_RH01_RUN_ID = await reserveProductionReadRun(process.env.WTP_RH01_PRODUCTION_READ_LEDGER,
+  arg("run-id") ?? process.env.WTP_RH01_RUN_ID);
+const phaseStartedAt = Date.now();
 enableProductionReadAccounting(phase);
 // --env-file preserves an inherited workspace DATABASE_URL; explicitly select the named read-only handle.
 if (process.env.WTP_PRODUCTION_DATABASE_URL_READONLY) process.env.DATABASE_URL = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
@@ -217,6 +223,10 @@ const factsUrl = await new Promise<string>((accept, reject) => {
   });
 });
 environment.WTP_RH01_FACTS_URL = factsUrl;
+// Only the read adapter has the production CP credential. Failed interception can reach only loopback.
+const productionControlHost = new URL(environment.WTP_CONTROL_PLANE_DATABASE_URL!).hostname;
+for (const name of Object.keys(environment)) if (environment[name]?.includes(productionControlHost)) delete environment[name];
+environment.WTP_CONTROL_PLANE_DATABASE_URL = "postgresql://wtp_cp_release_readonly:local-only@127.0.0.1:1/rh01";
 if (activePima) {
   const preparation = spawn(process.execPath, ["--experimental-strip-types", "--import", join(harnessRoot, "scripts/register-test-loader.mjs"),
     join(harnessRoot, "scripts/rh01-active-overlay-prepare.mts"), `--phase=${phase}`,
@@ -224,10 +234,16 @@ if (activePima) {
     cwd: harnessRoot, env: environment, stdio: ["ignore", "pipe", "pipe"],
   });
   let detail = "";
-  preparation.stdout.on("data", chunk => { detail += chunk; process.stdout.write(chunk); });
-  preparation.stderr.on("data", chunk => { detail += chunk; process.stderr.write(chunk); });
+  const preparationStdout = createWriteStream(join(directory, "active-preparation.stdout.log"));
+  const preparationStderr = createWriteStream(join(directory, "active-preparation.stderr.log"));
+  preparation.stdout.on("data", chunk => { detail = (detail + chunk).slice(-4096); preparationStdout.write(chunk); process.stdout.write(chunk); });
+  preparation.stderr.on("data", chunk => { detail = (detail + chunk).slice(-4096); preparationStderr.write(chunk); process.stderr.write(chunk); });
   const [status] = await once(preparation, "close");
-  if (status !== 0) { facts.kill("SIGTERM"); throw Error(`RH01 genuine local gateway preparation failed:${detail.slice(-4096)}`); }
+  preparationStdout.end(); preparationStderr.end();
+  activePreparation = status === 0 ? { status: "SUCCEEDED", code: 0 } : { status: "FAILED", code: typeof status === "number" ? status : null,
+    detail: detail.replace(/postgres(?:ql)?:\/\/[^\s]+/gi, "[redacted database connection]") };
+  await writeFile(join(directory, "active-preparation-result.json"), JSON.stringify(activePreparation, null, 2));
+  if (status !== 0) process.stderr.write("RH01_ACTIVE_PREPARATION_FAILED: native preparation remains incomplete; all exact inventory offers still proceed under native controls\n");
 }
 const active = new Map<number, { readonly job: Job; peak: number; ownPeak: number; readonly startedAt: number; readonly nested: Map<number, NestedPeak> }>();
 const observed = new Map<string, ObservedChild>(), observedMemory = new Map<number, MemorySample>();
@@ -490,6 +506,32 @@ const elapsedMs = Date.now() - startedAt;
 refreshObserved();
 const logicalReaderBytes = factsBytes + [...allParts.values()].reduce((sum, part) => sum + (part.bytes.reader ?? 0), 0);
 const physical = await physicalRunReads(environment.WTP_RH01_PRODUCTION_READ_LEDGER!, environment.WTP_RH01_RUN_ID!, startedAt);
+const phasePhysical = await physicalRunReads(environment.WTP_RH01_PRODUCTION_READ_LEDGER!, environment.WTP_RH01_RUN_ID!, 0);
+interface WorkerCompletion { pid: number; role: string; taskId: string; attemptId: string; complete: boolean; endedAt?: string; usd?: number | null; modelRequests?: number }
+const workerCompletions: WorkerCompletion[] = [], completionDirectory = join(directory, "observed-worker-completions");
+if (existsSync(completionDirectory)) for (const file of readdirSync(completionDirectory)) if (file.endsWith(".json")) {
+  const row = JSON.parse(await readFile(join(completionDirectory, file), "utf8")) as WorkerCompletion;
+  if (row.endedAt && Date.parse(row.endedAt) >= startedAt) workerCompletions.push(row);
+}
+let modelDiagnosticCalls: { role: string; usd: number | null; usage: unknown; requestHash: string; sentAt: string }[] = [];
+if (activePima) {
+  const descriptor = JSON.parse(await readFile(environment.WTP_RH01_MODEL_BROKER!, "utf8"));
+  const ledger = new DatabaseSync(descriptor.budgetPath, { readOnly: true });
+  try { modelDiagnosticCalls = ledger.prepare("SELECT role,actual_usd,usage_json,request_hash,sent_at FROM calls WHERE phase=? AND sent_at>=? ORDER BY id")
+    .all(phase, new Date(startedAt).toISOString()).map(row => ({ role: String(row.role), usd: typeof row.actual_usd === "number" ? row.actual_usd : null,
+      usage: typeof row.usage_json === "string" ? JSON.parse(row.usage_json) : null, requestHash: String(row.request_hash), sentAt: String(row.sent_at) })); }
+  finally { ledger.close(); }
+}
+const requiredWorkerRoles = ["SCOUT", "PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER"];
+const roleCoverage = requiredWorkerRoles.map(role => {
+  const completed = workerCompletions.filter(row => row.role === role && row.complete);
+  const paid = role === "SCOUT" || role === "ADVERSARIAL_AUDITOR";
+  const calls = modelDiagnosticCalls.filter(row => row.role === role && row.usd !== null && row.usage !== null);
+  const providerUsd = calls.reduce((sum, row) => sum + row.usd!, 0), completedUsd = completed.reduce((sum, row) => sum + (row.usd ?? 0), 0);
+  return { role, complete: completed.length > 0 && (!paid || calls.length > 0 && providerUsd + 0.000001 >= completedUsd), completed,
+    providerCalls: calls.length, providerUsd, completedUsd };
+});
+const allRoleCoverageRequired = Boolean(savedInventory && !only && !process.argv.includes("--representatives"));
 const attributed = new Set<number>();
 for (const result of results) {
   const pids = new Set([...(result.actualPid ? [result.actualPid] : []), ...(result.nestedProcesses ?? []).map(row => row.pid)]);
@@ -501,6 +543,10 @@ for (const result of results) {
 }
 const headroomBytes = 768 * 1024 * 1024;
 const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).toISOString(), elapsedMs, headroomBytes, comparisonLeaseWorkerBytes: leaseBytes,
+  activePreparation,
+  requiredWorkerRoleCoverage: { required: allRoleCoverageRequired, roles: roleCoverage, missing: roleCoverage.filter(row => !row.complete).map(row => row.role),
+    definition: "Actual native committed results produced during the workload. Preparation is excluded. SCOUT must finish its model loop; Auditor must commit a model review; ACQUIRER must complete a genuine generalized acquisition. Paid-role native usage is checked against the authorized phase broker's recorded provider usage." },
+  modelDiagnosticSpend: { calls: modelDiagnosticCalls, measuredUsd: modelDiagnosticCalls.reduce((sum, row) => sum + (row.usd ?? 0), 0) },
   temporaryDirectory: process.env.TMPDIR ?? process.env.TEMP ?? process.env.TMP ?? null,
   observationRequestedMs: observationMs, observedFullHour: elapsedMs >= 3600000 && !watchdogExceeded,
   workload: "Every selected command offered simultaneously. Actual parent descendants cover identical child commands; never-spawned offers enter admission after their owner ends. No cadence replay or synthetic clock advance",
@@ -508,6 +554,10 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   aggregatePeakRssBytes: aggregatePeak, localDatabasePeakRssBytes: factsPeak, controlHydrationBytes, readerBytes: physical.reader,
   readerBytesPerHour: physical.reader * 3600000 / elapsedMs, logicalReaderBytes,
   productionReadAccounting: { runId: environment.WTP_RH01_RUN_ID, path: environment.WTP_RH01_PRODUCTION_READ_LEDGER,
+    phaseStartedAt: new Date(phaseStartedAt).toISOString(), workloadStartedAt: new Date(startedAt).toISOString(), finishedAt: new Date().toISOString(),
+    setup: { readerResponseBytes: phasePhysical.reader - physical.reader, controlResponseBytes: phasePhysical.control - physical.control },
+    workload: { readerResponseBytes: physical.reader, controlResponseBytes: physical.control },
+    phaseTotal: { readerResponseBytes: phasePhysical.reader, controlResponseBytes: phasePhysical.control },
     readerResponseBytes: physical.reader, controlResponseBytes: physical.control,
     unattributedReaderResponseBytes: [...physical.owners].filter(([pid]) => !attributed.has(pid)).reduce((sum, [, row]) => sum + row.reader, 0),
     definition: "Actual production HTTP bodies and WebSocket payloads are counted once during this run. RPC owner PID attributes delegated reads to the calling job. Per-job native readerBytes are partial logical counters; productionReaderResponseBytes includes delegated reads. Parent owned-tree rows include descendants; aggregate bytes are never the sum of overlapping job rows." },
@@ -517,7 +567,7 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   leaseWorkersAtPeak, workingLeaseWorkersAtPeak: leaseWorkersAtPeak.filter(row => row.status === "RUNNING").length,
   maxSimultaneousLeaseWorkers, maxSimultaneousWorkingLeaseWorkers,
   minAdmissibleLeaseWorkers, admissionAtPeak,
-  jobs: results, complete: !watchdogExceeded && results.length === selection.length && results.every(result => result.complete) && admissionAtPeak !== null,
+  jobs: results, complete: !watchdogExceeded && activePreparation.status !== "FAILED" && (!allRoleCoverageRequired || roleCoverage.every(row => row.complete)) && results.length === selection.length && results.every(result => result.complete) && admissionAtPeak !== null,
   limits: ["The temporary fact database is separate from runner RSS, as production PostgreSQL is remote.", "Only a completed executable is a full-job measurement; every incomplete executable remains required work.",
     elapsedMs >= 3600000 && !watchdogExceeded ? "Reader bytes were observed for at least one real hour of this simultaneous-offer replay; this does not reproduce production cadence." : "Reader bytes per hour extrapolates this controlled interval, rather than observing a full hour of production cadence.",
     activePima ? "Only the explicitly authorized Pima model requests may spend; other production model work retains its existing controls and the broker scope." : "The no-model research parent cannot prove the paid hunter workload; that requires authentic replay or the explicitly approved isolated diagnostic."] };

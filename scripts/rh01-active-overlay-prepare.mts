@@ -10,7 +10,7 @@ const option = (name: string) => process.argv.find(value => value.startsWith(`--
 const phase = option("phase"); if (phase !== "before" && phase !== "after") throw Error("RH01 overlay phase is invalid");
 const facts = process.env.WTP_RH01_FACTS_URL, connection = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
 if (!facts || new URL(facts).hostname !== "127.0.0.1" || process.env.WTP_RUNTIME_MODE !== "staging" ||
-    !connection || decodeURIComponent(new URL(connection).username) !== "wtp_cp_release_readonly") throw Error("RH01 active setup requires verified read-only production and a local write overlay");
+    !connection || new URL(connection).hostname !== "127.0.0.1" || decodeURIComponent(new URL(connection).username) !== "wtp_cp_release_readonly") throw Error("RH01 active setup requires a loopback control connection and local write overlay");
 const prepared = resolve(option("prepared") ?? `.scratch/rh01/active-model-${phase}`);
 const shared = process.env.WTP_RH01_SHARED_STATE_DIRECTORY;
 if (!shared) throw Error("RH01 shared disposable state is absent");
@@ -18,11 +18,12 @@ const codeRoot = process.env.WTP_RH01_CODE_ROOT;
 if (!codeRoot) throw Error("RH01 active setup requires the immutable native code root");
 const code = (file: string) => import(pathToFileURL(join(codeRoot, file)).href);
 const [{ createFileRepositories }, { createPgRepositories }, { submit }, { readIntents, RESEARCH_INTENT_LOG_KEY },
-  { DurableEvidenceStore }, { extensionFor }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint }] = await Promise.all([
+  { DurableEvidenceStore }, { extensionFor }, { enqueueWorkerTask }, { runLeaseWorkerProcesses }, { readCompletedWorkerResult }, { fingerprint }, { findReceipt }, { canonicalJson }] = await Promise.all([
   code("lib/control-plane/repository/file-store.ts"), code("lib/control-plane/repository/pg-store.ts"),
   code("lib/control-plane/gateway/gateway.ts"), code("lib/control-plane/scheduler/research-policy.ts"),
   code("lib/control-plane/evidence/durable-store.ts"), code("lib/control-plane/evidence/store.ts"), code("lib/control-plane/workers/runtime.ts"),
   code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/repository/worker-completion.ts"), code("lib/control-plane/ids.ts"),
+  code("lib/control-plane/gateway/receipts.ts"), code("lib/control-plane/repository/types.ts"),
 ]);
 const manifest = JSON.parse(await readFile(join(prepared, "rh01-model-replay.json"), "utf8"));
 if (manifest.phase !== phase) throw Error("RH01 prepared source phase differs");
@@ -82,7 +83,9 @@ for (const [type, input] of [
 ] as const) {
   const result = await submit({ type, subject: "fleet", input, stateVersion: null, idempotencyKey: `rh01-active-pg-${phase}-${type}`,
     caller: "OPERATOR_CHAT", actorRef: "rh01-user-authorized-local-diagnostic" }, { repos, now: () => at, currentStateVersion: null, codeSha: null });
-  if (!result.ok) throw Error(`RH01 native local command refused: ${result.receipt.says}`); receipts.push(result.receipt);
+  if (!result.ok) throw Error(`RH01 native local command refused: ${result.receipt.says}`);
+  if (canonicalJson(await findReceipt(repos, result.receipt.receiptId)) !== canonicalJson(result.receipt)) throw Error("RH01 native local gateway receipt did not persist exactly");
+  receipts.push(result.receipt);
 }
 const controls = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
 if (controls.paused || !controls.pendingDispatch.length) throw Error("RH01 local Resume/Send did not read back");

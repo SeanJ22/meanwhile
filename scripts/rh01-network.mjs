@@ -25,6 +25,7 @@ function collect(value) {
 collect(inventory);
 const databaseHosts = new Set([process.env.WTP_PRODUCTION_DATABASE_URL_READONLY, process.env.WTP_CONTROL_PLANE_DATABASE_URL].filter(Boolean).flatMap(value => {
   const url = new URL(value), role = decodeURIComponent(url.username);
+  if (["localhost", "127.0.0.1", "::1", "[::1]"].includes(url.hostname)) return [];
   return role === "readonly" || role === "wtp_cp_release_readonly" ? [url.hostname, url.hostname.replace(/^[^.]+\./, "api.")] : [];
 }));
 const readerHost = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY
@@ -43,7 +44,8 @@ export function assertNeededProductionRead(text) {
     if (!/(?:^|,)\s*(?:[a-z_][a-z_0-9]*[.])?(?:\*|value|record|payload|candidate)\s*(?:AS\s+[a-z_][a-z_0-9]*)?\s*(?:,|$)/i.test(match[1])) continue;
     const suffix = text.slice(match.index + match[0].length);
     const predicate = /\bWHERE\b([\s\S]*?)(?=\bORDER\s+BY\b|\bGROUP\s+BY\b|\bLIMIT\b|\bOFFSET\b|;|$)/i.exec(suffix)?.[1];
-    const cursorOnly = predicate && /[<>]/.test(predicate) &&
+    const scopedIdentity = predicate && /\b(?:log_key|record_id|id)\s*=\s*\$\d+/i.test(predicate);
+    const cursorOnly = predicate && !scopedIdentity && /[<>]/.test(predicate) &&
       predicate.replace(/\$\d+|\b(?:AND|OR|id|log_key|record_id|position|changed_at|updated_at)\b|[\s"().,><=:]/gi, "") === "";
     if (!predicate || cursorOnly || /^\s*(?:TRUE|1\s*=\s*1)\s*$/i.test(predicate))
       throw Error(`RH01_UNSUPPORTED_PRODUCTION_READ: ${match[2]} whole rows require exact job scope; raw whole-table or cursor-only hydration is prohibited`);
@@ -61,6 +63,7 @@ export function enableProductionReadAccounting(phase = "preparation", options = 
 /** Count the one consumed HTTP body stream; no response copy or database values are retained. */
 function responseDatabase(url, headers) {
   const hostname = new URL(url).hostname;
+  if (localHost(hostname)) return null;
   if (hostname === readerHost) return "reader";
   if (hostname === controlHost) return "control-plane";
   // Neon sends HTTP queries to a regional API hostname shared by both databases.

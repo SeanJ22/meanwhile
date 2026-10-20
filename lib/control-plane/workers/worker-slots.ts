@@ -32,14 +32,18 @@ export const RUNNER_PARENT_PEAK_MIB: Readonly<Record<string, number>> = {
 const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // Provisional existing install-tree measurement: 1,295 MiB including postinstall; verify against the current shipped dependency tree.
-  "runtime-release-install.mjs": 1536,
+  // Current complete cached install sampled 871 MiB including postinstall.
+  // Retain the previously reported 1,294.85 MiB full-install peak plus 5%.
+  "runtime-release-install.mjs": 1360,
   "runtime-release-command.mjs": WORKER_ENTRY_PEAK_MIB.lease!,
   // Complete native migrated-copy runs, including publication: NY OpenStates
   // peaked at 3,568,775,168 bytes; NY LegiScan at 1,310,093,312 bytes.
   // Round each measured peak plus 5% up to MiB; the host also charges descendants.
   "openstates-votes-refresh.mts": 3574,
   "legiscan-votes-refresh.mts": 1312,
+  // The original failed FEC attempt already reached 398,643,200 bytes.
+  // This floor includes 5%; a complete current publication peak remains owed.
+  "fetch-fec.mts": 400,
   "federal-money-refresh.mts": 768,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,

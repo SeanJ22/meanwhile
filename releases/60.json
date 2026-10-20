@@ -1,0 +1,21 @@
+{
+  "n": 60,
+  "branch": "release/60",
+  "river_sha": "5307d8b75678fc416f8e062cc9c65839d6d23da8",
+  "tested_sha": "5307d8b75678fc416f8e062cc9c65839d6d23da8",
+  "steps": [
+    "RS-03",
+    "SRC-MN"
+  ],
+  "lanes": [
+    "rs-03",
+    "src-money"
+  ],
+  "integration_from": 247,
+  "integration_count": 249,
+  "pr": {
+    "number": 770,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/770"
+  },
+  "at": "2026-10-20T05:02:55Z"
+}

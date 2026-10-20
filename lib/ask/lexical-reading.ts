@@ -17,6 +17,10 @@ import { outcomeQuestionClass } from "./outcome-question.ts";
 import { personVotesQuestionShape, type PersonVotesQuestion } from "./person-votes.ts";
 import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
+import { readerMoneyReference, readerContestReference, readerMeasureReference } from "./reader-references.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { contestsForBallotAsk } from "./ballot-summary.ts";
+import type { Contest } from "../ballot/types.ts";
 
 /**
  * A closed set of question shapes read in code, skipping the model rung. Each
@@ -67,6 +71,7 @@ const WHEN_TAIL = "(?: (?:next|again))?";
 const RECENTLY = "(?: (?:recently|lately|last time|at (?:its|their|the) (?:last|latest|most recent|previous) meeting))?";
 
 const SHAPES: readonly ShapePattern[] = [
+  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^when (?:does|do|will) (?:the )?(.+?) meet next and what (?:is|s) on (?:the|its|their) agenda$/ },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:is|s|are) (?:the )?(.+?) (?:getting together|gathering|holding a meeting)${WHEN_TAIL}$`) },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will) (?:the )?(.+?) (?:get together|gather|hold a meeting)${WHEN_TAIL}$`) },
   /* MEETING_TIME — when a named body sits. */
@@ -129,6 +134,7 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:does|do) (.+?) stand for$/ },
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:background|record|voting record|platform|biography|bio)$/ },
   /* CONTACT — how to reach a named person or body. */
+  { shape: "CONTACT", kind: "BODY", pattern: /^where (?:is|s|are) (?:the )?(.+?) (?:main )?offices?$/ },
   { shape: "CONTACT", kind: "PERSON", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (.+?)$/ },
   { shape: "CONTACT", kind: "BODY", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (?:the )?(.+?)$/ },
   { shape: "CONTACT", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:contact information|contact info|phone number|email address)$/ },
@@ -178,7 +184,9 @@ function shapeMatches(question: string, options: { pronouns?: boolean } = {}): {
     const slot = pattern.exec(normalized)?.[1]?.trim();
     if (!slot) continue;
     // A pronoun is not a name: "when do they meet" depends on something earlier.
-    if (!options.pronouns && slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
+    const areaSlot = kind === "BODY" && /^(?:my|our) /.test(slot) &&
+      Object.hasOwn(AREA_CLASS_DIVISIONS, slot.replace(/^(?:my|our) /, ""));
+    if (!options.pronouns && !areaSlot && slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
     if (SITTING_SHAPES.has(shape) && (shape === "MEETING_OUTCOME") !== Boolean(outcome)) continue;
     if (!SITTING_SHAPES.has(shape) && outcome) continue;
     out.push({ shape, kind, slot });
@@ -430,6 +438,8 @@ export function otherNamedPerson(question: string, inventory: readonly BindableE
 }
 
 export interface LexicalReadingInput {
+  readerPeople?: readonly { id: string; officeTitle: string }[];
+  readerContests?: readonly Contest[];
   question: string;
   /** The same inventory the route hands the model and the resolver. */
   inventory: readonly BindableEntity[];
@@ -492,6 +502,11 @@ const AREA_CLASS_DIVISIONS: Readonly<Record<string, readonly string[]>> = {
   "city commission": ["place"],
 };
 
+export function readerBodyClassQuestion(question: string): boolean {
+  return shapeMatches(question).some(match => match.kind === "BODY" && /^(?:my|our) /.test(match.slot) &&
+    Object.hasOwn(AREA_CLASS_DIVISIONS, match.slot.replace(/^(?:my|our) /, "")));
+}
+
 /**
  * A question naming a kind of body ("the school board"), not one: the one
  * governing body of that kind among the reader's divisions settles it; several
@@ -504,6 +519,7 @@ function areaBodyOfClass(matches: readonly { shape: LexicalShape; kind: SubjectK
     const wanted = AREA_CLASS_DIVISIONS[words];
     if (!wanted) continue;
     const candidates = governing.filter((entity) => entity.level === "BODY" && wanted.includes(entity.divisionType ?? ""));
+    if (!candidates.length && /^(?:my|our) /.test(match.slot)) return { entity: null, choices: [], mention: words, match };
     if (candidates.length === 1) return { entity: candidates[0]!, choices: candidates, mention: words, match };
     if (candidates.length > 1 && candidates.length <= 6) return { entity: null, choices: candidates, mention: words, match };
   }
@@ -515,6 +531,27 @@ function areaBodyOfClass(matches: readonly { shape: LexicalShape; kind: SubjectK
  * code — or null, in which case the caller asks the model exactly as before.
  */
 export function lexicalReading(input: LexicalReadingInput): LexicalReading | null {
+  const referencedMoney = readerMoneyReference(input.question);
+  if (referencedMoney && input.readerPeople) {
+    const ids = new Set(input.readerPeople.filter(person => referencedMoney.office.keys.includes(officeIdentity(person.officeTitle) ?? ""))
+      .map(person => person.id));
+    const people = [...new Map(input.inventory.filter(entity => entity.nameClass === "person" && ids.has(entity.id)).map(entity => [entity.id, entity])).values()];
+    return { shape: "MONEY", subjectId: people.length === 1 ? people[0].id : "",
+      interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD", entityMentions: people.length === 1 ? [people[0].name] : [], temporal: { kind: "NONE" } },
+      ...(people.length > 1 ? { areaChoices: { mention: referencedMoney.money.slot, bodies: people } } : {}) };
+  }
+  const referencedContest = readerContestReference(input.question);
+  const referencedMeasure = readerMeasureReference(input.question);
+  if (referencedContest || referencedMeasure) {
+    const ids = referencedContest ? new Set(contestsForBallotAsk(input.readerContests ?? [], referencedContest.office).map(contest => contest.id)) : null;
+    const candidates = [...new Map(input.inventory.filter(entity => referencedMeasure ? kindOf(entity) === "MEASURE" : ids!.has(entity.id))
+      .map(entity => [entity.id, entity])).values()];
+    const shape = referencedMeasure ? "MEASURE_EXPLAIN" as const : "CONTEST_FIELD" as const;
+    return { shape, subjectId: candidates.length === 1 ? candidates[0].id : "",
+      interpretation: { ...unavailableInterpretation(), intent: referencedMeasure ? "MEASURE" : "PERSON_RECORD", temporal: { kind: "NONE" },
+        entityMentions: candidates.length === 1 ? [candidates[0].name] : [] },
+      ...(candidates.length > 1 ? { areaChoices: { mention: referencedMeasure ? "the measure on your ballot" : "your seat", bodies: candidates } } : {}) };
+  }
   const money = moneyReading(input);
   if (money !== undefined) return money;
   const group = groupMoneyReading(input);
@@ -551,10 +588,11 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
     /\b(?:getting together|get together|gather(?:ing)?|hold(?:ing)? a meeting)\b/.test(normalizeName(input.question))
     ? { kind: "NEXT" } : readTemporal;
   const area = areaBodyOfClass(matches, input.readerGoverning ?? []);
-  if (area && !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id))) {
+  if (area && (/^(?:my|our) /.test(area.match.slot) || !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id)))) {
     const areaIntent = tenseIntent(area.match.shape, temporal);
     if (!areaIntent) return null;
-    if (!area.entity) return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal }, subjectId: "", areaChoices: { mention: area.mention, bodies: area.choices } };
+    if (!area.entity) return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal }, subjectId: "",
+      ...(area.choices.length ? { areaChoices: { mention: area.mention, bodies: area.choices } } : {}) };
     return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal, entityMentions: [area.entity.name] }, subjectId: area.entity.id };
   }
   const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {

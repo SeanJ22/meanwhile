@@ -1,9 +1,5 @@
-/**
- * A write that timed out is read back before the owner is told anything:
- *   there        -> saved
- *   not there    -> not saved, safe to send again
- *   read fails   -> may have saved; never "nothing was recorded"
- */
+import { ADMIN_CONFIG_ID, type AdminConfig } from "./admin-config.ts";
+import { ADMIN_SECTIONS, type AdminSection, type AdminSectionsQuery } from "../repository/admin-config.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 
 export function isRequestTimeout(error: unknown): boolean {
@@ -59,25 +55,28 @@ export function withWriteReadback(repos: ControlPlaneRepositories): ControlPlane
   const config = repos.adminConfig;
   const adminConfig: typeof config = {
     ...config,
-    async put(id, value, now) {
+    async save(previous, next, now) {
       try {
-        return await config.put(id, value, now);
+        return await config.save(previous, next, now);
       } catch (error) {
         if (!isRequestTimeout(error)) throw error;
-        const held = await readBack(() => config.read(id));
+        const selected = (Object.keys(ADMIN_SECTIONS) as AdminSection[]).filter(section => section in next);
+        const entries = (value: AdminConfig | undefined, section: AdminSection) => (value?.[section] ?? []) as unknown as readonly Record<string, unknown>[];
+        const identity = (section: AdminSection, item: Record<string, unknown>) => String(item[section === "methodStandings" ? "methodId" : section === "placeTargets" ? "key" : "id"]);
+        const sections: AdminSectionsQuery = Object.fromEntries(selected.map(section => [section,
+          { ids: [...new Set([...entries(previous?.value, section), ...entries(next, section)].map(item => identity(section, item)))] }]));
+        const held = await readBack(() => config.read(previous?.id ?? ADMIN_CONFIG_ID, sections));
         if (!held.ok) throw new WriteMayHaveSaved();
-        if (held.value !== null && canonicalJson(held.value.value) === canonicalJson(value)) return { created: true, persisted: held.value };
-        throw new WriteNotSaved();
-      }
-    },
-    async compareAndSet(id, expectedRevision, next, now) {
-      try {
-        return await config.compareAndSet(id, expectedRevision, next, now);
-      } catch (error) {
-        if (!isRequestTimeout(error)) throw error;
-        const held = await readBack(() => config.read(id));
-        if (!held.ok) throw new WriteMayHaveSaved();
-        if (held.value !== null && held.value.revision === expectedRevision + 1 && canonicalJson(held.value.value) === canonicalJson(next)) return held.value;
+        const current = held.value;
+        const settings = (value: AdminConfig) => Object.fromEntries(Object.entries(value).filter(([key]) => !(key in ADMIN_SECTIONS)));
+        const expectedRevision = previous?.revision ?? 0;
+        if (current !== null && current.revision >= expectedRevision && current.revision <= expectedRevision + 1 &&
+            canonicalJson(settings(current.value)) === canonicalJson(settings(next)) && selected.every(section => {
+              const actual = new Map(entries(current.value, section).map(item => [identity(section, item), item]));
+              const wanted = entries(next, section);
+              return wanted.every(item => canonicalJson(actual.get(identity(section, item))) === canonicalJson(item)) &&
+                (!(section === "placeTargets" || section === "billingFacts") || actual.size === wanted.length);
+            })) return { ...current, value: next };
         throw new WriteNotSaved();
       }
     },

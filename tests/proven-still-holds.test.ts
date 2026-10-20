@@ -1,4 +1,3 @@
-/** A green "Proven" means still working today; when recent results fail the bar it reads "Proven, broke since", says so once, and is back in the Queue. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -12,14 +11,15 @@ import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { updateRecords } from "../lib/control-plane/updates.ts";
 import { memoryFixMap, type MethodAttempt } from "../lib/method/fix-map-record.ts";
-import { currentFixProof, DEFAULT_FIX_PROOF_BAR } from "../lib/method/fix-status.ts";
+import { methodStatistics } from "../lib/method/fix-map.ts";
+import { proofFromStatistics, DEFAULT_FIX_PROOF_BAR } from "../lib/method/fix-status.ts";
 
 const place = (i: number) => `ocd-division/country:us/state:${i % 2 ? "az" : "nm"}/county:c${i}`;
 const attempt = (i: number, outcome: "SUCCEEDED" | "FAILED", at: string): MethodAttempt =>
   ({ kind: "ROUTE_RUN", attemptId: `${i}@${at}`, placeId: place(i), methodIds: ["m-1"], outcome, cause: outcome === "FAILED" ? "The page moved." : null, at });
 const OLD = "2026-07-01T12:00:00.000Z";
 const NOW = "2026-09-20T12:00:00.000Z";
-const config = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+const config = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { methodStandings: true, updates: true })).value as AdminConfig;
 
 test("old successes cannot keep a Proven label green when today's results fail", async () => {
   const repos = createMemoryRepositories();
@@ -56,5 +56,5 @@ test("the daily recheck re-measures Proven labels; one that still holds writes n
 
 test("with no recent result, the whole map decides", () => {
   const rows = Array.from({ length: 6 }, (_, i) => ({ methodId: "m", placeId: place(i), state: "WORKS" as const, triedAt: OLD, attemptId: `${i}`, cause: null, updatedAt: OLD }));
-  assert.equal(currentFixProof(rows, DEFAULT_FIX_PROOF_BAR, NOW, 30).status, "PROVEN");
+  assert.equal(proofFromStatistics(methodStatistics(rows, new Date(Date.parse(NOW) - 30 * 86_400_000).toISOString())).status, "PROVEN");
 });

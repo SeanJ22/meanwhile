@@ -1,4 +1,3 @@
-/** BR-27/28/29: a bounded live brief, and one durable daily snapshot from the existing timer. */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "../gateway/admin-config.ts";
 import { BRIEF_TIME_SETTING, ALERTS_ON_SETTING, readSetting } from "../settings.ts";
 import { updateRecords } from "../updates.ts";
@@ -64,7 +63,7 @@ export function projectBrief(config:AdminConfig,rows:readonly QueueRow[],at:stri
 }
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {
-  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 }, fixList: { activeAndRecent: 500 } });
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
   const [history,stuck,reports,doors,questions]=await Promise.all([
@@ -92,7 +91,7 @@ export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,r
   for(let n=0;n<4;n++){
     const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||(latest.value.latestBrief?.day??"")>=clock.day)return false;
     const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
-    try{await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID,latest.revision,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
+    try{await repos.adminConfig.save(latest,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
   }
   return false;
 }

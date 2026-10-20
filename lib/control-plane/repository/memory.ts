@@ -1,3 +1,6 @@
+import type { HuntOrder } from "../hunt-orders.ts";
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -9,13 +12,13 @@ import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
 import { inProcessSpendHoldStore } from "../expansion/spend-holds.ts";
-/** In-process double with the same rules as `file-store.ts`. Never durable. */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import type { PricedCharge } from "../fleet-safety.ts";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -72,17 +75,15 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/** Stand-in for the database clock behind `changed_at`: a process-wide counter, monotonic, never the wall clock. */
 let changeClockMs = Date.parse("2000-01-01T00:00:00.000Z");
 const changeClock = { tick: (): number => (changeClockMs += 1), now: (): number => changeClockMs };
 const changeIso = (ms: number): string => new Date(ms).toISOString();
 
-/** One in-memory aggregate store with the full CAS contract. */
 export function memoryAggregateRepository<T>(kind: string): AggregateRepository<T> {
   const rows = new Map<string, Persisted<T>>();
-  /** Each row's `changed_at`, moved on every put that creates and every compare-and-set. */
+
   const changedAt = new Map<string, number>();
-  /** Revision-1 values: `put` compares against the creation, not the latest state. */
+
   const origins = new Map<string, T>();
 
   const read = async (id: string): Promise<Persisted<T> | null> => {
@@ -98,7 +99,6 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
   return {
     read,
 
-    /* `AggregateRepository.readMany`: the named rows that exist, in id order, as Postgres answers it. */
     readMany: async (ids: readonly string[]): Promise<readonly Persisted<T>[]> =>
       [...new Set(ids)].sort().flatMap((id) => { const row = rows.get(id); return row === undefined ? [] : [{ ...row, value: jsonCopy(row.value) }]; }),
 
@@ -117,7 +117,7 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
       const existing = rows.get(id);
       const origin = origins.get(id);
       if (existing !== undefined && origin !== undefined) {
-        // Throws IdentityCollision when the creation values differ; a no-op when created from exactly these inputs.
+
         reconcileIdempotentPut(kind, id, origin, value);
         return { created: false, persisted: { ...existing, value: jsonCopy(existing.value) } };
       }
@@ -156,7 +156,6 @@ export function memoryAggregateRepository<T>(kind: string): AggregateRepository<
     listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
-    /* `list()` filtered, so the two can never disagree on rows or order. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
@@ -190,7 +189,6 @@ interface LoggedRecord<T> {
   readonly changedAt: number;
 }
 
-/** One in-memory append-only log, partitioned by key. */
 export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository<T> {
   const partitions = new Map<string, LoggedRecord<T>[]>();
   /** Every record in `readAll()` order with the coordinates and clocks a changed-since read answers with. */
@@ -209,7 +207,7 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
       const partition = partitions.get(key) ?? [];
       const existing = partition.find((entry) => entry.recordId === recordId);
       if (existing !== undefined) {
-        // Throws AppendOnlyViolation on a rewrite; a byte-identical retry is a no-op success.
+
         reconcileIdempotentAppend(log, recordId, existing.record, record);
         return {
           appended: false,
@@ -325,7 +323,6 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
   };
 }
 
-/** Refuses rather than waits, like the file store. */
 export function memoryLockManager(): LockManager {
   const held = new Set<string>();
   return {
@@ -343,21 +340,22 @@ export function memoryLockManager(): LockManager {
   };
 }
 
-/** The full bundle, in memory. Never durable, and says so. */
 export function createMemoryRepositories(): ControlPlaneRepositories {
   const locks = memoryLockManager();
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
   const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
   const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
+  const scoutResults = memoryAppendOnlyRepository<ScoutResult>("scout_results");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
     async adminActionHistoryPage(query) {
-      // Positions belong to the append log, so new rows do not shift an older cursor.
+
       return (await adminReceipts.read("admin-action")).map((receipt, position) => ({ receipt, position }))
         .filter(row => (query.scope === "us" || row.receipt.subject === query.scope || row.receipt.requestedSubject === query.scope) &&
           (query.beforePosition == null || row.position < query.beforePosition))
         .sort((a, b) => b.position - a.position).slice(0, query.limit);
     },
+    dispatchState: createDispatchState(() => repositories),
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
     routeTasks: memoryAggregateRepository<RouteTask>("RouteTask"),
     attempts: memoryAggregateRepository<Attempt>("Attempt"),
@@ -385,20 +383,21 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
     ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
-    fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
+    fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
+    huntOrders: (() => { const base=memoryAggregateRepository<HuntOrder>("HuntOrder"); return {...base,request:async(orders:readonly HuntOrder[],at:string)=>{for(const order of orders)await base.put(order.id,order,at);},latestStop:async(state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.scopeKey===null).sort((a,b)=>b.value.requestedAt.localeCompare(a.value.requestedAt))[0]??null,pending:async (state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.confirmedAt===null)}; })(),
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
-    spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
+    spend: storedSpendRepository(memoryAggregateRepository<PricedCharge>("ModelCharge"), scoutResults),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: listedBoxRepository(memoryAggregateRepository<BoxFinding>("BoxFinding")),
     passCursors: memoryAggregateRepository<PassCursor>("PassCursor"),
-    scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+    scoutResults,
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
@@ -409,7 +408,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     liveAudits: memoryAppendOnlyRepository<LiveAuditLogRow>("live_audits"),
-    adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
+    adminConfig: storedAdminConfigRepository(memoryAggregateRepository<AdminConfig>("AdminConfig"), Object.fromEntries(Object.keys(ADMIN_SECTIONS).map(key => [key, memoryAggregateRepository<StoredAdminSection>(key)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     leadOrders: memoryAggregateRepository<LeadOrder>("LeadOrder"),
@@ -419,4 +418,5 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     describe: () => "in-memory control-plane repositories (lost when this process ends)",
     durable: false,
   };
+  return repositories;
 }

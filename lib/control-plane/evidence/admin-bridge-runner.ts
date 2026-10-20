@@ -20,8 +20,7 @@ export interface AdminMirrorReport {
 
 type Lane = "original" | "recent" | "history";
 const LANES: readonly Lane[] = ["original", "recent", "history"];
-// Funded hunts and new captures receive more turns, while history
-// still advances every six opportunities even under continuous new inflow.
+
 const TURN_ORDER: readonly Lane[] = ["original", "recent", "original", "history", "original", "recent"];
 const VERIFIED_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 export const ADMIN_MIRROR_BUDGET_MS = 60_000;
@@ -29,14 +28,13 @@ interface MirrorCursor {
   readonly version: 2;
   nextByLane: Record<Lane, number>;
   turn: number;
-  /** A scheduling hint only. Admin downloads verify the remote copy on every read. */
+
   verifiedAt: Record<string, number>;
 }
 const freshCursor = (): MirrorCursor => ({
   version: 2, nextByLane: { original: 0, recent: 0, history: 0 }, turn: 0, verifiedAt: Object.create(null),
 });
 
-/** Work opened by a funded Send's instruction gets the first lane, whichever Send it is. */
 function isFundedHuntWork(work: WorkItem | undefined, fundedReceipts: ReadonlySet<string>): boolean {
   if (!work || work.project !== "freshness") return false;
   return work.autonomousPlan?.ownerInstructions?.some(receipt => fundedReceipts.has(receipt)) === true ||
@@ -72,7 +70,7 @@ async function readCursor(path: string): Promise<MirrorCursor> {
       }
       return { version: 2, nextByLane: raw.nextByLane as Record<Lane, number>, turn: Number(raw.turn), verifiedAt };
     }
-    // The previous cursor covered only the oldest-first population.
+
     if (Number.isSafeInteger(raw.next) && Number(raw.next) >= 0) {
       const cursor = freshCursor(); cursor.nextByLane.history = Number(raw.next); return cursor;
     }
@@ -90,8 +88,6 @@ async function saveCursor(path: string, cursor: MirrorCursor): Promise<void> {
   await rename(temp, path);
 }
 
-/** Rotating bounded slices prioritize the exact hunt and new captures while
- * advancing historical backfill. The cursor is operational, never evidence. */
 export async function runAdminEvidenceMirror(input: {
   readonly repos: ControlPlaneRepositories;
   readonly vaultRoot: string;
@@ -99,9 +95,9 @@ export async function runAdminEvidenceMirror(input: {
   readonly env?: Readonly<{ WTP_ADMIN_EVIDENCE_MIRROR_ENABLED?: string; NETLIFY_SITE_ID?: string; NETLIFY_BLOBS_TOKEN?: string }>;
   readonly deadlineMs?: number;
   readonly nowMs?: number;
-  /** Isolated tests only. Production uses the time boundary, not a record count. */
+
   readonly maxExamined?: number;
-  /** Isolated tests only; production uses the configured private Netlify store. */
+
   readonly remote?: AdminEvidenceRemote;
 }): Promise<AdminMirrorReport> {
   const env = input.env ?? process.env;
@@ -122,15 +118,14 @@ export async function runAdminEvidenceMirror(input: {
     } finally { if (timer) clearTimeout(timer); }
   };
   const source = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
-  // An immutable create may settle after timeout. Its next ordinary turn reads
-  // and verifies the same key; no timed-out operation is counted as a copy.
+
   const remote: AdminEvidenceRemote = {
     read: key => beforeDeadline(() => source.read(key)),
     create: (key, blob) => beforeDeadline(() => source.create(key, blob)),
   };
   const [records, attempts, workItems, config] = await beforeDeadline(() => Promise.all([
     input.repos.artifacts.readAll(), input.repos.attempts.list(), input.repos.workItems.list(),
-    input.repos.adminConfig.read(ADMIN_CONFIG_ID),
+    input.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:input.repos.planningState?{where:{path:["geography","stateAbbr"],value:input.repos.planningState.toUpperCase()}}:true}),
   ]));
   const fundedReceipts = new Set(expansionScopesOf(config?.value ?? null).scopes.filter(isFundedHunt).map(scope => scope.receiptId));
   const nowMs = input.nowMs ?? Date.now();
@@ -174,7 +169,7 @@ export async function runAdminEvidenceMirror(input: {
       refused++;
       failures.push(`${record.artifactId}:${error instanceof Error ? error.message : "UNKNOWN"}`);
     }
-    // Persist each completed remote result before the next operation may block.
+
     await saveCursor(input.cursorPath, cursor);
     if (expired) break;
   }

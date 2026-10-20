@@ -28,13 +28,13 @@ export function publishNowWorkerTasks(items: readonly WorkerPublicationItem[], r
 /* Work changed since the cursor: the item itself, its worker results, or a page saved for its body or place;
    every held ballot route too when an input they all share moved. Each branch reads an index. */
 const CHANGED_SINCE = `WITH due(id) AS (
-    SELECT id FROM cp_work_items WHERE changed_at > $2::timestamptz
+    SELECT id FROM cp_work_items_history WHERE changed_at > $2::timestamptz
     UNION SELECT log_key FROM cp_log_worker_results WHERE changed_at > $2::timestamptz
-    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
-      JOIN cp_work_items p ON p.value #>> '{autonomousPlan,publication,bodyId}' = s.value #>> '{autonomousPlan,publication,bodyId}' WHERE a.changed_at > $2::timestamptz
-    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
-      JOIN cp_work_items p ON p.value #>> '{subject}' = s.value #>> '{subject}' WHERE a.changed_at > $2::timestamptz
-    UNION SELECT id FROM cp_work_items WHERE $3::boolean AND value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation')`;
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items_history s ON s.id = a.log_key
+      JOIN cp_work_items_history p ON p.value #>> '{autonomousPlan,publication,bodyId}' = s.value #>> '{autonomousPlan,publication,bodyId}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items_history s ON s.id = a.log_key
+      JOIN cp_work_items_history p ON p.value #>> '{subject}' = s.value #>> '{subject}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT id FROM cp_work_items_history WHERE $3::boolean AND value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation')`;
 
 /** The publication outbox reads only its registered work and acknowledgement scalars: everything on a first pass, then only what changed since `since`. */
 export async function readWorkerPublicationItems(
@@ -61,7 +61,7 @@ export async function readWorkerPublicationItems(
         'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}',
         'code', value #> '{publicationOutcome,code}'
       )) ELSE NULL END AS publication_outcome
-      FROM cp_work_items
+      FROM cp_work_items_history
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
         ${since === null ? "" : "AND id IN (SELECT id FROM due)"} ${afterId === null ? "" : `AND id > $${2 + window.length}`}
       ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [contractIds, ...window, ...(afterId === null ? [] : [afterId])]);

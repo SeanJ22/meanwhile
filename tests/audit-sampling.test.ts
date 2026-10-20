@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { newFieldManualEntry } from "../lib/control-plane/field-manual.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
   auditCoverageReport, boostReason, auditHistoryFrom, auditHistoryFromManual, createModelAuditSampler, DEFAULT_AUDIT_SAMPLE_POLICY, sampleDecision, stableFraction, stratumOf,
 } from "../lib/control-plane/workers/audit-sampling.ts";
@@ -98,8 +99,9 @@ test("what the manual remembers of a stratum keeps it under review after its res
   const h = auditHistoryFromManual(store);
   assert.equal(h.get("PLANNING_MEETING|www.broke.gov")!.everBroken, true);
   assert.equal(sampleDecision(spec("www.broke.gov", "x"), new Map([...h]), false, { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1 }).reason, "BROKEN_STRATUM");
-  const sampler = createModelAuditSampler({ workerResults: { readAll: async () => [] },
-    fieldManual: { slice: async () => store.entries.map((value) => ({ id: value.id, revision: 1, updatedAt: "", value })) } } as never,
+  const repos = createMemoryRepositories();
+  for (const entry of store.entries) await repos.fieldManual.put(entry.id, entry, "2026-09-20T00:00:00.000Z");
+  const sampler = createModelAuditSampler(repos,
     { ...DEFAULT_AUDIT_SAMPLE_POLICY, floorPerStratum: 1, ratio: 0, quotedRatio: 0 });
   assert.equal(await sampler(spec("www.broke.gov", "a1")), true, "a stratum the manual says broke is reviewed");
   assert.equal(await sampler(spec("www.fine.gov", "a2")), false, "a stratum the manual says was reviewed and held is not new");

@@ -78,7 +78,6 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   return store;
 }
 
-
 const NOW = "2026-09-29T20:00:00.000Z";
 const DIVISION = "ocd-division/country:us/state:az/place:benson";
 const URL_ = "https://www.bensonaz.gov/government/commissions-boards-committees/commissions";
@@ -105,7 +104,7 @@ async function prior(): Promise<RegistryRuntimePrior> {
 }
 const benson: Jurisdiction = { id: "az:city:city-of-benson", stateCode: "AZ", name: "City of Benson", govClass: "CITY", countyName: "Cochise",
   enumeratedFrom: "fixture", ownWebAddress: "https://www.bensonaz.gov/", sourceIds: [], ocdId: DIVISION } as unknown as Jurisdiction;
-/** A body-directory work item's plan, in the shape such items carry. */
+
 function directoryPlan(jurisdiction: Jurisdiction, bodyId: string): AutonomousWorkPlan {
   const routeId = "coverage-discovery:body-directory";
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,

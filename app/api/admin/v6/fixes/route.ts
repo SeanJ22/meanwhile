@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const decisions = await readDecisions(opened.repos);
     if (decisions.kind !== "HELD") throw new Error(decisions.detail);
     const queue = fixQueueView(collapseDecisionLog(decisions.value));
-    const held = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 }, methodStandings: true });
     const config = held && isAdminConfig(held.value) ? held.value : null;
     const list = config ? fixItems(config) : [];
     // The last few deploys' look checks, so a red flag's fix item keeps its screenshot after the next deploy.

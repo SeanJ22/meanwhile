@@ -1,3 +1,6 @@
+import type { HuntOrder } from "../hunt-orders.ts";
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, migrateStoredAdminConfig, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -8,13 +11,15 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-/** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
-
-import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { appendFile, link, mkdir, open, opendir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { pricedModelCharge, type PricedCharge } from "../fleet-safety.ts";
+import { costRecordId } from "../spend-window.ts";
+import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -78,14 +83,12 @@ import {
   type RecordProjection,
 } from "./types.ts";
 
-/** Unique per write without randomness: process id plus a per-process counter. */
 let tempCounter = 0;
 function tempPath(target: string): string {
   tempCounter += 1;
   return `${target}.${process.pid}.${tempCounter}.tmp`;
 }
 
-/** The readable prefix is for humans; the `fingerprint` suffix makes the name injective. */
 function fileNameFor(key: string): string {
   const readable = key.replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 64);
   return `${readable}-${fingerprint([key])}`;
@@ -99,11 +102,6 @@ function isEexist(error: unknown): boolean {
   return (error as NodeJS.ErrnoException)?.code === "EEXIST";
 }
 
-/**
- * All-or-nothing exclusive create: write a complete temp file, then `link` it into place (EEXIST when the
- * target exists). Where `link` is unavailable, an exclusive `open(path, "wx")` plus write lets a concurrent
- * reader briefly see an empty file, which reads as `CorruptPersistedState`, never a wrong answer.
- */
 async function exclusiveCreate(target: string, contents: string): Promise<boolean> {
   await mkdir(path.dirname(target), { recursive: true });
   const temp = tempPath(target);
@@ -135,7 +133,6 @@ async function exclusiveCreate(target: string, contents: string): Promise<boolea
   }
 }
 
-/** ENOENT is the only absence; every other failure is raised, never returned as null. */
 async function readJsonFile<T>(file: string, validate: (parsed: unknown) => T): Promise<T | null> {
   let raw: string;
   try {
@@ -156,7 +153,6 @@ async function readJsonFile<T>(file: string, validate: (parsed: unknown) => T): 
   return validate(parsed);
 }
 
-/** The on-disk shape of an aggregate. Validated on every read, never assumed. */
 function validateEnvelope<T>(file: string, kind: string, parsed: unknown): Persisted<T> {
   if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
     throw new CorruptPersistedState(file, `expected a ${kind} envelope object, found ${typeof parsed}`);
@@ -181,7 +177,6 @@ function validateEnvelope<T>(file: string, kind: string, parsed: unknown): Persi
   return { id: row.id, revision: row.revision, updatedAt: row.updatedAt, value: row.value as T };
 }
 
-/** A missing kind directory is empty; a missing root is corruption. */
 async function listDirectory(root: string, dir: string): Promise<string[]> {
   try {
     return await readdir(dir);
@@ -202,7 +197,6 @@ async function listDirectory(root: string, dir: string): Promise<string[]> {
   return [];
 }
 
-/** One file per revision (`<id>.r<n>.json`); taking a revision is winning an exclusive create, and the loser is refused with `ConcurrentModification`. */
 export function fileAggregateRepository<T>(
   root: string,
   kind: string,
@@ -213,7 +207,6 @@ export function fileAggregateRepository<T>(
   const fileForRevision = (id: string, revision: number): string =>
     path.join(dir, `${baseFor(id)}.r${revision}.json`);
 
-  /** Revisions present for one id, ascending. */
   const revisionsOf = async (id: string): Promise<number[]> => {
     const prefix = `${baseFor(id)}.r`;
     const names = await listDirectory(root, dir);
@@ -238,7 +231,7 @@ export function fileAggregateRepository<T>(
     const latest = revisions[revisions.length - 1];
     const row = await readRevision(id, latest);
     if (row === null) {
-      // Listed but not found on read: the store changed underneath us, which is not an absence.
+
       throw new CorruptPersistedState(
         fileForRevision(id, latest),
         `revision ${latest} was listed in ${dir} and then could not be read`,
@@ -279,7 +272,6 @@ export function fileAggregateRepository<T>(
   return {
     read,
 
-    /* A file holds the whole row, so this reads it and narrows it in process, exactly as the Postgres read narrows it in the database. */
     readNarrowed: async (id: string, projection: RecordProjection): Promise<Persisted<unknown> | null> => {
       const row = await read(id);
       return row === null ? null : { ...row, value: projectAggregate(row.value, projection) };
@@ -291,7 +283,6 @@ export function fileAggregateRepository<T>(
       return row;
     },
 
-    /** Compared against revision 1, the creation, so re-registering a task that has since moved is still idempotent. */
     put: async (id: string, value: T, now: string): Promise<PutOutcome<T>> => {
       const row: Persisted<T> = { id, revision: 1, updatedAt: now, value };
       const created = await exclusiveCreate(
@@ -330,8 +321,7 @@ export function fileAggregateRepository<T>(
         `${JSON.stringify(row, null, 2)}\n`,
       );
       if (won) return row;
-      // Another writer created this exact revision between our read and our
-      // write. It won; we are stale, and we say so with the revision that landed.
+
       const winner = await read(id);
       throw new ConcurrentModification(kind, id, expectedRevision, winner?.revision ?? null);
     },
@@ -340,8 +330,6 @@ export function fileAggregateRepository<T>(
     listNarrowed: async (projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
       (await list()).map(row => ({ ...row, value: projectAggregate(row.value, projection) })),
 
-    /* `list()` filtered, so the two can never disagree on rows or order. A
-       directory has no index to ask, so this reads what `list()` reads. */
     listWhere: async (jsonPath: readonly string[], value: string): Promise<readonly Persisted<T>[]> =>
       (await list()).filter((row) => jsonTextAtPath(row.value, jsonPath) === value),
     listWhereNarrowed: async (jsonPath: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]> =>
@@ -398,7 +386,6 @@ function parseLogLine<T>(file: string, line: string, lineNumber: number): LogLin
   return { key: row.key, recordId: row.recordId, at: String(row.at ?? ""), record: row.record as T };
 }
 
-/** Identical lines sharing a record id collapse to one; divergent ones are raised on read. */
 function dedupeHistory<T>(log: string, file: string, lines: readonly LogLine<T>[]): LogLine<T>[] {
   const seen = new Map<string, LogLine<T>>();
   const out: LogLine<T>[] = [];
@@ -461,7 +448,7 @@ export function fileAppendOnlyRepository<T>(
       const file = fileFor(key);
       await mkdir(path.dirname(file), { recursive: true });
       const entry: LogLine<T> = { key, recordId, at: now, record };
-      // O_APPEND, never a whole-file rewrite: a race must not be able to shorten history.
+
       await appendFile(file, `${JSON.stringify(entry)}\n`, "utf8");
       return { appended: true, recordId, record, position: lines.length };
     },
@@ -585,7 +572,6 @@ export function fileAppendOnlyRepository<T>(
   }
 }
 
-/** Exclusive-create lock. It refuses when held and never waits. */
 export function fileLockManager(root: string): LockManager {
   const dir = path.join(root, "locks");
   return {
@@ -615,7 +601,91 @@ export function fileLockManager(root: string): LockManager {
   };
 }
 
-/** No default directory. After this call creates the root, a missing root is corruption, not emptiness. */
+async function* streamedSpendCharges(file: string): AsyncGenerator<PricedCharge> {
+  let prefix = "", suffix = "", entry = "";
+  let phase: "prefix" | "entries" | "suffix" = "prefix";
+  let depth = 0, quoted = false, escaped = false, comma = false, count = 0;
+  for await (const chunk of createReadStream(file, { encoding: "utf8" })) {
+    let text = String(chunk);
+    if (phase === "prefix") {
+      prefix += text;
+      const start = /"charges"\s*:\s*\[/.exec(prefix);
+      if (!start) continue;
+      const end = start.index + start[0].length;
+      text = prefix.slice(end);
+      prefix = prefix.slice(0, end);
+      phase = "entries";
+    }
+    if (phase === "suffix") { suffix += text; continue; }
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (depth === 0) {
+        if (/\s/.test(char)) continue;
+        if (char === "]" && !comma) { suffix = text.slice(i); phase = "suffix"; break; }
+        if (char === "," && count > 0 && !comma) { comma = true; continue; }
+        if (char !== "{" || (count > 0 && !comma)) throw new CorruptPersistedState(file, "invalid spend charge array");
+        entry = "{"; depth = 1; quoted = false; escaped = false; comma = false;
+        continue;
+      }
+      entry += char;
+      if (escaped) { escaped = false; continue; }
+      if (quoted && char === "\\") { escaped = true; continue; }
+      if (char === '"') { quoted = !quoted; continue; }
+      if (quoted) continue;
+      if (char === "{" || char === "[") depth++;
+      if (char === "}" || char === "]") depth--;
+      if (depth === 0) {
+        const charge = JSON.parse(entry) as PricedCharge;
+        if (typeof charge.id !== "string" || typeof charge.at !== "string" || !charge.metered) throw new CorruptPersistedState(file, "invalid priced charge");
+        yield charge;
+        entry = ""; count++;
+      }
+    }
+  }
+  if (phase !== "suffix") throw new CorruptPersistedState(file, "incomplete spend charge array");
+  validateEnvelope(file, "SpendWindow", JSON.parse(prefix + suffix));
+}
+
+async function migrateFileSpend(root: string, locks: LockManager): Promise<void> {
+  const source = path.join(root, "aggregates", "spend-window");
+  try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+  await locks.withLock("cp01-spend-migration", async () => {
+    try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+    const target = path.join(root, "aggregates", "model-charges");
+    await mkdir(target, { recursive: true });
+    const insert = async (charge: PricedCharge) => {
+      await exclusiveCreate(path.join(target, `${fileNameFor(charge.id)}.r1.json`), canonicalJson({
+        id: charge.id, revision: 1, updatedAt: charge.at, value: charge,
+      }));
+    };
+    const prefix = `${fileNameFor("model-charges")}.r`;
+    let latest = 0;
+    for await (const file of await opendir(source)) {
+      if (!file.name.startsWith(prefix) || !file.name.endsWith(".json")) continue;
+      const revision = file.name.slice(prefix.length, -5);
+      if (/^\d+$/.test(revision)) latest = Math.max(latest, Number(revision));
+    }
+    if (latest > 0) for await (const charge of streamedSpendCharges(path.join(source, `${prefix}${latest}.json`))) await insert(charge);
+    const logs = path.join(root, "logs", "costs");
+    let directory;
+    try { directory = await opendir(logs); } catch (error) { if (!isEnoent(error)) throw error; }
+    if (directory) for await (const file of directory) {
+      if (!file.name.endsWith(".jsonl")) continue;
+      const sourceFile = path.join(logs, file.name);
+      const lines = createInterface({ input: createReadStream(sourceFile, { encoding: "utf8" }), crlfDelay: Infinity });
+      let lineNumber = 0;
+      for await (const line of lines) {
+        lineNumber++;
+        if (!line.trim()) continue;
+        const row = parseLogLine<CostEntry>(sourceFile, line, lineNumber);
+        const charge = pricedModelCharge(row.record, costRecordId(row.record));
+        if (charge) await insert(charge);
+      }
+    }
+    await rm(source, { recursive: true });
+  });
+}
+
 export async function createFileRepositories(root: string): Promise<ControlPlaneRepositories> {
   if (typeof root !== "string" || root.trim().length === 0) {
     throw new Error(
@@ -628,8 +698,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
   const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
+  const scoutResults = fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results");
+  const adminBase = fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
+    dispatchState: createDispatchState(() => repositories),
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
     routeTasks: fileAggregateRepository<RouteTask>(resolved, "RouteTask", "route-tasks"),
     attempts: fileAggregateRepository<Attempt>(resolved, "Attempt", "attempts"),
@@ -669,7 +742,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
     ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
-    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
+    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
@@ -684,13 +757,14 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
+    huntOrders: (() => { const base=fileAggregateRepository<HuntOrder>(resolved,"HuntOrder","hunt-orders"); return {...base,request:async(orders:readonly HuntOrder[],at:string)=>{for(const order of orders)await base.put(order.id,order,at);},latestStop:async(state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.scopeKey===null).sort((a,b)=>b.value.requestedAt.localeCompare(a.value.requestedAt))[0]??null,pending:async (state:string)=>(await base.listWhere(["state"],state)).filter(row=>row.value.confirmedAt===null)}; })(),
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
-    spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
+    spend: storedSpendRepository(fileAggregateRepository<PricedCharge>(resolved, "ModelCharge", "model-charges"), scoutResults),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: listedBoxRepository(fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings")),
     passCursors: fileAggregateRepository<PassCursor>(resolved, "PassCursor", "pass-cursors"),
-    scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+    scoutResults,
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
@@ -701,7 +775,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     liveAudits: fileAppendOnlyRepository<LiveAuditLogRow>(resolved, "live-audits"),
-    adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
+    adminConfig: storedAdminConfigRepository(adminBase, Object.fromEntries(Object.entries(ADMIN_SECTIONS).map(([key, table]) => [key, fileAggregateRepository<StoredAdminSection>(resolved, key, `admin-${table}`)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
     leadOrders: fileAggregateRepository<LeadOrder>(resolved, "LeadOrder", "lead-orders"),
@@ -713,4 +787,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     describe: () => `durable control-plane repositories rooted at ${resolved}`,
     durable: true,
   };
+  await migrateFileSpend(resolved, locks);
+  await migrateStoredAdminConfig(adminBase, repositories.adminConfig);
+  return repositories;
 }

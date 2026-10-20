@@ -4,7 +4,6 @@ import { addableFamilies } from "../../../../lib/coverage/owed-overlay.ts";
 import { RECIPES } from "../../../../lib/control-plane/data-business/recipes.ts";
 import { audienceWords } from "../../../../lib/control-plane/data-business/types.ts";
 
-/** A data switch's target is `<recipe>@<audience>`: the number's label and who it is for, in words. */
 function switchWords(target: string): { readonly label: string; readonly who: string } {
   const at = target.indexOf("@");
   const id = at < 0 ? target : target.slice(0, at);
@@ -51,17 +50,17 @@ export interface Preview {
   readonly rows: readonly (readonly [string, string])[];
   readonly options?: readonly PreviewOption[];
   readonly items?: readonly PreviewItem[];
-  /** A number the owner types (a hunt's lifetime limit). */
+
   readonly amount?: { readonly label: string; readonly initial: string; readonly text?: boolean };
   readonly note?: boolean;
-  /** The place whose hunt packets the dialog shows before sending: held facts, open blanks by family and the estimated cost. */
+
   readonly packetsFor?: string;
   readonly invalid?: (input: { readonly option: string | null; readonly words: string; readonly amount: string; readonly selected: number }) => string | null;
 }
 
 export interface GatewayMapping {
   readonly type: string;
-  /** The registry action quotes the rendered state; the executor sends the latest pulse revision. */
+
   readonly requiresStateVersion?: boolean;
 }
 
@@ -79,12 +78,9 @@ export const DEP = {
   receiptLookup: { id: "DEP-RECEIPT-LOOKUP", owner: "Codex (gateway)", need: "A read-only receipt lookup by action key." },
 } as const satisfies Record<string, Dependency>;
 
-
 function localOrGlobal(ctx: PreviewContext): "local" | "global" {
   return ctx.scopeIsCountry ? "global" : "local";
 }
-
-
 
 const defs: ActionDef[] = [
   {
@@ -156,7 +152,7 @@ const defs: ActionDef[] = [
     kind: "hunt-pause",
     label: "Pause paid work",
     needs: "spend",
-    doneWords: "Paused.",
+    doneWords: "Pause requested. Waiting for the runner.",
     preview: (ctx) => ({
       title: `Pause paid work for ${ctx.targetName}`,
       level: "local",
@@ -172,7 +168,7 @@ const defs: ActionDef[] = [
     kind: "hunt-resume",
     label: "Resume paid work",
     needs: "spend",
-    doneWords: "Resumed.",
+    doneWords: "Resume requested. Waiting for the runner.",
     preview: (ctx) => ({
       title: `Resume paid work for ${ctx.targetName}`,
       level: "local",
@@ -211,7 +207,7 @@ const defs: ActionDef[] = [
     kind: "hunt-stop",
     label: "Stop this hunt",
     needs: "spend",
-    doneWords: "Stopped.",
+    doneWords: "Stop requested. Waiting for the runner.",
     preview: (ctx) => ({
       title: `Stop ${ctx.targetName}`,
       level: "local",
@@ -221,6 +217,16 @@ const defs: ActionDef[] = [
     }),
     gateway: { type: "expansion.scope.remove" },
     dependency: null,
+  },
+  {
+    kind:"hunt-stop-state",label:"Stop every hunt in this state",needs:"spend",doneWords:"Stop requested. Waiting for the runner.",
+    preview:ctx=>({title:`Stop every hunt in ${ctx.targetName}`,level:"local",rows:[["Scope",ctx.targetName],["When","The next planning round"]]}),
+    gateway:{type:"expansion.scope.stopAll"},dependency:null,
+  },
+  {
+    kind:"hunt-stop-all",label:"Stop every hunt",needs:"spend",doneWords:"Stop requested. Waiting for the runner.",
+    preview:()=>({title:"Stop every hunt",level:"global",rows:[["Scope","Every state"],["When","The next planning round"]]}),
+    gateway:{type:"expansion.scope.stopAll"},dependency:null,
   },
   {
     kind: "global-paid",
@@ -609,6 +615,7 @@ export function gatewayActionKind(type: string, evidence: { subject?: string; sa
   if (!candidates.length) return null;
   if (candidates.length === 1) return candidates[0].kind;
   const says = evidence.says ?? "";
+  if (type === "expansion.scope.stopAll") return evidence.subject === "us" ? "hunt-stop-all" : "hunt-stop-state";
   if (type === "expansion.scope.budget") return /is paused/.test(says) ? "hunt-pause" : /is resumed/.test(says) ? "hunt-resume" : "hunt-limit";
   if (type === "expansion.scope.setMany") return evidence.subject && /^geo:[a-z]{2}\.zcta\./.test(evidence.subject) ? "hunt-start" : "hunt-start-many";
   if (type === "config.setDiscoverySearch") return /\bOFF\b|turned off|is off/i.test(says) ? "global-search-off" : "global-search-on";
@@ -618,10 +625,6 @@ export function gatewayActionKind(type: string, evidence: { subject?: string; sa
   return candidates[0].kind;
 }
 
-/**
- * A setting's new value from what was typed or chosen, or undefined when it does not parse.
- * The gateway still validates it against the setting's own rules.
- */
 export function settingValueFromInput(control: string, amount: string, option: string | null): unknown {
   const typed = amount.trim();
   if (control === "choice") return option ?? undefined;

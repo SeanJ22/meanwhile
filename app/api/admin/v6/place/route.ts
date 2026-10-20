@@ -20,7 +20,7 @@ async function configFor(placeKey: string): Promise<{ target: { goalPercent: num
   try {
     const opened = await openControlPlane();
     if (!opened.ok) return { target: null, missionStart: null, repos: null };
-    const row = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const row = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: { ids: [placeKey] } });
     const config = row !== null && isAdminConfig(row.value) ? row.value : null;
     const t = config ? placeTargetOf(config, placeKey) : null;
     return { target: t ? { goalPercent: t.goalPercent, setAt: t.setAt } : null, missionStart: missionStartOf(config, placeKey), repos: opened.repos };
@@ -41,10 +41,6 @@ export const runtime = "nodejs";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const PARAMS = new Set(["scope", "group", "status", "q", "cursor", "limit", "fresh"]);
 
-/**
- * `admin-v6/checklist@1` for any ZIP, county or state: the capture score overall and by group, and one
- * window of the owed list behind it. Read-only; it never starts an agent and never gates publishing.
- */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });

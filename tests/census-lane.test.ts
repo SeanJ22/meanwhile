@@ -72,7 +72,7 @@ test("not-due governments read one marker batch and never read hint, publication
   let batches = 0;
   repos.fieldManual.readMany = ids => { batches++; return readMany(ids); };
   const forbidden = async (): Promise<never> => { throw new Error("a not-due government read acquisition data"); };
-  repos.fieldManual.slice = forbidden;
+  repos.fieldManual.select = forbidden;
   repos.doors.read = forbidden;
   repos.workItems.listWhereNarrowed = forbidden;
   repos.scoutResults.keysWhere = forbidden;
@@ -141,8 +141,8 @@ test("a current official-site hint supplies the homepage before searching and ke
   assert.equal(report.hintMeetings[0].url, `${current}/board.ics`);
   assert.ok(trail.indexOf(`${current}/`) < trail.indexOf("SEARCH"));
   assert.ok(!trail.includes(home));
-  const hosts = await repos.fieldManual.slice({ kinds: ["ENTITY_HOST"], state: "az" });
-  assert.equal((hosts[0].value.payload as { source: string }).source, "ROUTE_HINT");
+  const hosts = (await repos.fieldManual.select({ kinds: ["ENTITY_HOST"], state: "az" })).store.entries;
+  assert.equal((hosts[0].payload as { source: string }).source, "ROUTE_HINT");
 });
 
 test("MTG-01/02 hunter findings are reused only for their exact registered body, including cross-subject and mid-walk drops", async () => {

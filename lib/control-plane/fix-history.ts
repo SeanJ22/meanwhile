@@ -1,9 +1,3 @@
-/**
- * Every door and fix keeps its history: the fix-list items for a door or
- * method, in order. Each time a fixed gap comes back, the finished episode is
- * kept on the item (`earlier`) before it reopens. Also here: the item a
- * reusable method gets when it goes from working to failing in a place.
- */
 import { addFixItem, completeFixItem, fixItems, type FixItem } from "./fix-list.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "./gateway/admin-config.ts";
 import { formatEastern } from "./eastern-time.ts";
@@ -30,11 +24,6 @@ export type FixItemWithHistory = FixItem & { readonly earlier?: readonly FixEpis
 /** How many finished episodes an item keeps; the oldest drop first. */
 export const FIX_EPISODES_KEPT = 20;
 
-/**
- * The item as it should be stored when a FIXED gap is reported again: the
- * finished episode is kept, then the item reads CAME_BACK. The fix list's
- * `withFixAdded` calls this for its came-back branch.
- */
 export function withEpisodeKept(item: FixItemWithHistory, at: string): FixItemWithHistory {
   const episode: FixEpisodeRecord = {
     brokeAt: item.cameBackAt ?? item.addedAt,
@@ -120,11 +109,6 @@ export function methodBreakFixWords(methodId: string, placeId: string): { where:
 
 type FixRepos = Pick<ControlPlaneRepositories, "adminConfig">;
 
-/**
- * What a fix-map change means for the fix list: working to failing opens (or
- * reopens) the item; failing to working completes it. Anything else writes
- * nothing.
- */
 export async function noteMethodTransition(repos: FixRepos, prior: FixMapRow | null, next: FixMapRow): Promise<"BROKE" | "FIXED" | null> {
   if (prior === null || next === prior) return null;
   const at = next.triedAt ?? next.updatedAt;
@@ -135,7 +119,7 @@ export async function noteMethodTransition(repos: FixRepos, prior: FixMapRow | n
   }
   if (prior.state === "FAILS" && next.state === "WORKS") {
     const id = fixSubjectId(where, says);
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { ids: [id] } });
     const item = held && isAdminConfig(held.value) ? fixItems(held.value).find((i) => i.id === id) : undefined;
     if (!item || item.state === "FIXED") return null;
     await completeFixItem(repos, id, {
@@ -149,14 +133,7 @@ export async function noteMethodTransition(repos: FixRepos, prior: FixMapRow | n
   return null;
 }
 
-/**
- * `recordAttempts` that keeps history: each row is written to the fix map, and
- * a working-to-failing change (or the reverse) goes on the fix list. Reads are
- * scoped to the attempt's place. A failed write is counted, never thrown. Then
- * each touched method is measured against the proof bar and a status change
- * writes its one update.
- */
-export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository, "put" | "forPlace" | "forMethod">, repos: FixRepos,
+export async function recordAttemptsKeepingHistory(fixMap: Pick<FixMapRepository, "put" | "forPlace" | "statistics">, repos: FixRepos,
   attempts: readonly MethodAttempt[], titleOf?: (methodId: string) => string | null,
 ): Promise<RecordedAttempts & { readonly broke: number; readonly fixed: number; readonly updates: number }> {
   let written = 0, skipped = 0, failed = 0, broke = 0, fixed = 0, updates = 0;

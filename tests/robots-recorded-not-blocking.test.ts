@@ -330,6 +330,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/scheduler/robots.ts": "the evaluator itself (tests/scout-tools.test.ts evaluator cases)",
   "lib/ballot/voting-source-fetch.ts": "VS-01 honors robots.txt: tests/voting-source-readers.test.ts blocks disallowed pages and keeps their hunter blanks open",
   "lib/hunt/robots-first-fetch.ts": "tests/robots-first-fetch.test.ts, this file",
+  "lib/hunt/source-page-reader.ts": "tests/hunters-read-to-reader.test.ts: a disallowing robots document is saved and the sourced roster reaches readers",
   "lib/sources/permission-gate.ts": "this file, tests/pima-edu-source.test.ts",
   "lib/sources/pima-edu/index.ts": "via the gate: tests/pima-edu-source.test.ts",
   "lib/sources/suiteone/index.ts": "via the gate: tests/suiteone-source.test.ts",

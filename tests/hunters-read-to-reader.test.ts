@@ -15,7 +15,7 @@ import {publishBoxFindings} from '../lib/facts/box-publication.ts';
 import {factClocks} from '../lib/facts/clocks.ts';
 import {readFileSync} from 'node:fs';
 
-test("saved government sources publish officials, contacts, body type and a portrait on the resident card", async () => {
+test("a government source with disallowing robots publishes its officials, contacts, body type and portrait", async () => {
   const facts=await factDb(),repos=createMemoryRepositories(),vault=new MemoryEvidenceStore();
   await facts.pg.exec('CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint); CREATE TABLE cp_work_items_history(id text primary key,value jsonb); CREATE TABLE cp_work_items(id text primary key,value jsonb); CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,validation_receipt jsonb); CREATE TABLE civic_data_payload_parts(hash text primary key,payload jsonb); CREATE TABLE civic_data_promotions(key text primary key,record_class text,scope text,current_version_id text,payload jsonb);');
   for(const stmt of readFileSync(new URL('../lib/db/migrations/0036_ne01.sql',import.meta.url),'utf8').split('--> statement-breakpoint').slice(1))await facts.pg.exec(stmt);
@@ -28,7 +28,7 @@ test("saved government sources publish officials, contacts, body type and a port
   if(!('cadenceHours' in scheduled))throw Error('fixture does not schedule');
   const job={obligation:scheduled,workItemId:'wi-site',routeTaskId:'rt-site',attemptId:attempt.id,holder:'test',executor:'DETERMINISTIC',bound:{maxAttempts:3,maxWallMs:60000}} as const;
   const seen:string[]=[];
-  const pages:Record<string,string>={'https://example.gov/robots.txt':'User-agent: *\nAllow: /','https://example.gov/':'<title>Example, Arizona</title><main><a href="/council">City Council</a></main>','https://example.gov/council':'<title>Example, Arizona</title><main><h1>City Council</h1><table><tr><td>Jane Doe</td><td>Mayor</td><td>jane@example.gov</td><td><img src="https://example.gov/jane.jpg" alt="Jane Doe"></td></tr><tr><td>John Smith</td><td>Councilmember</td><td>john@example.gov</td></tr></table></main>'};
+  const pages:Record<string,string>={'https://example.gov/robots.txt':'User-agent: *\nDisallow: /','https://example.gov/':'<title>Example, Arizona</title><main><a href="/council">City Council</a></main>','https://example.gov/council':'<title>Example, Arizona</title><main><h1>City Council</h1><table><tr><td>Jane Doe</td><td>Mayor</td><td>jane@example.gov</td><td><img src="https://example.gov/jane.jpg" alt="Jane Doe"></td></tr><tr><td>John Smith</td><td>Councilmember</td><td>john@example.gov</td></tr></table></main>'};
   const run=placeSourceExecutor({repos,scope:{jurisdictionId:government,governmentId:place,bodyId:body,name:'Example',state:'AZ',website:'https://example.gov/'},query:facts.query,now:()=>now,readHeldPage:async()=>null,spaceOut:async()=>{},vault:async(a,text)=>{const saved=await putArtifact(vault,'freshness',a,Buffer.from(text));return {stored:true,where:saved.key,why:'saved'};},open:async({url})=>{seen.push(url);const body=pages[url];assert.ok(body,'unexpected source '+url);return {status:200,body,bytes:Buffer.byteLength(body),contentType:url.endsWith('robots.txt')?'text/plain':'text/html',durationMs:1,transportError:null};}});
   const outcome=await run(job);
   console.log(JSON.stringify({outcome,seen}));

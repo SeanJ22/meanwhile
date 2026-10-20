@@ -55,6 +55,10 @@ export function huntBrief(packet: HuntPacket, context: {
     lines.push("", "WHAT WAS TRIED BEFORE — do not repeat a step that failed unless something about it changed:");
     for (const step of context.tried.slice(-TRIED_LINES)) lines.push(`- ${step.what}: ${step.result}`);
   }
+  if (packet.sourceFailures?.length) {
+    lines.push("","SOURCE CHECKS THAT FAILED — investigate these reasons and use a different route when the saved page cannot prove the value:");
+    for (const failed of packet.sourceFailures) lines.push(`- ${failed.label} [${failed.entityId}] ${failed.field}: ${failed.reason}; ${failed.detail}`);
+  }
   if (context.notes?.length) {
     lines.push("", "NOTES FOR THIS KIND OF PLACE (optional reading):", ...context.notes.slice(0, NOTE_LINES).map(note => `- ${note}`));
   }

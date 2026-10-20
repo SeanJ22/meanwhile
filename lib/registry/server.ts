@@ -41,7 +41,7 @@ import { getRegistryRuntimeReadModel, registryRuntimeReadState, selectedRegistry
 import { currentReaderAuthorityEdge, currentCampaignSitesEdge, currentCommentAccessEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
-import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
+import { curatedReaderReadState, primeCuratedReaderProjectionWithOwnerChoices, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
@@ -262,7 +262,7 @@ export const settleCommentAccessRead = (): Promise<void> =>
 
 /** The campaign-site URLs, edge first. */
 const settleCampaignSitesRead = (): Promise<void> =>
-  settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjection("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
+  settleEdgeFirst(currentCampaignSitesEdge, (value, versionId) => primeCuratedReaderProjectionWithOwnerChoices("campaign-sites", value, versionId), refreshCampaignSitesFromPromoted, "The campaign-site URLs");
 
 export function authorityVersionKey(state: { readonly kind: string; readonly metadata: { readonly versionId: string | null } }): string {
   const served = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP";

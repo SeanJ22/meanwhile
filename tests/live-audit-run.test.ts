@@ -1,12 +1,12 @@
-/** One connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
+/** One connected live-audit cycle records every result, opens Sean’s flags and retains correction history. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { fixItems } from "../lib/control-plane/fix-list.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { readAuditWeek, readLiveAuditPulls, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
+import { readAuditWeek, recordLiveAuditResult, weekDayKeys } from "../lib/control-plane/live-audit-log.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { curatedReaderCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
+import { auditLiveFact, curatedReaderCatalog, type PageRead } from "../lib/control-plane/workers/live-audit.ts";
 import { combinedCatalog, runLiveAuditCycle } from "../lib/control-plane/workers/live-audit-run.ts";
 
 const NOW = "2026-10-05T12:00:00.000Z";
@@ -24,7 +24,7 @@ const policy = { perAreaPerPass: 1, areasPerPass: 10, minHoursBetweenAudits: 24,
 
 test("every result is kept by day; a red flag unpulled for want of a trace goes on the fix list and teaches a lesson", async () => {
   const repos = createMemoryRepositories();
-  const out = await runLiveAuditCycle({ repos, catalog, policy, now: NOW, passId: "p1",
+  const out = await runLiveAuditCycle({ repos, flag: async()=>{}, catalog, policy, now: NOW, passId: "p1",
     fetchPage: pageOf({ a: "Residents of a may speak for three minutes.", b: "Residents of b may speak for five minutes." }) });
   assert.deepEqual([out.summary.green, out.summary.red, out.summary.inconclusive], [1, 1, 1]);
   const week = await readAuditWeek(repos, NOW);
@@ -35,14 +35,14 @@ test("every result is kept by day; a red flag unpulled for want of a trace goes 
   assert.equal(items.length, 1);
   assert.equal(items[0].where, "comment-access:b");
   assert.equal(items[0].addedBy, "The live audit");
-  assert.match(items[0].says, /not pulled automatically/);
+  assert.match(items[0].says, /flag is open/);
   assert.deepEqual(await repos.fieldManual.list(), [], "no lesson without a traced origin");
 
-  const again = await runLiveAuditCycle({ repos, catalog, policy, now: NOW, passId: "p1", fetchPage: async () => { throw new Error("no fetch"); } });
+  const again = await runLiveAuditCycle({ repos, flag: async()=>{}, catalog, policy, now: NOW, passId: "p1", fetchPage: async () => { throw new Error("no fetch"); } });
   assert.equal(again.summary.sampled, 0, "a fact checked within the hold is not checked again");
 });
 
-test("a traced red flag is pulled, its work reopened and its lesson kept; when it audits green again it is marked fixed", async () => {
+test("a traced red result keeps a flag and lesson; only an actual owner action counts as a correction", async () => {
   const repos = createMemoryRepositories();
   const reopened: string[] = [];
   const trace = {
@@ -51,22 +51,21 @@ test("a traced red flag is pulled, its work reopened and its lesson kept; when i
     reopenWorkItem: async (id: string) => { reopened.push(id); },
   };
   const one = combinedCatalog([curatedReaderCatalog("comment-access", [rule("b")])]);
-  const first = await runLiveAuditCycle({ repos, catalog: one, policy, now: NOW, passId: "p1", trace,
+  const first = await runLiveAuditCycle({ repos, flag: async()=>{}, catalog: one, policy, now: NOW, passId: "p1", trace,
     fetchPage: pageOf({ b: "Residents of b may speak for five minutes." }) });
-  assert.equal(first.redFlags[0].status, "PULLED_AND_REOPENED");
-  assert.deepEqual(reopened, ["wi-b"]);
-  const pulls = await readLiveAuditPulls(repos, "wi-b");
-  assert.deepEqual(pulls.map((p) => [p.parserAttemptId, p.recordIds]), [["pa", ["r1", "r2"]]]);
+  assert.equal(first.redFlags[0].status, "FLAGGED");
+  assert.deepEqual(reopened, []);
+  assert.deepEqual(await repos.liveAudits.read("pulls"), []);
   const manual = { value: { entries: (await repos.fieldManual.list()).map((row) => row.value) } };
   const lesson = manual?.value.entries.find((e) => e.kind === "AUDIT_LESSON");
   assert.deepEqual(lesson?.platforms, ["granicus"], "the lesson reaches every door on the platform");
-  assert.deepEqual((await readAuditWeek(repos, NOW)).corrections.map((c) => c.action), ["PULLED"]);
+  assert.deepEqual((await readAuditWeek(repos, NOW)).corrections.map((c) => c.action), []);
 
-  const second = await runLiveAuditCycle({ repos, catalog: one, policy, now: LATER, passId: "p2", trace,
+  const second = await runLiveAuditCycle({ repos, flag: async()=>{}, catalog: one, policy, now: LATER, passId: "p2", trace,
     fetchPage: pageOf({ b: "Residents of b may speak for three minutes." }) });
   assert.equal(second.summary.green, 1);
-  assert.equal(second.fixed, 1);
-  assert.deepEqual((await readAuditWeek(repos, LATER)).corrections.map((c) => c.action), ["PULLED", "FIXED"]);
+  assert.equal(second.fixed, 0);
+  assert.deepEqual((await readAuditWeek(repos, LATER)).corrections.map((c) => c.action), []);
 });
 
 test("a week of day keys reaches back seven days and includes today", () => {
@@ -76,20 +75,6 @@ test("a week of day keys reaches back seven days and includes today", () => {
   assert.equal(keys.at(-1), "day:2026-09-28");
 });
 
-test("the work-item trace reopens with a recorded REOPENED transition, and finds no origin for a member no work published", async () => {
-  const { createWorkItem } = await import("../lib/control-plane/work-item.ts");
-  const { workItemTrace } = await import("../lib/control-plane/workers/live-audit-run.ts");
-  const repos = createMemoryRepositories();
-  const item = createWorkItem({ project: "p", subject: "s", obligation: "o", why: "w", now: NOW });
-  await repos.workItems.put(item.id, item, NOW);
-  const trace = workItemTrace(repos, () => "clerk.example.gov");
-  assert.equal(await trace.originOf("comment-access:nobody"), null);
-  await trace.reopenWorkItem(item.id, "Live audit: a value left its page.");
-  const after = (await repos.workItems.mustRead(item.id)).value;
-  assert.equal(after.state, "REOPENED");
-  assert.match(after.transitions.at(-1)?.by ?? "", /^live-audit:/);
-  assert.equal((await repos.transitions.read(item.id)).length, 1);
-});
 
 test("the audit policy is Admin's audit.policy setting; unset or invalid reads the code default (DP-17)", async () => {
   const { auditPolicyFrom } = await import("../lib/control-plane/workers/live-audit-run.ts");
@@ -104,4 +89,13 @@ test("the audit policy is Admin's audit.policy setting; unset or invalid reads t
   assert.deepEqual(await auditPolicyFrom(repos), wider);
   assert.equal(isLiveAuditPolicy({ ...wider, perAreaPerPass: 0 }), false);
   assert.equal(isLiveAuditPolicy({ ...wider, extra: 1 }), false);
+});
+
+test('old office ID-only audit errors are rechecked without waiting for the ordinary audit hold',async()=>{
+ const repos=createMemoryRepositories();const record={id:'a',officeholderId:'nj-legislature:283',phone:'555-111-2222',sourceUrl:URL+'/a',verifiedAt:NOW};
+ const offices=curatedReaderCatalog('member-offices',[record]);const fact=(await offices.factsInArea((await offices.areas())[0],1))[0];
+ const previous=auditLiveFact(fact,{url:record.sourceUrl,text:record.phone,retrievedAt:NOW,contentHash:'old'},NOW);
+ await recordLiveAuditResult(repos,{...previous,verdict:'RED',checks:[{field:'officeholderId',kind:'VALUE_ON_PAGE',value:record.officeholderId,ok:false}]});
+ const result=await runLiveAuditCycle({repos,flag:async()=>{throw Error('No red flag is owed');},catalog:offices,policy,now:'2026-10-05T12:01:00.000Z',passId:'repair',fetchPage:pageOf({a:record.phone})});
+ assert.equal(result.summary.green,1);assert.equal(result.summary.red,0);
 });

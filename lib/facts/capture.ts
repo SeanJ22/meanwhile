@@ -1,5 +1,7 @@
-import { recordAcquisition } from "../control-plane/evidence/artifact.ts";
-import { putArtifact, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import { artifactId, deriveSanitized, recordAcquisition, type Artifact } from "../control-plane/evidence/artifact.ts";
+import { putArtifact, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
+import { contentHash } from "../control-plane/ids.ts";
+import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { heldCaptureReader } from "../civic-data/worker-publication-context.ts";
@@ -23,11 +25,12 @@ export function captureProvenance(capture: WorkerPublicationCapture, entityHosts
 export async function receiptCapture(input: {
   readonly url: string; readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
+  readonly windowHours?: number;
 }): Promise<{ readonly capture: WorkerPublicationCapture } | { readonly error: string }> {
   const readHeld = heldCaptureReader(input.vault);
   for (const record of (await input.repos.artifactsByCanonicalUrl?.(input.url, 3)) ?? []) {
     const capture = await readHeld(record);
-    if (capture) return { capture };
+    if (capture && (input.windowHours === undefined || (Date.parse(input.now)-Date.parse(capture.observedAt))/3_600_000 <= input.windowHours)) return { capture };
   }
   return fetchCapture(input);
 }
@@ -47,17 +50,38 @@ export async function fetchCapture(input: {
 export async function vaultCapture(input: {
   readonly vault: EvidenceStore; readonly url: string; readonly bytes: Uint8Array; readonly httpStatus: number; readonly contentType: string; readonly retrievedAt: string;
 }): Promise<{ readonly capture: WorkerPublicationCapture; readonly record: ArtifactRecord } | { readonly error: string }> {
-  const text = new TextDecoder().decode(input.bytes);
-  const { artifact } = recordAcquisition({ canonicalUrl: input.url, retrievedAt: input.retrievedAt, httpStatus: input.httpStatus,
+  const acquisition = { canonicalUrl: input.url, retrievedAt: input.retrievedAt, httpStatus: input.httpStatus,
     contentType: input.contentType, sourceId: new URL(input.url).hostname.toLowerCase(), methodRouteId: "fact-receipt",
-    workItemId: RECEIPT_WORK_ITEM, attemptId: `fact-receipt:${input.retrievedAt}`, permission: "ALLOWED", transport: "REACHABLE" }, text);
-  if (artifact.tier !== "RAW") return { error: "PAGE_HOLDS_CREDENTIALS" };
+    workItemId: RECEIPT_WORK_ITEM, attemptId: `fact-receipt:${input.retrievedAt}`, permission: "ALLOWED" as const, transport: "REACHABLE" as const };
+  let text: string, artifact: Artifact;
+  if (/pdf/i.test(input.contentType) || new TextDecoder().decode(input.bytes.subarray(0, 5)) === "%PDF-") {
+    const hash = contentHash(input.bytes);
+    const parent: Artifact = { ...acquisition, headers: {}, retrievalUrl: input.url, id: artifactId("RAW", hash), tier: "RAW",
+      contentHash: hash, byteLength: input.bytes.byteLength, retentionPolicy: "EVIDENCE_PERMANENT" };
+    await putArtifact(input.vault, "freshness", parent, input.bytes);
+    const { extractPdf } = await import("../control-plane/scheduler/scout-tools.ts");
+    const extracted = await extractPdf(input.bytes);
+    if (extracted.kind !== "TEXT" || !extracted.complete) return { error: "PDF_EXTRACTION_INCOMPLETE" };
+    text = extracted.text;
+    const captured = recordAcquisition({ ...acquisition, contentType: "text/plain" }, text).artifact;
+    if (captured.tier !== "RAW") return { error: "PDF_TEXT_HOLDS_CREDENTIALS" };
+    artifact = { ...captured, id: artifactId("EXTRACTED_DERIVED", captured.contentHash), tier: "EXTRACTED_DERIVED",
+      extraction: { kind: "PDF_TEXT", version: "pdf-transcription/1", complete: true, pages: extracted.pages, parent } };
+  } else {
+    try { text = new TextDecoder("utf-8", { fatal: true }).decode(input.bytes); }
+    catch { return { error: "SOURCE_TEXT_ENCODING_UNREADABLE" }; }
+    const captured = recordAcquisition(acquisition, text).artifact;
+    if (captured.tier === "RESTRICTED_RAW") {
+      const sanitized = deriveSanitized(captured, text, input.retrievedAt);
+      artifact = sanitized.artifact; text = sanitized.text;
+    } else artifact = captured;
+  }
   await putArtifact(input.vault, "freshness", artifact, new TextEncoder().encode(text));
+  const { input: saved } = await readForParser(input.vault, "freshness", artifact);
   const record: ArtifactRecord = { artifactId: artifact.id, workItemId: RECEIPT_WORK_ITEM, routeTaskId: null, attemptId: artifact.attemptId,
     tier: artifact.tier, contentHash: artifact.contentHash, byteLength: artifact.byteLength, contentType: artifact.contentType,
     canonicalUrl: artifact.canonicalUrl, partial: false, recordedAt: input.retrievedAt };
-  return { record, capture: { evidence: { artifactId: artifact.id, contentHash: artifact.contentHash, text, acquiredByAttemptId: artifact.attemptId,
-    canonicalUrl: artifact.canonicalUrl, retrievedAt: input.retrievedAt, sourceId: artifact.sourceId, methodRouteId: artifact.methodRouteId },
+    return { record, capture: { evidence: evidenceProjection(saved),
     observedAt: input.retrievedAt, httpStatus: input.httpStatus, transport: "REACHABLE", partial: false } };
 }
 

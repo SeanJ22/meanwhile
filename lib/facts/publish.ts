@@ -42,7 +42,8 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
   const outcome = await db.transaction<PublishOutcome>(async (query) => {
     if (!verdict.ok) {
       await openBlank(query, { entityId: c.entity.id, field: c.field, stage: "CHECK", reason: `CHECK_FAILED:${verdict.reason}`,
-        detail: c.copy.finalUrl, retryMinutes: clocks.retryMinutes(c.fieldKind) });
+        detail: JSON.stringify({ sourceUrl: c.copy.finalUrl, copyId: c.copy.id, fieldKind: c.fieldKind, provenance: c.provenance,
+          value: c.value, valueText: c.valueText, quote: c.quote, producedBy: c.producedBy }), retryMinutes: clocks.retryMinutes(c.fieldKind) });
       return { blank: verdict.reason };
     }
     const [row] = await query(`SELECT f.id, f.value, f.provenance_kind, coalesce(s.fetched_at, f.checked_at) AS fetched_at
@@ -51,7 +52,10 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {
-      await query("UPDATE fact SET checked_at = $2 WHERE id = $1", [row!.id, now.toISOString()]);
+      if (row!.provenance_kind !== "OWNER" && (row!.provenance_kind === c.provenance || c.provenance === "OFFICIAL" || c.provenance === "FILING")) {
+        await query(`UPDATE fact SET checked_at=$2,source_copy_id=$3,quote=$4,quote_start=$5,second_copy_id=$6,provenance_kind=$7 WHERE id=$1`,
+        [row!.id,now.toISOString(),c.copy.id,c.quote,verdict.quoteStart,c.second?.copy.id ?? null,c.provenance]);
+      }
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
       return { decision, factId: Number(row!.id) };
@@ -66,7 +70,9 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       verdict.quoteStart, c.second?.copy.id ?? null, now.toISOString(),
       live ? null : decision === "FLAG_OWNER" ? "OWNER_VALUE_CONTESTED" : "LOSES_TO_CURRENT", c.producedBy, c.costUsd]);
     const factId = Number(inserted!.id);
-    if (decision === "FLAG_OWNER") await query("INSERT INTO owner_flag (fact_id, kind) VALUES ($1, 'OWNER_VALUE_CONTESTED')", [factId]);
+    if (decision === "FLAG_OWNER") await query(`INSERT INTO owner_flag (fact_id,kind,reason,source_url)
+      SELECT $1,'OWNER_VALUE_CONTESTED',$2,$3 WHERE NOT EXISTS(SELECT 1 FROM owner_flag WHERE fact_id=$1 AND resolved IS NULL)`,
+    [row!.id,`An official source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       changed = await readerCacheScopeForEntity(query, c.entity.id);

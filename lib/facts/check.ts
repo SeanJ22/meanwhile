@@ -38,7 +38,8 @@ export interface Claim {
 
 type CheckReason =
   | "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | "PAGE_NOT_ABOUT_ENTITY"
-  | "COPY_OUTSIDE_FRESHNESS_WINDOW" | "SECOND_SOURCE_REQUIRED" | `SECOND_${"ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE"}`;
+  | "COPY_OUTSIDE_FRESHNESS_WINDOW" | "SECOND_SOURCE_REQUIRED" | "SECOND_SOURCE_NOT_INDEPENDENT"
+  | `SECOND_${"ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | "PAGE_NOT_ABOUT_ENTITY" | "COPY_OUTSIDE_FRESHNESS_WINDOW"}`;
 
 export type CheckResult = { readonly ok: true; readonly quoteStart: number } | { readonly ok: false; readonly reason: CheckReason };
 
@@ -79,12 +80,13 @@ export function needsSecondSource(kind: FieldKind, provenance: Provenance, url: 
   return provenance === "OTHER";
 }
 
-function quoteHolds(copy: SavedCopy, quote: string, valueText: string): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
+function quoteHolds(copy: SavedCopy, quote: string, valueText: string, kind: FieldKind): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
   if (copy.isArchive) return "ARCHIVE_NEVER_PROVES_PRESENT";
   const q = normalizeText(quote);
   const start = q ? normalizeText(copy.text).indexOf(q) : -1;
   if (start === -1) return "QUOTE_NOT_ON_SAVED_COPY";
-  if (boundedIndexOf(q, normalizeText(valueText)) === -1) return "VALUE_NOT_IN_QUOTE";
+  const value = normalizeText(valueText);
+  if (boundedIndexOf(q, value) === -1 && (kind !== "officeholder" || boundedIndexOf(q.toLowerCase(),value.toLowerCase()) === -1)) return "VALUE_NOT_IN_QUOTE";
   return start;
 }
 
@@ -98,20 +100,37 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
   const text = normalizeText(copy.text);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();
-  return boundedIndexOf(lower, entity.fullName.toLowerCase()) !== -1 &&
+  const names=[entity.fullName.toLowerCase()];
+  // Registry labels append "governing" to the jurisdiction; governments do not.
+  // Retain the complete jurisdiction and its type, including the alternate official word order.
+  if (entity.id.endsWith("#governing") && names[0].endsWith(" governing")) {
+    const jurisdiction=names[0].slice(0,-" governing".length);
+    names.push(jurisdiction);
+    const typed=/^(.+) (township|borough|city|town|village|county)$/.exec(jurisdiction);
+    if(typed) names.push(`${typed[2]} of ${typed[1]}`);
+  }
+  return names.some(name=>boundedIndexOf(lower,name)!==-1) &&
     (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1);
 }
 
 /** The value is on a saved page about this entity, captured inside its freshness window, and nothing more. */
 export function checkFact(c: Claim, now: Date, windowHours: (k: FieldKind) => number): CheckResult {
-  const held = quoteHolds(c.copy, c.quote, c.valueText);
+  const held = quoteHolds(c.copy, c.quote, c.valueText,c.fieldKind);
   if (typeof held === "string") return { ok: false, reason: held };
   if (!aboutEntity(c.entity, c.copy)) return { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" };
-  if ((now.getTime() - c.copy.fetchedAt.getTime()) / 3_600_000 > windowHours(c.fieldKind)) return { ok: false, reason: "COPY_OUTSIDE_FRESHNESS_WINDOW" };
+  const fresh = (copy: SavedCopy) => {
+    const age = (now.getTime()-copy.fetchedAt.getTime())/3_600_000;
+    return Number.isFinite(age) && age >= 0 && age <= windowHours(c.fieldKind);
+  };
+  if (!fresh(c.copy)) return { ok: false, reason: "COPY_OUTSIDE_FRESHNESS_WINDOW" };
   if (needsSecondSource(c.fieldKind, c.provenance, c.copy.finalUrl)) {
     if (!c.second) return { ok: false, reason: "SECOND_SOURCE_REQUIRED" };
-    const second = quoteHolds(c.second.copy, c.second.quote, c.valueText);
+    if (c.copy.finalUrl === c.second.copy.finalUrl || hostOf(c.copy.finalUrl) === hostOf(c.second.copy.finalUrl) ||
+        normalizeText(c.copy.text) === normalizeText(c.second.copy.text)) return { ok: false, reason: "SECOND_SOURCE_NOT_INDEPENDENT" };
+    const second = quoteHolds(c.second.copy, c.second.quote, c.valueText,c.fieldKind);
     if (typeof second === "string") return { ok: false, reason: `SECOND_${second}` };
+    if (!aboutEntity(c.entity,c.second.copy)) return { ok: false,reason: "SECOND_PAGE_NOT_ABOUT_ENTITY" };
+    if (!fresh(c.second.copy)) return { ok: false,reason: "SECOND_COPY_OUTSIDE_FRESHNESS_WINDOW" };
   }
   return { ok: true, quoteStart: held };
 }

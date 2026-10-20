@@ -51,6 +51,7 @@ export function addCensusVotingGeographies(place: VotingReaderPlace, payload: un
       if (state && !next.states.includes(state)) next.states.push(state);
       if (/^counties$/i.test(layer) && geoid) { next.countyFips.push(geoid); if (name) next.countyNames.push(name); }
       if (/county subdivisions/i.test(layer) && geoid) { next.countySubdivisionGeoids.push(geoid); if (name) next.towns.push(name); }
+      if (/^incorporated places$/i.test(layer) && name) next.towns.push(...strings([name, typeof row.BASENAME === "string" ? row.BASENAME : null]));
       if (/american indian|alaska native|native hawaiian|aiannh/i.test(layer) && geoid) next.aiannhGeoids.push(geoid);
       if (vintage === "CENSUS_2020" && /voting districts/i.test(layer) && name) next.precincts.push({ name,
         countyFips: geoid.length >= 5 ? geoid.slice(0, 5) : undefined, kind: "CENSUS_2020_VTD",

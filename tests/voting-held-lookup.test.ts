@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { projectVotingJurisdiction, votingJurisdictionCovers } from "../lib/ballot/voting-answer.ts";
-import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
+import { addCensusVotingGeographies, votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
 import { POST } from "../app/api/voting-sites/route.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -78,6 +78,19 @@ test("an unrecorded place is a coverage gap and does not become an infrastructur
   const response = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", { method: "POST", body: JSON.stringify({ address: "77002" }) })));
   assert.equal(response.status, 200);
   assert.equal((await response.json()).outsideCoverage, true);
+});
+
+test("a street's incorporated municipality remains usable when its county subdivision has a different name", () => {
+  // Protocol geography tests the Census response shape, without asserting a real precinct assignment.
+  const place = addCensusVotingGeographies({ ...votingPlaceFromZip([]), precision: "ADDRESS" }, {
+    result: { addressMatches: [{ geographies: {
+      Counties: [{ STATE: "17", GEOID: "17031", NAME: "Protocol County" }],
+      "County Subdivisions": [{ STATE: "17", GEOID: "1703100000", NAME: "Protocol Township" }],
+      "Incorporated Places": [{ STATE: "17", GEOID: "1700000", NAME: "Protocol City city", BASENAME: "Protocol City" }],
+    } }] },
+  });
+  assert.equal(votingJurisdictionCovers({ ...file.jurisdictions[0], state: "IL", countyFips: "17031",
+    ocdId: "ocd-division/country:us/state:il/county:protocol/place:protocol_city" }, place), true);
 });
 
 test("error diagnostics preserve the cause while removing the typed address and URL credentials", () => {

@@ -19,11 +19,14 @@ export interface BoxOrigin {
   readonly artifactIds: readonly string[];
   readonly missionPart?: string;
   readonly recordedAt: string;
+  readonly sourceCheckedAt?: string;
+  readonly sourceWorkItemId?:string;
+  readonly sourceAttemptId?:string;
   /** A mid-walk drop has no Scout result row yet, so its origin carries the fact itself. */
   readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
 }
 /** What a finding claims, held on its row so a builder never reads the whole result it came from. */
-interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
+interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null; readonly shownMemberId?: string }
 export interface BoxInput {
   readonly subjectId: string;
   readonly exactQuote: string | null;
@@ -84,7 +87,7 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
 /** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
 export function boxFindingId(input: BoxInput): string {
   const identity = input.exactQuote && input.sourceUrl
-    ? [input.exactQuote, input.sourceUrl, input.subjectId]
+    ? [input.exactQuote, input.sourceUrl, input.subjectId, ...(input.fact ? [input.fact.field, input.fact.value, input.fact.shownMemberId ?? null] : [])]
     : [input.subjectId, input.origin.kind, input.origin.resultId, input.origin.collection ?? "findings", input.origin.findingIndex];
   return `box-${contentHash(canonicalJson(identity))}`;
 }
@@ -115,7 +118,8 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
     const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey ?? origin.resultKey } : origin)
       : [...held.value.origins, input.origin];
     const fact = held.value.fact ?? input.fact;
-    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+    const refresh = input.origin.sourceCheckedAt !== undefined && Date.parse(input.origin.sourceCheckedAt) > Math.max(...held.value.origins.map(o=>Date.parse(o.sourceCheckedAt??o.recordedAt))) && held.value.state !== 'taken';
+    const next = { ...held.value, ...(refresh ? {state:'waiting' as const,claim:null,refusal:null,waitingFor:undefined}:{}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
       lastRecordedAt: origins.map(origin => origin.recordedAt).sort().at(-1)! };
     try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
@@ -175,7 +179,8 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 
 /** A finding's field, value and the Scout origin that carried them; null when it names no field. */
 export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxOrigin }) | null {
-  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT");
+  const latest = [...row.origins].sort((a,b) => Date.parse(b.sourceCheckedAt ?? b.recordedAt) - Date.parse(a.sourceCheckedAt ?? a.recordedAt));
+  const origin = latest.find(o => o.reported) ?? latest.find(o => o.kind === "SCOUT");
   return origin && row.fact ? { origin, ...row.fact } : null;
 }
 
@@ -194,17 +199,19 @@ export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, 
 
 /** A finding a Scout dropped mid-walk (`report_finding`), keyed by its attempt and drop order. */
 export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>, input: {
-  readonly workItemId: string; readonly attemptId: string; readonly obligationId?: string; readonly missionPart: string | null;
-  readonly finding: { readonly subjectId: string; readonly field: string; readonly value: string | number | boolean; readonly exactQuote: string;
-    readonly sourceUrl: string; readonly artifactIds: readonly string[]; readonly subjectHint: string | null; readonly index: number };
+  readonly workItemId: string; readonly attemptId: string; readonly obligationId?: string; readonly missionPart: string | null; readonly sourceCheckedAt?: string; readonly sourceWorkItemId?:string; readonly sourceAttemptId?:string;
+  readonly finding: { readonly sourceCheckedAt?:string;readonly subjectId: string; readonly field: string; readonly value: string | number | boolean; readonly exactQuote: string;
+    readonly sourceUrl: string; readonly artifactIds: readonly string[]; readonly subjectHint: string | null; readonly index: number; readonly shownMemberId?: string };
 }, now: string): Promise<BoxFinding> {
   const { finding } = input;
   return indexBoxFinding(repo, { subjectId: finding.subjectId, exactQuote: finding.exactQuote, sourceUrl: finding.sourceUrl,
     origin: { kind: "SCOUT", resultId: input.attemptId, ...(input.obligationId ? { resultKey: input.obligationId } : {}), workItemId: input.workItemId,
       findingIndex: finding.index, collection: "reported", artifactIds: finding.artifactIds, recordedAt: now,
+      ...((input.sourceCheckedAt??finding.sourceCheckedAt) ? {sourceCheckedAt:input.sourceCheckedAt??finding.sourceCheckedAt}:{}),
+      ...(input.sourceWorkItemId?{sourceWorkItemId:input.sourceWorkItemId,sourceAttemptId:input.sourceAttemptId}:{}),
       ...(input.missionPart ? { missionPart: input.missionPart } : {}),
       reported: { field: finding.field, value: finding.value, subjectHint: finding.subjectHint } },
-    fact: { field: finding.field, value: finding.value, recordClass: null } }, now);
+    fact: { field: finding.field, value: finding.value, recordClass: null, ...(finding.shownMemberId ? {shownMemberId:finding.shownMemberId}: {}) } }, now);
 }
 
 interface BoxDetectiveRecord {

@@ -1,0 +1,905 @@
+{
+  "kind": "Existing national source collector diagnostic, not HN-01 validation",
+  "states": [
+    {
+      "state": "ak",
+      "requests": 1,
+      "bytes": 216,
+      "usd": 0,
+      "peakRssBytes": 121155584,
+      "elapsedMs": 341,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "al",
+      "requests": 12,
+      "bytes": 1612122,
+      "usd": 0,
+      "peakRssBytes": 141791232,
+      "elapsedMs": 6038,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 6
+      },
+      "failures": 2
+    },
+    {
+      "state": "ar",
+      "requests": 66,
+      "bytes": 87971286,
+      "usd": 0,
+      "peakRssBytes": 537972736,
+      "elapsedMs": 10568,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 5
+      },
+      "failures": 1
+    },
+    {
+      "state": "as",
+      "requests": 1,
+      "bytes": 0,
+      "usd": 0,
+      "peakRssBytes": 120377344,
+      "elapsedMs": 92,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "az",
+      "requests": 235,
+      "bytes": 312836604,
+      "usd": 0,
+      "peakRssBytes": 1373143040,
+      "elapsedMs": 19212,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 389
+      },
+      "failures": 6
+    },
+    {
+      "state": "ca",
+      "requests": 67,
+      "bytes": 35709210,
+      "usd": 0,
+      "peakRssBytes": 349868032,
+      "elapsedMs": 6819,
+      "OFF": {
+        "findings": 1,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 40
+      },
+      "failures": 1
+    },
+    {
+      "state": "co",
+      "requests": 21,
+      "bytes": 1035325,
+      "usd": 0,
+      "peakRssBytes": 136437760,
+      "elapsedMs": 12782,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 11
+    },
+    {
+      "state": "ct",
+      "requests": 93,
+      "bytes": 110707054,
+      "usd": 0,
+      "peakRssBytes": 562667520,
+      "elapsedMs": 11859,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 7
+      },
+      "failures": 0
+    },
+    {
+      "state": "dc",
+      "requests": 39,
+      "bytes": 11026946,
+      "usd": 0,
+      "peakRssBytes": 211603456,
+      "elapsedMs": 2023,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 28
+      },
+      "failures": 0
+    },
+    {
+      "state": "de",
+      "requests": 51,
+      "bytes": 20819420,
+      "usd": 0,
+      "peakRssBytes": 262041600,
+      "elapsedMs": 2252,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 29
+      },
+      "failures": 3
+    },
+    {
+      "state": "fl",
+      "requests": 42,
+      "bytes": 1684132,
+      "usd": 0,
+      "peakRssBytes": 158187520,
+      "elapsedMs": 4871,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 41
+      },
+      "failures": 1
+    },
+    {
+      "state": "ga",
+      "requests": 62,
+      "bytes": 23024082,
+      "usd": 0,
+      "peakRssBytes": 282845184,
+      "elapsedMs": 4166,
+      "OFF": {
+        "findings": 1,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 42
+      },
+      "failures": 93
+    },
+    {
+      "state": "gu",
+      "requests": 1,
+      "bytes": 0,
+      "usd": 0,
+      "peakRssBytes": 120193024,
+      "elapsedMs": 3659,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "hi",
+      "requests": 41,
+      "bytes": 305651344,
+      "usd": 0,
+      "peakRssBytes": 2742083584,
+      "elapsedMs": 17676,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 3
+      },
+      "failures": 1
+    },
+    {
+      "state": "ia",
+      "requests": 27,
+      "bytes": 4659303,
+      "usd": 0,
+      "peakRssBytes": 170283008,
+      "elapsedMs": 2682,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 28
+      },
+      "failures": 16
+    },
+    {
+      "state": "id",
+      "requests": 127,
+      "bytes": 20015382,
+      "usd": 0,
+      "peakRssBytes": 274112512,
+      "elapsedMs": 3675,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 9
+      },
+      "failures": 4
+    },
+    {
+      "state": "il",
+      "requests": 1,
+      "bytes": 55,
+      "usd": 0,
+      "peakRssBytes": 126803968,
+      "elapsedMs": 500,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "in",
+      "requests": 42,
+      "bytes": 53617620,
+      "usd": 0,
+      "peakRssBytes": 464568320,
+      "elapsedMs": 7163,
+      "OFF": {
+        "findings": 2,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 15
+    },
+    {
+      "state": "ks",
+      "requests": 153,
+      "bytes": 35718734,
+      "usd": 0,
+      "peakRssBytes": 349634560,
+      "elapsedMs": 3925,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 1
+      },
+      "failures": 0
+    },
+    {
+      "state": "ky",
+      "requests": 65,
+      "bytes": 8873972,
+      "usd": 0,
+      "peakRssBytes": 184741888,
+      "elapsedMs": 6531,
+      "OFF": {
+        "findings": 1,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 3
+      },
+      "failures": 0
+    },
+    {
+      "state": "la",
+      "requests": 1,
+      "bytes": 42731,
+      "usd": 0,
+      "peakRssBytes": 125751296,
+      "elapsedMs": 476,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "ma",
+      "requests": 1,
+      "bytes": 212,
+      "usd": 0,
+      "peakRssBytes": 119291904,
+      "elapsedMs": 384,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 0
+    },
+    {
+      "state": "md",
+      "requests": 124,
+      "bytes": 33617415,
+      "usd": 0,
+      "peakRssBytes": 266895360,
+      "elapsedMs": 3920,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 24
+      },
+      "failures": 5
+    },
+    {
+      "state": "me",
+      "requests": 1,
+      "bytes": 919,
+      "usd": 0,
+      "peakRssBytes": 120229888,
+      "elapsedMs": 844,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "mi",
+      "requests": 148,
+      "bytes": 397660383,
+      "usd": 0,
+      "peakRssBytes": 1463173120,
+      "elapsedMs": 18386,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 17
+      },
+      "failures": 48
+    },
+    {
+      "state": "mn",
+      "requests": 103,
+      "bytes": 7930674,
+      "usd": 0,
+      "peakRssBytes": 230744064,
+      "elapsedMs": 9507,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 23
+      },
+      "failures": 0
+    },
+    {
+      "state": "mo",
+      "requests": 28,
+      "bytes": 5669401,
+      "usd": 0,
+      "peakRssBytes": 189870080,
+      "elapsedMs": 12818,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 45
+      },
+      "failures": 2
+    },
+    {
+      "state": "mp",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 121348096,
+      "elapsedMs": 4833,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "ms",
+      "requests": 66,
+      "bytes": 12081296,
+      "usd": 0,
+      "peakRssBytes": 244928512,
+      "elapsedMs": 12901,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 13
+      },
+      "failures": 2
+    },
+    {
+      "state": "mt",
+      "requests": 34,
+      "bytes": 13290758,
+      "usd": 0,
+      "peakRssBytes": 265949184,
+      "elapsedMs": 2689,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 11
+      },
+      "failures": 1
+    },
+    {
+      "state": "nc",
+      "requests": 270,
+      "bytes": 290072919,
+      "usd": 0,
+      "peakRssBytes": 1046913024,
+      "elapsedMs": 16196,
+      "OFF": {
+        "findings": 1,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 105
+      },
+      "failures": 51
+    },
+    {
+      "state": "nd",
+      "requests": 1,
+      "bytes": 0,
+      "usd": 0,
+      "peakRssBytes": 119865344,
+      "elapsedMs": 1377,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "ne",
+      "requests": 18,
+      "bytes": 40246478,
+      "usd": 0,
+      "peakRssBytes": 336707584,
+      "elapsedMs": 2656,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 2
+      },
+      "failures": 0
+    },
+    {
+      "state": "nh",
+      "requests": 1,
+      "bytes": 372,
+      "usd": 0,
+      "peakRssBytes": 127791104,
+      "elapsedMs": 593,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "nj",
+      "requests": 1,
+      "bytes": 346,
+      "usd": 0,
+      "peakRssBytes": 141373440,
+      "elapsedMs": 655,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 0
+    },
+    {
+      "state": "nm",
+      "requests": 40,
+      "bytes": 7469507,
+      "usd": 0,
+      "peakRssBytes": 352751616,
+      "elapsedMs": 12923,
+      "OFF": {
+        "findings": 16,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 30
+      },
+      "failures": 15
+    },
+    {
+      "state": "nv",
+      "requests": 1,
+      "bytes": 212,
+      "usd": 0,
+      "peakRssBytes": 119943168,
+      "elapsedMs": 312,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 0
+    },
+    {
+      "state": "ny",
+      "requests": 1,
+      "bytes": 0,
+      "usd": 0,
+      "peakRssBytes": 136409088,
+      "elapsedMs": 1300,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "oh",
+      "requests": 1,
+      "bytes": 0,
+      "usd": 0,
+      "peakRssBytes": 119959552,
+      "elapsedMs": 1072,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "ok",
+      "requests": 51,
+      "bytes": 23556739,
+      "usd": 0,
+      "peakRssBytes": 300908544,
+      "elapsedMs": 12496,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 34
+      },
+      "failures": 5
+    },
+    {
+      "state": "or",
+      "requests": 21,
+      "bytes": 9234322,
+      "usd": 0,
+      "peakRssBytes": 236298240,
+      "elapsedMs": 5966,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 1
+      },
+      "failures": 0
+    },
+    {
+      "state": "pa",
+      "requests": 82,
+      "bytes": 106311737,
+      "usd": 0,
+      "peakRssBytes": 470831104,
+      "elapsedMs": 9522,
+      "OFF": {
+        "findings": 4,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 44
+      },
+      "failures": 0
+    },
+    {
+      "state": "pr",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 119504896,
+      "elapsedMs": 483,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "ri",
+      "requests": 23,
+      "bytes": 2341188,
+      "usd": 0,
+      "peakRssBytes": 153866240,
+      "elapsedMs": 1981,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 10
+      },
+      "failures": 0
+    },
+    {
+      "state": "sc",
+      "requests": 69,
+      "bytes": 30687388,
+      "usd": 0,
+      "peakRssBytes": 326742016,
+      "elapsedMs": 14306,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 123
+      },
+      "failures": 4
+    },
+    {
+      "state": "sd",
+      "requests": 153,
+      "bytes": 328704825,
+      "usd": 0,
+      "peakRssBytes": 1838931968,
+      "elapsedMs": 17713,
+      "OFF": {
+        "findings": 3,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 47
+      },
+      "failures": 3
+    },
+    {
+      "state": "tn",
+      "requests": 43,
+      "bytes": 1863782,
+      "usd": 0,
+      "peakRssBytes": 156295168,
+      "elapsedMs": 2988,
+      "OFF": {
+        "findings": 16,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 7
+      },
+      "failures": 2
+    },
+    {
+      "state": "tx",
+      "requests": 35,
+      "bytes": 13167688,
+      "usd": 0,
+      "peakRssBytes": 222134272,
+      "elapsedMs": 1495,
+      "OFF": {
+        "findings": 1,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 7
+      },
+      "failures": 6
+    },
+    {
+      "state": "ut",
+      "requests": 22,
+      "bytes": 14421144,
+      "usd": 0,
+      "peakRssBytes": 222412800,
+      "elapsedMs": 1055,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 3
+      },
+      "failures": 0
+    },
+    {
+      "state": "va",
+      "requests": 92,
+      "bytes": 11044864,
+      "usd": 0,
+      "peakRssBytes": 204034048,
+      "elapsedMs": 2186,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 91
+      },
+      "failures": 0
+    },
+    {
+      "state": "vi",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 118849536,
+      "elapsedMs": 118,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "vt",
+      "requests": 1,
+      "bytes": 919,
+      "usd": 0,
+      "peakRssBytes": 132751360,
+      "elapsedMs": 557,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "wa",
+      "requests": 131,
+      "bytes": 35241577,
+      "usd": 0,
+      "peakRssBytes": 423866368,
+      "elapsedMs": 10266,
+      "OFF": {
+        "findings": 2,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 3
+      },
+      "failures": 943
+    },
+    {
+      "state": "wi",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 119058432,
+      "elapsedMs": 170,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "wv",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 119758848,
+      "elapsedMs": 1190,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    },
+    {
+      "state": "wy",
+      "requests": 1,
+      "bytes": 215,
+      "usd": 0,
+      "peakRssBytes": 119865344,
+      "elapsedMs": 94,
+      "OFF": {
+        "findings": 0,
+        "section3Supported": 0
+      },
+      "ELE": {
+        "findings": 0
+      },
+      "failures": 1
+    }
+  ],
+  "requests": 2716,
+  "webBytes": 2419623893,
+  "usd": 0,
+  "peakRssBytes": 2742083584
+}

@@ -39,12 +39,13 @@ test("a run past its time limit is cancelled, its cost recorded and whatever it 
   let now = 0;
   let polls = 0;
   const kept = { subjectId: `${COUNTY}#board`, field: "MTG-01", value: "first Tuesday", sourceUrl: "https://pima.example.gov/board", sentence: "The Board meets on the first Tuesday." };
-  const { sent, fetchImpl } = exa([{ id: "run-2", status: "running" }, { id: "run-2", status: "running" },
+  const { sent, fetchImpl } = exa([{ id: "run-2", status: "running" },
     { id: "run-2", status: "cancelled", output: { structured: { findings: [kept], summary: "" } }, costDollars: { total: 0.5 } }]);
   const run = await runExaAgent({ packet, key: "secret", instructions: "Hunt.", deadlineMs: 4, fetchImpl: fetchImpl as never,
     sleep: async () => { now += 5; }, clock: () => now, onPoll: () => { polls += 1; } });
   assert.equal(sent.at(-1)!.url, "https://api.exa.ai/agent/runs/run-2/cancel");
   assert.equal(sent.at(-1)!.init.method, "POST");
+  assert.equal(run.requestCount,2,"the deadline is followed by cancellation, without another poll");
   assert.equal(run.status, "cancelled");
   assert.deepEqual(run.findings, [kept]);
   assert.equal(run.costUsd, 0.5);

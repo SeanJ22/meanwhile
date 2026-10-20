@@ -1,3 +1,5 @@
+import {huntDirections} from './directions.ts';
+import {readPlaceArtifacts} from '../control-plane/repository/pg-store.ts';
 import { indexReportedFinding } from "../control-plane/box.ts";
 import { readSetting } from "../control-plane/settings.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
@@ -15,7 +17,7 @@ import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../control-plane/cost.ts"
 import { readRolePlaybook } from "../control-plane/playbooks.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { ABSENCE_MAX_HOLD_DEFAULT_DAYS, ABSENCE_MAX_HOLD_SETTING } from "../control-plane/scheduler/absence-hold.ts";
-import { listDoors } from "../doors/registry.ts";
+import { isDoorRecord } from "../doors/registry.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
@@ -39,7 +41,7 @@ const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined
   (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
 export async function shutDoorsOf(repos: Pick<ControlPlaneRepositories, "doors">, governmentId: string): Promise<ShutDoorNote[]> {
-  const { doors } = await listDoors(repos.doors);
+  const doors=(await repos.doors.listWhere(["ocdId"],governmentId)).map(row=>row.value).filter(isDoorRecord);
   return doors.filter(door => door.status === "SHUT" && door.ocdId === governmentId).map(door => ({ doorId: door.doorId, shutSince: door.shutSince,
     evidence: `${door.shutReason ?? "no reason was recorded"}; it reads ${door.hosts.join(", ") || "no recorded host"}` }));
 }
@@ -124,23 +126,25 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
   const readerQuestion = item.autonomousPlan?.readerQuestion;
+  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const packetNow = async (): Promise<HuntPacket | null> => {
     const divisions = readerQuestion?.divisions.length ? readerQuestion.divisions : [governmentId.split("#")[0]!];
     const packets = await read(divisions, input.now(), await readAskedGaps(input.repos, input.now()));
-    if (!readerQuestion) return packets.get(governmentId) ?? null;
+    const directions=await huntDirections(input.repos,item.autonomousPlan?.ownerInstructions??[],owner?.assignments??[]);
+    if (!readerQuestion) {const packet=packets.get(governmentId);return packet?Object.assign({},packet,{directions}):null;}
     // Read all held facts for the place before hunting its unanswered question.
     // The question is work instructions, never a new checklist or evidence.
     const held = [...packets.values()];
     if (held.length === 0) return null;
     return { governmentId, label: readerQuestion.place ? `ZIP ${readerQuestion.place}` : governmentId,
-      held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks) };
+      held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks),...{directions} };
   };
   const opening = await packetNow();
-  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
   const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
   let packet: HuntPacket | null = null;
+  const sourceOrigins=new Map<string,Promise<Awaited<ReturnType<typeof readPlaceArtifacts>>>>();
   return hunterExecutor({
     role,
     playbookFor: hunterRole => readRolePlaybook(input.repos, hunterRole),
@@ -176,8 +180,15 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
           },
           reportFinding: {
             subjects: reportableSubjects(reportPacket),
-            write: async finding => ({ boxId: (await indexReportedFinding(input.repos.boxFindings, { workItemId: item.id, attemptId: job.attemptId,
-              obligationId: huntPacketObligationId(governmentId), missionPart: null, finding }, input.now())).id }),
+            write: async finding => {
+              const at=input.now(),key=JSON.stringify([finding.sourceUrl,...finding.artifactIds]);
+              if(!sourceOrigins.has(key))sourceOrigins.set(key,readPlaceArtifacts(input.repos,finding.sourceUrl,new Date(Date.parse(at)-30*86400000).toISOString(),at));
+              const source=(await sourceOrigins.get(key)!).filter(record=>finding.artifactIds.includes(record.artifactId)).sort((a,b)=>b.recordedAt.localeCompare(a.recordedAt))[0];
+              return {boxId:(await indexReportedFinding(input.repos.boxFindings,{workItemId:item.id,attemptId:job.attemptId,
+                sourceCheckedAt:source?.recordedAt??(finding as typeof finding & {sourceCheckedAt?:string}).sourceCheckedAt,
+                sourceWorkItemId:source?.workItemId,sourceAttemptId:source?.attemptId,
+                obligationId:huntPacketObligationId(governmentId),missionPart:null,finding},at)).id};
+            },
           },
         },
       };

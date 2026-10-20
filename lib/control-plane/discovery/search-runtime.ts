@@ -1,3 +1,5 @@
+type BudgetLedger=BaseLedger & {readonly hostState:Readonly<Record<string,HostState & {requestLeases?:Readonly<Record<string,string>>}>>};
+import {randomUUID} from "node:crypto";
 /**
  * The discovery search seam over Brave and Exa (`hunt/search.ts`),
  * pointers only. Every provider request is admitted first by the cycle's search
@@ -9,7 +11,7 @@
  * timeout plus the ledger's calls; a query starts only with that much time left.
  */
 
-import type { BudgetLedger, HostBudget, VendorBudget } from "../budget.ts";
+import type { BudgetLedger as BaseLedger, HostState, HostBudget, VendorBudget } from "../budget.ts";
 import { createLedger, tryAcquire, release } from "../budget.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { SearchHit } from "../../hunt/search.ts";
@@ -62,7 +64,11 @@ export function recoverSearchSlots(ledger: BudgetLedger, now: string): BudgetLed
   const hostState = { ...ledger.hostState };
   for (const host of Object.values(SEARCH_HOSTS)) {
     const state = hostState[host];
-    if (state?.inFlight > 0 && state.lastRequestAt !== null &&
+    const leases=(state as (HostState & {requestLeases?:Readonly<Record<string,string>>})|undefined)?.requestLeases;
+    if(leases){
+      const live=Object.fromEntries(Object.entries(leases).filter(([,until])=>Date.parse(until)>Date.parse(now)));
+      hostState[host]={...state,inFlight:Math.max(0,state.inFlight-Object.keys(leases).length+Object.keys(live).length),requestLeases:live} as typeof state;
+    }else if (state?.inFlight > 0 && state.lastRequestAt !== null &&
       Date.parse(now) - Date.parse(state.lastRequestAt) > SEARCH_REQUEST_LIFETIME_MS) {
       hostState[host] = { ...state, inFlight: 0 };
     }
@@ -72,8 +78,8 @@ export function recoverSearchSlots(ledger: BudgetLedger, now: string): BudgetLed
 
 /** Admits one provider request, or says why not. `done` returns the concurrency slot. */
 export interface SearchBudget {
-  take(host: string): Promise<string | null>;
-  done(host: string): Promise<void>;
+  take(host: string,lifetimeMs?:number,holder?:string): Promise<string | null>;
+  done(host: string,holder?:string): Promise<void>;
 }
 
 /**
@@ -94,7 +100,12 @@ export function durableSearchBudget(input: {
   let used = 0;
   let registered = false;
   const held = new Map<string, string[]>();
-  const remember = (host: string, at: string) => held.set(host, [...(held.get(host) ?? []), at]);
+  const holderKey=(host:string,holder?:string)=>host+"\0"+(holder??"");
+  const remember = (host: string, lease: string,holder?:string) => {const key=holderKey(host,holder);held.set(key,[...(held.get(key)??[]),lease]);};
+  const occupy=(ledger:BudgetLedger,host:string,lease:string,at:string,lifetimeMs:number):BudgetLedger=>{
+    const state=ledger.hostState[host] as typeof ledger.hostState[string] & {requestLeases?:Readonly<Record<string,string>>};
+    return {...ledger,hostState:{...ledger.hostState,[host]:{...state,requestLeases:{...state.requestLeases,[lease]:new Date(Date.parse(at)+lifetimeMs).toISOString()}}}};
+  };
   async function register(): Promise<void> {
     if (registered) return;
     try {
@@ -105,35 +116,39 @@ export function durableSearchBudget(input: {
     await input.repos.budget.mutate((ledger) => ({ ledger: withSearchBudgets(ledger, input.perDay), result: null }), input.now());
     registered = true;
   }
-  const done = async (host: string) => {
-    const at = held.get(host)?.shift();
-    if (at === undefined) return;
-    await input.repos.budget.mutate(ledger => ({
-      // A late release from an expired holder must not consume its replacement's slot.
-      ledger: ledger.hostState[host]?.lastRequestAt === at ? release(ledger, host) : ledger,
-      result: null,
-    }), input.now());
+  const done = async (host: string,holder?:string) => {
+    const key=holderKey(host,holder),queue=held.get(key);
+    const lease = queue?.shift();
+    if(queue?.length===0)held.delete(key);
+    if (lease === undefined) return;
+    await input.repos.budget.mutate(ledger => {
+      const state=ledger.hostState[host] as typeof ledger.hostState[string] & {requestLeases?:Readonly<Record<string,string>>};
+      if(!state?.requestLeases?.[lease])return {ledger,result:null};
+      const leases={...state.requestLeases};delete leases[lease];
+      const released=release(ledger,host);
+      return {ledger:{...released,hostState:{...released.hostState,[host]:{...released.hostState[host],requestLeases:leases}}},result:null};
+    }, input.now());
   };
   return {
     used: () => used,
-    async take(host) {
+    async take(host,lifetimeMs=SEARCH_REQUEST_LIFETIME_MS,holder?:string) {
       if (used >= input.perCycle) return `the cycle's ${input.perCycle}-request search budget is spent`;
       const refused = input.admit();
       if (refused !== null) return refused;
       await register();
-      const at = input.now();
+      const at = input.now(),lease=randomUUID();
       const { result: acquired } = await input.repos.budget.mutate(ledger => {
         const acquired = tryAcquire(recoverSearchSlots(ledger, at), host, at);
-        return { ledger: acquired.ledger, result: acquired };
+        return { ledger: acquired.granted?occupy(acquired.ledger,host,lease,at,lifetimeMs):acquired.ledger, result: acquired };
       }, at);
       if (!acquired.granted) return acquired.reason;
-      remember(host, at);
+      remember(host, lease,holder);
       used += 1;
       return null;
     },
     done,
     lifetimeHunt: {
-      async take(host) {
+      async take(host,lifetimeMs=SEARCH_REQUEST_LIFETIME_MS,holder?:string) {
         if (!input.admitLifetimeHunt) return "lifetime-hunt search admission is unavailable";
         const refused = input.admitLifetimeHunt();
         if (refused !== null) return refused;
@@ -141,7 +156,7 @@ export function durableSearchBudget(input: {
         // Ignore only the discretionary combined request count. The shared
         // transaction still applies host spacing, concurrency, backoff and
         // vendor concurrency/backoff to this exact hunt's request.
-        const at = input.now();
+        const at = input.now(),lease=randomUUID();
         const outcome = await input.repos.budget.mutate((original) => {
           const ledger = recoverSearchSlots(original, at);
           const vendor = ledger.vendors[DISCOVERY_SEARCH_VENDOR];
@@ -149,11 +164,11 @@ export function durableSearchBudget(input: {
           const transient: BudgetLedger = { ...ledger, vendors: { ...ledger.vendors,
             [DISCOVERY_SEARCH_VENDOR]: { ...vendor, dailyRequestCap: null } } };
           const acquired = tryAcquire(transient, host, at);
-          return { ledger: { ...acquired.ledger, vendors: ledger.vendors },
+          return { ledger: { ...(acquired.granted?occupy(acquired.ledger,host,lease,at,lifetimeMs):acquired.ledger), vendors: ledger.vendors },
             result: acquired.granted ? null : acquired.reason };
         }, at);
         if (outcome.result !== null) return outcome.result;
-        remember(host, at);
+        remember(host, lease,holder);
         used += 1;
         return null;
       },

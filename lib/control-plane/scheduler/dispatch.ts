@@ -565,12 +565,18 @@ export async function dispatchOne(
       artifactIds: record.inputArtifactIds, cost: record.cost, detail: outcome.detail };
   }
 
+  /*
+   * Source observations are recorded first so a disposition can cite them. Identical bytes at another
+   * URL retain that source observation, while the result cites each content id once.
+   */
   const artifactIds: string[] = [];
   const artifactRefusals: string[] = [];
   const seenArtifactIds = new Set<string>();
+  const seenObservations=new Set<string>();
   for (const artifact of outcome.artifacts ?? []) {
-    if (seenArtifactIds.has(artifact.artifactId)) continue;
-    seenArtifactIds.add(artifact.artifactId);
+    const observation=JSON.stringify([artifact.artifactId,artifact.canonicalUrl,artifact.recordedAt]);
+    if(seenObservations.has(observation))continue;
+    seenObservations.add(observation);
     const record: ArtifactRecord = {
       ...artifact,
       workItemId,
@@ -579,7 +585,7 @@ export async function dispatchOne(
     };
     try {
       await recordArtifactMetadata(repos, record, terminalAt);
-      artifactIds.push(record.artifactId);
+      if(!seenArtifactIds.has(record.artifactId)){artifactIds.push(record.artifactId);seenArtifactIds.add(record.artifactId);}
     } catch (error) {
       artifactRefusals.push(
         `${record.artifactId} <${record.canonicalUrl}> not attributed: ${

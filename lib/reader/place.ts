@@ -118,7 +118,7 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
 ), members AS (
   SELECT f.entity_id AS body_id,f.body_name,substr(f.field,8) AS person_id,f.value,f.quote,f.checked_at,f.provenance_kind,f.url,
     coalesce((SELECT x.value FROM entity_external_id x WHERE x.entity_id=substr(f.field,8) AND x.scheme='roster-member' LIMIT 1),'') AS shown_id,
-    coalesce((SELECT jsonb_object_agg(p.field,jsonb_build_object('value',p.value,'quote',p.quote,'url',s.url,'checked',p.checked_at))
+    coalesce((SELECT jsonb_object_agg(p.field,jsonb_build_object('value',p.value,'quote',p.quote,'url',s.url,'checked',p.checked_at,'kind',p.provenance_kind))
       FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'),'{}'::jsonb) AS person
   FROM body_facts f WHERE $8::text[] IS NULL AND f.field LIKE 'member:%'
 ), runtime_rosters AS MATERIALIZED (
@@ -375,7 +375,12 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)))) FROM bodies b),'[]'::jsonb) AS entities,
-  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
+  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM (
+    SELECT entity_id,field,value,checked_at,url FROM body_facts WHERE field IN ('name','body_type','homepage','meeting_cadence','agenda_url','office_address','office_phone')
+    UNION ALL SELECT b.id,'homepage',g.value,g.checked_at,s.url FROM bodies b JOIN fact g ON g.entity_id=b.parent_id AND g.field='homepage' AND g.status='live'
+      LEFT JOIN source_copy s ON s.id=g.source_copy_id
+      WHERE NOT EXISTS(SELECT 1 FROM body_facts own WHERE own.entity_id=b.id AND own.field='homepage')
+  ) f),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,

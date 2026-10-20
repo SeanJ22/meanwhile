@@ -1,3 +1,5 @@
+import {AppendOnlyViolation} from "./types.ts";
+import {createHash} from 'node:crypto';
 import {
   AttemptContract,
   beginAttempt,
@@ -32,7 +34,6 @@ import {
 } from "../route-task.ts";
 import { withRouteTasks, type Escalation, type WorkItem, type WorkItemState } from "../work-item.ts";
 import {
-  AppendOnlyViolation,
   ConcurrentModification,
   IdentityCollision,
   canonicalJson,
@@ -308,23 +309,13 @@ export async function recordArtifactMetadata(
   now: string,
 ): Promise<AppendOutcome<ArtifactRecord>> {
   await repos.attempts.mustRead(record.attemptId);
-  try {
-    return await repos.artifacts.append(record.workItemId, record.artifactId, record, now);
-  } catch (error) {
-    if (!(error instanceof AppendOnlyViolation)) throw error;
-
-    const held = await repos.artifacts.read(record.workItemId);
-    const position = held.findIndex((a) => a.artifactId === record.artifactId);
-    const prior = position >= 0 ? held[position] : undefined;
-    const contentIdentical =
-      prior !== undefined &&
-      prior.contentHash === record.contentHash &&
-      prior.byteLength === record.byteLength &&
-      prior.canonicalUrl === record.canonicalUrl &&
-      prior.tier === record.tier &&
-      prior.partial === record.partial;
-    if (!contentIdentical) throw error;
-    return { appended: false, recordId: record.artifactId, record: prior, position };
+  try{return await repos.artifacts.append(record.workItemId,record.artifactId,record,now);}
+  catch(error){
+    if(!(error instanceof AppendOnlyViolation))throw error;
+    const [prior]=await repos.artifacts.readRecentWhere(record.workItemId,['artifactId'],record.artifactId,1,{contentHash:true,byteLength:true,tier:true}) as readonly Pick<ArtifactRecord,'contentHash'|'byteLength'|'tier'>[];
+    if(!prior || prior.contentHash!==record.contentHash || prior.byteLength!==record.byteLength || prior.tier!==record.tier)throw error;
+    const observation=createHash('sha256').update(JSON.stringify([record.artifactId,record.canonicalUrl,record.attemptId,record.recordedAt])).digest('hex');
+    return repos.artifacts.append(record.workItemId,`${record.artifactId}:${observation}`,record,now);
   }
 }
 

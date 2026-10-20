@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-20T12:38:20.871178+00:00",
+  "production_read_only": true,
+  "admin_writes": 0,
+  "source_states": 51,
+  "background_catalog_states": 56,
+  "background_governments": 111858,
+  "background_held_own_sites": 57354,
+  "source_runs": 69,
+  "source_requests": 2828,
+  "provider_usd": 0,
+  "findings": 5090,
+  "passed_check": 1026,
+  "additional_reader_fact_rows": 397,
+  "reader_bodies": 88,
+  "reader_officials": 50,
+  "source_worker_active_seconds": 1114.434,
+  "peak_source_worker_rss_bytes": 379949056,
+  "peak_initial_source_worker_rss_bytes": 621502464,
+  "metered_production_transfer": {
+    "reader": {
+      "requests": 598,
+      "requestBytes": 553087,
+      "responseBytes": 1975969
+    },
+    "control-plane": {
+      "requests": 13,
+      "requestBytes": 3903,
+      "responseBytes": 8839
+    }
+  },
+  "metered_response_bytes": 1984808,
+  "reader_egress_estimate_usd": 0.00019759690000000003,
+  "reader_facts_per_hour_baseline": 0.2916666666666667,
+  "production_observed_at": "2026-10-20T12:29:41.449Z",
+  "validation_worker_seconds": 152.587,
+  "actual_exa": {
+    "findings": 0,
+    "passed_check": 0,
+    "reader_fact_rows": 0,
+    "usd": 0,
+    "usd_per_reader_fact": null
+  },
+  "exa_documented_high_effort_usd_per_place": 0.5,
+  "additional_facts_per_active_source_worker_hour": 1282.444720817922,
+  "additional_facts_per_active_source_and_validation_worker_hour": 1128.0002462469051,
+  "actual_production_facts_added": 0,
+  "blanks_addressed": 422,
+  "all_production_wire_bytes_known": false,
+  "metered_request_bytes": 556990
+}

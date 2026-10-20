@@ -1,3 +1,7 @@
+import {governmentStateOf} from '../../../registration/listings.ts';
+import {freeGovernmentSources,type FreeGovernmentSource} from '../../../hunt/free-government-sources.ts';
+import {stateOfficesForStates} from '../../../reference/state-offices.ts';
+import type {HuntSourceScope} from '../../../hunt/own-site-runtime.ts';
 /**
  * Free meetings discovery for every registered government with a website. An explicit dispatch adds paid
  * research for unresolved blanks. A found route publishes through the existing crosswalk and meeting partitions.
@@ -52,35 +56,21 @@ export function meetingsDiscoveryNeedFor(reg: JurisdictionRegistry, jurisdiction
   return meetingsDiscoveryNeeds([reg]).find((n) => n.jurisdictionId === jurisdictionId) ?? null;
 }
 
-/** The route one need is worked through: discovery, never an openable address. */
+/** This government's own site, or an official published directory when its site is blank. */
 export function meetingsDiscoveryRoute(reg: JurisdictionRegistry, need: MeetingsDiscoveryNeed): RouteDescriptor {
-  const routeId = MEETINGS_DISCOVERY_ROUTE[need.basis];
-  const ownSite = need.basis === "SOURCE_DISCOVERY_OWED";
-  const source = ownSite ? reg.sourceCatalog[need.sources[0] ?? OWN_SITE_MEETINGS_SOURCE] ?? null : null;
-  return {
-    routeId,
-    label: `${need.name} — meetings discovery (${ownSite ? "its own recorded site" : "no site recorded yet"})`,
-    executorClass: "BOUNDED_MODEL_WORKER",
-    executorReason:
-      "finding where a government publishes its meetings is discovery: the address or the extraction is not " +
-      "known, so no deterministic client may be pointed at a guess",
-    open: {
-      kind: "NOT_MACHINE_EXECUTABLE",
-      target: need.ownWebAddress ?? need.name,
-      reason: ownSite
-        ? `${source?.owed ?? "walk the government's own recorded site for its meetings"} ` +
-          "REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record."
-        : "no website is recorded for this government, so its meetings have no source yet. The first step is " +
-          "its own site (Tier B), found from what the tier above publishes about it; an absence is " +
-          "argued, never asserted. REQUIRES_NEW_ADAPTER: a fact about our reading, never about the record.",
-    },
-    citation:
-      source?.citation ??
-      (reg.registration === undefined
-        ? `the promoted ${need.stateCode} jurisdiction registry names this government and records no MEETINGS source for it (basis NO_MEETINGS_SOURCE_RECORDED)`
-        : `${need.stateCode.toUpperCase()}'s registration names this government (promoted version ${reg.registration.versionId}), and the Census records no web address for it, so none is invented (basis NO_MEETINGS_SOURCE_RECORDED)`),
-    awaitingAdapter: "the meetings discovery executor",
-  };
+  return governmentSourceRoute({jurisdictionId:need.jurisdictionId,name:need.name,state:need.stateCode,govClass:need.govClass,
+    website:need.ownWebAddress,directorySeeds:stateOfficesForStates([need.stateCode]).map(office=>office.url),
+    citation:reg.registration===undefined ? `${reg.stateCode}'s promoted jurisdiction registry` : `${reg.stateCode}'s promoted registration ${reg.registration.versionId}`},MEETINGS_DISCOVERY_ROUTE[need.basis]);
+}
+
+export function governmentSourceRoute(source:FreeGovernmentSource,routeId=source.website ? 'own-site-meetings' : 'find-own-site'):RouteDescriptor {
+  const url=source.website??source.directorySeeds[0];
+  return {routeId,label:`${source.name} — ${source.website?'government sources':'government website directory'}`,
+    executorClass:'DETERMINISTIC',executorReason:'Read held national sources first, then this government’s published pages for open checklist blanks',
+    open:url?{kind:'HTTP_GET',url}:{kind:'NOT_MACHINE_EXECUTABLE',target:source.name,reason:'No published government website or official directory address is held; the website blank remains owed'},
+    citation:source.citation,
+    ...(url?{placeHunt:{jurisdictionId:source.jurisdictionId,governmentId:source.governmentId??null,bodyId:source.bodyId??null,name:source.name,state:source.state.toUpperCase(),website:url,
+      knownOwnSite:!!source.website,directorySeeds:source.directorySeeds,govClass:source.govClass} as HuntSourceScope}:{})} as RouteDescriptor;
 }
 
 /** The needs the owner's dispatch materialized, each with the registry it derives from. A state whose registry cannot be read is named. */
@@ -97,7 +87,7 @@ export function materializedDiscoveryNeeds(
   for (const id of [...ids].sort()) {
     const parsed = parseMeetingsDiscoveryId(id);
     if (parsed === null) continue;
-    const stateCode = parsed.jurisdictionId.split(":")[0]?.toLowerCase() ?? "";
+    const stateCode = governmentStateOf(parsed.jurisdictionId)??"";
     let held = needsByState.get(stateCode);
     if (held === undefined) {
       try {
@@ -146,26 +136,8 @@ export function standingDiscoveryNeeds(reg: JurisdictionRegistry): readonly Meet
   }).sort((a, b) => a.jurisdictionId.localeCompare(b.jurisdictionId));
 }
 
-function freeDiscoveryRoute(reg: JurisdictionRegistry, need: MeetingsDiscoveryNeed): RouteDescriptor {
-  return {
-    routeId: MEETINGS_DISCOVERY_ROUTE.SOURCE_DISCOVERY_OWED,
-    label: `${need.name} — free meetings discovery`,
-    executorClass: "DETERMINISTIC",
-    executorReason: "the standing discovery walk reads this government's recorded website without a model or a Send",
-    open: {
-      kind: "ROUTINE_READ",
-      contractIds: ["meeting-body-crosswalk-derived", "meeting-source-wiring"],
-      target: need.ownWebAddress!,
-      reason: "The standing free walk records discovered meeting routes; automatic crosswalk review and source wiring carry them into ordinary meeting acquisition.",
-      cadenceFailure: null,
-    },
-    citation: reg.registration === undefined
-      ? `${reg.stateCode}'s promoted jurisdiction registry records this government's website`
-      : `${reg.stateCode}'s promoted registration ${reg.registration.versionId} records this government's website`,
-  };
-}
-
 export interface MeetingsDiscoveryInput {
+  readonly background?: (root:string,state:string)=>readonly FreeGovernmentSource[];
   readonly materialized?: () => MaterializedReading;
   /** State-scoped registered holdings; tests may hand in an exact snapshot. */
   readonly registered?: () => ReturnType<typeof promotedRegistries>;
@@ -177,12 +149,12 @@ export function meetingsDiscoveryProvider(input: MeetingsDiscoveryInput = {}): O
   return {
     id: MEETINGS_DISCOVERY_PROVIDER_ID,
     describe:
-      "standing free meetings discovery for every registered government with a website; explicit owner dispatches add paid research for unresolved blanks",
+      "Free government-source reads for every state; Admin orders keep their existing paid hunt packets",
 
     /* The template `meetingsDiscoveryObligationId` restates; the assignment view's prefix table reads it here. */
     scheduledId: (record, route) => `freshness:meetings-discovery:${record.subjectId}#${route.routeId}`,
 
-    enumerate(_ctx: ProviderContext): ProviderYield {
+    enumerate(ctx: ProviderContext): ProviderYield {
       const failures: string[] = [];
       const records = new Map<string, ProvidedObligation>();
       const record = (need: MeetingsDiscoveryNeed, route: RouteDescriptor): ProvidedObligation => ({
@@ -193,19 +165,28 @@ export function meetingsDiscoveryProvider(input: MeetingsDiscoveryInput = {}): O
         lastWorkedAt: null,
         routes: [route],
       });
+      const state=(ctx as ProviderContext & {state?:string}).state;
+      if(state && /^[a-z]{2}$/i.test(state)){
+        try{for(const source of (input.background??freeGovernmentSources)(ctx.root,state)){
+          const basis=source.website?'SOURCE_DISCOVERY_OWED':'NO_MEETINGS_SOURCE_RECORDED';
+          const need={...source,stateCode:source.state,ownWebAddress:source.website,basis,sources:[]} as MeetingsDiscoveryNeed;
+          records.set(meetingsDiscoveryObligationId(need),record(need,governmentSourceRoute(source)));
+        }}catch(error){failures.push(`${state.toUpperCase()}'s held national government sources could not be read (${error instanceof Error?error.message:String(error)})`);}
+      }
       const registered = readRegistered();
       if ("unreadable" in registered) failures.push(`registered government websites could not be read (${registered.unreadable})`);
       else {
-        for (const [state, why] of registered.refused) failures.push(`${state.toUpperCase()}'s registered government websites could not be read (${why})`);
+        for (const [registeredState, why] of registered.refused) if(!state || registeredState.toLowerCase()===state.toLowerCase())failures.push(`${registeredState.toUpperCase()}'s registered government websites could not be read (${why})`);
         for (const reg of registered.registries.values()) {
-          for (const need of standingDiscoveryNeeds(reg)) records.set(meetingsDiscoveryObligationId(need), record(need, freeDiscoveryRoute(reg, need)));
+          if(state && reg.stateCode.toLowerCase()!==state.toLowerCase())continue;
+          for (const need of standingDiscoveryNeeds(reg)) records.set(meetingsDiscoveryObligationId(need), record(need, meetingsDiscoveryRoute(reg, need)));
         }
       }
       const materialized = readMaterialized();
       if ("unreadable" in materialized) {
         failures.push(`the work the owner's dispatch materialized could not be read (${materialized.unreadable})`);
       } else {
-        const derived = materializedDiscoveryNeeds(materialized.ids);
+        const derived = materializedDiscoveryNeeds([...materialized.ids].filter(id=>!state || governmentStateOf(parseMeetingsDiscoveryId(id)?.jurisdictionId??'')===state.toLowerCase()));
         failures.push(...derived.failures);
         for (const { need, reg } of derived.entries) records.set(meetingsDiscoveryObligationId(need), record(need, meetingsDiscoveryRoute(reg, need)));
       }

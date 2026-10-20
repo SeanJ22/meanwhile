@@ -22,7 +22,7 @@ const broker = workerBroker<LeaseWorkerConfig>(async config => {
   const executor = { lane: "DETERMINISTIC" as const,
     workerFor: ({ holder }: { holder: string }) => ({ role: "ACQUIRER" as const, provider: "we-the-people",
       version: `route-executor/1.0 (${route?.routeId ?? "unrouted"})`, instance: holder }),
-    run: routeExecutor({ routeFor: () => route, now: clock,
+    run: routeExecutor({ repos,root:config.root,routeFor: () => route, now: clock,
       openOne: request => broker.call<Awaited<ReturnType<OpenOne>>>("route-tool", { name: "openOne", args: [request] }),
       spaceOut: host => broker.call<void>("route-tool", { name: "spaceOut", args: [host] }),
       vault: (...args: Parameters<VaultPut>) => broker.call<Awaited<ReturnType<VaultPut>>>("route-tool", { name: "vault", args }),

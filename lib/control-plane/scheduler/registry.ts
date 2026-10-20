@@ -40,6 +40,7 @@ export interface YieldContract {
 }
 
 export interface RouteDescriptor {
+  readonly placeHunt?: import("../../hunt/own-site-runtime.ts").HuntSourceScope;
   readonly routeId: string;
   readonly label: string;
 

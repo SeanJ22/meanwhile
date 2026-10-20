@@ -52,6 +52,8 @@ export interface CredentialBudget {
 
 /** Live counters for one host. Derived state only; never authored by a worker. */
 export interface HostState {
+  /** Existing request occupancy, including a research run that outlives a short search. */
+  readonly requestLeases?: Readonly<Record<string, string>>;
   readonly inFlight: number;
   readonly lastRequestAt: string | null;
   readonly requestsToday: number;

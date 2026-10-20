@@ -3,7 +3,7 @@ import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 
 /** Where a hunter's finding publishes: a fact-store slot, a meeting route hint, a ballot-navigation field, a campaign-site lead, or the class it waits for. */
 export type FindingSlot =
-  | { readonly class: "rosters"; readonly slot: "member_name" | "member_office" | "term_note" | "term_start" | "term_end" }
+  | { readonly class: "rosters"; readonly slot: "member_name" | "member_office" | "term_note" | "term_start" | "term_end" | "member_photo" }
   | { readonly class: "contacts"; readonly slot: "email" | "phone" | "website" }
   | { readonly class: "office contacts"; readonly slot: "office_address" | "office_phone" }
   | { readonly class: "body links"; readonly slot: "name" | "homepage" }
@@ -17,7 +17,7 @@ export type FindingSlot =
   | { readonly class: string; readonly waiting: string };
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "5";
+export const FINDING_SLOTS_VERSION = "6";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -47,6 +47,7 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => Findi
   "OFF-04": () => ({ class: "rosters", slot: "member_name" }),
   "OFF-06": (value, quote) => !DATE.test(value) ? { class: "rosters", slot: "term_note" }
     : /\b(since|began|begins|start|appointed|elected|sworn)\b/i.test(quote) ? { class: "rosters", slot: "term_start" } : { class: "rosters", slot: "term_end" },
+  "OFF-17": value => URL_VALUE.test(value) ? {class:"rosters",slot:"member_photo"} : {class:"rosters",waiting:"PORTRAIT_IS_NOT_AN_ADDRESS"},
   "OFF-08": value => URL_VALUE.test(value) ? { class: "contacts", slot: "website" } : { class: "contacts", waiting: "PAGE_IS_NOT_AN_ADDRESS" },
   "OFF-09": value => EMAIL.test(value) ? { class: "contacts", slot: "email" } : PHONE.test(value) ? { class: "contacts", slot: "phone" }
     : { class: "contacts", waiting: "CONTACT_IS_NEITHER_EMAIL_NOR_PHONE" },
@@ -74,7 +75,7 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => Findi
 };
 
 /** Ids whose record publishes only as a whole import (a directory reading, a ballot list, a filing, a dataset), never one value at a time. */
-const WHOLE_RECORDS = new Set(("GEO-07 GEO-08 GEO-10 GOV-03 GOV-05 GOV-06 OFF-11 OFF-12 OFF-15 OFF-17 OFF-18 OFF-19 OFF-20 MTG-05 MTG-13 MTG-19 " +
+const WHOLE_RECORDS = new Set(("GEO-07 GEO-08 GEO-10 GOV-03 GOV-05 GOV-06 OFF-11 OFF-12 OFF-15 OFF-18 OFF-19 OFF-20 MTG-05 MTG-13 MTG-19 " +
   "DOC-02 DOC-03 DOC-06 DOC-08 DOC-09 DOC-10 DOC-17 PAR-07 LEG-02 LEG-03 LEG-04 LEG-05 LEG-06 LEG-07 LEG-09 LEG-11 LEG-17 LEG-18 LEG-20 LEG-21 " +
   "ELE-01 ELE-04 ELE-07 ELE-11 ELE-16 ELE-21 ELE-22 ELE-25 ELE-26 CAN-01 CAN-02 CAN-03 CAN-07 CAN-12 CAN-21 " +
   "CAM-01 CAM-02 CAM-03 CAM-05 CAM-06 CAM-07 CAM-13 CAM-14 FIN-01 FIN-02 FIN-03 FIN-04 FIN-05 FIN-06 FIN-07 FIN-08 FIN-09 FIN-10 " +
@@ -138,6 +139,7 @@ export function slotFor(field: string, value: unknown, recordClass: string | nul
   if (key === "commentperiod") return /^(yes|no)$/i.test(String(value)) ? { class: "comment rules", slot: "comment:period" } : { class: "comment rules", slot: "comment:detail" };
   if (COMMENT[key]) return { class: "comment rules", slot: COMMENT[key] };
   if (key === "meeting.schedule" || key === "body.meetingschedule" || key === "meetingschedule") return { class: "schedules", slot: "meeting_cadence" };
+  if (PERSON.test(head) && /^(?:photo|photourl|portrait|portraiturl|headshot)$/.test(last))return {class:"rosters",slot:"member_photo"};
   if (PERSON.test(head) || head === "superintendent" || head === "") {
     if (last === "name") return { class: "rosters", slot: "member_name" };
     if (last === "office" || last === "title") return { class: "rosters", slot: "member_office" };

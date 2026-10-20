@@ -1,3 +1,6 @@
+import {FleetPreSendRefusal} from '../control-plane/fleet-safety.ts';
+import {SendBudgetRefusal} from '../control-plane/expansion/spend-holds.ts';
+import {exaModelRequest,exaRunOf} from "./exa-transport.ts";
 /** Exa's facts go into the Box through the hunter's own report path,
  * so each cited page is saved and each fact is checked the same way. */
 import type { DeclaredExecutor, WorkOutcome } from "../control-plane/scheduler/dispatch.ts";
@@ -25,7 +28,7 @@ export function exaAgentExecutor(deps: {
   readonly instructions: () => Promise<string>;
   readonly packetNow: () => Promise<HuntPacket | null>;
   /** The paid-search budget admits each run; a refused, unread or absent budget sends nothing. */
-  readonly budget: SearchBudget | undefined;
+  readonly budget: (SearchBudget & {research?:(request:Parameters<typeof exaModelRequest>[0])=>Promise<import("./exa-agent.ts").ExaAgentRun>}) | undefined;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
   readonly toolsFor: (job: { readonly attemptId: string; readonly workItemId: string; readonly routeTaskId: string }, packet: HuntPacket) =>
     Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "openBytes" | "reportFinding">;
@@ -49,7 +52,7 @@ export function exaAgentExecutor(deps: {
       }
       const { key, budget } = deps;
       let refused: string | null;
-      try { refused = !key ? "EXA_API_KEY is not set" : !budget ? "no paid-search budget reaches this worker" : await budget.take(EXA_AGENT_HOST); }
+      try { refused = !key ? "EXA_API_KEY is not set" : !budget?.research ? "no guarded paid-research transport reaches this worker" : await (budget as SearchBudget & {take:(host:string,lifetimeMs:number)=>Promise<string|null>}).take(EXA_AGENT_HOST,EXA_AGENT_WALL_MS+60_000); }
       catch (error) { refused = `the paid-search budget could not be read (${error instanceof Error ? error.message : String(error)})`; }
       if (refused !== null || !key || !budget) {
         return { kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", failureOutcome: "DENIED_BY_POLICY", endedAt: deps.now(), artifacts: [],
@@ -57,9 +60,12 @@ export function exaAgentExecutor(deps: {
       }
       let run: Awaited<ReturnType<typeof runExaAgent>>;
       try {
-        run = await runExaAgent({ packet, key, instructions: await deps.instructions(),
+        run = await budget.research!({ packet, instructions: await deps.instructions(),
           deadlineMs: Math.min(Date.now() + EXA_AGENT_WALL_MS, deps.endsAt ?? Number.POSITIVE_INFINITY),
-          ...(deps.progress ? { onPoll: deps.progress } : {}), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
+        });
+      } catch(error) {
+        if(error instanceof SendBudgetRefusal || error instanceof FleetPreSendRefusal)return {kind:'ABORTED',ranAs:'BOUNDED_MODEL_WORKER',failureOutcome:'DENIED_BY_POLICY',endedAt:deps.now(),artifacts:[],cost:cost(0,Date.now()-started,0,0),detail:`DENIED_BY_POLICY: Exa agent not sent, ${error.message}`};
+        throw error;
       } finally {
         await budget.done(EXA_AGENT_HOST).catch(() => undefined);
       }
@@ -88,7 +94,7 @@ export function exaAgentExecutor(deps: {
         startedAt, recordedAt: deps.now(), blanks: packet.blanks.length,
       };
       await deps.onResult(result, packet);
-      const outcomeCost = cost(run.costUsd, elapsedMs, 1 + toolkit.requestCount, toolkit.bytesFetched);
+      const outcomeCost = cost(run.costUsd, elapsedMs, run.requestCount + toolkit.requestCount, run.bytesFetched + toolkit.bytesFetched);
       if (result.refusal !== null) return { kind: "ABORTED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: deps.now(), artifacts, cost: outcomeCost,
         detail: `EXA AGENT ended with nothing reported: ${result.refusal[0]!.detail}` };
       return { kind: "DISPOSED", ranAs: "BOUNDED_MODEL_WORKER", endedAt: deps.now(), artifacts, cost: outcomeCost, disposition: dispositionForHunt(result),

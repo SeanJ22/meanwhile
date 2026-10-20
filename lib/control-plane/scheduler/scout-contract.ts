@@ -162,6 +162,8 @@ export interface ScoutToolContext {
 
 /** A fact a hunter reported: written to the Box at once with its page and the sentence that states it. */
 export interface ReportedFinding {
+  /** Code's actual observation time of the cited saved page. */
+  readonly sourceCheckedAt?: string;
   readonly subjectId: string;
   readonly field: string;
   readonly value: string | number | boolean;

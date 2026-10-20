@@ -9,14 +9,14 @@ const ROSTER_FACTS_SQL = `WITH members AS (
   SELECT m.body_id, b.name AS body_name, m.person_id, m.value, m.quote, m.checked_at, m.provenance_kind, m.url,
     coalesce((SELECT value FROM entity_external_id x WHERE x.entity_id = m.person_id AND x.scheme = 'roster-member' LIMIT 1), '') AS shown_id,
     coalesce((SELECT jsonb_object_agg(p.field, jsonb_build_object('value', p.value, 'quote', p.quote,
-        'url', (SELECT ps.url FROM source_copy ps WHERE ps.id = p.source_copy_id), 'checked', p.checked_at))
+        'url', (SELECT ps.url FROM source_copy ps WHERE ps.id = p.source_copy_id), 'checked', p.checked_at, 'kind', p.provenance_kind))
       FROM fact p
       WHERE p.entity_id = m.person_id AND p.status = 'live'
-        AND (p.field IN ('name', 'email', 'phone', 'website') OR p.field LIKE '%:' || m.body_id)), '{}'::jsonb) AS person
+        AND (p.field IN ('name', 'email', 'phone', 'website', 'photo') OR p.field LIKE '%:' || m.body_id)), '{}'::jsonb) AS person
   FROM members m JOIN entity b ON b.id = m.body_id
   ORDER BY m.body_id, m.person_id`;
 
-interface PersonField { readonly value: unknown; readonly quote: string; readonly url: string; readonly checked: string }
+interface PersonField { readonly value: unknown; readonly quote: string; readonly url: string; readonly checked: string; readonly kind?: string }
 const day = (at: unknown) => new Date(at as string).toISOString().slice(0, 10);
 
 /** Every body's members as readers see them, composed only from live facts and their receipts. */
@@ -37,23 +37,23 @@ export function factRostersFromRows(rows: readonly Record<string, unknown>[]): {
     const membership = row.value as { name: string; office: string | null };
     const office = at("office");
     const value = (field: string) => (typeof at(field)?.value === "string" ? at(field)!.value as string : null);
-    const source = (field: string, fallback: { quote: string; url: string; checked: string }) => {
+    const source = (field: string, fallback: { quote: string; url: string; checked: string; kind?: string }) => {
       const held = at(field) ?? fallback;
       return { sourceUrl: held.url, sourceOrg: new URL(held.url).hostname, collectedAt: day(held.checked), verifiedAt: day(held.checked), quote: held.quote,
-        ...(row.provenance_kind === "OFFICIAL" ? { kind: "OFFICIAL" as const } : {}) };
+        ...(held.kind === "OFFICIAL" ? { kind: "OFFICIAL" as const } : {}) };
     };
-    const own = { quote: String(row.quote), url: String(row.url), checked: String(row.checked_at) };
+    const own = { quote: String(row.quote), url: String(row.url), checked: String(row.checked_at), kind: String(row.provenance_kind) };
     const id = rosterMemberId(bodyId, String(row.person_id), String(row.shown_id));
-    const fields = ["name", "office", "email", "phone", "website", "term_note", "term_start", "term_end"].filter(field => at(field));
+    const fields = ["name", "office", "email", "phone", "website", "photo", "term_note", "term_start", "term_end"].filter(field => at(field));
     const roster = byBody.get(bodyId) ?? { bodyId, bodyName: String(row.body_name), members: [], sourceUrl: own.url,
       sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked), partisanship: "UNDETERMINED" as const };
     if (day(own.checked) > roster.collectedAt) Object.assign(roster, { sourceUrl: own.url, sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked) });
     roster.members.push({ id, personId: String(row.person_id), name: value("name") ?? membership.name,
       officeTitle: (typeof office?.value === "string" ? office.value : membership.office) ?? "Member",
-      termNote: value("term_note"), termStart: value("term_start"), termEnd: value("term_end"),
+      photoUrl:value("photo"), termNote: value("term_note"), termStart: value("term_start"), termEnd: value("term_end"),
       email: value("email"), phone: value("phone"), websiteUrl: value("website"), contactKind: "PUBLIC_OFFICE",
       membershipSource: { sourceUrl: own.url, sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked) },
-      fieldSources: Object.fromEntries(fields.map(field => [{ website: "websiteUrl", term_note: "termNote", term_start: "termStart", term_end: "termEnd" }[field] ?? field,
+      fieldSources: Object.fromEntries(fields.map(field => [{ photo:"photoUrl", website: "websiteUrl", term_note: "termNote", term_start: "termStart", term_end: "termEnd" }[field] ?? field,
         source(field, own)])) });
     byBody.set(bodyId, roster);
     dispositions.push({ sourceId: id, canonicalId: id, state: "READER_ELIGIBLE", reason: "Each fact checked against its saved source page." });

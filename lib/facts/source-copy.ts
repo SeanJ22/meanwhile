@@ -1,3 +1,4 @@
+import {createHash} from "node:crypto";
 import { visibleText } from "../extract/visible-text.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { SavedCopy } from "./check.ts";
@@ -31,12 +32,12 @@ interface CopyRow {
   readonly contentHash: string;
 }
 
-/** One row per vault artifact: the key is the artifact id the vault resolves to its exact bytes. */
+/** One source URL per saved content artifact; fresh reads advance its check time. */
 async function saveCopy(query: Query, row: CopyRow): Promise<number> {
   const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
-    ON CONFLICT (blob_key) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
-  [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}`,
+    ON CONFLICT (blob_key) DO UPDATE SET fetched_at = greatest(source_copy.fetched_at,EXCLUDED.fetched_at) RETURNING id`,
+  [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}:${createHash("sha256").update(row.finalUrl).digest("hex")}`,
     isArchive(row.finalUrl)]);
   return Number(saved!.id);
 }

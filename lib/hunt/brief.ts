@@ -12,7 +12,6 @@ export interface TriedStep {
 }
 
 const HELD_LINES = 120;
-const SUBJECT_LINES = 120;
 const NOTE_LINES = 12;
 const TRIED_LINES = 40;
 
@@ -33,6 +32,8 @@ export function huntBrief(packet: HuntPacket, context: {
 }): string {
   const lines: string[] = [`Government: ${packet.label} [${packet.governmentId}]`];
   lines.push(context.officialWebsite ? `Official website: ${context.officialWebsite}` : "Official website: not recorded yet.");
+  const directions=(packet as HuntPacket & {directions?:readonly string[]}).directions;
+  if(directions?.length)lines.push("","SEAN'S DIRECTIONS FOR THIS HUNT — work the named blanks first:",...directions.map(note=>`- ${note}`));
   lines.push("", `WHAT WE ALREADY HOLD (${packet.held.length}) — never look for these again; read_held opens them.`);
   if (packet.held.length === 0) lines.push("- nothing yet");
   for (const fact of packet.held.slice(0, HELD_LINES)) {
@@ -42,15 +43,12 @@ export function huntBrief(packet: HuntPacket, context: {
   lines.push("", `BLANKS TO FILL (${packet.blanks.length}). Report each value with report_finding the moment a page states it: subjectId in [brackets], field = the checklist id.`);
   const families = new Map<string, PacketField[]>();
   for (const blank of packet.blanks) families.set(blank.family, [...families.get(blank.family) ?? [], blank]);
-  let shown = 0;
   for (const [family, blanks] of [...families].sort(([a], [b]) => Object.keys(CHECKLIST_FAMILIES).indexOf(a) - Object.keys(CHECKLIST_FAMILIES).indexOf(b))) {
     lines.push(`${CHECKLIST_FAMILIES[family]?.name ?? family}:`);
     for (const [subjectId, fields] of bySubject(blanks)) {
-      if (shown++ >= SUBJECT_LINES) break;
       lines.push(`- ${fields[0]!.subjectLabel} [${subjectId}]: ${fields.map(f => `${f.checklistId} ${fieldName(f.requirement)}`).join("; ")}`);
     }
   }
-  if (shown > SUBJECT_LINES) lines.push("- more blanks remain; fill these first");
   if (context.tried.length > 0) {
     lines.push("", "WHAT WAS TRIED BEFORE — do not repeat a step that failed unless something about it changed:");
     for (const step of context.tried.slice(-TRIED_LINES)) lines.push(`- ${step.what}: ${step.result}`);

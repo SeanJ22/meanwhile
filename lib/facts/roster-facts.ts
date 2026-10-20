@@ -9,6 +9,8 @@ import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 
 export interface RosterMember {
+  /** A contact or portrait attachment does not re-confirm the person’s seat. */
+  readonly publishMembership?: boolean;
   readonly recordId: string;
   readonly fields: Readonly<Record<string, unknown>>;
   readonly fieldSources?: Readonly<Record<string, FieldSource>>;
@@ -95,13 +97,15 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
       count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge }),
         member.recordId, sourceField);
     };
-    await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
+    if(member.publishMembership!==false)await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
     await claim(person, "name", "officeholder", name, written, "name");
     if (office) await claim(person, `office:${body.id}`, "officeholder", office, office, "office");
     if (member.fields.contactKind !== "PERSONAL") for (const [from, field] of CONTACTS) {
       const value = text(member.fields[from]);
       if (value) await claim(person, field, "contact", value, value, from);
     }
+    const photo=text(member.fields.photoUrl);
+    if(photo)await claim(person,"photo","portrait",photo,photo,"photoUrl");
     for (const [from, field] of TERMS) {
       const value = text(member.fields[from]);
       const quote = member.fieldSources?.[from]?.quote;

@@ -38,6 +38,7 @@ export interface HeldFact extends PacketField {
 }
 
 export interface HuntPacket {
+  readonly directions?: readonly string[];
   /** The government's OCD division. */
   readonly governmentId: string;
   readonly label: string;

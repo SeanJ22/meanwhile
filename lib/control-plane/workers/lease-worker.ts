@@ -1,4 +1,5 @@
 import { EMPTY_SPEND } from "../spend-window.ts";
+import {exaModelRequest,exaRunOf} from '../../hunt/exa-transport.ts';
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { RepositoryLockHeld } from "../repository/types.ts";
@@ -45,7 +46,8 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
     ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),
       transportFor: jurisdiction => { broker.assignment(current, jurisdiction); return request => broker.call<ModelResponse>("model", request); } } : {}),
     ...(config.searchEnabled ? { search: request => broker.call<HuntSearchResult>("search", request),
-      searchBudget: { take: host => broker.call<string | null>("search-take", host), done: async host => { await broker.call("search-done", host); } } } : {}),
+      searchBudget: { take: (host:string,lifetimeMs?:number) => broker.call<string | null>("search-take", {host,lifetimeMs}), done: async(host:string) => { await broker.call("search-done", host); },
+        research:async(request:Parameters<typeof exaModelRequest>[0])=>exaRunOf(await broker.call<ModelResponse>("model",exaModelRequest(request))) } } : {}),
     auditCeilingUsd: config.ceilingUsd, lifetimeHuntSubject: subject => config.fundedSubjects.includes(subject),
     endsAt, progress: () => broker.send("progress", "", null) });
   const pending = new Set(config.taskIds);

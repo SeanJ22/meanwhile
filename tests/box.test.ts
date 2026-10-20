@@ -115,7 +115,7 @@ test("a Box row keeps its finding's field and value; a row from before that gain
   const repos = createMemoryRepositories();
   const scout = scoutResult([{ subjectId: "person:alice", field: "officeholder.name", value: "Alice Adams", kind: "RECORD", summary: "Clerk",
     exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] }], "roster");
-  const id = boxFindingId(input);
+  const id = boxFindingId({ ...input, fact: { field: "officeholder.name", value: "Alice Adams", recordClass: "roster" } });
   await indexScoutFindings(repos.boxFindings, scout, NOW);
   const held = await repos.boxFindings.mustRead(id);
   const { fact: _fact, lastRecordedAt: _at, ...older } = held.value;

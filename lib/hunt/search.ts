@@ -25,8 +25,9 @@ export interface SearchHit {
 
 /** Admits one paid provider request, or says why not; `done` returns the slot. */
 export interface SearchBudget {
-  take(host: string): Promise<string | null>;
-  done(host: string): Promise<void>;
+  take(host: string, lifetimeMs?: number, holder?: string): Promise<string | null>;
+  done(host: string, holder?: string): Promise<void>;
+  research?(request: import("./exa-transport.ts").ExaResearchRequest): Promise<import("./exa-agent.ts").ExaAgentRun>;
 }
 
 const BRAVE_WEB = "https://api.search.brave.com/res/v1/web/search";

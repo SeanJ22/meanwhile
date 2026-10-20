@@ -396,6 +396,10 @@ export interface ArtifactRecord {
   readonly byteLength: number;
   readonly contentType: string;
   readonly canonicalUrl: string;
+  readonly httpStatus?: number | null;
+  readonly retrievalUrl?: string;
+  readonly permission?: import("../evidence/artifact.ts").Artifact["permission"];
+  readonly transport?: import("../evidence/artifact.ts").Artifact["transport"];
 
   readonly partial: boolean;
   readonly recordedAt: string;

@@ -1,5 +1,6 @@
 import {huntFindingSubject} from './finding-subject.ts';
 import {prepareLiveExaBody} from './body-target-runtime.ts';
+import {liveHuntDirections} from './directions.ts';
 /** Exa's facts go into the Box through the hunter's own report path,
  * so each cited page is saved and each fact is checked the same way. */
 import type { DeclaredExecutor, WorkOutcome } from "../control-plane/scheduler/dispatch.ts";
@@ -24,6 +25,7 @@ export function exaAgentExecutor(deps: {
   readonly key: string | undefined;
   readonly now: () => string;
   readonly instructions: () => Promise<string>;
+  readonly directions?: (input:{workItemId:string;governmentId:string})=>Promise<readonly string[]>;
   readonly packetNow: () => Promise<HuntPacket | null>;
   /** The paid-search budget admits each run; a refused, unread or absent budget sends nothing. */
   readonly budget: SearchBudget | undefined;
@@ -59,7 +61,8 @@ export function exaAgentExecutor(deps: {
       }
       let run: Awaited<ReturnType<typeof runExaAgent>>;
       try {
-        run = await runExaAgent({ packet, key, instructions: await deps.instructions(),
+        const directedPacket={...packet,directions:packet.directions??await(deps.directions??liveHuntDirections)({workItemId,governmentId:packet.governmentId})};
+        run = await runExaAgent({ packet:directedPacket, key, instructions: await deps.instructions(),
           deadlineMs: Math.min(Date.now() + EXA_AGENT_WALL_MS, deps.endsAt ?? Number.POSITIVE_INFINITY),
           ...(deps.progress ? { onPoll: deps.progress } : {}), ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {}) });
       } finally {

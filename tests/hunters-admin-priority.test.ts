@@ -13,12 +13,14 @@ import {buildRegistry} from '../lib/control-plane/scheduler/registry.ts';
 import {syncObligations,openOccurrence} from '../lib/control-plane/scheduler/durable.ts';
 import {placeFirstRows} from '../lib/control-plane/scheduler/shadow-loop.ts';
 import {unitMatchesTarget} from '../lib/control-plane/scheduler/dispatch-target.ts';
+import {workItemHuntDirections} from '../lib/hunt/directions.ts';
 
 const ROOT=fileURLToPath(new URL("../",import.meta.url));
 
 test("an Admin order retains its budget and receipt while its place precedes background source work", async () => {
   const now='2026-10-20T10:00:00.000Z',repos=createMemoryRepositories(),place='ocd-division/country:us/state:az/place:example';
-  const accepted=await submit({type:'fleet.deployHere',subject:'fleet',input:{note:'Send agents to Example AZ',budgetUsd:1},stateVersion:null,idempotencyKey:'hn01-priority-check',caller:'OWNER_SESSION',actorRef:'isolated-check'}, {repos,now:()=>now,currentStateVersion:null,codeSha:null,readPlaceScore:async()=>null,wake:null});
+  const note='Send agents to Example AZ. Fill OFF-17 portraits first.';
+  const accepted=await submit({type:'fleet.deployHere',subject:'fleet',input:{note,budgetUsd:1},stateVersion:null,idempotencyKey:'hn01-priority-check',caller:'OWNER_SESSION',actorRef:'isolated-check'}, {repos,now:()=>now,currentStateVersion:null,codeSha:null,readPlaceScore:async()=>null,wake:null});
   assert.equal(accepted.ok,true,accepted.receipt.says);
   const [intent]=readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch;
   assert.equal(intent.budgetUsd,1);
@@ -43,6 +45,7 @@ test("an Admin order retains its budget and receipt while its place precedes bac
   const packet=synchronized.all.find(row=>row.recordClass==='HUNT_PACKET');assert.ok(packet);
   const occurrence=await openOccurrence(repos,{obligation:packet,dueAt:now,now});assert.ok(occurrence);
   assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions,[intent.intentId]);
+  assert.deepEqual(await workItemHuntDirections(repos,{workItemId:occurrence.workItem.id,governmentId:place}),[note]);
   const priority=new Set([...sourceRows, ...pass.units.map(unit=>({id:unit.obligation.id,subjectId:unit.obligation.subjectId}))].filter(row=>unitMatchesTarget(target.target,row)).map(row=>row.id));
   const queue=placeFirstRows([sourceRows.find(row=>row.subjectId===background.id)!,sourceRows.find(row=>row.subjectId===focus.id)!].map(row=>({obligation:row})),priority);
   assert.equal(queue[0].obligation.subjectId,focus.id);

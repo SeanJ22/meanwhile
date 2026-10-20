@@ -82,9 +82,6 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
   };
 }
 
-/* ==========================================================================
- * THE REGISTRY — every entry describes its behavior
- * ======================================================================= */
 
 test("ADM-C6: every registry entry carries a full definition", () => {
   const definitions = actionDefinitions();
@@ -123,9 +120,6 @@ test("ADM-C6: an action type that is not registered resolves to nothing, inherit
   }
 });
 
-/* ==========================================================================
- * 1 · A PERMITTED ACTION SUCCEEDS, AND THE RECEIPT SAYS WHAT HAPPENED
- * ======================================================================= */
 
 test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that answers §3.7", async () => {
   const repos = createMemoryRepositories();
@@ -155,7 +149,7 @@ test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that
   );
 
   assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 0, "the fix list no longer waits on a local script");
-  const held = (await repos.adminConfig.mustRead("current")).value;
+  const held = (await repos.adminConfig.mustRead("current", { fixList: true })).value;
   assert.equal(held.fixList?.length, 1, "the queue add did not reach the fix list");
   assert.equal(held.fixList?.[0].state, "OPEN");
 
@@ -175,9 +169,6 @@ test("ADM-C6: the receipt log holds no field the aggregate-only boundary refuses
   assert.ok(keys.has("actorRef"), "the session reference is carried under a name the boundary allows");
 });
 
-/* ==========================================================================
- * 2 · STALE REFUSAL
- * ======================================================================= */
 
 test("ADM-C6 acceptance 2: an action rendered against a world that has moved is refused as stale", async () => {
   const repos = createMemoryRepositories();
@@ -211,9 +202,6 @@ test("ADM-C6: an action that must quote a version and quotes none is INVALID, no
   assert.equal(relaxed.ok, true, relaxed.receipt.says);
 });
 
-/* ==========================================================================
- * 3 · DUPLICATE SUBMISSION — one receipt, one state change
- * ======================================================================= */
 
 test("ADM-C6 acceptance 3: a duplicate submission returns the same receipt and does not act twice", async () => {
   const repos = createMemoryRepositories();
@@ -315,9 +303,6 @@ test("ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions",
   assert.equal((await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).length, 2);
 });
 
-/* ==========================================================================
- * 5 · OWNER-GATED — an agent cannot decide for the owner
- * ======================================================================= */
 
 test("ADM-C6 acceptance 5: an owner-gated action is refused for an AGENT caller", async () => {
   const repos = createMemoryRepositories();
@@ -366,9 +351,6 @@ test("ADM-C6: the operator chat carries a button's authority for everything but 
   assert.deepEqual(ALLOWED_BY_CALLER.ANONYMOUS, [], "and the ladder says so");
 });
 
-/* ==========================================================================
- * 6 · A REFUSAL WRITES A RECEIPT   ·   7 · UNKNOWN FAILS CLOSED
- * ======================================================================= */
 
 test("ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable receipt", async () => {
   const repos = createMemoryRepositories();
@@ -421,9 +403,6 @@ test("ADM-C6: a request that is not shaped like an action writes nothing at all,
   assert.deepEqual(await readReceipts(repos), [], "a record was written under an id nobody can address");
 });
 
-/* ==========================================================================
- * POSITIVE CONTROL
- * ======================================================================= */
 
 test("ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught here", async () => {
   // Blinding the idempotency read must make the delegated log move twice.
@@ -463,9 +442,6 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
   assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), [], "it acted without being able to check");
 });
 
-/* ==========================================================================
- * THE API FALLBACK TOGGLE
- * ======================================================================= */
 
 test("§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written", async () => {
   const repos = createMemoryRepositories();
@@ -474,9 +450,6 @@ test("§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothin
   assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "a fresh store holds no policy");
 });
 
-/* ==========================================================================
- * THE FLEET SPEND CEILING — the console dial for the rolling-24h model spend
- * ======================================================================= */
 
 test("the Fleet spend ceiling is recorded durably, names who/when/previous, and its absence reads as the fallback", async () => {
   const repos = createMemoryRepositories();
@@ -537,9 +510,6 @@ test("the Fleet spend ceiling rounds to whole cents and a corrupt policy row rea
   assert.equal(stored?.value.fleetSpendCeiling?.previousUsd, FLEET_SAFETY_BOUNDS.rolling24HourModelUsd, "a corrupt prior row reads as the fallback, never as no ceiling");
 });
 
-/* ==========================================================================
- * THE PULSE
- * ======================================================================= */
 
 test("ADM-34: the pulse names every read it could not make and renders none of them as zero", async () => {
   const repos = createMemoryRepositories();
@@ -607,9 +577,6 @@ test("ADM-34: the pulse makes no list() call — the reads it may not make are r
   assert.ok(pulse.revision.length > 0);
 });
 
-/* ==========================================================================
- * THE AGENT-JOB RECORD — reserved storage, minimal and honest
- * ======================================================================= */
 
 test("ADM-C6: the agent-job log holds a job's progression without ever editing a record", async () => {
   const repos = createMemoryRepositories();
@@ -656,9 +623,6 @@ test("ADM-34: a delegated-job row this strip cannot read makes the count unknown
   );
 });
 
-/* ==========================================================================
- * THE ROUTES — the security sequence, and one door for both shapes of caller
- * ======================================================================= */
 
 function request(host: string, path: string, init: { method?: string; headers?: Record<string, string>; body?: string } = {}): NextRequest {
   return new NextRequest(`https://${host}${path}`, {
@@ -748,9 +712,6 @@ test("ADM-C6: the route is one door — a no-JS form and a JSON fetch build the 
   assert.equal(inputDigest({ a: 1, b: 2 }), inputDigest({ b: 2, a: 1 }));
 });
 
-/* ==========================================================================
- * THE SNAPSHOT-FED COUNTS
- * ======================================================================= */
 
 test("ADM-34: the counts come from the published snapshot, so the strip and the page agree", async () => {
   const repos = createMemoryRepositories();
@@ -825,9 +786,6 @@ test("ADM-34: the counts come from the published snapshot, so the strip and the 
   assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, null);
 });
 
-/* ==========================================================================
- * THE RECEIPT LOG IS ADDRESSED BY ONE KEY
- * ======================================================================= */
 
 test("ADM-C6: every receipt lands under the one declared log key", async () => {
   const repos = createMemoryRepositories();
@@ -847,7 +805,7 @@ test("a place target is recorded with its receipt, changed in place, refused whe
 
   const first = await send("target-key-01", "95");
   assert.equal(first.ok, true, first.receipt.says);
-  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: true });
   assert.deepEqual(after?.value.placeTargets?.map((t) => [t.key, t.goalPercent, t.decidedBy, t.receiptId]),
     [["geo:az.zcta.85635", 95, "adm_test-session", receiptIdFor("config.setPlaceTarget", "target-key-01")]], "the target names who set it and the receipt");
   assert.equal(after?.value.fleetSpendCeiling?.rollingCeilingUsd, 250, "setting a target keeps the ceiling");
@@ -856,7 +814,7 @@ test("a place target is recorded with its receipt, changed in place, refused whe
   const changed = await send("target-key-02", 90);
   assert.equal(changed.ok, true);
   assert.match(changed.receipt.says, /it was 95%/);
-  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets?.length, 1, "one target per place");
+  assert.equal((await repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: true }))?.value.placeTargets?.length, 1, "one target per place");
 
   for (const [i, raw] of ["0", "101", "abc", -5].entries()) {
     const refused = await send(`target-bad-${i}`, raw);
@@ -867,7 +825,7 @@ test("a place target is recorded with its receipt, changed in place, refused whe
 
   const cleared = await send("target-key-03", null);
   assert.equal(cleared.ok, true);
-  assert.deepEqual((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value.placeTargets, []);
+  assert.deepEqual((await repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: true }))?.value.placeTargets, []);
 });
 
 test("a data switch is recorded with its receipt, changed in place, refused for an unknown number or audience, and keeps every other decision", async () => {
@@ -879,7 +837,7 @@ test("a data switch is recorded with its receipt, changed in place, refused for 
   const on = await send("switch-key-001", { recipe: "word-cloud", audience: "customer:acme", on: true });
   assert.equal(on.ok, true, on.receipt.says);
   assert.match(on.receipt.says, /now on for customer acme \(it was off\)/);
-  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: true });
   assert.deepEqual(after?.value.dataSwitches?.map((d) => [d.recipe, d.audience, d.on, d.decidedBy, d.receiptId]),
     [["word-cloud", "customer:acme", true, "adm_test-session", receiptIdFor("config.setDataSwitch", "switch-key-001")]], "the switch names who set it and the receipt");
   assert.equal(after?.value.placeTargets?.[0]?.goalPercent, 80, "a switch keeps the place target");

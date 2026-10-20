@@ -75,7 +75,7 @@ function checkCycleFailsClosed(src: string): void {
   /* 1. An unreadable intent log is captured, never read as "not paused". */
   assert.match(
     src,
-    /let intentLogUnreadable: string \| null = null;\s*try \{\s*intentLog = \[\.\.\.\(await repos\.researchIntents\.read\(RESEARCH_INTENT_LOG_KEY\)\)\];\s*\} catch \(error\) \{\s*intentLogUnreadable = /,
+    /let intentLogUnreadable: string \| null = null;\s*try \{\s*intentLog = \[\.\.\.\(await readPlanningIntents\(repos\)\)\];\s*\} catch \(error\) \{\s*intentLogUnreadable = /,
     "an unreadable intent log is not captured",
   );
   assert.doesNotMatch(src, /treats the owner as not paused/, "the cycle still treats an unreadable log as no pause");
@@ -92,7 +92,7 @@ function checkCycleFailsClosed(src: string): void {
   assert.match(closure[0], /paused: intents\.paused,/);
   assert.match(closure[0], /runnerPaused: intents\.runnerPause\.paused,/, "the runner pause does not close the lane");
   assert.match(closure[0], /unreadableControls,/);
-  assert.match(src, /paused: intents\.runnerPause\.paused,\s*\/\*[^*]*\*\/\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
+  assert.match(src, /paused: intents\.runnerPause\.paused,\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
 
   /* 4 & 5. The row is read through the trusted reading, before the lane is decided. */
   assert.match(src, /const \{ config, holdPaidWork: configHold \} = adminConfigForPaidWork\(configRead\);/);
@@ -125,7 +125,7 @@ function checkFreeStandingWork(src: string, walk = source("scripts/platform-cens
   assert.match(walk, /runCensusState/);
   assert.doesNotMatch(walk, /modelLaneEnabled|laneClosure|scoutFor/);
   assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents\.runnerPause\.paused;/);
-  assert.match(src, /const dispatchScopes = expansionPlan\?\.scopes \?\? \[\];/);
+  assert.match(src, /const dispatchScopes = \(expansionPlan\?\.scopes \?\? \[\]\)\.filter\(scope=>scope\.decision\.budgetUsd>0\);/);
   assert.match(src, /for \(const \{ intent \} of dispatchDetails\)[\s\S]*?for \(const t of carriedDispatchTargets/);
   assert.match(src, /for \(const scope of dispatchScopes\) add\(scopeWorkTarget\(scope\)\)/);
   assert.match(src, /applyManualSourceGaps\(repos, dispatchScopes,/,

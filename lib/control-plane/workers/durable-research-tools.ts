@@ -12,7 +12,7 @@ export interface ResearchRuntimeTools {
   readonly openBytesFor?: (subjectId: string) => ScoutToolContext["openBytes"];
   /** Selected same-period sibling captures, brokered from canonical source and completed-rung records. */
   readonly siblingHeldRootFor?: (input:{readonly artifactId:string;readonly originWorkItemId:string;
-    readonly childWorkItemId:string;readonly project:string})=>string|null;
+    readonly childWorkItemId:string;readonly project:string})=>string|null|Promise<string|null>;
   readonly now: () => string;
 }
 

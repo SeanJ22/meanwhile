@@ -1,4 +1,3 @@
-/** The fix list lives on the control plane: add, survive a reload, complete with before and after, come back. */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -10,7 +9,7 @@ import { v6FixesView } from "../lib/control-plane/admin-view/v6-fixes-read.ts";
 
 const at = "2026-10-05T16:00:00Z";
 const deps = (repos = createMemoryRepositories()) => ({ repos, now: () => at, currentStateVersion: null, codeSha: null });
-const read = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+const read = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { fixList: true })).value as AdminConfig;
 
 test("an item added from code is Open, once, and stays after a fresh read", async () => {
   const repos = createMemoryRepositories();
@@ -166,4 +165,39 @@ test("BR-04: old queued gaps migrate once through the live gateway",async()=>{
   assert.equal(fixItems(await read(repos)).length,1);assert.ok(fixItems(await read(repos))[0].dispatch);
   assert.equal((await repos.adminReceipts.readAll()).filter(r=>r.type==="queue.add").length,1);
   assert.equal((await read(repos)).legacyFixQueueImportedAt,at);
+});
+
+test("older shown updates remain durable and are not announced again when a source retries", async () => {
+  const { addUpdate, addUpdates, takeUnshownUpdates } = await import("../lib/control-plane/updates.ts");
+  const repos = createMemoryRepositories();
+  const updates = Array.from({ length: 205 }, (_, index) => ({ id: `retained:${index}`, what: `Change ${index}`, at, label: "TESTING" as const }));
+  await addUpdates(repos, updates, at);
+  assert.equal((await takeUnshownUpdates(repos, at)).length, 200);
+  assert.equal((await takeUnshownUpdates(repos, at)).length, 5);
+  const readConfig = repos.adminConfig.read.bind(repos.adminConfig);
+  const selections: unknown[] = [];
+  repos.adminConfig.read = async (id, sections) => {
+    selections.push(sections);
+    return readConfig(id, sections);
+  };
+  await addUpdate(repos, updates[0]);
+  assert.deepEqual(selections, [{ updates: { ids: [updates[0].id] } }]);
+  assert.deepEqual(await takeUnshownUpdates(repos, at), []);
+  assert.equal((await readConfig(ADMIN_CONFIG_ID, { updates: true }))?.value.updates?.length, 205);
+  assert.equal((await readConfig(ADMIN_CONFIG_ID))?.value.updates, undefined);
+});
+
+test("repairing one item reads its own record and preserves unrelated closed history", async () => {
+  const repos = createMemoryRepositories();
+  const first = await addFixItem(repos, { where: "One place", says: "Missing meeting", by: "The auditor", at });
+  const second = await addFixItem(repos, { where: "Another place", says: "Missing meeting", by: "The auditor", at });
+  const readConfig = repos.adminConfig.read.bind(repos.adminConfig);
+  const selections: unknown[] = [];
+  repos.adminConfig.read = async (id, sections) => {
+    selections.push(sections);
+    return readConfig(id, sections);
+  };
+  await completeFixItem(repos, first, { whatChanged: "Found the meeting", changedBy: "The detective", before: "Missing", after: "Published" }, at);
+  assert.deepEqual(selections, [{ fixList: { ids: [first] } }]);
+  assert.deepEqual((await readConfig(ADMIN_CONFIG_ID, { fixList: true }))?.value.fixList?.map(item => [item.id, item.state]), [[first, "FIXED"], [second, "OPEN"]]);
 });

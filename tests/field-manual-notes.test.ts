@@ -4,25 +4,24 @@ import test from "node:test";
 import { readFieldManual, type FieldManualEntry, type FieldManualRepos } from "../lib/control-plane/field-manual.ts";
 import { fieldManualNotes, seedFieldManualNotes } from "../lib/control-plane/field-manual-notes.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { scoutFieldManualProjection, scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
+import { scoutFieldManualQuery } from "../lib/control-plane/scheduler/field-manual-scout.ts";
 
 const NOW = "2026-10-14T12:00:00.000Z";
 const KINDS = ["SOURCE_PAGE", "SEARCH_ROUTE", "DEAD_END", "WALL", "PLATFORM_NOTE", "SOURCE_REGISTER"];
 const AZ = "ocd-division/country:us/state:az";
 const MARICOPA = `${AZ}/county:maricopa`;
-/** AZ-01's governments as its owed list resolves them: the country, the state, the district, the county, and the cities, towns and school districts inside it. */
+
 const AZ_01 = [
   "ocd-division/country:us", AZ, `${AZ}/cd:1`, MARICOPA,
   ...["phoenix", "scottsdale", "paradise_valley", "fountain_hills", "cave_creek", "carefree"].map(place => `${AZ}/place:${place}`),
   ...["scottsdale", "paradise_valley", "cave_creek", "fountain_hills"].map(name => `${AZ}/school_district:${name}_unified_district`),
 ];
-/** How many notes a hunt packet's brief carries. */
+
 const PACKET_NOTES = 12;
 
-/** The field-manual read a hunt packet's job makes for its government. */
 async function packetNotes(repos: FieldManualRepos, governmentId: string) {
   const opts = { subjectId: governmentId, divisions: [governmentId] };
-  return scoutFieldManualProjection(await readFieldManual(repos, scoutFieldManualQuery(opts)), { ...opts, limit: PACKET_NOTES });
+  return (await readFieldManual(repos,scoutFieldManualQuery({...opts,limit:PACKET_NOTES}))).projection;
 }
 
 test("the notes are one-line rows by state and kind, and the registry rows carry access, licence and status", async () => {

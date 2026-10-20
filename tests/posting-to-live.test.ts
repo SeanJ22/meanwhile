@@ -12,8 +12,7 @@ import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-
-/** Four times kept apart for each change; the clock stops at the reader readback PASS. */
+import { installFactReader } from "../lib/facts/db.ts";
 
 const legistar = MEETING_PARTITION_CONTRACTS.find((partition) => partition.meetingSource === "legistar")!;
 const url = "https://webapi.legistar.com/v1/pima/events";
@@ -87,7 +86,13 @@ test("DB-27: an unchanged stamp is not a new posting", () => {
   assert.equal(rows[0]!.basis, "FIRST_SEEN", "the stamp did not move with this change, so it dates nothing about it");
 });
 
-test("DB-27: read from the store, the clock stops at the readback PASS of the version", async () => {
+test("DB-27: read from the store, the clock stops at the readback PASS of the version", async (t) => {
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
   const store = new MemoryRoutineDataStore();
   const seed = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [meeting("sitting")], agendaDocuments: [], reports: [report(FIRST)], generatedAt: FIRST });
   assert.equal(seed[0]?.outcome.candidate.state, "PROMOTED");
@@ -105,7 +110,9 @@ test("DB-27: read from the store, the clock stops at the readback PASS of the ve
   assert.equal(agenda.liveAt, null, "promoted but not yet read back");
   assert.equal(agenda.minutesToLive, null);
 
-  await repairMeetingReaderProjectionReadbacks(store, [legistar], LIVE, "f".repeat(40));
+  const repaired = await repairMeetingReaderProjectionReadbacks(store, [legistar], LIVE, "f".repeat(40));
+  assert.deepEqual(repaired.map(row => ({ ok: row.ok, error: row.error })), [{ ok: true, error: null }]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   const after = (await readPostingToLive(store, versionId))!.find((row) => row.kind === "AGENDA_LINK")!;
   assert.equal(after.liveAt, LIVE);
   assert.equal(after.minutesToLive, 47, "posted 14:20, live 15:07");

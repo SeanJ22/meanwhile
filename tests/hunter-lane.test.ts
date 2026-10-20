@@ -1,11 +1,3 @@
-/**
- * The standing hunter lane works the round's queue with no
- * 15-minute slice. It re-arms its guards mid-wave, runs plain-code tasks while
- * paid work is held and the paid ones once it opens, picks up each new queue,
- * ends at the end of its life or on a release drain, and releases the request
- * holds it never settled. The round, with the switch on, writes the queue and
- * holds its own model lane closed; the runner starts the lane only then.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
@@ -29,7 +21,7 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
   let arms = 0;
   let reads = 0;
   const REFRESH_MS = 5 * 60_000;
-  /* The refresher's waits are passive, like a real timer: they end when the lane's own waits or work move the clock past them. */
+
   const passive: { at: number; done: () => void }[] = [];
   const pass = (ms: number): void => {
     now += ms;
@@ -45,7 +37,7 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
     arm: async () => options.arms[Math.min(arms++, options.arms.length - 1)],
     readQueue: () => options.queues[Math.min(reads++, options.queues.length - 1)],
     runWave: async ({ queue, paidOpen }) => {
-      /* A wave takes six minutes: longer than a refresh, so the guards change under it. */
+
       for (let i = 0; i < 6; i += 1) { pass(60_000); await new Promise(done => setImmediate(done)); }
       waves.push({ queue, paidOpen, guardsAtEnd: lane.current() });
       return queue.taskIds.map(id => ({ obligationId: id }) as never);
@@ -119,14 +111,14 @@ test("CH-24 lane: the round under the switch closes its own model lane after any
   assert.match(round, /const laneClosure = modelLaneClosure\(\{[\s\S]{0,800}?paidWorkInHunterLane: CONTINUOUS_HUNTERS,\n  unreadableControls,\n\}\);/);
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
   const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
-  assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT\)\)/);
+  assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT,PLANNING_STATE\)\)/);
   assert.match(wave, /return \{ \.\.\.planned, dispatches: \[\.\.\.queueFailures\], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 \};/);
 });
 
 test("CH-24 lane: the runner starts the lane only under the switch, names one reading path for every checkout, and drains it on a release", () => {
   const runner = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
   assert.match(runner, /if \(!CONTINUOUS_HUNTERS \|\| canary \|\| runtimeAdmissionsHeld\) return;/);
-  assert.match(runner, /process\.env\.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath\(ROOT\)/);
+  assert.ok(!runner.includes("process.env.WTP_HUNTER_LANE_ARMING ="));
   assert.match(runner, /\{ id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS \+ HUNTER_WORKER_WALL_MS, run: runHunterLane \}/);
   assert.match(runner, /noProgressMs: RUNTIME_NO_PROGRESS_MS,\n    onStdout: \(_id, output\) => process\.stdout\.write\(output\),\n    onStderr: \(_id, output\) => process\.stderr\.write\(output\),\n    onStarted: \(_id, child\) => \{ hunterLaneChild = child; \},/);
   assert.equal(runner.match(/drainHunterLane\(\);/g)?.length, 2, "both release paths drain the lane");

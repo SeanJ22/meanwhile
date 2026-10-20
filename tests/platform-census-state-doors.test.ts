@@ -25,7 +25,9 @@ test("the census runner casts the extracted jsonb before it is matched with LIKE
 async function database(): Promise<PGlite> {
   const pg = new PGlite();
   await pg.exec(`CREATE TABLE cp_doors (id text PRIMARY KEY, value jsonb NOT NULL);
-    CREATE TABLE cp_work_items (id text PRIMARY KEY, value jsonb NOT NULL);`);
+    CREATE TABLE cp_work_items (id text PRIMARY KEY, value jsonb NOT NULL);
+    CREATE TABLE cp_work_items_archive (LIKE cp_work_items INCLUDING ALL);
+    CREATE VIEW cp_work_items_history AS SELECT * FROM cp_work_items UNION ALL SELECT * FROM cp_work_items_archive;`);
   const doors: [string, object][] = [
     ["by-ocd", { ocdId: "ocd-division/country:us/state:az/county:pima", bodyIds: [] }],
     ["by-body", { ocdId: "ocd-division/country:us/state:fl/place:x", bodyIds: ["ocd-division/country:us/state:az/place:mesa#governing"] }],
@@ -33,7 +35,7 @@ async function database(): Promise<PGlite> {
     ["elsewhere", { ocdId: "ocd-division/country:us/state:fl/place:z", bodyIds: ["ocd-division/country:us/state:fl/place:z#governing"] }],
   ];
   for (const [id, value] of doors) await pg.query("INSERT INTO cp_doors VALUES ($1, $2::jsonb)", [id, JSON.stringify(value)]);
-  await pg.query("INSERT INTO cp_work_items VALUES ('w1', $1::jsonb)", [JSON.stringify({ publicationOutcome: { doorId: "by-plan" }, autonomousPlan: { jurisdiction: "az" } })]);
+  await pg.query("INSERT INTO cp_work_items_archive VALUES ('w1', $1::jsonb)", [JSON.stringify({ publicationOutcome: { doorId: "by-plan" }, autonomousPlan: { jurisdiction: "az" } })]);
   return pg;
 }
 

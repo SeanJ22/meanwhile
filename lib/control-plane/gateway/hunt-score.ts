@@ -1,4 +1,4 @@
-/** BR-12/13: capture scores at acceptance and compare them with the same live place score later. */
+import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { readPlaceOwed } from "../admin-view/place-owed-read.ts";
 import { scorePlace } from "../admin-view/place-scorecard.ts";
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
@@ -26,7 +26,7 @@ export async function scoresAtAcceptance(type:string,input:Readonly<Record<strin
     :type==="expansion.scope.setMany"?(input.items as readonly {geography:ExpansionScopeGeography}[]).map(i=>i.geography):[];
   if(!geographies.length)return undefined;
   const result:HuntAcceptanceScore[]=[];
-  // Same place memo and at most eight reads in flight; this never creates work or changes a budget.
+
   for(let i=0;i<geographies.length;i+=8) result.push(...await Promise.all(geographies.slice(i,i+8).map(async geography=>{
     const placeKey=huntPlaceKey({geography} as Parameters<typeof huntPlaceKey>[0]);
     return {placeKey,scopeKey:scopeKeyOf(geography),label:geography.label,before:await read(placeKey).catch(()=>null)};
@@ -38,31 +38,39 @@ export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:A
   const accepted=receipt.huntScores;
   if(!accepted?.length)return core;
   try{
-    const [held,state]=await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),repos.researchState.readNarrowed(RESEARCH_STATE_ID,{assignments:true})]);
-    const config=held&&isAdminConfig(held.value)?held.value:null;
-    const assignments=(state?.value as {assignments?:AssignmentCycleReading}|undefined)?.assignments;
-    const scopes=config?expansionScopesOf(config):null;
-    const current=await Promise.all(accepted.map(score=>read(score.placeKey).catch(()=>null)));
-    const finished=accepted.every(score=>{
+    const goals=new Map<string,number>();
+    const current:(PlaceScoreReading|null)[]=[];
+    let finished=true,completedAt:string|null=null;
+    for(const score of accepted) {
+      const place=parseV6PlaceKey(score.placeKey);
+      if(!place || place.kind==="country")throw new Error("A hunt score needs one state");
+      const [held,state]=await Promise.all([
+        repos.adminConfig.read(ADMIN_CONFIG_ID,{placeTargets:{ids:[score.placeKey]},expansionScopes:{ids:[score.scopeKey]}}),
+        repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${place.state}`,{assignments:true})]);
+      const config=held&&isAdminConfig(held.value)?held.value:null;
+      const assignments=(state?.value as {assignments?:AssignmentCycleReading}|undefined)?.assignments;
+      const scopes=config?expansionScopesOf(config):null;
       const assignment=assignments?.assignments.find(a=>a.key===score.scopeKey&&a.ref===(score.assignmentRef??receipt.receiptId));
       const stopped=Boolean(scopes&&scopes.malformed===0&&!scopes.scopes.some(s=>s.key===score.scopeKey));
-      return stopped||assignment?.completion?.kind==="COMPLETE";
-    });
+      finished &&= stopped||assignment?.completion?.kind==="COMPLETE";
+      completedAt=assignments?.at??completedAt;
+      goals.set(score.placeKey,placeTargetOf(config,score.placeKey)?.goalPercent??100);
+      current.push(await read(score.placeKey).catch(()=>null));
+    }
     const before=accepted.map(score=>`${score.label}: ${scoreWords(score.before)}`).join("; ");
     const after=accepted.map((score,i)=>`${score.label}: ${scoreWords(current[i])}`).join("; ");
     const known=accepted.every((s,i)=>s.before?.percent!==null&&s.before!==null&&current[i]?.percent!==null&&current[i]!==null);
     const done=known?accepted.reduce((n,s,i)=>n+Math.max(0,current[i]!.percent!-s.before!.percent!),0):null;
-    const of=known?accepted.reduce((n,s)=>n+Math.max(0,(placeTargetOf(config,s.placeKey)?.goalPercent??100)-s.before!.percent!),0):null;
+    const of=known?accepted.reduce((n,s)=>n+Math.max(0,(goals.get(s.placeKey)??100)-s.before!.percent!),0):null;
     return {...core,state:finished?"applied":core.state==="applied"?"in-progress":core.state,
       words:finished?"Done. The place score before and after is shown below.":core.state==="applied"?"The runner has the hunt; its progress is shown below.":core.words,
-      progress:{done,of},change:{before,after},at:finished?assignments?.at??core.at:core.at};
+      progress:{done,of},change:{before,after},at:finished?completedAt??core.at:core.at};
   }catch{return {...core,state:"unread",words:"The hunt is saved; its progress could not be read just now."};}
 }
 
-/** Existing lifetime hunts retain their original assignment identity when edited. */
 export async function bindScoreAssignments(repos:ControlPlaneRepositories,scores:readonly HuntAcceptanceScore[],receiptId:string):Promise<readonly HuntAcceptanceScore[]> {
   try {
-    const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{ids:scores.map(score=>score.scopeKey)}});
     if(!held||!isAdminConfig(held.value))return scores;
     const scopes=expansionScopesOf(held.value).scopes;
     return scores.map(score=>{ const scope=scopes.find(s=>s.key===score.scopeKey); return {...score,assignmentRef:scope&&(scope.latestDecisionReceiptId===receiptId||scope.receiptId===receiptId)?scope.receiptId:undefined}; });

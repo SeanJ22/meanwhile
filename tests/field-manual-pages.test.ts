@@ -1,23 +1,12 @@
-/**
- * Every role's starting page, rendered from the same manual before and after
- * the manual moved to one row per entry. `fixtures/field-manual-pages/before.json`
- * was rendered by the single-document code from `manual.json` (the document as
- * that code stored it) before the code was replaced. Here the document is
- * copied into rows the way production copies it, each page is rendered again,
- * and every difference must be one of the intended changes listed below.
- * The rows each role read for one job (its slice) are measured against what it
- * renders (its page).
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { copyFieldManualDocument, copiedReach, type SingleDocumentManual } from "../lib/control-plane/field-manual-copy.ts";
+import { copyFieldManualPage, copiedReach } from "../lib/control-plane/field-manual-copy.ts";
 import { fieldManualLine, readFieldManual, type FieldManualEntry, type FieldManualRead } from "../lib/control-plane/field-manual.ts";
 import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
 import { readValidatorManual } from "../lib/control-plane/promotion/validator-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import type { Persisted } from "../lib/control-plane/repository/types.ts";
 import { engineerJob } from "../lib/control-plane/workers/engineering-adapter.ts";
 import { routeParse } from "../lib/control-plane/workers/model-parser.ts";
 import { acquirerQuery } from "../lib/control-plane/workers/research-runtime.ts";
@@ -32,25 +21,9 @@ const before = JSON.parse(readFileSync(new URL("before.json", dir), "utf8")) as 
 };
 const NOW = "2026-10-07T12:00:00.000Z";
 
-/** The old document table in memory, as the copy reads it. */
-export function memoryDocument(entries: readonly FieldManualEntry[]): SingleDocumentManual & { readonly retired: () => readonly string[] } {
-  const rows = new Map<string, Persisted<{ entries: readonly FieldManualEntry[] }>>([["live", { id: "live", revision: 3, updatedAt: NOW, value: { entries } }]]);
-  return {
-    read: async (id) => rows.get(id) ?? null,
-    retire: async (id, revision, as) => {
-      const row = rows.get(id);
-      if (!row || row.revision !== revision) return false;
-      rows.delete(id);
-      rows.set(as, { ...row, id: as });
-      return true;
-    },
-    retired: () => [...rows.keys()],
-  };
-}
-
 async function copied() {
   const repos = createMemoryRepositories();
-  const report = await copyFieldManualDocument(memoryDocument(document.entries), repos, NOW);
+  const report = await copyFieldManualPage(repos,document.entries,NOW);
   assert.ok(report);
   return { repos, report };
 }
@@ -84,7 +57,6 @@ async function renderAfter(repos: ReturnType<typeof createMemoryRepositories>) {
   return { pages, reads };
 }
 
-/** The intended differences, each with the reason a line may leave or join a page. */
 const INTENDED = {
   OTHER_PLACE: "a lesson about another place's own source stays with that place",
   NO_PLACE: "a lesson that names no place no longer applies everywhere by default",
@@ -135,7 +107,7 @@ test("every role's starting page is the old page except for the listed intended 
   const rows = (await repos.fieldManual.list()).map((row) => row.value);
   const tally: Record<string, Record<string, number>> = {};
   for (const [role, byJob] of Object.entries(before.pages)) {
-    // The Scout's brief page is gone; hunters read the manual through their packet's brief.
+
     if (role === "SCOUT" || role === "DETECTIVE") continue;
     for (const [key, old] of Object.entries(byJob)) {
       const now = after.pages[role]![key]!;

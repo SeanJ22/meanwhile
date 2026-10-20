@@ -68,8 +68,6 @@ function log(line: string): void {
   console.log(`owner-snapshot · ${line}`);
 }
 
-/* The runner ends a child that prints no new line for ten minutes (RUNTIME_NO_PROGRESS_MS),
-   so every finished collection step prints one. */
 function stepDone(what: string): void {
   log(`${what} (${Math.round((Date.now() - NOW.getTime()) / 1000)}s into this publish)`);
 }
@@ -80,17 +78,15 @@ const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
   ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
   : null;
 
-/** Candidate display names belong to the canonical candidate-profile projection, not this snapshot. */
+// Candidate display names belong to the canonical candidate-profile projection, not this snapshot.
 function candidateNames(): Record<string, string> {
   return {};
 }
 
-/** Measured spend per Eastern calendar day over the trailing fortnight. */
 function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
   return reads === null ? [] : spendByDayOf(reads.fold.costs.days);
 }
 
-/** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
 interface CycleRecord {
   risk?: {
     obligationsScheduled?: number;
@@ -146,7 +142,6 @@ const registeredUnits =
     : providerRows.reduce((n, p) => n + (typeof p.units === "number" ? p.units : 0), 0);
 const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 
-/** Read once so every cost row and the by-state deployment come from one instant. Null when the store was not opened. */
 interface ControlPlaneReads {
   readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof billingAttributionOf>[0]["scopes"];
@@ -162,7 +157,7 @@ interface ControlPlaneReads {
 async function readControlPlane(repos: ControlPlaneRepositories, existing: CarriedForward | null): Promise<ControlPlaneReads> {
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds, prior, research, askGaps] = await Promise.all([
-    repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+    repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     // Only live holds count as set aside.
     readLiveSpendHolds(repos, new Date().toISOString()).catch(() => null),
     repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID),
@@ -203,7 +198,6 @@ function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
   });
 }
 
-/** Standing obligations by state from obligation ids; an obligation naming no state lands in "other". */
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
   const counts = reads === null ? {} : reads.fold.obligationsByState();
   const total = Object.values(counts).reduce((n, c) => n + c, 0);
@@ -328,19 +322,17 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
     );
   }
   if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
-  // Without a per-request deadline one hung request holds the publisher until the runner's ceiling kills it.
+
   installNeonRequestDeadline();
   return createPgRepositories(url, NOW_ISO);
 }
 
-/** The parts of the published snapshot this publish carries forward; the rest is rebuilt, so it is never read back. */
 const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true } as const;
 type CarriedForward = Partial<Pick<OwnerSnapshot, keyof typeof CARRIED_FORWARD>>;
 
 async function main(): Promise<void> {
   log(`HEAD ${HEAD?.slice(0, 8) ?? "unknown"}`);
 
-  // Opened first so the cost panel and the by-state deployment read the same instant.
   const repos = publisherRepos;
   if (repos) log(repos.describe());
   const existing = repos ? await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, CARRIED_FORWARD) as Persisted<CarriedForward> | null : null;

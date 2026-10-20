@@ -1,3 +1,4 @@
+import { applyHuntOrders } from "../lib/control-plane/hunt-orders.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
@@ -23,27 +24,28 @@ test("hunt acceptance persists its score once; pickup stays in progress and comp
  await submit(request,s.deps);assert.equal(s.calls(),1,"replay must keep the original baseline");
  const key=out.receipt.huntScores![0].scopeKey;
  const state=(complete:boolean)=>({formatVersion:RESEARCH_FORMAT_VERSION,assignments:{formatVersion:1,at:AT,assignments:[{key,ref:out.receipt.receiptId,completion:complete?{kind:"COMPLETE",assignmentKey:key,members:1,satisfied:[]}:{kind:"NO_MEMBERS",assignmentKey:key,says:"No members"}}]}} as unknown as ResearchState);
- await s.repos.researchState.put(RESEARCH_STATE_ID,state(false),AT);s.setScore(35);
+ await s.repos.researchState.put(`${RESEARCH_STATE_ID}:az`,state(false),AT);s.setScore(35);
  const running=await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore);
  assert.equal(running.state,"in-progress");assert.deepEqual(running.progress,{done:15,of:80});assert.match(running.change!.before,/20%/);assert.match(running.change!.after,/35%/);
  const def=actionDef("send-agents");const ui=startReceipt({key:"ui-score",def,target:"Arizona",targetName:"Arizona",label:def.label,scopeKey:"st:04",scopeName:"Arizona",level:"local",at:AT,simulated:false});
  assert.equal(applyConfirmation(ui,running,AT).status,"running");
  assert.equal(applyGatewayReply(ui,def,200,{...out,confirmation:running},AT).status,"running","a saved DONE gateway outcome must not hide a hunt already in progress");
- const held=await s.repos.researchState.read(RESEARCH_STATE_ID);await s.repos.researchState.compareAndSet(RESEARCH_STATE_ID,held!.revision,state(true),AT);
+ const held=await s.repos.researchState.read(`${RESEARCH_STATE_ID}:az`);await s.repos.researchState.compareAndSet(`${RESEARCH_STATE_ID}:az`,held!.revision,state(true),AT);
  assert.equal((await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore)).state,"applied");
 });
 test("a stopped hunt finishes, and an unavailable score is never zero",async()=>{
  const s=setup();s.setScore(null);const out=await submit(ask("expansion.scope.set","hunt-score-two",{geography,budgetUsd:20,priority:1}),s.deps);assert.equal(out.ok,true);
  assert.equal(out.receipt.huntScores![0].before,null);
  await submit(ask("expansion.scope.remove","hunt-stop-one",{key:out.receipt.huntScores![0].scopeKey}),s.deps);
+ await applyHuntOrders(s.repos,"az",AT);
  const done=await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore);assert.equal(done.state,"applied");assert.deepEqual(done.progress,{done:null,of:null});assert.match(done.change!.before,/—/);assert.match(done.change!.after,/—/);
 });
 test("a send uses only its own created and deferred runner counts",async()=>{
  const s=setup();const out=await submit(ask("fleet.deployHere","send-progress-one",{note:"Arizona"}),s.deps);assert.equal(out.ok,true);
  await s.repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY,"send-honor",{formatVersion:RESEARCH_FORMAT_VERSION,kind:"HONORED",intentId:"send-honor",honors:out.receipt.subject,action:"DISPATCH",honoredAt:AT,honoredBy:"test",detail:""},AT);
  const reading=(id:string,deferred:number)=>({formatVersion:RESEARCH_FORMAT_VERSION,ownerDispatch:{intentId:id,work:{key:`dispatch:${id}`,created:4,deferred,defined:7,carried:0,createdThisCycle:4,blockedUnits:0,blocked:[]}}} as unknown as ResearchState);
- await s.repos.researchState.put(RESEARCH_STATE_ID,reading("other-send",3),AT);
+ await s.repos.researchState.put(`${RESEARCH_STATE_ID}:az`,reading("other-send",3),AT);
  const unknown=await confirmReceipt(s.repos,out.receipt,Date.parse(AT));assert.equal(unknown.progress!.of,null);
- const held=await s.repos.researchState.read(RESEARCH_STATE_ID);await s.repos.researchState.compareAndSet(RESEARCH_STATE_ID,held!.revision,reading(out.receipt.subject,3),AT);
+ const held=await s.repos.researchState.read(`${RESEARCH_STATE_ID}:az`);await s.repos.researchState.compareAndSet(`${RESEARCH_STATE_ID}:az`,held!.revision,reading(out.receipt.subject,3),AT);
  const running=await confirmReceipt(s.repos,out.receipt,Date.parse(AT));assert.equal(running.state,"in-progress");assert.deepEqual(running.progress,{done:4,of:7});assert.equal(running.plan!.creates,7);
 });

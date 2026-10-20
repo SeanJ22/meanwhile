@@ -24,8 +24,8 @@ const scheduled = { obligation: { id: "pb01", recordClass: "meetings", subjectId
 
 nodeTest("PB-01 Settings save reaches the next real hunter request, its log, and undo", async () => {
   const repos = createMemoryRepositories();
-  // The place-filtered manual deliberately has no instructions: the run must use the exact row read.
-  repos.fieldManual.slice = async () => [];
+
+  repos.fieldManual.select=async()=>assert.fail("Role playbooks must use their current instruction row");
   const deps = { repos, now: () => at, currentStateVersion: null, codeSha: null };
   const fetchImpl = (async (_url: unknown, init?: RequestInit) => {
     const { type, subject, idempotencyKey, returnTo: _returnTo, ...input } = JSON.parse(String(init?.body));
@@ -107,7 +107,7 @@ nodeTest("Ask model choices use plain names and the existing Settings action, lo
   const deps = { repos, now: () => at, currentStateVersion: null, codeSha: null };
   const request = { type: "config.setSetting", subject: action.target, input, stateVersion: null, idempotencyKey: "ask-model", caller: "OWNER_SESSION" as const, actorRef: "owner" };
   assert.equal((await submit(request, deps)).ok, true);
-  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   assert.equal(config.settings?.["ask.readerModel"], choice.id);
   assert.equal(config.settingHistory?.at(-1)?.before, "claude-haiku-5-5");
   assert.equal(config.settingHistory?.at(-1)?.factory, undefined);
@@ -115,7 +115,7 @@ nodeTest("Ask model choices use plain names and the existing Settings action, lo
   const undo = settingActions(changedRow)[1];
   const undoInput = actionInput(undo.kind, { target: undo.target, scopeKey: "us", option: null, words: "Undo", amount: "", selected: [], payload: undo.payload });
   assert.equal((await submit({ ...request, input: undoInput, idempotencyKey: "ask-model-undo" }, deps)).ok, true);
-  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value.settings?.["ask.readerModel"], "claude-haiku-5-5");
+  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value.settings?.["ask.readerModel"], "claude-haiku-5-5");
 });
 
 nodeTest("restoring missing instructions can be undone to stuck work, including the Ask snapshot", async () => {

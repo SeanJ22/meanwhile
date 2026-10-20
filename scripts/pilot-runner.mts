@@ -1,3 +1,4 @@
+import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -16,12 +17,7 @@ import {
   type ControlPlaneRepositories,
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
-import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
-import { isAssignmentCycleReading } from "../lib/control-plane/expansion/assignment-budget.ts";
-import { isExpansionCycleReading } from "../lib/control-plane/expansion/reading.ts";
-import { unacknowledgedResearchResume, unacknowledgedScope } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { continuingDirectedHunt, originalLifetimeHuntContinuation } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { unacknowledgedResearchResume } from "../lib/control-plane/scheduler/launch-wake.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
@@ -77,7 +73,6 @@ import {
   routineSupervisorOuterEvidence,
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
-import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane/workers/hunter-lane.ts";
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
@@ -119,38 +114,33 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 
-/* Before anything connects: a per-address connect window that fits this host,
-   for this process and, through NODE_OPTIONS, every child (connect-attempt-window.ts). */
 installConnectAttemptWindow();
 
 const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
 
-/** How much of a failed cycle's stderr the digest carries (see runOneCycle). */
 const STDERR_TAIL_LINES = 40;
 
 const ROOT = process.cwd();
-/* Vital signs: each child this parent starts, and theirs, prints its hour counts (Neon bytes
-   by calling code, rounds, facts) as report lines; this parent alone keeps them here, with its own, and sums the hour. */
+
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
-/* Every runner process answers its whole-table control-plane reads from the same held copies (incremental-reads.ts). */
+
 process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
 readFromHeldCopies();
-/* Every runner process reads unchanged civic rows and payload parts from the same disposable copies (civic-read-cache.ts). */
+
 keepNeonBytesInProcess();
-/** One process's hour so far: its hour file, and what it added since its last report to the daily transfer rows. */
+
 function keepHourPart(part: NeonBytesHour): void {
   keepNeonBytesPart(VITAL_SIGNS_DIR, part);
   keepRunnerTransfer(part);
 }
 receiveChildVitalSigns(keepHourPart);
-/** This process's own hour counts, kept beside its children's. */
+
 function keepOwnNeonBytes(nowMs: number): void {
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
-// Keep the exact launch path, but do not pass reporting secrets to workers.
-// The owner-snapshot collector reloads only those keys from this private file.
+
 if (!process.env.WTP_BILLING_ENV_FILE) {
   const launchFile = process.execArgv.find(a => a.startsWith("--env-file="));
   if (launchFile) process.env.WTP_BILLING_ENV_FILE = launchFile.slice("--env-file=".length);
@@ -190,15 +180,11 @@ function standingChildEnvironment(
     : billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
 }
 
-// The installed dispatcher, the scheduled task, and any stale Startup entry
-// all reach this same atomic host-local door. The kernel releases it on process death;
-// a second clock therefore fails before writing a heartbeat or launching work.
 const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
   "pilot-runner",
   PILOT_RUNNER_SINGLETON_PORT,
 );
 
-/** The parent's own loaded code, captured before a handoff can move the checkout. */
 const PARENT_CODE_SHA = headSha(ROOT);
 
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
@@ -207,21 +193,19 @@ const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
-// No standing per-cycle dispatch cap; `--max` is a diagnostic pass-through only.
+
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
 const idsArg = argv.find((a) => a.startsWith("--ids="));
 const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
 const canary = argv.includes("--canary");
 
-/** Host-local diagnostics: the digest's canonical copy is the control-plane digest log. */
 const DIGEST_DIR = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs");
 
 let hangWatchdog: HangWatchdog | null = null;
 if (provider === "postgres") {
-  // Install transport cancellation first; the circuit breaker composes around
-  // it and therefore cannot reintroduce an unbounded owner-receipt request.
+
   installNeonRequestDeadline();
   installNeonCircuitBreaker(ROOT);
   if (!canary && !hangWatchdogDisabled()) hangWatchdog = startHangWatchdog();
@@ -240,11 +224,14 @@ interface RunRecord {
       readonly emptyReason: string | null;
     }[];
     readonly registeredUnits?: number;
-    /** Present only on historical pre-PDC run records. */
+
     readonly nonMeetingUnits?: number;
   };
   readonly dueCount?: number;
   readonly dispatched?: number;
+  readonly workedCount?: number;
+  readonly incidentCount?: number;
+  readonly dispositionCounts?: Readonly<Record<string, number>>;
   readonly worked?: readonly string[];
   readonly dispositions?: readonly { obligationId: string; disposition: string | null; artifacts: number }[];
   readonly staged?: readonly {
@@ -261,10 +248,10 @@ interface RunRecord {
   readonly incidents?: readonly { cause: string; target: string; obligationsAffected: number; nextRetryAt: string }[];
   readonly promotedToReaderTruth?: boolean;
   readonly digest?: readonly string[];
-  /** Level 1 — Research, as the cycle recorded it. Absent on a record written before activation. */
+
   readonly research?: {
     readonly state?: {
-      /** The metrics the cycle computed. Absent on a record written before them. */
+
       readonly metrics?: ResearchMetrics | null;
       readonly modelLaneEnabled?: boolean;
       readonly modelLaneDisabledReason?: string | null;
@@ -280,12 +267,13 @@ interface RunRecord {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
       readonly model?: {
         readonly due?: number; readonly dispatched?: number; readonly deferred?: number; readonly deferredBy?: Readonly<Record<string, number>>;
-        /** The cycle's pre-warm of the Scout static prefix. Null when no Scout was admitted; absent on older records. */
+
         readonly prewarm?: PrewarmOutcome | null;
       };
     } | null;
 
     readonly cacheThisCycle?: readonly CacheHitRate[] | null;
+    readonly scoutCost?: { readonly attempts:number; readonly usd:number; readonly unmeasured:number };
     readonly scouts?: readonly {
       readonly obligationId: string;
       readonly attemptId: string | null;
@@ -309,13 +297,11 @@ interface RunRecord {
   };
 }
 
-/* ------------------------------------------------------------- one cycle --- */
-
 async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }): Promise<{
   readonly ok: boolean;
   readonly recordPath: string | null;
   readonly stdout: string;
-  /** The last lines the child wrote to stderr. The diagnosis of a failed cycle. */
+
   readonly stderrTail: string;
   readonly signal: string | null;
   readonly exitCode: number | null;
@@ -328,11 +314,11 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, exitCode: null, circuit: latched };
   }
   const args = [
-    /* PRDY-3: the fact bridge reaches the Reader's own renderer, which imports by the `@/` alias the loader resolves. */
+
     ...TS_CHILD,
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
-    /* So the child's heartbeat can state when the next cycle is due. */
+
     `--interval=${INTERVAL_MIN}`,
     ...(maxArg ? [maxArg] : []),
     ...(onlyArg ? [onlyArg] : []),
@@ -369,7 +355,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
       repos: await ownerRepositories(), error: new Error(reason),
       cycleId: `research-supervisor:${hostname()}:${before}`, startedAt: before,
       finishedAt: new Date(failedAtMs).toISOString(), testedSha: RUNNING_CODE_SHA, host: hostname(), pending: null,
-      /* The child's own account is out of reach here; its last lines say what was running when it went quiet. */
+
       lastOutput: lastChildLines(currentCycleOutput),
       writeLocalRecord: record => {
         mkdirSync(RUNS_DIR, { recursive: true });
@@ -383,7 +369,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     console.error(`  research round FAILED: ${reason}; canonical outcome ${outcome.canonical}; retry within 10 minutes`);
   }
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
-  const match = stdout.match(/local diagnostic: (.+\.json)/);
+  const match = [...stdout.matchAll(/local diagnostic: (.+\.json)/g)].at(-1);
   const stderrLines = (run.stderr ?? "").split("\n").filter((l) => l.trim() !== "");
   const failure = classifyProviderFailure(new Error(`${run.stderr ?? ""}\n${run.stdout ?? ""}`));
   const databaseNamed = /neon|postgres|database|control plane|transfer allowance|compute quota|storage quota/i.test(failure.condition);
@@ -402,10 +388,6 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     ...(run.status !== 0 ? { failedAtMs } : {}),
   };
 }
-
-/* --------------------------------------------------------------- the cost --- */
-
-/* The COST section moved to lib/control-plane/pilot-cost-digest.ts so it can be rendered over any run record and tested. */
 
 function laneShare(record: RunRecord): string[] {
   const digest = record.digest ?? [];
@@ -467,7 +449,7 @@ function laneShare(record: RunRecord): string[] {
     out.push(`- runtime conditions: ${(state?.runtimeConditions ?? []).join("; ")}`);
   }
   out.push("- PROMOTION: OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.");
-  /* The metrics travel on the research state the cycle wrote; a record without them says so rather than printing zeros. */
+
   out.push("", "## RESEARCH METRICS (reader-impact ordering)", "");
   if (state?.metrics) {
     for (const line of researchDigestLines(state.metrics)) out.push(`- ${line.trim()}`);
@@ -477,8 +459,6 @@ function laneShare(record: RunRecord): string[] {
   return out;
 }
 
-/* ------------------------------------------------------------- the digest --- */
-
 function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean): string {
   const out: string[] = [];
   const health = record.health;
@@ -486,12 +466,10 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   out.push("");
   out.push(
     `Written by the standing pilot runner on the \`${record.provider ?? "unknown"}\` control plane. ` +
-      "Promotion is OFF: nothing here changed what a reader is told.",
+      "Each state records its work and publication results separately.",
   );
   out.push("");
 
-  /* Health first, activity under. A digest that leads with counts
-     reads as health and measures effort. */
   out.push("## PILOT HEALTH");
   out.push("");
   if (health?.readings) {
@@ -543,11 +521,12 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
         "DISCHARGED",
         "what was dispatched",
         record.dispatched ?? 0,
-        (record.worked ?? []).length,
+        record.workedCount ?? (record.worked ?? []).length,
         (record.dispatched ?? 0) === 0 ? "nothing was dispatched this cycle" : undefined,
       ),
     )}`,
   );
+  for (const [disposition, count] of Object.entries(record.dispositionCounts ?? {})) out.push(`  - ${disposition}: ${count}`);
   for (const d of record.dispositions ?? []) {
     out.push(`  - \`${d.disposition}\` — ${d.obligationId} (${d.artifacts} artifact(s))`);
   }
@@ -560,7 +539,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   const gaps = staged.filter((s) => s.state === "STAGED_GAP");
   out.push(
     `${staged.length} entry(ies) staged — ${ready.length} promotion-ready, ${gaps.length} honest gap(s). ` +
-      "The last mile is a session's, under existing law.",
+      "Verified records publish through the builders; gaps stay open.",
   );
   out.push("");
   for (const s of ready) {
@@ -576,7 +555,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
 
   out.push("## DEBT AND WALLS");
   out.push("");
-  out.push(`${record.debts ?? 0} debt row(s) across ${(record.incidents ?? []).length} incident(s).`);
+  out.push(`${record.debts ?? 0} debt row(s) across ${record.incidentCount ?? (record.incidents ?? []).length} incident(s).`);
   for (const i of record.incidents ?? []) {
     out.push(
       `- \`${i.cause}\` at ${i.target} — ${i.obligationsAffected} obligation(s), next retry ${i.nextRetryAt}`,
@@ -591,8 +570,6 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   return `${out.join("\n")}\n`;
 }
 
-/* ---------------------------------------------------------------- delivery --- */
-
 function deliver(body: string, headline: string): { readonly where: string } {
   mkdirSync(DIGEST_DIR, { recursive: true });
   const path = join(DIGEST_DIR, "pilot-digest.md");
@@ -601,8 +578,6 @@ function deliver(body: string, headline: string): { readonly where: string } {
   return { where: path };
 }
 
-/* -------------------------------------------------------- console publish --- */
-
 const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
 
   { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
@@ -610,8 +585,7 @@ const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: reado
 
 const publishChangedConsole = consolePublisher({
   readInputs: async () => {
-    // Match the publishers' existing reader target, including the installed
-    // runtime's read-only connection. A developer URL is never a substitute.
+
     const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
     const controlUrl = controlPlaneUrlFromEnv(env);
     const readerUrl = env.DATABASE_URL;
@@ -648,8 +622,7 @@ async function publishConsoleChildren(): Promise<boolean> {
     const [run] = await runRuntimeChildren([{
       id: `console-publish:${publisher.name}`,
       executable: process.execPath,
-      /* Workers inherit the launch environment. Only the owner snapshot reloads
-       * five billing keys from the same absolute private file, never cwd-relative. */
+
       args: [...TS_CHILD, ...publisher.args],
       env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
     }], {
@@ -677,7 +650,6 @@ async function publishConsoleChildren(): Promise<boolean> {
   return succeeded;
 }
 
-/** The same standing clock runs the production data plane after each cycle. */
 async function runRoutineCivicData(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) {
     console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
@@ -695,7 +667,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
       [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt,
     },
   );
-  // A routine pass between research cycles still checks in, so a long pass never reads as a silent runner.
+
   const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
   const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
@@ -748,7 +720,6 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
   }
 }
 
-/** Each minute, saved parser results and changed doors publish without waiting for the routine pass (publish-now.ts). */
 async function runPublishNow(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
   const startedAt = new Date().toISOString();
@@ -785,14 +756,13 @@ async function persistOuterRoutineChildFailure(
     termination: run.termination,
     exitStatus: run.status,
   });
-  // A child that died on an error nothing caught names its step and cause in
-  // one sanitized line (lib/ops/fatal-line.ts); quote that, never raw stderr.
+
   const fatal = childFatalLine(output);
   const evidence = { ...outer, detail: `${outer.detail}${run.errorMessage ? ` ${run.errorMessage}` : ""}${fatal ? ` The child's own last line: ${fatal}.` : ""}` };
   try {
     const repos = await ownerRepositories();
     if (repos === null) throw new Error("production control plane is not configured");
-    /* The child writes its outcome after this pass started; only those rows' kinds cross the wire. */
+
     const existing = (await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["digestId"], cycleId, 20,
       { runtimeOutcome: ["kind"] }, startedAt) as readonly Pick<OwnerDigestRecord, "runtimeOutcome">[]).find(
       (row) => row.runtimeOutcome?.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR",
@@ -935,8 +905,6 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
   }
 }
 
-/* -------------------------------------------------------------- the loop --- */
-
 async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
   if (provider !== "postgres") return;
   try {
@@ -947,7 +915,7 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
     try {
       codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: finishedAt, fetch: false });
     } catch {
-      /* a beat that cannot read git still says the cycle ran; keep codeIdentity null */
+
     }
     const current = await repos.runnerHeartbeat.read(RUNNER_ID);
     const next = { ...current?.value, ...cycleLivenessBeat(current?.value ?? null, {
@@ -969,7 +937,7 @@ async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
 }
 
 let currentCycleErrors = "";
-/** The research child's stdout and stderr together, in arrival order, for a crash record. */
+
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
 
@@ -994,7 +962,7 @@ const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
   if (!stagedReleaseIsReady(ROOT, targetSha)) {
     if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
-    // Staging already failed once for this target: the old drain still lands the release.
+
     return stagingInFlight !== null ? "STAGING" : "DRAIN";
   }
   if (!RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
@@ -1007,7 +975,7 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
     return "DRAIN";
   }
   const directory = stagedReleaseDirectory(ROOT, targetSha);
-  // Contract migrations stay at the switch point, run from the new code.
+
   if (!await applyRuntimeContracts(targetSha, directory)) return "DRAIN";
   const previous = RUNNING_CODE_SHA;
   CODE_ROOT = directory;
@@ -1020,17 +988,17 @@ async function requestQueuedReleaseDrain(): Promise<void> {
   if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
   const release = await inspectRuntimeRelease();
   if (release.state !== "UPDATE_REQUIRED") return;
-  // Install the release beside the running one first; admissions continue meanwhile.
+
   if (release.targetSha !== null && await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
   if (!researchCycleChild?.connected) return;
-  // Reconciliation still applies only after both the research child and source lanes settle.
+
   runtimeAdmissionsHeld = true;
   drainHunterLane();
   researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
   });
 }
-/** The last full UTC hour and the hour so far, summed over every runner process's file. */
+
 function neonBytesReading(nowMs = Date.now()): NonNullable<RunnerHeartbeat["neonBytes"]> {
   keepOwnNeonBytes(nowMs);
   const current = hourStart(nowMs);
@@ -1080,10 +1048,9 @@ const vitalSignsTimer = setInterval(() => {
 }, 60_000);
 vitalSignsTimer.unref();
 
-/** A null start only advances the check-in: the routine lane is running while no research cycle is. */
 async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
-  /* A native abort's stack and its workers' disconnects follow the line that says why, so that line leads. */
+
   const abort = nativeAbortLine(currentCycleErrors);
   const tail = currentCycleErrors.split("\n").filter(line => line && line.trim() !== abort).slice(-8).join("\n");
   let lastError = [abort?.slice(0, 400), tail.slice(-1600)].filter(Boolean).join("\n") || null;
@@ -1096,15 +1063,15 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
-    /* The host's memory, the runner's process tree and the reservations, so River can say how many jobs fit. */
+
     const memory = await hostMemoryReading().catch(() => null);
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
-    try { neonBytes = neonBytesReading(); } catch { /* the last beat's reading stays */ }
+    try { neonBytes = neonBytesReading(); } catch {  }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
       if (startedAt === null && current === null) return;
-      // A beat left behind may land after its cycle's last beat; it must not reopen that cycle.
+
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = startedAt === null
         ? { ...current!.value, beatAt: at, memory: memory ?? current!.value.memory ?? null, neonBytes: neonBytes ?? current!.value.neonBytes ?? null }
@@ -1122,7 +1089,6 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
   }
 }
 
-/** Beats come each minute; one that has not answered in this long is left behind so the next can start. */
 const BEAT_BOUND_MS = 45_000;
 const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
 
@@ -1148,15 +1114,14 @@ let adminCopyWork: Promise<void> | null = null;
 let researchCycleActive = false;
 let ownerWakePending = false;
 let activeControlRead: Promise<void> | null = null;
-/** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
+
 let announcedPause: string | null = null;
 let lastPauseBeatMs = 0;
-/** Intent ids this process already acted on, so a failed HONORED append is retried but never re-triggers a cycle. */
+
 const actedOn = new Set<string>();
 const honorFailurePrinted = new Set<string>();
 
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
-if (!process.env.WTP_HUNTER_LANE_ARMING) process.env.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath(ROOT);
 let hunterLaneChild: ChildProcess | null = null;
 async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
@@ -1179,7 +1144,7 @@ async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!run) throw new Error("HUNTER_LANE_CHILD_RESULT_MISSING");
   if (run.status !== 0) throw new Error(`HUNTER_LANE_EXITED: ${run.status ?? `signal ${run.signal ?? "none"}`}; queued work remains owed and the lane starts again`);
 }
-/** A release asks the hunter lane to stop handing out tasks; each worker finishes the one it holds. */
+
 function drainHunterLane(): void {
   if (!hunterLaneChild?.connected) return;
   hunterLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
@@ -1187,7 +1152,6 @@ function drainHunterLane(): void {
   });
 }
 
-/* One auditors' pass at a time, outside the standing lanes: a look check can wait an hour on its batch, and a drain ends it. */
 const auditPasses = auditPassClock({
   statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
   codeRoot: () => CODE_ROOT,
@@ -1235,7 +1199,6 @@ async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   return intentRepos;
 }
 
-/** Same permanent process, separate from the research-cycle wall and source clock. */
 function runAdminCopyTick(): void {
   if (runtimeAdmissionsHeld || adminCopyWork || provider !== "postgres" ||
       process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
@@ -1314,7 +1277,7 @@ function runStandingRuntimeTick(reason: string, force = false): void {
 function startStandingRuntimeClock(): void {
   if (runtimeAdmissionsHeld || standingRuntimeTimer !== null) return;
   startScheduledOrderClock();
-  // The auditors' passes (live audit, resident tasks, look check, speed, claim audit, loss study, break patterns).
+
   if (provider === "postgres" && !canary && !STAGING) auditPasses.start();
   runStandingRuntimeTick("independent standing clock startup", true);
   standingRuntimeTimer = setInterval(
@@ -1323,7 +1286,7 @@ function startStandingRuntimeClock(): void {
     },
     POLL_MS,
   );
-  // Source admissions keep their own clock. Admin hints are read independently.
+
   ownerControlTimer = setInterval(() => {
     if (researchCycleActive && !canary && activeControlRead === null) {
       activeControlRead = ownerSays().then(says => {
@@ -1466,15 +1429,9 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return null;
   }
 
-  // At process startup no clock has passed the method-authority gate yet. A
-  // transient target that moves back to this SHA while we drain must not turn
-  // reconciliation into a pre-gate clock opener. During a later boundary the
-  // timer is already live, so that exact prior state may be restored.
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
-  // Between rounds, a release that leaves the parent's code alone loads
-  // without closing admissions. At process start nothing runs yet, so the
-  // ordinary restart path is already gap-free.
+
   if (RELEASE_QUICK_SWITCH && first.state === "UPDATE_REQUIRED" && first.targetSha !== null && reopenStandingClock && !runtimeAdmissionsHeld) {
     const step = await advanceStagedRelease(first.targetSha);
     if (step !== "DRAIN") return null;
@@ -1490,16 +1447,13 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
 
-  // The deploy, receipt, or checks can move while an in-flight source finishes.
-  // Re-read all three only after the source lanes are quiescent.
   const final = await inspectRuntimeRelease();
   if (final.state === "REFUSED") {
     await persistRuntimeBoundaryFailure(final, startedAt);
     return 2;
   }
   if (final.state === "CURRENT") {
-    // Production moved back to the code this process actually loaded. Nothing
-    // was switched; admissions may safely resume.
+
     runtimeAdmissionsHeld = false;
     if (reopenStandingClock) startStandingRuntimeClock();
     if (reopenAdminCopyClock) startAdminCopyClock();
@@ -1542,7 +1496,6 @@ async function applyRuntimeContracts(sha: string | null, cwd: string = CODE_ROOT
   return false;
 }
 
-/** The latest RESUME_RUNNER with no HONORED record beside it, or null. */
 function unhonoredResume(log: readonly ResearchIntent[]): ResearchIntentRequest | null {
   const honored = new Set(log.filter((r) => r.kind === "HONORED").map((r) => r.honors));
   const resumes = log
@@ -1601,7 +1554,7 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
     lastCycleOk: null,
     testedSha: RUNNING_CODE_SHA,
     host: hostname(),
-    /* PRDY-1: a paused runner still says which code it holds; no fetch while idling. */
+
     codeIdentity: readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now, fetch: false }),
   };
   const next: RunnerHeartbeat = {
@@ -1617,9 +1570,8 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
 
 type OwnerSays = "HOLD" | "START_NOW" | "NOTHING" | "UNREADABLE";
 
-/** ONE read of the intent log; every check above is answered from it. */
 async function ownerSays(): Promise<OwnerSays> {
-  /* The file provider is a local proof with no owner intents; nothing is unread. */
+
   if (provider !== "postgres") return "NOTHING";
   let repos: ControlPlaneRepositories | null;
   let log: readonly ResearchIntent[];
@@ -1671,6 +1623,7 @@ async function ownerSays(): Promise<OwnerSays> {
     return "HOLD";
   }
   announcedPause = null;
+  if(controls.planningPending)return "START_NOW";
 
   const resume = unhonoredResume(log);
   if (resume !== null) {
@@ -1691,7 +1644,7 @@ async function ownerSays(): Promise<OwnerSays> {
     if (!researchCycleActive) console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
     return "START_NOW";
   }
-  if (reading.pendingDispatch.length > 0) {
+  if (!reading.paused && reading.pendingDispatch.length > 0) {
     const first = reading.pendingDispatch[0];
     if (!researchCycleActive) console.log(
       `  ${reading.pendingDispatch.length} DISPATCH intent(s) pending (oldest: "${first.note ?? ""}") — ` +
@@ -1699,32 +1652,14 @@ async function ownerSays(): Promise<OwnerSays> {
     );
     return "START_NOW";
   }
-  // A saved Send does not open the paid lane. Once the owner has resumed it,
-  // wake for a receipt the last completed cycle did not actually consume.
-  // This also handles a Send made while a cycle was active without overlapping
-  // that cycle or needlessly repeating one that already read the new receipt.
+
   if (!reading.paused) {
     const resumeId = unacknowledgedResearchResume(log);
     if (resumeId !== null) {
       console.log(`  research resumed by owner (${resumeId}) — starting the next cycle now`);
       return "START_NOW";
     }
-    try {
-      const config = controls.config;
-      const held = expansionScopesOf(config !== null && isAdminConfig(config.value) ? config.value : null);
-      if (held.scopes.length > 0) {
-        const state = controls.state;
-        const raw: unknown = (state?.value as { assignments?: unknown } | undefined)?.assignments;
-        const last = isAssignmentCycleReading(raw) ? raw : null;
-        const pending = unacknowledgedScope(held.scopes, last);
-        if (pending !== null) {
-          console.log(`  Send ${pending.receiptId} has not been read by a completed cycle — starting the next cycle now`);
-          return "START_NOW";
-        }
-      }
-    } catch (error) {
-      console.error(`  Send wake check could not be read; ordinary cycle interval stands: ${error instanceof Error ? error.message : String(error)}`);
-    }
+
   }
   return "NOTHING";
 }
@@ -1772,37 +1707,32 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
     await sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
-    /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
+
     const says = await ownerSays();
     if (says === "START_NOW") return;
-    /* The owner's PAUSE_RUNNER holds between cycles too (holdWhilePaused holds before one). */
+
     if (says === "HOLD") continue;
   }
 }
 
 let lifetimeHuntStalledCycles = 0;
-/** Exact authorized lifetime work resumes in bounded cycles. The child still
- * enforces provider restrictions and atomically reserves every paid call. */
+
 async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
   const ordinary = (cycleOk ? INTERVAL_MIN : Math.min(INTERVAL_MIN, 10)) * 60_000;
   if (provider !== "postgres" || canary) return ordinary;
   try {
     const repos = await ownerRepositories();
     if (repos === null) return ordinary;
-    const { config: policy, state, research: intents } = await readRunnerControls(repos, true);
+    const currentBeat=await repos.runnerHeartbeat.read(RUNNER_ID);
+    if(currentBeat?.value.nextCycleReason)await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,currentBeat.revision,{...currentBeat.value,nextCycleReason:null},new Date().toISOString());
+    const { research: intents } = await readRunnerControls(repos, true);
     const intent = readIntents(intents);
     if (intent.runnerPause.paused || intent.paused) return ordinary;
-    const scopes = expansionScopesOf(policy !== null && isAdminConfig(policy.value) ? policy.value : null);
-    if (scopes.malformed > 0) return ordinary;
-    const value = state?.value as { expansion?: unknown; assignments?: unknown } | undefined;
-    const expansion = isExpansionCycleReading(value?.expansion) ? value.expansion : null;
-    const assignments = isAssignmentCycleReading(value?.assignments) ? value.assignments : null;
-    const lifetime = originalLifetimeHuntContinuation(scopes.scopes, expansion, assignments, cycleOk ? lifetimeHuntStalledCycles : Math.max(1,lifetimeHuntStalledCycles));
-    if (lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH") lifetimeHuntStalledCycles = Math.min(lifetimeHuntStalledCycles + 1, 2);
-    else if (lifetime?.reason === "DUE_AFTER_PROGRESS") lifetimeHuntStalledCycles = 0;
-    const otherScopes = scopes.scopes.filter(scope => !scope.budgetStartedAt);
-    const hunt = lifetime ?? (!cycleOk ? null : continuingDirectedHunt(otherScopes, expansion, assignments));
-    if (hunt === null) return ordinary;
+    const continuation=await readPlanningContinuation(repos,cycleOk,lifetimeHuntStalledCycles);
+    if(!continuation)return ordinary;
+    const {hunt,lifetime}=continuation;
+    if(lifetime?.reason==="ELIGIBLE_ZERO_DISPATCH")lifetimeHuntStalledCycles=Math.min(lifetimeHuntStalledCycles+1,2);
+    else if(lifetime?.reason==="DUE_AFTER_PROGRESS")lifetimeHuntStalledCycles=0;
     const requestedWaitMs = lifetime?.delayMs ?? POLL_MS;
     const waitMs = cycleOk ? requestedWaitMs : Math.min(requestedWaitMs, ordinary);
     const reason = lifetime?.reason === "ELIGIBLE_ZERO_DISPATCH"
@@ -1853,19 +1783,15 @@ console.log(
 );
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
-// This clock is independent of research and console children. All long-lived
-// children below are asynchronous, so the timer can keep admitting a due lane
-// while research is still pending; the lane scheduler prevents same-lane overlap.
+
 startStandingRuntimeClock();
 startAdminCopyClock();
 await publishConsole();
 
 while (cycle < CYCLES) {
-  /* PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
+
   const owner = await holdWhilePaused();
-  // A deployment can finish while the runner is asleep (including a
-  // RUN_CYCLE_NOW wake). Reconcile before admitting another research child;
-  // the previous end-of-cycle check cannot observe a later deployment.
+
   const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
   if (wakeReleaseExit !== null) {
     handoffExitCode = wakeReleaseExit;
@@ -1887,7 +1813,7 @@ while (cycle < CYCLES) {
     boundedBeat(() => writeLiveCycleBeat(startedAt, exit), BEAT_BOUND_MS, lateBeat)();
   await beat();
   let cycleBeat = Promise.resolve();
-  // The release inspection keeps its own turn, so a slow one never holds back a beat.
+
   let releaseDrain: Promise<void> | null = null;
   const cycleBeatTimer = setInterval(() => {
     if (!researchCycleActive) return;
@@ -1919,7 +1845,7 @@ while (cycle < CYCLES) {
     const delivered = deliver(digest, headline);
     console.error(`  ${headline}`);
     console.log(`  digest: ${delivered.where}`);
-    /* (a) A circuit-broken cycle did not run a healthy cycle; still beat liveness. */
+
     await writeFailedCycleBeat(startedAt);
     const releaseExit = await reconcileRuntimeReleaseAtBoundary();
     if (releaseExit !== null) {
@@ -1927,7 +1853,7 @@ while (cycle < CYCLES) {
       break;
     }
     if (cycle >= CYCLES) break;
-    // Owner controls remain live while the child's provider circuit is latched.
+
     await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
     continue;
   }
@@ -1954,7 +1880,7 @@ while (cycle < CYCLES) {
     "obligations DISCHARGED",
     "what this cycle dispatched",
     record.dispatched ?? 0,
-    (record.worked ?? []).length,
+    record.workedCount ?? (record.worked ?? []).length,
     (record.dispatched ?? 0) === 0
       ? "this cycle dispatched nothing, so there is no population to measure a discharge rate over"
       : undefined,
@@ -1998,11 +1924,8 @@ while (cycle < CYCLES) {
   console.log(`  digest: ${delivered.where}`);
   console.log(`  ${headline}`);
 
-  /* (a) On a NON-ok cycle the child did not write a beat; advance beatAt here so a
-     failed cycle reads as "alive, last cycle did not pass", not as a dead runner. */
   if (!result.ok) await writeFailedCycleBeat(startedAt);
 
-  /* The console is published by the machine after every digest, succeeded or failed. */
   await publishConsole();
 
   const releaseExit = await reconcileRuntimeReleaseAtBoundary();
@@ -2042,6 +1965,5 @@ if (handoffExitCode === null) {
 } else {
   process.exitCode = handoffExitCode;
 }
-// Open sockets or timers must never keep old code alive after a finished handoff.
-// Restart=always resumes the startup release reconciliation without human help.
+
 if (handoffExitCode !== null) process.exit(handoffExitCode);

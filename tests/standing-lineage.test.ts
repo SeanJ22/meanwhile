@@ -6,7 +6,7 @@ import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts
 import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import { FRESHNESS_PROJECT, standing } from "../lib/control-plane/scheduler/durable.ts";
-import { brokeredSiblingCaptures, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
+import { brokeredSiblingCaptures, persistVerifiedPublicationAnchors, readStandingLineages, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 
 test("accepted child publication advances the source clock once and keeps partial gaps open", async () => {
   const h=await autonomousHarness();
@@ -129,4 +129,26 @@ test("sibling bytes require a completed same-period origin and actual official-h
   assert.deepEqual(brokeredSiblingCaptures({...input,attempts:[{...attempt,outcome:"ABORTED" as const}]}),[]);
   assert.deepEqual(brokeredSiblingCaptures({...input,scouts:[{...scout,rungs:[{...scout.rungs[0]!,httpStatus:403}]}]}),[]);
   assert.deepEqual(brokeredSiblingCaptures({...input,artifacts:[{...artifact,partial:true}]}),[]);
+});
+
+test("the cycle retains the latest matching publication and current source period from cached per-place history", async () => {
+  const h = await autonomousHarness();
+  const plan = { ...h.item.autonomousPlan!, ownerInstructions: ["current-send"] };
+  const obligation = standing({ id: "lineage-cache-obligation", subjectId: h.item.subject, recordClass: "OFFICIAL_ROSTER", routeId: null,
+    active: true, readerImpactAt: null, observedChangeRateHours: null, declaredCycleHours: 24, lastWorkedAt: null,
+    autonomousPlan: plan, assignments: [{ assignmentKey: "place", ref: "current-send", relation: "CREATED", at: h.now() }] }, h.now());
+  const lineage = (dueAt: string, publishedAt: string | null, instruction = "current-send") => ({
+    key: standingLineageKeyFor({ obligationId: obligation.id, dueAt, project: FRESHNESS_PROJECT, subject: obligation.subjectId,
+      plan, instructionReceipts: [instruction] })!, obligationId: obligation.id, dueAt, rootWorkItemId: `root-${dueAt}`,
+    siblingRootIds: [`root-${dueAt}`], publishedAt,
+  });
+  const latest = lineage("2026-09-02T12:00:00.000Z", "2026-09-02T14:00:00.000Z");
+  const current = lineage("2026-09-03T14:00:00.000Z", null);
+  const history = [lineage("2026-08-01T12:00:00.000Z", "2026-08-01T14:00:00.000Z"), latest, current,
+    lineage("2026-09-04T12:00:00.000Z", "2026-09-04T14:00:00.000Z", "other-send")];
+  const repos = { ...h.repos, dispatchState: { ...h.repos.dispatchState, lineages: async () => history } };
+  const selected = await readStandingLineages(repos, [obligation], "2026-09-04T16:00:00.000Z");
+  assert.deepEqual(selected, [latest, current]);
+  assert.equal(standingLineageCoversDue({ lineages: selected, key: current.key, now: "2026-09-04T16:00:00.000Z", cadenceHours: 24 })?.rootWorkItemId,
+    standingLineageCoversDue({ lineages: history, key: current.key, now: "2026-09-04T16:00:00.000Z", cadenceHours: 24 })?.rootWorkItemId);
 });

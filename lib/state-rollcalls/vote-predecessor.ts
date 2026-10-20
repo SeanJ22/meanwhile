@@ -1,3 +1,4 @@
+import { createVotePageSink } from "./vote-page-writer.ts";
 import { createHash } from "node:crypto";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { civicPayloadBytes, isCivicPayloadPart } from "../civic-data/payload-codec.ts";
@@ -9,7 +10,7 @@ import type { CivicDataReadResult } from "../civic-data/read-model.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { pluralVotesProjectionIssue, type PluralVoteFact } from "../sources/plural/votes.ts";
-import { createVotePageSink, type VotePageProjection } from "./vote-pages.ts";
+import type { VotePageProjection } from "./vote-page-model.ts";
 
 const CACHE_BYTES = 64 * 1024 * 1024;
 const SHA = /^[a-f0-9]{64}$/;

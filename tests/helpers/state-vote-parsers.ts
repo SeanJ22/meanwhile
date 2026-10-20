@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parsePluralBulkSessionFile, type PluralBulkParseOptions } from "../../lib/sources/plural/vote-bulk.ts";
 import type { PluralBillEvidence } from "../../lib/sources/plural/votes.ts";
-import { parseLegiscanDatasetFile } from "../../lib/sources/legiscan/dataset.ts";
+import { parseLegiscanDatasetFile } from "../../lib/sources/legiscan/dataset-parser.ts";
 
 /** Retained byte fixtures stage in an isolated temporary directory. Runtime
  * acquisition passes its already-streamed source files to the parsers directly. */

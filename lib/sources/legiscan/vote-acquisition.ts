@@ -1,7 +1,8 @@
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { readCompleteResponse } from "../source-bytes.ts";
-import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, object, parseLegiscanDatasetFile, parseLegiscanDatasetList,
+import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, object, parseLegiscanDatasetList,
   text, type LegiscanDatasetEvidence, type LegiscanSession } from "./dataset.ts";
+import { parseLegiscanDatasetFile } from "./dataset-parser.ts";
 import { acquireVoteSourceFile } from "../../state-rollcalls/source-file.ts";
 import { decodeLegiscanDatasetEnvelope } from "./dataset-envelope.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";

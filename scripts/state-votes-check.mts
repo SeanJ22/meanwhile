@@ -1,3 +1,5 @@
+import { votePagesIssue } from "../lib/state-rollcalls/vote-page-model.ts";
+import { createVotePageSink } from "../lib/state-rollcalls/vote-page-writer.ts";
 /** Each child owns one state/source. Production connections are read-only;
  * source captures and normalized member pages are written to the local audit
  * vault. No production refresh writer or promotion function is called. */
@@ -18,7 +20,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { installDatabaseTransferCounter } from "../lib/db/transfer.ts";
 import { keepNeonBytesInProcess, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../lib/state-rollcalls/reader-votes.ts";
-import { createVotePageSink, readVotePages, votePagesIssue } from "../lib/state-rollcalls/vote-pages.ts";
+import { readVotePages } from "../lib/state-rollcalls/vote-pages.ts";
 import type { Officeholder } from "../lib/officials/types.ts";
 import type { PluralVoteFact } from "../lib/sources/plural/votes.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";

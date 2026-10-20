@@ -1,3 +1,4 @@
+import { readLegiscanVotesForPerson } from "../lib/sources/legiscan/vote-reader.ts";
 import { parseLegiscanDataset } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -5,7 +6,7 @@ import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { parseLegiscanDatasetList, legiscanIdentityJoins, digest, type LegiscanSession } from "../lib/sources/legiscan/dataset.ts";
 import { acquireLegiscanVotes } from "../lib/sources/legiscan/vote-acquisition.ts";
-import { legiscanVotesProjectionIssue, legiscanVoteIdentityAuthorityIssue, readLegiscanVotesForPerson } from "../lib/sources/legiscan/votes.ts";
+import { legiscanVotesProjectionIssue, legiscanVoteIdentityAuthorityIssue } from "../lib/sources/legiscan/votes.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";

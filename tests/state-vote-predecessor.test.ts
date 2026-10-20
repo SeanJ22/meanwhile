@@ -1,3 +1,4 @@
+import { votePagesIssue } from "../lib/state-rollcalls/vote-page-model.ts";
 import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -9,7 +10,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createVoteRefreshSink } from "../lib/state-rollcalls/vote-predecessor.ts";
-import { readVotePages, votePagesIssue } from "../lib/state-rollcalls/vote-pages.ts";
+import { readVotePages } from "../lib/state-rollcalls/vote-pages.ts";
 
 import { pluralVotesCandidate, readPluralVotesProjection, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";

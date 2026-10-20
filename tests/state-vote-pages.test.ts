@@ -1,3 +1,6 @@
+import { votePagesIssue, type VotePageProjection } from "../lib/state-rollcalls/vote-page-model.ts";
+import { readPluralVotesForPerson } from "../lib/sources/plural/vote-reader.ts";
+import { createVotePageSink } from "../lib/state-rollcalls/vote-page-writer.ts";
 import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -6,9 +9,9 @@ import test from "node:test";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { createVotePageSink, bindVotePageVault, readVotePages, votePagesIssue, votePageVault, type VotePageProjection } from "../lib/state-rollcalls/vote-pages.ts";
+import { bindVotePageVault, readVotePages, votePageVault } from "../lib/state-rollcalls/vote-pages.ts";
 
-import { pluralVotesCandidate, pluralVotesContract, readPluralVotesForPerson } from "../lib/sources/plural/votes.ts";
+import { pluralVotesCandidate, pluralVotesContract } from "../lib/sources/plural/votes.ts";
 
 const root = new URL("./fixtures/state-votes/openstates/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("manifest.json", root), "utf8"));

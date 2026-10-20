@@ -1,3 +1,4 @@
+import { readPluralVotesForPerson } from "../lib/sources/plural/vote-reader.ts";
 import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -8,7 +9,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, currentPluralSessions, PLURAL_SESSION_CATALOG, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
 
-import { parsePluralBill, pluralVoteJurisdiction, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
+import { parsePluralBill, pluralVoteJurisdiction, pluralVotesScope, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
 
 interface Example { personId: string; position: string; billNumber: string; billTitle: string; date: string; voteId: string }

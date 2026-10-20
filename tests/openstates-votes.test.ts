@@ -1,3 +1,4 @@
+import { readPluralVotesForPerson } from "../lib/sources/plural/vote-reader.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -5,7 +6,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes } from "../lib/sources/plural/vote-acquisition.ts";
-import { pluralVoteJurisdiction, pluralVotesScope, parsePluralBill, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
+import { pluralVoteJurisdiction, pluralVotesScope, parsePluralBill, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
 

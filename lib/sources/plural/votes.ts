@@ -5,7 +5,7 @@ import { canonicalCivicDataHash } from "../../civic-data/changes.ts";
 import { holdRawCapture, type RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
-import { votePagesIssue, readVotePages, votePageVault, type VoteMemberPage } from "../../state-rollcalls/vote-pages.ts";
+import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
 
 import { PLURAL_STATES } from "./targets.ts";
 
@@ -163,15 +163,4 @@ export async function readPluralVotesProjection(state: string, options: Promoted
   const read = await readPromotedCivicData<PluralVotesProjection>("STATE_ROLL_CALL", pluralVotesScope(state), options);
   if (read.kind === "PROMOTED" && (read.metadata.sourceId !== PLURAL_VOTES_SOURCE || pluralVotesProjectionIssue(read.value) || read.value.state !== pluralVoteState(state).toUpperCase())) throw new Error("PLURAL_VOTES_READER_INVALID");
   return read;
-}
-export async function readPluralVotesForPerson(state: string, personId: string, options: PromotedCivicDataReadOptions = {}): Promise<(PluralVoteFact & { position: string })[]> {
-  if (!id(personId, "person")) return [];
-  const read = await readPluralVotesProjection(state, options);
-  if (read.kind === "NOT_RECORDED") return [];
-  if (read.kind !== "PROMOTED") throw new Error("PLURAL_VOTES_UNAVAILABLE");
-  const votes = read.value.formatVersion === 2 ? await readVotePages(votePageVault(options.store), read.value, personId) : read.value.rollCalls;
-  return votes.flatMap(vote => {
-    const position = vote.positions.find(position => position.personId === personId);
-    return position ? [{ ...vote, position: position.option, retrievedAt: position.retrievedAt }] : [];
-  }).sort((left, right) => right.date.localeCompare(left.date));
 }

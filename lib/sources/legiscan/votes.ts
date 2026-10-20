@@ -1,4 +1,4 @@
-import { votePagesIssue, readVotePages, votePageVault, type VoteMemberPage } from "../../state-rollcalls/vote-pages.ts";
+import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
@@ -121,15 +121,4 @@ export async function readLegiscanVotesProjection(state: string, options: Promot
   const read = await readPromotedCivicData<LegiscanVotesProjection>("STATE_ROLL_CALL", legiscanVotesScope(state), options);
   if (read.kind === "PROMOTED" && (read.metadata.sourceId !== LEGISCAN_VOTES_SOURCE || read.value.state !== legiscanState(state) || legiscanVotesProjectionIssue(read.value))) throw new Error("LEGISCAN_VOTES_READER_INVALID");
   return read;
-}
-export async function readLegiscanVotesForPerson(state: string, personId: string, options: PromotedCivicDataReadOptions = {}): Promise<(PluralVoteFact & { position: string })[]> {
-  if (!nativePersonId(personId)) return [];
-  const read = await readLegiscanVotesProjection(state, options);
-  if (read.kind === "NOT_RECORDED") return [];
-  if (read.kind !== "PROMOTED") throw new Error("LEGISCAN_VOTES_UNAVAILABLE");
-  const votes = read.value.formatVersion === 2 ? await readVotePages(votePageVault(options.store), read.value, personId) : read.value.rollCalls;
-  return votes.flatMap(vote => {
-    const position = vote.positions.find(position => position.personId === personId);
-    return position ? [{ ...vote, position: position.option, retrievedAt: position.retrievedAt }] : [];
-  }).sort((a, b) => b.date.localeCompare(a.date));
 }

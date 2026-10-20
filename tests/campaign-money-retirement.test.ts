@@ -29,7 +29,7 @@ test("retirement deletes the replaced load from facts and publications while ret
       INSERT INTO civic_data_candidate_events VALUES('old1'),('old2'),('held'),('new');
       INSERT INTO pass_cursor VALUES('campaign-finance:AL:receipts','old checkpoint');`);
     const [before]=await db.query("SELECT version FROM fact_watermark WHERE scope='AL'");
-    const migration=await readFile(new URL('../lib/db/migrations/0045_src_mn_retire_campaign_load.sql',import.meta.url),'utf8');
+    const migration=await readFile(new URL('../lib/db/migrations/SRC-MN_retire_campaign_load.sql',import.meta.url),'utf8');
     await db.pg.transaction(async tx=>{for(const sql of migration.split('--> statement-breakpoint'))await tx.exec(sql);});
     assert.equal((await db.query("SELECT count(*) AS n FROM fact WHERE produced_by LIKE 'campaign-finance:%'"))[0].n,0);
     assert.equal((await db.query("SELECT count(*) AS n FROM fact WHERE status='live'"))[0].n,3);

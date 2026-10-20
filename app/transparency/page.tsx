@@ -49,7 +49,7 @@ export default function TransparencyPage() {
             { what: "Postal coordinates", provenance: { sourceOrg: "GeoNames", sourceUrl: "https://www.geonames.org/", collectedAt: "", verifiedAt: null } },
             { what: "GeoNames license: CC BY 4.0", provenance: { sourceOrg: "Creative Commons", sourceUrl: "https://creativecommons.org/licenses/by/4.0/", collectedAt: "", verifiedAt: null } },
             { what: "Postal types", provenance: { sourceOrg: "Zipcodes", sourceUrl: "https://github.com/seanpianka/Zipcodes", collectedAt: "", verifiedAt: null } },
-          ]}><p>ZIP locations use U.S. Census Bureau ZIP areas, GeoNames postal coordinates and Zipcodes postal types. Census boundaries connect those coordinates to places.</p></Card>
+          ]}>{null}</Card>
         </div>
         <p className="mt-10 t-body"><Link href="/" className="mw-back-pill">← Back to the map</Link></p>
       </div>

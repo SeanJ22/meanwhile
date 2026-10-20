@@ -2,8 +2,11 @@
 
 import { Card } from "@/components/ui/card";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
+import type { CardGap } from "@/lib/design/card-gaps";
+import { feedbackHref } from "@/lib/feedback/shape";
+import { useReaderCopy } from "@/hooks/use-reader-copy";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
@@ -51,6 +54,7 @@ export function VotingSitesPanel({
   onClose,
   embedded = false,
 }: VotingSitesPanelProps) {
+  const readerCopy = useReaderCopy();
   const [address, setAddress] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
   const pendingRequest = useRef<AbortController | null>(null);
@@ -61,7 +65,7 @@ export function VotingSitesPanel({
   }, [onSites]);
 
   const submit = useCallback(
-    async (event: React.FormEvent, googleFallback = false) => {
+    async (event: React.FormEvent) => {
       event.preventDefault();
       const value = address.trim();
       if (value.length < 3) return;
@@ -73,7 +77,7 @@ export function VotingSitesPanel({
         const res = await fetch("/api/voting-sites", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ address: value, googleFallback }),
+          body: JSON.stringify({ address: value }),
           cache: "no-store",
           signal: controller.signal,
         });
@@ -141,13 +145,6 @@ export function VotingSitesPanel({
           autoComplete="off"
           inputMode="text"
         />
-        {/* Describes the mechanism as it works today, with no forward commitment. */}
-        <p className="voting-panel-note">
-          Your address is used to find your voting locations. It passes through
-          our server to the Census Bureau&rsquo;s geocoder and, where available,
-          the election office&rsquo;s address-only lookup. A ZIP shows all of its
-          covered places. No name or date of birth is needed.
-        </p>
         <button type="submit" className="voting-panel-submit">
           Show me
         </button>
@@ -163,7 +160,7 @@ export function VotingSitesPanel({
         </p>
       )}
 
-      {state.kind === "answered" && !state.answer.match && (
+      {state.kind === "answered" && !state.answer.match && !state.answer.outsideCoverage && (
         <p className="voting-panel-status">
           We could not turn that into a location. Try including the town and
           state.
@@ -171,19 +168,14 @@ export function VotingSitesPanel({
       )}
 
       {state.kind === "answered" &&
-        state.answer.match &&
         state.answer.outsideCoverage && (
-          <CardGapContribution id="voting-locations" label="voting locations for this address" />
+          <div className="voting-panel-status" data-voting-coverage-gap>
+            <p>{readerCopy("copy.working")}.</p>
+            <a href={feedbackHref({ about: "Voting locations", zip: /^\d{5}$/.test(address.trim()) ? address.trim() : null })}>
+              Want us to get this sooner?
+            </a>
+          </div>
         )}
-
-      {state.kind === "answered" && state.answer.googleFallback?.available && !state.answer.googleFallback.requested && (
-        <div className="voting-panel-note">
-          <p>We have not loaded an official source for this place yet. You can ask Google’s election data; only this button sends your address to Google.</p>
-          <button type="button" className="voting-panel-submit" onClick={event => void submit(event, true)}>Ask Google’s election data</button>
-        </div>
-      )}
-      {state.kind === "answered" && state.answer.googleFallback?.requested && <p className="voting-panel-note">{state.answer.googleFallback.label}</p>}
-      {state.kind === "answered" && state.answer.googleFallback?.message && <p className="voting-panel-note">{state.answer.googleFallback.message}</p>}
 
       {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
       </Card>
@@ -194,7 +186,9 @@ export function VotingSitesPanel({
 
 /** The actual answered jurisdiction/site body shared by both panel entry paths. */
 export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
+  const gaps = useMemo(() => votingAnswerGaps(answer), [answer]);
   return <>
+      <CardGapsContribution id="voting-answer" gaps={gaps} />
       {answer.jurisdictions.map((j) => (
           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
             <h3 className="voting-jurisdiction-name">{j.name}</h3>
@@ -228,7 +222,6 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
               {j.office.address && <p>{j.office.address}</p>}
             </div>}
-            {j.blanks?.map(blank => <CardGapContribution key={blank.id} id={`voting-owed:${blank.id}`} label={blank.owed} />)}
             {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
                 Published for the {j.election}.
@@ -261,7 +254,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
                   <SiteRow
                     key={site.id}
                     site={site}
-                    electionDate={j.electionDate}
+                    checkedAt={j.collectedAt}
                     miles={miles}
                     selected={site.id === selectedSiteId}
                     onSelect={() =>
@@ -278,6 +271,34 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
   </>;
 }
 
+/** One contribution per answer avoids a separate card update for every missing site field. */
+function votingAnswerGaps(answer: VotingSitesAnswer): CardGap[] {
+  if (answer.outsideCoverage) return [];
+  const gaps = new Map<string, CardGap>();
+  const add = (gap: CardGap) => {
+    const key = `${gap.kind ?? "not-held"}:${gap.label}:${gap.unit ?? ""}`;
+    const prior = gaps.get(key);
+    gaps.set(key, prior ? { ...prior, count: (prior.count ?? 1) + (gap.count ?? 1) } : gap);
+  };
+  for (const j of answer.jurisdictions) {
+    if (answer.precision === "ADDRESS" && j.narrowing.kind === "REFUSED")
+      add({ id: `voting-precinct:${j.ocdId}`, label: "your Election Day polling place" });
+    for (const blank of j.blanks ?? []) add({ id: `voting-owed:${blank.id}`, label: blank.owed });
+    const electionLabel = j.electionDate && /^\d{4}-\d{2}-\d{2}$/.test(j.electionDate)
+      ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(`${j.electionDate}T12:00:00Z`)) : "Upcoming";
+    for (const site of j.sites) {
+      if (!site.hours && !site.schedules?.some(schedule => schedule.hours))
+        add({ id: `voting-hours:${site.id}`, label: "hours", unit: "voting location" });
+      if (site.election === null && !site.electionDate)
+        add({ id: `voting-election:${site.id}`, label: "election dates", unit: "voting location" });
+      if (!site.electionDate || j.electionDate && site.electionDate !== j.electionDate)
+        add({ id: `voting-confirmation:${site.id}`, label: `${electionLabel} election confirmation`, unit: "voting location" });
+      if (!isPinnable(site)) add({ id: `voting-map:${site.id}`, label: "map locations", unit: "voting location" });
+    }
+  }
+  return [...gaps.values()];
+}
+
 const KIND_LABEL: Record<VotingSite["kind"], string> = {
   ELECTION_DAY: "Election-day polling place",
   EARLY_VOTING: "Early voting",
@@ -289,22 +310,19 @@ const KIND_LABEL: Record<VotingSite["kind"], string> = {
 
 function SiteRow({
   site,
-  electionDate,
+  checkedAt,
   miles,
   selected,
   onSelect,
 }: {
   site: VotingSite;
-  electionDate?: string;
+  checkedAt: string;
   /** Miles from the address the reader typed, or null if unplaceable. */
   miles: number | null;
   selected: boolean;
   onSelect: () => void;
 }) {
-  const confirmed = !!site.electionDate && (!electionDate || site.electionDate === electionDate);
-  const requestedElection = electionDate && /^\d{4}-\d{2}-\d{2}$/.test(electionDate)
-    ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(`${electionDate}T12:00:00Z`))
-    : null;
+  const lastChecked = site.sources?.flatMap(source => source.checkedAt ? [source.checkedAt] : []).sort().at(-1) ?? checkedAt;
   return (
     <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
@@ -315,20 +333,22 @@ function SiteRow({
       {/* A null distance renders nothing; map gaps join the card footer. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
-      <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
+      <p className="voting-site-kind">{(site.kinds ?? [site.kind]).map(kind => KIND_LABEL[kind]).join(" · ")}</p>
       {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {site.election}</p>}
       {site.electionDate && <p className="voting-site-election">Election date: {site.electionDate}</p>}
-      {site.precinct && <p className="voting-site-serves">Precinct: {site.precinct}</p>}
+      {(site.precincts?.length || site.precinct) && <p className="voting-site-serves">Precinct: {(site.precincts ?? [site.precinct]).join(", ")}</p>}
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}
-      {site.days && <p className="voting-site-days">Days: {site.days}</p>}
-      {site.hours ? <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p> : <CardGapContribution id={`voting-hours:${site.id}`} label="hours" unit="voting location" />}
+      {site.schedules?.length ? site.schedules.map((schedule, index) => <p className="voting-site-hours whitespace-pre-line" key={index}>
+        {KIND_LABEL[schedule.kind]}{schedule.electionDate ? ` · ${schedule.electionDate}` : ""}{schedule.days ? ` · ${schedule.days}` : ""}{schedule.hours ? `: ${schedule.hours}` : ""}
+      </p>) : <>
+        {site.days && <p className="voting-site-days">Days: {site.days}</p>}
+        {site.hours && <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p>}
+      </>}
       {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
       {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
       {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
       {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
-      {site.election === null && !site.electionDate && <CardGapContribution id={`voting-election:${site.id}`} label="election dates" unit="voting location" kind="not-posted" />}
-      {!confirmed && <CardGapContribution id={`voting-confirmation:${site.id}`} label={`${requestedElection ?? "Upcoming"} election confirmation`} unit="voting location" />}
-      {!isPinnable(site) && <CardGapContribution id={`voting-map:${site.id}`} label="map locations" unit="voting location" />}
+      <p className="voting-site-checked">Last checked: <time dateTime={lastChecked}>{lastChecked.slice(0, 10)}</time></p>
       {site.address && <a
         className="voting-site-directions"
         href={directionsUrl(site)}

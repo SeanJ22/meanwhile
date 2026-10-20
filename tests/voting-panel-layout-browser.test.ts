@@ -133,7 +133,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
       await context.close();
     }
-    assert.equal(received.length, 4); assert.ok(received.every(row => row.googleFallback === false));
+    assert.equal(received.length, 4); assert.ok(received.every(row => row.googleFallback === undefined));
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

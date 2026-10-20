@@ -1,72 +1,71 @@
-import { readerRoute } from "@/lib/api/reader-route";
-import { parseCensusGeographies } from "@/lib/geo/census-geocoder";
-import { currentRepresentationSelection } from "@/lib/census-geography/selection";
-import { divisionsForCensusGeographies, divisionsByOcdIds } from "@/lib/registry/server";
-import { loadVotingSites, readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
-import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { answerVotingSites, votingJurisdictionCovers, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
-import { addCensusVotingGeographies, census2020VotingDistricts, censusVotingAddress, censusVotingAddressFields, votingPlaceFromDivisions, votingInputZip } from "@/lib/ballot/voting-answer-geography";
-import { readGoogleVotingAnswer } from "@/lib/sources/google-civic/reader-lookup";
-import { readVotingSource } from "@/lib/ballot/voting-source-readers";
-import type { VotingAddressInput } from "@/lib/ballot/voting-source-types";
+import { withReaderRoute, withReaderSelection } from "@/lib/db/reader-route";
+import { readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
+import { indexedZipDivisionEntry } from "@/lib/geo/zip-division-index";
+import { answerVotingSites, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
+import { addCensusVotingGeographies, censusVotingAddress, votingInputZip, votingPlaceFromZip } from "@/lib/ballot/voting-answer-geography";
+import { recordVotingFailure } from "@/lib/ballot/voting-errors";
+import type { VotingSitesFile } from "@/lib/ballot/voting-sites";
 
-/** POST keeps the address out of our URL. No identity fields, storage, logging or request cache. */
+/** Address inputs stay in this uncached POST request and the one Census geocode. */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
-const empty = (status = 200) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage: false, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
+const empty = (status = 200, outsideCoverage = true) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
 
-export const POST = readerRoute("/api/voting-sites", async function POST(request: Request) {
-  const deadline = Date.now() + 2800;
-  const requestFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store",
-    signal: AbortSignal.any([AbortSignal.timeout(Math.max(1, deadline - Date.now())), ...(init?.signal ? [init.signal] : [])]) });
-  let address: string, googleRequested: boolean;
-  try {
-    const body = await request.json() as Record<string, unknown>;
-    if (!body || Object.keys(body).some(key => key !== "address" && key !== "googleFallback")) return empty(400);
-    address = typeof body.address === "string" ? body.address.trim() : "";
-    googleRequested = body.googleFallback === true;
-  } catch { return empty(400); }
-  if (address.length < 3 || address.length > 200) return empty(400);
-
-  const isZip = /^\d{5}$/.test(address);
-  const geocoded = isZip ? Promise.resolve(null) : censusVotingAddress(address, requestFetch);
-  try {
-    let place: VotingReaderPlace;
-    let readerAddress: VotingAddressInput = { address };
-    const located = await geocoded;
-    const zipInput = isZip ? address : !located ? votingInputZip(address) : null;
-    if (zipInput) {
-      const zip = await zipDivisionEntry(zipInput);
-      if (!zip) return empty();
-      const divisions = await divisionsByOcdIds(zip.ids, { zip: zipInput });
-      place = votingPlaceFromDivisions(divisions, "ZIP", null);
-      place.divisionIds = [...new Set([...place.divisionIds, ...zip.ids])];
-      place.states = [...new Set([...place.states, ...zip.ids.flatMap(id => /\/(?:state|district|territory):([a-z]{2})/.exec(id)?.[1]?.toUpperCase() ?? [])])];
-    } else {
-      if (!located) return empty();
-      readerAddress = censusVotingAddressFields(address, located.payload);
-      const geographic = parseCensusGeographies(located.payload);
-      const divisions = await divisionsForCensusGeographies(geographic?.geographies ?? {}, currentRepresentationSelection(), "Current_Current", {});
-      place = addCensusVotingGeographies(votingPlaceFromDivisions(divisions, "ADDRESS", located.point), located.payload);
+export async function POST(request: Request): Promise<Response> {
+  return withReaderRoute("/api/voting-sites", async () => {
+    const deadline = Date.now() + 2800;
+    let address = "";
+    let stage = "input";
+    try {
+      let body: unknown;
+      try { body = await request.json(); }
+      catch { throw new Error("Voting lookup body is not valid JSON"); }
+      if (!body || typeof body !== "object" || Array.isArray(body) || Object.keys(body).some(key => key !== "address")) {
+        recordVotingFailure({ stage }, new Error("Voting lookup accepts only an address field"));
+        return empty(400, false);
+      }
+      address = typeof (body as { address?: unknown }).address === "string" ? (body as { address: string }).address.trim() : "";
+      if (address.length < 3 || address.length > 200) {
+        recordVotingFailure({ stage }, new Error("Voting lookup address length is outside 3 to 200 characters"));
+        return empty(400, false);
+      }
+      const isZip = /^\d{5}$/.test(address);
+      stage = "geocode";
+      const located = isZip ? null : await censusVotingAddress(address);
+      const zipInput = isZip ? address : !located ? votingInputZip(address) : null;
+      let place: VotingReaderPlace;
+      if (zipInput) {
+        stage = "zip-membership";
+        const zip = await indexedZipDivisionEntry(zipInput);
+        if (!zip) {
+          recordVotingFailure({ stage, precision: "ZIP" }, new Error("ZIP membership is not held"));
+          return empty();
+        }
+        place = votingPlaceFromZip(zip.ids);
+      } else {
+        if (!located) return empty();
+        place = addCensusVotingGeographies({ precision: "ADDRESS", point: located.point, divisionIds: [], states: [], countyFips: [], countyNames: [],
+          countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] }, located.payload);
+      }
+      stage = "held-voting-sites";
+      return await withReaderSelection({ states: place.states, keys: new Set(place.divisionIds), ...(place.point ? { point: [place.point.lng, place.point.lat] as const } : {}) }, async () => {
+        const files = await Promise.all(place.states.map(async state => {
+          const read = await readVotingSitesProjection(state, {}, Math.max(1, deadline - Date.now()));
+          if (read.kind === "PROMOTED") return read.value;
+          if (read.kind === "NOT_RECORDED") return { generatedAt: "", jurisdictions: [] } satisfies VotingSitesFile;
+          const detail = "detail" in read ? read.detail : "No published voting-site value";
+          recordVotingFailure({ stage, state, precision: place.precision }, new Error(`${read.kind}: ${detail}`));
+          throw new Error(`Voting-site holding could not be read for ${state}: ${read.kind}`);
+        }));
+        const file: VotingSitesFile = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "", jurisdictions: files.flatMap(row => row.jurisdictions) };
+        stage = "precinct-match";
+        const answer = await answerVotingSites(file, place);
+        return Response.json(answer, { headers: NO_STORE });
+      });
+    } catch (error) {
+      recordVotingFailure({ stage }, error, address);
+      return empty(stage === "input" ? 400 : 503, stage !== "input");
     }
-    const files = await Promise.all(place.states.map(async state => {
-      await readVotingSitesProjection(state);
-      return loadVotingSites(state);
-    }));
-    const file = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "",
-      jurisdictions: files.flatMap(row => row.jurisdictions).filter(row => votingJurisdictionCovers(row, place)) };
-    const covering = file.jurisdictions.filter(j => votingJurisdictionCovers(j, place));
-    const needsPrecinct = covering.some(j => j.sites.some(site => site.kind === "ELECTION_DAY" && site.precinct));
-    if (place.point && needsPrecinct && !covering.some(j => j.boundaries?.some(b => b.kind === "OFFICIAL_PRECINCT"))) {
-      place = addCensusVotingGeographies(place, await census2020VotingDistricts(place.point, requestFetch), "CENSUS_2020");
-    }
-    const answer = await answerVotingSites(file, place, { address, readerRequested: true, googleRequested }, {
-      readOfficialAddress: (door) => readVotingSource(door, { fetch: requestFetch, deadlineMs: deadline, readerAddress }),
-      readGoogle: (value, resolved) => readGoogleVotingAnswer(value, resolved, { fetchImpl: requestFetch }),
-    });
-    return Response.json(answer, { headers: NO_STORE });
-  } catch {
-    return Response.json({ error: "Voting-location data is temporarily unavailable. The source work remains open." }, { status: 503, headers: NO_STORE });
-  }
-});
+  });
+}

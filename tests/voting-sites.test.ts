@@ -210,17 +210,9 @@ test("B19: the route writes nothing — a source scan for every write primitive"
   );
 });
 
-test("B19: the panel says what happens to the address, where the reader types it", () => {
-  const panel = readFileSync(
-    join(process.cwd(), "components", "map", "voting-sites-panel.tsx"),
-    "utf8",
-  );
-  assert.match(panel, /passes through\s+our server/);
-  assert.match(panel, /Census Bureau/);
-  assert.ok(
-    !/never (store|log)/i.test(panel),
-    "the struck never-store/never-log promise is back on the voting panel",
-  );
+test("VS-01: voting-panel privacy copy stays on the collection-information page", () => {
+  const panel = readFileSync(join(process.cwd(), "components", "map", "voting-sites-panel.tsx"), "utf8");
+  assert.doesNotMatch(panel, /passes through\s+our server|Census Bureau|Ask Google.s election data/);
 });
 
 test("B19: directions are the only external handoff, built from the site's own address", () => {

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -9,7 +10,6 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import type { RecordExtractionShape } from "../lib/control-plane/workers/types.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { votingChiefRoots, votingScopeResolvers, votingSourceEvidence, votingReadHasFacts } from "../scripts/fetch-voting-sites.mts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 const doors = JSON.parse(readFileSync("data/reference/voting-legacy-doors.json", "utf8")) as VotingSourceDoor[];
 const named = (id: string) => { const door = doors.find(row => row.id === id); assert.ok(door); return door; };
@@ -48,13 +48,11 @@ test("source publication needs acquired facts and keeps only its own source evid
   const captured = { ...read, sources: [{ publisher: door.publisher, url: door.url }], rawBodies: [raw] };
   assert.equal(votingReadHasFacts(door, captured), true);
   const other = named("cochise:ballot-box-table");
-  const vault = new MemoryEvidenceStore();
-  const evidence = await votingSourceEvidence(vault, door, captured, [{ url: other.url, contentType: "text/html",
+  const evidence = await votingSourceEvidence(door, captured, [{ url: other.url, contentType: "text/html",
     bytes: readFileSync("tests/fixtures/voting-sources/cochise-voter-information-official-extract.html") }]);
   assert.equal(evidence.length, 1);
   assert.equal(evidence[0]!.url, door.url);
-  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), raw.bytes);
-  assert.equal((await vault.list("")).length, 1, "an unrelated capture is never held");
+  assert.deepEqual(gunzipSync(Buffer.from(evidence[0]!.savedDocument!.body, "base64")), raw.bytes);
 });
 
 test("the prior official routes remain data, including mixed-election filters and the closed public state list", () => {

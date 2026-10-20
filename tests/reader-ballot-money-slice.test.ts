@@ -17,6 +17,9 @@ test("the migrated ballot money read retains complete displayed and prior filing
     {targetKeys:["ballot-nj-earlier"],ocdId:division,filings:[{year:2024,sourceUrl:"https://www.elec.nj.gov/earlier",amount:5678}]},
     {targetKeys:["ballot-nj-unrelated"],ocdId:division,filings:[{year:2026,amount:91011}]}];
   const payload={formatVersion:1,cycle:2026,collectedAt:AT,records,refreshAttempts:{held:{checkedAt:AT}},acquisitionCursors:{next:40}};
+  const previousUrl=process.env.DATABASE_URL;
+  // Select the database reader; every query below runs in the migrated in-memory database.
+  process.env.DATABASE_URL="postgres://readonly:fixture@127.0.0.1/reader-migrations-test";
   let reads=0;
   installReaderDatabaseQuery(async statements=>{
     reads++;
@@ -30,9 +33,9 @@ test("the migrated ballot money read retains complete displayed and prior filing
     await withReaderSelection({states:["NJ"],keys:new Set([division,"state:NJ","07005"]),point:[-74.4,40.9]},async()=>{
       await primeBallotStateMoneyRead("NJ",set,[contest]);
       const result=await readPromotedCivicData<typeof payload>("STATE_CAMPAIGN_FINANCE","US-NJ:campaign-finance:2026");
-      assert.equal(result.kind,"PROMOTED");
+      assert.equal(result.kind,"PROMOTED",JSON.stringify(result));
       if(result.kind==="PROMOTED")assert.deepEqual(result.value,{...payload,records:records.slice(0,2)});
       assert.equal(reads,1,"subsequent money cards consume the same selected holding");
     });
-  }finally{installReaderDatabaseQuery(undefined);await pg.close();}
+  }finally{installReaderDatabaseQuery(undefined);if(previousUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=previousUrl;await pg.close();}
 });

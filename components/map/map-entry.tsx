@@ -141,8 +141,16 @@ interface ViewTarget {
 const EMPTY_COVERED_BODIES: CoveredBody[] = [];
 const EMPTY_MEETINGS: Meeting[] = [];
 // Start the split map download when its client module arrives, before hydration's effects.
-const arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
-void arrivingMap?.catch(() => {});
+let arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
+void arrivingMap?.catch(() => { arrivingMap=null; });
+let arrivingAsk: Promise<typeof import("@/components/ask/ask-box")> | null = null;
+function prepareAsk() {
+  if (!arrivingAsk) {
+    arrivingAsk = import("@/components/ask/ask-box");
+    void arrivingAsk.catch(() => { arrivingAsk = null; });
+  }
+  return arrivingAsk;
+}
 
 export function MapEntry() {
   return (
@@ -1079,7 +1087,7 @@ function MapEntryInner() {
       .then(module => { if (active) setListOverlay(() => module.ListOverlay); }).catch(error=>failed("list",error));
     if ((cardKind === "door" || phoneMenu) && !DoorOverlay) void import("./door-overlay")
       .then(module => { if (active) setDoorOverlay(() => module.DoorOverlay); }).catch(error=>failed("door",error));
-    if (pop === "ask" && !AskBox) void import("@/components/ask/ask-box")
+    if (pop === "ask" && !AskBox) void prepareAsk()
       .then(module => { if (active) setAskBox(() => module.AskBox); }).catch(error=>failed("ask",error));
     return () => { active = false; };
   }, [cardKind, pop, AskBox, DoorOverlay, ListOverlay, layoutBp, sidebarState]);
@@ -1575,6 +1583,12 @@ function MapEntryInner() {
       >
       <main
         className="mw-reader relative h-dvh w-full overflow-hidden"
+        onPointerDownCapture={event => {
+          if (event.button === 0 && event.target instanceof Element && event.target.closest(".ask-pill")) void prepareAsk();
+        }}
+        onFocusCapture={event => {
+          if (event.target instanceof Element && event.target.closest(".ask-pill")) void prepareAsk();
+        }}
         data-sidebar={sidebarUp ? "open" : "closed"}
         data-bp={layoutBp}
         style={

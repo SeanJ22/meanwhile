@@ -4,6 +4,7 @@ import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
+import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
@@ -27,12 +28,12 @@ import {
 } from "./fixture-policy.ts";
 export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
-import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
 import { projectionKey } from "./projection-key.ts";
 
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
+const proofRequire=createRequire(import.meta.url);
 
 function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null): string | null {
   const evidence = candidate?.candidate.bootstrapImport;
@@ -1247,6 +1248,8 @@ export function promotionProofIssue<T>(
   if (indexedPrior) {
     if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
   } else if (candidate.bootstrapImport) {
+    // Reader pointer proofs do not need the legacy import builders on a cold visit.
+    const {trustedLkgImportEvidenceIssue}=proofRequire("./trusted-lkg-import.ts") as typeof import("./trusted-lkg-import.ts");
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
     const expectedSourceCode = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION"

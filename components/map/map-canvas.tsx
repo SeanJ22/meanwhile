@@ -1046,6 +1046,16 @@ export function MapCanvas({
       framedMapRef.current = map;
       framedBoundsRef.current = signature;
 
+      // Arrival already positioned the ZIP. Keep that view when every venue
+      // fits inside its unobstructed area instead of loading a second tile set.
+      const padding = map.getPadding(), canvas = map.getCanvas();
+      const inside = (lng: number, lat: number) => {
+        const point = map.project([lng, lat]);
+        return point.x >= (padding.left ?? 0) + 24 && point.x <= canvas.clientWidth - (padding.right ?? 0) - 24
+          && point.y >= (padding.top ?? 0) + 24 && point.y <= canvas.clientHeight - (padding.bottom ?? 0) - 24;
+      };
+      if (inside(camera.lng, camera.lat) && framed.every(venue => inside(venue.lng, venue.lat))) return;
+
       map.fitBounds(bounds, {
         padding: { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,

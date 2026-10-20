@@ -196,7 +196,7 @@ export function statePackageStatement(state: string, divisions: readonly string[
   if(!jurisdiction)throw new Error("READER_JURISDICTION_UNAVAILABLE");
   // ZIP shards name local and legislative divisions; statewide officers govern every ZIP too.
   const places=[...new Set([...divisions,"ocd-division/country:us",`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.postal.toLowerCase()}`])];
-  const parts=[['zip_people',zipPeopleStatement(state,places)],['zip_official',zipOfficialStatement(state,places)],
+  const parts=[['zip_official',zipOfficialStatement(state,places)],['zip_people',zipPeopleStatement(state,places)],
     ['zip_sources',zipSourcesStatement(state,places)],['zip_registry',zipRegistryStatement(state,places)]] as const;
   const params:unknown[]=[...geography.params];
   const ctes=parts.map(([name,statement])=>{const offset=params.length;params.push(...statement.params);
@@ -362,15 +362,11 @@ function zipOfficialStatement(state: string, divisions: readonly string[]) {
 function zipPeopleStatement(state: string, divisions: readonly string[]) {
   const stateCode = requireRegistryState(state);
   return {text:`WITH RECURSIVE selected_divisions AS MATERIALIZED (${selectedDivisionsSql}), official_root AS MATERIALIZED (
-    SELECT reader_payload_node(p.payload) AS value
-      FROM civic_data_promotions p WHERE p.key=$3
+    SELECT reader_payload_node(payload) AS value FROM zip_official WHERE published
   ), official_roster AS MATERIALIZED (
     SELECT reader_payload_node(value->'roster') AS value FROM official_root
   ), official_people AS MATERIALIZED (
     SELECT reader_payload_node(h.item) AS value FROM official_roster,LATERAL reader_payload_members(value->'officeholders') h
-    WHERE reader_payload_node(h.item)->>'id' IN (
-      SELECT reader_payload_node(d.item)->>'officeholderId' FROM official_roster,LATERAL reader_payload_members(value->'divisions') d
-      WHERE reader_payload_node(d.item)->>'ocdId' IN (SELECT id FROM selected_divisions))
     UNION ALL SELECT jsonb_build_object('id',i.value->>'officeholderId','personId',i.value->>'officeholderId',
       'name',concat_ws(' ',nullif(m.value->>'givenName',''),nullif(m.value->>'middleName',''),nullif(m.value->>'familyName','')),
       'nativeIds',jsonb_build_object('nh-general-court',jsonb_build_array(i.value->>'officialPersonId')))
@@ -379,7 +375,6 @@ function zipPeopleStatement(state: string, divisions: readonly string[]) {
       LATERAL reader_payload_members(official_root.value->'identities') identity,
       LATERAL (SELECT reader_payload_node(identity.item) AS value) i
     WHERE m.value->>'chamber'=i.value->>'chamber' AND m.value->>'seatNo'=i.value->>'seatNo' AND m.value->>'district'=i.value->>'district'
-      AND ${nhMemberDivisionSql("m.value","$4")} IN (SELECT id FROM selected_divisions)
   ), seed_ids AS MATERIALIZED (SELECT id FROM selected_divisions UNION SELECT unnest(${peopleIdentityKeysSql("value")}) FROM official_people
   ), seed_names AS MATERIALIZED (
     SELECT regexp_replace(lower(normalize(reader_payload_value(value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name FROM official_people
@@ -416,7 +411,7 @@ function zipPeopleStatement(state: string, divisions: readonly string[]) {
         'unmatched',coalesce((SELECT jsonb_agg(reader_payload_value(u.item) ORDER BY u.ordinal_index) FROM reader_payload_members(roster.value->'unmatched') u
           WHERE reader_payload_node(u.item)->>'officeholderId' IN (SELECT value->>'id' FROM chosen)),'[]'::jsonb)))
     END AS payload FROM pointer LEFT JOIN root ON true LEFT JOIN roster ON true`,
-    params:[`STATE_LEGISLATOR:US-${stateCode}:openstates-people:v1`,divisions,`STATE_LEGISLATOR:US-${stateCode}`,Object.keys(NH_COUNTY)]};
+    params:[`STATE_LEGISLATOR:US-${stateCode}:openstates-people:v1`,divisions]};
 }
 
 export function zipPeopleEntry(state: string, row: Record<string, unknown> | null | undefined): PromotedEdgeEntry {

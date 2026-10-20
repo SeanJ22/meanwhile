@@ -1,5 +1,5 @@
-/** Fresh browser visits on current main, or --built with the existing production readonly connection.
- * NODE_USE_ENV_PROXY=1 WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium node --env-file=/tmp/rs03-production.env
+/** Fresh browser visits on current main, or --built on the exact standalone build and production copy.
+ * NODE_USE_ENV_PROXY=1 WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium node --env-file=/tmp/rs03-production-copy.env
  *   --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/rs-03-pages-check.mts --provider [--built] --out=...
  * Normal basemap checks also set WTP_PROVIDER_ACCESS=maptiler and WTP_PROVIDER_REQUEST_CEILING=200.
  */
@@ -39,10 +39,10 @@ const relaySessions=new Set<ServerHttp2Session>();
 const rows:Record<string,unknown>[]=[];
 let build:unknown,buildId:string|undefined,identity:unknown;
 const save=()=>writeFile(`${output}/timings.json`,JSON.stringify({at:new Date().toISOString(),origin,serverOrigin:built?serverOrigin:null,motion,build,buildId,identity,
-  transport:built?"Streaming HTTP/2 TLS loopback proxy; Next starts on the first dynamic request; browser-only DNS override":"Live production",
+  transport:built?"Streaming HTTP/2 TLS loopback proxy; generated standalone server starts on the first dynamic request; browser-only DNS override":"Live production",
   provider:{mode:browser.provider.policy.mode,spent:browser.provider.spent,blocked:browser.provider.blocked,refused:browser.provider.refused},
   productionCopyReadBytes:built?{direct:directReadBytes,server:serverReadBytes,total:directReadBytes+serverReadBytes}:null,
-  method:built?"Fresh browser and server process per ZIP/profile/surface; production-copy database; local cold server startup is inside the navigation clock; navigation through full rendering, load event, complete initial API reads, and two painted frames; one real first Ask opening, input tap and typing; no question submission":"Fresh browser process/context; live production server warmth is uncontrolled; complete page rendering and first Ask opening, input tap and typing; no question submission",rows},null,2)+"\n");
+  method:built?"Fresh browser and generated standalone server process per ZIP/profile/surface; production-copy database; cold startup is inside the navigation clock; navigation through full rendering, load event, complete initial API reads, and two painted frames; one real first Ask opening, input tap and typing; no question submission":"Fresh browser process/context; live production server warmth is uncontrolled; complete page rendering and first Ask opening, input tap and typing; no question submission",rows},null,2)+"\n");
 if(built){
  const connection=process.env.RS03_READER_COPY_DATABASE_URL;
  assert.ok(connection,"The production-copy readonly connection is required");
@@ -56,10 +56,11 @@ if(built){
   EXISTS(SELECT 1 FROM pg_tables WHERE schemaname='public' AND has_table_privilege(current_user,quote_ident(schemaname)||'.'||quote_ident(tablename),'INSERT,UPDATE,DELETE')) AS can_write`,[])],{readOnly:true});
  assert.equal(role.role,"readonly");assert.equal(role.read_only,"on");assert.equal(role.can_write,false);identity=role;
  buildId=(await readFile(".next/BUILD_ID","utf8")).trim();
+ assert.equal((await readFile(".next/standalone/.next/BUILD_ID","utf8")).trim(),buildId,"Measure the standalone output from this exact build");
  let starting:Promise<void>|undefined;
  const ensureServer=()=>starting??=(async()=>{
- server=spawn(process.execPath,["node_modules/next/dist/bin/next","start","-p","3305","-H","127.0.0.1"],{
-  env:{...process.env,DATABASE_URL:connection,WTP_CONTROL_PLANE_DATABASE_URL:process.env.RS03_CONTROL_COPY_DATABASE_URL,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
+ server=spawn(process.execPath,[resolve(".next/standalone/server.js")],{
+  env:{...process.env,PORT:"3305",HOSTNAME:"127.0.0.1",DATABASE_URL:connection,WTP_CONTROL_PLANE_DATABASE_URL:process.env.RS03_CONTROL_COPY_DATABASE_URL,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
  });
  server.stdout!.on("data",chunk=>{serverLog+=chunk;});server.stderr!.on("data",chunk=>{serverLog+=chunk;});
  return new Promise<void>((ready,fail)=>{
@@ -79,7 +80,8 @@ if(built){
  for(const [directory,prefix] of [[".next/static","/_next/static"],["public",""]]){
   for(const name of await readdir(directory,{recursive:true})){
    const path=resolve(directory,name),extension=extname(name);
-   const type=({".js":"text/javascript",".mjs":"text/javascript",".css":"text/css",".json":"application/json",".geojson":"application/geo+json",".woff2":"font/woff2",".svg":"image/svg+xml"} as Record<string,string>)[extension];
+   const type=({".js":"text/javascript",".mjs":"text/javascript",".css":"text/css",".json":"application/json",".geojson":"application/geo+json",".woff2":"font/woff2",".svg":"image/svg+xml",
+    ".jpg":"image/jpeg",".jpeg":"image/jpeg",".png":"image/png",".webp":"image/webp",".avif":"image/avif",".ico":"image/x-icon"} as Record<string,string>)[extension];
    if(!type)continue;
    const raw=await readFile(path).catch(()=>null);if(!raw)continue;
    const compressed=/javascript|css|json|svg/.test(type);
@@ -109,7 +111,9 @@ if(built){
 const browser=await launchGuarded({label:"rs03-full-pages",blockWrites:true,headless:true,
  ...(process.argv.includes("--provider")?{spendsProviderQuota:"maptiler" as const}:{}),
  proxy:{server:process.env.HTTPS_PROXY??"http://proxy:8080",bypass:`127.0.0.1,localhost${built?`,${publicUrl.hostname}`:""}`},
- args:["--no-sandbox","--disable-dev-shm-usage","--ignore-certificate-errors","--use-angle=swiftshader","--enable-unsafe-swiftshader",...(built?[`--host-resolver-rules=MAP ${publicUrl.hostname} 127.0.0.1:3310`]:[])],
+ // Use Chromium's WebGL fallback, not its GPU-driver emulation for every
+ // compositor surface. The latter stalls on the initial blank widget's GL flush.
+ args:["--no-sandbox","--disable-dev-shm-usage","--ignore-certificate-errors","--use-gl=angle","--use-angle=swiftshader-webgl","--enable-unsafe-swiftshader",...(built?[`--host-resolver-rules=MAP ${publicUrl.hostname} 127.0.0.1:3310`]:[])],
 });
 try{
  build=built?{localBuildId:buildId}:await(await fetch(`${origin}/api/build`,{headers:{"x-wtp-synthetic-run":browser.runId}})).json();
@@ -123,7 +127,6 @@ try{
    const response=await fetch(`${origin}${path}`,{headers:{"x-wtp-synthetic-run":browser.runId},signal:AbortSignal.timeout(10000)});
    await route.fulfill({status:response.status,contentType:"application/json",body:Buffer.from(await response.arrayBuffer())});
   });
-  await context.addInitScript(()=>localStorage.setItem("wtp.tutorial_seen","1"));
   const page=await context.newPage(),pending=new Set<BrowserRequest>();
   if(process.argv.includes("--profile")||process.argv.includes("--stages")||process.argv.includes("--trace"))await page.addInitScript(()=>{
    const host=window as unknown as {__rs03Stages:Record<string,unknown>[];__wtpMap?:unknown};host.__rs03Stages=[];
@@ -185,6 +188,15 @@ try{
   try{
    const navigation=await page.goto(`${origin}${surface==="ballot"?"/ballot":"/"}?zip=${zip}`,{waitUntil:"commit",timeout:45000});
    if(built)assert.equal(navigation?.headers()["x-rs03-build"],buildId,"The browser must receive the measured build through the streaming proxy");
+   if(surface!=="ballot"){
+    // Poll in the page's animation frames: a broad role lookup can leave the
+    // visible tour waiting behind selector retries and charge that to the app.
+    await page.waitForFunction(()=>{
+     const button=document.querySelector<HTMLButtonElement>('dialog[open] button[aria-label="Skip the tour"]');
+     return Boolean(button?.getClientRects().length);
+    },undefined,{timeout:20000});
+    await page.locator('dialog[open] button[aria-label="Skip the tour"]').click({timeout:5000});
+   }
    if(surface==="ask"){
     // A real first click waits for a usable control; a custom event before hydration is lost.
     await page.locator(".ask-pill").filter({visible:true}).first().click({timeout:15000});
@@ -217,6 +229,10 @@ try{
     }
    }
    usableMs=await page.evaluate(()=>performance.now());
+   if (built&&surface==="ballot") await page.waitForFunction(()=>{
+    const footer=document.querySelector<HTMLElement>("[data-ballot-complete]");
+    return Boolean(footer?.getClientRects().length&&getComputedStyle(footer).visibility!=="hidden");
+   },undefined,{timeout:20000});
    if(surface!=="ballot")await page.waitForFunction(()=>{
     const map=(window as unknown as {__wtpMap?:{loaded:()=>boolean;isMoving:()=>boolean}}).__wtpMap;
     return Boolean(map?.loaded()&&!map.isMoving());
@@ -232,6 +248,10 @@ try{
    }while(pending.size&&Date.now()<deadline);
    if(pending.size)throw new Error("Initial page API reads did not finish");
    ms=await page.evaluate(()=>performance.now());
+   assert.deepEqual(await page.evaluate(()=>Array.from(document.images).filter(img=>{
+    const box=img.getBoundingClientRect();
+    return box.width&&box.height&&box.bottom>0&&box.right>0&&box.top<innerHeight&&box.left<innerWidth&&(!img.complete||!img.naturalWidth);
+   }).map(img=>img.currentSrc)),[],"Visible images must finish with real image bytes");
    // Verify the finished content after stopping the clock: inspection must not
    // charge its own layout, feature-query or locator-polling time to the reader.
    assert.ok(!/BASEMAP UNAVAILABLE|couldn't load state boundaries/i.test(await page.locator("body").innerText()),"The complete page must have its basemap and boundaries");

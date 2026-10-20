@@ -1,4 +1,5 @@
-import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead } from "@/lib/ballot/reader-data";
+import {Suspense} from "react";
+import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -500,8 +501,6 @@ export default readerRoute("/ballot", async function BallotPage({
   const readerData = await readBallotReaderData(place);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
   if (centroid && knownState) {
-    startRead("candidate-profiles", () => settleCandidateProfilesRead(knownState));
-    startRead("candidate-publications", () => settleCandidateCorpusRead(knownState));
     startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
     startRead("federal-directory", settleFederalDirectoryRead);
     startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
@@ -557,8 +556,10 @@ export default readerRoute("/ballot", async function BallotPage({
     auxiliaryPreloads.set(family, startRead(family, read));
   if (centroid) preload("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
-    preload("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
-    preload("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
+    const candidateDetails = readerData ? primeBallotCandidateDetails(set,matched.contests) : Promise.resolve();
+    void candidateDetails.catch(() => {});
+    preload("candidate-profiles", async () => { await candidateDetails; return settleCandidateProfilesRead(set!.election.state); });
+    preload("candidate-publications", async () => { await candidateDetails; return settleCandidateCorpusRead(set!.election.state); });
     preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
       preload("federal-directory", settleFederalDirectoryRead);
@@ -602,6 +603,46 @@ export default readerRoute("/ballot", async function BallotPage({
     return [contest.id, result] as const;
   })));
 
+  const measureContests = orderMeasures(
+    matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
+  );
+
+  const askSubjects: {
+    id: string;
+    name: string;
+    kind: "CONTEST" | "MEASURE" | "PERSON";
+  }[] = [
+    ...candidacyContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "CONTEST" as const,
+    })),
+    ...measureContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "MEASURE" as const,
+    })),
+
+    ...(set
+      ? candidacyContests.flatMap((c) =>
+          candidatesOf(set, c).map((k) => ({
+            id: k.id,
+            name: [k.givenName, k.familyName].filter(Boolean).join(" "),
+            kind: "PERSON" as const,
+          })),
+        )
+      : []),
+
+    ...candidacyContests.flatMap((c) =>
+      (lineupForContest(set!.election.state, c.id)?.nominees ?? []).map((n) => ({
+        id: `${c.id}|${n.name}`,
+        name: n.name,
+        kind: "PERSON" as const,
+      })),
+    ),
+  ].filter((v) => v.name.length > 0);
+
+  const contents = (async () => {
   const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
   const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
     .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
@@ -657,9 +698,7 @@ export default readerRoute("/ballot", async function BallotPage({
   const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
 
   const measureRecords = set ? measureRecordsForBallot(set) : [];
-  const measureContests = orderMeasures(
-    matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
-  );
+
 
   const measureFor = (contestId: string): Measure | null =>
     set?.measures.find((m) => m.contestId === contestId) ?? null;
@@ -673,40 +712,7 @@ export default readerRoute("/ballot", async function BallotPage({
     (c) => !isStatewideDivision(c.ocdId),
   );
 
-  const askSubjects: {
-    id: string;
-    name: string;
-    kind: "CONTEST" | "MEASURE" | "PERSON";
-  }[] = [
-    ...candidacyContests.map((c) => ({
-      id: c.id,
-      name: c.title,
-      kind: "CONTEST" as const,
-    })),
-    ...measureContests.map((c) => ({
-      id: c.id,
-      name: c.title,
-      kind: "MEASURE" as const,
-    })),
 
-    ...(set
-      ? candidacyContests.flatMap((c) =>
-          candidatesOf(set, c).map((k) => ({
-            id: k.id,
-            name: [k.givenName, k.familyName].filter(Boolean).join(" "),
-            kind: "PERSON" as const,
-          })),
-        )
-      : []),
-
-    ...candidacyContests.flatMap((c) =>
-      (lineupForContest(set!.election.state, c.id)?.nominees ?? []).map((n) => ({
-        id: `${c.id}|${n.name}`,
-        name: n.name,
-        kind: "PERSON" as const,
-      })),
-    ),
-  ].filter((v) => v.name.length > 0);
 
   const pickableContests =
     set && matched
@@ -814,49 +820,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
   return (
 
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
-      <BallotCapture zip={zip} />
-      <div className="ballot-page-chrome flex items-center justify-between gap-3">
-        <p className="t-body">
-          <Link
-            href="/"
-            prefetch={false}
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            ← Back to the map
-          </Link>
-        </p>
-        <ThemeToggle className="shrink-0" />
-      </div>
-      <div className="ballot-page-chrome mt-4">
-        <Logo variant="wordmark" size={30} />
-      </div>
-      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
-        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
-      </h1>
-
-      <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
-        A zip code is orientation, not your exact ballot — zip areas cross
-        town and district lines. Everything below is presented as filed with
-        election authorities, with the filing linked on every item.{" "}
-        <span className="font-medium">We never suggest how to vote.</span>
-      </p>
-
-      {zip && (
-        <div className="ballot-top-pills">
-          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">
-            Moving here? Know the basics →
-          </Link>
-          <BallotAskPill
-            zip={zip}
-            ocdIds={askOcdIds}
-            activeSubjects={askSubjects}
-          />
-        </div>
-      )}
-
-      <div className="my-4"><WhereToVote /></div>
+    <>
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
 
@@ -1812,9 +1776,10 @@ export default readerRoute("/ballot", async function BallotPage({
         </>
       )}
 
-      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
+      <p data-ballot-complete className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
         <Link
           href="/"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           Back to the map
@@ -1822,11 +1787,63 @@ export default readerRoute("/ballot", async function BallotPage({
         <span className="text-muted">·</span>{" "}
         <Link
           href="/transparency"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           How we handle data
         </Link>
       </p>
+    </>
+  );
+  })();
+  void contents.catch(() => {});
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
+      <BallotCapture zip={zip} />
+      <div className="ballot-page-chrome flex items-center justify-between gap-3">
+        <p className="t-body">
+          <Link
+            href="/"
+            prefetch={false}
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            ← Back to the map
+          </Link>
+        </p>
+        <ThemeToggle className="shrink-0" />
+      </div>
+      <div className="ballot-page-chrome mt-4">
+        <Logo variant="wordmark" size={30} />
+      </div>
+      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
+        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
+      </h1>
+
+      <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
+        A zip code is orientation, not your exact ballot — zip areas cross
+        town and district lines. Everything below is presented as filed with
+        election authorities, with the filing linked on every item.{" "}
+        <span className="font-medium">We never suggest how to vote.</span>
+      </p>
+
+      {zip && (
+        <div className="ballot-top-pills">
+          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
+          <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">
+            Moving here? Know the basics →
+          </Link>
+          <BallotAskPill
+            zip={zip}
+            ocdIds={askOcdIds}
+            activeSubjects={askSubjects}
+          />
+        </div>
+      )}
+
+      <div className="my-4"><WhereToVote /></div>
+      <Suspense fallback={<p role="status" className="my-6 text-paper-dim">Loading your ballot…</p>}>
+        {contents}
+      </Suspense>
     </main>
   );
 });

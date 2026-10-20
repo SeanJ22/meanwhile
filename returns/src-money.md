@@ -3,79 +3,32 @@
 lane: src-money
 owner: src-money
 writer: the src-money lane
-check: combined-preflight-import-closure
-ready: SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584
-river: ab0c352cf21752d23500fb7ea72ddf712675755e
-at: 2026-10-18T22:01:55Z
+check: fold-conflict
+ready: no step ids unknown
+river: d9cb87e0f6869334be584fc7f842fc41daea78e9
+at: 2026-10-20T22:49:58Z
 state: returned
-fix_subject: fix:d6384109
-fix: River · stream/src-money — combined-preflight-import-closure failed for src-money: Exact failing candidate c9e009037d93abc5e63ef48bdb8c94974f406031 includes current main release-55 merge 4bdb43a7048b4fa407fa236602e93a85e0efd2b6. Both folds were clean; no new migrations.
+fix_subject: fix:68bd221c
+fix: River · stream/src-money — fold-conflict failed for src-money: SRC-MN READY 6dc11bf851b6 does not fold cleanly with AQ-03 b0bffe3c50 and UI-03 51f73f7104 in the release being built (River 7dbad3bb5 + main ed0ac299c + MP-01 b986167e6f + AQ-03 + UI-03). Sean asked for both lanes' behavior to be kept, and
 
 ## Failure
 
 ```
-SRC-MN READY a1d55302b3d15200b6d2bed51cf530f105fec584 is incompatible with the release-56 combination containing SH-01 READY 445e511dab21766cbfde79b3a0bd1c933e4fb4d9.
-Exact failing candidate c9e009037d93abc5e63ef48bdb8c94974f406031 includes current main release-55 merge 4bdb43a7048b4fa407fa236602e93a85e0efd2b6. Both folds were clean; no new migrations.
-The actual river.mjs test stopped in preflight before the expensive tier. This is an application import-graph interaction, not a package/tool setup failure.
-SH-01 alone at 8ce8d440c72314aac258c4bd6a251610e7c12fb8 passed both preflight checks.
-SRC-MN alone at its exact READY also passed both checks. Neither standalone result resolves the combined failure.
-Returning the later SRC-MN batch so the older SH-01 two-hour-triggered batch can ship after full gates. Owner src-money: integrate current River after SH-01 ships, reduce the shared runtime import closure without raising the existing limit or adding a bypass, preserve the shared state/place fact path, run the focused check and send a new READY. Do not retry this SHA unchanged. Production ingestion/live examples remain unverified and were not performed by River.
+SRC-MN READY 6dc11bf851b6 does not fold cleanly with AQ-03 b0bffe3c50 and UI-03 51f73f7104 in the release being built (River 7dbad3bb5 + main ed0ac299c + MP-01 b986167e6f + AQ-03 + UI-03). Sean asked for both lanes' behavior to be kept, and said to return SRC-MN if that cannot be resolved cleanly. Three hunks conflict:
 
-=== Actual combined gates output ===
-river test: pnpm gates on c9e009037d93
+1. app/ballot/page.tsx, 1 hunk (vs UI-03). UI-03 deleted the constants AUXILIARY_READER_LABEL and EXTENDED_MECHANICS_CHARS (about 400 lines of ballot page); SRC-MN still carries them. Keep UI-03's deletion unless SRC-MN's own change needs them: check that nothing in the merged page references either constant. The other overlap Sean named, tests/ballot-source-isolation.test.ts, did not conflict textually; confirm it still passes on the merged tree.
 
-> we-the-people@0.1.0 gates /workspace/meanwhile
-> node scripts/gates.mjs
+2. app/api/ask/grounded/route.ts, hunk A (vs AQ-03). The state-money filer lookup differs. AQ-03 settles a preload and skips it for federal offices:
+     if (!namedFederalOfficeholder(question) && !relativeMoney?.office.keys.every(key => key === "us_representative" || key === "us_senator")) { await settleGroundedSourcePreloads([stateMoneyPreload]); stateMoneyFilers = requestedStateMoneySubjects(question, moneyStates); }
+   SRC-MN awaits a state-filtered lookup:
+     if (!namedFederalOfficeholder(question)) await settleGroundedSourcePreloads([timed("campaignFinance", async () => { stateMoneyFilers = await requestedStateMoneySubjects(question, statesOf(ocdIds)); })]);
+   They differ in the function's signature (sync with moneyStates vs awaited with statesOf(ocdIds)) and in the federal-office skip. Decide which signature requestedStateMoneySubjects has after both lanes, keep AQ-03's relative-money federal skip, and keep SRC-MN's retirement of the state-native campaign load.
 
-local gates — the set CI requires
+3. app/api/ask/grounded/route.ts, hunk B (vs AQ-03). deferrablePreloads composition: AQ-03 adds campaignFinancePreload, hasOneReferencedContest and the ballotReference branch; SRC-MN's version is the older shape (stateMoneyFilers.length ? [] : ...). Keep AQ-03's ballotReference and campaignFinancePreload branches; keep SRC-MN's rule that a state-money filer question reads nothing from the retired native load.
 
-  visible-tree … PASS — files a sweep of the committed tree can see: 5495 of 5495.
-  civic-data-release-firewall … FAIL — 1 release-coupling finding(s).
-    DATA_EXECUTABLE_CLOSURE_UNRESOLVED · scripts/promote-registry-runtime.mts · The registered data-command closure could not be classified: registered executable closure exceeded 512 files.
-
-  preflight REFUSED in 17.51s — civic-data-release-firewall.
-  The expensive tier was not run on this tree. Fix the above and run `pnpm gates` again;
-  the corrected tree runs every gate before anything may ship.
-
-(node:47234) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
- ELIFECYCLE  Command failed with exit code 1.
-river test: gates fail on c9e009037d93 (recorded in .scratch/river/test.json)
-river: gates fail; isolate the failing lane before promoting
-
-=== SH-01 only preflight ===
-
-preflight — the cheap deterministic checks
-
-  visible-tree … PASS — files a sweep of the committed tree can see: 5437 of 5437.
-  civic-data-release-firewall … PASS — 0 findings across 767 routine and 361 explicit-owner source contract(s).
-
-  2 of 2 preflight check(s) clean. The expensive tier may run on this head.
-
-(node:47334) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
-
-=== SRC-MN only preflight ===
-
-preflight — the cheap deterministic checks
-
-  visible-tree … PASS — files a sweep of the committed tree can see: 5490 of 5490.
-  civic-data-release-firewall … PASS — 0 findings across 823 routine and 361 explicit-owner source contract(s).
-
-  2 of 2 preflight check(s) clean. The expensive tier may run on this head.
-
-(node:47353) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
+River will not hand-merge the Ask route: a wrong guess changes what readers are answered, and the owners have the tests. Merge current River once the release (MP-01, AQ-03, UI-03, OT-01) is in main, resolve these three hunks, run the Ask money and ballot tests with the CI flags (tests/ask-*, tests/campaign-money-*, tests/ballot-*), preflight, db:gate, pnpm build (the /api/voting-sites trace must stay at or under 430) and the full pnpm gates, and send a new READY.
 ```
 
 ## Repair
 
 Fix on stream/src-money and publish a new READY commit; River folds the new READY and clears this return when it integrates.
-
-## Changed combination — 22:29Z October 18
-
-The return above applies to the SH-01 + SRC-MN combination. SH-01 was subsequently returned after its independent full gates failed tests/seat-grouping.test.ts:117 (new valid vacancy row made a stale 4-count assertion observe 5). The failing SH-01 input is now removed. SRC-MN alone passed the focused preflight; this is new combination evidence, not a retry of the unchanged failing pair. River is now running full gates on SRC-MN alone with main release 55 included so the remaining batch can ship. AQ-01 was assessed freshly but its actual fold conflicts in app/api/ask/grounded/route.ts, so it is excluded. The original combined import-graph interaction remains relevant when a future SH-01 replacement integrates SRC-MN.
-
-## Standalone result — 22:55Z October 18
-
-SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584 passed all eight full gates on 6b4ea17aff9153d1f4da0cfc03ce5f23a7186b3c with main release 55 included and SH-01/AQ-01 excluded: 8,668 pass, zero fail, five skip. Promoted to River; release 56 PR 765 open. This standalone candidate clears SRC-MN's return; the original SH/SRC import-graph interaction remains a required fix for a future SH-01 replacement. No failed combination was promoted.

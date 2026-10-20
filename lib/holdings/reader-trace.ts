@@ -23,7 +23,8 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     ...zipShards,
   ];
   return [
-    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    { route: "api/voting-sites/route", loader: "lib/geo/zip-division-index.ts", files: zipShards },
     // The map reads only the ZIP index; the tier ledger's reader for it is `/api/log`.
     { route: "api/meetings/route", loader: "lib/geo/zip-division-index.ts + lib/registry/server.ts", files: zipShards },
     { route: "api/reader/places/route", loader: "lib/geo/zip-division-index.ts", files: [...zipShards, "data/derived/zip-divisions/index.json"] },

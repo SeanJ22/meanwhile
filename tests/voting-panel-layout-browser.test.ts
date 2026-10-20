@@ -55,6 +55,10 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
     else if (request.url === "/api/voting-sites") {
       let body = ""; for await (const chunk of request) body += chunk;
       const data = JSON.parse(body); received.push(data);
+      if (data.address === "Server failure") {
+        response.writeHead(503, { "content-type": "application/json" }).end("{}"); return;
+      }
+      if (data.address === "Stalled request") return;
       const answer = answers.get(data.address); assert.ok(answer);
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(answer));
     } else if (cases.some(item => item.path === request.url)) response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"></head><body class="mw-reader"><main id="root"></main><script src="/fixture.js"></script></body></html>');
@@ -72,6 +76,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       await context.route("**/*", route => { if (new URL(route.request().url()).origin === origin) return route.continue(); external.push(route.request().url()); return route.abort(); });
       const page = await context.newPage();
       const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+      const diagnostics: string[] = []; page.on("console", message => { if (message.type() === "error") diagnostics.push(message.text()); });
       for (const item of cases) {
         await page.goto(`${origin}${item.path}`);
         await page.getByLabel("Your street address or ZIP").fill(item.zip);
@@ -131,9 +136,25 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         assert.equal(overflow, false, "no viewport horizontal overflow");
       }
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
+      // Protocol failures assert no civic facts and use no database or invented SQL schema.
+      await page.goto(`${origin}/adams`);
+      for (const input of ["Server failure", "Stalled request"]) {
+        await page.getByLabel("Your street address or ZIP").fill(input);
+        const started = performance.now();
+        await page.getByRole("button", { name: "Show me", exact: true }).click();
+        const gap = page.locator("[data-voting-coverage-gap]");
+        await gap.waitFor({ state: "visible", timeout: 3000 });
+        assert.ok(performance.now() - started < 3000, "a failed transport still resolves the panel within three seconds");
+        assert.match(await gap.innerText(), /working on getting this info/i);
+        assert.equal(await gap.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);
+        assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /Something went wrong/i);
+      }
+      assert.ok(diagnostics.some(line => line.includes('"stage":"reader-response"')));
+      assert.ok(diagnostics.some(line => line.includes('"stage":"reader-request"')));
+      assert.deepEqual(errors, []);
       await context.close();
     }
-    assert.equal(received.length, 4); assert.ok(received.every(row => row.googleFallback === undefined));
+    assert.equal(received.length, 8); assert.ok(received.every(row => row.googleFallback === undefined));
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

@@ -80,7 +80,7 @@ export function VotingSitesPanel({
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ address: value }),
           cache: "no-store",
-          signal: controller.signal,
+          signal: AbortSignal.any([controller.signal, AbortSignal.timeout(2800)]),
         });
         if (controller.signal.aborted) return;
         if (!res.ok) {
@@ -159,12 +159,6 @@ export function VotingSitesPanel({
         <p className="voting-panel-status">Looking&hellip;</p>
       )}
 
-      {state.kind === "failed" && (
-        <p className="voting-panel-status">
-          Something went wrong on our end. Try again.
-        </p>
-      )}
-
       {state.kind === "answered" && !state.answer.match && !state.answer.outsideCoverage && (
         <p className="voting-panel-status">
           We could not turn that into a location. Try including the town and
@@ -172,8 +166,7 @@ export function VotingSitesPanel({
         </p>
       )}
 
-      {state.kind === "answered" &&
-        state.answer.outsideCoverage && (
+      {(state.kind === "failed" || state.kind === "answered" && state.answer.outsideCoverage) && (
           <div className="voting-panel-status" data-voting-coverage-gap>
             <p>{readerCopy("copy.working")}.</p>
             <a href={feedbackHref({ about: "Voting locations", zip: /^\d{5}$/.test(address.trim()) ? address.trim() : null })}>

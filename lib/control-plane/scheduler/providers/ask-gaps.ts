@@ -1,8 +1,8 @@
 /**
  * Turns the gaps Ask states for a held body (`heldBodyGaps`) into tracked work, one obligation per body and
  * gap code. Derived from held data, never from questions; counts of what readers were told only raise reader
- * impact or create a `MEETINGS_NOT_HELD` obligation. A carrying routine read past its cadence is
- * `CADENCE_BROKEN`; with no carrier an adapter is owed. A failed read is a `readFailure`, so no gap retires
+ * impact or create a `MEETINGS_NOT_HELD` obligation. Reads open the registered publisher source;
+ * a contract's existence is never a substitute for acquisition. A failed read is a `readFailure`, so no gap retires
  * on it. Pure.
  *
  *   id       freshness:ask-gap:<body id>#<code>
@@ -27,11 +27,12 @@ import {
   type AskedGap,
   type AskGapObservationReading,
 } from "../../ask-gap-observations.ts";
-import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
+import { ROUTINE_SOURCE_CONTRACTS, currentMeetingClock, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "../../../civic-data/runtime-routine-contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../../civic-data/meeting-partitions.ts";
 import { displayNameOf } from "../../display-name.ts";
 import { ASK_GAPS_PROVIDER_ID, ASK_GAP_OBLIGATION_CLASS, NEXT_READ_MARK } from "../../ask-gap-id.ts";
+import { sourceRequestHeaders } from "../../../sources/http.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderYield, RouteDescriptor } from "../registry.ts";
 
 export { ASK_GAPS_PROVIDER_ID, ASK_GAP_NAMESPACE, askGapObligationId, parseAskGapObligationId } from "../../ask-gap-id.ts";
@@ -76,8 +77,16 @@ export const UNREAD_ASK_GAP_HOLDINGS: AskGapHoldingsReading = {
 
 /** `US-XX` from `ocd-division/country:us/state:xx/...`; null when the id names no state. */
 function stateOfBody(bodyId: string): string | null {
-  const m = /\/state:([a-z]{2})(?=[/#]|$)/.exec(bodyId);
+  const m = /(?:\/(?:state|district|territory):|^curated:)([a-z]{2})(?=[/#]|$)/.exec(bodyId);
   return m ? `US-${m[1]!.toUpperCase()}` : null;
+}
+
+function divisionsOfBody(bodyId: string): readonly string[] {
+  if (bodyId.startsWith("ocd-division/")) return [bodyId.split("#")[0]!];
+  const held = [...new Set(MEETING_PARTITION_CONTRACTS.filter(partition => partition.bodyId === bodyId)
+    .flatMap(partition => partition.ocdId ? [partition.ocdId] : []))];
+  const state = stateOfBody(bodyId);
+  return held.length ? held : state ? [state] : [];
 }
 
 /**
@@ -187,7 +196,38 @@ function heldEvidence(code: AskGapCode, gaps: readonly HeldAskGap[], nowMs: numb
 }
 
 
-/** The one route for a body's gap: its routine read, or the adapter owed. */
+/** The publisher address already registered for this exact body. Never choose a different body's source. */
+export function askGapSourceUrl(bodyId: string, carriers: readonly string[], nowMs: number): string | null {
+  const own = MEETING_PARTITION_CONTRACTS.filter(partition => partition.bodyId === bodyId && partition.derivedFamily === null);
+  const source = own.find(partition => carriers.includes(partition.id)) ?? own[0];
+  const wiring = source?.wiring;
+  if (source?.meetingSource === "legistar" && wiring) {
+    const slug = wiring.config.slug;
+    const nativeBody = Number(wiring.config.eventBodyId);
+    if (slug && /^[a-z0-9_-]+$/i.test(slug) && Number.isSafeInteger(nativeBody) && nativeBody > 0) {
+      const day = (offset: number) => new Date(nowMs + offset * 86_400_000).toISOString().slice(0, 10);
+      const filter = `EventId gt 0 and EventDate ge datetime'${day(-120)}' and EventDate le datetime'${day(120)}' and EventBodyId eq ${nativeBody}`;
+      return `https://webapi.legistar.com/v1/${slug}/events?$filter=${encodeURIComponent(filter)}&$orderby=EventId&$top=1000`;
+    }
+  }
+  const registered = [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS].filter(contract => carriers.includes(contract.id));
+  const urls = [
+    ...registered.flatMap(contract => contract.acquisitionAdapter.authorityMode === "SINGLE_ROUTE" ? [contract.acquisitionAdapter.requestedUrl] : []),
+    ...(wiring ? [
+      ...(wiring.config.insiteHost ? [`https://${wiring.config.insiteHost.replace(/^https?:\/\//, "").replace(/\/$/, "")}/Calendar.aspx`] : []),
+      ...["feedUrl", "schedulePage", "pageUrl", "calendarUrl", "agendaCenterUrl", "icalUrl", "portalUrl", "documentsUrl", "publisherUrl", "baseUrl"].map(key => wiring.config[key]), wiring.noticeUrl] : []),
+  ];
+  for (const candidate of urls) {
+    if (!candidate) continue;
+    try {
+      const url = new URL(candidate);
+      if (["https:", "http:"].includes(url.protocol) && !url.username && !url.password) return url.href;
+    } catch { /* A template or missing address is still owed; it is never a fetched source. */ }
+  }
+  return null;
+}
+
+/** The one route for a body's gap opens its real source. */
 export function askGapRoute(input: {
   readonly bodyId: string;
   readonly code: AskGapCode;
@@ -198,6 +238,8 @@ export function askGapRoute(input: {
   readonly source: string;
   /** What readers were told of this gap in the observation window; null when none were, or none were read. */
   readonly asked?: AskedGap | null;
+  /** Inject a registered publisher address for an isolated provider test. */
+  readonly sourceUrl?: string | null;
 }): RouteDescriptor {
   const { bodyId, code, gaps, carriers } = input;
   const recordClass = ASK_GAP_RECORD_CLASS[code];
@@ -211,7 +253,8 @@ export function askGapRoute(input: {
       ? `${carriers.join(", ")} carr${carriers.length === 1 ? "ies" : "y"} ${recordClass} for ${bodyId} (lib/civic-data/meeting-partitions.ts, lib/civic-data/contracts.ts)`
       : `no registered routine contract carries ${recordClass} for ${bodyId} (lib/civic-data/meeting-partitions.ts, lib/civic-data/contracts.ts)`);
 
-  if (carriers.length === 0) {
+  const sourceUrl = input.sourceUrl === undefined ? askGapSourceUrl(bodyId, carriers, input.nowMs) : input.sourceUrl;
+  if (sourceUrl === null) {
     const what = recordClass === "MEETING_OUTCOME" ? "recorded outcomes — decisions, votes or minutes —" : "a meeting calendar";
     return {
       routeId: code,
@@ -223,7 +266,7 @@ export function askGapRoute(input: {
         kind: "NOT_MACHINE_EXECUTABLE",
         target: name.name,
         reason:
-          `${evidence} No routine contract reads ${what} for ${name.name}, so no scheduled read can close this gap. ` +
+          `${evidence} No registered publisher address reads ${what} for ${name.name}. ` +
           "REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
       },
       citation,
@@ -238,18 +281,15 @@ export function askGapRoute(input: {
     routeId: code,
     label,
     executorClass: "DETERMINISTIC",
-    executorReason:
-      "a routine contract reads this record on its own clock; this obligation opens nothing, so neither a model nor a second fetch of the same feed is ever spent on it",
+    executorReason: "the body's registered publisher source is read with plain code; verified details remain independent of the rest of its checklist",
     open: {
-      kind: "ROUTINE_READ",
-      contractIds: carriers,
-      target: bodyId,
-      reason:
-        `${evidence} ${cadences.map((c) => c.words).join("; ")}. ` +
-        `${NEXT_READ_MARK}${next === null ? "no carrying clock states when its next read is owed" : `owed by ${next.nextReadDueAt}, by ${next.id}`}`,
-      cadenceFailure: failures.length === 0 ? null : `${failures.join("; ")}.`,
+      kind: "HTTP_GET",
+      url: sourceUrl,
+      headers: sourceRequestHeaders(),
     },
-    citation,
+    citation: `${citation}. ${evidence} ${cadences.map(c => c.words).join("; ")}. ` +
+      (failures.length ? `CADENCE_BROKEN: ${failures.join("; ")}. ` : "") +
+      `${NEXT_READ_MARK}${next === null ? "no carrying clock states when its next read is owed" : `owed by ${next.nextReadDueAt}, by ${next.id}`}`,
   };
 }
 
@@ -282,6 +322,13 @@ function groupBy<T>(items: readonly T[], key: (item: T) => string | null | undef
     else out.set(k, [item]);
   }
   return out;
+}
+
+/** Reuse the installed Admin meeting clock, including the rolling hot window read by the carrier. */
+function readCycleHours(bodyId: string, code: AskGapCode, reading: AskGapHoldings, registered: AskGapsInput["registered"]): number {
+  const clocks = askGapCarriersFor(bodyId, code, registered).map(id => reading.clockOf(id));
+  const every = clocks.flatMap(clock => clock.kind === "READ" ? [clock.requiredEveryMs] : []);
+  return Math.min(...(every.length ? every : [currentMeetingClock().hotEveryMs])) / 3_600_000;
 }
 
 export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
@@ -333,9 +380,11 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
           records.push({
             recordClass: ASK_GAP_OBLIGATION_CLASS,
             subjectId: bodyId,
+            scopeDivisions: divisionsOfBody(bodyId),
             /* Reader impact is the earlier of the next sitting with its agenda unheld and the latest day readers were told. */
             readerImpactAt: earliest(code === "AGENDA_NOT_HELD" ? upcoming : null, toldAt(told)),
             observedChangeRateHours: null,
+            declaredCycleHours: readCycleHours(bodyId, code, reading, input.registered),
             lastWorkedAt: null,
             routes: [askGapRoute({ bodyId, code, gaps, carriers, clockOf: reading.clockOf, nowMs, source: reading.source, asked: told })],
           });
@@ -350,8 +399,10 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
         records.push({
           recordClass: ASK_GAP_OBLIGATION_CLASS,
           subjectId: told.bodyId,
+          scopeDivisions: divisionsOfBody(told.bodyId),
           readerImpactAt: toldAt(told),
           observedChangeRateHours: null,
+          declaredCycleHours: readCycleHours(told.bodyId, "MEETINGS_NOT_HELD", reading, input.registered),
           lastWorkedAt: null,
           routes: [askGapRoute({
             bodyId: told.bodyId,

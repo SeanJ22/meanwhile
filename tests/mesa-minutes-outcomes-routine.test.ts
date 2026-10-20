@@ -39,7 +39,9 @@ import {
   parseMinutesIngestArgs,
   rangesForWindow,
   runInSiteMinutesOutcomeIngest,
+  readCalendar,
 } from "../scripts/legistar-insite-minutes-ingest.mts";
+import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 import { withFetch } from "./helpers/with-fetch.ts";
 
 const CONTRACT_ID = "mesa-legistar-minutes-outcomes";
@@ -137,6 +139,100 @@ function steppedClock(startIso: string): () => string {
   };
 }
 
+test("a read-only minutes run reads the document and measures reader facts without moving a production pointer", async () => {
+  const store = new MemoryRoutineDataStore();
+  const portal = recordedPortal();
+  const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
+    store, tenant, args: parseMinutesIngestArgs(["--dry-run", "--slug", "mesa"]),
+    window: { from: "2026-07-20", to: "2026-07-20" }, now: steppedClock("2026-09-25T17:00:00.000Z"),
+    spacingMs: 0, log: () => {},
+  }));
+  assert.equal(result.exitCode, 0);
+  assert.equal(result.receiptLine, null);
+  assert.ok(portal.requests.some(request => request.startsWith("GET") && request.includes("View.ashx")));
+  assert.ok(result.measurement.byFamily.outcomes.factsFound > 0);
+  assert.ok(result.measurement.byFamily.minutes.factsWouldAttach > 0);
+  assert.equal(result.measurement.requests, portal.requests.length);
+  assert.equal(result.measurement.dollars, 0);
+  assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
+});
+
+test("the recorded multi-body paged portal retains only the held council's calendar rows in the minutes worker", async () => {
+  const portal = recordedPortal(), names = new Set(tenant.bodyNames.map(name => name.trim().toLowerCase()));
+  assert.ok(parseCalendarRows(THIS_YEAR).some(row => !names.has(row.bodyName.trim().toLowerCase())), "the real portal fixture includes other boards");
+  const calendar = await withFetch(portal.fetchImpl, () => readCalendar(new InSiteSession({ fetchImpl: (url, init) => fetch(url, init), spacingMs: 0 }),
+    "https://mesa.legistar.com/Calendar.aspx", ["This Year"], tenant.bodyNames));
+  assert.equal(calendar.gridRendered, true);
+  assert.ok(calendar.rows.length > 0);
+  assert.ok(calendar.rows.every(row => names.has(row.bodyName.trim().toLowerCase())));
+  assert.ok(portal.requests.some(request => request.startsWith("POST")), "the whole required source range/page remains actually read");
+});
+
+test("a held calendar acquisition supplies the native minutes reader once and keeps the link's original evidence clock", async () => {
+  const store = new MemoryRoutineDataStore(), portal = recordedPortal();
+  const bytes = new TextEncoder().encode(THIS_YEAR), retrievedAt = "2026-09-25T16:45:00.000Z";
+  let links = 0;
+  const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
+    store, tenant, args: parseMinutesIngestArgs(["--dry-run", "--slug", "mesa"]),
+    window: { from: "2026-07-20", to: "2026-07-20" }, now: steppedClock("2026-09-25T17:00:00.000Z"), spacingMs: 0, log: () => {},
+    initialResponse: { source: "legistar-insite", requestedUrl: "https://mesa.legistar.com/Calendar.aspx", finalUrl: "https://mesa.legistar.com/Calendar.aspx",
+      httpStatus: 200, contentType: "text/html", bytes, byteCount: bytes.length, rawHash: createHash("sha256").update(bytes).digest("hex"), retrievedAt },
+    minutesFactSink: async claim => {
+      links++;
+      assert.equal(claim.copy.fetchedAt.toISOString(), retrievedAt, "the acquired calendar was not re-stamped by the detail worker");
+      return { decision: "PUBLISH", factId: null };
+    },
+  }));
+  assert.equal(result.exitCode, 0, result.measurement.failures.join("; "));
+  assert.equal(links, 1);
+  assert.equal(portal.requests.some(request => request === "GET https://mesa.legistar.com/Calendar.aspx"), false);
+  assert.equal(result.measurement.requests, portal.requests.length);
+  assert.ok(result.measurement.bytesRead! > 0, "new detail response bytes are measured separately from the reused capture");
+  assert.ok(portal.requests.some(request => request.startsWith("GET") && request.includes("View.ashx")));
+  assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
+});
+
+test("verified minutes links reach their independent fact sink when the document yields no motion", async () => {
+  const store = new MemoryRoutineDataStore(), portal = recordedPortal({ bytes: { "1336056": MOTIONLESS } });
+  const links: string[] = [];
+  const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
+    store, tenant, args: parseMinutesIngestArgs(["--dry-run", "--slug", "mesa"]),
+    window: { from: "2026-07-20", to: "2026-07-20" }, now: steppedClock("2026-09-25T17:00:00.000Z"), spacingMs: 0, log: () => {},
+    minutesFactSink: async claim => {
+      assert.equal(claim.field, "minutes_url");
+      assert.equal(claim.entity.id, "meeting:legistar-insite:mesa:1336056");
+      assert.ok(claim.copy.text.includes(claim.valueText), "the exact saved calendar page proves the minutes link");
+      assert.match(claim.valueText, /^View\.ashx\?M=M&amp;ID=1336056&amp;GUID=/, "the claim checks the publisher's original relative, entity-encoded href");
+      assert.ok(claim.quote.includes(claim.valueText));
+      assert.equal(new URL(claim.valueText.replaceAll("&amp;", "&"), claim.copy.finalUrl).href, claim.value);
+      links.push(String(claim.value));
+      return { decision: "PUBLISH", factId: null };
+    },
+  }));
+  assert.equal(links.length, 1);
+  assert.equal(result.measurement.byFamily.minutes.factsWouldAttach, 1);
+  assert.equal(result.measurement.incomplete, true);
+  assert.ok(result.measurement.failures.some(failure => failure.includes("yielded no motion")));
+  assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
+});
+
+test("a read-only minutes failure leaves the failed detail owed while its verified link remains attachable", async () => {
+  const store = new MemoryRoutineDataStore();
+  const portal = recordedPortal({ documents: { "1336056": 404 } });
+  const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
+    store, tenant, args: parseMinutesIngestArgs(["--dry-run", "--slug", "mesa"]),
+    window: { from: "2026-07-20", to: "2026-07-20" }, now: steppedClock("2026-09-25T17:00:00.000Z"),
+    spacingMs: 0, log: () => {},
+  }));
+  assert.equal(result.exitCode, 2);
+  assert.equal(result.measurement.incomplete, true);
+  assert.equal(result.measurement.requests, portal.requests.length);
+  assert.equal(result.measurement.factsWouldAttach, 1);
+  assert.equal(result.measurement.byFamily.minutes.factsWouldAttach, 1);
+  assert.match(result.measurement.failures.join(" "), /404/);
+  assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
+});
+
 async function pass(store: MemoryRoutineDataStore, portal: ReturnType<typeof recordedPortal>, window: { from: string; to: string }, clockStart: string) {
   const lines: string[] = [];
   const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
@@ -147,6 +243,7 @@ async function pass(store: MemoryRoutineDataStore, portal: ReturnType<typeof rec
     now: steppedClock(clockStart),
     log: (line) => lines.push(line),
     spacingMs: 0,
+    minutesFactSink: async () => ({ decision: "PUBLISH", factId: null }),
   }));
   return { result, lines };
 }

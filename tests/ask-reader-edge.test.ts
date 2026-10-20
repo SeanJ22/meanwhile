@@ -245,35 +245,3 @@ test("a named place absent from its state registry gives a specific holding", as
   assert.deepEqual(payload.gaps, [{ whose: "OURS", statement: payload.answer }]);
   assert.deepEqual(Object.keys(payload.trace.preloadSources), ["registry"]);
 });
-
-test("an unmarked warm call loads nothing for the Ask, and the warm route never calls the Ask's handler, a model, a log or a write", async () => {
-  activeFixture = fullFixture;
-  const { GET } = await import("../app/api/warm/route.ts");
-  const { primed } = await (await GET(new Request("https://wtp.test/api/warm?hold=0"))).json() as { primed: unknown };
-  assert.equal(primed, null);
-  const source = readFileSync("app/api/warm/route.ts", "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
-  assert.match(source, /import \{ POST as askHandler \} from "@\/app\/api\/ask\/grounded\/route"/, "the route module is statically imported for its graph");
-  assert.doesNotMatch(source, /askHandler\s*\(|captureAskInteraction|recordAskGapObservations|afterResponse|interpretQuestion|synthesize|anthropic|getDb/i);
-});
-
-test("the warm call settles only unscoped Ask sources and never preloads every state", async () => {
-  const sourceNames = warmSourceNames();
-  const ask = readFileSync("app/api/ask/grounded/route.ts", "utf8");
-  const start = ask.indexOf("const essentialPreloads = [");
-  const end = ask.indexOf("await settleGroundedSourcePreloads(topicRoute");
-  assert.ok(start > 0 && end > start, "the Ask route's preload lists moved; re-read them here");
-  const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
-  // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
-  assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots", "campaignFinance"]) {
-    assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
-    named.delete(stateSource);
-  }
-  assert.deepEqual(sourceNames.sort(), [...named].sort());
-});
-
-function warmSourceNames(): string[] {
-  const source = readFileSync("app/api/warm/route.ts", "utf8");
-  const declarations = source.slice(source.indexOf("const ASK_SOURCE_PRELOADS"), source.indexOf("interface AskPrimed"));
-  return [...declarations.matchAll(/^  ([a-zA-Z]+):/gm)].map(match => match[1]);
-}

@@ -24,6 +24,10 @@ export function normalizeCongressMember(value: unknown, options: PeopleAcquisiti
   holder.birthDate = string(member.birthDate);
   holder.partyLabel = string(array(record(member.partyHistory).item ?? member.partyHistory).map(record).sort((a,b) => (number(b.startYear) ?? 0) - (number(a.startYear) ?? 0))[0]?.partyName ?? member.partyName);
   holder.websiteUrl = url(member.officialWebsiteUrl); holder.phone = string(record(member.addressInformation).phoneNumber);
+  const address = record(member.addressInformation), officeAddress = string(address.officeAddress);
+  if (officeAddress) holder.offices = [{ id:`capitol:${bioguide}`,name:"Capitol office",
+    address:[officeAddress,string(address.city),[string(address.district),address.zipCode == null ? null : String(address.zipCode)].filter(Boolean).join(" ")].filter(Boolean).join(", "),
+    ...(holder.phone ? {phone:holder.phone} : {}),sourceUrl,collectedAt }];
   const depiction = record(member.depiction), imageUrl = url(depiction.imageUrl);
   if (imageUrl) holder.portraitCandidate = { imageUrl, sourceUrl, collectedAt };
   const divisionId = chamber === "senate" ? state.root : district === null ? undefined : `${state.root}/cd:${district === 0 || !state.root.includes("/state:") ? "at-large" : district}`;

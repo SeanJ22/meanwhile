@@ -8,6 +8,7 @@ import {
   type WarmPlace,
   POST_DEPLOY_WARM_MARKER,
   readerMeetingsPath,
+  publishedPlaces,
   warmAfterDeploy,
 } from "../lib/ops/post-deploy-warm.ts";
 import { handleDeploySucceeded } from "../netlify/functions/deploy-succeeded.mts";
@@ -28,6 +29,17 @@ test("POST-DEPLOY · only a production deploy with a commit is warmed", () => {
     null,
     "production",
   ]) assert.equal(deployToWarm(body), null, JSON.stringify(body));
+});
+
+test("POST-DEPLOY · failed place discovery is reported and never passes as an empty successful fill", async () => {
+  const production = fakeProduction(() => COMMIT);
+  const result = await warmAfterDeploy({ commit: COMMIT, deployId: "d1" }, {
+    fetchImpl: production.fetchImpl,
+    places: async () => { throw new Error("reader unavailable"); },
+  });
+  assert.equal(result.outcome, "PLACES_UNAVAILABLE");
+  assert.ok(production.calls.every(call => call.url.endsWith("/api/build")));
+  await assert.rejects(publishedPlaces(PUBLIC_SITE_ORIGIN, async () => new Response(null, { status: 503 }), 100), /HTTP 503/);
 });
 
 /** Places as the live site's manifest would name them: none of them a pilot, none listed in code. */
@@ -58,23 +70,20 @@ function fakeProduction(served: () => string) {
   return { calls, fetchImpl };
 }
 
-test("POST-DEPLOY · it waits for production to serve the commit, then warms the instances and fills and rereads every published place", async () => {
+test("POST-DEPLOY · it waits for production to serve the commit, then fills and rereads every published place", async () => {
   let clock = 0;
   let builds = 0;
   const production = fakeProduction(() => (++builds < 3 ? OLD : COMMIT));
-  let warmCalls = 0;
   const result = await warmAfterDeploy({ commit: COMMIT, deployId: "d1" }, {
     fetchImpl: production.fetchImpl,
     now: () => clock,
     sleep: async (ms) => { clock += ms; },
-    warmCalls: async () => { warmCalls += 1; return { answered: 14, ms: 900 }; },
     places: async () => PLACES,
   });
   assert.equal(result.outcome, "WARMED");
   if (result.outcome !== "WARMED") return;
   assert.equal(builds, 3, "it asked /api/build until the new commit was served");
   assert.equal(result.waitedMs, 4_000);
-  assert.equal(warmCalls, 1, "the pinger's fourteen marked calls, once");
   const pilots = PLACES.map((point) => `${PUBLIC_SITE_ORIGIN}${readerMeetingsPath(point)}`);
   const meetingsCalls = production.calls.filter((call) => call.url.includes("/api/meetings"));
   assert.deepEqual(meetingsCalls.map((call) => call.url).sort(), [...pilots, ...pilots].sort(), "each place filled, then read back");
@@ -87,18 +96,15 @@ test("POST-DEPLOY · it waits for production to serve the commit, then warms the
 test("POST-DEPLOY · a deploy that never becomes the served one is reported, and nothing is warmed for it", async () => {
   let clock = 0;
   const production = fakeProduction(() => OLD);
-  let warmCalls = 0;
   const result = await warmAfterDeploy({ commit: COMMIT, deployId: "d1" }, {
     fetchImpl: production.fetchImpl,
     now: () => clock,
     sleep: async (ms) => { clock += ms; },
     serveDeadlineMs: 10_000,
-    warmCalls: async () => { warmCalls += 1; return { answered: 14, ms: 1 }; },
     places: async () => PLACES,
   });
   assert.equal(result.outcome, "NOT_SERVED");
   assert.ok(result.waitedMs <= 10_000);
-  assert.equal(warmCalls, 0);
   assert.ok(production.calls.every((call) => call.url.endsWith("/api/build")), "no fill for a deploy that is not serving");
 });
 
@@ -124,21 +130,21 @@ test("POST-DEPLOY · without a places list it asks the live site for one per pub
   const fetchImpl = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
     asked.push(url);
-    if (url.includes("/api/warm?places=1")) {
-      assert.equal(new Headers(init?.headers).get("x-wtp-synthetic-run"), "keep-warm");
+    if (url.includes("/api/reader/places")) {
+      assert.equal(new Headers(init?.headers).get("x-wtp-synthetic-run"), POST_DEPLOY_WARM_MARKER);
       return Response.json({ places: PLACES, skipped: 0 });
     }
     return production.fetchImpl(input, init);
   }) as typeof fetch;
   const result = await warmAfterDeploy({ commit: COMMIT, deployId: "d1" }, {
-    fetchImpl, now: () => clock, sleep: async (ms) => { clock += ms; }, warmCalls: async () => ({ answered: 14, ms: 1 }) });
+    fetchImpl, now: () => clock, sleep: async (ms) => { clock += ms; } });
   assert.equal(result.outcome, "WARMED");
   if (result.outcome !== "WARMED") return;
   assert.equal(result.places, PLACES.length);
   assert.ok(asked.some((url) => url.includes("zip=43015")), "a ZIP that is in no list in code is filled");
 
   const late = await warmAfterDeploy({ commit: COMMIT, deployId: "d1" }, {
-    fetchImpl: production.fetchImpl, now: () => clock, sleep: async (ms) => { clock += ms; }, warmCalls: async () => ({ answered: 14, ms: 1 }),
+    fetchImpl: production.fetchImpl, now: () => clock, sleep: async (ms) => { clock += ms; },
     places: async () => PLACES, fillBudgetMs: -1 });
   assert.equal(late.outcome, "WARMED");
   if (late.outcome === "WARMED") assert.ok(late.fills.every((read) => read.status === "SKIPPED"));

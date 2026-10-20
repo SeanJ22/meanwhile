@@ -109,7 +109,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     id: federalDirectoryContractId(state), execution: "EXPLICIT_OWNER_INVOCATION_ONLY" as const,
     sourceId: "congress-directory-project" as const, recordClass: "FEDERAL_DIRECTORY" as const,
     scope: federalDirectoryScope(state), command: ["scripts/fetch-congress-legislators.mts", "--promote", `--state=${state}`],
-    parserNormalizerVersion: "congress-directory/4",
+    parserNormalizerVersion: "congress-directory/5",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES" as const, sourceId: "congress-directory-project" as const },
     validationContract: VALIDATION_CHECKS, canonicalProductionStore: STORE,
     readerProjection: { id: `federal-membership-contact-directory:${state}`, consumers: ["registry", "/api/directory", "representation", "map", "ballot", "Ask", "funding identity"] },

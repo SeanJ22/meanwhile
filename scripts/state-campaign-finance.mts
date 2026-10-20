@@ -1,3 +1,4 @@
+import { readCampaignMoneyPeople } from "../lib/funding/state-people.ts";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -32,6 +33,7 @@ try {
   const repos = url ? await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true }) : null;
   const directory = join(tmpdir(), "meanwhile-campaign-finance", sha256(process.cwd()));
   const runId = randomUUID();
+  const people = await readCampaignMoneyPeople(facts.query, state);
   let outcome: PromotionOutcome | null = null, failure: { url: string; detail: string; code: string } | null = null;
   try {
     if (!source.resources.length) {
@@ -48,7 +50,7 @@ try {
     } })) {
     const route = resource.url, id = resource.id;
     try {
-      const result = await publishCampaignFinanceResource(state, resource, { store, facts, vault, directory, runId, signal: new AbortController().signal });
+      const result = await publishCampaignFinanceResource(state, resource, { store, facts, vault, directory, runId, people, signal: new AbortController().signal });
       outcome = result.outcome;
       if (repos) await recordCampaignFinanceDoor({ doors: repos.doors, state, resource: id, url: route, at: new Date().toISOString(), evidence: { kind: "GOOD", rows: result.records }, reason: null });
       console.log(`CAMPAIGN_FINANCE_RESOURCE=${JSON.stringify({ state, resource: id, records: result.records, joined: result.records - result.unjoined, unjoined: result.unjoined, versionId: outcome.promoted?.versionId })}`);

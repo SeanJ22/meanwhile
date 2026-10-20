@@ -223,8 +223,9 @@ test("native campaign-money writes, replacements and confirmations clear their s
   t.after(() => db.pg.close());
   const resource = campaignFinanceSource("MN").resources[0];
   const [raw] = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/mn-native-excerpt.json", import.meta.url), "utf8"));
-  const record = campaignSourceRecord("MN", resource, raw, { url: resource.url, rawHash: "b".repeat(64), vaultKey: "test:mn",
-    byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null });
+  const record = { ...campaignSourceRecord("MN", resource, raw, { url: resource.url, rawHash: "b".repeat(64), vaultKey: "test:mn",
+    byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null }),
+    person: { id: "test-laurie-pryor", name: "Laurie Pryor", seat: "test-house-seat", sourceUrl: "https://www.house.mn.gov/" } };
   let purges = 0;
   const purge = async (tags: readonly string[]) => {
     assert.deepEqual(tags, ["reader-state:MN"]);

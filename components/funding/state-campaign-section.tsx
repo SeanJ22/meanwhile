@@ -19,7 +19,7 @@ export function StateCampaignSection({ divisionId, data }: { divisionId: string;
   useEffect(() => {
     const current = ++request.current;
     if (!data) void load(divisionId).then(value => { if (request.current === current) setRead(value); }).catch(() => { if (request.current === current) setFailed(true); });
-    return () => { request.current++; };
+    return () => { if (request.current === current) request.current = current + 1; };
   }, [divisionId, data]);
   const value = read?.division === divisionId ? read : data;
   async function next() {
@@ -35,9 +35,8 @@ export function StateCampaignSection({ divisionId, data }: { divisionId: string;
     <h4 className="t-detail font-medium text-paper">Campaign money</h4>
     <dl className="space-y-3">{value.records.map(row => <div key={row.id} data-campaign-record={row.id}>
       <dt className="t-body text-paper">{campaignFinanceRecordText(row)}</dt>
-      <dd className="mt-1 t-detail"><a href={row.filingUrl} target="_blank" rel="noopener noreferrer" className="text-link">Official filing source</a></dd>
     </div>)}</dl>
-    {value.nextCursor && <button type="button" disabled={loading} onClick={() => void next()} className="t-caption text-link">{loading ? "Loading filings…" : failed ? "Try loading the next filings again" : "Next filings"}</button>}
+    {value.nextCursor && <button type="button" disabled={loading} onClick={() => void next()} className="t-caption text-link">{loading ? "Loading campaign totals…" : failed ? "Try loading the next totals again" : "Next committee"}</button>}
     <CardSourcesContribution id={`campaign-finance:${divisionId}`} sources={value.records.flatMap(campaignFinanceRecordSources)} />
   </section>;
 }

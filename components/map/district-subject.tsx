@@ -32,6 +32,7 @@ export function districtSubject(
   hits: readonly DistrictHit[] = [],
 ): ModalSubject {
   const resolved = resolvedById[district.ocdId];
+  const vacancy = resolved?.vacancy ?? coverage?.seats.find(seat => seat.ocdId === district.ocdId)?.vacancy;
   // A county card accepts its exact published ID and child jurisdictions
   // whose OCD path names this county. A same-state match or a missing ID
   // cannot establish county ownership.
@@ -52,7 +53,8 @@ export function districtSubject(
       ...division,
       holders: answer?.holders ?? representationForDivision(coverage, division.ocdId),
       rosterGaps: answer?.rosterGaps ?? projectedRosterGapsForDivision(coverage, division.ocdId),
-      note: representationNoteFor(division.tier, answer ? noteStateFor(answer.status) : "gap"),
+      vacancy: answer?.vacancy ?? coverage?.seats.find(seat => seat.ocdId === division.ocdId)?.vacancy,
+      note: representationNoteFor(division.tier, answer ? noteStateFor(answer.status) : "gap", answer?.vacancy ?? coverage?.seats.find(seat => seat.ocdId === division.ocdId)?.vacancy),
     };
   });
   return {
@@ -76,15 +78,19 @@ export function districtSubject(
     divisionOcdId: district.ocdId,
     representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
+    vacancy,
     spotRepresentation,
     rosterGaps: resolved?.rosterGaps ?? projectedRosterGapsForDivision(coverage, district.ocdId),
     representationNote: representationNoteFor(
       district.tier,
       resolved ? noteStateFor(resolved.status) : "gap",
+      vacancy,
     ),
     meetings,
     /* Built from the same rows the card renders. */
-    sources: districtCardSources([...roster, ...spotRepresentation.flatMap(division => division.holders)], meetings),
+    sources: [...districtCardSources([...roster, ...spotRepresentation.flatMap(division => division.holders)], meetings),
+      ...[...new Map([vacancy, ...spotRepresentation.map(division => division.vacancy)].flatMap(row => row ? [[row.ocdId, row] as const] : [])).values()]
+        .map(row => ({ what: "Seat vacancy", provenance: { sourceUrl: row.sourceUrl, sourceOrg: row.sourceOrg, collectedAt: row.collectedAt, verifiedAt: row.collectedAt } }))],
   };
 }
 

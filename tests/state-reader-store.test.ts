@@ -64,6 +64,25 @@ test("invalid scopes fail before SQL and a missing exact state remains unrecorde
   assert.equal(calls,1);
 });
 
+test("federal directory, optional portraits and registration hydrate by their exact state keys", async () => {
+  for (const [recordClass, scope] of [
+    ["FEDERAL_DIRECTORY", "US-AZ:current-congress-directory"],
+    ["STATE_LEGISLATOR", "US-AZ:people:portraits:v1"],
+    ["REGISTRATION", "US-TX:registration:v1"],
+  ] as const) {
+    const payload = { held: recordClass }, source = row(payload);
+    Object.assign(source.roots.projection, { recordClass, scope, key: `${recordClass}:${scope}` });
+    const read = await readStateReaderPromotion(async (_sql, params) => {
+      assert.deepEqual(params, [`${recordClass}:${scope}`]);
+      return [source];
+    }, recordClass, scope);
+    assert.deepEqual(read?.projection.payload, payload);
+  }
+  const query = async () => { throw new Error("SQL must not run"); };
+  for (const scope of ["US:current-congress-directory", "US-XX:current-congress-directory", "US-AZ:people:portraits:v1"])
+    await assert.rejects(readStateReaderPromotion(query, "FEDERAL_DIRECTORY", scope), /STATE_READER_SCOPE_INVALID/);
+});
+
 test("changed proof, missing parts, cycles and changed part contents cannot serve", async () => {
   const proof = row({id:"held"}); proof.proof_valid=false;
   await assert.rejects(readStateReaderPromotion(async()=>[proof],recordClass,scope),/STATE_READER_PUBLISHED_PROOF_INVALID/);

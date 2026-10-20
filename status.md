@@ -4,8 +4,8 @@ build_state: IDLE; RELEASES 57, 58, 59 AND 60 SHIPPED; WAITING ON NEW READYS; NE
 worker: claude-river
 provider: Claude
 run_id: session_017TkpzScBJXCdKRAQCCg6M1
-lock: none
-heartbeat: 2026-10-20T05:56:21Z
+lock: claude-river-20261019T1652
+heartbeat: 2026-10-20T07:17:22Z
 
 ## Where things stand (Oct 20, 1:25 AM EDT)
 

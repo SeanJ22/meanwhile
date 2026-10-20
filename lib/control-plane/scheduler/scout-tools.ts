@@ -301,37 +301,40 @@ export async function extractPdf(bytes: Uint8Array, ocr: typeof runOcr = runOcr)
   }
   try {
     /* A COPY: pdfjs takes ownership of the buffer it is handed and detaches it. */
-    const doc = await getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false }).promise;
+    const loadingTask = getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false });
+    const pages: string[] = [];
+    const tables: ExtractedTable[] = [];
+    let numPages: number;
     try {
-      const pages: string[] = [];
-      const tables: ExtractedTable[] = [];
-      for (let i = 1; i <= doc.numPages; i += 1) {
+      const doc = await loadingTask.promise;
+      numPages = doc.numPages;
+      for (let i = 1; i <= numPages; i += 1) {
         const page = await doc.getPage(i);
         const content = await page.getTextContent();
         pages.push(content.items.map((item) => ("str" in item ? item.str : "")).join(" "));
         tables.push(...tablesFromRows(rowsFromItems(content.items.flatMap(item => "str" in item && item.str.trim()
           ? [{ x: item.transform[4], y: item.transform[5], width: item.width, text: item.str }] : [])).map(cellsFromRow), i));
       }
-      const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
-      let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
-      if (empty.length) {
-        const scanned = await ocr(new Uint8Array(bytes), "vaulted PDF");
-        if (scanned.outcome === "EXTRACTED" && scanned.counts.pages === doc.numPages) {
-          const byPage = new Map(scanned.items.map(page => [page.page, page.text]));
-          for (const index of empty) pages[index] = byPage.get(index + 1) ?? "";
-          const unresolved = empty.filter(index => !pages[index].trim());
-          extractionNote = `OCR used on ${empty.length} page(s) without a text layer. ${unresolved.length ? `No text recognized on page(s) ${unresolved.map(index => index + 1).join(", ")}; this does not prove blank source pages. ` : ""}OCR is an unverified transcription; normal independent verification remains required.`;
-        } else {
-          const why = scanned.outcome === "EXTRACTED" ? "OCR page count disagrees with the PDF" : scanned.reason;
-          if (empty.length === pages.length) return { kind: "EXTRACTION_FAILED", why: `Scanned PDF OCR incomplete: ${why}` };
-          extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
-        }
-      }
-      return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(),
-        pages: doc.numPages, tables, complete: pages.every(text => text.trim().length >= 2), extractionNote };
     } finally {
-      await doc.cleanup();
+      await loadingTask.destroy();
     }
+    const empty = pages.flatMap((text, index) => text.trim().length < 2 ? [index] : []);
+    let extractionNote = "Text layer extracted; ordinary source and claim verification still required.";
+    if (empty.length) {
+      const scanned = await ocr(new Uint8Array(bytes), "vaulted PDF");
+      if (scanned.outcome === "EXTRACTED" && scanned.counts.pages === numPages) {
+        const byPage = new Map(scanned.items.map(page => [page.page, page.text]));
+        for (const index of empty) pages[index] = byPage.get(index + 1) ?? "";
+        const unresolved = empty.filter(index => !pages[index].trim());
+        extractionNote = `OCR used on ${empty.length} page(s) without a text layer. ${unresolved.length ? `No text recognized on page(s) ${unresolved.map(index => index + 1).join(", ")}; this does not prove blank source pages. ` : ""}OCR is an unverified transcription; normal independent verification remains required.`;
+      } else {
+        const why = scanned.outcome === "EXTRACTED" ? "OCR page count disagrees with the PDF" : scanned.reason;
+        if (empty.length === pages.length) return { kind: "EXTRACTION_FAILED", why: `Scanned PDF OCR incomplete: ${why}` };
+        extractionNote = `PARTIAL EXTRACTION: page(s) ${empty.map(index => index + 1).join(", ")} remain unread. ${why}. Retained text from other pages is not complete-document evidence.`;
+      }
+    }
+    return { kind: "TEXT", text: pages.map((text, index) => `[Page ${index + 1}]\n${text}`).join("\n").replace(/[ \t]+/g, " ").trim(),
+      pages: numPages, tables, complete: pages.every(text => text.trim().length >= 2), extractionNote };
   } catch (error) {
     return { kind: "EXTRACTION_FAILED", why: error instanceof Error ? error.message : String(error) };
   }

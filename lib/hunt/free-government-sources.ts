@@ -1,5 +1,6 @@
 import {readStateReference} from '../control-plane/expansion/state-references.ts';
 import {loadRegistrationReference} from '../registration/reference.ts';
+import {referenceGovernmentListings} from '../registration/listings.ts';
 import {stateOfficesForStates} from '../reference/state-offices.ts';
 
 export interface FreeGovernmentSource {jurisdictionId:string;governmentId?:string;bodyId?:string|null;name:string;state:string;govClass:string;website:string|null;directorySeeds:readonly string[];citation:string;}
@@ -18,12 +19,12 @@ export function freeGovernmentSources(root:string,state:string):FreeGovernmentSo
   catch{return null;}
  };
  const sources=new Map<string,FreeGovernmentSource>();
- for(const [pid,id,name,kind] of registered.reference.governments)sources.set(id,{jurisdictionId:id,name,state:state.toUpperCase(),govClass:classes[kind]??kind,website:address(held.facts[pid]?.web),directorySeeds:seeds,citation:`${registered.generatedAt}; registration reference ${state.toUpperCase()} sha256 ${registered.sha256}`});
- for(const row of registered.listings??[]){
+ for(const [pid,id,name,kind] of registered.reference.governments)if(kind==='STATE')sources.set(id,{jurisdictionId:id,name,state:state.toUpperCase(),govClass:classes[kind]??kind,website:address(held.facts[pid]?.web),directorySeeds:seeds,citation:`${registered.generatedAt}; registration reference ${state.toUpperCase()} sha256 ${registered.sha256}`});
+ for(const row of referenceGovernmentListings(registered)){
   const id=row.jurisdictionId??row.id;
   sources.set(id,{jurisdictionId:id,governmentId:row.id,bodyId:row.bodyIds.length===1?row.bodyIds[0]:null,
    name:row.name,state:row.state.toUpperCase(),govClass:row.kind==='EDUCATION_AGENCY'?'SCHOOL_DISTRICT':row.kind==='DEPENDENT_SCHOOL_SYSTEM'?'DEPENDENT_SCHOOL_SYSTEM':row.governmentClass,
-   website:address(row.govDomains?.[0]?.website??row.website),directorySeeds:seeds,
+   website:address(row.govDomains?.[0]?.website??row.website??held.facts[row.nativeIds.census_pid6]?.web),directorySeeds:seeds,
    citation:`${row.provenance.sourceUrl}; ${row.sourceVintage}; held ${state.toUpperCase()} government source listing`});
  }
  return [...sources.values()];

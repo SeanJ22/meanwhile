@@ -13,6 +13,8 @@ test("the free source provider covers every state without creating paid focus", 
    const result=meetingsDiscoveryProvider({registered:()=>({registries:new Map(),refused:new Map()}),materialized:()=>({ids:new Set()})} as never).enumerate({root:ROOT,nowIso:'2026-10-20T11:00:00Z',state} as never);
    assert.equal(result.readFailure,null,result.readFailure??'');
    const scheduled=new Set(result.obligations.map(record=>record.subjectId));
+   const nativeIds=result.obligations.flatMap(record=>{const id=(record.routes[0] as {placeHunt?:{governmentId?:string}}).placeHunt?.governmentId;return id?[id]:[];});
+   assert.equal(new Set(nativeIds).size,nativeIds.length,`${state}: one free source obligation per native government`);
    for(const [,id] of loadRegistrationReference(ROOT,state).reference.governments)assert.ok(scheduled.has(id),`${state}: registered government ${id} must retain its free source work`);
    for(const record of result.obligations){governments++;const route=record.routes[0] as typeof record.routes[0]&{placeHunt?:{state:string;knownOwnSite:boolean}};
     assert.notEqual(route.open.kind,'ROUTINE_READ');assert.equal(route.executorClass,'DETERMINISTIC');

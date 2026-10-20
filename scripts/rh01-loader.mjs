@@ -10,6 +10,7 @@ const root = process.env.WTP_RH01_CODE_ROOT ?? process.cwd();
 const runtime = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-readonly-runtime.mts")).href;
 const neonBridge = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-loopback-neon.mjs")).href;
 const routeReplay = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-route-replay.mts")).href;
+const browserEvidence = pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-browser-evidence.mts")).href;
 
 export async function resolve(specifier, context, nextResolve) {
   const parent = context.parentURL ?? "";
@@ -114,7 +115,7 @@ export async function load(url, context, nextLoad) {
     add(`import {storeMeasurementScreenshot as rhLocalScreenshot} from ${JSON.stringify(runtime)};
       export async function storeRunScreenshot(key,bytes,io) { return rhOriginalStoreRunScreenshot(key,bytes,io??{put:rhLocalScreenshot}); }`);
   } else if (url.endsWith("/lib/control-plane/live-audit-log.ts")) {
-    for (const name of ["recordClaimPass", "readRecentClaimPasses", "recordLookPass"]) {
+    for (const name of ["recordClaimPass", "readRecentClaimPasses", "recordLookPass", "recordTaskPass", "recordSpeedPass"]) {
       const declaration = `export async function ${name}(`;
       if (!source.includes(declaration)) throw Error(`RH01 native audit lifecycle did not match: ${name}`);
       source = source.replace(declaration, `async function rhOriginal${name}(`);
@@ -122,7 +123,28 @@ export async function load(url, context, nextLoad) {
     add(`import {auditDueRepositories as rhAuditDue,observeLookPass as rhObserveLook} from ${JSON.stringify(runtime)};
       export async function recordClaimPass(repos,pass) { return rhOriginalrecordClaimPass(rhAuditDue(repos,{kind:'CLAIMS',week:pass.week}),pass); }
       export async function readRecentClaimPasses(repos,weeks) { return rhOriginalreadRecentClaimPasses(weeks.length===1?rhAuditDue(repos,{kind:'CLAIMS',week:weeks[0]}):repos,weeks); }
-      export async function recordLookPass(repos,pass) { const local=rhAuditDue(repos,{kind:'LOOK',sha:pass.sha}); await rhOriginalrecordLookPass(local,pass); await rhObserveLook(local,pass); }`);
+      export async function recordLookPass(repos,pass) { const local=rhAuditDue(repos,{kind:'LOOK',sha:pass.sha}); await rhOriginalrecordLookPass(local,pass); await rhObserveLook(local,pass); }
+      export async function recordTaskPass(repos,pass) { await rhOriginalrecordTaskPass(repos,pass); await rhObserveTasks(repos,pass); }
+      export async function recordSpeedPass(repos,pass) { await rhOriginalrecordSpeedPass(repos,pass); await rhObserveSpeed(repos,pass); }`);
+    add(`import {observeResidentPass as rhObserveTasks,observeSpeedPass as rhObserveSpeed} from ${JSON.stringify(browserEvidence)};`);
+  } else if (url.endsWith("/lib/health/resident-task-run.ts")) {
+    const declaration = "export async function runTaskPlaces(";
+    if (!source.includes(declaration)) throw Error("RH01 native resident place iterator did not match");
+    source = source.replace(declaration, "async function rhOriginalRunTaskPlaces(");
+    add(`import {observeResidentPlaces as rhObserveTaskPlaces} from ${JSON.stringify(browserEvidence)};
+      export async function runTaskPlaces(input) { return rhObserveTaskPlaces(input,rhOriginalRunTaskPlaces); }`);
+  } else if (url.endsWith("/scripts/resident-tasks.mts")) {
+    const screen = "if (deadEnd === null) missing = await unmet(page, script.scope, script.checks);";
+    if (!source.includes(screen)) throw Error("RH01 native resident final-screen check did not match");
+    source = source.replace(screen, "if (deadEnd === null) { missing = await unmet(page, script.scope, script.checks); await rhResidentScreen(page,script.scope,script.checks); }");
+    add(`import {observeResidentScreen as rhResidentScreen} from ${JSON.stringify(browserEvidence)};`);
+  } else if (url.endsWith("/scripts/worst-case-speed-pass.mts")) {
+    const targets = 'const targets = speedTargets(tasks, zips).filter((t) => t.surface !== "ask" || askZips.has(t.zip));';
+    const visit = 'runs.push(await visit(target.surface === "ask" ? asker! : reader, target));';
+    if (!source.includes(targets) || !source.includes(visit)) throw Error("RH01 native speed target loop did not match");
+    source = source.replace(targets, targets + "\nrhPrepareSpeed(targets,RUNS);");
+    source = source.replace(visit, 'runs.push(await rhSpeedTarget(target,()=>visit(target.surface === "ask" ? asker! : reader, target)));');
+    add(`import {prepareSpeedObservation as rhPrepareSpeed,observeSpeedTarget as rhSpeedTarget} from ${JSON.stringify(browserEvidence)};`);
   } else if (url.endsWith("/scripts/look-pass.mts")) {
     const current = "hasLookedCommit(repos, served.sha)", before = "readLookedCommits(repos)";
     if (source.includes(current)) source = source.replace(current, "hasLookedCommit(rhAuditDue(repos,{kind:'LOOK',sha:served.sha}), served.sha)");
@@ -136,10 +158,13 @@ export async function load(url, context, nextLoad) {
     source = source.replace("if (blockWrites) {", "if (true) {");
     source = source.replace("    return context;", `    await context.route("**/*", async route => {
       const request = route.request();
+      const ask=await rhAskResponse({url:request.url(),method:request.method(),headers:request.headers(),body:request.postData()});
+      if(ask)return route.fulfill({status:ask.status,headers:ask.headers,body:ask.body});
       if (!rhAllowedRequest(request.url(), request.method())) return route.abort("blockedbyclient");
       return route.fallback();
     });\n    return context;`);
     add(`import { allowedMeasurementRequest as rhAllowedRequest } from ${JSON.stringify(pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-network.mjs")).href)};`);
+    add(`import {measurementAskResponse as rhAskResponse} from ${JSON.stringify(runtime)};`);
   } else if (url.endsWith("/lib/control-plane/workers/lease-worker.ts")) {
     const dispatch = "const result = await dispatchAutonomousTask(runtime, task);";
     if (!source.includes(dispatch)) throw Error("RH01 native lease dispatch observation did not match");

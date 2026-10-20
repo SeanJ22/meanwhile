@@ -11,6 +11,7 @@ import { sqlStatementCode } from "./rh01-sql.mts";
 
 const productionReadOwner = new AsyncLocalStorage();
 export const withProductionReadOwner = (owner, work) => productionReadOwner.run(owner, work);
+export const currentProductionReadOwner = () => productionReadOwner.getStore();
 
 const blockedHosts = /(?:^|\.)(?:anthropic\.com|openai\.com|exa\.ai|brave\.com|openrouter\.ai|generativelanguage\.googleapis\.com)$/i;
 const sourcePosts = new Set();

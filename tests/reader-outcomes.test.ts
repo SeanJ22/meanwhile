@@ -181,3 +181,41 @@ test("a cold Ask reads published doors without a runner catalogue, keeps old yea
     assert.equal(loadedFrom(), "EMPTY_STORE", "an unselected request never falls back to the runner catalogue");
   });
 });
+
+test("federal Ask outcomes keep exact federal bodies and calendar aliases without expanding a legacy country's local records", async t => {
+  const { pg, put } = await outcomeDatabase(t);
+  const body = "ocd-division/country:us#senate", otherFederalBody = "b:federal-board", foreignBody = "b:california";
+  const current = { ...sitting, slug: "federal", bodyId: body, ocdId: "ocd-division/country:us", meetingId: "legistar:federal:2026" };
+  const alias = { ...current, meetingId: "legistar-insite:federal:calendar-alias" };
+  const old = { ...current, bodyId: otherFederalBody, slug: "federal-board", meetingId: "legistar:federal-board:2018", startsAt: "2018-01-09T09:00:00Z" };
+  const foreign = { ...sitting, bodyId: foreignBody, meetingId: current.meetingId,
+    agenda: [{ ...sitting.agenda[0], title: "FOREIGN LOCAL OUTCOME ".repeat(10_000) }] };
+  await pg.query("INSERT INTO entity VALUES($1,'US'),($2,'US'),($3,'CA'),($4,'AZ')", [body, otherFederalBody, foreignBody, BODY]);
+  const legacyScope = "US:legacy-meeting-outcomes", aliasScope = outcomePartitionScope(meetingPartitionId("legistar-insite", body));
+  await put({ ...own, tenants: ["federal", "federal-board", "pima"], sittings: [current, old, foreign, sitting] }, legacyScope);
+  await put({ ...own, tenants: ["federal"], sittings: [alias] }, aliasScope);
+  await put({ ...own, sittings: [foreign, sitting] }, "US:local-only-meeting-outcomes");
+  let reads = 0;
+  const query: ReadOnlyQuery = async statements => {
+    reads++;
+    assert.deepEqual(statements[0].params[0], [], "federal US never grants whole-partition state selection");
+    assert.deepEqual(statements[0].params[4], ["US"]);
+    assert.deepEqual(statements[0].params[5], [], "no artificial state:us door prefix can widen federal selection");
+    const rows = (await pg.query<Record<string, unknown>>(statements[0].text, [...statements[0].params])).rows;
+    assert.ok(rows.every(row => row.scope === legacyScope || row.scope === aliasScope));
+    assert.doesNotMatch(JSON.stringify(rows), /FOREIGN LOCAL OUTCOME/, "foreign local source records never cross the database boundary");
+    return [rows];
+  };
+  const snapshot = await readStateMeetingOutcomes(["US"], [], query);
+  assert.deepEqual(snapshot.sittings.map(row => row.meetingId).sort(), [current.meetingId, old.meetingId, alias.meetingId].sort());
+  assert.deepEqual(snapshot.sittings.find(row => row.meetingId === current.meetingId), current);
+  assert.ok(snapshot.sittings.every(row => row.bodyId === body || row.bodyId === otherFederalBody));
+  const selected = await readSelectedMeetingOutcomes(["US"], body, [current.meetingId, alias.meetingId], query);
+  assert.deepEqual(selected.sittings.map(row => row.meetingId).sort(), [current.meetingId, alias.meetingId].sort());
+  assert.deepEqual(selected.sittings.find(row => row.meetingId === alias.meetingId), alias);
+  assert.equal(reads, 2);
+  for (const invalid of ["XX", "US-US"]) await assert.rejects(readStateMeetingOutcomes([invalid], [], query), /REGISTRY_STATE_INVALID/);
+  assert.equal(reads, 2, "invalid state codes never reach the reader store");
+  await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE scope=$1", [legacyScope]);
+  await assert.rejects(readStateMeetingOutcomes(["US"], [], query), /PUBLICATION_INVALID/);
+});

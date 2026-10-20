@@ -4,7 +4,7 @@ import { StringDecoder } from "node:string_decoder";
 
 export const COMPLETION_LINE_BYTES = 4 * 1024 * 1024;
 export const COMPLETION_EVIDENCE_BYTES = 1024 * 1024;
-const controls = ["RH01_NATIONAL_RESULT ", "RH01_ROUTE_REPLAY ", "RH01_REPLAY ", "RH01_FRESHNESS_RESULT ", "RH01_PILOT_CYCLE ",
+const controls = ["RH01_NATIONAL_RESULT ", "RH01_ROUTE_REPLAY ", "RH01_REPLAY ", "RH01_FRESHNESS_RESULT ", "RH01_PILOT_CYCLE ", "RH01_LOOK_RESULT ", "RH01_BROWSER_RESULT ",
   "RCD_OPERATIONAL_OUTCOME=", "RCD_RUN=", "RCD_RECEIPT=", "INTAKE_RUNTIME_RECEIPT="] as const;
 const statuses = /hunter lane:|refresh failed|open request hold could not be released|pilot-runner · 1 cycle\(s\) complete\.|owner-snapshot · published: snapshot;|incomplete control-plane inputs|NOT BUILT|--dry-run:|target: [^\r\n]*role=readonly|DRY RUN — nothing applied|No pending [^\r\n]* migrations within this plan|loss study:|not read:|nothing was measured|nothing was studied|break patterns:|claim audit:|lessons not saved:|could not be done:|live audit:|lessons not kept:|resident tasks:|speed:/;
 type Receipt = { readonly acquisitionSucceeded?: boolean; readonly decision?: string; readonly state?: string };
@@ -26,6 +26,8 @@ function compactControl(line: string): { text: string; receipt?: Receipt } {
       : prefix === "RH01_REPLAY " ? ["complete", "role", "taskId", "committedResultId", "reports"]
         : prefix === "RH01_FRESHNESS_RESULT " ? ["state", "durable", "simulated", "filtered", "registeredUnits", "workedUnits", "cycleId"]
           : prefix === "RH01_PILOT_CYCLE " ? ["ok", "recorded", "registeredUnits", "workedUnits"]
+            : prefix === "RH01_LOOK_RESULT " ? ["sha", "runId", "durable", "expectedScreens", "screens", "exactTargets", "shots", "reviewer", "reviewerSays", "red", "green", "notReviewed"]
+            : prefix === "RH01_BROWSER_RESULT " ? ["kind", "durable", "exactTargets", "exhausted", "places", "expected", "observed", "expectedChecks", "checks", "shots", "expectedAsks", "asks", "expectedDigest", "actualDigest", "passed", "failed"]
             : prefix === "RCD_OPERATIONAL_OUTCOME=" ? ["state", "durable"]
               : prefix === "RCD_RUN=" ? ["denominator", "attempted", "failed", "skipped"]
                 : prefix === "RCD_RECEIPT=" ? ["acquisitionSucceeded", "decision", "state"]

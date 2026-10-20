@@ -496,7 +496,7 @@ test("a Send's completion uses the same created and reordered members as its lin
     { obligationId: "created", subjectId: "s1", entry: { assignmentKey: A.key, ref: "r-a", relation: "CREATED", at: JOINED } },
     { obligationId: "reordered", subjectId: "s2", entry: { assignmentKey: A.key, ref: "r-a", relation: "REORDERED", at: JOINED } },
   ]);
-  const members = memberRecordsForSend(A.key, membership, [{ id: "reordered", lastWorkedAt: JOINED }]);
+  const members = memberRecordsForSend(A.key, membership, id => id === "reordered" ? { id, lastWorkedAt: JOINED } : undefined);
   const completion = evaluateAssignmentFromRecords({ assignmentKey: A.key, obligations: members, debtFor: () => null, now: T0 });
   assert.equal(completion.kind, "NOT_COMPLETE");
   if (completion.kind !== "NOT_COMPLETE") return;

@@ -124,7 +124,7 @@ import { percentOf } from "../lib/coverage/place-percent.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
 import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
-import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
+import { divisionsOfPlace, readGovernmentPackets } from "../lib/hunt/packet-read.ts";
 import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
@@ -827,7 +827,9 @@ let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
 /** Obligations whose open/resume threw and were isolated. Never silent. */
-const preOpenSkipped: { obligationId: string; why: string }[] = [];
+let preOpenSkippedSequence = 0;
+const preOpenSkippedRows = planner.table<{ obligationId: string; why: string }>("pre-open-skipped", () => String(preOpenSkippedSequence++));
+const preOpenSkipped = preOpenSkippedRows.rows;
 const dueTable = planner.table<{ obligation: StandingObligation; nextDueAt: string; cadenceHours: number }>("due", row => row.obligation.id);
 let dueThisCycle = dueTable.rows;
 
@@ -852,7 +854,7 @@ const retryNow = plannerSet(planner, "retry-now-identities", debtsIn.filter(debt
 const backedOff = plannerSet(planner, "backed-off-identities", new DiskRows(() => debtIds).filter(id => !retryNow.has(id)));
 console.log(
   `  freshness debt inherited from earlier processes: ${debtIds.size} open row(s)` +
-    (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
+    (debtIds.size === 0 ? "" : ` — ${[...new DiskRows(() => debtIds).slice(0, 3)].join(", ")}${debtIds.size > 3 ? " …" : ""}`),
 );
 
 
@@ -867,6 +869,7 @@ for (const obligation of sync.all) {
   const anchored = await persistVerifiedPublicationAnchors(repos, { obligations: [obligation], lineages, now: NOW });
   for (const next of anchored.updated.values()) syncSink.all.add(next);
   publicationAnchors += anchored.anchored.length;
+  roundProgress.note("standing lineage");
 }
 if (publicationAnchors) console.log(`  verified standing publications advanced ${publicationAnchors} source clock(s)`);
 
@@ -887,7 +890,8 @@ for (const o of sync.all) {
 
 
 
-const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
+let continuedStandingLineageCount = 0;
+const continuedStandingLineageRoots: string[] = [];
 if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
   for (const row of dueThisCycle) {
     const o = row.obligation;
@@ -897,18 +901,23 @@ if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) &&
     if (!key) continue;
     const held = standingLineageCoversDue({lineages:[...lineageRows.rowsWhere(["obligationId"], o.id)],key,now:NOW,cadenceHours:row.cadenceHours});
     if (!held) continue;
-    continuedStandingLineages.push({obligationId:o.id,rootWorkItemId:held.rootWorkItemId});
+    continuedStandingLineageCount++;
+    if (continuedStandingLineageRoots.length < 3) continuedStandingLineageRoots.push(held.rootWorkItemId);
     dueTable.delete(o.id);
   }
 }
-if (continuedStandingLineages.length) console.log(`  standing source periods continued: ${continuedStandingLineages.length}; no duplicate Scout root opened; canonical roots ${continuedStandingLineages.slice(0, 3).map(row=>row.rootWorkItemId).join(", ")}${continuedStandingLineages.length>3?" …":""}`);
+if (continuedStandingLineageCount) console.log(`  standing source periods continued: ${continuedStandingLineageCount}; no duplicate Scout root opened; canonical roots ${continuedStandingLineageRoots.join(", ")}${continuedStandingLineageCount>3?" …":""}`);
 
 /* A packet is sent only while it has an open blank and something changed since its last job. */
 {
   const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
   if (packetRows.length > 0) {
     try {
-      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW, undefined, planner, async governmentId => {
+      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW, async (...args) => {
+        const packets = await readGovernmentPackets(...args);
+        roundProgress.note("held government packet");
+        return packets;
+      }, planner, async governmentId => {
         if (observationsUnreadable) throw new Error(observationsUnreadable);
         const own = observations.rows.filter(row => row.value.bodyId.split("#")[0] === governmentId).map(row => row.value);
         return [...foldAskGapObservations([...own], NOW).asked.values()];
@@ -1225,6 +1234,7 @@ const openOccurrenceInStep = async (
     if (resumed?.kind === "SETTLED") {
       if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
       else openedDeterministic += 1;
+      roundProgress.note("standing occurrence");
       return { settled: resumed.settled };
     }
     if (resumed !== null) {
@@ -1236,9 +1246,10 @@ const openOccurrenceInStep = async (
     }
     if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
     else openedDeterministic += 1;
+    roundProgress.note("standing occurrence");
     return true;
   } catch (error) {
-    preOpenSkipped.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
+    preOpenSkippedRows.add({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     return false;
   }
 };
@@ -1757,7 +1768,7 @@ const nextDuePersistence = runPool(nextDueWrites, Math.max(1, workerCapacity), a
 /* Visited is not finished. Each Send is evaluated from its members' own records as this cycle
    read them (obligations at sync, debts at load): settled, or named as refused or not yet settled. */
 const debtByObligation = plannerMap(planner, "assignment-debts", debtsIn.map((d) => [d.obligationId, d] as const));
-const assignmentObligations = assignmentRows;
+const readAssignmentObligation = (id: string) => syncSink.outside.read(id) ?? syncSink.all.read(id);
 /* A Send over resolved places is Done by its mission map: no unfilled row and every door it opened has a next read. */
 const resolvedReceipts = new Set((expansionPlan?.scopes ?? []).filter(scope => scope.kind === "RESOLVED").map(scope => scope.decision.receiptId));
 const priorMapBefore = (key: string, ref: string): number | null => {
@@ -1767,7 +1778,7 @@ const priorMapBefore = (key: string, ref: string): number | null => {
 };
 const assignmentCompletion = (key: string) => {
   const ref = assignmentSpecs.find(spec=>spec.key===key)?.ref;
-  const obligations = memberRecordsForSend(key, assignmentMembers, assignmentObligations, ref, planner);
+  const obligations = memberRecordsForSend(key, assignmentMembers, readAssignmentObligation, ref, planner);
   const debtFor = (id: string) => debtByObligation.get(id) ?? null;
   if (ref !== undefined && resolvedReceipts.has(ref)) {
     const counted = missionMaps.get(ref);

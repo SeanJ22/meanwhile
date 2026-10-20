@@ -2,7 +2,7 @@
  * Production reads retain their real credentials; publication writes go to temporary local storage.
  */
 import { DatabaseSync } from "node:sqlite";
-import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { dirname, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -13,6 +13,8 @@ import type { ConfirmUnchangedInput } from "../lib/civic-data/unchanged-confirma
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { LookPass } from "../lib/frontend/look-pass.ts";
+import { currentProductionReadOwner } from "./rh01-network.mjs";
+import { observeAskRequest, measurementScreenshotExists } from "./rh01-browser-evidence.mts";
 
 const root = process.env.WTP_RH01_DIRECTORY;
 if (!root) throw Error("RH01 measurement directory is required");
@@ -151,9 +153,28 @@ const routineOverlays = new WeakSet<object>();
 const routineIdentities = new WeakMap<object, object>();
 export const isRoutineOverlay = (value: unknown): boolean => typeof value === "object" && value !== null && routineOverlays.has(value);
 export const routineStoreIdentity = (value: object): object => routineIdentities.get(value) ?? value;
-const rpcHeaders = () => ({ "content-type": "application/json", "x-rh01-owner-pid": String(process.pid),
-  "x-rh01-owner-job": process.env.WTP_RUNTIME_AUTHORITY_CONTRACT || process.env.WTP_RH01_JOB_ID || "",
-  "x-rh01-owner-task": process.env.WTP_RH01_WORKER_TASK_ID ?? "" });
+const rpcHeaders = () => {
+  const owner = currentProductionReadOwner();
+  return { "content-type": "application/json", "x-rh01-owner-pid": String(owner?.ownerPid ?? process.pid),
+    "x-rh01-owner-job": owner?.jobId ?? (process.env.WTP_RUNTIME_AUTHORITY_CONTRACT || process.env.WTP_RH01_JOB_ID || ""),
+    "x-rh01-owner-task": owner?.taskId ?? process.env.WTP_RH01_WORKER_TASK_ID ?? "" };
+};
+
+/** The browser's original Ask request is answered by native handlers in disposable local infrastructure. */
+export async function measurementAskResponse(input: { url: string; method: string; headers: Record<string, string>; body: string | null }):
+  Promise<{ status: number; headers: Record<string, string>; body: string } | null> {
+  const url = new URL(input.url), path = url.pathname;
+  if (input.method !== "POST" || !["/api/ask/grounded", "/api/ask/classify"].includes(path)) return null;
+  const endpoint = process.env.WTP_RH01_FACTS_URL?.replace(/\/query$/, "/ask");
+  if (!endpoint || new URL(endpoint).hostname !== "127.0.0.1") throw Error("RH01 Ask bridge requires the loopback coordinator");
+  const observe = observeAskRequest(input);
+  try {
+    const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify(input) });
+    const result = await response.json();
+    if (!response.ok) throw Error(result.error ?? "RH01 local Ask bridge failed");
+    observe(result); return result;
+  } catch (error) { observe(); throw error; }
+}
 
 /** The real PG repositories keep their SQL, projections, CAS and log allocation behavior. */
 export function controlSql<T extends { query: (...args: never[]) => unknown }>(production: T): T {
@@ -465,15 +486,9 @@ export async function observeLookPass(repos: Pick<ControlPlaneRepositories, "liv
   const expected = targets.map(key).sort(), actual = pass.screens.map(key).sort();
   const durable = marked && retained?.kind === "LOOK" && canonicalJson(retained.pass) === canonicalJson(pass);
   const shots = pass.screens.filter(screen => screen.shot !== null && screen.failed === null &&
-    existsScreenshot(screen.shot)).length;
+    measurementScreenshotExists(screen.shot)).length;
   console.log("RH01_LOOK_RESULT " + JSON.stringify({ sha: pass.sha, runId: pass.runId, durable,
     expectedScreens: expected.length, screens: actual.length, exactTargets: JSON.stringify(actual) === JSON.stringify(expected), shots,
     reviewer: pass.reviewerSays === null ? "REVIEWED" : "NOT_RUN", reviewerSays: pass.reviewerSays,
     red: pass.red, green: pass.green, notReviewed: pass.notReviewed }));
-}
-
-function existsScreenshot(key: string): boolean {
-  const directory = resolve(sharedRoot, "screenshots"), path = resolve(directory, key);
-  if (!key.startsWith("resident-tasks/") || key.split(/[\\/]/).includes("..") || !path.startsWith(directory + sep)) return false;
-  try { const held = statSync(path); return held.isFile() && held.size > 0; } catch { return false; }
 }

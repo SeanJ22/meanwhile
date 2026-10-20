@@ -5,7 +5,7 @@ import type { WorkItemState } from "./work-item.ts";
 import { instructionReceiptKey } from "./scheduler/obligation.ts";
 import type { PlaceOwedItem } from "../coverage/place-owed.ts";
 import { DiskRows } from "./scheduler/disk-rows.ts";
-import { plannerMap, type PlannerSpool } from "./scheduler/planner-spool.ts";
+import type { PlannerSpool } from "./scheduler/planner-spool.ts";
 
 let nextCompletion = 0;
 function* assigned<T extends MemberCandidate>(rows: Iterable<T>, key: string): IterableIterator<T> {
@@ -119,19 +119,21 @@ export interface MemberRecord {
 }
 
 /** A newly created obligation may be missing from the cycle's earlier snapshot; it is still an unsettled member. */
-export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref: string | undefined, planner: PlannerSpool): DiskRows<MemberRecord>;
-export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref?: string): MemberRecord[];
-export function memberRecordsForSend(key: string, membership: SendMembership, records: Iterable<MemberRecord>, ref?: string, planner?: PlannerSpool): MemberRecord[] | DiskRows<MemberRecord> {
+export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref: string | undefined, planner: PlannerSpool): DiskRows<MemberRecord>;
+export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref?: string): MemberRecord[];
+export function memberRecordsForSend(key: string, membership: SendMembership, readRecord: (id: string) => MemberRecord | undefined, ref?: string, planner?: PlannerSpool): MemberRecord[] | DiskRows<MemberRecord> {
   const slot = ref === undefined ? membership.byKey.get(key) : membership.byInstruction.get(instructionReceiptKey(key, ref));
   const prefix = `completion-${nextCompletion++}`;
   if (!slot) return planner ? new DiskRows(() => [], () => 0) : [];
-  const byId = planner ? plannerMap<MemberRecord>(planner, `${prefix}-records`) : new Map<string, MemberRecord>();
-  for (const row of records) byId.set(row.id, row);
   const out = planner?.table<MemberRecord>(`${prefix}-members`, row => row.id), native: MemberRecord[] = [];
   for (const member of (function* () { yield* slot.created.values(); yield* slot.reordered.values(); })()) {
-    const held = byId.get(member.obligationId), relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
-    const row = { ...held, id: member.obligationId, ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
-      assignments: [...(held?.assignments ?? []), { assignmentKey: key, relation, at: member.joinedAt }] };
+    const held = readRecord(member.obligationId), relation = slot.created.has(member.obligationId) ? "CREATED" : "REORDERED";
+    const fields = held === undefined ? {} : Object.fromEntries(
+      (["lastWorkedAt", "openOccurrenceId", "nextDueAt", "absentUntil", "instructionJoinedAt"] as const)
+        .filter(key => Object.hasOwn(held, key)).map(key => [key, held[key]]));
+    const row: MemberRecord = { ...fields, id: member.obligationId, ...(ref === undefined ? {} : { instructionJoinedAt: member.joinedAt }),
+      assignments: [...(held?.assignments ?? []).map(({ assignmentKey, relation, at }) => ({ assignmentKey, relation, at })),
+        { assignmentKey: key, relation, at: member.joinedAt }] };
     if (out) out.add(row); else native.push(row);
   }
   return out ? out.rows : native;

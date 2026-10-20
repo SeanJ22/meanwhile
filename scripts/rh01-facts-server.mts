@@ -15,6 +15,7 @@ import { projectedRead, updateRead, shadowRead, sqlStatementCode, type SqlShadow
 import { installMeasurementNetworkBoundary } from "./rh01-network.mjs";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { ReadonlySpendHoldOverlay } from "./rh01-spend-holds.mts";
+import type { NativeAskProcess } from "./rh01-ask-bridge.mts";
 
 installMeasurementNetworkBoundary();
 
@@ -38,6 +39,7 @@ let routineSqlite: DatabaseSync | null = null;
 const canonicalVersions = new Set<string>();
 let controlQueue: Promise<unknown> = Promise.resolve();
 let readerQueue: Promise<unknown> = Promise.resolve();
+let askBridge: Promise<NativeAskProcess> | undefined;
 let spendHolds: ReadonlySpendHoldOverlay | null = null;
 let actionHistoryReady = false;
 const phaseSchema = await import(pathToFileURL(join(process.env.WTP_RH01_CODE_ROOT ?? process.cwd(), "lib/control-plane/repository/pg-schema.ts")).href);
@@ -442,7 +444,7 @@ const server = createServer((request, response) => withProductionReadOwner({
   ownerPid: Number(request.headers["x-rh01-owner-pid"]) || process.pid,
   jobId: String(request.headers["x-rh01-owner-job"] ?? ""), taskId: String(request.headers["x-rh01-owner-task"] ?? ""),
 }, async () => {
-  if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing", "/audit-log"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
+  if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing", "/audit-log", "/ask"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
   const disconnected = new AbortController();
   request.once("aborted", () => disconnected.abort(Error("RH01 local read caller disconnected")));
   response.once("close", () => { if (!response.writableEnded) disconnected.abort(Error("RH01 local read caller disconnected")); });
@@ -451,6 +453,15 @@ const server = createServer((request, response) => withProductionReadOwner({
     for await (const chunk of request) body += chunk;
     const decoded = JSON.parse(body || "{}");
     const { text, params = [], token } = decoded as { text: string; params: unknown[]; token?: string };
+    if (request.url === "/ask") {
+      const address = server.address();
+      if (!address || typeof address === "string") throw Error("RH01 Ask coordinator address missing");
+      askBridge ??= import("./rh01-ask-bridge.mts").then(module => module.startNativeAskBridge(`http://127.0.0.1:${address.port}/query`));
+      const ownerHeaders = Object.fromEntries(["x-rh01-owner-pid", "x-rh01-owner-job", "x-rh01-owner-task"]
+        .map(name => [name, String(request.headers[name] ?? "")]));
+      const result = await (await askBridge).answer(decoded, ownerHeaders);
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result)); return;
+    }
     if (request.url === "/reader-select") {
       const statements = decoded.statements as readonly { text: string; params: readonly unknown[] }[];
       if (!Array.isArray(statements) || statements.some(statement => typeof statement?.text !== "string" || !Array.isArray(statement.params))) throw Error("RH01 reader statements are invalid");
@@ -550,5 +561,6 @@ process.once("SIGTERM", () => {
   shutdown.abort(Error("RH01 local database is stopping"));
   current?.end(false);
   process.stdout.write(`RH01_FACTS_END ${JSON.stringify({ remoteBytes, remoteControlBytes, peakRssBytes: process.resourceUsage().maxRSS * 1024, controlReadTiming })}\n`);
-  server.close(() => { routineSqlite?.close(); void Promise.all([pg.close(), controlPg?.close(), canonicalPg?.close()]).then(() => process.exit(0)); });
+  const askClosed = askBridge?.then(bridge => bridge.close());
+  server.close(() => { routineSqlite?.close(); void Promise.all([pg.close(), controlPg?.close(), canonicalPg?.close(), askClosed]).then(() => process.exit(0)); });
 });

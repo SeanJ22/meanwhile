@@ -113,9 +113,18 @@ export function measuredCompletion(input: { readonly script: string; readonly st
       ? yes("Production facts were sampled and audited against their sources", Number(match[1])) : no("The live audit did not cover its readable production families");
   }
   if (script === "resident-tasks.mts" || script === "worst-case-speed-pass.mts") {
-    const match = script === "resident-tasks.mts" ? /resident tasks: (\d+) passed, 0 failed,/.exec(stdout)
-      : /speed: (\d+) within three seconds, 0 too slow or unfinished,/.exec(stdout);
-    return match && Number(match[1]) > 0 ? yes("Every browser workload completed", Number(match[1])) : no("A browser task was missing, refused, or unfinished");
+    const observed = jsonLine(stdout, "RH01_BROWSER_RESULT "), tasks = script === "resident-tasks.mts";
+    const count = (value: unknown) => typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+    if (!observed || observed.kind !== (tasks ? "TASKS" : "SPEED") || observed.durable !== true || observed.exactTargets !== true || observed.exhausted !== true ||
+        !count(observed.places) || observed.places === 0 || !count(observed.expected) || observed.expected === 0 || observed.observed !== observed.expected ||
+        !count(observed.expectedChecks) || observed.expectedChecks === 0 || observed.checks !== observed.expectedChecks ||
+        !count(observed.expectedAsks) || observed.expectedAsks === 0 || observed.asks !== observed.expectedAsks || !count(observed.passed) || !count(observed.failed) ||
+        Number(observed.passed) + Number(observed.failed) !== (tasks ? observed.observed : observed.checks) ||
+        typeof observed.expectedDigest !== "string" || !/^[a-f0-9]{64}$/.test(observed.expectedDigest) || observed.actualDigest !== observed.expectedDigest ||
+        tasks && (!count(observed.shots) || Number(observed.shots) < Number(observed.observed)))
+      return no("A native browser target, interaction, retained pass, screenshot or full place-scoped Ask response was missing");
+    return { ...yes("Every native browser workload and place-scoped Ask response completed and its actual pass was retained", Number(observed.observed)),
+      successful: observed.failed === 0 };
   }
   return no("No full-workload completion evidence was recorded for this executable");
 }

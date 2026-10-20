@@ -27,6 +27,32 @@ test("a completed national marker before large irrelevant output remains proved 
   assert.doesNotMatch(evidence.stdout, /sourceRecords/);
 }));
 
+test("a native look receipt survives saved-log compaction and cannot hide incomplete screenshots", async () => logs(async paths => {
+  const look = { sha: "a".repeat(40), runId: "native-browser", durable: true, expectedScreens: 8, screens: 8,
+    exactTargets: true, shots: 8, reviewer: "NOT_RUN", reviewerSays: "no model", red: 0, green: 0, notReviewed: 8,
+    screenshotBodies: "unneeded".repeat(40000) };
+  await writeFile(paths.stdoutFile, `RH01_LOOK_RESULT ${JSON.stringify(look)}\n` + "unrelated output\n".repeat(20000));
+  const evidence = await readCompletionLogEvidence(paths), result = complete(evidence, "scripts/look-pass.mts");
+  assert.equal(result.complete, true); assert.equal(result.successful, false); assert.match(result.reason, /reviewer NOT_RUN/);
+  assert.doesNotMatch(evidence.stdout, /screenshotBodies/); assert.ok(evidence.retainedBytes < 1024);
+  await appendFile(paths.stdoutFile, `RH01_LOOK_RESULT ${JSON.stringify({ ...look, shots: 7 })}\n`);
+  assert.equal(complete(await readCompletionLogEvidence(paths), "scripts/look-pass.mts").complete, false);
+}));
+
+test("persisted browser workload evidence keeps slow product failures separate and rejects missing native Ask coverage", async () => logs(async paths => {
+  const browser = { kind: "SPEED", durable: true, exactTargets: true, exhausted: true, places: 1,
+    expected: 32, observed: 32, expectedChecks: 22, checks: 22, shots: 0, expectedAsks: 12, asks: 12,
+    expectedDigest: "a".repeat(64), actualDigest: "a".repeat(64), passed: 4, failed: 18, irrelevantBodies: "x".repeat(100000) };
+  await writeFile(paths.stdoutFile, `RH01_BROWSER_RESULT ${JSON.stringify(browser)}\n`);
+  const evidence = await readCompletionLogEvidence(paths), result = complete(evidence, "scripts/worst-case-speed-pass.mts");
+  assert.equal(result.complete, true); assert.equal(result.successful, false);
+  assert.doesNotMatch(evidence.stdout, /irrelevantBodies/); assert.ok(evidence.retainedBytes < 1024);
+  for (const missing of [{ durable: false }, { asks: 11 }, { expectedAsks: 0 }, { checks: 21 }, { observed: 31 }, { exhausted: false }, { actualDigest: "b".repeat(64) }]) {
+    await appendFile(paths.stdoutFile, `RH01_BROWSER_RESULT ${JSON.stringify({ ...browser, ...missing })}\n`);
+    assert.equal(complete(await readCompletionLogEvidence(paths), "scripts/worst-case-speed-pass.mts").complete, false);
+  }
+}));
+
 test("early refusal and hunter failures cannot be evicted by later source floods or repeated successful statuses", async () => logs(async paths => {
   await writeFile(paths.stdoutFile, marker + receipt + "hunter lane: refresh failed; original state retained\n" +
     "hunter lane: armed; model on\n" + "hunter lane: ended after 1 wave(s), 2 task result(s): its life ended; the runner starts a fresh lane\n");

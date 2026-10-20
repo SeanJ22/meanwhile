@@ -581,7 +581,21 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
     );
 
     const restarted = await createFileRepositories(root);
-    const report = await reconcile(restarted, T5M);
+    const fail = async (): Promise<never> => { throw new Error("COUNTRY_RECONCILIATION_ROWS_MATERIALIZED"); };
+    let pages = 0;
+    const observed: ControlPlaneRepositories = { ...restarted,
+      dispositions: { ...restarted.dispositions, readAll: fail, readChangedSince: async (since, held, options) => {
+        assert.ok(options?.page, "global recovery must consume pages rather than return the full commit history");
+        return restarted.dispositions.readChangedSince(since, held, { ...options, page: async rows => {
+          pages++;
+          await options.page!(rows);
+        } });
+      } },
+      routeTasks: { ...restarted.routeTasks, list: fail, listNarrowed: fail },
+      attempts: { ...restarted.attempts, list: fail, listNarrowed: fail },
+    };
+    const report = await reconcile(observed, T5M);
+    assert.equal(pages, 1);
     assert.equal(report.commitsSeen, 1);
     assert.deepEqual(report.healed, [commit.commitId], "the unapplied commit was completed");
 

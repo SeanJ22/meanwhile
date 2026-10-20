@@ -651,44 +651,29 @@ export async function reconcile(
   now: string,
   scope?: { readonly workItemIds: readonly string[] },
 ): Promise<ReconcileReport> {
+  let commitsSeen = 0;
+  const healed: string[] = [];
+  const apply = async (commit: DispositionCommit, expected?: { workItemId: string; routeTaskId: string }) => {
+    if (expected && (commit.workItemId !== expected.workItemId || commit.routeTaskId !== expected.routeTaskId))
+      throw new Error("DISPOSITION_RECONCILE_SCOPE_MISMATCH");
+    commitsSeen++;
+    const [task, attempt] = await Promise.all([repos.routeTasks.read(commit.routeTaskId), repos.attempts.read(commit.attemptId)]);
+    if (task && canonicalJson(task.value) === canonicalJson(commit.disposedTask) &&
+        attempt && canonicalJson(attempt.value) === canonicalJson(commit.closedAttempt)) return;
+    await applyDispositionCommit(repos, commit, now);
+    healed.push(commit.commitId);
+  };
   if (scope) {
-    let commitsSeen = 0;
-    const healed: string[] = [];
     for (const workItemId of new Set(scope.workItemIds)) {
       const tasks = await repos.routeTasks.listWhereNarrowed(["workItemId"], workItemId, {});
       for (const task of tasks) await repos.dispositions.readChangedSince(null, undefined, { keys: [task.id], page: async rows => {
-        for (const { record: commit } of rows) {
-          if (commit.workItemId !== workItemId || commit.routeTaskId !== task.id) throw new Error("DISPOSITION_RECONCILE_SCOPE_MISMATCH");
-          commitsSeen++;
-          const [heldTask, heldAttempt] = await Promise.all([repos.routeTasks.read(task.id), repos.attempts.read(commit.attemptId)]);
-          if (heldTask && canonicalJson(heldTask.value) === canonicalJson(commit.disposedTask) &&
-              heldAttempt && canonicalJson(heldAttempt.value) === canonicalJson(commit.closedAttempt)) continue;
-          await applyDispositionCommit(repos, commit, now);
-          healed.push(commit.commitId);
-        }
+        for (const { record } of rows) await apply(record, { workItemId, routeTaskId: task.id });
       } });
     }
-    return { commitsSeen, healed };
-  }
-  const commits = await repos.dispositions.readAll();
-  const healed: string[] = [];
-  if (commits.length === 0) return { commitsSeen: 0, healed };
-  const [taskRows, attemptRows] = await Promise.all([repos.routeTasks.list(), repos.attempts.list()]);
-  const tasks = new Map(taskRows.map(row => [row.id, row]));
-  const attempts = new Map(attemptRows.map(row => [row.id, row]));
-  for (const commit of commits) {
-    const task = tasks.get(commit.routeTaskId) ?? null;
-    const attempt = attempts.get(commit.attemptId) ?? null;
-    const taskApplied = task !== null && canonicalJson(task.value) === canonicalJson(commit.disposedTask);
-    const attemptApplied =
-      attempt !== null && canonicalJson(attempt.value) === canonicalJson(commit.closedAttempt);
-    if (taskApplied && attemptApplied) continue;
-    const applied = await applyDispositionCommit(repos, commit, now);
-    tasks.set(commit.routeTaskId, applied.task);
-    attempts.set(commit.attemptId, applied.attempt);
-    healed.push(commit.commitId);
-  }
-  return { commitsSeen: commits.length, healed };
+  } else await repos.dispositions.readChangedSince(null, undefined, { page: async rows => {
+    for (const { record } of rows) await apply(record);
+  } });
+  return { commitsSeen, healed };
 }
 
 /** Move a WorkItem and append the transition to its replayable history. */

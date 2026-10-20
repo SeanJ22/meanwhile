@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import test from "node:test";
 import { readFile, mkdtemp, rm } from "node:fs/promises";
 import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaignMoneyWork, campaignMoneyStateDue,readCampaignMoneyStateWork,campaignRecordYear, type CampaignMoneyPerson } from "../lib/funding/state-people.ts";
@@ -257,9 +258,9 @@ test("cycle donor totals name organizations and individuals over $200 and never 
     installFactReader(db.query);
     const {GET:campaignGET}=await import("../app/api/campaign-finance/route.ts");
     const {GET:personGET}=await import("../app/api/funding/[target]/route.ts");
-    const response=await campaignGET(new Request(`https://meanwhileusa.com/api/campaign-finance?${new URLSearchParams({division:candidate.division,person:candidate.id})}`));
+    const response=await campaignGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?${new URLSearchParams({division:candidate.division,person:candidate.id})}`));
     assert.deepEqual((await response.json()).records,read.records);
-    const personResponse=await personGET(new Request(`https://meanwhileusa.com/api/funding/${candidate.id}?${new URLSearchParams({division:candidate.division})}`),{params:Promise.resolve({target:candidate.id})});
+    const personResponse=await personGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/funding/${candidate.id}?${new URLSearchParams({division:candidate.division})}`),{params:Promise.resolve({target:candidate.id})});
     const personMoney=await personResponse.json();assert.equal(personMoney.kind,"state-cycle");assert.deepEqual(personMoney.data.records,read.records);
     const ask=await stateCampaignEvidence([candidate.division],candidate.id,{query:db.query});
     assert.match(ask.records[0].text,/LARGE DONOR: \$300|FILED PAC: \$50/);assert.doesNotMatch(JSON.stringify(ask),/SMALL DONOR PRIVATE/);

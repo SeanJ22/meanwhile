@@ -200,7 +200,8 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
   if (options.runId && prior?.runId === options.runId) return prior;
   const at=(options.now??(()=>new Date().toISOString()))();
   if(prior && options.releaseEveryMs !== undefined && Date.parse(at)-Date.parse(prior.sourceCheck.checkedAt)<options.releaseEveryMs)return prior;
-  const versionUrl=resource.releaseVersionUrl ?? (resource.kind==="SOCRATA" ? new URL(`/api/views/${new URL(resource.url).pathname.split("/").at(-1)!.replace(/\.json$/,"")}.json`,resource.url).href : null);
+  const resourceUrl=new URL(resource.url);
+  const versionUrl=resource.releaseVersionUrl ?? (resource.kind==="SOCRATA" ? new URL(`/api/views/${resourceUrl.pathname.split("/").at(-1)!.replace(/\.json$/,"")}.json`,resourceUrl).href : null);
   let releaseVersion:string|undefined;
   let releasePublishedAt:string|null=null;
   if(versionUrl && options.releaseEveryMs!==undefined){

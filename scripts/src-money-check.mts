@@ -13,6 +13,7 @@ import {refreshCampaignMoneyState} from "../lib/funding/state-publication.ts";
 import {stateCampaignEvidence} from "../lib/ask/state-campaign.ts";
 import {DurableEvidenceStore} from "../lib/control-plane/evidence/durable-store.ts";
 import {installFactReader} from "../lib/facts/db.ts";
+import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import type {Query} from "../lib/facts/publish.ts";
 
 const state=process.argv.find(arg=>arg.startsWith("--state="))?.slice(8);
@@ -134,10 +135,10 @@ if(!state){
     let apiMs:number|null=null,personApiMs:number|null=null;
     if(["DC","FL","CO","AZ"].includes(state)){
       const {GET}=await import("../app/api/campaign-finance/route.ts");
-      const begin=performance.now(),response=await GET(new Request(`https://meanwhileusa.com/api/campaign-finance?division=${encodeURIComponent(division)}`));
+      const begin=performance.now(),response=await GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?division=${encodeURIComponent(division)}`));
       const value=await response.json();apiMs=performance.now()-begin;assert.equal(response.status,200);assert.deepEqual(value.records,read.records);
       const person=read.records[0]?.person.id??people[0]?.id;
-      if(person){const {GET:personGET}=await import("../app/api/funding/[target]/route.ts");const begin=performance.now();const response=await personGET(new Request(`https://meanwhileusa.com/api/funding/${encodeURIComponent(person)}?division=${encodeURIComponent(division)}`),{params:Promise.resolve({target:person})});const value=await response.json();personApiMs=performance.now()-begin;assert.equal(response.status,200);assert.equal(value.kind,"state-cycle");}
+      if(person){const {GET:personGET}=await import("../app/api/funding/[target]/route.ts");const begin=performance.now();const response=await personGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/funding/${encodeURIComponent(person)}?division=${encodeURIComponent(division)}`),{params:Promise.resolve({target:person})});const value=await response.json();personApiMs=performance.now()-begin;assert.equal(response.status,200);assert.equal(value.kind,"state-cycle");}
       assert.ok(apiMs<3000 && readerMs<3000 && (personApiMs??0)<3000,`${state} money reads exceeded three seconds`);
     }
     const [counts]=await query("SELECT count(*) FILTER(WHERE field LIKE 'campaign-money:%') AS rows,count(*) FILTER(WHERE field LIKE 'campaign-cycle:%') AS cycles FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.state=$1 AND f.status='live'",[state]);

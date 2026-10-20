@@ -96,7 +96,8 @@ test("F01 11.2 / 11.3: the ballot page drops the contradiction and the false cla
     !/we\s*\n?\s*never see them/.test(page),
     "the self-contradicting picks paragraph is back",
   );
-  assert.match(page, /How we handle data/);
+  assert.match(page, /href="\/transparency"[^>]*>\s*What this site collects\s*<\/Link>/,
+    "the ballot must link to the collection details with its plain page title");
   // The page no longer claims an order it does not use.
   assert.ok(
     !/listed alphabetically by surname —/.test(page),

@@ -1,4 +1,3 @@
-import type {ControlPlaneRepositories} from '../repository/types.ts';
 /**
  * The route-aware executor: opens what each `RouteDescriptor` says (GET, POST, or nothing), reusing
  * `http-executor.ts`'s disposition mapping. A response that misses the declared yield contract is ABORTED; a
@@ -192,7 +191,6 @@ export type VaultPut = (
 
 /** Build the executor. An obligation with no descriptor is an ABORTED attempt naming our gap. */
 export function routeExecutor(input: {
-  readonly repos?:ControlPlaneRepositories;
   readonly routeFor: (obligationId: string) => RouteDescriptor | null;
   readonly openOne?: OpenOne;
   readonly timeoutMs?: number;
@@ -224,12 +222,7 @@ export function routeExecutor(input: {
       };
     }
 
-    const placeHunt=(route as RouteDescriptor & {placeHunt?:import('../../hunt/own-site-runtime.ts').HuntSourceScope}).placeHunt;
-    if(placeHunt){
-      if(!input.repos || !input.vault)return {ranAs:RAN_AS,kind:'ABORTED',cost:NO_SEND_COST,detail:'The government-source reader requires its existing repositories and evidence vault; this place stays owed'};
-      const {placeSourceExecutor}=await import('../../hunt/own-site-runtime.ts');
-      return placeSourceExecutor({repos:input.repos,scope:placeHunt,open:openOne,vault:input.vault,spaceOut:input.spaceOut??(async()=>{}),now:clock,root:input.root})(job);
-    }
+    if(route.placeHunt)return {ranAs:RAN_AS,kind:'ABORTED',cost:NO_SEND_COST,detail:'Government source reads require the standing route worker and its repositories; this place stays owed'};
 
     /* A route we hold no client for commits REQUIRES_NEW_ADAPTER: debt accrues and the next-due stands. */
     if (route.open.kind === "NOT_MACHINE_EXECUTABLE") {

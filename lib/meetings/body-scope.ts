@@ -7,6 +7,7 @@ export function meetingStateOf(id: string | null | undefined): string {
 }
 export const divisionOf = (id: string): string => id.split("#")[0]!;
 
-export function meetingPartitionId(sourceName: string, bodyId: string): string {
-  return `meetings:${sourceName}:${encodeURIComponent(bodyId)}`;
+export function meetingPartitionId(sourceName: string, bodyId: string, route?: string): string {
+  if (route !== undefined && !/^[a-f0-9]{16}$/.test(route)) throw new Error("MEETING_PARTITION_ROUTE_INVALID");
+  return `meetings:${sourceName}:${encodeURIComponent(bodyId)}${route ? `:route:${route}` : ""}`;
 }

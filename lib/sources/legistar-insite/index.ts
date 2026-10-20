@@ -205,6 +205,15 @@ export interface LegistarInSiteRaw {
   collectedAt: string;
 }
 
+/** One actually saved calendar page, retaining its date and the pager's explicit incomplete scope. */
+export function heldInSiteCalendar(input: { html: string; url: string; retrievedAt: string; slug: string }): LegistarInSiteRaw {
+  const range = renderedRange(input.html);
+  if (!range) throw new Error("The saved InSite page does not state its selected calendar range");
+  return { slug: input.slug, calendarUrl: input.url,
+    windows: [{ range: range as InSiteRange, rendered: range, html: input.html, pager: parseGridPager(input.html), pages: [], noRecords: parseGridNoRecords(input.html) }],
+    feedXml: null, feedUrl: null, icalByInsiteId: {}, clerkScheduleHtml: null, clerkScheduleUrl: null, collectedAt: input.retrievedAt };
+}
+
 /** `M/D/YYYY` as the grid prints it. */
 function gridDate(raw: string): { year: number; month: number; day: number } | null {
   const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(raw.trim());

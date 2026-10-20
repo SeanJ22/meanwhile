@@ -1,4 +1,4 @@
-import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+import { recordFreeDiscoveryWalks } from "./helpers/free-discovery-walk.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -191,8 +191,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   };
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  await runCensusState({
-    repos, state: "OH", needs,
+  await recordFreeDiscoveryWalks({
+    repos, needs,
     runtime: {
       open: recordedDiscoveryOpen(site),
       spaceOut: async () => {},

@@ -140,11 +140,23 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       await page.goto(`${origin}/adams`);
       for (const input of ["Server failure", "Stalled request"]) {
         await page.getByLabel("Your street address or ZIP").fill(input);
-        const started = performance.now();
+        await page.evaluate(() => {
+          const state = { started: 0, elapsed: 0 };
+          Object.assign(window, { lookupTiming: state });
+          document.querySelector("form")!.addEventListener("submit", () => { state.started = performance.now(); }, { once: true, capture: true });
+          const observer = new MutationObserver(() => {
+            if (state.started && document.querySelector("[data-voting-coverage-gap]")) {
+              state.elapsed = performance.now() - state.started; observer.disconnect();
+            }
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
         await page.getByRole("button", { name: "Show me", exact: true }).click();
         const gap = page.locator("[data-voting-coverage-gap]");
-        await gap.waitFor({ state: "visible", timeout: 3000 });
-        assert.ok(performance.now() - started < 3000, "a failed transport still resolves the panel within three seconds");
+        await gap.waitFor({ state: "visible", timeout: 5000 });
+        const elapsed = await page.evaluate(() => (window as unknown as { lookupTiming: { elapsed: number } }).lookupTiming.elapsed);
+        console.log(`VS-01 ${viewport.name} ${input}: ${Math.round(elapsed)} ms`);
+        assert.ok(elapsed > 0 && elapsed < 3000, `${input}: usable answer took ${elapsed} ms`);
         assert.match(await gap.innerText(), /working on getting this info/i);
         assert.equal(await gap.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);
         assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /Something went wrong/i);

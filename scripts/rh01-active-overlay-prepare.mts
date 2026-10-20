@@ -7,7 +7,7 @@ import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts"
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import type { ObjectMeta } from "../lib/control-plane/evidence/store.ts";
-import { savedArtifactFirstObservation, savedSourceTaskFork } from "./rh01-source-fork.mts";
+import { savedArtifactFirstObservation, savedSourceTaskFork, savedSourceWorkerTaskFork } from "./rh01-source-fork.mts";
 
 const option = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const phase = option("phase"); if (phase !== "before" && phase !== "after") throw Error("RH01 overlay phase is invalid");
@@ -45,6 +45,16 @@ const at = new Date().toISOString(), repos = await createPgRepositories(connecti
 const held = await createFileRepositories(prepared), handoff = manifest.nativeHandoff, { workItemId } = handoff, contract = handoff.plan.contract;
 const sourceTasks = await Promise.all(handoff.sourceRouteTaskIds.map(id => held.routeTasks.mustRead(id)));
 const sourceAttempts = await Promise.all(handoff.sourceAttemptIds.map(id => held.attempts.mustRead(id)));
+const sourceWorkerResults = new Map<string, WorkerResultRecord>();
+async function validateSource(task: (typeof sourceTasks)[number]["value"], attempt: (typeof sourceAttempts)[number]["value"], artifacts: readonly ArtifactRecord[],
+  existing: (typeof sourceTasks)[number]["value"] = { ...task, state: "PENDING", disposition: null, attemptIds: [], policyDenial: null, policyReauthorizations: [] }) {
+  if (task.state !== "RESULT_RECORDED") return savedSourceTaskFork({ source: task, existing, attempt, artifacts, canonicalJson, routeTaskId, disposeRoute });
+  // The original native reader validates the sealed completion and actual closed Attempt before any overlay write.
+  const { record } = await readCompletedWorkerResult(held, `wr-${fingerprint([attempt.id])}`);
+  const receipt = savedSourceWorkerTaskFork({ source: task, existing, attempt, artifacts, result: record, canonicalJson, contentHash, routeTaskId });
+  sourceWorkerResults.set(record.id, record);
+  return receipt;
+}
 const firstObservations: { artifactId: string; savedReplayAttemptId: string; originalAttemptId: string; snapshot: string }[] = [];
 // Verify the saved execution and bytes before restoring any local lifecycle projection.
 const sourceObjects = await Promise.all(handoff.sourceArtifacts.map(async ({ record: source, key }) => {
@@ -58,8 +68,7 @@ const sourceObjects = await Promise.all(handoff.sourceArtifacts.map(async ({ rec
       meta.byteLength !== source.byteLength || meta.custom?.canonicalUrl !== source.canonicalUrl || meta.custom?.retrievedAt !== source.recordedAt ||
       meta.custom?.workItemId !== source.workItemId || meta.custom?.attemptId !== source.attemptId || meta.custom?.tier !== source.tier)
     throw Error("RH01 held source sidecar does not identify the original acquisition");
-  savedSourceTaskFork({ source: task, existing: { ...task, state: "PENDING", disposition: null, attemptIds: [], policyDenial: null, policyReauthorizations: [] },
-    attempt, artifacts: [source], canonicalJson, routeTaskId, disposeRoute });
+  await validateSource(task, attempt, [source]);
   const found = await repos.artifacts.readWhere(source.workItemId, ["artifactId"], source.artifactId) as readonly ArtifactRecord[];
   if (!found.length) return { source, key, bytes, meta, existingMetadata: false };
   if (found.length === 1 && canonicalJson(found[0]) === canonicalJson(source)) return { source, key, bytes, meta, existingMetadata: true };
@@ -71,9 +80,8 @@ const sourceObjects = await Promise.all(handoff.sourceArtifacts.map(async ({ rec
     repos.attempts.mustRead(original.attemptId), repos.routeTasks.mustRead(original.routeTaskId!),
   ]);
   // The native first observation must itself have completed. The saved replay remains in its original File store.
-  savedSourceTaskFork({ source: originalTask.value,
-    existing: { ...task, state: "PENDING", disposition: null, attemptIds: [], policyDenial: null, policyReauthorizations: [] },
-    attempt: originalAttempt.value, artifacts: [original], canonicalJson, routeTaskId, disposeRoute });
+  await validateSource(originalTask.value, originalAttempt.value, [original],
+    { ...task, state: "PENDING", disposition: null, attemptIds: [], policyDenial: null, policyReauthorizations: [] });
   sourceTasks[sourceTasks.findIndex(row => row.id === source.routeTaskId)] = originalTask;
   sourceAttempts[sourceAttempts.findIndex(row => row.id === source.attemptId)] = originalAttempt;
   firstObservations.push({ artifactId: source.artifactId, savedReplayAttemptId: source.attemptId, originalAttemptId: original.attemptId, snapshot });
@@ -103,7 +111,7 @@ for (const { source, key, bytes, meta, existingMetadata } of sourceObjects) {
 }
 await writeFile(join(shared, "saved-source-first-observations.json"), JSON.stringify({ at, source: prepared, firstObservations, productionWrites: 0,
   note: "Existing immutable artifact metadata and its genuine original completed acquisition were retained. Matching saved bytes filled the disposable local vault; the separate local replay was not rewritten." }, null, 2) + "\n");
-const sourceForks: ReturnType<typeof savedSourceTaskFork>[] = [];
+const sourceForks: Awaited<ReturnType<typeof validateSource>>[] = [];
 for (const source of sourceTasks) {
   const existing = await repos.routeTasks.read(source.id);
   if (!existing) await repos.routeTasks.put(source.id, source.value, source.updatedAt);
@@ -112,16 +120,18 @@ for (const source of sourceTasks) {
     // Keep both snapshots in the measurement receipt; never describe this local fork as production completion.
     const snapshot = join(shared, `source-task-snapshot-${source.id}.json`);
     await writeFile(snapshot, JSON.stringify({ at, source: prepared, existing, savedExecution: source, productionWrites: 0 }, null, 2) + "\n");
-    const attempt = sourceAttempts.find(row => row.id === source.value.disposition?.attemptId)?.value;
+    const attempt = sourceAttempts.find(row => row.id === source.value.disposition?.attemptId ||
+      sourceWorkerResults.has(`wr-${fingerprint([row.id])}`) && row.value.routeTaskId === source.id)?.value;
     if (!attempt) throw Error(`RH01 source task differs without a saved completed Attempt; snapshots: ${snapshot}`);
-    const fork = savedSourceTaskFork({ source: source.value, existing: existing.value, attempt,
-      artifacts: sourceObjects.filter(row => row.source.routeTaskId === source.id).map(row => row.source), canonicalJson, routeTaskId, disposeRoute });
+    const fork = await validateSource(source.value, attempt,
+      sourceObjects.filter(row => row.source.routeTaskId === source.id).map(row => row.source), existing.value);
     await repos.routeTasks.compareAndSet(source.id, existing.revision, source.value, source.updatedAt);
     sourceForks.push(fork);
     await writeFile(join(shared, "saved-source-local-forks.json"), JSON.stringify({ at, source: prepared, sourceForks, productionWrites: 0,
       note: "Saved native completions replaced only untouched pending projections in the disposable local fork. Production lifecycle and controls were not changed." }, null, 2) + "\n");
   }
 }
+for (const record of sourceWorkerResults.values()) await repos.workerResults.append(record.workItemId, record.id, record, record.endedAt);
 await registerAutonomousPlan(repos, workItemId, handoff.plan, at);
 async function execute(taskId: string, role: "ACQUIRER" | "PARSER" | "VALIDATOR", verdict: string): Promise<WorkerResultRecord> {
   const reports: DispatchResult[] = [];
@@ -172,7 +182,7 @@ for (const [type, input] of [
 }
 const controls = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
 if (controls.paused || !controls.pendingDispatch.length) throw Error("RH01 local Resume/Send did not read back");
-const result = { phase, at, source: prepared, restored, sourceForks, firstObservations, acquisitionResultId: acquired.id, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
+const result = { phase, at, source: prepared, restored, sourceForks, firstObservations, restoredSourceWorkerResultIds: [...sourceWorkerResults.keys()], acquisitionResultId: acquired.id, parserResultId: parser.id, validatorResultId: validator.id, auditTaskId: audit.id, receipts, productionWrites: 0,
   note: "Exact saved source observations grounded a new native v2 ACQUIRER/parser/validator chain. Canonical independent context passed without a provider call. The audit is pending and no old v1 task or result was relabeled. All writes used the disposable local overlay." };
 await writeFile(join(shared, "active-overlay-preparation.json"), JSON.stringify(result, null, 2) + "\n");
 console.log(`RH01_ACTIVE_OVERLAY_PREPARED ${JSON.stringify(result)}`);

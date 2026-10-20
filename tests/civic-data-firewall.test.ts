@@ -649,6 +649,8 @@ test("executable closure permits its exact bound with duplicate pending imports 
     files[`lib/closure/${i}.ts`] = i === 510 ? 'export const last = true;' : `import "./${i + 1}.ts"; import "./${i + 1}.ts";`;
   }
   assert.equal(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"), false);
+  files['lib/closure/350.ts'] += '\nimport {execFileSync} from "node:child_process"; execFileSync("git", ["push", "origin", "HEAD:main"]);';
+  assert.ok(audit(files).some(row => row.code === "ROUTINE_PATH_INVOKES_RELEASE" && row.path === "lib/closure/350.ts"));
   files['lib/closure/510.ts'] = 'import "./511.ts";';
   files['lib/closure/511.ts'] = 'export const last = true;';
   assert.ok(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"));

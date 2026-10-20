@@ -53,7 +53,7 @@ export async function readHeldInputs(
     const at = new Map<string, string>();
     for (let start = 0; start < keys.length; start += SUBJECT_PAGE) {
       for (const row of await query(`SELECT w.value #>> '${path}' AS key, max(a.recorded_at) AS at
-        FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
+        FROM cp_work_items_history w JOIN cp_log_artifacts a ON a.log_key = w.id
         WHERE w.value #>> '${path}' = ANY($1::text[]) GROUP BY 1`, [keys.slice(start, start + SUBJECT_PAGE)])) {
         const time = iso(row.at);
         if (typeof row.key === "string" && time) at.set(row.key, time);

@@ -4,7 +4,6 @@ import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import {
-  ROUTINE_DUE_REQUEST_HISTORY,
   parseRoutineDueRequests,
   requestRoutineDue,
   routineDueCommand,
@@ -74,7 +73,7 @@ test("a due request names one registered meeting partition with a sitting window
   for (const [args, expected] of refused) assert.throws(() => routineDueCommand(args), expected, args.join(" "));
 });
 
-test("one open request at a time on the owner's config row; withdrawn and expired ones stay as inert history", async () => {
+test("one open request at a time per partition; withdrawn and expired ones stay as inert history", async () => {
   const repos = await fixtureRepositories();
   const first = await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=30"], NOW);
   assert.match(first.id, /^routine-due:[0-9a-f-]{36}$/);
@@ -88,14 +87,14 @@ test("one open request at a time on the owner's config row; withdrawn and expire
   assert.equal(withdrawn.withdrawnAt, iso(NOW_MS + 31 * MIN));
   assert.deepEqual(await withdrawRoutineDue(repos, [`--withdraw=${second.id}`], iso(NOW_MS + 40 * MIN)), withdrawn);
   await assert.rejects(withdrawRoutineDue(repos, ["--withdraw=routine-due:00000000-0000-4000-8000-000000000000"], NOW), /UNKNOWN/);
-  const stored = (await repos.adminConfig.mustRead("current")).value;
+  const stored = (await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value;
   assert.deepEqual(stored.routineDueRequests?.map(({ id }) => id), [first.id, second.id]);
   assert.equal(stored.apiFallback.enabled, false, "nothing else on the row moves");
   let at = NOW_MS + 2 * HOUR;
-  for (let index = 0; index < ROUTINE_DUE_REQUEST_HISTORY + 3; index += 1, at += 2 * HOUR) {
+  for (let index = 0; index < 23; index += 1, at += 2 * HOUR) {
     await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=5"], iso(at));
   }
-  assert.equal((await repos.adminConfig.mustRead("current")).value.routineDueRequests?.length, ROUTINE_DUE_REQUEST_HISTORY + 1, "closed history does not evict the active request");
+  assert.equal((await repos.adminConfig.mustRead("current",{routineDueRequests:true})).value.routineDueRequests?.length, 25, "every closed request remains in its history table");
 });
 
 test("a stored request is durable input: malformed rows are named and ignored, never trusted", () => {

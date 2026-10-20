@@ -35,11 +35,11 @@ const { POST } = await import("../app/api/ask/grounded/route.ts");
 const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
 const nearby = "ocd-division/country:us/state:az/school_district:sunnyside_unified_district";
-async function ask(question: string, confirmation?: BodyConfirmation): Promise<AskAnswerPayload> {
+async function ask(question: string, confirmation?: BodyConfirmation, divisions = [nearby]): Promise<AskAnswerPayload> {
   resetGroundedState();
   const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "tester-9-4-ask" },
-    body: JSON.stringify({ question, confirmation, surface: "MAP", ocdIds: [nearby], today: "2026-09-04" }),
+    body: JSON.stringify({ question, confirmation, surface: "MAP", ocdIds: divisions, today: "2026-09-04" }),
   }));
   assert.equal(response.status, 200);
   const answer = readAskAnswer(await response.json()); assert.ok(answer);
@@ -51,44 +51,36 @@ async function ask(question: string, confirmation?: BodyConfirmation): Promise<A
 test("ASK-26 Vail and its clean canonical name bind outside the reader's nearby coverage", async () => {
   for (const question of ["What's on the Vail school district agenda?", "What's on the Vail Unified District agenda?"]) {
     const answer = await ask(question);
-    assert.equal(answer.subject?.id, VAIL);
+    assert.equal(answer.subject?.id, VAIL, JSON.stringify({ question, mode: answer.mode, choices: answer.bodyChoices, trace: answer.trace.resolution }));
     assert.equal(answer.confirmation, undefined);
     assert.ok(answer.records.every(record => !record.bodyId || record.bodyId === VAIL));
-    assert.equal(answer.agendaLead, true);
+    assert.equal(answer.agendaLead, false, "a missing agenda starts with its short answer");
   }
 });
 
-test("ASK-26 typo and mechanical acronym offer ONE guess, no answer, then bind the original question", async () => {
+test("AQ-01 a unique typo or abbreviation answers without a confirmation", async () => {
   for (const question of ["What's on the Vial school district agenda?", "What's on the Vial agenda?", "What's on the VUSD agenda?"]) {
-    const pending = await ask(question);
-    assert.equal(pending.mode, "CLARIFY");
-    assert.equal(pending.subject, null); assert.equal(pending.answer, null);
-    assert.deepEqual(pending.records, []); assert.deepEqual(pending.meetings, []);
-    assert.equal(pending.candidates, undefined);
-    assert.equal(pending.confirmation?.bodyId, VAIL);
-    assert.equal(pending.confirmation?.question, question);
-    assert.equal(pending.trace.retrieval.recordCount, 0);
-    const markup = renderToStaticMarkup(createElement(AskBodyConfirmation, { answer: pending, working: false, onConfirm() {}, onClarify() {} }));
-    assert.match(markup, /Did you mean Vail Unified/); assert.match(markup, /Yes, answer for this body/);
-    const confirmed = await ask(question, pending.confirmation);
-    assert.equal(confirmed.subject?.id, VAIL);
-    assert.equal(confirmed.trace.resolution.basis, "READER_CONFIRMATION");
-    assert.ok(confirmed.records.length > 0);
-    assert.ok(confirmed.records.every(record => !record.bodyId || record.bodyId === VAIL));
-    const forged = await ask(question, { ...pending.confirmation!, bodyId: `${nearby}#board` });
-    assert.equal(forged.subject, null); assert.equal(forged.mode, "CLARIFY");
-    const reused = await ask("What's on the Vial school board agenda?", pending.confirmation);
-    assert.equal(reused.subject, null);
+    const answer = await ask(question, undefined, [VAIL.split("#")[0]]);
+    assert.equal(answer.subject?.id, VAIL, JSON.stringify({ question, mode: answer.mode, choices: answer.bodyChoices, trace: answer.trace.resolution }));
+    assert.equal(answer.confirmation, undefined);
+    assert.notEqual(answer.mode, "CLARIFY");
+    assert.ok(answer.records.every(record => !record.bodyId || record.bodyId === VAIL));
+    const forged = await ask(question, { bodyId: `${nearby}#board`, name: "Another body", question }, [VAIL.split("#")[0]]);
+    assert.equal(forged.subject?.id, VAIL, "a supplied confirmation cannot replace the unique match");
   }
 });
 
-test("ASK-26 tie chooses one stable canonical suggestion without treating an ordering as identity proof", () => {
+test("ASK-26 a real tie offers both governments and accepts either choice", () => {
   const bodies: BindableEntity[] = ["second", "first"].map(id => ({ id, name: "Springfield Unified District", nameClass: "body", divisionType: "school_district", level: "BODY" }));
   const question = "What's on the Springfield school district agenda?";
   const decision = decideNamedBody(question, bodies);
   assert.equal(decision.kind, "CONFIRM");
   if (decision.kind !== "CONFIRM") return;
   assert.equal(decision.candidate.id, "first");
+  assert.deepEqual(decision.alternatives.map(row => row.id), ["second"]);
+  assert.equal(decideNamedBody(question, bodies, { bodyId: "second", question }).kind, "BOUND");
+  const markup = renderToStaticMarkup(createElement(AskBodyConfirmation, { answer: { mode: "CLARIFY", bodyChoices: [decision.candidate, ...decision.alternatives].map(row => ({ bodyId: row.id, name: row.name, question })) } as AskAnswerPayload, working: false, onConfirm() {}, onClarify() {} }));
+  assert.match(markup, /Which do you mean/);
   assert.deepEqual(decideNamedBody(question, [...bodies].reverse()), decision);
   const substituted = applyNamedBodyDecision(decision, { binding: { kind: "BOUND", entity: bodies[0], matchedOn: "a model expansion" }, basis: "MODEL_EXPANSION_NARROWED", boundOn: "Springfield" }, question);
   assert.equal(substituted.binding.kind, "UNRESOLVED");
@@ -112,10 +104,11 @@ test("ASK-26 unknown named body gets a plain gap; another nearby body cannot inh
   }
   // A bare unknown name still needs identification; never default to a nearby body.
   const unnamed = await ask("What's on the Zzznonexistent agenda?");
-  assert.equal(unnamed.mode, "CLARIFY");
+  assert.equal(unnamed.mode, "NO_EVIDENCE");
   assert.equal(unnamed.subject, null); assert.equal(unnamed.confirmation, undefined); assert.equal(unnamed.candidates, undefined);
   assert.deepEqual(unnamed.records, []); assert.deepEqual(unnamed.meetings, []);
-  assert.match(unnamed.clarification ?? "", /Which government/);
+  assert.equal(unnamed.clarification, undefined);
+  assert.equal(unnamed.answer, "We don't have that answer yet.");
 });
 
 test("ASK-27 an unavailable agenda remains an OURS holding gap, never an empty docket claim", async () => {

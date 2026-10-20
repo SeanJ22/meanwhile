@@ -74,7 +74,6 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   return store;
 }
 
-
 const NOW = "2026-09-29T20:00:00.000Z";
 const OH = "ocd-division/country:us/state:oh";
 

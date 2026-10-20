@@ -24,8 +24,7 @@ async function change(deps: GatewayDeps, at: string, apply: Change): Promise<{ o
       if (made === (current.owedOverlay ?? EMPTY_OWED_OVERLAY)) return { ok: true };
       const next: AdminConfig = { ...current, owedOverlay: made, updatedAt: at };
       try {
-        if (held) await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
-        else await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+        await deps.repos.adminConfig.save(held, next, at);
         return { ok: true };
       } catch (error) { if (attempt >= 1) throw error; }
     }

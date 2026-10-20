@@ -1,7 +1,3 @@
-/**
- * The updates feed: `{what, when, label, evidence, shownAt}`, shown on Now once. Labels: PROVEN (worked at the
- * proof bar), TESTING (live, not yet proven), EXPECTED (never shown as a win). Stored on the Admin config row.
- */
 import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } from "./gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 
@@ -36,8 +32,6 @@ export interface OwedDeclinePayload {
 /** What a claimed win says, in numbers its source records can confirm. */
 export type UpdateClaim = { readonly kind: "FIX_PROVEN"; readonly methodId: string; readonly works: number; readonly failed: number };
 
-export const UPDATES_CAP = 200;
-
 export function updateRecords(config: AdminConfig): readonly UpdateRecord[] {
   return config.updates ?? [];
 }
@@ -61,9 +55,7 @@ export function withUpdateAdded(config: AdminConfig, add: NewUpdate): AdminConfi
   const next = [...items, { id: add.id, what: add.what.trim(), at: add.at, label: add.label, evidenceHref: add.evidenceHref ?? null,
     before: add.before ?? null, after: add.after ?? null, shownAt: null, ...(add.decline ? { decline: add.decline } : {}),
     ...(add.setback ? { setback: true } : {}), ...(add.claim ? { claim: add.claim } : {}) }];
-  // Shown updates are the first to go when the list is full.
-  const kept = next.length <= UPDATES_CAP ? next : [...next.filter((u) => u.shownAt === null), ...next.filter((u) => u.shownAt !== null)].slice(-UPDATES_CAP);
-  return { ...config, updates: kept, updatedAt: add.at };
+  return { ...config, updates: next, updatedAt: add.at };
 }
 
 export function withUpdatesShown(config: AdminConfig, ids: readonly string[], at: string): AdminConfig {
@@ -74,15 +66,14 @@ export function withUpdatesShown(config: AdminConfig, ids: readonly string[], at
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
-async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => AdminConfig): Promise<AdminConfig> {
+async function mutate(repos: Repos, at: string, ids: readonly string[], change: (c: AdminConfig) => AdminConfig): Promise<AdminConfig> {
   for (let attempt = 0; ; attempt++) {
-    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { ids } });
     const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(at);
     const next = change(current);
     if (next === current) return current;
     try {
-      if (held) await repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, at);
-      else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
+      await repos.adminConfig.save(held, next, at);
       return next;
     } catch (error) {
       if (attempt >= 1) throw error;
@@ -92,22 +83,22 @@ async function mutate(repos: Repos, at: string, change: (c: AdminConfig) => Admi
 
 /** The one way code adds an update to the feed. Idempotent by `id`. */
 export async function addUpdate(repos: Repos, add: NewUpdate): Promise<void> {
-  await mutate(repos, add.at, (c) => withUpdateAdded(c, add));
+  await mutate(repos, add.at, [add.id], (c) => withUpdateAdded(c, add));
 }
 
 /** Add several (one write); used for the Changes feed. */
 export async function addUpdates(repos: Repos, adds: readonly NewUpdate[], at: string): Promise<void> {
   if (adds.length === 0) return;
-  await mutate(repos, at, (c) => adds.reduce((acc, a) => withUpdateAdded(acc, a), c));
+  await mutate(repos, at, adds.map(add => add.id), (c) => adds.reduce((acc, a) => withUpdateAdded(acc, a), c));
 }
 
 /** Read what Now has not shown yet, and mark it shown in the same pass, so each update appears once. */
 export async function takeUnshownUpdates(repos: Repos, at: string): Promise<readonly UpdateRecord[]> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 200, where: { path: ["shownAt"], value: null } } });
   const config = held && isAdminConfig(held.value) ? held.value : null;
   if (!config) return [];
   const fresh = updateRecords(config).filter((u) => u.shownAt === null);
   if (fresh.length === 0) return [];
-  await mutate(repos, at, (c) => withUpdatesShown(c, fresh.map((u) => u.id), at));
+  await mutate(repos, at, fresh.map(u => u.id), (c) => withUpdatesShown(c, fresh.map((u) => u.id), at));
   return fresh;
 }

@@ -1,28 +1,30 @@
 import { stateFromRegistryRuntimeContractId } from "../../civic-data/state-scopes.ts";
-import { appendTransition, contextFromRepositories, readPipelineStates, scoutedFromScoutResult } from "../promotion/pipeline.ts";
+import { appendTransition, readPipelineStates, scoutedFromScoutResult } from "../promotion/pipeline.ts";
 import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type TransitionRecord, type VerificationCheckName } from "../promotion/types.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { isWorkerReaderContract } from "../../civic-data/worker-reader-contracts.ts";
 
-/** Offer each completed Validator result through the existing pipeline as the check it ran. */
 export async function projectFleetPipeline(repos: ControlPlaneRepositories): Promise<void> {
   const results = await readCompletedWorkerResults(repos);
   if (!results.length) return;
-  const ctx = await contextFromRepositories(repos);
+  const ctx = {workerResultById:(id:string)=>results.find(result=>result.id===id)??null};
   for (const scout of await repos.scoutResults.readAll()) {
     for (const offered of scoutedFromScoutResult(scout)) {
       if (results.some(r => r.inputArtifactIds.some(id => offered.artifactIds.includes(id)))) await appendTransition(repos, offered, ctx, offered.at);
     }
   }
   const states = await readPipelineStates(repos);
-  const registryWork = new Set((await repos.workItems.list()).filter(row => {
-    const id = row.value.autonomousPlan?.publication?.contractId;
-    return Boolean(stateFromRegistryRuntimeContractId(id ?? "")) || (id !== undefined && isWorkerReaderContract(id));
-  }).map(row => row.id));
+  const registryWork = new Set<string>();
+  for(const workItemId of new Set(results.filter(result=>result.result.role==="VALIDATOR").map(result=>result.workItemId))) {
+    const row=await repos.workItems.readNarrowed(workItemId,{autonomousPlan:["publication"]});
+    const value=row?.value as {autonomousPlan?:{publication?:{contractId?:string}}}|undefined;
+    const id=value?.autonomousPlan?.publication?.contractId;
+    if(Boolean(stateFromRegistryRuntimeContractId(id??""))||(id!==undefined&&isWorkerReaderContract(id)))registryWork.add(workItemId);
+  }
   for (const result of results) {
     if (result.result.role !== "VALIDATOR") continue;
-    // This class publishes through its typed reader door, which runs its own checks.
+
     if (registryWork.has(result.workItemId)) continue;
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;

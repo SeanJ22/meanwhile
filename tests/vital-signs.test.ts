@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { countNeonBytes, countVitalSign, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+import { countNeonBytes, countVitalSign, formatVitalSignsReport, parseVitalSignsReport, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { keepNeonBytesPart, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import {
   HOUR_COSTS_SQL, VITAL_COUNTERS, composeVitalSignsRow, controlPlaneByCaller, costPerFact, formatVitalSignsLine,
@@ -52,11 +52,48 @@ test("cost per fact is spend over facts, unknown when either is unknown or no fa
 test("the caller split keeps the 20 largest control-plane callers and sums the rest as other", () => {
   const byCaller: Record<string, number> = { "reader: x ← lib/r.ts:1": 10_000 };
   for (let i = 0; i < 25; i++) byCaller[`cp_t.list ← lib/a.ts:${i}`] = 100 + i;
-  const split = controlPlaneByCaller({ hour: HOUR, requests: 0, bytes: { reader: 0, "control-plane": 0 }, byCaller, processes: [] });
+  const split = controlPlaneByCaller({ hour: HOUR, requests: 0, bytes: { reader: 10_000, "control-plane": 2_800 }, byCaller, processes: [] });
   assert.equal(Object.keys(split).length, 21);
   assert.equal(split["cp_t.list ← lib/a.ts:24"], 124);
   assert.equal(split.other, 100 + 101 + 102 + 103 + 104);
   assert.equal(Object.keys(split).some(key => key.startsWith("reader: ")), false);
+});
+
+test("merged truncated child reports reconcile control-plane callers without including hidden reader bytes", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vital-signs-truncated-"));
+  try {
+    const hot = "cp_hot.read ← scripts/hunt.ts:1";
+    const byCaller: Record<string, number> = { [hot]: 100_000, "reader: pages.read ← app/page.ts:1": 200_000 };
+    const bytes = { reader: 200_000, "control-plane": 100_000 };
+    for (let index = 0; index < 120; index++) {
+      const database = index % 2 ? "reader" : "control-plane";
+      const amount = 100 + index;
+      byCaller[`${database === "reader" ? "reader: " : ""}query ← lib/${"long-caller-path-".repeat(10)}:${index}`] = amount;
+      bytes[database] += amount;
+    }
+    const part: NeonBytesHour = { hour: HOUR, requests: 122, bytes, byCaller, processes: ["child#42"], pid: 42, startedMs: 1 };
+    const report = formatVitalSignsReport(part);
+    assert.ok(Buffer.byteLength(report) <= 3_800);
+    const child = parseVitalSignsReport(report)!;
+    const keptReader = Object.entries(child.byCaller).filter(([name]) => name.startsWith("reader: ")).reduce((total, [, amount]) => total + amount, 0);
+    const keptControl = Object.entries(child.byCaller).filter(([name]) => name !== "other" && !name.startsWith("reader: ")).reduce((total, [, amount]) => total + amount, 0);
+    assert.ok(keptReader < bytes.reader && keptControl < bytes["control-plane"], "truncation groups callers from both databases");
+    assert.equal(child.byCaller.other, bytes.reader - keptReader + bytes["control-plane"] - keptControl);
+    keepNeonBytesPart(dir, child);
+    const parent = "cp_parent.read ← scripts/runner.ts:1";
+    keepNeonBytesPart(dir, { hour: HOUR, requests: 1, bytes: { reader: 0, "control-plane": 250_000 },
+      byCaller: { [parent]: 250_000 }, processes: ["parent#43"], pid: 43, startedMs: 1 });
+    const accounting = readNeonBytesHour(dir, HOUR);
+    const row = composeVitalSignsRow({ accounting, releaseSha: "abc", writtenAt: HOUR, costs: null });
+    assert.equal(row.neonBytesByCaller[hot], 100_000);
+    for (const split of [row.neonBytesByCaller, controlPlaneByCaller(accounting, 1)]) {
+      assert.equal(split[parent], 250_000);
+      assert.equal(Object.values(split).reduce((total, amount) => total + amount, 0), row.neonBytesRead);
+      assert.equal(Object.keys(split).some(name => name.startsWith("reader: ")), false);
+      assert.ok(split.other > 0);
+    }
+    assert.equal(row.neonBytesRead, bytes["control-plane"] + 250_000);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("the cost read is one bounded aggregate over the hour by its index; the write says when the table is missing", async () => {

@@ -1,12 +1,3 @@
-/**
- * Reads every artifact record the control plane holds back through the
- * runtime's own resolvers (`CycleVault.readHeld`, `workerVaultResolver`,
- * `researchVaultResolver`) against one vault, read only.
- *
- *   node --env-file=<.env.local> --experimental-strip-types --import ./scripts/register-test-loader.mjs \
- *     scripts/vault-restore.mts --target=<vault root> [--receipt-out=<file>]
- */
-
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
@@ -31,7 +22,7 @@ const sql = neon(url);
 const [artifactRows, attemptRows] = (await sql.transaction(
   [
     sql.query(`SELECT a.log_key, a.record_id, a.record, w.value->>'project' AS project
-                 FROM cp_log_artifacts a LEFT JOIN cp_work_items w ON w.id = a.record->>'workItemId'
+                 FROM cp_log_artifacts a LEFT JOIN cp_work_items_history w ON w.id = a.record->>'workItemId'
                 ORDER BY a.log_key ASC, a.position ASC`),
     sql.query(`SELECT id, value FROM cp_attempts WHERE id IN (SELECT record->>'attemptId' FROM cp_log_artifacts)`),
   ],

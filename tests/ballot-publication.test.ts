@@ -224,7 +224,7 @@ test("Admin's ballot control queues the normal runner task even before its next 
   const result = await action.execute({ repos, now: () => now, currentStateVersion: null, codeSha: null },
     { at: now, receiptId: "fixture-ballot-action", request: { actorRef: "owner" } } as Parameters<typeof action.execute>[1], input);
   assert.equal(result.ok, true);
-  const requests = (await repos.adminConfig.mustRead("current")).value.routineDueRequests!;
+  const requests = (await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value.routineDueRequests!;
   assert.equal(requests.length, REGISTRY_STATES.length);
   assert.equal(new Set(requests.map(row => row.contractId)).size, REGISTRY_STATES.length);
   const request = requests.find(row => row.contractId === "ballot-contests:TX")!;

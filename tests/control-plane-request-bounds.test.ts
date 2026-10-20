@@ -33,8 +33,7 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
       const request = JSON.parse(init?.body ?? "{}");
-      // The supplied reader database enables the byte counter's background transaction.
-      // Answer that fixture write separately; it is not one of the civic POINT reads.
+
       if (Array.isArray(request.queries)) return Response.json(request.queries.map(() => ({ fields: [], rows: [], rowCount: 0, command: "INSERT" })));
       active++; peak = Math.max(peak, active); calls++;
       starts.push(Number(request.params[0]));
@@ -43,7 +42,7 @@ test("dispatch-sized POINT bursts share transport admission across repository cl
         return answer([]);
       } finally { active--; }
     }) as typeof neonConfig.fetchFunction;
-    // The measured bounds: this test is about admission, and a 60 ms bound would also be measuring the host's CPU load.
+
     const first = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const second = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const result = await Promise.all(Array.from({ length: 3300 }, (_, index) =>
@@ -88,10 +87,6 @@ interface HungFetch {
   readonly calls: { readonly signal: AbortSignal | null }[];
 }
 
-/**
- * A driver fetch that never answers. `honorAbort` makes it reject with the
- * signal's reason when aborted; without it only the call's own timer can settle it.
- */
 async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Promise<T>): Promise<T> {
   const original = neonConfig.fetchFunction;
   const hung: HungFetch = { calls: [] };
@@ -109,7 +104,6 @@ async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Pr
   }
 }
 
-/** Resolve an answered query: the driver's JSON shape for one text column. */
 function answer(rows: readonly Record<string, string>[]): Response {
   const names = rows.length > 0 ? Object.keys(rows[0]!) : ["id"];
   return new Response(
@@ -176,7 +170,7 @@ test("each call class takes its own bound: a large document row is DOCUMENT, a p
       [() => budgetAggregate.readNarrowed("shared-budget-ledger", {}), "cp_budget.readNarrowed", "POINT", TINY.POINT],
       [() => repos.researchState.read("level-1"), "cp_research_state.read", "DOCUMENT", TINY.DOCUMENT],
       [() => repos.fieldManual.read("fm-x"), "cp_field_manual_entries.read", "POINT", TINY.POINT],
-      [() => repos.fieldManual.slice({ role: "SCOUT" }), "cp_field_manual_entries.slice", "PAGE", TINY.PAGE],
+      [() => repos.fieldManual.select({ role: "SCOUT" }), "cp_field_manual_entries.select", "PAGE", TINY.PAGE],
       [() => repos.costs.readAll(), "cp_log_costs.readChangedSince:clock", "POINT", TINY.POINT],
       [() => repos.costs.readSince("2026-09-22T00:00:00.000Z"), "cp_log_costs.readSince", "PAGE", TINY.PAGE],
       [() => repos.occurrences.list(), "cp_occurrences.listChangedSince:clock", "POINT", TINY.POINT],
@@ -265,7 +259,7 @@ test("the measured defaults: POINT < DOCUMENT < PAGE, each inside the 30 s trans
   const { POINT, DOCUMENT, PAGE } = CONTROL_PLANE_REQUEST_BOUNDS_MS;
   assert.ok(POINT > 0 && POINT < DOCUMENT && DOCUMENT < PAGE, JSON.stringify(CONTROL_PLANE_REQUEST_BOUNDS_MS));
   assert.ok(PAGE < STANDING_NEON_REQUEST_DEADLINE_MS, "a page bound at or over the backstop would surface as the driver's unnamed TimeoutError");
-  /* At least 20x the slowest request measured in each class (324 ms, 615 ms, 950 ms). */
+
   assert.ok(POINT >= 324 * 20 && DOCUMENT >= 615 * 20 && PAGE >= 950 * 20);
 });
 
@@ -425,8 +419,7 @@ test("connect-retry: the real bootstrap survives a hung first connect, because t
         });
       }
       const query = JSON.parse(init?.body ?? "{}").query as string | undefined;
-      // This mocked database already has the valid index; online creation has
-      // separate coverage and must not open a real socket in a retry test.
+
       const result = query?.includes("FROM pg_index i")
         ? { command: "SELECT", fields: [{ name: "valid", dataTypeID: 16 }, { name: "building", dataTypeID: 16 }], rows: [["t", "f"]], rowCount: 1, rowAsArray: false }
         : { command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false };

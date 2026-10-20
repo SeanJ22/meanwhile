@@ -1,7 +1,7 @@
 import { askPlaybook, askSettings } from "./runtime-settings.ts";
 import { writerSelection } from "./writer-selection.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
-import { askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
+import { ASK_MODEL_ROLES, askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
@@ -28,6 +28,7 @@ export type SynthesisOutcome =
   | {
       kind: "WROTE";
       answer: string;
+      missingAnswer?: boolean;
       citedUrls: string[];
       model: string;
       servedModel: string | null;
@@ -50,15 +51,19 @@ export function synthesisSchema(): Record<string, unknown> {
       answer: {
         type: "string",
         description:
-          "The answer to the reader's question, in plain language, using only the supplied records.",
+          "Answer the actual question first, from the supplied evidence. A simple question needs one sentence. Add only detail needed to answer it. No definition unless asked, date preamble, records narration, unrelated gaps, hedging, links or citations in prose.",
       },
       citedSources: {
         type: "array",
         items: { type: "integer" },
         description: "The n, from the sources list, of every source whose records the answer actually relied on.",
       },
+      answeredFromRecords: {
+        type: "boolean",
+        description: "True only when the supplied evidence answers what the reader actually asked. False when the answer is a missing-information line, even if other records about the subject exist.",
+      },
     },
-    required: ["answer", "citedSources"],
+    required: ["answer", "citedSources", "answeredFromRecords"],
     additionalProperties: false,
   };
 }
@@ -151,7 +156,8 @@ export function synthesisRequestBody(
     text: synthesisContextPayload(pack),
   };
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
-  const fields = modelRequestFields(shape.model, { thinking: "ADAPTIVE", effort: shape.effort ?? resolveAskEffort() });
+  const thinking = shape.model === resolveAskFastWriter() ? ASK_MODEL_ROLES.FAST_WRITER.thinking : ASK_MODEL_ROLES.ESCALATION_WRITER.thinking;
+  const fields = modelRequestFields(shape.model, { thinking, effort: shape.effort ?? resolveAskEffort() });
   const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.stableCacheControl }[] = shape.cached
     ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl }]
     : synthesisPrompt(pack);
@@ -277,13 +283,14 @@ async function synthesizeOnRung(
     if (!text) {
       return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: body.stop_reason === "refusal" ? "refusal" : "no text block" };
     }
-    const parsed = JSON.parse(text) as { answer?: unknown; citedSources?: unknown };
+    const parsed = JSON.parse(text) as { answer?: unknown; citedSources?: unknown; answeredFromRecords?: unknown };
     if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) {
       return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no answer string" };
     }
     return {
       kind: "WROTE",
       answer: parsed.answer.trim(),
+      missingAnswer: parsed.answeredFromRecords === false,
       citedUrls: citedUrlsFrom(pack, parsed.citedSources),
       model,
       servedModel: servedModelOf(body),

@@ -102,15 +102,14 @@ test("the period is the agency's own, spelled for a reader; New Jersey's report 
   assert.equal(f("72/24 HR, D-1, R-1, RQ-2024, RQ-2025 through 2026-06-22", 14), "in 14 reports filed through June 22nd, 2026");
   assert.equal(f(null), "for the 2026 election cycle");
   assert.equal(f("2026 GENERAL", 3), "for the 2026 GENERAL, across 3 reports");
+  assert.equal(f("2026: D-1, R-1 through 2026-10-06", 2), "in 2 reports filed through October 6th, 2026");
+  assert.equal(f("2025-01-01 through 2026-12-31"), "for January 1st, 2025 through December 31st, 2026");
 });
 
 test("how much: the committee's own figures, period, agency and read date — and it passes the validator", () => {
   const held = heldEvidence(AYOTTE, "Kelly Ayotte");
   const composed = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED", "SPENT"] }, subject: held.subject, records: held.records, gaps: held.gaps });
-  assert.equal(composed?.answer,
-    "Kelly Ayotte's campaign committee, registered as \"Kelly for New Hampshire\", reported raising $5,995,303.26 and spending $3,276,135.21 for the 2026 Election Cycle. " +
-    "Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 1st, 2026. " +
-    "These records describe the campaigns' own filings; they do not establish outside spending for or against Kelly Ayotte.");
+  assert.equal(composed?.answer, '"Kelly for New Hampshire" raised $5,995,303.26 and spent $3,276,135.21 for the 2026 Election Cycle.');
   assert.deepEqual(composed?.citedUrls, ["https://cfs.sos.nh.gov/"]);
   assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack(held.subject, held.records, "How much has Kelly Ayotte raised and spent?")).kind, "PASSED");
   // A figure asked for that the filing does not carry is said to be missing from OUR record, never $0.
@@ -122,18 +121,18 @@ test("how much: the committee's own figures, period, agency and read date — an
 test("Rebecca Harned and Cinde Warmington: the held NH filings are what the answer states", () => {
   const harned = heldEvidence(HARNED, "Rebecca Harned");
   assert.match(composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: harned.subject, records: harned.records, gaps: harned.gaps })?.answer ?? "",
-    /^Rebecca Harned's campaign committee, registered as "Harned, Rebecca", reported raising \$77,860\.61 and spending \$5,374\.52 for the 2026 Election Cycle\./);
+    /^"Harned, Rebecca" raised \$77,860\.61 for the 2026 Election Cycle\./);
   const warmington = heldEvidence(WARMINGTON, "Cinde Warmington");
   assert.match(composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: warmington.subject, records: warmington.records, gaps: warmington.gaps })?.answer ?? "",
-    /registered as "Friends of Cinde Warmington", reported raising \$888,256\.70/, "the registered name is trimmed of the agency's trailing space");
+    /^"Friends of Cinde Warmington" raised \$888,256\.70/, "the registered name is trimmed of the agency's trailing space");
 });
 
-test("who gave: our records hold totals, not donor identities — said as OURS, counted, never put on the state", () => {
+test("who gave: a missing donor answer is one line and never attributed to the state", () => {
   const held = heldEvidence("ballot-az-pima:governor:hobbs-katie", "Katie Hobbs");
   const composed = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject: held.subject, records: held.records, gaps: held.gaps });
   assert.ok(composed);
-  assert.match(composed.answer, /^Our records for Katie Hobbs hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\. /);
-  assert.match(composed.answer, /The campaign committee, registered as "Elect Katie Hobbs", reported raising \$11,109,719\.95 and spending \$14,355,612\.69/);
+  assert.equal(composed.answer, "We don't have Katie Hobbs's campaign funding sources yet.");
+  assert.equal(composed.missingAnswer, true);
   // The donor gap is ours, never put on the state.
   assert.doesNotMatch(composed.answer, /filed with Arizona describe|Arizona (?:does not|doesn't) (?:list|publish|name)|state (?:does not|doesn't) (?:list|publish|name)/i);
   assert.equal(validateAnswer(composed.answer, composed.citedUrls, pack(held.subject, held.records, "Who donated to Katie Hobbs's campaign?")).kind, "PASSED");
@@ -147,9 +146,7 @@ test("compare: each person's own figure, and a verdict only on like-for-like fil
   assert.equal(composed?.answer,
     "Cinde Warmington's campaign committee, registered as \"Friends of Cinde Warmington\", reported raising $888,256.70, and " +
     "Kelly Ayotte's campaign committee, registered as \"Kelly for New Hampshire\", reported raising $5,995,303.26, both for the 2026 Election Cycle. " +
-    "By these filings, \"Kelly for New Hampshire\" reported raising more. " +
-    "Filed with the New Hampshire Secretary of State — Campaign Finance System; read September 1st, 2026. " +
-    "These are the campaigns' own filings; they do not show outside spending for or against either candidate.");
+    "By these filings, \"Kelly for New Hampshire\" reported raising more.");
   assert.equal(validateAnswer(composed!.answer, composed!.citedUrls, pack(warmington.subject, records, "Has Cinde Warmington raised more money than Kelly Ayotte?")).kind, "PASSED");
   // Missing the second person's records: no composition.
   assert.equal(composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: warmington.subject, other: { id: AYOTTE, name: "Kelly Ayotte" }, records: warmington.records, gaps: [] }), null);
@@ -193,7 +190,8 @@ test("two committees are stated separately and never added; composition steps as
   const target = [...new Set(nj.flatMap((record) => record.targetKeys))].find((key) => nj.filter((record) => record.targetKeys.includes(key)).length === 2)!;
   const held = heldEvidence(target, "Pat Q. Example");
   const composed = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: held.subject, records: held.records, gaps: held.gaps });
-  assert.match(composed?.answer ?? "", /^We hold 2 committee filings for Pat Q\. Example, each stated on its own and not added together\. One, registered as "[^"]+", reported raising \$[\d,.]+ and spending \$[\d,.]+ in \d+ reports? filed through [^;]+; the other, registered as/);
+  assert.match(composed?.answer ?? "", /^"[^"]+" raised \$[\d,.]+ in \d+ reports? filed through [^;]+; "[^"]+" raised/);
+  assert.doesNotMatch(composed?.answer ?? "", /spent|spending/, "only the requested figures are stated");
   assert.doesNotMatch(composed?.answer ?? "", /total|combined|together raised/i, "never added");
   const ask: MoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
   const ayotte = heldEvidence(AYOTTE, "Kelly Ayotte");
@@ -204,19 +202,20 @@ test("two committees are stated separately and never added; composition steps as
   assert.equal(composeMoneyAnswer({ ask, subject: ayotte.subject, records: [...ayotte.records, ...[1, 2].map((n) => ({ ...ayotte.records[0], id: `${ayotte.records[0].id}:${n}` }))], gaps: [] }), null, "three committees: the model writes");
 });
 
-test("a federal candidate's money is the FEC record's own sentences, with the agency and the read date — and 'who gave' says we hold totals, not donors", () => {
+test("a federal money answer gives only the requested exact FEC totals; missing funding sources stay a gap", () => {
   const person: EvidenceSubject = { kind: "PERSON", id: "ballot-az-pima:us-house-6|Juan Ciscomani", name: "Juan Ciscomani" };
   const fec: EvidenceRecord = {
     kind: "FINANCE_SUMMARY", id: "fec:H2AZ02360", subjectId: person.id, canonicalSubjectId: "H2AZ02360",
     text: "This campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total.",
     sourceUrl: "https://www.fec.gov/data/candidate/H2AZ02360/", sourceOrg: "Federal Election Commission", retrievedAt: "2026-09-28",
+    fecTotals: { receipts: 6200000, disbursements: 2300000, cashOnHand: 4100000, cycle: "2025–26", through: "2026-09-28" },
   };
   const how = composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: person, records: [fec], gaps: [] });
-  assert.equal(how?.answer, "Juan Ciscomani's campaign has raised $6.2 million in the 2025–26 election cycle and spent $2.3 million. It has $4.1 million on hand. About 8% of the money came from small donors — people who gave under $200 in total. Filed with the Federal Election Commission; read September 28th, 2026.");
+  assert.equal(how?.answer, "Juan Ciscomani's campaign raised $6,200,000.00 in the 2025–26 cycle through September 28th, 2026.");
   assert.deepEqual(how?.citedUrls, ["https://www.fec.gov/data/candidate/H2AZ02360/"]);
   assert.equal(validateAnswer(how!.answer, how!.citedUrls, pack(person, [fec], "How much money has Juan Ciscomani raised?")).kind, "PASSED");
   const who = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject: person, records: [fec], gaps: [] });
-  assert.match(who?.answer ?? "", /^Our records for Juan Ciscomani hold campaign totals, not the identities of donors \(money records we hold for this candidate that name a donor: 0 of 1\)\. Juan Ciscomani's campaign has raised/);
+  assert.equal(who?.answer, "We don't have Juan Ciscomani's campaign funding sources yet.");
   assert.doesNotMatch(who?.answer ?? "", /withhold|not published|state does not/i, "the donor gap is ours, never the agency's");
   assert.equal(composeMoneyAnswer({ ask: { kind: "COMPARE", measure: "RAISED" }, subject: person, other: { id: "x", name: "Other Person" }, records: [fec], gaps: [] }), null, "a comparison with a federal record is for a writer");
   assert.equal(composeMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, subject: person, records: [{ ...fec, id: "fec-absence:x" }], gaps: [] }), null, "an FEC absence is not a figure");

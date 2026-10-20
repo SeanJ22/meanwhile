@@ -1,33 +1,7 @@
-/**
- * A budget on one assignment (owner Send), honoured by the runner. An
- * assignment is a selected geography (keyed by its scope key) or a DISPATCH
- * (`dispatch:<intent id>`); membership is read from the obligations' own
- * `assignments`, never re-joined by place.
- *
- * ```
- *   budget     a geography's rolling 24-hour budget, or the budget a DISPATCH
- *              was sent with; none otherwise (only the Fleet ceiling bounds it)
- *   spent      every model-backed charge in the rolling window on a member
- *              obligation, at or after it joined. A charge naming no obligation
- *              counts against every assignment with work on its subject
- *   held       worst cases reserved for Scouts admitted and not yet settled
- *   left       budget − spent − held
- * ```
- *
- * A charge counts toward every Send its obligation belongs to. A Scout is
- * admitted while any budgeted Send it belongs to has room for one more worst
- * case (running under the most recent such Send) and its worst case is held
- * against all of them. Sends without a budget add no limit.
- *
- * Fail closed: an unreadable ledger, an unmeasured charge, or unreadable owner
- * instructions for DISPATCH work hold the Scout, by name.
- *
- * Pure: no store, no clock, no environment.
- */
-
 import type { AssignmentCompletion } from "../assignment-completion.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
 import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
+import type { SpendQuery, SpendRepository } from "../spend-window.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
 import { READING_LIST_CAP, isVersionedCycleReading } from "./reading.ts";
@@ -85,10 +59,6 @@ export function malformedAssignmentBudgetsOf(intents: readonly ResearchIntent[])
 /** One budget line a hold is checked against: `send:<assignment key>` (see `spend-holds.ts`). */
 export const sendBudgetKey = (assignmentKey: string): string => `send:${assignmentKey}`;
 
-/**
- * The budgets in force: every selected scope's, and every DISPATCH the owner
- * sent with one (honored or not — an honored Send's work still belongs to it).
- */
 export function assignmentBudgetsOf(input: {
   readonly scopes: readonly ExpansionScopeDecision[];
   readonly intents: readonly ResearchIntent[];
@@ -134,11 +104,6 @@ export interface AssignmentMembership {
   readonly refsOf: ReadonlyMap<string, readonly { readonly key:string; readonly ref:string }[]>;
 }
 
-/**
- * Who belongs to which Send, from the obligations' own records (and anything
- * this cycle recorded after they were read). A row a Send both reordered and
- * later created counts once, as created.
- */
 export function assignmentMembership(
   rows: Iterable<{ readonly id: string; readonly subjectId: string; readonly assignments?: readonly ObligationAssignment[] }>,
   recorded: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[] = [],
@@ -244,12 +209,6 @@ export interface AssignmentBudgetState {
   readonly refused: number;
 }
 
-/**
- * The per-assignment admission gate for paid Scouts, in the Fleet
- * controller's holdback pattern: history + this cycle + held + one worst case
- * must fit the budget. `check` decides without reserving; `admit` decides and
- * reserves; `settle` releases the hold and books what the Scout measured.
- */
 export class AssignmentBudgetGate {
   private readonly specs: ReadonlyMap<string, AssignmentBudgetSpec>;
   private readonly keysOf: ReadonlyMap<string, readonly string[]>;
@@ -296,12 +255,6 @@ export class AssignmentBudgetGate {
     this.historyReadAt = input.historyReadAt ?? new Date(0).toISOString();
   }
 
-  /**
-   * The fail-closed conditions that hold an obligation's paid work whatever
-   * the dollars say, or null: a Send the cycle reached it under whose record on
-   * the row is missing, a Send whose budget is unreadable, a DISPATCH whose
-   * budget cannot be known because the owner's instructions were unreadable.
-   */
   private failClosed(obligationId: string, keys: readonly string[]): AssignmentRefusal | null {
     const reached = this.reachedThisCycle.get(obligationId) ?? [];
     for (const key of keys) {
@@ -330,11 +283,6 @@ export class AssignmentBudgetGate {
     return null;
   }
 
-  /**
-   * The budget lines a paid job on this obligation is held against
-   * (`spend-holds.ts`): every budgeted Send it belongs to, most recent first, or
-   * the refusal when the budget cannot be checked. No lines: no Send budget applies.
-   */
   linesFor(obligationId: string): { readonly lines: readonly BudgetLine[] } | { readonly refusal: AssignmentRefusal } {
     const keys = this.keysOf.get(obligationId) ?? [];
     const closed = this.failClosed(obligationId, keys);
@@ -469,39 +417,45 @@ export class AssignmentBudgetGate {
   }
 }
 
-/**
- * Arm the gate at cycle start: each budget's rolling-window spend from the
- * canonical ledger. `costs` null means the ledger could not be read.
- */
-function chargesForInstruction(charges:readonly PricedCharge[], spec:AssignmentBudgetSpec):readonly PricedCharge[] {
-  // A charge with a different exact receipt does not belong here. Older rows
-  // without receipts are counted by membership and time.
-  return charges.filter(cost=>cost.assignmentRefs===undefined ||
-    cost.assignmentRefs.some(mark=>mark.key===spec.key&&mark.ref===spec.ref));
+export function assignmentSpendQueries(now: string, specs: readonly AssignmentBudgetSpec[], membership: AssignmentMembership): ReadonlyMap<string, SpendQuery> {
+  const since = new Date(Date.parse(now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
+  return new Map(specs.map(spec => {
+    const members = membership.byInstruction.get(instructionReceiptKey(spec.key, spec.ref));
+    const rows = members ? [...members.created.values(), ...members.reordered.values()] : [];
+    const subjects = new Map<string, string>();
+    for (const row of rows) {
+      const previous = subjects.get(row.subjectId);
+      if (previous === undefined || Date.parse(row.joinedAt) < Date.parse(previous)) subjects.set(row.subjectId, row.joinedAt);
+    }
+    return [spec.key, { since: spec.budgetStartedAt ?? since, until: now,
+      assignment: { key: spec.key, ref: spec.ref,
+        obligations: rows.map(row => ({ id: row.obligationId, since: row.joinedAt })),
+        subjects: [...subjects].map(([id, joinedAt]) => ({ id, since: joinedAt })) } }];
+  }));
+}
+
+export async function readAssignmentHistory(spend: SpendRepository, now: string, specs: readonly AssignmentBudgetSpec[], membership: AssignmentMembership): Promise<ReadonlyMap<string, AssignmentSpend>> {
+  const history = new Map<string, AssignmentSpend>();
+  for (const [key, query] of assignmentSpendQueries(now, specs, membership)) history.set(key, await spend.aggregate(query));
+  return history;
 }
 
 export function armAssignmentBudget(input: {
   readonly now: string;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: readonly PricedCharge[] | null;
+  readonly history: ReadonlyMap<string, AssignmentSpend> | null;
   readonly worstCaseUsd: number;
   readonly intentsReadable: boolean;
   readonly malformed?: readonly MalformedAssignmentBudget[];
   readonly reachedThisCycle?: ReadonlyMap<string, readonly string[]>;
 }): AssignmentBudgetGate {
-  const since = new Date(Date.parse(input.now) - ASSIGNMENT_BUDGET_WINDOW_HOURS * 3_600_000).toISOString();
-  const historical = new Map<string, AssignmentSpend>();
-  if (input.charges !== null) {
-    const empty: AssignmentMembers = { created: new Map(), reordered: new Map() };
-    for (const spec of input.specs) historical.set(spec.key, assignmentSpend(chargesForInstruction(input.charges,spec), input.membership.byInstruction.get(instructionReceiptKey(spec.key,spec.ref)) ?? empty, spec.budgetStartedAt ?? since, input.now));
-  }
   return new AssignmentBudgetGate({
     specs: input.specs,
     membership: input.membership,
-    historical,
+    historical: input.history ?? new Map(),
     worstCaseUsd: input.worstCaseUsd,
-    costsReadable: input.charges !== null,
+    costsReadable: input.history !== null,
     intentsReadable: input.intentsReadable,
     malformed: input.malformed ?? [],
     reachedThisCycle: input.reachedThisCycle ?? new Map(),
@@ -570,7 +524,6 @@ export function assignmentCycleReading(input: {
   readonly gate: AssignmentBudgetGate;
   readonly specs: readonly AssignmentBudgetSpec[];
   readonly membership: AssignmentMembership;
-  readonly charges: readonly PricedCharge[] | null;
   readonly intentsReadable: boolean;
   /** Labels for Sends with members and no budget in force (from this cycle's targets). */
   readonly labels?: ReadonlyMap<string, string>;
@@ -585,7 +538,7 @@ export function assignmentCycleReading(input: {
     const spec = specs.get(key) ?? null;
     const m = spec ? input.membership.byInstruction.get(instructionReceiptKey(key,spec.ref)) ?? empty : input.membership.byKey.get(key) ?? empty;
     const state = input.gate.state(key);
-    const spend = spec !== null && input.charges !== null ? assignmentSpend(chargesForInstruction(input.charges,spec), m, spec.budgetStartedAt ?? since, input.now) : null;
+    const spend = spec === null ? null : input.gate.armedReading().historical?.get(key) ?? null;
     const kind = key.startsWith("dispatch:") ? "DISPATCH" : "SCOPE";
     return {
       key,
@@ -627,7 +580,7 @@ export function assignmentCycleReading(input: {
       completion: input.completionFor?.(key) ?? null,
     };
   });
-  return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.charges !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };
+  return { formatVersion: ASSIGNMENT_BUDGET_FORMAT_VERSION, at: input.at, costsReadable: input.gate.armedReading().historical !== null, intentsReadable: input.intentsReadable, rule: SHARED_WORK_RULE, assignments };
 }
 
 /** A value on the research state that is not a reading reads as none, never as "no assignments". */

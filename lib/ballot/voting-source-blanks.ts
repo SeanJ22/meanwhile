@@ -186,7 +186,7 @@ export async function persistVotingSourceBlanks(input: {
       row = (await input.repos.obligations.compareAndSet(id, held.revision, { ...held.value,
         autonomousPlan: refreshed, updatedAt: input.now }, input.now)).value;
     }
-    const resumed = await resumeOpenOccurrence(input.repos, row);
+    const resumed = await resumeOpenOccurrence(input.repos, row, await input.repos.dispatchState.readOpen({ obligationIds: [row.id] }));
     const due = scheduleObligation(row, Date.parse(input.now));
     if ("nextDueAt" in due) await recordNextDue(input.repos, { obligationId: id, nextDueAt: due.nextDueAt, now: input.now });
     const opened = resumed ? null : await openOccurrence(input.repos, {

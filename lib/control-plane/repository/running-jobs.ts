@@ -1,4 +1,3 @@
-/** One bounded statement: unreleased, unexpired work leases, each joined to its own open Attempt. */
 import { WINDOW_LEASE_ID } from "../promotion/window.ts";
 import { boundedQuery } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
@@ -76,7 +75,7 @@ LEFT JOIN LATERAL (
   WHERE value->>'leaseId' = l.value->>'id' AND (value->>'endedAt') IS NULL AND (value->>'outcome') IS NULL
   ORDER BY (value->>'startedAt') DESC LIMIT 1
 ) a ON true
-LEFT JOIN cp_work_items w ON w.id = a.value->>'workItemId'
+LEFT JOIN cp_work_items_history w ON w.id = a.value->>'workItemId'
 LEFT JOIN cp_obligations o ON o.id = regexp_replace(w.value->>'obligation', '#[0-9]+$', '')
 ORDER BY (l.value->>'expiresAt'), l.id`;
 

@@ -47,21 +47,43 @@ export interface NeonSent { readonly requests: number; readonly bytes: number }
 
 interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: Record<NeonDatabase, NeonSent>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
-const scope = new AsyncLocalStorage<string>();
-const pinnedSite = new AsyncLocalStorage<string>();
-const buckets = new Map<string, Bucket>();
-const siteCache = new Map<string, string>();
+interface CallerState {
+  scope: AsyncLocalStorage<string>;
+  pinnedSite: AsyncLocalStorage<string>;
+  buckets: Map<string, Bucket>;
+  siteCache: Map<string, string>;
+  reportInstalled: boolean;
+  keptInProcess: boolean;
+}
+// Server bundles share pools; their borrowers must share the same async scopes and counters.
+const callerSlot = Symbol.for("meanwhile.database.transfer.callers");
+const host = globalThis as typeof globalThis & { [callerSlot]?: CallerState };
+const callerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
+  buckets: new Map(), siteCache: new Map(), reportInstalled: false, keptInProcess: false };
+const { scope, pinnedSite, buckets, siteCache } = callerState;
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
 const SITE_CACHE_LIMIT = 256;
-let reportInstalled = false;
-let keptInProcess = false;
 
 export function hourStart(nowMs: number): string {
   return new Date(Math.floor(nowMs / 3_600_000) * 3_600_000).toISOString();
 }
 
 export function withQueryCaller<T>(operation: string, run: () => T): T {
-  return scope.run(`${operation} ← ${pinnedSite.getStore() ?? callSite()}`, run);
+  return scope.run(`${operation} ← ${namedSite()}`, run);
+}
+
+/** Capture before an await or stream callback loses the stack that requested the read. */
+export function activeQueryCaller(): string | undefined { return scope.getStore(); }
+
+function namedSite(): string {
+  const site = pinnedSite.getStore() ?? callSite();
+  if (site !== "unknown") return site;
+  const route = currentReaderRoute();
+  return route !== "unattributed" ? route : basename(process.argv[1] ?? "server");
+}
+
+export function withDatabaseQuery<T>(text: string, run: () => T): T {
+  return withQueryCaller(`query:${transferRead(JSON.stringify({ query: text }))}`, run);
 }
 
 export function withCallerSite<T>(run: () => T): T {
@@ -77,7 +99,7 @@ export function callerFromStack(stack: string | undefined): string {
   if (cached !== undefined) return cached;
   let site = "unknown";
   for (const line of stack.split("\n").slice(1)) {
-    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
+    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/(?:facts\/db|reader\/database|civic-data\/(?:store|read-model))\.|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
     const match = line.match(/.*[/\\]((?:lib|scripts|app|netlify|tests)[/\\][^:()]+):(\d+):\d+/);
     if (match) { site = `${match[1].replace(/\\/g, "/")}:${match[2]}`; break; }
   }
@@ -88,7 +110,7 @@ export function callerFromStack(stack: string | undefined): string {
 
 /** The code opening a database socket, under which the socket's bytes count: "websocket ← path:line". */
 export function socketCaller(): string {
-  return `websocket ← ${pinnedSite.getStore() ?? callSite()}`;
+  return scope.getStore() ?? `websocket ← ${namedSite()}`;
 }
 
 function callSite(): string {
@@ -103,7 +125,7 @@ function callSite(): string {
 export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now(),
   sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string): void {
   try {
-    const site = caller ?? scope.getStore() ?? `query ← ${callSite()}`;
+    const site = caller ?? scope.getStore() ?? `query ← ${namedSite()}`;
     const key = database === "reader" ? `reader: ${site}` : site;
     const bucket = bucketFor(nowMs);
     bucket.requests += sent.requests;
@@ -190,7 +212,7 @@ export function parseVitalSignsReport(line: string): NeonBytesHour | null {
 }
 
 export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string) => void = text => { process.stdout.write(text); }): boolean {
-  if (keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
+  if (callerState.keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
   try {
     for (const part of takeNeonBytesHours(nowMs)) write(`${formatVitalSignsReport(part)}\n`);
     return true;
@@ -232,8 +254,8 @@ export function vitalSignsLineFilter(onReport: (part: NeonBytesHour) => void): {
 
 /** One report a minute and one at exit, in every process that counts. */
 export function installNeonBytesReport(): void {
-  if (reportInstalled) return;
-  reportInstalled = true;
+  if (callerState.reportInstalled) return;
+  callerState.reportInstalled = true;
   const timer = setInterval(() => { reportNeonBytes(); }, 60_000);
   timer.unref();
   /* At exit every hour this process counted is reported again, so its last part carries its peak memory. */
@@ -242,7 +264,7 @@ export function installNeonBytesReport(): void {
 
 /** The runner parent sums the hour itself (takeNeonBytesHours); it never reports to its own output. */
 export function keepNeonBytesInProcess(): void {
-  keptInProcess = true;
+  callerState.keptInProcess = true;
 }
 
 export function summarizeNeonBytes(hour: NeonBytesHour, top = 20): NeonBytesSummary {
@@ -279,22 +301,23 @@ type FetchLike = typeof fetch;
 
 export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>, internal: () => boolean = () => false): FetchLike {
   return async (input, init) => {
-    const response = await underlying(input, init);
     const headers = new Headers(input instanceof Request ? input.headers : undefined);
     new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
     const connection = headers.get("neon-connection-string");
-    if (connection === null || internal()) return response;
+    if (connection === null || internal()) return underlying(input, init);
     if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
-        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
+        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return underlying(input, init);
     const day = easternDay(new Date()), database = connection === process.env.DATABASE_URL ? "reader" : "control-plane";
     const client = runnerClient() ? "runner" : "reader";
     const requestBytes = typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0;
     const read = `${currentReaderRoute()}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
+    const caller = scope.getStore() ?? `query:${read.split("\t")[1]} ← ${namedSite()}`;
+    const response = await underlying(input, init);
     let received = 0, recorded: Promise<void> | null = null;
-    const finish = (): Promise<void> => recorded ??= Promise.resolve().then(() => record({
+    const finish = (): Promise<void> => recorded ??= Promise.resolve().then(() => scope.run(caller, () => record({
       day, database, client, requests: 1, requestBytes, responseBytes: received,
       reads: { [read]: [1, requestBytes, received] },
-    })).then(() => undefined);
+    }))).then(() => undefined);
     if (response.body === null) { await finish(); return response; }
     const reader = response.body.getReader();
     const body = new ReadableStream<Uint8Array>({

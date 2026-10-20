@@ -28,7 +28,6 @@ import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage
 import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
-  RUNNER_ID,
   SNAPSHOT_ID,
 } from "../lib/control-plane/admin-data.ts";
 import {
@@ -40,7 +39,6 @@ import {
   type Held,
   type Measured,
   type OwnerSnapshot,
-  type RunnerHeartbeat,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
 import { costPanelOf, spendByDayOf } from "../lib/control-plane/cost-panel.ts";
@@ -49,7 +47,7 @@ import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts
 import type { AssignmentPublication, AssignmentView } from "../lib/control-plane/assignment-view.ts";
 import { readAskGapObservations } from "../lib/control-plane/ask-gap-observations.ts";
 import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
-import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
+import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
@@ -143,7 +141,6 @@ const registeredUnits =
 const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 
 interface ControlPlaneReads {
-  readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof billingAttributionOf>[0]["scopes"];
   readonly billingHolds: Parameters<typeof billingAttributionOf>[0]["holds"];
   readonly fold: OwnerSnapshotFold;
@@ -155,19 +152,18 @@ interface ControlPlaneReads {
 
 /** The totals carried from the last publish, with every control-plane row changed since then folded in state by state. */
 async function readControlPlane(repos: ControlPlaneRepositories, existing: CarriedForward | null): Promise<ControlPlaneReads> {
-  const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds, prior, research, askGaps] = await Promise.all([
-    repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+    repos.adminConfig.read(ADMIN_CONFIG_ID, { expansionScopes: true }).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     // Only live holds count as set aside.
     readLiveSpendHolds(repos, new Date().toISOString()).catch(() => null),
     repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID),
-    repos.researchState.read(RESEARCH_STATE_ID),
+    repos.researchState.readNarrowed(RESEARCH_STATE_ID, { metrics: ["cacheByRole", "share"] }),
     readAskGapObservations(repos.askGapObservations),
   ]);
   const fold = await OwnerSnapshotFold.fold(repos, prior?.value ?? null, { nowIso: NOW_ISO, servedReader: existing?.servedReaderReadback ?? null,
     askGapObservations: "unreadable" in askGaps ? null : askGaps.rows, scopes: billingScopes, carried: existing?.providerBilling?.readings ?? [], write: !DRY_RUN, log });
-  const metrics = research?.value.metrics ?? null;
-  return { runnerHeartbeat, billingScopes, billingHolds, fold, cacheByRole: metrics?.cacheByRole ?? null, share: metrics?.share ?? null, prior };
+  const metrics = (research?.value as Pick<ResearchState, "metrics"> | undefined)?.metrics ?? null;
+  return { billingScopes, billingHolds, fold, cacheByRole: metrics?.cacheByRole ?? null, share: metrics?.share ?? null, prior };
 }
 
 function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {

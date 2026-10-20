@@ -1,42 +1,58 @@
 import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 import type { FactDb, Query } from "./publish.ts";
+import { installDatabaseTransferCounter } from "../db/transfer.ts";
+import { withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 
-let pool: Pool | null = null;
+const pools = new Map<string, Pool>();
 
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
 export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
   if (!url) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
+  installDatabaseTransferCounter();
   if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
-  pool ??= new Pool({ connectionString: url, max: 4 });
-  const held = pool;
+  let held = pools.get(url);
+  if (!held) pools.set(url, held = new Pool({ connectionString: url, max: 4, allowExitOnIdle: true }));
+  const pool = held;
   return {
-    query: async (text, params = []) => (await held.query(text, [...params])).rows,
-    async transaction(work) {
-      const client = await held.connect();
+    query: (text, params = []) => withDatabaseQuery(text, async () => {
+      const client = await pool.connect();
+      let failure: Error | undefined;
+      try { return (await client.query(text, [...params])).rows; }
+      catch (error) { failure = error instanceof Error ? error : new Error(String(error)); throw error; }
+      finally { client.release(failure); }
+    }),
+    transaction: work => withCallerSite(async () => {
+      const client = await pool.connect();
+      const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
       try {
-        await client.query("BEGIN");
-        const out = await work(async (text, params = []) => (await client.query(text, [...params])).rows);
-        await client.query("COMMIT");
+        await query("BEGIN");
+        const out = await work(query);
+        await query("COMMIT");
         return out;
       } catch (error) {
-        await client.query("ROLLBACK").catch(() => undefined);
+        await query("ROLLBACK").catch(() => undefined);
         throw error;
       } finally {
         client.release();
       }
-    },
+    }),
   };
 }
 
 let installed: Query | null | undefined;
+let reader: { url: string; query: Query } | undefined;
 
 /** Reads of the reader database's facts over HTTP; null when no reader database is configured. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
   const url = process.env.DATABASE_URL?.trim();
   if (!url) return null;
+  if (reader?.url === url) return reader.query;
+  installDatabaseTransferCounter();
   const sql = neon(url);
-  return async (text, params = []) => (await sql.query(text, [...params])) as Record<string, unknown>[];
+  const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await sql.query(text, [...params])) as Record<string, unknown>[]);
+  reader = { url, query };
+  return query;
 }
 
 /** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */

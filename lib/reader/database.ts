@@ -2,7 +2,7 @@ import { neonConfig, Pool, type PoolClient } from "@neondatabase/serverless";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
-import { withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
+import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 
 let installed: ReadOnlyQuery | null | undefined;
 
@@ -58,7 +58,7 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (installed !== undefined) return installed;
   const connectionString = process.env.DATABASE_URL?.trim();
   if (!connectionString) return null;
-  installDatabaseTransferCounter();
+  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
   const pool = serverReaderValue(`database-pool:${connectionString}`, () => new Pool({
     connectionString, max: 4, allowExitOnIdle: true,

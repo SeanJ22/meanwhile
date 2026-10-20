@@ -1,14 +1,14 @@
 import { neon, neonConfig, Pool } from "@neondatabase/serverless";
 import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
-import { withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
+import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 
 const pools = new Map<string, Pool>();
 
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
 export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
   if (!url) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-  installDatabaseTransferCounter();
+  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
   let held = pools.get(url);
   if (!held) pools.set(url, held = new Pool({ connectionString: url, max: 4, allowExitOnIdle: true }));
@@ -48,7 +48,7 @@ export function factReader(): Query | null {
   const url = process.env.DATABASE_URL?.trim();
   if (!url) return null;
   if (reader?.url === url) return reader.query;
-  installDatabaseTransferCounter();
+  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   const sql = neon(url);
   const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await sql.query(text, [...params])) as Record<string, unknown>[]);
   reader = { url, query };

@@ -10,7 +10,7 @@ import type { BoxFinding, BoxRepository } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
-import { withCallerSite } from "../../db/transfer-by-caller.ts";
+import { installDatabaseClientAccounting, withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
@@ -1581,7 +1581,7 @@ export async function createPgRepositories(
         "is kept separate on purpose.",
     );
   }
-  installDatabaseTransferCounter();
+  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   const bounds: ControlPlaneRequestBounds = { ...CONTROL_PLANE_REQUEST_BOUNDS_MS, ...options.requestBounds };
   for (const [callClass, ms] of Object.entries(bounds)) {
     if (!Number.isSafeInteger(ms) || ms <= 0) {

@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-20T14:26:42.993Z",
+  "at": "2026-10-20T18:03:53.490Z",
   "readOnly": true,
   "readerDaily": [
     {
@@ -49,7 +49,7 @@
     {
       "route_id": "hunter:packet",
       "state": "PENDING",
-      "tasks": "180"
+      "tasks": "181"
     }
   ],
   "exaAttempts": [],
@@ -83,42 +83,42 @@
   "memory": [
     {
       "memory": {
-        "at": "2026-10-20T14:24:50.290Z",
+        "at": "2026-10-20T18:03:28.807Z",
         "parents": [
           {
-            "pid": 808635,
-            "rssBytes": 230051840,
+            "pid": 850189,
+            "rssBytes": 218599424,
             "peakBytes": 0
           },
           {
-            "pid": 841079,
-            "rssBytes": 372408320,
-            "peakBytes": 0
+            "pid": 859753,
+            "rssBytes": 273592320,
+            "peakBytes": 3070230528
+          },
+          {
+            "pid": 862484,
+            "rssBytes": 432852992,
+            "peakBytes": 3070230528
           }
         ],
         "totalBytes": 8326938624,
         "reservations": [
           {
             "entry": "platform-census-runner.mts",
-            "rssBytes": 242753536,
-            "peakBytes": 348127232
-          },
-          {
-            "entry": "ingest.ts",
-            "rssBytes": 149622784,
-            "peakBytes": 391118848
+            "rssBytes": 240078848,
+            "peakBytes": 332398592
           }
         ],
         "headroomBytes": 805306368,
-        "availableBytes": 6179606528,
-        "fitLeaseWorkers": 14,
-        "runnerTreeRssBytes": 2539741184,
-        "reservedGrowthBytes": 346869760,
-        "runnerTreeProcesses": 23,
+        "availableBytes": 5304184832,
+        "fitLeaseWorkers": 0,
+        "runnerTreeRssBytes": 3526721536,
+        "reservedGrowthBytes": 5526335488,
+        "runnerTreeProcesses": 17,
         "leaseWorkerPeakBytes": 358612992
       },
-      "tested_sha": "58115789b1d0342cc8563e97f909ac62db01f9b2",
-      "beat_at": "2026-10-20T14:24:50.477Z"
+      "tested_sha": "ed0ac299ccf33fe0b1a33429cc8f805b59c5bd1d",
+      "beat_at": "2026-10-20T18:03:28.918Z"
     }
   ],
   "transfer": {
@@ -130,7 +130,7 @@
     "control-plane": {
       "requests": 6,
       "requestBytes": 1711,
-      "responseBytes": 3823
+      "responseBytes": 3824
     }
   }
 }

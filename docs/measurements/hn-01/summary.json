@@ -1,171 +1,295 @@
 {
-  "at": "2026-10-20T13:01:10.947798+00:00",
+  "at": "2026-10-20T18:17:31.914842+00:00",
   "production_read_only": true,
-  "admin_writes": 0,
-  "source_states": 51,
-  "background_catalog_states": 56,
-  "background_governments": 112090,
-  "background_held_own_sites": 57357,
+  "production_writes": 0,
+  "admin_settings_writes": 0,
+  "code_scope": "Hunters, meetings-discovery provider, route executor and named standing route workers; original shared Box publisher and reader/Admin code",
+  "source_states_and_dc": 51,
   "source_runs": 69,
-  "source_requests": 2828,
+  "source_http_requests": 2828,
   "provider_usd": 0,
-  "findings": 5090,
-  "passed_check": 1026,
-  "additional_reader_fact_rows": 397,
-  "reader_bodies": 88,
-  "reader_officials": 50,
+  "findings_reported": 5067,
+  "distinct_box_findings": 4570,
+  "findings_passed_check": 884,
+  "additional_native_fact_rows": 302,
+  "reader_bodies": 96,
+  "reader_roster_entries": 58,
+  "blanks_worked": 417,
   "source_worker_active_seconds": 1114.434,
-  "peak_source_worker_rss_bytes": 384237568,
-  "peak_initial_source_worker_rss_bytes": 621502464,
-  "metered_production_transfer": {
-    "reader": {
-      "requests": 908,
-      "requestBytes": 799071,
-      "responseBytes": 3762962
-    },
-    "control-plane": {
-      "requests": 19,
-      "requestBytes": 5614,
-      "responseBytes": 12662
-    }
-  },
-  "metered_response_bytes": 3775624,
-  "reader_egress_estimate_usd": 0.0003762962,
-  "reader_facts_per_hour_baseline": 0.2916666666666667,
-  "production_observed_at": "2026-10-20T14:26:42.993Z",
-  "validation_worker_seconds": 170.315,
+  "validation_worker_active_seconds": 211.75,
+  "peak_fresh_source_worker_rss_bytes": 621502464,
+  "peak_saved_source_worker_rss_bytes": 384237568,
+  "peak_isolated_pglite_validation_rss_bytes": 1173782528,
+  "production_observed_at": "2026-10-20T18:03:53.490Z",
+  "production_noncampaign_facts_last24h": 7,
+  "production_facts_per_hour_today": 0.2916666666666667,
   "actual_exa": {
     "findings": 0,
     "passed_check": 0,
-    "reader_fact_rows": 0,
+    "native_reader_fact_rows": 0,
     "usd": 0,
-    "usd_per_reader_fact": null
+    "usd_per_native_reader_fact": null
   },
-  "exa_documented_high_effort_usd_per_place": 0.5,
-  "additional_facts_per_active_source_worker_hour": 1282.444720817922,
-  "additional_facts_per_active_source_and_validation_worker_hour": 1112.4351916210871,
+  "exa_high_effort_documented_base_usd_per_place": 0.5,
+  "actual_exa_cost_is_provider_reported_and_can_exceed_base": true,
+  "metered_production": {
+    "reader": {
+      "requests": 909,
+      "requestBytes": 799332,
+      "responseBytes": 3763498
+    },
+    "control-plane": {
+      "requests": 25,
+      "requestBytes": 7325,
+      "responseBytes": 16486
+    }
+  },
+  "metered_copy_and_initial_misconfigured_parity": {
+    "reader-copy": {
+      "requestBytes": 3427115,
+      "responseBytes": 98592220
+    },
+    "control-copy": {
+      "requestBytes": 16722753,
+      "responseBytes": 410240050
+    }
+  },
+  "metered_copy_by_process": {
+    "149986:hn:reader-copy": {
+      "requestBytes": 142267,
+      "responseBytes": 779243
+    },
+    "150181:live:reader-copy": {
+      "requestBytes": 53158,
+      "responseBytes": 469830
+    },
+    "151082:hn:reader-copy": {
+      "requestBytes": 1493856,
+      "responseBytes": 51074939
+    },
+    "151129:live:reader-copy": {
+      "requestBytes": 1481951,
+      "responseBytes": 45920609
+    },
+    "151082:hn:control-copy": {
+      "requestBytes": 85248,
+      "responseBytes": 195617346
+    },
+    "151129:live:control-copy": {
+      "requestBytes": 80856,
+      "responseBytes": 195614640
+    },
+    "155246:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1164
+    },
+    "155246:copy-source-worker:control-copy": {
+      "requestBytes": 3628,
+      "responseBytes": 173313
+    },
+    "155259:copy-source-worker:control-copy": {
+      "requestBytes": 3119112,
+      "responseBytes": 3375200
+    },
+    "155259:copy-source-worker:reader-copy": {
+      "requestBytes": 3952,
+      "responseBytes": 28748
+    },
+    "155297:copy-source-worker:control-copy": {
+      "requestBytes": 620,
+      "responseBytes": 1897
+    },
+    "155446:copy-source-worker:control-copy": {
+      "requestBytes": 105,
+      "responseBytes": 22591
+    },
+    "155542:copy-source-worker:reader-copy": {
+      "requestBytes": 259,
+      "responseBytes": 582
+    },
+    "155542:copy-source-worker:control-copy": {
+      "requestBytes": 1271,
+      "responseBytes": 2188
+    },
+    "155669:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1164
+    },
+    "155669:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 50924
+    },
+    "155682:copy-source-worker:control-copy": {
+      "requestBytes": 4413775,
+      "responseBytes": 4913617
+    },
+    "155682:copy-source-worker:reader-copy": {
+      "requestBytes": 3952,
+      "responseBytes": 28748
+    },
+    "156888:copy-source-worker:control-copy": {
+      "requestBytes": 617,
+      "responseBytes": 1544
+    },
+    "157195:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1266
+    },
+    "157195:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 53375
+    },
+    "157208:copy-source-worker:control-copy": {
+      "requestBytes": 3719768,
+      "responseBytes": 4135048
+    },
+    "157208:copy-source-worker:reader-copy": {
+      "requestBytes": 6817,
+      "responseBytes": 30073
+    },
+    "157314:copy-source-worker:control-copy": {
+      "requestBytes": 386,
+      "responseBytes": 90635
+    },
+    "157314:copy-source-worker:reader-copy": {
+      "requestBytes": 45906,
+      "responseBytes": 33967
+    },
+    "158171:copy-source-worker:control-copy": {
+      "requestBytes": 596,
+      "responseBytes": 449
+    },
+    "158210:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1368
+    },
+    "158210:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 29715
+    },
+    "158223:copy-source-worker:control-copy": {
+      "requestBytes": 2724798,
+      "responseBytes": 3051191
+    },
+    "158223:copy-source-worker:reader-copy": {
+      "requestBytes": 8269,
+      "responseBytes": 32279
+    },
+    "158583:copy-source-worker:control-copy": {
+      "requestBytes": 710,
+      "responseBytes": 29210
+    },
+    "158583:copy-source-worker:reader-copy": {
+      "requestBytes": 40081,
+      "responseBytes": 32177
+    },
+    "158642:copy-source-worker:control-copy": {
+      "requestBytes": 710,
+      "responseBytes": 29210
+    },
+    "158642:copy-source-worker:reader-copy": {
+      "requestBytes": 40081,
+      "responseBytes": 32177
+    },
+    "158906:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1606
+    },
+    "158906:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 73481
+    },
+    "158919:copy-source-worker:control-copy": {
+      "requestBytes": 2554331,
+      "responseBytes": 2879132
+    },
+    "158919:copy-source-worker:reader-copy": {
+      "requestBytes": 14144,
+      "responseBytes": 34456
+    },
+    "159274:copy-source-worker:control-copy": {
+      "requestBytes": 1510,
+      "responseBytes": 95344
+    },
+    "159274:copy-source-worker:reader-copy": {
+      "requestBytes": 56218,
+      "responseBytes": 42710
+    },
+    "159424:copy-source-worker:reader-copy": {
+      "requestBytes": 33589,
+      "responseBytes": 45114
+    }
+  },
+  "all_database_bytes_known": false,
+  "unmetered_read": "Initial production baseline occurred before instrumentation; approximately 121 KB saved output is not wire-byte measurement.",
+  "copy_runs": [
+    {
+      "at": "2026-10-20T17:24:40.646Z",
+      "workItemId": "wi-0ead87d316a39ea54cf321e4",
+      "pids": [
+        155682
+      ],
+      "httpRequests": 55,
+      "elapsedMs": 67612,
+      "boxRows": 38,
+      "outcome": "FAILED",
+      "peakWorkerRssBytes": 243507200
+    },
+    {
+      "at": "2026-10-20T17:34:02.276Z",
+      "workItemId": "wi-b5fc1ba41d538860c40d7330",
+      "pids": [
+        157208
+      ],
+      "httpRequests": 57,
+      "elapsedMs": 67505,
+      "boxRows": 38,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 233373696
+    },
+    {
+      "at": "2026-10-20T17:58:53.472Z",
+      "workItemId": "wi-721d979d1156922f08f2c4ec",
+      "pids": [
+        158223
+      ],
+      "httpRequests": 50,
+      "elapsedMs": 73696,
+      "boxRows": 13,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 215797760
+    },
+    {
+      "at": "2026-10-20T18:02:58.437Z",
+      "workItemId": "wi-53a2c06eed0c083504536369",
+      "pids": [
+        158919
+      ],
+      "httpRequests": 55,
+      "elapsedMs": 73837,
+      "boxRows": 47,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 218251264
+    },
+    {
+      "at": "2026-10-20T17:08:24.473Z",
+      "workItemId": "wi-6548d0d2ad0ba34014f6c74e",
+      "pids": [
+        155259
+      ],
+      "httpRequests": 37,
+      "elapsedMs": 68729,
+      "boxRows": 101,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 360022016
+    }
+  ],
+  "all_observed_civic_http_requests": 6009,
   "actual_production_facts_added": 0,
-  "blanks_addressed": 422,
-  "all_production_wire_bytes_known": false,
-  "metered_request_bytes": 804685,
-  "checked_source_commit": "77ac3f6e1",
-  "real_route_process": {
-    "at": "2026-10-20T12:52:27.228819+00:00",
-    "checkedGitHead": "77ac3f6e1",
-    "states": 51,
-    "workerProcesses": 51,
-    "productionWrites": 0,
-    "adminWrites": 0,
-    "httpRequests": 184,
-    "providerUsd": 0,
-    "findingsLocallyBoxed": 1515,
-    "worked": 17,
-    "failedOpen": 34,
-    "peakWorkerRssBytes": 249409536,
-    "probeBoundMs": 5000,
-    "probeHttpTimeoutMs": 3000,
-    "minimumHostSpacingMs": 1000,
-    "databaseTransfer": {
-      "reader": {
-        "requests": 257,
-        "requestBytes": 204039,
-        "responseBytes": 1471866
-      },
-      "control-plane": {
-        "requests": 0,
-        "requestBytes": 0,
-        "responseBytes": 0
-      }
-    },
-    "section3Passed": 44,
-    "additionalReaderFactRows": 27,
-    "readerBodies": 8,
-    "readerOfficials": 0,
-    "sourceWorkerSeconds": 208.517,
-    "validationWorkerSeconds": 122.615,
-    "additionalFactsPerActiveWorkerHour": 293.53852844182984
-  },
-  "all_civic_http_requests_including_diagnostic": 5749,
-  "entrypoint_recheck": {
-    "state": "CO",
-    "checkedGitHead": "d315063a9",
-    "workerProcesses": 1,
-    "requests": 4,
-    "findings": 8,
-    "result": "WORKED",
-    "telemetry": [
-      {
-        "hour": "2026-10-20T13:00:00.000Z",
-        "requests": 5,
-        "bytes": {
-          "reader": 28759,
-          "control-plane": 0
-        },
-        "sent": {
-          "reader": {
-            "requests": 5,
-            "bytes": 4007
-          },
-          "control-plane": {
-            "requests": 0,
-            "bytes": 0
-          }
-        },
-        "byCaller": {
-          "reader: query \u2190 unknown": 28759
-        },
-        "processes": [
-          "route-worker#97229"
-        ],
-        "pid": 97229,
-        "startedMs": 1792504103596,
-        "peakRssBytes": 172064768
-      }
-    ],
-    "vaultOutsideDeployTree": true
-  },
-  "metric_definitions": {
-    "reader_officials": "Published roster entries, including a person once per body when they serve on more than one body.",
-    "database_bytes": "Metered application response bodies from the existing TX counter; the initial baseline response size is unknown.",
-    "per_state_rate": "Additional isolated-reader rows divided by this state\u2019s active source plus validation seconds; no claim of sustained production throughput.",
-    "production_daily_rate": "New non-campaign native facts in 24 hours / 24 at the production snapshot; title and starts_at belong to MTG."
-  },
-  "territory_route_process": {
-    "at": "2026-10-20T14:21:16.663398+00:00",
-    "checkedGitHead": "5e22c3491",
-    "states": 5,
-    "workerProcesses": 5,
-    "productionWrites": 0,
-    "adminWrites": 0,
-    "httpRequests": 17,
-    "providerUsd": 0,
-    "findingsLocallyBoxed": 0,
-    "worked": 1,
-    "failedOpen": 4,
-    "peakWorkerRssBytes": 170565632,
-    "probeBoundMs": 5000,
-    "probeHttpTimeoutMs": 3000,
-    "minimumHostSpacingMs": 1000,
-    "databaseTransfer": {
-      "reader": {
-        "requests": 25,
-        "requestBytes": 19908,
-        "responseBytes": 144121
-      },
-      "control-plane": {
-        "requests": 0,
-        "requestBytes": 0,
-        "responseBytes": 0
-      }
-    },
-    "section3Passed": 0,
-    "additionalReaderFactRows": 0,
-    "additionalFactsPerActiveWorkerHour": 0,
-    "websiteBlanksAttempted": 5,
-    "blanksAddressedByFindings": 0,
-    "sourceWorkerSeconds": 25.158
-  },
-  "current_source_commit": "5e22c3491",
-  "database_transactions": 927,
-  "ready_integration_river": "a258e6881136df4a8e2ec00fc8f71666739ecb30"
+  "additional_rows_per_active_source_and_validation_hour": 819.7957447835294,
+  "metered_production_response_bytes": 3779984,
+  "metered_copy_response_bytes": 508832270,
+  "total_metered_database_response_bytes": 512612254,
+  "reader_production_transfer_usd_at_010_per_gb": 0.00037634980000000005,
+  "all_metered_reader_labeled_transfer_usd_at_010_per_gb": 0.010235571800000001
 }

@@ -1,133 +1,66 @@
 {
-  "at": "2026-10-20T14:41:09.707155+00:00",
-  "canonicalTestPartitions": [
-    {
-      "commit": "5e22c349165a086482121a2355f426a68b7ef4d3",
-      "suiteHash": "262e392bfbec70411c7942fd4b75a32cc01531c9592457199248e73925383e4f",
-      "partition": {
-        "index": 1,
-        "count": 2
-      },
-      "selectedFiles": 592,
-      "elapsedMs": 1022581,
-      "counts": {
-        "tests": 4231,
-        "failed": 0,
-        "passed": 4230,
-        "cancelled": 0,
-        "skipped": 1,
-        "todo": 0,
-        "topLevel": 4155,
-        "suites": 28
-      },
-      "status": "passed"
-    },
-    {
-      "commit": "5e22c349165a086482121a2355f426a68b7ef4d3",
-      "suiteHash": "262e392bfbec70411c7942fd4b75a32cc01531c9592457199248e73925383e4f",
-      "partition": {
-        "index": 2,
-        "count": 2
-      },
-      "selectedFiles": 592,
-      "elapsedMs": 967450,
-      "counts": {
-        "tests": 4549,
-        "failed": 0,
-        "passed": 4548,
-        "cancelled": 0,
-        "skipped": 1,
-        "todo": 0,
-        "topLevel": 4508,
-        "suites": 11
-      },
-      "status": "passed"
-    }
+  "at": "2026-10-20T18:20:43.368885+00:00",
+  "tested_code_sha": "3152bc197ce654a405c5425e4e11ad398e988a62",
+  "command": "pnpm gates",
+  "selection": "CI_TEST_FILES; newline-separated explicit affected tests",
+  "test_files": [
+    "tests/hunt-budget-period.test.ts",
+    "tests/hunt-continuation.test.ts",
+    "tests/hunt-exa-agent.test.ts",
+    "tests/hunt-executor.test.ts",
+    "tests/hunt-packet.test.ts",
+    "tests/hunt-places.test.ts",
+    "tests/hunt-report.test.ts",
+    "tests/hunt-search.test.ts",
+    "tests/hunt-source-tasks.test.ts",
+    "tests/hunter-isolation.test.ts",
+    "tests/hunter-lane-arming.test.ts",
+    "tests/hunter-lane.test.ts",
+    "tests/hunters-admin-priority.test.ts",
+    "tests/hunters-body-identity.test.ts",
+    "tests/hunters-exa-publication.test.ts",
+    "tests/hunters-exa-setting.test.ts",
+    "tests/hunters-free-catalog.test.ts",
+    "tests/hunters-no-send-process.test.ts",
+    "tests/hunters-own-calendar.test.ts",
+    "tests/hunters-read-to-reader.test.ts",
+    "tests/hunters-scoped-bank.test.ts",
+    "tests/hunters-source-shapes.test.ts",
+    "tests/standing-meetings-discovery.test.ts",
+    "tests/obligation-registry.test.ts",
+    "tests/expansion-any-state.test.ts",
+    "tests/worker-fleet-coordinator.test.ts"
   ],
-  "registeredTestFiles": 1184,
   "counts": {
-    "tests": 8780,
+    "files": 26,
+    "registered": 137,
+    "passed": 137,
     "failed": 0,
-    "passed": 8778,
-    "cancelled": 0,
-    "skipped": 2,
-    "todo": 0,
-    "topLevel": 8663,
-    "suites": 39
+    "skipped": 0,
+    "bundle_registered": 16,
+    "bundle_passed": 16,
+    "bundle_failed": 0
   },
   "gatesPassed": 8,
-  "gates": [
-    "lint",
-    "tsc",
-    "assert:browser",
-    "test",
-    "db:gate (no schema change)",
-    "build",
-    "test:bundle",
-    "build:standalone"
-  ],
-  "additionalBuild": "complete-catalog-build.log: 429 app trace files against 430 ceiling; 0 tests traced; reader trace failures []",
-  "sourceDuringChecks": "Functional source fixed at 5e22c349165a086482121a2355f426a68b7ef4d3; measurement files and the reference-loader documentation were updated while checks ran.",
-  "headAtCompletion": "b19df51a5230683b2292c4c8f3106925f055d314",
-  "currentRiverIntegration": {
-    "river": "a258e6881136df4a8e2ec00fc8f71666739ecb30",
-    "checkedCommit": "aedfe0277408a040565fdf3ea68f41f6aa3a4b92",
-    "selectedFiles": [
-      "tests/artifact-reobservation.test.ts",
-      "tests/ask-reader-edge.test.ts",
-      "tests/box-publication.test.ts",
-      "tests/campaign-money-people.test.ts",
-      "tests/campaign-money-retirement.test.ts",
-      "tests/dispatch-work.test.ts",
-      "tests/hunt-exa-agent.test.ts",
-      "tests/hunters-admin-priority.test.ts",
-      "tests/hunters-box-order.test.ts",
-      "tests/hunters-exa-budgets.test.ts",
-      "tests/hunters-exa-publication.test.ts",
-      "tests/hunters-exa-setting.test.ts",
-      "tests/hunters-free-catalog.test.ts",
-      "tests/hunters-held-capture.test.ts",
-      "tests/hunters-held-directory.test.ts",
-      "tests/hunters-no-send-process.test.ts",
-      "tests/hunters-own-calendar.test.ts",
-      "tests/hunters-portrait-order.test.ts",
-      "tests/hunters-read-to-reader.test.ts",
-      "tests/hunters-scoped-bank.test.ts",
-      "tests/hunters-search-lease.test.ts",
-      "tests/hunters-source-origin.test.ts",
-      "tests/hunters-source-shapes.test.ts",
-      "tests/obligation-registry.test.ts",
-      "tests/reader-cache.test.ts",
-      "tests/routine-civic-data-promotion.test.ts",
-      "tests/routine-civic-data-runner.test.ts",
-      "tests/standing-meetings-discovery.test.ts"
-    ],
-    "counts": {
-      "tests": 200,
-      "failed": 0,
-      "passed": 200,
-      "cancelled": 0,
-      "skipped": 0,
-      "todo": 0,
-      "topLevel": 200,
-      "suites": 0
-    },
-    "elapsedMs": 51818,
-    "gatesInitialRun": {
-      "passed": 7,
-      "failed": [
-        "db:gate"
-      ],
-      "reason": "Stale origin/main included already-shipped SRC-MN migration. No production credential or database contact."
-    },
-    "schemaGateRerun": {
-      "exitCode": 0,
-      "result": "NOT APPLICABLE",
-      "base": "a258e6881136df4a8e2ec00fc8f71666739ecb30",
-      "databaseContacted": false,
-      "note": "Explicitly refreshed origin/main; all 46 established migrations intact, no HN schema change."
-    },
-    "allEightChecksPassedAfterRerun": true,
-    "at": "2026-10-20T14:49:04.568179+00:00"
-  }
+  "gates": {
+    "lint": "PASS",
+    "tsc": "PASS",
+    "assert:browser": "PASS",
+    "test": "PASS",
+    "db:gate": "PASS",
+    "build": "PASS",
+    "test:bundle": "PASS",
+    "build:standalone": "PASS"
+  },
+  "schema_gate": "NOT APPLICABLE: no change to established schema; new DB tests apply all 46 real reader migrations and actual CP DDL",
+  "budgets": "Default and standalone builds passed unchanged budgets",
+  "scope": "Focused suite; no claim that the entire canonical repository test suite was run on this scoped implementation",
+  "production_copy": "Six API answers plus meetings, ballot and Admin Now pages compared to shipped release code on identical copied databases; detailed limitations in production-copy-parity.json",
+  "native_publication": "Real source child, original Box publisher, real Neon production copies, then actual /api/meetings?zip=88310 HTTP 200 with three new bodies",
+  "admin_priority": "A one-place $1 Admin order through existing gateway/intent/dispatch-work/hunt-packets/occurrence remains ahead of background government sources; owner instructions and budget unchanged",
+  "no_send": "Four inert descriptor cases: zero child workers, requests and dollars",
+  "database_bytes": "All metered production, copy, failed and superseded attempts included; initial unmetered baseline remains unknown",
+  "source_files_unchanged_after_gates": true,
+  "extra_source_identity_check": "Named library/advisory bodies stay distinct from governing bodies; a five-minute-later report retains original source_copy.fetched_at.",
+  "outside_scope_exa_budget_gap": "Exa takes the existing request/concurrency search gate; it does not use the shared model transport that reserves Send/area dollars. Shared standing-runtime.ts is DG-01-owned and unchanged. The production paid-research pause was not changed."
 }

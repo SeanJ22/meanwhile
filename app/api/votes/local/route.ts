@@ -1,6 +1,4 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleOutcomeRead, sittingsForBody } from "@/lib/outcomes/store";
 import { linkLocalVotes, localVotesForMember, type LocalVoteRosterFor } from "@/lib/outcomes/local-votes";
 import { rosterForBody } from "@/lib/registry/body-rosters";
@@ -17,8 +15,6 @@ export const GET = readerRoute("/api/votes/local", async function GET(request: R
   const bodyId = ROSTER_ID.exec(personId)?.[1];
   if (!bodyId || personId.length > 300) return Response.json({ error: "personId required" }, { status: 400 });
   try {
-    const authority = await ensureReaderAuthorityEdge(null, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, ["registry-runtime", "meeting-outcomes"]));
-    if (authority) enterReaderAuthorityEdge(authority);
     await settleOutcomeRead();
   } catch (error) {
     return Response.json({ error: "the outcomes could not be read right now", dataState: "STORE_UNREACHABLE", detail: error instanceof Error ? error.message : "unknown" }, { status: 503 });

@@ -7,6 +7,7 @@ import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
+import { getCachedStateDivision, isStateDivisionPending } from "@/lib/reader/client";
 
 export type RepresentationStatus =
   | "resolved"
@@ -33,8 +34,12 @@ export function useDivisionsRepresentation(
   ocdIds: readonly string[],
 ): Record<string, DivisionRepresentation> {
   const ids = [...new Set(ocdIds)];
-  const local = new Map(ids.map(id => [id, representationForDivision(coverage, id)]));
-  const remoteIdsKey = JSON.stringify(ids.filter(id => !local.get(id)?.length).sort());
+  const cached = new Map(ids.map(id => [id, getCachedStateDivision(id)]));
+  const local = new Map(ids.map(id => {
+    const holders = representationForDivision(coverage, id);
+    return [id, holders.length ? holders : cached.get(id)?.holders ?? holders];
+  }));
+  const remoteIdsKey = JSON.stringify(ids.filter(id => !local.get(id)?.length && !cached.get(id) && !isStateDivisionPending(id)).sort());
   const [answers, setAnswers] = useState<{ key: string; values: Record<string, Answer> }>({ key: remoteIdsKey, values: {} });
   if (answers.key !== remoteIdsKey) setAnswers({ key: remoteIdsKey, values: {} });
 
@@ -77,7 +82,11 @@ export function useDivisionsRepresentation(
 
   return Object.fromEntries(ids.map(ocdId => {
     const holders = local.get(ocdId)!;
-    if (holders.length) return [ocdId, { holders, status: "resolved", rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) }];
+    const cachedAnswer = cached.get(ocdId);
+    if (holders.length || cachedAnswer) return [ocdId, {
+      holders, status: holders.length ? "resolved" : "unsourced",
+      rosterGaps: cachedAnswer?.rosterGaps ?? projectedRosterGapsForDivision(coverage, ocdId),
+    }];
     const answer = answers.key === remoteIdsKey ? answers.values[ocdId] : undefined;
     if (!answer) return [ocdId, { holders: [], status: "looking" }];
     if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];

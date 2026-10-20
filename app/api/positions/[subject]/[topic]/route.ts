@@ -1,7 +1,5 @@
 import { settlePositionHoldingAnswer, type PositionHoldingReaders } from "@/lib/candidates/position-holding";
 import { readerRoute } from "@/lib/api/reader-route";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
 import { positionIdentityKeys } from "@/lib/identity/position-identity-keys";
 import { getCandidateCorpus } from "@/lib/candidates/positions";
@@ -70,10 +68,6 @@ export const GET = readerRoute("/api/positions/[subject]/[topic]", async functio
     return Response.json({ error: "subject and topic are required" }, { status: 400 });
   }
 
-  {
-    const edge = await ensureReaderAuthorityEdge(null, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(error => holdReaderAuthorityEdge(error, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]));
-    if (edge) enterReaderAuthorityEdge(edge);
-  }
   const divisions = await ballotPlaceFromRequest(request);
   const settled = await settlePositionHoldingAnswer(subject, topic, defaultReadersFor(subject, divisions));
   if (settled.kind === "IDENTITY_UNRESOLVED") {

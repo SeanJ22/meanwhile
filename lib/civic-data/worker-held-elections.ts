@@ -3,6 +3,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ArtifactRecord, ControlPlaneRepositories, RecordProjection } from "../control-plane/repository/types.ts";
 import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { pageWords, section3Record } from "../control-plane/promotion/section3.ts";
@@ -239,7 +240,7 @@ export async function publishHeldElectionOffices(input: {
   }
   await runPool(report, PLACES_AT_ONCE, async ({ workItemId, outcome }) => {
     const latest = await input.repos.workItems.mustRead(workItemId);
-    await input.repos.workItems.compareAndSet(workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
   });
   return report;
 }

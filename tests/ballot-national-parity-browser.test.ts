@@ -9,7 +9,6 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { build } from "esbuild";
 import sharp from "sharp";
-import { neonConfig } from "@neondatabase/serverless";
 
 import { launchGuarded } from "../scripts/browser.mts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -18,11 +17,9 @@ import { ballotElectionKey, genericBallotProblems } from "../lib/ballot/generic-
 import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane.ts";
 import { normalizePortrait } from "../lib/photos/decode.ts";
 import type { PortraitVerification } from "../lib/photos/binding.ts";
-import { ensureReaderAuthorityEdge, publishReaderMeetings, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
-import { publishPointers } from "./helpers/edge-pointers.ts";
+import { installReaderValues, installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };
 import type { GlobalAuthorityFamily, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { PRL_CONTRACT } from "../lib/sources/prl/data-plane.ts";
@@ -76,7 +73,6 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
       versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
 }
 
-type FixtureStatement = { query?: string; params?: unknown[] };
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -137,7 +133,7 @@ async function renderBallot(zip: string): Promise<RenderedBallot> {
   return result;
 }
 
-test("BL-20: Ohio and Michigan national ballots render the same incumbent record and challenger portrait as Arizona", async t => {
+test("BL-20: Ohio and Michigan national ballots render the same incumbent record and challenger portrait as Arizona", async () => {
   const encoded = await sharp({ create: { width: 128, height: 144, channels: 3, background: "#456789" } }).png().toBuffer();
   const portrait = await normalizePortrait(encoded);
   assert.ok("bytes" in portrait && portrait.verdict.ok);
@@ -158,31 +154,6 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   }
   const linkedRegistry = { ...registry, officialCandidacies: reconcileOfficialCandidacies({ bridge: registry.officialCandidacies, ballots }),
     officialPhotos: { photos: registry.officialPhotos.photos.filter(photo => !cases.some(item => item.incumbent === photo.officeholderId)) } };
-  const previousFetch = neonConfig.fetchFunction, previousDatabase = process.env.DATABASE_URL;
-  process.env.DATABASE_URL = "postgresql://fixture:fixture@ballot-place.invalid/fixture";
-  // A member's own vote record is read from the reader store, as production reads it.
-  const memberRecords = new Map(syntheticFederalRollCalls(federal, 2).members.map(record => [federalMemberVotesScope(record.officeholderId), record]));
-  neonConfig.fetchFunction = async (_input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
-    const body = JSON.parse(String(init?.body)) as FixtureStatement & { queries?: FixtureStatement[] };
-    const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
-    const results = (body.queries ?? [body]).map(statement => {
-      const record = statement.query?.includes("FROM civic_data_promotions p") ? memberRecords.get(String(statement.params?.[1])) : undefined;
-      if (record) {
-        const { projection, attested } = provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(record.officeholderId), sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: `BL-20:votes:${record.officeholderId}`, value: record });
-        const row: Record<string, unknown> = { key: projection.key, source_id: projection.sourceId, record_class: projection.recordClass, scope: projection.scope,
-          current_version_id: projection.versionId, last_known_good_version_id: projection.lastKnownGoodVersionId, promoted_at: projection.promotedAt,
-          validation_receipt: projection.receipt, payload: projection.payload, retrieved_at: attested.retrievedAt, temporal: null };
-        return { command: "SELECT", rowCount: 1, rowAsArray: true, fields: Object.keys(row).map(name => ({ name, dataTypeID: 114 })),
-          rows: [Object.values(row).map(value => JSON.stringify(value))] };
-      }
-      assert.ok(statement.query?.includes("FROM fact f JOIN source_copy") || statement.query?.includes("WITH people AS") ||
-        statement.query?.includes("database_transfer_daily"), statement.query);
-      return empty;
-    });
-    return Response.json(body.queries ? { results } : results[0]);
-  };
-  t.after(() => { neonConfig.fetchFunction = previousFetch;
-    if (previousDatabase === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = previousDatabase; });
   for (const [index, item] of cases.entries()) assert.equal(linkedRegistry.officialCandidacies.rows.find(row => row.holder.id === item.incumbent)?.candidacy?.candidacyId, ballots[index]!.candidacies[0]!.id);
   const corpus: CandidateCorpus = { formatVersion: 1, attempted: 2, fetchedAt: checkedAt, failures: [], documents: cases.map(item => {
     const text = `I will protect drinking water for every family in our state. ${"Our communities need schools, safe roads, and public services that everyone can reach. ".repeat(5)}`;
@@ -255,15 +226,13 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   ] as const) stateAuthorities[family] = { ...stateAuthorities[family], AZ: promotedFamily([absentEdgeEntry(recordClass, `US-AZ:${scope}`)], `BL-20:absent-${family}:AZ`) };
   const dir = mkdtempSync(join(tmpdir(), "wtp-national-ballot-parity-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const store = new LocalFileArtifactStore(dir);
-  const published = await publishReaderMeetings({ store, meetingStates: {} });
-  assert.equal(published.status, "PUBLISHED");
   const none = { value: null, versionId: "none" };
-  await publishPointers(store, { authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },
-    stateLegislators: { "US-AZ": none, "US-OH": none, "US-MI": none } });
-  process.env.WTP_READER_EDGE_DIR = dir;
-  const manifest = (await store.readManifest())!.manifest;
-  const edge = await ensureReaderAuthorityEdge(manifest, store);
+  installReaderValues({ authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },
+    stateLegislators: { "US-AZ": none, "US-OH": none, "US-MI": none } }, dir);
+  installCanonicalEntries(syntheticFederalRollCalls(federal, 2).members.map(record => provenEdgeEntry({
+    recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(record.officeholderId), sourceId: FEDERAL_VOTES_SOURCE_ID,
+    versionId: `BL-20:votes:${record.officeholderId}`, value: record })), dir);
+  activateCanonicalFixture(dir);
   const browserCards: Record<string, unknown>[] = [];
   for (const [index, item] of cases.entries()) {
     const rendered = await renderBallot(item.zip);
@@ -293,15 +262,15 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const { GET: positionsGET } = await import("../app/api/positions/[subject]/[topic]/route.ts");
   const answers = new Map<string, string>();
   for (const item of cases) {
-    const votes = await withReaderAuthorityEdge(edge, () => votesGET(new Request(`https://fixture.test/api/votes?member=${item.incumbent}`)));
+    const votes = await votesGET(new Request(`https://fixture.test/api/votes?member=${item.incumbent}`));
     assert.equal(votes.status, 200);
     answers.set(`/api/votes?member=${encodeURIComponent(item.incumbent)}&state=${item.state}`, await votes.text());
-    const profile = await withReaderAuthorityEdge(edge, () => profileGET(new Request("https://fixture.test/"), { params: Promise.resolve({ subject: item.incumbent }) }));
+    const profile = await profileGET(new Request("https://fixture.test/"), { params: Promise.resolve({ subject: item.incumbent }) });
     assert.equal(profile.status, 200);
     const profileBody = await profile.json();
     assert.equal(profileBody.profile?.subjectId, item.incumbent);
     answers.set(`/api/profile/${encodeURIComponent(item.incumbent)}`, JSON.stringify(profileBody));
-    const positions = await withReaderAuthorityEdge(edge, () => positionsGET(new Request(`https://fixture.test/?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`), { params: Promise.resolve({ subject: item.incumbent, topic: "water" }) }));
+    const positions = await positionsGET(new Request(`https://fixture.test/?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`), { params: Promise.resolve({ subject: item.incumbent, topic: "water" }) });
     assert.equal(positions.status, 200);
     answers.set(`/api/positions/${encodeURIComponent(item.incumbent)}/water?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`, await positions.text());
   }

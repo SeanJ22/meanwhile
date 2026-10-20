@@ -111,7 +111,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
@@ -161,8 +161,6 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishReaderEdge, publishReaderStateFacts, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
-import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
@@ -191,7 +189,6 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
 const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
-const EDGE_SLICE_MS = Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
@@ -557,8 +554,6 @@ function newestConsideredAt(
 
 async function persistSupervisorOutcome(input: {
   readonly ballotPublications?: BallotPublicationSummaries;
-  /** Null on the routine lane: publish-now alone publishes the reader edge. */
-  readonly readerEdge: ReaderEdgePublicationOutcome | null;
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
@@ -603,7 +598,6 @@ async function persistSupervisorOutcome(input: {
     attemptedTasks: input.attemptedTasks,
     verifiedSourceSuccesses: input.verifiedSourceSuccesses,
     verifiedSourceFailures: input.verifiedSourceFailures,
-    ...(input.readerEdge ? { readerEdge: input.readerEdge } : {}),
     failures: input.failures,
     crashedTasks: input.crashedTasks,
     taskReceipts: input.taskReceipts,
@@ -683,41 +677,6 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 
 
-const edgeStore = resolveReaderArtifactWriteStore();
-const edgeStoreName = edgeStore?.kind === "local-file" ? "local folder" : edgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
-/** Publish-now alone publishes the reader edge: what moved since it last published, a piece at a time. */
-async function publishChangedReaderEdge(): Promise<ReaderEdgePublicationOutcome> {
-  if (edgeStore) try {
-    const facts = await publishReaderStateFacts(readerFactDb().query, edgeStore, new Date().toISOString());
-    if (facts.published.length || facts.raced.length) console.log(JSON.stringify({ readerEdgeStateFacts: facts }));
-  } catch (error) {
-    supervisorFailures.push({ taskId: "state-facts-publication", code: "STATE_FACTS_PUBLISH_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-  }
-  // A first publication goes a slice at a time, so the pass's own work still launches and its repairs still run.
-  return publishReaderEdge({ store, query: readerFactDb().query, artifactStore: edgeStore, deadlineMs: Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + EDGE_SLICE_MS) });
-}
-const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
-  store: edgeStoreName,
-  readPaused: async () => {
-    const connection = controlPlaneUrlFromEnv();
-    if (!connection) throw new Error("control-plane reporting connection is unavailable");
-    const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    return readIntents([...(await readPlanningIntents(repos))]).runnerPause.paused;
-  },
-  check: async () => {
-    const outcome = await publishChangedReaderEdge();
-    const failure = readerEdgeSupervisorFailure(outcome);
-    if (failure) supervisorFailures.push(failure);
-    return outcome;
-  }, onError: error => {
-    supervisorFailures.push({ taskId: "reader-edge-publication", code: "READER_EDGE_PUBLISH_FAILED",
-      detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-  },
-}) : null;
-if (publishNowEdgeChecks) {
-  step = "publishing changed source pointers before worker admission";
-  await publishNowEdgeChecks.run();
-}
 if (!PUBLISH_NOW) {
   step = "loading fact store entities";
   try {
@@ -794,21 +753,20 @@ if (controlPlaneUrlFromEnv()) try {
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
-  const readerEdge = (await publishNowEdgeChecks!.stop())!;
   await settlePublishNowCursor(selectedTasks, supervisorFailures);
-  if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
+  if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
     console.log("publish-now: nothing owed this minute");
   } else {
     step = "persisting the publication outcome";
     try {
-      const cycleId = await persistSupervisorOutcome({ readerEdge, failures: supervisorFailures,
+      const cycleId = await persistSupervisorOutcome({ failures: supervisorFailures,
         attemptedTasks: 0, verifiedSourceSuccesses: 0, verifiedSourceFailures: 0,
         finishedAt: new Date().toISOString(), taskReceipts: [], dueRequestLines: [],
         readerReadback: { denominator: 0, recordedPass: 0, recordedFail: 0, currentFail: 0, noops: 0, repairFailures: 0, references: [] },
       });
       console.log("RCD_OPERATIONAL_OUTCOME=" + JSON.stringify({ kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
         state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED", cycleId, lane: "publish-now",
-        readerEdge, exactTaskReceipts: 0, durable: true }));
+        exactTaskReceipts: 0, durable: true }));
     } catch (error) {
       const detail = safeFailure(sanitizedErrorDiagnostic(error));
       supervisorFailures.push({ taskId: "routine-civic-data-supervisor-outcome", code: "SUPERVISOR_OUTCOME_NOT_DURABLE", detail });
@@ -1476,20 +1434,11 @@ for (const error of pass.errors) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 const readerRuns = pass.repair;
-
-step = "publishing changed reader edge copies";
-let readerEdge: ReaderEdgePublicationOutcome | null = null;
-if (publishNowEdgeChecks) {
-  await publishNowEdgeChecks.stop();
-  await publishNowEdgeChecks.run();
-  readerEdge = await publishNowEdgeChecks.stop();
-}
 if (!PUBLISH_NOW && ONLY === null) {
   try {
     const sql = neon(process.env.DATABASE_URL!), query = (text: string, params: readonly unknown[]) => sql.query(text, [...params]);
     const origins = await reconcileNationalStatePointers({ query, env: process.env });
-    // Retirement checks the edge already serves each state's replacement, which publish-now publishes.
-    const retired = await retireNationalStatePointers(query, resolveReaderArtifactWriteStore(), origins);
+    const retired = await retireNationalStatePointers(query, origins);
     if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
@@ -1548,7 +1497,6 @@ try {
     ...(ballotPublications.size ? { ballotPublications: Object.fromEntries(ballotPublications) } : {}),
     campaignPublicationApprovalsByState: Object.fromEntries([...campaignPublicationInputs.values()].filter(input =>
       verifiedTaskReceipts.some(row => row.taskId === campaignPublicationTask(input.state))).map(input => [input.state, input.approvals])),
-    readerEdge,
     failures: supervisorFailures,
     attemptedTasks: attempted,
     verifiedSourceSuccesses,
@@ -1572,7 +1520,6 @@ try {
     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
     cycleId,
     lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
-    readerEdge,
     exactTaskReceipts: verifiedTaskReceipts.length,
     durable: true,
   }));
@@ -1607,7 +1554,6 @@ console.log("RCD_RUN=" + JSON.stringify({
     readerReadbacksCurrentFail,
   verifiedSourceSuccesses,
   verifiedSourceFailures,
-  readerEdge,
   supervisorFailures: supervisorFailures.length,
   readerReadbacksRecordedPass,
   readerReadbacksRecordedFail,

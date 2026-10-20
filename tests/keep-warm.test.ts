@@ -65,16 +65,14 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
   assert.equal(answered, 14 - 4 - 2, "calls 3, 6, 9 and 12 threw; calls 5 and 10 answered 503");
 });
 
-test("KEEP-WARM · a marked call loads the shared reader index without database fallback; an unmarked call loads nothing", async () => {
-  const nothing = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0, ask: null };
+test("KEEP-WARM · a marked call loads the national shelf; an unmarked call loads nothing", async () => {
+  const nothing = { nationalShelf: false, ask: null };
   const marked = await (await call("?hold=0", true)).json();
-  assert.deepEqual(marked.primed, nothing, "no edge store here, so nothing is loaded and nothing falls back");
+  assert.deepEqual(marked.primed, nothing, "without canonical national records this process has no shelf to warm");
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
   const source = readFileSync("app/api/warm/route.ts", "utf8");
-  assert.match(source, /readReaderManifest\(\)/, "authority warming reads the shared manifest");
-  assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
-  assert.match(source, /Object\.keys\(manifest\.meetingStates \?\? \{\}\)\.length > 0/, "meeting warming reads the manifest's state list and nothing else");
-  assert.doesNotMatch(source, /readReaderEdgeMeetings/);
-  assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);
+  assert.match(source, /readNationalShelf\(\)/);
+  assert.doesNotMatch(source, /readReaderManifest|ensureReaderAuthorityEdge|resolveReaderArtifactStore/);
+
 });

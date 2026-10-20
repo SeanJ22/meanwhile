@@ -9,9 +9,6 @@ import { reconcileNationalStatePointers, retireNationalStatePointers } from "../
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { STATE_BALLOT_FAMILIES, stateBallotContractId, stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
-import type { ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import type { AuthorityArtifactRef, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
-import { authorityPointerKey } from "../lib/meetings/edge-serving.ts";
 
 test("national retirement requires every exact GOOD state replacement and keeps ordinary deletion forbidden", async () => {
   const db = new PGlite();
@@ -104,8 +101,7 @@ test("terminal preparation stays scalar and serializes same-state origins before
   assert.equal(running.size, 0);
 });
 
-test("retirement accepts actual edge version syntax and atomically refuses a moved original", async () => {
-  const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, AuthorityArtifactRef>>> = {};
+test("retirement uses canonical state replacements and atomically refuses a moved original", async () => {
   const rows = new Map<string, Record<string, unknown>>();
   for (const state of REGISTRY_STATES) {
     const descriptors = [{ family: "registry-runtime", contract: requiredManualProductionContract(stateRegistryRuntimeContractId(state)) },
@@ -116,12 +112,8 @@ test("retirement accepts actual edge version syntax and atomically refuses a mov
     for (const { family, contract } of descriptors) {
       const key = `${contract.recordClass}:${contract.scope}`, version = `${family}-${state}`;
       rows.set(key, { key, source_id: contract.sourceId, current_version_id: version, last_known_good_version_id: version, decision: "GOOD" });
-      (stateAuthorities[family as StateAuthorityFamily] ??= {})[state] = { key: `reader/artifacts/${"a".repeat(64)}.json.gz`, sha: "a".repeat(64), version: `${key}=${version}~${"b".repeat(16)}` };
     }
   }
-  const pointers = new Map(Object.entries(stateAuthorities).flatMap(([family, states]) =>
-    Object.entries(states).map(([state, ref]) => [authorityPointerKey(family as StateAuthorityFamily, state), ref] as const)));
-  const artifacts = { readJsonPointer: async (key: string) => pointers.has(key) ? { value: pointers.get(key), etag: "e" } : null } as unknown as ReaderArtifactStore;
   const origins = [{ family: "ballot-contests" as const, recordClass: "BALLOT_CANDIDACY" as const, scope: "US-NH:merrimack:2026-general", versionId: "pinned-NH", promotedAt: "2026-10-15T12:00:00Z", hash: "a".repeat(64) }];
   let changed = false;
   const query = async (sql: string, params: readonly unknown[]): Promise<readonly Record<string, unknown>[]> => {
@@ -131,7 +123,7 @@ test("retirement accepts actual edge version syntax and atomically refuses a mov
     assert.deepEqual(JSON.parse(params[0] as string), [{ key: "BALLOT_CANDIDACY:US-NH:merrimack:2026-general", current_version_id: "pinned-NH" }]);
     return changed ? [] : [{ key: "BALLOT_CANDIDACY:US-NH:merrimack:2026-general" }];
   };
-  assert.equal(await retireNationalStatePointers(query, artifacts, origins), 1);
+  assert.equal(await retireNationalStatePointers(query, origins), 1);
   changed = true;
-  await assert.rejects(retireNationalStatePointers(query, artifacts, origins), /ORIGIN_MOVED/);
+  await assert.rejects(retireNationalStatePointers(query, origins), /ORIGIN_MOVED/);
 });

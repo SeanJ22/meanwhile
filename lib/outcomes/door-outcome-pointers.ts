@@ -14,6 +14,10 @@ export interface DoorOutcomePointer {
 
 export const DOOR_OUTCOME_POINTERS: DoorOutcomePointer[] = [];
 
+export function outcomePartitionScope(doorId: string): string {
+  return `door:${encodeURIComponent(doorId)}:outcomes`;
+}
+
 export function setDoorOutcomePointers(pointers: readonly DoorOutcomePointer[]): void {
   DOOR_OUTCOME_POINTERS.splice(0, DOOR_OUTCOME_POINTERS.length, ...pointers);
 }

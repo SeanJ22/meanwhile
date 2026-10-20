@@ -6,7 +6,8 @@ import type { BodySourceWiring } from "../registry/source-wiring.ts";
 import { wiringRowsFromDoors } from "../doors/rows.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { OutcomeTenant } from "../outcomes/data-plane.ts";
-import { setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
+import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
+export { outcomePartitionScope } from "../outcomes/door-outcome-pointers.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -32,10 +33,6 @@ export interface OutcomePartitionContract extends RoutineSourceContract {
 
 export function outcomePartitionId(doorId: string): string {
   return `${doorId}:outcomes`;
-}
-
-export function outcomePartitionScope(doorId: string): string {
-  return `door:${encodeURIComponent(doorId)}:outcomes`;
 }
 
 export function isOutcomePartitionScope(scope: string): boolean {

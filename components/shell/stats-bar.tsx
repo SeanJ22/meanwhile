@@ -42,6 +42,7 @@ export function StatsBar() {
 
   // No answer for this ZIP yet: a count of 0 would read as "nothing here".
   const awaitingAnswer = result === null && !searchFailed;
+  const awaitingLocal = awaitingAnswer || Boolean(result?.localPending && !searchFailed);
   const accent = tierSetVars(ui.tiers);
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
 
@@ -52,11 +53,11 @@ export function StatsBar() {
       <Card
         statKey="meetings"
         label={listingCount.heading}
-        value={awaitingAnswer ? "—" : view.meetings}
-        loading={awaitingAnswer}
+        value={awaitingLocal ? "—" : view.meetings}
+        loading={awaitingLocal}
         sub={
-          listingCount.countNote ??
-          (searchFailed || awaitingAnswer
+          awaitingLocal ? null : listingCount.countNote ??
+          (searchFailed
             ? null
             : `${venues.length} ${venues.length === 1 ? "venue" : "venues"}`)
         }
@@ -67,9 +68,9 @@ export function StatsBar() {
       {/* "Bodies here" matches the door; the second line splits governing bodies from boards and committees. */}
       <Card
         label="Bodies here"
-        value={view.bodies}
-        loading={awaitingAnswer}
-        sub={view.bodiesSecondary}
+        value={awaitingLocal ? "—" : view.bodies}
+        loading={awaitingLocal}
+        sub={awaitingLocal ? null : view.bodiesSecondary}
         open={ui.door === "bodies"}
         onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
       />
@@ -95,14 +96,14 @@ export function StatsBar() {
       )}
 
       {/* Meetings the adapter could not place are counted, so the map never reads as complete. */}
-      {dropped > 0 && (
+      {!result?.localPending && dropped > 0 && (
         <p className="stat-missing">
           {dropped} {dropped === 1 ? "calendar listing" : "calendar listings"} not shown — no
           resolvable location
         </p>
       )}
 
-      {coverage && !searchFailed && (
+      {coverage && !searchFailed && !result?.localPending && (
         <p className="stat-missing" style={{ color: "var(--text-muted)" }}>
           {COVERAGE_LABEL[coverage]}
         </p>

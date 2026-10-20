@@ -6,22 +6,13 @@ import test from "./helpers/playbooks.ts";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { meetingCompositionOf } from "../lib/meetings/body-records.ts";
-import {
-  readMeetingPartitionProjection,
-  type MeetingsSnapshot,
-} from "../lib/meetings/snapshot.ts";
-import {
-  candidateForMeetingPartition,
-  promoteMeetingPartition,
-  readPreviousMeetingPartition,
-} from "../scripts/ingest.ts";
+import { readMeetingPartitionProjection, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { candidateForMeetingPartition, promoteMeetingPartition, readPreviousMeetingPartition } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { installFactReader } from "../lib/facts/db.ts";
-import { bodyPointerOf, readEveryBody } from "./helpers/meeting-body-national.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -133,14 +124,8 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
   assert.deepEqual(previous, promoted.outcome.promoted?.payload);
 });
 
-test("meetings candidate proves its meeting door's obligations independently of row count", async (t) => {
+test("meetings candidate proves its meeting door's obligations independently of row count", async () => {
   const evidenced = withAcquisitionEvidence(fixturePartition());
-  const factReads: string[] = [];
-  installFactReader(async text => {
-    factReads.push(text);
-    assert.fail("published meeting composition must not query facts");
-  });
-  t.after(() => installFactReader(undefined));
   const candidate = candidateForMeetingPartition(partition, evidenced);
   assert.equal(candidate.retrieval.requestedUrl, "https://webapi.legistar.com/v1/pima/events");
   assert.equal(candidate.retrieval.finalUrl, "https://webapi.legistar.com/v1/pima/events");
@@ -164,12 +149,10 @@ test("meetings candidate proves its meeting door's obligations independently of 
   const previous = await readPreviousMeetingPartition(store, partition);
   assert.ok(previous);
 
-  const { read, edge } = await readEveryBody(store, GENERATED_AT);
+  const { read } = await readEveryBody(store, GENERATED_AT);
   assert.equal(read.kind, "PROMOTED");
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.deepEqual(read.kind === "PROMOTED" && read.value.meetings.map((row) => row.id).sort(), evidenced.meetings.map((row) => row.id).sort());
-  assert.equal((await bodyPointerOf(edge, "AZ", partition.bodyId))?.composition,
-    meetingCompositionOf([{ contractId: partition.id, versionId: promoted.candidate.id }]), "the served body is composed from the promoted version");
+
 });
 
 test("meetings promotion fails closed without per-child bytes or on an untrusted child redirect", async () => {

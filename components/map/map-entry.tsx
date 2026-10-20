@@ -1,9 +1,13 @@
 "use client";
 
 import { useOfficePins } from "@/hooks/use-office-pins";
+import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
+import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
+import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { forgetCamera } from "@/lib/map/camera-memory";
 
 import dynamic from "next/dynamic";
@@ -34,13 +38,10 @@ import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/te
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
-import { VotingSitesPanel } from "./voting-sites-panel";
-import type { VotingSitePin } from "./map-canvas";
 import { PillCluster, type ReaderPop } from "@/components/shell/pill-cluster";
 import { ReaderCard } from "@/components/shell/reader-card";
 import { ReaderPopup } from "@/components/shell/reader-popup";
 import { SelectionPill } from "@/components/shell/selection-pill";
-import { AskBox } from "@/components/ask/ask-box";
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
@@ -86,13 +87,23 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
-import type { CameraTarget, MapFocus } from "./map-canvas";
-import { MeetingPanel } from "./meeting-panel";
-import { DoorOverlay } from "./door-overlay";
+import { MapCanvas, type CameraTarget, type MapFocus, type VotingSitePin } from "./map-canvas";
 import type { ModalSubject } from "./popup/entity-modal";
 
-const MapCanvas = dynamic(
-  () => import("./map-canvas").then(m => m.MapCanvas),
+const AskBox = dynamic(
+  () => import("@/components/ask/ask-box").then((m) => m.AskBox),
+  { ssr: false },
+);
+const DoorOverlay = dynamic(
+  () => import("./door-overlay").then((m) => m.DoorOverlay),
+  { ssr: false },
+);
+const MeetingPanel = dynamic(
+  () => import("./meeting-panel").then((m) => m.MeetingPanel),
+  { ssr: false },
+);
+const VotingSitesPanel = dynamic(
+  () => import("./voting-sites-panel").then((m) => m.VotingSitesPanel),
   { ssr: false },
 );
 const OfficialModal = dynamic(
@@ -135,6 +146,7 @@ interface ViewTarget {
   lng: number;
 
   radiusKm?: number;
+  state?: string;
 }
 
 const EMPTY_COVERED_BODIES: CoveredBody[] = [];
@@ -155,6 +167,7 @@ function MapEntryInner() {
   const dispatch = useUiDispatch();
 
   const takeForeground = useCallback(() => {
+    discardReaderAgendaStart();
     dispatch({ type: "select/venue", key: null });
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
@@ -211,6 +224,7 @@ function MapEntryInner() {
   const setLarge = useCallback((next: LargeSurface | null) => {
     setLargeStack(next ? [next] : []);
   }, []);
+  useEffect(() => discardReaderAgendaStart, []);
   // The last district hits, so the popup can recover the full set.
   const [lastHits, setLastHits] = useState<DistrictHit[]>([]);
 
@@ -241,6 +255,7 @@ function MapEntryInner() {
             zip: location.zip,
             lat: location.lat,
             lng: location.lng,
+            state: location.postal?.state,
           }
         : null,
     [location],
@@ -259,69 +274,76 @@ function MapEntryInner() {
     const controller = new AbortController();
     const { key, zip, lat, lng, radiusKm } = view;
 
-    void (async () => {
-      try {
-        // Orientation only. A settled viewport has none; the server resolves the nearest ZCTA.
+    let status: number | null = null;
+    const publish = (payload: MeetingSearchResult & { nearZip?: string | null }) => {
+      if (controller.signal.aborted) return;
+      setResult({
+        ...withReaderNames(payload),
+        zip: zip ?? payload.nearZip ?? "the area shown",
+        viewKey: key,
+      });
+      setFailure(null);
+    };
+    void loadStateAndPlace({
+      state: () => zip && view.state ? loadReaderState(view.state, zip) : Promise.resolve(null),
+      place: async () => {
         const zipParam = zip ? `&zip=${zip}` : "";
-        // Always stated: the requested radius follows the viewport.
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
-        const response = await fetch(
+        const response = await fetchReaderResponse(
           `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
-          {
-            headers: { accept: "application/json" },
-            signal: controller.signal,
-          },
+          { headers: { accept: "application/json" }, signal: controller.signal },
         );
-        if (controller.signal.aborted) return;
         if (!response.ok) {
-          // The status separates 5xx, 4xx and 401, which need different next steps.
-          console.error(
-            `meetings fetch failed: ${response.status} for ${view.kind} view`,
-          );
-          setResult(null);
-          setFailure({ status: response.status });
-          return;
+          status = response.status;
+          throw new Error(`Meetings request failed: ${response.status}`);
         }
-
-        const payload: MeetingSearchResult & { nearZip?: string | null } =
-          await response.json();
-        if (controller.signal.aborted) return;
-        setResult({
-          ...withReaderNames(payload),
-          // The typed zip, the settled area's nearest zip, or a generic label.
-          zip: zip ?? payload.nearZip ?? "the area shown",
-          viewKey: key,
+        return readReaderJson<MeetingSearchResult & { nearZip?: string | null }>(response);
+      },
+      signal: controller.signal,
+      onState: state => {
+        primeStateMemberDirectories(state.memberDirectories, state.state);
+        primeMemberDirectories(state.directory, state.state);
+        const coverage = zip ? stateCoverageForZip(state, zip) : null;
+        if (!coverage) return;
+        const divisions = state.zipPlaces[zip!];
+        publish({
+          coverage, meetings: [], localPending: true, tier: "none", center: { lat, lng },
+          radiusKm: radiusKm ?? DEFAULT_RADIUS_KM,
+          governingOcdIds: divisions ? [...divisions.ids] : null, partialOcdIds: divisions ? [...divisions.partial] : null,
         });
-        setFailure(null);
-        // Sent by the fire-and-forget beacon, never on the response path.
-        {
-          const extra = payload as {
-            governingOcdIds?: readonly string[] | null;
-          };
-          logEvent(
-            "SEARCH",
-            Array.isArray(extra.governingOcdIds) ? [...extra.governingOcdIds] : [],
-            {
-              tier: payload.tier,
-              radiusKm: payload.radiusKm,
-              meetingCount: payload.meetings.length,
-            },
-            zip ?? payload.nearZip ?? null,
-          );
-        }
-      } catch {
-        if (controller.signal.aborted) return;
-        console.error(`meetings fetch got no answer for ${view.kind} view`);
-        setResult(null);
-        setFailure({ status: null });
-      }
-    })();
+      },
+      onPlace: (payload, state) => {
+        const entry = state && zip ? state.zipPlaces[zip] : undefined;
+        const complete = {
+          ...payload,
+          ...(entry ? { governingOcdIds: [...entry.ids], partialOcdIds: [...entry.partial] } : {}),
+          localPending: false,
+          coverage: mergeReaderCoverage(state && zip ? stateCoverageForZip(state, zip) : null, payload.coverage, payload.meetings.length),
+        };
+        // Both async reads are complete. Commit their answer before another
+        // map animation frame can postpone the reader's ready information.
+        flushSync(() => publish(complete));
+        logEvent(
+          "SEARCH",
+          Array.isArray(payload.governingOcdIds) ? [...payload.governingOcdIds] : [],
+          { tier: payload.tier, radiusKm: payload.radiusKm, meetingCount: payload.meetings.length },
+          zip ?? payload.nearZip ?? null,
+        );
+      },
+    }).catch(() => {
+      if (controller.signal.aborted) return;
+      console.error(`meetings fetch failed for ${view.kind} view`);
+      // State officials remain usable when the independent local read fails.
+      setResult(previous => previous?.viewKey === key ? previous : null);
+      setFailure({ status });
+    });
 
     return () => controller.abort();
   }, [view, retryNonce]);
 
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
+      discardReaderAgendaStart();
       dispatch({ type: "select/venue", key: null });
       // A new area clears every entity of the previous one.
       dispatch({ type: "select/district", ocdId: null, districtType: null });
@@ -449,6 +471,7 @@ function MapEntryInner() {
 
   /** Open a card from inside another one, keeping the way back. */
   const pushLarge = useCallback((next: LargeSurface) => {
+    beginReaderAgenda(next.kind === "entity" ? next.subject.agenda : null);
     setLargeStack((stack) =>
       [...stack, next].slice(-LARGE_STACK_LIMIT),
     );
@@ -457,6 +480,7 @@ function MapEntryInner() {
   /** The one-at-a-time rule: any large surface replaces every other. */
   const openLarge = useCallback(
     (next: LargeSurface) => {
+      beginReaderAgenda(next.kind === "entity" ? next.subject.agenda : null);
       captureEvent(
         next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
@@ -961,6 +985,7 @@ function MapEntryInner() {
 
   const onSelectVenue = useCallback(
     (venue: Venue) => {
+      discardReaderAgendaStart();
       // A pin opens its venue card and focuses the map on the room.
       setLarge(null);
       dispatch({ type: "list/open", open: false });
@@ -1122,6 +1147,7 @@ function MapEntryInner() {
   });
 
   const closeCard = useCallback(() => {
+    discardReaderAgendaStart();
     setLargeStack([]);
     dispatch({ type: "list/open", open: false });
     dispatch({ type: "door/close" });
@@ -1133,6 +1159,8 @@ function MapEntryInner() {
 
   const applySnapshot = useCallback(
     (snap: CardSnapshot) => {
+      const restored = snap.largeStack.at(-1);
+      beginReaderAgenda(restored?.kind === "entity" ? restored.subject.agenda : null);
       setLargeStack(snap.largeStack);
       dispatch({ type: "select/venue", key: snap.venueKey });
       if (snap.listOpen) {
@@ -1322,6 +1350,7 @@ function MapEntryInner() {
       onOpenPop={openPopup}
       onOpenGoverns={openGoverns}
       onOpenBallot={closePop}
+      prefetchReady={Boolean(shown && !shown.localPending && !refreshing)}
     />
   );
 
@@ -1342,6 +1371,7 @@ function MapEntryInner() {
             zip={shown.zip}
             listingCount={readerMeetingCount(shown.meetings, shown.listingIdentity)}
             coverage={shown.coverage}
+            localPending={shown.localPending}
             refreshing={refreshing}
             failedSourceOcdIds={
               shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
@@ -1644,7 +1674,7 @@ function MapEntryInner() {
               onRetry={() => setRetryNonce((n) => n + 1)}
             />
           )}
-          {location && !shown && !failure && (
+          {location && (!shown || shown.localPending) && !failure && (
             <p className="mw-loading-note" role="status">
               Loading meetings {view?.kind === "zip" ? `near ${location.zip}` : `in ${focusState.stateName ?? "this area"}`}…
             </p>
@@ -1955,7 +1985,7 @@ function meetingSubject(
   };
 }
 
-function bodySubject(
+export function bodySubject(
   body: CoveredBody,
   allMeetings: Meeting[] = [],
 ): ModalSubject {

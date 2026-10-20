@@ -1399,22 +1399,6 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.doesNotMatch(runner, /task\.id === "meetings"|ONLY\.has\("meetings"\)/);
 });
 
-test("publish-now alone publishes the reader edge: it finishes its minute checks, and an ordinary pass publishes nothing", async () => {
-  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const start = runner.indexOf("let readerEdge: ReaderEdgePublicationOutcome | null = null;");
-  const end = runner.indexOf("\nif (!PUBLISH_NOW && ONLY === null) {", start);
-  assert.ok(start > 0 && end > start);
-  for (const publishNow of [false, true]) {
-    const calls: string[] = [];
-    const periodic = { status: "PUBLISHED", families: "periodic" };
-    const context = { publishNowEdgeChecks: publishNow ? { stop: async () => { calls.push("stop"); return periodic; }, run: async () => { calls.push("run"); return periodic; } } : null };
-    const complete = runInNewContext(transpileModule(`async function complete() {\n${runner.slice(start, end)}\nreturn readerEdge;\n}\ncomplete;`, {
-      compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
-    }).outputText, context) as () => Promise<unknown>;
-    assert.equal(await complete(), publishNow ? periodic : null);
-    assert.deepEqual(calls, publishNow ? ["stop", "run", "stop"] : []);
-  }
-});
 
 test("Reader readback repair covers the observable registry independently of source cadence", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
@@ -1434,11 +1418,6 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderMeetings/);
-  assert.match(runner, /if \(publishNowEdgeChecks\) \{\n  await publishNowEdgeChecks\.stop\(\);\n  await publishNowEdgeChecks\.run\(\);/,
-    "publish-now completes its pointer sweep; an ordinary pass publishes nothing");
-  const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\)/,
-    "minute checks publish only what was promoted since the edge last published");
   assert.doesNotMatch(child, /readMeetingsProjection\(/, "the child composes nothing: it reads each body's own partition");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -2224,14 +2203,15 @@ test("scoped source passes repair only matching reader pointers, including narro
   assert.equal(selectedReaderRepairContracts(all, null), all);
 });
 
-test("state publishers and artifact children retain the measured state reservation across small runs", async () => {
+
+test("state publishers retain the measured state reservation across small runs", async () => {
   const mib = 1024 * 1024;
   const slots = routineProcessSlots({ availableBytes: () => (1024 + 768) * mib, headroomBytes: 768 * mib, parentPeakBytes: 0,
     peakBytes: () => mib, host: workerMemoryHost({ processes: () => [] }) });
   const first = await slots.acquire("ballot-contests:CA/assemble-ballot-package.mts");
   const second = await slots.acquire("registry-runtime:AZ/promote-registry-runtime.mts");
   let admitted = false;
-  const queued = slots.acquire("registry-runtime:AZ:reader-artifact/publish-state-authority.mts").then(release => {
+  const queued = slots.acquire("registry-runtime:TX/promote-registry-runtime.mts").then(release => {
     admitted = true; return release;
   });
   await new Promise<void>(resolve => setImmediate(resolve));

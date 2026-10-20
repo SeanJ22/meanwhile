@@ -18,6 +18,9 @@ import { codeOf } from "./read-code.ts";
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { electionSelection } from "./helpers/ballot-district-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { readerLocation } from "../lib/reader/location.ts";
+import { stateCoverageForZip, type ReaderStateResponse } from "../lib/reader/client.ts";
+import type { CoveredBody } from "../lib/registry/coverage.ts";
 
 const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
 
@@ -304,21 +307,20 @@ test("3.3: couldGovern is only set on a TYPED zip, never on a panned viewport", 
   const route = codeOf("app", "api", "meetings", "route.ts");
   assert.match(
     route,
-    /coverage\s*&&\s*zipRead\.value/,
+    /if\s*\(zipRead\.value\)\s*coverage\.bodies\s*=/,
     "a reader who panned has named no place, so there is no zip for a body to be partial about",
   );
 });
 
-test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", () => {
-
-  const ballot = codeOf("app", "ballot", "page.tsx");
-  const meetings = codeOf("app", "api", "meetings", "route.ts");
-  for (const [name, src] of [["ballot page", ballot], ["meetings route", meetings]] as const) {
-    assert.match(
-      src,
-      /divisionIdsForZipArea\(/,
-      `${name} must resolve a zip as an AREA — a ZCTA centroid is one point and may never resolve who governs a reader`,
-    );
+test("3.1: both zip-resolving surfaces use the whole ZIP area", async () => {
+  assert.match(codeOf("app", "ballot", "page.tsx"), /divisionIdsForZipArea\(/,
+    "the ballot resolves all qualified election districts touching the ZIP");
+  assert.match(codeOf("app", "api", "meetings", "route.ts"), /readerLocation\(lat, lng, zipRead\.value\)/,
+    "the meetings route passes the typed ZIP to the area index");
+  const location = await readerLocation(40.91, -74.51, "07866");
+  for (const place of ["rockaway_borough", "rockaway_township", "denville_township"]) {
+    assert.ok(location.divisionIds.includes(`ocd-division/country:us/state:nj/county:morris/place:${place}`),
+      `${place} touching 07866 must survive even when the centroid is elsewhere`);
   }
 });
 
@@ -344,26 +346,56 @@ test("3.1: the held election plans widen 85641 to both legislative districts and
   }
 });
 
-test("3.1: a body arriving only through the widening must be GOVERNING", () => {
+function widenedCoverage(): ReaderStateResponse {
+  const own = "ocd-division/country:us/state:nj/county:morris/place:rockaway_borough";
+  const partial = "ocd-division/country:us/state:nj/county:morris/place:denville_township";
+  const body = (id: string, ocdId: string, bodyClass: CoveredBody["bodyClass"],
+    coverageStatus: CoveredBody["coverageStatus"], lookedAt: boolean): CoveredBody => ({
+    bodyId: id, ocdId, name: id, divisionLabel: id, divisionType: "place", lsad: null,
+    schoolDependency: "UNCLASSIFIED", bodyClass, coverageStatus, homepageUrl: null,
+    agendaSourceRef: null, lookedAt, tier: "local",
+  });
+  return {
+    state: "NJ", version: "area-fixture", directory: null, boundaryUrl: "/boundaries.pmtiles",
+    zipPlaces: { "07866": { ids: [own, partial], partial: [partial], samples: 1 } },
+    coverage: {
+      state: "NO_SOURCE", bodies: [
+        body("own-government", own, "GOVERNING", "LIVE", true),
+        body("partial-government", partial, "GOVERNING", "NOT_ATTEMPTED", false),
+        body("partial-advisory", partial, "ADVISORY", "MANUAL", true),
+        body("elsewhere", "ocd-division/country:us/state:nj/place:elsewhere", "GOVERNING", "LIVE", true),
+      ],
+      seats: [], stateLegislatorAuthorities: [], divisions: [], unincorporated: false,
+      senators: [], statewideExecutives: [],
+      counts: { total: 4, withSource: 3, withoutSource: 1, lookedAt: 3, governing: { total: 3, withSource: 2 } },
+      seatCounts: { total: 0, named: 0 },
+    },
+  };
+}
 
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(
-    route,
-    /pointOwnDivisionIds\.has\(body\.ocdId\)\s*\|\|\s*body\.bodyClass === "GOVERNING"/,
-    "a body on a widened-in division must be GOVERNING; a body on the point's own division is untouched",
-  );
+test("3.1: ZIP widening retains every held body and marks its partial service", () => {
+  const coverage = stateCoverageForZip(widenedCoverage(), "07866");
+  assert.ok(coverage);
+  assert.deepEqual(coverage.bodies.map(body => body.bodyId), ["own-government", "partial-government", "partial-advisory"]);
+  assert.equal(coverage.bodies.find(body => body.bodyId === "own-government")?.couldGovern, false);
+  for (const id of ["partial-government", "partial-advisory"]) {
+    assert.equal(coverage.bodies.find(body => body.bodyId === id)?.couldGovern, true,
+      "any held body serving part of the ZIP needs the street-level uncertainty label");
+  }
 });
 
-test("3.1: filtering the body list recomputes the counts it invalidates", () => {
-
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(route, /total: kept\.length/, "total is recounted off the kept array");
-  assert.match(route, /governing: \{/, "and so is the governing pair the lead sentence reads");
+test("3.1: ZIP filtering recomputes rendered and governing body counts", () => {
+  const coverage = stateCoverageForZip(widenedCoverage(), "07866");
+  assert.ok(coverage);
+  assert.deepEqual(coverage.counts, {
+    total: 3, withSource: 2, withoutSource: 1, lookedAt: 2, governing: { total: 2, withSource: 1 },
+  });
 });
 
-test("3.1: the wired-status set is imported, never a second hand-typed copy", () => {
-
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(route, /import \{ WIRED_STATUSES \} from/, "imported from lib/registry/coverage");
-  assert.doesNotMatch(route, /\["WIRED", "PARTIAL"\]/, "and not retyped");
+test("3.1: server and client coverage share the wired-status set", () => {
+  for (const path of [["lib", "registry", "coverage.ts"], ["lib", "reader", "client.ts"]]) {
+    const source = codeOf(...path);
+    assert.match(source, /import \{ WIRED_STATUSES \} from/, "coverage composers import the shared status set");
+    assert.doesNotMatch(source, /\["WIRED", "PARTIAL"\]/, "the set is not retyped at its consumers");
+  }
 });

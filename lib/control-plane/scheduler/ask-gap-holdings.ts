@@ -10,7 +10,6 @@ import {
 } from "../../civic-data/runner.ts";
 import { heldBodyGaps, type HeldAskGap } from "../../ask/held-gaps.ts";
 import { readMeetingBodies, type StateMeetingBody } from "../../meetings/edge-serving.ts";
-import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
 import type { MeetingsSnapshot } from "../../meetings/snapshot.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted, outcomePointers, readDoorOutcomeProjection } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
@@ -25,7 +24,7 @@ export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
 function readHeldBodies(state?: string): AsyncGenerator<StateMeetingBody> {
-  return readMeetingBodies({ store: resolveReaderArtifactWriteStore(), window: "HELD", ...(state ? { states: [state] } : {}) });
+  return readMeetingBodies({ window: "HELD", ...(state ? { states: [state.toUpperCase()] } : {}) });
 }
 
 async function readHeldOutcomes(state?: string): Promise<{ readonly sittings: readonly PersistedSittingOutcomes[]; readonly unreadable: string | null }> {

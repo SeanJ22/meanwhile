@@ -18,6 +18,7 @@ import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from 
 import { acquireProcessSingleton } from "../lib/civic-data/process-singleton.ts";
 import type { DiscoveryRuntime } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import { runPageDoorChecks, recheckShutDoors } from "../lib/doors/page-check.ts";
+import { readPlacePackage } from "../lib/reader/place.ts";
 
 const root = process.env.WTP_PROJECT_ROOT ?? process.cwd();
 const url = controlPlaneUrlFromEnv();
@@ -73,10 +74,11 @@ try {
         return await censusStateCoverage((sql, parameters) => query.query(sql, parameters), state, async () => {
           if (!process.env.DATABASE_URL) return null;
           try {
-            const rows = await neon(process.env.DATABASE_URL).query(`SELECT count(DISTINCT meeting->>'ocdId')::int AS governments
-              FROM civic_data_reader_projections CROSS JOIN LATERAL jsonb_array_elements(coalesce(payload->'meetings', '[]'::jsonb)) meeting
-              WHERE record_class = 'MEETING' AND meeting->>'ocdId' LIKE $1`, [`${censusDivisionPrefix(state)}%`]);
-            return Number(rows[0]?.governments ?? 0);
+            const reader = neon(process.env.DATABASE_URL);
+            const held = await readPlacePackage({ state: state.toUpperCase(), divisionIds: [], allBodies: true, includeAgenda: false },
+              (sql, parameters) => reader.query(sql, [...parameters ?? []]));
+            return new Set(held.meetings.filter(meeting => meeting.ocdId?.startsWith(censusDivisionPrefix(state)))
+              .map(meeting => meeting.ocdId)).size;
           } catch { console.error(`CENSUS_METRICS ${state}: published meeting counts could not be read`); return null; }
         });
       } catch { console.error(`CENSUS_METRICS ${state}: coverage counts could not be read`); return null; }

@@ -33,8 +33,18 @@ export interface FederalDirectoryAcquisition {
 /** An acquisition as the candidate holds it: the bytes stay in the raw-capture vault. */
 export type FederalDirectoryCapture = Omit<FederalDirectoryAcquisition, "body"> & { readonly raw: RawCaptureRef };
 
+/** An explicit vacancy statement from the chamber, retained with its source. */
+export interface FederalVacancy {
+  readonly ocdId: string;
+  readonly sourceUrl: string;
+  readonly sourceOrg: string;
+  readonly collectedAt: string;
+  readonly reason: string;
+}
+
 export interface FederalDirectoryReadModel {
   readonly formatVersion: 1;
+  readonly vacancies?: readonly FederalVacancy[];
   readonly currentMembershipComplete?: boolean;
   readonly sourceSha: string;
   readonly roster: OfficeholderSet;
@@ -92,6 +102,7 @@ export function federalDirectoryForState(model: FederalDirectoryReadModel, state
   const committees = Object.fromEntries(Object.entries(model.directory.committees).filter(([id]) => seated.has(id)));
   return {
     ...model,
+    ...(model.vacancies ? { vacancies: model.vacancies.filter(row => new RegExp(`^ocd-division/country:us/(?:state|district|territory):${place.toLowerCase()}/`).test(row.ocdId)) } : {}),
     roster: { ...model.roster, officeholders, divisions: model.roster.divisions.filter(row => ids.has(row.officeholderId)),
       unmatched: model.roster.unmatched.filter(row => ids.has(row.officeholderId)) },
     directory: { ...model.directory, committees, byMember, counts: {

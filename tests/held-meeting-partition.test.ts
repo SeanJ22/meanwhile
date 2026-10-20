@@ -1,28 +1,18 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test, { type TestContext } from "node:test";
+import test from "node:test";
 
-import {
-  HELD_MEETING_PARTITIONS,
-  MEETING_PARTITION_CONTRACTS,
-  RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD,
-  heldMeetingPartitionFor,
-  meetingPartitionId,
-  type MeetingPartitionContract,
-} from "../lib/civic-data/meeting-partitions.ts";
+import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS, RETIRED_MEETING_PARTITIONS_WITHOUT_HOLD, heldMeetingPartitionFor, meetingPartitionId, type MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
-import { installFactReader } from "../lib/facts/db.ts";
-import { meetingCompositionOf } from "../lib/meetings/body-records.ts";
+
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { RETIRED_MEETING_ROUTES } from "../lib/registry/source-wiring.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
-import { freshEdge, publishPass } from "./helpers/meeting-body-fixtures.ts";
-import { meetingStateOf } from "../lib/meetings/body-records.ts";
-import { bodyPointerOf, coupledContracts, readEveryBody, readBody } from "./helpers/meeting-body-national.ts";
+
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const BEFORE_CUTOVER = "2026-09-20T12:00:00.000Z";
 const FIRST_SUCCESSOR_RUN = "2026-09-20T14:00:00.000Z";
@@ -30,18 +20,8 @@ const READ_AT = "2026-09-20T15:00:00.000Z";
 
 const [held] = HELD_MEETING_PARTITIONS;
 const successor = MEETING_PARTITION_CONTRACTS.find((partition) => partition.id === held?.successorId)!;
-const STATE = meetingStateOf(successor.bodyId);
 
-function rejectMeetingFactReads(t: TestContext): string[] {
-  const reads: string[] = [];
-  installFactReader(async text => {
-    reads.push(text);
-    assert.fail("published meeting composition must not query facts");
-  });
-  t.after(() => installFactReader(undefined));
-  return reads;
-}
-
+/** The retired identity as it was registered before the cutover — used only to seed its held pointer. */
 const retired = {
   ...successor,
   id: held!.id,
@@ -49,6 +29,7 @@ const retired = {
   meetingSource: held!.meetingSource,
 } as MeetingPartitionContract;
 
+// Any URL the meetings authority still admits; the retired host itself left the authority.
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 
 function row(source: string, suffix: string, startsAt: string, collectedAt: string): Meeting {
@@ -137,7 +118,7 @@ async function promoteSuccessor(store: MemoryRoutineDataStore): Promise<string> 
 }
 
 test("every retired route is a held partition whose successor is registered and whose own identity is not", () => {
-
+  // A route retired beside a successor already wired for the body has nothing to hold.
   const cutovers = RETIRED_MEETING_ROUTES.filter((route) => !route.successorAlreadyWired);
   assert.equal(HELD_MEETING_PARTITIONS.length, cutovers.length);
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
@@ -163,13 +144,11 @@ test("every retired route is a held partition whose successor is registered and 
   assert.equal(heldMeetingPartitionFor(MEETING_PARTITION_CONTRACTS.find((p) => !heldMeetingPartitionFor(p.id))!.id), null);
 });
 
-test("until its successor promotes, the retired route's held version is composed in its place and named", async (t) => {
+test("until its successor promotes, the retired route's held version is composed in its place and named", async () => {
   const store = new MemoryRoutineDataStore();
-  const heldVersion = await seedRetiredPointer(store);
+  await seedRetiredPointer(store);
 
-  const factReads = rejectMeetingFactReads(t);
-  const { read, edge } = await readEveryBody(store, READ_AT);
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
+  const { read } = await readEveryBody(store, READ_AT);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -177,8 +156,7 @@ test("until its successor promotes, the retired route's held version is composed
     [`${held!.meetingSource}:pcc:706`, `${held!.meetingSource}:pcc:707`],
     "the body's sittings stay on the page through the cutover",
   );
-  assert.deepEqual(await coupledContracts(store, STATE, successor.bodyId), [held!.id], "the body is coupled to the retired route's held version, named by its own identity");
-  assert.equal((await bodyPointerOf(edge, STATE, successor.bodyId))?.composition, meetingCompositionOf([{ contractId: held!.id, versionId: heldVersion }]));
+
   assert.equal(
     read.value.sources.some((source) => !source.ok && (source.unreachableOcdIds ?? []).includes(successor.ocdId!)),
     false,
@@ -186,14 +164,12 @@ test("until its successor promotes, the retired route's held version is composed
   );
 });
 
-test("the successor's first promotion supersedes the held version, which stays in the store untouched", async (t) => {
+test("the successor's first promotion supersedes the held version, which stays in the store untouched", async () => {
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
-  const successorVersion = await promoteSuccessor(store);
+  await promoteSuccessor(store);
 
-  const factReads = rejectMeetingFactReads(t);
-  const { read, edge } = await readEveryBody(store, READ_AT);
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
+  const { read } = await readEveryBody(store, READ_AT);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -205,70 +181,6 @@ test("the successor's first promotion supersedes the held version, which stays i
     ],
     "one authority for the body: the successor's rows only",
   );
-  assert.deepEqual(await coupledContracts(store, STATE, successor.bodyId), [successor.id]);
-  assert.equal((await bodyPointerOf(edge, STATE, successor.bodyId))?.composition, meetingCompositionOf([{ contractId: successor.id, versionId: successorVersion }]));
+
   assert.equal((await store.readPromotion("MEETING", held!.scope))?.versionId, heldVersion, "nothing moved the held pointer");
-});
-
-test("the held pointer's payload is read only while its successor has none; a superseded route costs no further reads", async (t) => {
-  class ScopeCountingStore extends MemoryRoutineDataStore {
-    readonly requested: string[] = [];
-    override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string) {
-      this.requested.push(scope);
-      return super.readPromotion<T>(recordClass, scope);
-    }
-    override async readPromotions<T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
-      this.requested.push(...scopes);
-      return super.readPromotions<T>(recordClass, scopes);
-    }
-  }
-
-  const store = new ScopeCountingStore();
-  const edge = freshEdge();
-  await seedRetiredPointer(store);
-  const factReads = rejectMeetingFactReads(t);
-  await publishPass(store, edge, READ_AT);
-  assert.equal(store.requested.includes(held!.scope), true, "in the window, the held version is what the page shows");
-
-  await promoteSuccessor(store);
-  store.requested.length = 0;
-  await publishPass(store, edge, READ_AT);
-  assert.ok(store.requested.includes(successor.scope), "the successor is what is read now");
-  assert.equal(store.requested.includes(held!.scope), false, "after the first promotion, nothing reads the retired pointer's payload again");
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
-});
-
-test("the body's record couples to the held version, then recomposes on the successor's first promotion", async (t) => {
-  const store = new MemoryRoutineDataStore();
-  const edge = freshEdge();
-  const heldVersion = await seedRetiredPointer(store);
-
-  const factReads = rejectMeetingFactReads(t);
-  const first = await publishPass(store, edge, READ_AT);
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
-  assert.equal(first.status, "PUBLISHED");
-  const servedHeld = await readBody(edge, store, READ_AT, successor.bodyId);
-  assert.equal(servedHeld.kind, "PROMOTED");
-  if (servedHeld.kind !== "PROMOTED") return;
-  assert.equal(servedHeld.value.meetings.length, 2);
-  assert.equal((await bodyPointerOf(edge, STATE, successor.bodyId))?.composition,
-    meetingCompositionOf([{ contractId: held!.id, versionId: heldVersion }]));
-
-  const again = await publishPass(store, edge, READ_AT);
-  assert.equal(again.status, "CURRENT", "an unchanged held coupling never recomposes");
-  assert.equal(again.plan.stats.composed, 0);
-
-  const successorVersion = await promoteSuccessor(store);
-  const second = await publishPass(store, edge, READ_AT);
-  assert.equal(second.plan.stats.composed, 1);
-  const servedSuccessor = await readBody(edge, store, READ_AT, successor.bodyId);
-  assert.equal(servedSuccessor.kind, "PROMOTED");
-  if (servedSuccessor.kind !== "PROMOTED") return;
-  assert.equal((await bodyPointerOf(edge, STATE, successor.bodyId))?.composition,
-    meetingCompositionOf([{ contractId: successor.id, versionId: successorVersion }]));
-  assert.equal(
-    servedSuccessor.value.meetings.every((meeting) => meeting.id.startsWith(`${successor.meetingSource}:`)),
-    true,
-  );
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });

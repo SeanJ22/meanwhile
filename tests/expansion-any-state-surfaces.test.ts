@@ -19,7 +19,7 @@ import { registrationGovernments, type ReadOnlyQuery, type Statement } from "../
 import { deployPreview } from "../lib/control-plane/deploy-preview.ts";
 import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
-import { meetingIndexRowScope, meetingStateOf } from "../lib/meetings/body-records.ts";
+import { meetingStateOf } from "../lib/meetings/body-scope.ts";
 import { stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
@@ -40,7 +40,6 @@ test("a DC or territory division lies in its own state code on every step of the
   /* The reader's serving state: a Puerto Rico body is filed under Puerto Rico's index, not the national one. */
   assert.equal(stateOfOcdId(PR), "pr");
   assert.equal(meetingStateOf(`${PR}#governing`), "PR");
-  assert.equal(meetingIndexRowScope(meetingStateOf(`${PR}/place:adjuntas`)), "US-PR:meetings-index");
 
   /* A crosswalk row on a municipio's division, reviewed like any other. */
   const bodyId = `${PR}#governing`;

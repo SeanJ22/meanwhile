@@ -8,7 +8,7 @@ import { tierSetVars } from "../shell/tier-style";
 
 /** The floating count, which opens the list overlay. */
 export function CountBadge() {
-  const { meetings, venues, searchFailed } = useShellData();
+  const { meetings, venues, searchFailed, result } = useShellData();
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   const ui = useUi();
   const dispatch = useUiDispatch();
@@ -38,7 +38,7 @@ export function CountBadge() {
       onClick={() => dispatch({ type: "list/toggle" })}
       style={{ ...tierSetVars(ui.tiers), ...(listingCount.unresolved ? { flexWrap: "wrap", whiteSpace: "normal", maxWidth: "100%" } : {}) }}
     >
-      <span className="cb-num">{meetings.length}</span>{" "}
+      <span className="cb-num">{result?.localPending ? "…" : meetings.length}</span>{" "}
       {listingCount.unit}
       {venues.length > 0 && (
         <>

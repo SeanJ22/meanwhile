@@ -1,3 +1,4 @@
+import { readRegistryRuntimeProjection, readFederalDirectoryProjection } from "../lib/reader/authority-reads.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -162,10 +163,11 @@ test("the public federal-money route serves the real place artifact on its first
   try {
     const store = new LocalFileArtifactStore(directory);
     await publish(store);
-    const written = await publishPointers(store, {
+    await publishPointers(store, {
       stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]), "federal-directory": stateFederalDirectoryArtifacts("reader-api:federal-directory") },
     }, NOW);
-    assert.ok(written.includes("registry-runtime/AR") && written.some(pointer => pointer.startsWith("federal-directory/")), JSON.stringify(written));
+    assert.equal((await readRegistryRuntimeProjection(["AR"])).kind, "PROMOTED", "the canonical registry fixture is available before the first request");
+    assert.equal((await readFederalDirectoryProjection(["AR"])).kind, "PROMOTED", "the canonical federal directory fixture is available before the first request");
     process.env.WTP_READER_EDGE_DIR = directory;
     process.env.DATABASE_URL = "postgresql://do-not-open.invalid/federal-money-test";
     const started = performance.now();

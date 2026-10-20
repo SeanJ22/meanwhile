@@ -13,6 +13,7 @@ import { processRegisteredManualCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export const SPECIAL_DISTRICT_BOUNDARY_DOOR_KIND = "special-district-boundaries-geojson";
@@ -101,6 +102,6 @@ export async function runSpecialDistrictBoundaryPublication(input: Parameters<ty
       code: "SPECIAL_DISTRICT_BOUNDARY_HELD", detail: sanitizedErrorDiagnostic(error), recovery: candidateId ? "PUBLISHER" : "WORKER" };
   }
   const latest = await input.repos.workItems.mustRead(input.workItemId);
-  if (!await input.repos.workItems.compareAndSet(input.workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now)) throw new Error("District boundary outcome changed during retention.");
+  if (!await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now)) throw new Error("District boundary outcome changed during retention.");
   return { workItemId: input.workItemId, outcome };
 }

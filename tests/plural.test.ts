@@ -508,8 +508,6 @@ import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
 import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
-import { installFactReader } from "../lib/facts/db.ts";
-import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 
@@ -541,7 +539,6 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
   const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
   for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
     sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
-  installFactReader(rosterFactReader(projection.payload.bodyRosters));
   const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
   return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
 }

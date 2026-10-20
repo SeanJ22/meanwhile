@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 // Static geography is file-backed; mutable civic facts resolve production pointers.
 const staticGeographyTrace = [
   "./data/states/*/geo/**/*.geojson",
-  "./data/derived/resolver-geometry.json",
+  // The resolver manifest is read by a literal path and traces itself.
   "./public/geo/*.geojson",
 ];
 const stateOfficeTrace = [
@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
   outputFileTracingIncludes: {
+    "/api/reader/state": ["./data/derived/zip-divisions/*.json", ...stateOfficeTrace],
     "/api/location/zip": ["./lib/geo/zcta-centroids.json", "./lib/geo/postal-zips.json"],
     // Bulk hunts compute ZIP shard names, which static tracing cannot discover.
     "/api/admin/bulk-hunts": ["./data/derived/zip-divisions/*.json"],
@@ -50,6 +51,7 @@ const nextConfig: NextConfig = {
     "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
     "/api/{ask/grounded,warm}": ["./public/geo/cd119.geojson", "./public/geo/county-us.geojson"],
     "/{ballot,about-area}": staticGeographyTrace,
+    "/about-area/compare": ["./data/derived/resolver-geometry.json"],
     "/api/meetings": [
       ...staticGeographyTrace,
       ...stateOfficeTrace,

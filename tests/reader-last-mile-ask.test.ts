@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { neonConfig } from "@neondatabase/serverless";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
@@ -530,12 +531,25 @@ test("one canonical Reader preload failure cannot reject or suppress an unrelate
   assert.equal(outcomes[1]?.status === "fulfilled" ? outcomes[1].value : null, "unrelated ballot authority remains readable");
 });
 
-test("unreadable state ballots are failed holdings, never empty civic populations", async () => {
+test("unreadable state ballots are failed holdings, never empty civic populations", async t => {
   const base = promotedFixtureBundle();
   const states = ["AZ", "NJ"];
-  const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !states.some(state => key === `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`))),
+  const keys = new Set(states.map(state => `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`));
+  const originalFetch = neonConfig.fetchFunction;
+  assert.ok(originalFetch, "the fixture canonical transport is installed");
+  t.after(() => { neonConfig.fetchFunction = originalFetch; });
+  let unreadableQueries = 0;
+  neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const request = JSON.parse(String(init?.body)) as { query?: string; params?: unknown[]; queries?: { query: string; params: unknown[] }[] };
+    if ((request.queries ?? [request]).some(statement => keys.has(String(statement.params?.[0])))) {
+      unreadableQueries++;
+      throw new Error("PLANTED_CANONICAL_BALLOT_READ_FAILURE");
+    }
+    return originalFetch(input, init);
+  };
+  const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !keys.has(key))),
     stateAuthorities: { families: base.stateAuthorities!.families, load: async (family, state) => {
-      if (family === "ballot-contests" && states.includes(state)) throw new Error("PLANTED_STATE_BALLOT_FAILURE");
+      if (family === "ballot-contests" && states.includes(state)) return null;
       return base.stateAuthorities!.load(family, state);
     } } };
   await withReaderAuthorityEdge(edge, async () => {
@@ -548,6 +562,7 @@ test("unreadable state ballots are failed holdings, never empty civic population
     assert.equal(body.denominators.ballotLoaderFailures, 1);
     assert.ok(body.gaps.some(gap => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
   });
+  assert.ok(unreadableQueries >= 2, "each unreadable ballot reached the canonical database transport");
 });
 
 test("the canonical body inventory remains available where no meeting has been acquired", async () => {

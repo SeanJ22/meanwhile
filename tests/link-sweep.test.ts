@@ -5,7 +5,7 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import { listDoors } from "@/lib/doors/registry.ts";
 import { memoryWebsitePacing } from "@/lib/control-plane/website-pacing.ts";
 import { MemoryRoutineDataStore } from "@/lib/civic-data/store.ts";
-import { collectOutboundLinks, readEdgeForSweep, recordSweep, summarizeSweep, sweepLinks, type SweepFetch } from "@/lib/doors/link-sweep.ts";
+import { collectOutboundLinks, readReaderForSweep, recordSweep, summarizeSweep, sweepLinks, type SweepFetch } from "@/lib/doors/link-sweep.ts";
 
 import { ACQUIRED_URL, HOUR, PIMA, T1, at, freshEdge, publishPass, readPartition } from "./helpers/meeting-body-fixtures.ts";
 
@@ -112,12 +112,10 @@ test("the sweep is kept beside door health, one record per surface, zero where n
   assert.equal(summarizeSweep(results).reduce((n, s) => n + s.links, 0), results.length);
 });
 
-test("the edge is read from the manifest, each state's index and each body's record", async () => {
-  const published = freshEdge();
-  assert.deepEqual(await collectOutboundLinks(readEdgeForSweep(published)), [], "nothing published, nothing to sweep");
+test("reader links come directly from current canonical source calendars", async () => {
   const store = new MemoryRoutineDataStore();
   await readPartition(store, PIMA, T1, ["a"]);
-  await publishPass(store, published, at(T1, HOUR));
-  const links = await collectOutboundLinks(readEdgeForSweep(published));
-  assert.deepEqual(links.map((l) => l.url), [ACQUIRED_URL]);
+  await publishPass(store, freshEdge(), at(T1, HOUR));
+  const links = await collectOutboundLinks(readReaderForSweep());
+  assert.deepEqual(links.map(link => link.url), [ACQUIRED_URL]);
 });

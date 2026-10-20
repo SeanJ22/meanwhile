@@ -18,11 +18,15 @@ export function useBodyOfficeLocations(bodies: readonly CoveredBody[], meetings:
   const [resolved, setResolved] = useState<{ key: string; locations: BodyOfficeLocation[] }>({ key: "", locations: [] });
   useEffect(() => {
     let active = true;
+    const requested = JSON.parse(key) as Omit<BodyOfficeLocation, "lat" | "lng">[];
+    if (requested.length === 0) return;
     void Promise.all(requested.map(async office => {
       const point = await pointFor(office.address);
       return point ? { ...office, ...point } : null;
     })).then(locations => { if (active) setResolved({ key, locations: locations.filter((value): value is BodyOfficeLocation => value !== null) }); });
     return () => { active = false; };
-  }, [key, requested]);
-  return resolved.key === key ? resolved.locations : [];
+  }, [key]);
+  return resolved.key === key ? resolved.locations : EMPTY;
 }
+
+const EMPTY: readonly BodyOfficeLocation[] = [];

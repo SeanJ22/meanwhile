@@ -50,7 +50,7 @@ export async function initializeLineKeeper(control: Sql, reader: Sql, at: string
     readDestinationDelta(reader,at,at,true),
     readTransferCounters(reader,at,true),
   ]);
-  const state = {...held?.value??emptyState(at),transferSample};
+  const state = {...held?.value??emptyState(at),transferSample,fixes:fixItems((await readFixConfig(control,at,held?.value.fixes,true)).value)};
   const retainedPosting=foldPosting(state.posting??[],posting,[],at),pendingVersions=new Set(retainedPosting.map(p=>p.versionId));
   const retainedTargets=[...new Map([...(state.targets??[]).filter(t=>pendingVersions.has(t.version)),...targets].map(t=>[t.recordKey,t])).values()];
   const next = { ...state, ...foldClocks({ ...state, doors: {}, sittings: {} }, doors.map(row=>({...row,value:{...row.value as object,firstSeenAt:state.doors[String(row.id)]?.firstSeenAt??(row.value as {updatedAt:string}).updatedAt}})), calendars),destinations:destinations??{},recordTargets,inventory:foldInventory(undefined,inventory),waitingIndex:foldWaiting({},waiting),posting:retainedPosting,targets:retainedTargets,seededAt: at };
@@ -85,7 +85,8 @@ export function workOwner(family: string): string {
   return /discovery|hunt|scout|acquir/i.test(family)?"hunters":"diggers";
 }
 function issue(key: string, where: string, says: string, owner: string, next: string, technical?: readonly string[]): Problem {
-  return { key, where, says, owner, next, ...(technical ? { technical } : {}) };
+  const place=/^([A-Z]{2}) · (.+)$/.exec(where);
+  return { key, where:place?`${place[1]} · ${readerFamily(place[2])}`:where, says, owner, next, ...(technical ? { technical } : {}) };
 }
 /** No finding closes fix work. Only a repair proven on the live site may do that. */
 export function composeHour(input: Awaited<ReturnType<typeof readHour>>, state: LineState, at: string,proofs:readonly PageProof[]=[]): LineHour {
@@ -107,7 +108,7 @@ export function composeHour(input: Awaited<ReturnType<typeof readHour>>, state: 
     'Repair the recorded blocker without changing spending limits; verify useful output and facts on the live page.',rows.slice(0,8).map(w=>`${w.id} · ${w.place}: ${w.reason.slice(0,240)}`)));
   const missing=posting.filter(p=>!p.liveAt&&Date.parse(at)-Date.parse(p.firstSeenAt)>90*60_000);
   for(const p of missing)add(issue(`meeting-stamp:${p.versionId}:${p.recordKey}`,'Meeting delivery checks',
-    `${p.recordKey} has no delivery stamp after 90 minutes. Delivery is unverified.`,
+    `${state.targets?.find(t=>t.version===p.versionId&&t.recordKey===p.recordKey)?.title||'A meeting change'} has no delivery stamp after 90 minutes. Delivery is unverified.`,
     'diggers','Repair the stamp writer and verify this exact change on the live page in the next hourly check.',[JSON.stringify({version:p.versionId,recordKey:p.recordKey})]));
   const raw = input.rawVital;
   const summary = input.heartbeat?.bytes as {hour?:string;readerBytes?:number;controlPlaneBytes?:number;byCaller?:{caller:string;bytes:number}[]} | undefined;
@@ -253,41 +254,54 @@ export function configGrowth(before:AdminConfig,after:AdminConfig,rounds:number|
   const fixBytes=bytes(after.fixList)-bytes(before.fixList),briefBytes=bytes(after.latestBrief)-bytes(before.latestBrief),totalBytes=bytes(after)-bytes(before);
   return {fixBytes,briefBytes,totalBytes,fourCallersBytesPerHour:rounds===null?null:Math.max(0,totalBytes)*4*rounds};
 }
-/** Only the existing repair and brief fields cross the wire. Unrelated settings never enter this process. */
-export async function readFixConfig(sql:Sql,at:string):Promise<{revision:number;bytes:number;fixBytes?:number;briefBytes?:number;value:AdminConfig}> {
-  const [row]=await query(sql,'fix-list',`SELECT revision,value->'fixList' AS fixes,value->'latestBrief' AS brief,
-    value->>'updatedAt' AS updated_at,octet_length(value::text) AS bytes,octet_length(coalesce(value->'fixList','null'::jsonb)::text) AS fix_bytes,octet_length(coalesce(value->'latestBrief','null'::jsonb)::text) AS brief_bytes FROM cp_admin_config WHERE id=$1`,[ADMIN_CONFIG_ID]);
+/** Retain our own repairs and read only changes from the existing split fix list. */
+export async function readFixConfig(sql:Sql,at:string,previous:readonly import('../fix-list.ts').FixItem[]=[],initialize=false):Promise<{revision:number;bytes:number;value:AdminConfig}> {
+  const [row]=await query(sql,'fix-list',`SELECT revision,value->'latestBrief' AS brief,
+    value->>'updatedAt' AS updated_at,octet_length(value::text) AS bytes FROM cp_admin_config WHERE id=$1`,[ADMIN_CONFIG_ID]);
   if(!row)throw Error('Admin settings are unreadable; findings have not been queued');
-  return {revision:Number(row.revision),bytes:Number(row.bytes),fixBytes:Number(row.fix_bytes),briefBytes:Number(row.brief_bytes),value:{...defaultAdminConfig(at),updatedAt:String(row.updated_at??at),
-    fixList:(row.fixes??[]) as AdminConfig['fixList'],latestBrief:row.brief as AdminConfig['latestBrief']??undefined}};
+  const changed=await query(sql,'fix-list-changes',`SELECT value FROM cp_admin_fix_list WHERE config_id=$1
+    AND value->>'addedBy'=$2 AND ($3::boolean OR updated_at >= $4::timestamptz)`,
+    [ADMIN_CONFIG_ID,LINE_KEEPER_BY,initialize,new Date(Date.parse(at)-3_600_000).toISOString()]);
+  const fixes=[...new Map([...previous,...changed.map(r=>r.value as import('../fix-list.ts').FixItem)].map(f=>[f.id,f])).values()];
+  return {revision:Number(row.revision),bytes:Number(row.bytes),value:{...defaultAdminConfig(at),updatedAt:String(row.updated_at??at),
+    fixList:fixes,latestBrief:row.brief as AdminConfig['latestBrief']??undefined}};
 }
 export function measuredConfigGrowth(before:Awaited<ReturnType<typeof readFixConfig>>,after:AdminConfig,hour:LineHour) {
-  const growth=configGrowth(before.value,after,hour.rounds.finished);
+  const growth=configGrowth(before.value,after,null);
   const callers=(hour.runnerTransferByCaller??hour.transfer?.byCaller??[]).filter(c=>c.caller.includes('cp_admin_config.read ')||c.caller.endsWith('\tcp_admin_config'));
   const observed=callers.length?Math.max(...callers.map(c=>c.bytes)):null;
-  return {...growth,fourCallersBytesPerHour:observed!==null&&before.bytes>0?Math.ceil(Math.max(0,growth.totalBytes)/before.bytes*observed*4):growth.fourCallersBytesPerHour};
+  return {...growth,fourCallersBytesPerHour:observed!==null&&before.bytes>0?Math.ceil(Math.max(0,growth.totalBytes)/before.bytes*observed*4):null};
 }
 function exactGrowth(before:Awaited<ReturnType<typeof readFixConfig>>,after:AdminConfig,hour:LineHour,measured:Record<string,unknown>){
  const growth=measuredConfigGrowth(before,after,hour),totalBytes=Number(measured.bytes)-before.bytes;
- return {...growth,totalBytes,fixBytes:Number(measured.fix_bytes)-(before.fixBytes??0),briefBytes:Number(measured.brief_bytes)-(before.briefBytes??0),
+ return {...growth,totalBytes,fixBytes:Number(measured.fix_growth),briefBytes:Number(measured.brief_growth),
   fourCallersBytesPerHour:growth.totalBytes>0&&growth.fourCallersBytesPerHour!==null?Math.ceil(growth.fourCallersBytesPerHour/growth.totalBytes*Math.max(0,totalBytes)):growth.fourCallersBytesPerHour};
 }
-/** Exact JSONB textual growth, evaluated by SELECT against the same revision. */
+/** Exact JSONB growth on the current schema: fix rows grow separately from the config. */
 export async function previewConfigGrowth(sql:Sql,before:Awaited<ReturnType<typeof readFixConfig>>,after:AdminConfig,hour:LineHour){
- const [row]=await query(sql,'preview-config-growth',`SELECT octet_length(proposed::text) bytes,octet_length((proposed->'fixList')::text) fix_bytes,
- octet_length((proposed->'latestBrief')::text) brief_bytes FROM (SELECT value||$1::jsonb AS proposed FROM cp_admin_config WHERE id=$2 AND revision=$3) proposed`,
- [JSON.stringify({fixList:after.fixList,latestBrief:after.latestBrief,updatedAt:hour.measuredAt}),ADMIN_CONFIG_ID,before.revision]);
+ const [row]=await query(sql,'preview-config-growth',`SELECT octet_length((value||$1::jsonb)::text) bytes,
+ octet_length(($1::jsonb->'latestBrief')::text)-octet_length(coalesce(value->'latestBrief','null'::jsonb)::text) brief_growth,
+ (SELECT coalesce(sum(octet_length(item::text)-coalesce(octet_length(held.value::text),0)),0)
+ FROM jsonb_array_elements($4::jsonb) item LEFT JOIN cp_admin_fix_list held ON held.config_id=$2 AND held.id=item->>'id') fix_growth
+ FROM cp_admin_config WHERE id=$2 AND revision=$3`,
+ [JSON.stringify({latestBrief:after.latestBrief,updatedAt:hour.measuredAt}),ADMIN_CONFIG_ID,before.revision,JSON.stringify(after.fixList??[])]);
  if(!row)throw Error('Admin settings moved during the read-only growth preview');return exactGrowth(before,after,hour,row);
 }
-async function writeFixes(sql: Sql, hour: LineHour): Promise<ReturnType<typeof configGrowth>> {
-  for (let attempt=0;attempt<4;attempt++) {
-    const held=await readFixConfig(sql,hour.measuredAt);
-    const config = withKeeperFixes(held.value,hour);
-    const saved = await query(sql,"save-fix-list",`UPDATE cp_admin_config SET value=value || $1::jsonb,revision=revision+1,updated_at=$2::timestamptz
-      WHERE id=$3 AND revision=$4 RETURNING revision,octet_length(value::text) bytes,octet_length((value->'fixList')::text) fix_bytes,octet_length((value->'latestBrief')::text) brief_bytes`,[JSON.stringify({fixList:config.fixList,latestBrief:config.latestBrief,updatedAt:hour.measuredAt}),hour.measuredAt,ADMIN_CONFIG_ID,held.revision]);
-    if(saved.length) return exactGrowth(held,config,hour,saved[0]);
+export async function writeFixes(sql:Sql,hour:LineHour,previous:readonly import('../fix-list.ts').FixItem[]=[]) {
+  for(let attempt=0;attempt<4;attempt++){
+    const held=await readFixConfig(sql,hour.measuredAt,previous),config=withKeeperFixes(held.value,hour);
+    const growth=await previewConfigGrowth(sql,held,config,hour);
+    const saved=await query(sql,'save-fix-list',`WITH saved AS (
+      UPDATE cp_admin_config SET value=value||$1::jsonb,revision=revision+1,updated_at=$2::timestamptz
+      WHERE id=$3 AND revision=$4 RETURNING id,revision), fixes AS (
+      INSERT INTO cp_admin_fix_list(config_id,id,updated_at,value)
+      SELECT saved.id,item->>'id',$2::timestamptz,item FROM saved CROSS JOIN jsonb_array_elements($5::jsonb) item
+      ON CONFLICT(config_id,id) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at
+      WHERE cp_admin_fix_list.value IS DISTINCT FROM excluded.value RETURNING id)
+      SELECT revision FROM saved`,[JSON.stringify({latestBrief:config.latestBrief,updatedAt:hour.measuredAt}),hour.measuredAt,ADMIN_CONFIG_ID,held.revision,JSON.stringify(config.fixList??[])]);
+    if(saved.length)return {growth,fixes:fixItems(config)};
   }
-  throw Error("Admin settings changed during every fix-list save");
+  throw Error('Admin settings changed during every fix-list save');
 }
 export async function runLineKeeper(control: Sql, reader: Sql, at: string, options: {readonly readOnly?:boolean; readonly initialState?:LineState;readonly measureCountry?:boolean;readonly checkPages?:boolean;readonly countryCache?:readonly import("./country.ts").CountryCache[]} = {}): Promise<{ state:LineState; hour:LineHour }> {
   if (options.initialState && !options.readOnly) throw Error("An injected checkpoint is only allowed for a read-only preview");
@@ -334,11 +348,12 @@ export async function runLineKeeper(control: Sql, reader: Sql, at: string, optio
     `${row.saved-row.live} promoted records from the last hour have no confirmed public delivery.`, 'River','Trace the unmatched records through their reader API and visible page; keep the repair open until the next check carries them.')]};
   if(country.length)hour={...hour,countryFreshness:{states:country.filter(s=>!s.error).length,n:country.filter(s=>!s.error).reduce((n,s)=>n+(s.freshness?.n??0),0),of:country.filter(s=>!s.error).reduce((n,s)=>n+(s.freshness?.of??0),0)}};
   if(country.some(s=>s.error))hour={...hour,problems:[...hour.problems,issue('country-scores','Readers have',`${country.filter(s=>s.error).length} states have an unavailable or incomplete country-table report.`,'River','Restore the published score inputs and verify the existing country table.',country.filter(s=>s.error).slice(0,8).map(s=>`${s.state}: ${s.error}`))]};
-  if(!options.readOnly) hour={...hour,configGrowth:await writeFixes(control,hour)};
-  else {const heldConfig=await readFixConfig(control,at).catch(()=>null);if(heldConfig)hour={...hour,configGrowth:await previewConfigGrowth(control,heldConfig,withKeeperFixes(heldConfig.value,hour),hour)};}
+  let retainedFixes=previous.fixes??[];
+  if(!options.readOnly){const saved=await writeFixes(control,hour,retainedFixes);retainedFixes=saved.fixes;hour={...hour,configGrowth:saved.growth};}
+  else {const heldConfig=await readFixConfig(control,at,retainedFixes).catch(()=>null);if(heldConfig){const config=withKeeperFixes(heldConfig.value,hour);retainedFixes=fixItems(config);hour={...hour,configGrowth:await previewConfigGrowth(control,heldConfig,config,hour)};}}
   hour={...hour,own:ownReading(baseline)};
   const compactHour={...hour,posting:undefined,waiting:undefined,facts:hour.facts?.map(({eligibleFacts:_eligibleFacts,...f})=>f)??null};
-  const state:LineState = {...base,transferSample:transferSince(previous.transferSample,input.transferCounters).sample,seededAt:hour.sources?.complete?base.seededAt:null,checkedAt:options.readOnly?at:new Date().toISOString(),hours:[...previous.hours.filter(h => h.from!==hour.from),compactHour].sort((a,b) => b.from.localeCompare(a.from)).slice(0,2)};
+  const state:LineState = {...base,fixes:retainedFixes,transferSample:transferSince(previous.transferSample,input.transferCounters).sample,seededAt:hour.sources?.complete?base.seededAt:null,checkedAt:options.readOnly?at:new Date().toISOString(),hours:[...previous.hours.filter(h => h.from!==hour.from),compactHour].sort((a,b) => b.from.localeCompare(a.from)).slice(0,2)};
   if(!options.readOnly) await saveState(control,state,held?.revision ?? null);
   return {state,hour};
 }

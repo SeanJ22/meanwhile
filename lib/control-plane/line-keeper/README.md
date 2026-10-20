@@ -35,8 +35,9 @@ Meetings outside the published shown window do not count as missing live pins.
 Missing evidence stays unknown and becomes owned fix work.
 
 Findings use `withFixAdded` in the existing fix list, and the existing daily brief.
-Only those two fields and their update time are patched into Admin settings,
-with a revision check. No spending limit, pause or alert setting is rewritten.
+Fix items use CP-01’s existing separate fix rows; only the brief and update time
+are patched into Admin settings, with a shared revision check. Hourly fix reads
+merge changed rows into the observer’s retained repair list. No spending limit, pause or alert setting is rewritten.
 The next independent observation must find the same state/kind/link carrying
 useful work and exact facts on the live page before an item closes. A meeting
 stamp repair additionally needs that exact version and record's stamp. Unresolved
@@ -48,8 +49,8 @@ with `--check-pages --today --out=<file>`; use `--initialize-clocks` for a separ
 one-time seed, or `--state=<prior-preview>` for an incremental check.
 `--country-changes --country-cache=<seed>` includes the existing country score.
 The preview reports every proposed fix with its owner, UTF-8 configuration growth,
-and the extra bytes four whole-record readers would transfer at their observed
-read rate. Historical replay uses hourly event evidence, not reconstructed past
+and the extra brief bytes four whole-record readers would transfer at their observed
+read rate. Fix rows add no bytes to those config reads. Historical replay uses hourly event evidence, not reconstructed past
 browser pages or today's source inventory relabeled as history.
 
 Results now reads the retained publication index, with exact approval/version

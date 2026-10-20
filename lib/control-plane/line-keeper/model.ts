@@ -46,6 +46,7 @@ export interface LineState {
   readonly destinations?:Readonly<Record<string,string>>;
   readonly recordTargets?:readonly import('./records.ts').RecordTarget[];
   readonly transferSample?:import('./transfer.ts').TransferSample;
+  readonly fixes?:readonly import('../fix-list.ts').FixItem[];
 }
 export function emptyState(at: string): LineState { return { version: 1, seededAt: null, checkedAt: at, doors: {}, sittings: {}, hours: [] }; }
 export function closedHour(at: string): { from: string; through: string } {

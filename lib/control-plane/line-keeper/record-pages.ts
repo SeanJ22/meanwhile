@@ -6,6 +6,7 @@ import { stateDivisionId } from '../admin-view/v6-national-geography.ts';
 import { bodyDisplayName } from '../../text/reader-names.ts';
 import { PUBLIC_SITE_ORIGIN } from '../../ops/origins.ts';
 import { formatDateLong } from '../../text/format-date.ts';
+import { allOfficialRows } from '../../officials/tier-grouping.ts';
 import { personIdentityKeys } from '../../officials/people-identity.ts';
 import type { Officeholder } from '../../officials/types.ts';
 import { readPublicPlace,observedDirectory } from './reader-page.ts';
@@ -45,7 +46,7 @@ function visibleValue(text:string,value:string|number|boolean):boolean{
 export async function openMeetingCard(page:Page,id:string):Promise<Locator>{
   await page.keyboard.press('Escape');
   const list=page.locator('button[data-stat="meetings"]');
-  if(!await list.isVisible())await page.getByRole('button',{name:'Open menu',exact:true}).click();
+  if(!await list.isVisible())await page.getByRole('button',{name:/^Open (?:menu|sidebar)$/}).click();
   await list.click();await page.getByRole('combobox',{name:'Group by',exact:true}).selectOption('none');
   const row=page.locator(`.al-overlay [data-meeting-row][data-meeting-id=${JSON.stringify(id)}]`);
   while(!await row.count()){
@@ -93,10 +94,10 @@ export async function observeRecord(page:Page,target:RecordTarget,at:string,held
     if(target.kind==='AGENDA_DOCUMENT'||target.kind==='MEETING_OUTCOME'){
       modal=await openMeetingCard(page,target.id);
     }else if(target.memberId){
-      const member=recordsWithIdentity(value.coverage,target.memberId)[0];
+      const member=value.coverage?allOfficialRows(value.coverage).find(row=>recordsWithIdentity(row.holder,target.memberId).length)?.holder:null;
       if(!member||typeof member.name!=='string')throw Error('The exact person is missing from this place’s reader API.');
-      const door=page.getByRole('button',{name:'Open the officials here list',exact:true});
-      if(!await door.isVisible())await page.getByRole('button',{name:'Open menu',exact:true}).click();
+      const door=page.locator('button[data-stat="officials"]');
+      if(!await door.isVisible())await page.getByRole('button',{name:/^Open (?:menu|sidebar)$/}).click();
       await door.click();const button=page.locator('.door-panel').getByRole('button',{name:`${member.name} →`,exact:true});
       if(await button.count()!==1)throw Error('The exact person’s public control is ambiguous or missing.');await button.click();
       modal=page.getByRole('dialog').last();
@@ -107,7 +108,7 @@ export async function observeRecord(page:Page,target:RecordTarget,at:string,held
     }else if(target.bodyId){
       const body=value.coverage?.bodies?.find((b:{bodyId:string})=>b.bodyId===target.bodyId);if(!body)throw Error('The exact body is missing from this place’s reader API.');
       const label=bodyDisplayName(body),door=page.getByRole('button',{name:'Open the bodies here list',exact:true});
-      if(!await door.isVisible())await page.getByRole('button',{name:'Open menu',exact:true}).click();await door.click();
+      if(!await door.isVisible())await page.getByRole('button',{name:/^Open (?:menu|sidebar)$/}).click();await door.click();
       await page.locator('.door-panel').locator(`button[title=${JSON.stringify(`More about ${label}`)}]`).click();modal=page.getByRole('dialog').last();
       if(target.kind==='REGISTRY_RUNTIME_BINDING')api=carries(body,target.expected);
     }else throw Error('The changed record has no connected person or body control on this public surface.');

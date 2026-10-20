@@ -16,19 +16,19 @@ export interface RecordTarget {
   readonly expected:readonly (string|number|boolean)[];readonly displayValues?:readonly (string|number|boolean)[];
 }
 /** Quiet-path inventory only. Hourly work uses RECORD_TARGET_SQL below. */
-export const RECORD_SAMPLE_SQL=`WITH heads AS MATERIALIZED (
+const RECORD_HEAD_SQL=`WITH heads AS MATERIALIZED (
  SELECT DISTINCT ON(p.record_class,coalesce(substring(p.scope from 'US-([A-Z]{2})'),substring(p.scope from '/state:([a-z]{2})'),'US'))
- c.id,c.record_class,c.scope,c.retrieved_at,p.promoted_at,c.candidate FROM civic_data_promotions p
- JOIN civic_data_candidates c ON c.id=p.current_version_id WHERE p.promoted_at >= $1::timestamptz AND p.promoted_at <= greatest($2::timestamptz,statement_timestamp())
+ p.current_version_id,p.record_class,p.scope,p.promoted_at FROM civic_data_promotions p
+ WHERE p.promoted_at >= $1::timestamptz AND p.promoted_at <= greatest($2::timestamptz,statement_timestamp())
  AND p.record_class NOT IN ('OPERATIONAL_REFERENCE','DOTGOV_REFERENCE','CENSUS_REFERENCE','CENSUS_GEOGRAPHY','PRL_ARCHIVE')
  ORDER BY p.record_class,coalesce(substring(p.scope from 'US-([A-Z]{2})'),substring(p.scope from '/state:([a-z]{2})'),'US'),p.promoted_at DESC)
- SELECT c.id version,c.record_class,c.scope,c.retrieved_at,c.promoted_at,d->>'key' record_key,
- resolved.before,resolved.after, coalesce(binding.division,meeting_binding.division) division, meeting_binding.body_id, vote_member.officeholder_id FROM heads c
+ SELECT c.id version,c.record_class,c.scope,c.retrieved_at,p.promoted_at,d->>'key' record_key,
+ resolved.before,resolved.after, coalesce(binding.division,meeting_binding.division) division, meeting_binding.body_id, vote_member.officeholder_id FROM heads p JOIN LATERAL (SELECT * FROM civic_data_candidates WHERE id=p.current_version_id OFFSET 0) c ON true
  CROSS JOIN LATERAL (SELECT reader_payload_node(c.candidate->'changeSet') changes) cs
  CROSS JOIN LATERAL (SELECT reader_payload_node(member.item) d FROM (SELECT item FROM reader_payload_members(coalesce(changes->'added','[]'::jsonb)) UNION ALL SELECT item FROM reader_payload_members(coalesce(changes->'changed','[]'::jsonb))) member CROSS JOIN LATERAL (SELECT reader_payload_node(member.item) delta) decoded
  WHERE (c.record_class<>'MEETING' OR delta->>'key' LIKE 'agenda-document:%')
  AND delta->>'key' NOT LIKE 'projection:%' AND delta->>'key' NOT LIKE '%checkpoint%' AND delta->>'key' NOT LIKE '%partition%' AND delta->>'key' NOT LIKE '%marker%' AND delta->>'key' NOT LIKE 'absence:%' AND jsonb_typeof(delta->'after')='object'
- ORDER BY CASE WHEN delta->>'key' LIKE 'officeholder:%' OR delta->>'key' LIKE 'body:%' OR delta->>'key' LIKE 'outcome:%' THEN 0 ELSE 1 END,delta->>'key' LIMIT 1) selected
+ LIMIT 1) selected
  CROSS JOIN LATERAL (WITH RECURSIVE decoded(side,node,path,step) AS (
  SELECT side,CASE WHEN reader_payload_node(d->side) ? '$civicCandidatePath' THEN c.candidate->'readModel' ELSE d->side END,
  coalesce(reader_payload_node(d->side)->'$civicCandidatePath','[]'::jsonb),0 FROM (VALUES ('before'),('after')) sides(side)
@@ -50,10 +50,21 @@ export const RECORD_SAMPLE_SQL=`WITH heads AS MATERIALIZED (
  THEN coalesce(reader_payload_node(c.candidate->'readModel')->'positions','[]'::jsonb) ELSE '[]'::jsonb END)
  WHERE reader_payload_node(item)->>'rollCallId'=coalesce(resolved.after->>'id',resolved.after->>'rollCallId') LIMIT 1) vote_member ON true`;
 
+/** The quiet directory check follows a person already held in its roster. A
+ * committee-only change must not be mistaken for a missing officeholder. */
+export const RECORD_SAMPLE_SQL=RECORD_HEAD_SQL.replace(
+ "SELECT reader_payload_node(c.candidate->'changeSet') changes",
+ `SELECT CASE WHEN c.record_class='FEDERAL_DIRECTORY' THEN
+ (SELECT jsonb_build_object('added',coalesce(jsonb_agg(jsonb_build_object(
+ 'key','officeholder:'||(reader_payload_node(item)->>'id'),'after',item)),'[]'::jsonb))
+ FROM (SELECT item FROM reader_payload_members(coalesce(reader_payload_node(
+ reader_payload_node(c.candidate->'readModel')->'roster')->'officeholders','[]'::jsonb)) LIMIT 1) people)
+ ELSE reader_payload_node(c.candidate->'changeSet') END changes`);
+
 /** Hourly reads retain every changed record. Sampling is only for the one-time
  * inventory of quiet public paths; it never discards another new record. */
-export const RECORD_TARGET_SQL=RECORD_SAMPLE_SQL
- .replace(RECORD_SAMPLE_SQL.slice(RECORD_SAMPLE_SQL.indexOf('SELECT DISTINCT ON'),RECORD_SAMPLE_SQL.indexOf(' c.id,c.record_class')), 'SELECT')
+export const RECORD_TARGET_SQL=RECORD_HEAD_SQL
+ .replace(RECORD_HEAD_SQL.slice(RECORD_HEAD_SQL.indexOf('SELECT DISTINCT ON'),RECORD_HEAD_SQL.indexOf(' p.current_version_id')), 'SELECT')
  .replace('LIMIT 1) selected',') selected');
 
 const ignored=/^(?:id|bodyId|ocdId|personId|memberId|officeholderId|officialPersonId|rollCallId|officialRollCallId|divisionId|recordClass|kind|type|state|sourceId|provenance|fieldSources|sourceProjectionEvidence|raw|rawHash|contentHash|generatedAt|retrievedAt|collectedAt|verifiedAt|checkedAt|routesWalked|extraction|extractionNote|nativeIds|titleSource|publicationObservations|publication|minutesDocument)$/;
@@ -74,7 +85,7 @@ export async function readRecordTargets(sql:Sql,from:string,through:string,sampl
     const kind=agenda?'AGENDA_DOCUMENT':recordClass;
     if(agenda){const versions=a.versions as Record<string,unknown>[]|undefined;a={...a,...versions?.at(-1)};}
     const facts=civicRecordFacts(recordClass as RoutineRecordClass,{key:recordKey,record:a}),before=civicRecordFacts(recordClass as RoutineRecordClass,{key:recordKey,record:r.before});
-    const publicFields=/DIRECTORY|LEGISLATOR$/.test(kind)?['name','officeTitle','phone','email','websiteUrl','contactFormUrl','partyLabel','termStart','termEnd','birthDate','photo','social']:null;
+    const publicFields=/DIRECTORY|LEGISLATOR$/.test(kind)?sample?['name']:['name','officeTitle','phone','email','websiteUrl','contactFormUrl','partyLabel','termStart','termEnd','birthDate','photo','social']:null;
     const select=(v:unknown,display=false)=>{
       const row=v as Record<string,unknown>|null;
       if(agenda)return row?{documentUrl:row.documentUrl,text:row.text}:null;

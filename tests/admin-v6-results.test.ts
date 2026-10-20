@@ -36,12 +36,12 @@ test("every mark a result carries is a mark the screen has words for", () => {
   assert.equal(sample.kind, null);
 });
 
-test("the results section is announced with the snapshot revision and the worker clock, and withdrawn without a snapshot", () => {
+test("the results section is announced with the snapshot revision and worker clock, independently of the whole snapshot", () => {
   const on = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: null, workerAgeBucket: 3 });
   assert.deepEqual(on.sections.results, { contract: "admin-v6/results@1", href: "/api/admin/v6/results", revision: "results:7:3" });
   assert.notEqual(adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 8, researchRevision: null, workerAgeBucket: 3 }).sections.results.revision, on.sections.results.revision);
   assert.notEqual(adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 7, researchRevision: null, workerAgeBucket: 4 }).sections.results.revision, on.sections.results.revision);
-  assert.equal(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: null, researchRevision: 9 }).sections.results, undefined, "an unread snapshot cannot claim a result list");
+  assert.equal(adminV6ReadCapabilities({ configRevision: 3, snapshotRevision: null, researchRevision: 9 }).sections.results.contract, "admin-v6/results@1", "the retained publication reader reports its own availability");
 });
 
 /* -------------------------------------------------------------------- SQL */

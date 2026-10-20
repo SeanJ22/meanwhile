@@ -77,7 +77,7 @@ async function observeMeeting(page:Page,target:MeetingTarget,zip:string,at:strin
     const tour=page.getByRole('button',{name:'Skip the tour',exact:true});
     if(await tour.isVisible())await tour.click();
     const list=page.getByRole('button',{name:'Open the bodies here list',exact:true});
-    if(!await list.isVisible())await page.getByRole('button',{name:'Open menu',exact:true}).click();
+    if(!await list.isVisible())await page.getByRole('button',{name:/^Open (?:menu|sidebar)$/}).click();
     await list.click();
     const label=bodyDisplayName({...body,name:body.name??null,divisionType:body.divisionType??null});
     await page.locator('.door-panel').locator(`button[title=${JSON.stringify(`More about ${label}`)}]`).click();

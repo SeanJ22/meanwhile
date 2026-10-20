@@ -47,8 +47,11 @@ export async function publishCountryScores(control:Sql,reader:Sql,from:string,th
   for(const {code:state} of US_STATES){
     const id=stateDivisionId(state);if(!id)continue;
     let capture=caches.get(state)?.capture??null,error:string|null=caches.get(state)?.error??null;
+    const missed=!options.initialize&&(error?.startsWith('The country inputs missed an hourly interval.')||
+      !!caches.get(state)&&Date.parse(caches.get(state)!.measuredAt)<Date.parse(from)-120_000);
+    if(missed)error='The country inputs missed an hourly interval. Reinitialize their retained source inputs.';
     let inputs:Record<string,string>|undefined;
-    if(options.initialize||affected.has(state)){
+    if(options.initialize||affected.has(state)&&!missed){
       error=null;
       try{
         const held=options.previewCache?caches.get(state)?.inputs:(await boundedQuery(control,{operation:'line-keeper.country-state-inputs',callClass:'POINT'},

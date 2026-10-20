@@ -8,7 +8,9 @@ import { refreshOwedOverlay } from "./owed-overlay-read.ts";
 import { readStateDistricts, zipDivisionIds } from "./v6-national-geography.ts";
 import { nationalScopeOf, v6NationalSection, type NationalDeps } from "./v6-national-read.ts";
 import { population } from "./v6-stuck-route.ts";
-import { readV6Sources } from "./v6-money-hunts-route.ts";
+import { expansionScopesOf } from "../expansion/scopes.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
+import type { OwnerSnapshot } from "../owner-surface.ts";
 import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
 import { neon } from "@neondatabase/serverless";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
@@ -39,14 +41,21 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
   const deps = options.deps ?? defaultNationalDeps;
   const opened = await openControlPlane();
   if (!opened.ok) return NextResponse.json({ state: "UNREAD", code: "CONTROL_PLANE_UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
-  const [sources, stuck] = await Promise.all([
-    readV6Sources(opened.repos, deps.now(), false),
-    population().then((read) => read?.rows ?? null, () => null),
+  const quick=async<T>(read:Promise<T>):Promise<T|null>=>{
+    let timer:ReturnType<typeof setTimeout>;
+    try{return await Promise.race([read.catch(()=>null),new Promise<null>(resolve=>{timer=setTimeout(()=>resolve(null),SCORE_BUDGET_MS);})]);}
+    finally{clearTimeout(timer!);}
+  };
+  const [config,snapshot,stuck,country]=await Promise.all([
+    quick(opened.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true})),
+    quick(opened.repos.ownerSnapshots.readNarrowed('current',{billingAttribution:true})),
+    quick(population()).then(read=>read?.rows??null),
+    query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(neon(controlPlaneUrlFromEnv()!))):null,
   ]);
-  const country=query.scope.kind==='country' && !options.deps && controlPlaneUrlFromEnv()
-    ? await readCountryScores(neon(controlPlaneUrlFromEnv()!)).catch(()=>null):null;
+  const scopes=expansionScopesOf(config?.value??null);
+  const attribution=(snapshot?.value as Pick<OwnerSnapshot,'billingAttribution'>|undefined)?.billingAttribution;
   const out = await v6NationalSection({ scopeKey: query.scopeKey, scope: query.scope,
-    sources: { hunts: { scopes: sources.scopes, malformedScopes: sources.malformedScopes, attribution: sources.attribution }, stuck }, deps,
+    sources: { hunts: { scopes:config?scopes.scopes:null, malformedScopes:scopes.malformed, attribution }, stuck }, deps,
     ...(!options.deps && query.scope.kind==='country'?{publishedScores:new Map((country??[]).map(s=>[`st:${s.state}`,s.score]))}:{}) });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
   const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);

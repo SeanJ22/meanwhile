@@ -41,13 +41,14 @@ export function inventoryProblems(inventory:Inventory|undefined,links:readonly L
     if(!job.active||job.due&&job.due>at)continue;
     if(job.due===null||!job.lastRun||Date.parse(at)-Date.parse(job.due!)>3_600_000){const key=`${job.state}:${job.kind}`;groups.set(key,[...groups.get(key)??[],job]);}
   }
-  const problems:Problem[]=[...groups].map(([key,jobs])=>({key:`job-clock:${key}`,where:`${jobs[0].state} · ${jobs[0].kind}`,
+  const problems:Problem[]=[...groups].map(([key,jobs])=>({key:`job-clock:${key}`,where:`${jobs[0].state} · ${jobs[0].kind.toLowerCase().replaceAll('_',' ')}`,
     says:`${jobs.length} active scheduled jobs are overdue or have no clock; ${jobs.filter(j=>j.opened===0).length} have never been dispatched.`,owner:'the runner',
     next:'Restore dispatch and useful output for these jobs, then verify the facts on the live page.',technical:jobs.slice(0,8).map(j=>`${j.id}: ${j.subject}; due ${j.due??'not scheduled'}; last worked ${j.lastRun??'never'}`)}));
   for(const role of WORKER_ROLES){
+    const label=role.toLowerCase().replaceAll('_',' ');
     const last=inventory.workers[role],waiting=links.some(l=>l.link==='Worker'&&l.kind===role&&l.incoming>0&&l.outgoing===0);
     if(!last||waiting&&Date.parse(at)-Date.parse(last)>3_600_000)problems.push({key:`worker-clock:${role}`,where:'Workers',
-      says:last?`${role} has work arriving but has not run within the last hour.`:`The registered ${role} worker has never recorded a run.`,
+      says:last?`The ${label} worker has work arriving but has not run within the last hour.`:`The registered ${label} worker has never recorded a run.`,
       owner:['SCOUT','ACQUIRER','DISCOVERY_SEARCH'].includes(role)?'hunters':role==='DETECTIVE'?'diggers':['ENGINEERING','RELEASE_ORCHESTRATOR'].includes(role)?'River':'the runner',next:'Connect this worker to its work and verify useful output through to the live page.'});
   }
   return problems;

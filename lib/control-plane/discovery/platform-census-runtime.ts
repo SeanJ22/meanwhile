@@ -27,6 +27,22 @@ import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hint
 import { platformFetch } from "../../doors/platform-http.ts";
 import { platformCensusWatchdog } from "./platform-census-watchdog.ts";
 
+/** Targeted reads of CP-01's per-entry store, shared with the schema integration check. */
+export const PLATFORM_CENSUS_NOTES_SQL = {
+  version: `SELECT max(updated_at)::text AS updated,count(*)::int AS count FROM cp_field_manual_entries
+    WHERE value->>'kind'='MEETINGS_TENANT_LEAD' AND value->>'source'<>'platform-tenant'`,
+  retry: `SELECT id,value #>> '{payload,jurisdictionId}' AS subject FROM cp_field_manual_entries
+    WHERE value->>'source'='platform-government' AND value->>'kind'='PLATFORM_CENSUS_CHECK' AND id>$1
+      AND value #>> '{payload,nextCheck}' <= $2
+      AND value #>> '{payload,jurisdictionId}' IS NOT NULL ORDER BY id LIMIT 1`,
+  leads: `SELECT id,value->>'url' AS url,value->>'title' AS name,value->'platforms'->>0 AS platform,
+    value->'states'->>0 AS state,value->>'source' AS source FROM cp_field_manual_entries WHERE id>$1
+      AND value->>'kind'='MEETINGS_TENANT_LEAD' AND value->>'source'<>'platform-tenant'
+      AND value->>'url' IS NOT NULL ORDER BY id LIMIT 1`,
+  government: `SELECT value FROM cp_field_manual_entries WHERE (value #>> '{payload,jurisdictionId}'=$1 OR value #>> '{payload,subjectId}'=$1)
+    AND value->>'kind' IN ('SCOUT_DISCOVERY','ROUTE','GOVERNMENT_WEBSITE','NCES_WEBSITE','PLATFORM_CENSUS_DOMAIN')`,
+} as const;
+
 /** The runner child admits one government or one directory page per worker and retains only their inventory cursors. */
 export async function runNationalPlatformCensus() {
   const root = process.env.WTP_PROJECT_ROOT ?? process.cwd();
@@ -74,8 +90,7 @@ export async function runNationalPlatformCensus() {
     const dotgov = await readPlatformDirectory({ name: "CISA government domains", url: DOTGOV_CENSUS_URL, repos, runtime, vault,
       validate: body => { for (const _tenant of dotgovPlatformTenants(body, "validation")) void _tenant; } });
     const reviewer = platformReviewer(root);
-    const [leads] = await controlQuery(`SELECT max(updated_at)::text AS updated,count(*)::int AS count FROM cp_field_manual
-      WHERE value->>'kind'='MEETINGS_TENANT_LEAD' AND value->>'source'<>'platform-tenant'`, []);
+    const [leads] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.version, []);
     const version = createHash("sha256").update(`${catalog?.version ?? "unavailable"}|${dotgov?.version ?? "unavailable"}|${heldPlatformDirectoryVersion(root)}|${JSON.stringify(leads)}|${reviewer}`).digest("hex");
     let portableMethods: Promise<readonly FieldManualEntry[]> | undefined;
     const methods = () => portableMethods ??= repos.fieldManual.select({ everywhere: true, recordClass: "meetings", kinds: [RECIPE_KIND, "PLATFORM_FINGERPRINT"] }).then(read => {
@@ -90,10 +105,7 @@ export async function runNationalPlatformCensus() {
       retryGovernments: async function* () {
         let after = "";
         for (;;) {
-          const [row] = await controlQuery(`SELECT id,value #>> '{payload,jurisdictionId}' AS subject FROM cp_field_manual
-            WHERE value->>'source'='platform-government' AND value->>'kind'='PLATFORM_CENSUS_CHECK' AND id>$1
-              AND value #>> '{payload,nextCheck}' <= $2
-              AND value #>> '{payload,jurisdictionId}' IS NOT NULL ORDER BY id LIMIT 1`, [after, now()]);
+          const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.retry, [after, now()]);
           if (!row) return;
           after = String(row.id);
           yield* ownerPlatformGovernments(query, [String(row.subject)]);
@@ -105,10 +117,7 @@ export async function runNationalPlatformCensus() {
         const savedLeads = async function* () {
           let after = "";
           for (;;) {
-            const [row] = await controlQuery(`SELECT id,value->>'url' AS url,value->>'title' AS name,value->'platforms'->>0 AS platform,
-              value->'states'->>0 AS state,value->>'source' AS source FROM cp_field_manual WHERE id>$1
-                AND value->>'kind'='MEETINGS_TENANT_LEAD' AND value->>'source'<>'platform-tenant'
-                AND value->>'url' IS NOT NULL ORDER BY id LIMIT 1`, [after]);
+            const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.leads, [after]);
             if (!row) return; after = String(row.id);
             const state = String(row.state ?? "").toUpperCase();
             yield { platform: String(row.platform ?? "platform"), url: String(row.url), name: String(row.name), state: /^[A-Z]{2}$/.test(state) ? state : null, source: String(row.source) };
@@ -125,8 +134,7 @@ export async function runNationalPlatformCensus() {
         sizeReaders.set(page, size);
         const need = platformRegistrationNeed(page)!;
         const [shared, local, priorAttempts] = await Promise.all([
-          methods(), controlQuery(`SELECT value FROM cp_field_manual WHERE (value #>> '{payload,jurisdictionId}'=$1 OR value #>> '{payload,subjectId}'=$1)
-            AND value->>'kind' IN ('SCOUT_DISCOVERY','ROUTE','GOVERNMENT_WEBSITE','NCES_WEBSITE','PLATFORM_CENSUS_DOMAIN')`, [need.jurisdictionId]),
+          methods(), controlQuery(PLATFORM_CENSUS_NOTES_SQL.government, [need.jurisdictionId]),
           repos.discoveryAttempts.readRecent(need.jurisdictionId, 1),
         ]);
         const entries = [...new Map([...shared, ...local.map(row => row.value as FieldManualEntry)].map(entry => [entry.id, entry])).values()];

@@ -56,7 +56,7 @@
     }
   ],
   "productionReads": {
-    "totalMeteredResponseBytes": 14115522,
+    "totalMeteredResponseBytes": 14129679,
     "perResponseLogs": [
       {
         "file": "mp01-all-platforms-readonly.json.reads.jsonl",
@@ -141,6 +141,20 @@
         "requests": 1196,
         "controlPlaneBytes": 119269,
         "readerBytes": 271030
+      },
+      {
+        "file": "mp01-return-schema.reads.jsonl",
+        "bytes": 12408,
+        "requests": 3,
+        "controlPlaneBytes": 0,
+        "readerBytes": 12408
+      },
+      {
+        "file": "mp01-cp-schema.reads.jsonl",
+        "bytes": 1749,
+        "requests": 4,
+        "controlPlaneBytes": 1749,
+        "readerBytes": 0
       }
     ],
     "otherMeteredReports": [
@@ -528,5 +542,41 @@
     "coverage": "NOT_MEASURED means no result in this bounded check, never proof of no publisher or no meetings. All 50 states, DC and five territories remain in standing inventory work.",
     "memory": "Per-row acquisition peak is the shared four-job measurement process while that row was active. Local publication replay peak includes PGlite and is not a production worker reservation."
   },
-  "statePlatformReport": "mp-01-state-platform.csv"
+  "statePlatformReport": "mp-01-state-platform.csv",
+  "testedRiverBase": "a258e6881136df4a8e2ec00fc8f71666739ecb30",
+  "returnValidation": {
+    "focusedTestsPassed": 42,
+    "schemaReadResponseBytes": 12408,
+    "localGateResults": {
+      "lint": "PASS",
+      "tsc": "PASS",
+      "assert:browser": "PASS",
+      "test": "PASS (8,772 passed, 0 failed, 2 skipped; 8,774 registered)",
+      "db:gate": "PASS",
+      "build": "PASS",
+      "test:bundle": "PASS (16/16)",
+      "build:standalone": "PASS"
+    },
+    "cp01SchemaQueries": {
+      "passed": 4,
+      "productionResponseBytes": 1749,
+      "legacyTableRequired": false
+    },
+    "unchangedFullSuiteRetry": {
+      "tests": 8773,
+      "passed": 8768,
+      "failed": 0,
+      "skipped": 5
+    },
+    "finalGateSummary": {
+      "passed": 8,
+      "total": 8,
+      "testsRegistered": 8774,
+      "testsPassed": 8772,
+      "testsFailed": 0,
+      "testsSkipped": 2,
+      "votingSitesTraceFiles": 429
+    },
+    "earlierGateFailure": "One earlier run had a native V8 WebAssembly allocation abort; unchanged isolated file passed 9/9 and unchanged full-suite retry passed 8,768 with zero failures and five skipped. The final full gates passed after the CP-01 query correction."
+  }
 }

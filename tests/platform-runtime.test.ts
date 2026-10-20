@@ -10,6 +10,29 @@ import { readPlatformDirectory } from "../lib/control-plane/discovery/platform-d
 import { readPlatformOrders, orderedPlatformGovernments } from "../lib/control-plane/discovery/platform-orders.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { platformRequestPacer } from "../lib/control-plane/discovery/platform-request-pacing.ts";
+import { PLATFORM_CENSUS_NOTES_SQL } from "../lib/control-plane/discovery/platform-census-runtime.ts";
+
+test("census leads, retries and government notes read CP-01's per-entry store without a legacy relation", async () => {
+  const pg = new PGlite();
+  try {
+    await pg.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,updated_at timestamptz,value jsonb)");
+    const put = (id: string, value: unknown) => pg.query("INSERT INTO cp_field_manual_entries VALUES($1,'2026-10-20T12:00:00Z',$2)", [id, JSON.stringify(value)]);
+    await put("lead", { source: "hunter", kind: "MEETINGS_TENANT_LEAD", title: "Published calendar", url: "https://example.legistar.com/", platforms: ["legistar"], states: ["ny"] });
+    await put("own-lead", { source: "platform-tenant", kind: "MEETINGS_TENANT_LEAD", url: "https://other.legistar.com/" });
+    await put("retry", { source: "platform-government", kind: "PLATFORM_CENSUS_CHECK", payload: { jurisdictionId: "ny:city:example", nextCheck: "2026-10-20T11:00:00Z" } });
+    await put("future", { source: "platform-government", kind: "PLATFORM_CENSUS_CHECK", payload: { jurisdictionId: "ny:city:future", nextCheck: "2026-10-21T11:00:00Z" } });
+    await put("note", { kind: "ROUTE", payload: { subjectId: "ny:city:example" } });
+    await put("foreign-note", { kind: "ROUTE", payload: { subjectId: "ny:city:elsewhere" } });
+    const version = await pg.query<{ count: number }>(PLATFORM_CENSUS_NOTES_SQL.version);
+    assert.equal(version.rows[0].count, 1, "only another producer's platform leads invalidate the directory cursor");
+    const leads = await pg.query<{ id: string; url: string }>(PLATFORM_CENSUS_NOTES_SQL.leads, [""]);
+    assert.deepEqual(leads.rows.map(row => row.id), ["lead"]);
+    const due = await pg.query<{ subject: string }>(PLATFORM_CENSUS_NOTES_SQL.retry, ["", "2026-10-20T12:00:00Z"]);
+    assert.deepEqual(due.rows.map(row => row.subject), ["ny:city:example"]);
+    const notes = await pg.query<{ value: { payload: { subjectId: string } } }>(PLATFORM_CENSUS_NOTES_SQL.government, ["ny:city:example"]);
+    assert.deepEqual(notes.rows.map(row => row.value.payload.subjectId), ["ny:city:example"]);
+  } finally { await pg.close(); }
+});
 
 test("Admin's last pause applies without a config row; cancelled dispatches and closed leads never choose focus", async () => {
   const pg = new PGlite();

@@ -7,6 +7,7 @@ import { neon } from "@neondatabase/serverless";
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
+import { REPLAY_WRAPPER_PARENT_PEAK_MIB } from "./rh01-workload.mts";
 
 enableProductionReadAccounting(process.env.WTP_RH01_PHASE ?? "held-worker-preparation");
 
@@ -93,9 +94,13 @@ if (seedRoot) {
       role, producerResultId: producer.id, now: now() })).id;
   } else if (role !== "PARSER") throw Error("RH01 held deterministic replay supports only ACQUIRER, PARSER and VALIDATOR");
   process.env.WTP_RH01_HELD_VAULT_DIRECTORY = join(root, "vault");
-  const { runLeaseWorkerProcesses } = await code("lib/control-plane/workers/process-pool.ts");
+  const [{ runLeaseWorkerProcesses }, { workerProcessSlots }] = await Promise.all([
+    code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/workers/worker-slots.ts"),
+  ]);
+  const slots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+    process.env.WTP_RH01_PHASE === "before" ? {} : { parentPeakBytes: REPLAY_WRAPPER_PARENT_PEAK_MIB * 1024 * 1024 });
   const reports: DispatchResult[] = [];
-  await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", config: { root: codeRoot, fileStoreRoot: root, postgres: false,
+  await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", slots, config: { root: codeRoot, fileStoreRoot: root, postgres: false,
     taskIds: [taskId], modelEnabled: false, searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 1,
     transportFor: () => async () => { throw Error("RH01 paid model call is forbidden"); }, onDispatched: (report: DispatchResult) => { reports.push(report); } });
   const report = reports[0], committed = report?.attemptId && report.outcome === "WORKED"

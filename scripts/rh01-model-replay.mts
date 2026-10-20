@@ -6,6 +6,7 @@ import type { DispatchResult } from "../lib/control-plane/scheduler/dispatch.ts"
 import { fingerprint } from "../lib/control-plane/ids.ts";
 import { diagnosticModelClient } from "./rh01-model-client.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
+import { REPLAY_WRAPPER_PARENT_PEAK_MIB } from "./rh01-workload.mts";
 
 process.env.WTP_VITAL_SIGNS_REPORT = "1";
 if (process.env.WTP_PRODUCTION_DATABASE_URL_READONLY) process.env.DATABASE_URL = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
@@ -62,9 +63,13 @@ if (process.argv.includes("--prepare")) {
   const preloads = [join(harnessRoot, "scripts/rh01-loader.mjs"), join(harnessRoot, "scripts/rh01-model-preload.mjs")];
   for (const name of Object.keys(process.env)) if (/ANTHROPIC|OPENAI|EXA|BRAVE|BLOBS|NETLIFY.*TOKEN/.test(name)) delete process.env[name];
   process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS ?? ""} ${preloads.map(file => `--import=${file}`).join(" ")}`;
-  const { runLeaseWorkerProcesses } = await code("lib/control-plane/workers/process-pool.ts");
+  const [{ runLeaseWorkerProcesses }, { workerProcessSlots }] = await Promise.all([
+    code("lib/control-plane/workers/process-pool.ts"), code("lib/control-plane/workers/worker-slots.ts"),
+  ]);
+  const slots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+    phase === "before" ? {} : { parentPeakBytes: REPLAY_WRAPPER_PARENT_PEAK_MIB * 1024 * 1024 });
   const reports: DispatchResult[] = [];
-  await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", config: { root: codeRoot, fileStoreRoot: root, postgres: false,
+  await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/lease-worker.ts", slots, config: { root: codeRoot, fileStoreRoot: root, postgres: false,
     taskIds: [manifest.tasks[role]], modelEnabled: true, searchEnabled: false, ceilingUsd: role === "SCOUT" ? 2.49 : 0.01, fundedSubjects: [] },
     capacity: () => 1, transportFor: () => diagnosticModelClient(),
     onDispatched: (report: DispatchResult) => { reports.push(report); } });

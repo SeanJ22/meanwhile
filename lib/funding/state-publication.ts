@@ -270,8 +270,10 @@ async function main(){
   const state=process.argv.find(arg=>arg.startsWith("--state="))?.slice(8);
   if(!state || process.argv.length!==3)throw new Error("Campaign money requires one state");
   campaignFinanceSource(state);prepareProductionCivicDataWrite();
-  const {createPgRepositories}=await import("../control-plane/repository/pg-store.ts");
-  const repos=await createPgRepositories(process.env.DATABASE_URL!,new Date().toISOString(),{skipBootstrap:true});
+  const {createPgRepositories,controlPlaneUrlFromEnv}=await import("../control-plane/repository/pg-store.ts");
+  const control=controlPlaneUrlFromEnv();
+  if(!control)throw new Error("Campaign source doors require the configured control-plane database");
+  const repos=await createPgRepositories(control,new Date().toISOString(),{skipBootstrap:true});
   const database=new URL(process.env.DATABASE_URL!);
   const cacheKey=createHash("sha256").update(database.hostname.replace("-pooler","")+database.pathname).digest("hex").slice(0,24);
   const facts=readerFactDb(),result=await refreshCampaignMoneyState({state,query:facts.query,facts,vault:rawCaptureVault(),

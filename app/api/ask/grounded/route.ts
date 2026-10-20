@@ -1,6 +1,5 @@
 import { stateCampaignEvidence, stateCampaignQuestion, resolveStateCampaignRecordsAsk } from "@/lib/ask/state-campaign";
 import { requestedStateMoneySubjects, selectStateMoneyNames } from "@/lib/ask/state-money-subjects";
-import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryRuntimeProjection, readStateRegistryAuthority } from "@/lib/reader/authority-reads";
@@ -96,9 +95,6 @@ import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { officeContactsForMember } from "@/lib/ask/office-contacts";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { settleFundingRead } from "@/lib/funding/snapshot";
-import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   officialStateRollCallTargetByScope,
@@ -177,7 +173,6 @@ import {
   financeQuestionAskedFor,
   financeRegimeNotesFor,
   financeScopeGapFor,
-  localFinanceEvidenceFor,
 } from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
 
@@ -634,16 +629,10 @@ async function answerWithSettings(request: Request) {
   if (!needsCommentAccess) delete trace.preloadSources.commentAccess;
   if (!needsOutcomePreload) delete trace.preloadSources.outcomes;
   if (areaMeetingsAsk || stateExecutiveOnly) delete trace.preloadSources.federalDirectory;
-  const moneyStates = ballotStatesForDivisions(ocdIds).filter((state): state is StateCampaignFinanceJurisdiction => state in STATE_CAMPAIGN_FINANCE_SOURCES);
-  let moneyRead: Promise<unknown> | null = null;
-  const stateMoneyPreload = () => moneyRead ??= timed("stateMoney", () => Promise.all(moneyStates.map(state => settleStateMoneyRead(state))))();
-  let stateMoneyFilers: ReturnType<typeof requestedStateMoneySubjects> = [];
-  if (deferPersonRecords && readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)) {
+  let stateMoneyFilers: Awaited<ReturnType<typeof requestedStateMoneySubjects>> = [];
+  if (deferPersonRecords && selectStateMoneyNames(question).length && readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)) {
     await earlyFederalDirectory?.catch(() => undefined);
-    if (!namedFederalOfficeholder(question)) {
-      await settleGroundedSourcePreloads([stateMoneyPreload]);
-      stateMoneyFilers = requestedStateMoneySubjects(question, moneyStates);
-    }
+    if (!namedFederalOfficeholder(question)) await settleGroundedSourcePreloads([timed("campaignFinance",async()=>{stateMoneyFilers=await requestedStateMoneySubjects(question,statesOf(ocdIds));})]);
   }
   let stateVotesRead: Promise<unknown> | null = null;
   let deferrableSourcesLoaded = false;
@@ -652,25 +641,20 @@ async function answerWithSettings(request: Request) {
     stateVotesRead ??= settleGroundedSourcePreloads([...stateVoteScopes].map((scope) => timed(`stateVotes:${scope}`, () => refreshStateVotesFromPromoted(scope))));
     return stateVotesRead;
   };
-  const pimaFinancePreload = timed("azPimaFinance", settleAzPimaFinanceRead);
   const personRecordPreloads = [
     timed("federalVotes", settleFederalVotesRead),
     timed("federalKeyVotes", settleFederalKeyVotesRead),
     timed("officeholderStatements", settleOfficeholderStatementsRead),
     timed("executiveActions", settleExecutiveActionsRead),
   ];
-  const unrelatedPreloads = [pimaFinancePreload, ...personRecordPreloads];
-
+  const unrelatedPreloads = personRecordPreloads;
   const skippedPreloads = deferShape ? unrelatedPreloads : deferPersonRecords ? personRecordPreloads : [];
   const markDeferrableLoaded = () => { deferrableSourcesLoaded = true; return Promise.resolve(); };
   const fundingPreload = timed("funding", settleFundingRead);
-  const campaignFinancePreload = timed("campaignFinance", () => settleCampaignFinanceReads(ocdIds));
   const deferrablePreloads = [
     markDeferrableLoaded,
-    ...(stateMoneyFilers.length ? [campaignFinancePreload] : votingOnly ? personRecordPreloads.slice(0, exactVote && !billVote ? 1 : 2) : [
+    ...(stateMoneyFilers.length ? [] : votingOnly ? personRecordPreloads.slice(0, exactVote && !billVote ? 1 : 2) : [
     fundingPreload,
-    campaignFinancePreload,
-    stateMoneyPreload,
     timed("candidateProfiles", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state)))),
     timed("candidateCorpus", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state)))),
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
@@ -1518,7 +1502,7 @@ async function answerWithSettings(request: Request) {
         if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);
       }
       if (financeDivision && stateCampaignQuestion(question)) {
-        const campaign = await stateCampaignEvidence([financeDivision], subject.id);
+        const campaign = await stateCampaignEvidence([financeDivision],undefined,{aboutSubjectId:subject.id});
         records.push(...campaign.records); gaps.push(...campaign.gaps); Object.assign(denominators, campaign.denominators);
       }
       if (financeDivision && governmentFinanceQuestion(question)) {
@@ -1827,10 +1811,12 @@ async function answerWithSettings(request: Request) {
         : null;
       if (otherSubject?.kind === "PERSON") {
         comparedIds.add(otherSubject.id);
+        const campaign=await stateCampaignEvidence(ocdIds,otherRecord?.id??otherSubject.id);
+        records.push(...campaign.records);gaps.push(...campaign.gaps);
         const theirs = campaignMoneyEvidenceFor(otherSubject, otherRecord?.id ?? otherSubject.id, otherRecord?.contestId);
         records.push(...theirs.records);
         gaps.push(...theirs.gaps);
-        denominators.comparedPersonStateFinanceRecordsReturned = theirs.denominators.stateFinanceRecordsReturned;
+        denominators.comparedPersonStateFinanceRecordsReturned = campaign.denominators.stateCampaignRecordsReturned + theirs.denominators.stateFinanceRecordsReturned;
         denominators.comparedPersonFederalFinanceRecordsReturned = theirs.denominators.federalFinanceRecordsReturned;
         if (otherRecord && ballot.set) {
           const filing = ballotRecordsFor(otherRecord, { set: ballot.setForTarget(otherRecord.id) ?? ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees });
@@ -1841,6 +1827,8 @@ async function answerWithSettings(request: Request) {
 
     if (partyConflictFiling && subject?.kind === "PERSON" && financeAsked) {
       comparedIds.add(partyConflictFiling.id);
+      const campaign=await stateCampaignEvidence(ocdIds,partyConflictFiling.id);
+      records.push(...campaign.records);gaps.push(...campaign.gaps);
       const filed = campaignMoneyEvidenceFor(ballotSubject(partyConflictFiling), partyConflictFiling.id, partyConflictFiling.contestId);
       records.push(...filed.records);
       gaps.push(...filed.gaps);
@@ -1863,11 +1851,12 @@ async function answerWithSettings(request: Request) {
         if (candidate.kind !== "PERSON" || candidate.contestId !== groupContest.contestId || candidate.removedFromFiling ||
           candidate.historicalFiling || candidate.outsideReaderDivisions || groupCandidates.some((held) => held.id === candidate.id)) continue;
         comparedIds.add(candidate.id);
+        const campaign=await stateCampaignEvidence(ocdIds,candidate.id);
+        records.push(...campaign.records);gaps.push(...campaign.gaps);
         const theirs = campaignMoneyEvidenceFor(ballotSubject(candidate), candidate.id, candidate.contestId);
         records.push(...theirs.records);
         gaps.push(...theirs.gaps);
-        groupStateRecords += theirs.denominators.stateFinanceRecordsReturned;
-
+        groupStateRecords += campaign.denominators.stateCampaignRecordsReturned + theirs.denominators.stateFinanceRecordsReturned;
         groupCandidates.push({ id: candidate.id, name: candidate.name, matched: Boolean(candidate.candidacyId) && theirs.denominators.financeIdentityUnresolved === 0 });
       }
       denominators.raceCandidatesListed = groupCandidates.length;
@@ -1883,23 +1872,19 @@ async function answerWithSettings(request: Request) {
     }
 
     if (subject && financeAsked) {
+      if(subject.kind==="PERSON"){
+        const campaign=await stateCampaignEvidence(ocdIds,ballotRecord?.id??subject.id);
+        records.push(...campaign.records);gaps.push(...campaign.gaps);Object.assign(denominators,campaign.denominators);
+      }
       const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
       records.push(...normalized.records);
       gaps.push(...normalized.gaps);
       Object.assign(denominators, normalized.denominators);
-      const finance = localFinanceEvidenceFor(subject, [...canonicalSubjectKeys]);
-      if (finance) {
-        records.push(...finance.records);
-        gaps.push(...finance.gaps);
-        Object.assign(denominators, finance.denominators);
-      } else if (normalized.records.length === 0 && normalized.gaps.length === 0 && groupCandidates.length === 0) {
-        gaps.push(financeScopeGapFor(subject));
-      }
-
+      if (normalized.records.length === 0 && normalized.gaps.length === 0 && groupCandidates.length === 0 && !(denominators.stateCampaignRecordsReturned > 0)) gaps.push(financeScopeGapFor(subject));
       for (const note of financeRegimeNotesFor(subject, {
-        state: normalized.denominators.stateFinanceRecordsReturned > 0 || groupStateRecords > 0 || (denominators.partyConflictFilingStateFinanceRecordsReturned ?? 0) > 0,
+        state: (denominators.stateCampaignRecordsReturned ?? 0) > 0 || normalized.denominators.stateFinanceRecordsReturned > 0 || groupStateRecords > 0 || (denominators.partyConflictFilingStateFinanceRecordsReturned ?? 0) > 0,
         federal: normalized.denominators.federalFinanceRecordsReturned > 0,
-        county: Boolean(finance?.records.length),
+        county: false,
       })) gaps.push(note.gap);
       denominators.financeRegimesNamed = 3;
     }

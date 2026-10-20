@@ -32,7 +32,6 @@ import {
   candidateProfilesReadState,
 } from "../lib/civic-data/manual-read-models.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
@@ -344,7 +343,6 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
     ["the candidate profiles", candidateProfilesReadState("AZ"), EDGE.profiles],
     ["the candidate publications", currentStateAuthorityProjection("candidate-publications", "AZ")!.result, EDGE.corpus],
     ["FEC funding", fundingReadState(), EDGE.funding],
-    ["Arizona money", stateMoneyReadState("AZ"), EDGE.stateMoney("AZ")],
   ] as const)) {
     assert.equal(state.kind, "PROMOTED", `${what} was not read as the promoted version`);
     assert.equal(state.metadata.versionId, version, `${what} was not served from the edge`);

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { campaignFinanceSource, type CampaignFinanceResource } from "./state-sources.ts";
 import { campaignFinanceStateScope } from "./state-sources.ts";
 
@@ -10,13 +10,14 @@ export interface CampaignSourceCapture {
   readonly byteLength: number;
   readonly retrievedAt: string;
   readonly publicationDate: string | null;
+  readonly checkedAt?:string;
   readonly lookup?: { readonly url: string; readonly rawHash: string; readonly vaultKey: string; readonly byteLength: number; readonly retrievedAt: string; readonly publicationDate: string | null };
 }
-type Provenance = CampaignSourceCapture & { readonly publisher: string; readonly official: true; readonly sourcePublicationDate: string | null };
+type Provenance = CampaignSourceCapture & { readonly publisher: string; readonly official: true; readonly sourcePublicationDate: string | null; readonly filingUrl?:string };
 
 export interface CampaignSourceRecord {
   readonly id: string;
-  readonly person?: { readonly id: string; readonly name: string; readonly seat: string; readonly sourceUrl: string };
+  readonly person?: { readonly id: string; readonly name: string; readonly seat: string; readonly sourceUrl: string;readonly office?:string };
   readonly state: string;
   readonly resource: string;
   readonly nativeId: string | null;
@@ -27,11 +28,16 @@ export interface CampaignSourceRecord {
   readonly filingState: "FILED" | "UNFILED" | "ACTIVITY_UNCONFIRMED";
   readonly candidateName: string | null;
   readonly organizationName: string | null;
+  readonly donor?: {readonly key:string;readonly kind:"INDIVIDUAL"|"COMMITTEE_OR_ORGANIZATION";readonly filedName:string;readonly amount:number};
+  readonly individualLines?: {readonly small:number;readonly large:number};
   readonly filingUrl: string;
   readonly office: string | null;
   readonly period: string | null;
   readonly transactionDate: string | null;
+  readonly cycle?: number;
   readonly nativeGovernmentId: string | null;
+  readonly filedDistrict?:string|null;
+  readonly filedJurisdiction?:string|null;
   readonly governmentOcdId: string | null;
   readonly amounts: readonly { readonly label: string; readonly amount: number; readonly provenance?: Provenance }[];
   readonly unavailableAmounts: readonly string[];
@@ -42,7 +48,7 @@ export interface CampaignSourceRecord {
   readonly provenance: Provenance;
 }
 
-export const CAMPAIGN_FINANCE_JOIN_REASONS = {
+const CAMPAIGN_FINANCE_JOIN_REASONS = {
   missingId: "The source row has no mapped native record ID; its captured bytes remain held.",
   missingFiler: "The filing has no supported source-native filer binding.",
   conflictingCover: "The source cover records conflict for this native filing.",
@@ -82,7 +88,7 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
   if (Object.entries(resource.expectedFields ?? {}).some(([field, expected]) => cell(fieldValue(row, field)) !== expected)) throw new Error("The campaign records do not match the source's indexed native identity.");
   const nativeId = identity(row, resource.identity);
   const filerId = resource.filerIdentity ? identity(row, resource.filerIdentity) : first(row, resource.filer);
-  const provenance: Provenance = { ...capture, publicationDate: date(row, resource.publicationDate, resource),
+  const provenance: Provenance = { ...capture, publicationDate: date(row, resource.publicationDate, resource)??capture.publicationDate,
     sourcePublicationDate: date(row, resource.sourcePublicationDate ?? [], resource) ?? capture.publicationDate, publisher: resource.publisher ?? source.publisher, official: true };
   const amounts: CampaignSourceRecord["amounts"][number][] = [];
   const unavailableAmounts: string[] = [];
@@ -110,10 +116,20 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
   }
   const governmentOcdId = resource.governmentOcdId ?? null;
   const period = resource.periodParts?.map(field => cell(fieldValue(row, field))).filter(Boolean).join(" – ") || first(row, resource.period);
+  const cycleYears=first(row,resource.cycle??[])?.match(/\b(?:19|20)\d{2}\b/g)?.map(Number);
+  const cycle=cycleYears?.length ? Math.max(...cycleYears) : undefined;
   const periodContext = resource.periodQueryParameter ? new URL(capture.url).searchParams.get(resource.periodQueryParameter) : null;
   if (resource.periodQueryParameter && !/^\d{4}$/.test(periodContext ?? "")) throw new Error("The source export is missing its declared report year.");
   const summary = resource.summaryLine;
   const organization = resource.organization;
+  const individual=resource.individual;
+  const kind=organization?.types.includes(cell(fieldValue(row,organization.typeField))) ? "COMMITTEE_OR_ORGANIZATION"
+    : individual?.types.includes(cell(fieldValue(row,individual.typeField))) ? "INDIVIDUAL" : null;
+  const donorName=kind==="COMMITTEE_OR_ORGANIZATION" ? first(row,organization!.nameFields) : kind==="INDIVIDUAL" ? individual!.nameParts?.map(field=>cell(fieldValue(row,field))).filter(Boolean).join(" ") || first(row,individual!.nameFields) : null;
+  const donorIdentity=kind==="INDIVIDUAL" ? identity(row,individual!.identityFields) : donorName;
+  const lines=resource.individualLines;
+  const small=lines ? Number(cell(fieldValue(row,lines.small)).replaceAll(",","")) : NaN;
+  const large=lines ? Number(cell(fieldValue(row,lines.large)).replaceAll(",","")) : NaN;
   let filingUrl = resource.landingUrl ?? capture.url;
   if (resource.filingUrl && cell(fieldValue(row, resource.filingUrl.field))) {
     try {
@@ -126,16 +142,19 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
   const contentIdentity = publicationScoped ? Object.fromEntries(Object.entries(row).filter(([field]) =>
     !resource.identity.includes(field) && !resource.sourcePublicationDate?.includes(field))) : row;
   return {
-    id: `${state}:${resource.id}:${hash(publicationScoped || nativeId === null ? canonicalCivicDataJson(contentIdentity) : nativeId)}`,
-    state, resource: resource.id, nativeId, nativeIdScope: nativeId === null ? null : publicationScoped ? "PUBLICATION" : "SOURCE",
+    id: `${state}:${resource.id}:${publicationScoped || nativeId === null ? canonicalCivicDataHash(contentIdentity) : hash(nativeId)}`,
+    state, resource: resource.id,...(cycle?{cycle}:{}), nativeId, nativeIdScope: nativeId === null ? null : publicationScoped ? "PUBLICATION" : "SOURCE",
     projectionOrdinal, filerId, filingState: !filed ? "UNFILED" : registrationOnly ? "ACTIVITY_UNCONFIRMED" : "FILED",
-    filerName: resource.filerNameParts?.map(field => cell(fieldValue(row, field))).filter(Boolean).join(" ") || first(row, resource.filerName),
+    filerName: resource.filerNameParts?.map(field => cell(fieldValue(row, field))).filter(Boolean).join(" ") || first(row, resource.filerName) || resource.filerFallbackParts?.map(field=>cell(fieldValue(row,field))).filter(Boolean).join(" ") || null,
     candidateName: resource.candidateCondition && !resource.candidateCondition.values.includes(cell(fieldValue(row, resource.candidateCondition.field))) ? null
       : resource.candidateParts?.map(field => cell(fieldValue(row, field))).filter(Boolean).join(" ") || first(row, resource.candidate),
     organizationName: organization?.types.includes(cell(fieldValue(row, organization.typeField))) ? first(row, organization.nameFields) : null,
+    ...(resource.receipts && kind && donorName && donorIdentity && amounts.length===1 ? {donor:{key:hash(JSON.stringify([provenance.publisher,kind,donorIdentity])),kind,filedName:donorName,amount:amounts[0].amount}} : {}),
+    ...(lines && first(row,[lines.small])!==null && first(row,[lines.large])!==null && Number.isFinite(small) && Number.isFinite(large) && small>=0 && large>=0 ? {individualLines:{small,large}} : {}),
     filingUrl,
     office: first(row, resource.office), period: [periodContext, period].filter(Boolean).join(" – ") || null,
     transactionDate: date(row, resource.transactionDate, resource), nativeGovernmentId: first(row, resource.government),
+    filedDistrict:first(row,resource.district??[]),filedJurisdiction:first(row,resource.jurisdiction??[]),
     governmentOcdId, amounts, unavailableAmounts, issues,
     title: summary?.labels[cell(fieldValue(row, summary.formField))]?.[cell(fieldValue(row, summary.lineField))] ?? first(row, resource.title ?? []),
     qualifiers: (resource.qualifiers ?? []).flatMap(({ field, label }) => {
@@ -151,7 +170,7 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
 }
 
 export function campaignSourceRecordHash(row: CampaignSourceRecord): string {
-  const { provenance, amounts, projectionOrdinal: _projectionOrdinal, ...native } = row;
-  return hash(canonicalCivicDataJson({ ...native, nativeId: row.nativeIdScope === "PUBLICATION" ? null : row.nativeId, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
-    publicationDate: (own ?? provenance).publicationDate, publisher: (own ?? provenance).publisher })), publicationDate: provenance.publicationDate, publisher: provenance.publisher }));
+  const { provenance, amounts, projectionOrdinal: _projectionOrdinal, fingerprint: _fingerprint, ...native } = row as CampaignSourceRecord & {readonly fingerprint?:string};
+  return canonicalCivicDataHash({ ...native, nativeId: row.nativeIdScope === "PUBLICATION" ? null : row.nativeId, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
+    publisher: (own ?? provenance).publisher })),publisher: provenance.publisher });
 }

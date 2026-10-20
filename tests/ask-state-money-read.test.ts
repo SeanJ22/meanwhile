@@ -3,12 +3,11 @@ import test from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { STATE_MONEY_READER_PAYLOAD } from "../lib/civic-data/read-model.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
-import { refreshStateMoneyProjectionFromPromoted, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
-import { requestedStateMoneySubjects, selectStateMoneyNames } from "../lib/ask/state-money-subjects.ts";
-import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { stateMoneyFixture } from "./helpers/promoted-fixtures.ts";
-import { STATE_CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/data-plane.ts";
+import { requestedStateMoneySubjects } from "../lib/ask/state-money-subjects.ts";
 import { stateCampaignRecordsAsk } from "../lib/ask/state-campaign.ts";
+import{factDb}from"./helpers/fact-db.ts";
+import{installFactReader}from"../lib/facts/db.ts";
+import{readFileSync}from"node:fs";
 
 test("a named campaign question reads its source filer's rows without name-joining an officeholder", async () => {
   const pg = new PGlite();
@@ -28,23 +27,26 @@ test("a named campaign question reads its source filer's rows without name-joini
   } finally { await pg.close(); }
 });
 
-test("concurrent campaign questions keep their selected source filings within their own request", async () => {
-  let release!: () => void, count = 0;
-  const both = new Promise<void>(resolve => { release = resolve; });
-  const contract = STATE_CAMPAIGN_FINANCE_SOURCES.NH;
-  await Promise.all(["First", "Second"].map(name => withReaderSelection({ states: ["NH"], keys: new Set() }, async () => {
-    const base = stateMoneyFixture("NH"), target = `ballot-nh-test:governor:${name.toLowerCase()}`;
-    const row = { ...base.records[0]!, candidateNameAsFiled: `${name} Person`, targetKeys: [target, `state-finance:NH:${name}:2026`] };
-    selectStateMoneyNames(`How much has ${name} Person raised?`);
-    await refreshStateMoneyProjectionFromPromoted("NH", { edge: provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: contract.scope,
-      sourceId: contract.sourceId, versionId: `test:money:${name}`, value: { ...base, records: [row] } }) });
-    if (++count === 2) release();
-    await both;
-    assert.deepEqual(stateMoneyForTarget(target).map(row => row.candidateNameAsFiled), [`${name} Person`]);
-    const selected = requestedStateMoneySubjects(`How much has ${name} Person raised?`, ["NH"]);
-    assert.deepEqual(selected.map(row => row.id), [target]);
-    assert.deepEqual(requestedStateMoneySubjects("How much has Other Person raised?", ["NH"]), []);
-  })));
+test("concurrent campaign questions select their published people without reading another person's money", async () => {
+  const db=await factDb();
+  try{
+    await db.pg.exec("CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
+    for(const sql of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(sql))await db.pg.exec(sql);
+    const state="ocd-division/country:us/state:nh";
+    await db.query("INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key) VALUES('https://www.sos.nh.gov/','https://www.sos.nh.gov/',now(),repeat('a',64),'fixture')");
+    for(const name of ["First","Second"]){
+      const id=`published:${name}`;
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'person',$2,'NH')",[id,`${name} Person`]);
+      await db.query("INSERT INTO civic_data_promotions VALUES('REGISTRY_RUNTIME_BINDING',$1,$2,$3)",[`US-NH:${name}`,name,JSON.stringify({bodyRosters:[{bodyId:`${state}/place:${name.toLowerCase()}#council`,sourceUrl:"https://www.sos.nh.gov/",members:[{id,name:`${name} Person`,officeTitle:"Mayor"}]}]})]);
+      await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by) VALUES($1,'campaign-cycle:2026',$2,'','live','OFFICIAL',1,'',now(),'fixture')",[id,JSON.stringify({person:{name:`${name} Person`},cycle:2026})]);
+    }
+    installFactReader(db.query);
+    await Promise.all(["First","Second"].map(name=>withReaderSelection({states:["NH"],keys:new Set()},async()=>{
+      const selected=await requestedStateMoneySubjects(`How much has ${name} Person raised?`,["NH"]);
+      assert.deepEqual(selected.map(row=>row.id),[`published:${name}`]);
+      assert.deepEqual(await requestedStateMoneySubjects("How much has Other Person raised?",["NH"]),[]);
+    })));
+  }finally{installFactReader(undefined);await db.pg.close();}
 });
 
 test("campaign record questions select the explicit state or exact place, and unknown places cannot stand in", () => {

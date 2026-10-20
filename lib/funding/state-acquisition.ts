@@ -16,10 +16,11 @@ import { campaignSession } from "./state-request.ts";
 import { joinedCampaignSourceRows } from "./state-source-join.ts";
 
 interface DownloadCheckpoint { readonly etag: string | null; readonly modified: string | null; readonly archiveId: string; readonly rawHash: string; readonly path: string; readonly byteLength: number; readonly retrievedAt: string }
-interface Download extends DownloadCheckpoint { readonly sourceCheck: SourceCheckEvidence; readonly runId: string | null }
+interface Download extends DownloadCheckpoint { readonly sourceCheck: SourceCheckEvidence; readonly runId: string | null;readonly releaseVersion?:string }
 interface ResourceCheckpoint { readonly rawHash: string; readonly rows: number; readonly total: number | null; readonly retrievedAt: string; readonly publicationId: string | null }
 interface CampaignSourcePage {
   readonly records: readonly CampaignSourceRecord[];
+  readonly inputRecords:number;
   readonly capture: CampaignSourceCapture | null;
   readonly offset: number;
   readonly complete: boolean;
@@ -37,6 +38,9 @@ interface Options {
   readonly acceptedPublicationId?: string;
   readonly publicationId?: string;
   readonly runId?: string;
+  readonly releaseEveryMs?: number;
+  readonly selectRecord?:(row:CampaignSourceRecord)=>CampaignSourceRecord|null;
+  readonly onCapture?:(capture:CampaignSourceCapture)=>Promise<void>;
 }
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
 function requestIdentity(url: string, body: Record<string, unknown> | null, resource: CampaignFinanceResource): string {
@@ -82,8 +86,8 @@ export async function campaignSourceResponse(url: string, init: RequestInit, opt
 
 async function* capturedRows(state: string, resource: CampaignFinanceResource, input: AsyncIterable<Uint8Array>, metadata: {
   url: string; retrievedAt: string; publicationDate: string | null; archiveId: string; rawHash: string; byteLength: number;
-}, options: Options, envelope: FederalJsonEnvelope = { rows: 0, found: false }): AsyncGenerator<{ records: CampaignSourceRecord[]; capture: CampaignSourceCapture }> {
-  let records: CampaignSourceRecord[] = [], bytes = 0, projectionOrdinal = 0, columns: string[] | null = null, selectedColumns: readonly { field: string; index: number }[] | null = null, preambleRows = resource.preambleRows ?? 0;
+}, options: Options, envelope: FederalJsonEnvelope = { rows: 0, found: false }): AsyncGenerator<{ records: CampaignSourceRecord[]; capture: CampaignSourceCapture;inputRecords:number }> {
+  let records: CampaignSourceRecord[] = [], bytes = 0, inputRecords=0, projectionOrdinal = 0, columns: string[] | null = null, selectedColumns: readonly { field: string; index: number }[] | null = null, preambleRows = resource.preambleRows ?? 0;
   let capture: CampaignSourceCapture = { url: metadata.url, retrievedAt: metadata.retrievedAt, publicationDate: metadata.publicationDate,
     rawHash: metadata.rawHash, byteLength: metadata.byteLength, vaultKey: metadata.archiveId };
   const json = resource.kind === "JSON" || resource.kind === "SOCRATA";
@@ -117,7 +121,7 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
     const length = Buffer.byteLength(raw);
     if (records.length && (records.length >= 500 || bytes + length > 2 * 1024 * 1024)) {
       if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "campaign-project", item: metadata.url, itemBytes: bytes, retainedRows: records.length });
-      yield { records, capture }; records = []; bytes = 0;
+      yield { records, capture,inputRecords }; records = []; bytes = 0; inputRecords=0;
     }
     let value: Record<string, unknown>;
     if (json) value = JSON.parse(raw);
@@ -127,11 +131,14 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
       if (fields.length !== columns!.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "A campaign row differs from its source columns.");
       value = Object.fromEntries((selectedColumns ?? columns!.map((field, index) => ({ field, index }))).map(({ field, index }) => [field, fields[index]]));
     }
-    records.push(campaignSourceRecord(state, resource, value, capture, projectionOrdinal++)); bytes += length;
+    inputRecords++;
+    const sourceRecord=campaignSourceRecord(state, resource, value, capture, projectionOrdinal++);
+    const record=options.selectRecord?options.selectRecord(sourceRecord):sourceRecord;
+    if(record){records.push(record);bytes+=length;}
   }
-  if (records.length) {
+  if (records.length || inputRecords || json || columns!==null) {
     if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "campaign-project", item: metadata.url, itemBytes: bytes, retainedRows: records.length });
-    yield { records, capture };
+    yield { records, capture,inputRecords };
   }
   if (!json && columns === null) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign export has no source columns.");
   if (json && !envelope.found) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign API response has no declared record array.");
@@ -147,12 +154,17 @@ async function* filePages(state: string, resource: CampaignFinanceResource, path
       lookup: { url: lookup.sourceCheck.requestedUrl, rawHash: lookup.rawHash, vaultKey: lookup.archiveId, byteLength: lookup.byteLength,
         retrievedAt: lookup.retrievedAt, publicationDate: lookup.modified && Number.isFinite(Date.parse(lookup.modified)) ? new Date(lookup.modified).toISOString() : null },
     } : {}) };
-    let records: CampaignSourceRecord[] = [], ordinal = 0;
+    let records: CampaignSourceRecord[] = [], ordinal = 0,inputRecords=0,bytes=0;
     for await (const raw of federalJsonRecords(joinedCampaignSourceRows(path, resource, `${path}.join`, options.signal, lookup?.path), "", envelope)) {
-      records.push(campaignSourceRecord(state, resource, JSON.parse(raw), capture, ordinal++));
-      if (records.length >= 500) { yield { records, capture }; records = []; }
+      if(records.length && (records.length>=500 || bytes+Buffer.byteLength(raw)>2*1024*1024)){
+        yield {records,capture,inputRecords};records=[];inputRecords=0;bytes=0;
+      }
+      inputRecords++;
+      const sourceRecord=campaignSourceRecord(state, resource, JSON.parse(raw), capture, ordinal++);
+      const record=options.selectRecord?options.selectRecord(sourceRecord):sourceRecord;
+      if(record){records.push(record);bytes+=Buffer.byteLength(raw);}
     }
-    if (records.length) yield { records, capture };
+    if (records.length || inputRecords) yield { records, capture,inputRecords };
   } else if (resource.kind === "ZIP") {
     let found = false;
     for await (const entry of federalZipEntries(path)) {
@@ -186,6 +198,36 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") prior = null; else throw error; }
   }
   if (options.runId && prior?.runId === options.runId) return prior;
+  const at=(options.now??(()=>new Date().toISOString()))();
+  if(prior && options.releaseEveryMs !== undefined && Date.parse(at)-Date.parse(prior.sourceCheck.checkedAt)<options.releaseEveryMs)return prior;
+  const versionUrl=resource.releaseVersionUrl ?? (resource.kind==="SOCRATA" ? new URL(`/api/views/${new URL(resource.url).pathname.split("/").at(-1)!.replace(/\.json$/,"")}.json`,resource.url).href : null);
+  let releaseVersion:string|undefined;
+  let releasePublishedAt:string|null=null;
+  if(versionUrl && options.releaseEveryMs!==undefined){
+    const metadata=await campaignSourceResponse(versionUrl,{},options);
+    const reader=metadata.body?.getReader(),chunks:Uint8Array[]=[];
+    let length=0;
+    try{
+      for(;;){
+        const chunk=await reader?.read();
+        if(!chunk || chunk.done)break;
+        length+=chunk.value.byteLength;
+        if(length>4*1024*1024)throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The source release metadata exceeds one metadata page");
+        chunks.push(chunk.value);
+      }
+    }finally{await reader?.cancel();}
+    const bytes=Buffer.concat(chunks,length);
+    const value=property(JSON.parse(new TextDecoder().decode(bytes)),resource.releaseVersionPath??"rowsUpdatedAt");
+    if(typeof value!=="number" && typeof value!=="string")throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The source release metadata has no published version");
+    releaseVersion=String(value);
+    if(resource.kind==="SOCRATA" && typeof value==="number" && Number.isFinite(new Date(value*1000).getTime()))releasePublishedAt=new Date(value*1000).toISOString();
+    const rawHash=digest(new TextDecoder().decode(bytes));
+    await options.vault.put(`project/meanwhile/source/campaign-finance-release/${rawHash}`,bytes,{contentHash:`sha256-${rawHash}`,byteLength:bytes.length,contentType:"application/json"});
+    if(prior?.releaseVersion===releaseVersion){
+      const unchanged:Download={...prior,runId:options.runId??null,sourceCheck:{...prior.sourceCheck,checkedAt:at}};
+      await saveCheckpoint(head,unchanged);return unchanged;
+    }
+  }
   const headers = new Headers({ accept: "application/json, text/csv, application/zip, */*" });
   for (const [name, value] of Object.entries(resource.headers ?? {})) headers.set(name, value);
   if (resource.method && body && !headers.has("content-type")) headers.set("content-type", resource.requestEncoding === "FORM" ? "application/x-www-form-urlencoded; charset=UTF-8" : "application/json");
@@ -212,9 +254,9 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     const { path, archiveId } = await saveFederalBulkBytes({ root: options.directory, vault: options.vault, signal: options.signal }, async () => raw, generation, url);
     const rawHash = bodyHash.digest("hex");
     const bytesHeld: DownloadCheckpoint = prior?.rawHash === rawHash ? { ...prior, etag: acquired.headers.get("etag") } : {
-      path, archiveId, rawHash, byteLength: (await stat(path)).size, etag: acquired.headers.get("etag"), modified: acquired.headers.get("last-modified"), retrievedAt: checkedAt,
+      path, archiveId, rawHash, byteLength: (await stat(path)).size, etag: acquired.headers.get("etag"), modified: acquired.headers.get("last-modified")??releasePublishedAt, retrievedAt: checkedAt,
     };
-    const value: Download = { ...bytesHeld, runId: options.runId ?? null, sourceCheck: { requestedUrl: url, finalUrl: acquired.url || url, httpStatus: 200, rawHash, checkedAt } };
+    const value: Download = { ...bytesHeld,...(releaseVersion?{releaseVersion}:{}), runId: options.runId ?? null, sourceCheck: { requestedUrl: url, finalUrl: acquired.url || url, httpStatus: 200, rawHash, checkedAt } };
     await saveCheckpoint(head, value);
     if (value.path !== path) await rm(temporaryPath(generation), { recursive: true, force: true });
     else if (prior) await rm(temporaryPath(dirname(prior.path)), { recursive: true, force: true });
@@ -248,8 +290,15 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
       else url.searchParams.set(resource.throughDateParameter, through);
     }
     const paged = resource.kind === "SOCRATA" || resource.offsetParameter !== undefined;
+    if(resource.since){
+      const since=resource.since,year=campaignFinanceSource(state).minimumYear;
+      const condition=since.kind==="YEAR" ? `${since.field} >= ${year}` : `${since.field} >= '${year}-01-01T00:00:00.000'`;
+      if(resource.kind!=="SOCRATA")throw new Error("Campaign date predicate requires its declared native API");
+      const held=url.searchParams.get("$where");url.searchParams.set("$where",held?`(${held}) AND (${condition})`:condition);
+    }
     if (resource.kind === "SOCRATA") {
-      url.searchParams.set("$limit", String(pageSize)); url.searchParams.set("$offset", String(offset)); url.searchParams.set("$order", ":id");
+      url.searchParams.set("$limit", String(pageSize)); url.searchParams.set("$offset", String(offset));
+      if(!url.searchParams.has("$order"))url.searchParams.set("$order", ":id");
     } else if (resource.offsetParameter) {
       const parameters = { [resource.offsetParameter]: offset, ...(resource.limitParameter ? { [resource.limitParameter]: pageSize } : {}) };
       for (const [name, value] of Object.entries(parameters)) {
@@ -265,21 +314,25 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     const lookupUrl = resource.lookup?.relativeUrl ? new URL(resource.lookup.relativeUrl, url).href : resource.lookup?.url;
     if (resource.lookup?.publicationResource && !campaignFinanceSource(state).resources.some(row => row.id === resource.lookup!.publicationResource)) throw new Error("The shared native cover file has no registered publication resource.");
     const lookup = lookupUrl ? await download(state, lookupUrl, { ...resource, method: undefined }, null, options) : undefined;
+    const metadata = { url: url.href, retrievedAt: raw.retrievedAt, archiveId: raw.archiveId, rawHash: raw.rawHash, byteLength: raw.byteLength,
+      publicationDate: raw.modified && Number.isFinite(Date.parse(raw.modified)) ? new Date(raw.modified).toISOString() : null };
+    await options.onCapture?.({url:metadata.url,retrievedAt:metadata.retrievedAt,publicationDate:metadata.publicationDate,
+      rawHash:raw.rawHash,byteLength:raw.byteLength,vaultKey:raw.archiveId});
+    if(lookup)await options.onCapture?.({url:lookup.sourceCheck.requestedUrl,retrievedAt:lookup.retrievedAt,publicationDate:null,
+      rawHash:lookup.rawHash,byteLength:lookup.byteLength,vaultKey:lookup.archiveId});
     const projectionHash = digest(`${descriptorHash}:${raw.rawHash}:${lookup?.rawHash ?? ""}`);
     const unchanged = prior?.rawHash === projectionHash;
     if (unchanged && options.acceptedPublicationId && prior.publicationId === options.acceptedPublicationId) {
       await saveCheckpoint(checkpointPath, { ...prior, publicationId: options.publicationId ?? null });
       const complete = completed(prior.rows, prior.total, paged);
-      yield { records: [], capture: null, offset, complete, unchanged: true, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
+      yield { records: [],inputRecords:0, capture: null, offset, complete, unchanged: true, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
       if (complete) return;
       offset += resource.offsetUnit === "PAGE" ? 1 : prior.rows; continue;
     }
-    const metadata = { url: url.href, retrievedAt: raw.retrievedAt, archiveId: raw.archiveId, rawHash: raw.rawHash, byteLength: raw.byteLength,
-      publicationDate: raw.modified && Number.isFinite(Date.parse(raw.modified)) ? new Date(raw.modified).toISOString() : null };
     const envelope: FederalJsonEnvelope = { rows: 0, found: false };
     let count = 0;
     for await (const page of filePages(state, resource, raw.path, metadata, options, envelope, lookup)) {
-      count += page.records.length;
+      count += page.inputRecords;
       yield { ...page, offset: offset + count, complete: false, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
     }
     const total = resource.totalPath ? property(envelope.value, resource.totalPath) as number : null;
@@ -287,7 +340,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     if (errors && (!Array.isArray(errors) || errors.length)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign API reports incomplete or failed source results.");
     const complete = completed(count, total, paged);
     await saveCheckpoint(checkpointPath, { rawHash: projectionHash, rows: count, total, retrievedAt: raw.retrievedAt, publicationId: options.publicationId ?? null } satisfies ResourceCheckpoint);
-    yield { records: [], capture: null, offset: offset + count, complete, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
+    yield { records: [],inputRecords:0, capture: null, offset: offset + count, complete, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
     if (complete) return;
     offset += resource.offsetUnit === "PAGE" ? 1 : count;
   }

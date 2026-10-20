@@ -29,7 +29,7 @@ export function directFundingTargetPlan(target: string): FundingTargetPlan {
   const state = stateFromContest(contestId) ?? (nativeState && REGISTRY_STATES.includes(nativeState) ? nativeState : null);
   return {
     contestId,
-    federal: target.startsWith("congress:") || /^fec:[HS]\d[A-Z]{2}\d{5}$/.test(target) || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
+    federal: target.startsWith("congress:") || /^(?:fec:)?(?:[HS]\d[A-Z]{2}\d{5}|P\d{8})$/.test(target) || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
     state,
     ballotIdentity: target.includes("|"),
   };

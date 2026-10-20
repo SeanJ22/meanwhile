@@ -1,6 +1,6 @@
-import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -412,6 +412,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     ...REGISTRY_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
+    CAMPAIGN_MONEY_SOURCE_ID,
     "usaspending",
     "federal-audit-clearinghouse",
     "sam-gov-entities",
@@ -457,7 +458,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
 test("one canonical registry owns every supported authority and refuses arbitrary gov hosts", () => {
   const supportingResearchAuthorities = [
     "census-bulk-products",
-    ...CAMPAIGN_FINANCE_SOURCES.map(source=>campaignFinanceSourceId(source.state)),
+    ...CAMPAIGN_FINANCE_SOURCES.map(source=>`US-${source.state}:campaign-finance-source`),
     "az-legislature",
     "nj-legislature",
     "legiscan",
@@ -2210,6 +2211,8 @@ test("state publishers retain the measured state reservation across small runs",
   second();
 });
 
-test("the retired native campaign load has no scheduled source jobs", () => {
-  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE"), []);
+test("campaign money checks hourly state clocks from one serial coordinator", () => {
+  const money=ROUTINE_SOURCE_TASKS.filter(task=>task.recordClass==="CAMPAIGN_FINANCE");
+  assert.equal(money.length,1);assert.equal(money[0].id,CAMPAIGN_MONEY_SOURCE_ID);
+  assert.equal(money[0].cadenceMs,ROUTINE_DATA_ADMISSION_MS);
 });

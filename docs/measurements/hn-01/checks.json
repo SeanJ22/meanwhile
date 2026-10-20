@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-20T14:41:09.707155+00:00",
+  "canonicalTestPartitions": [
+    {
+      "commit": "5e22c349165a086482121a2355f426a68b7ef4d3",
+      "suiteHash": "262e392bfbec70411c7942fd4b75a32cc01531c9592457199248e73925383e4f",
+      "partition": {
+        "index": 1,
+        "count": 2
+      },
+      "selectedFiles": 592,
+      "elapsedMs": 1022581,
+      "counts": {
+        "tests": 4231,
+        "failed": 0,
+        "passed": 4230,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 4155,
+        "suites": 28
+      },
+      "status": "passed"
+    },
+    {
+      "commit": "5e22c349165a086482121a2355f426a68b7ef4d3",
+      "suiteHash": "262e392bfbec70411c7942fd4b75a32cc01531c9592457199248e73925383e4f",
+      "partition": {
+        "index": 2,
+        "count": 2
+      },
+      "selectedFiles": 592,
+      "elapsedMs": 967450,
+      "counts": {
+        "tests": 4549,
+        "failed": 0,
+        "passed": 4548,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 4508,
+        "suites": 11
+      },
+      "status": "passed"
+    }
+  ],
+  "registeredTestFiles": 1184,
+  "counts": {
+    "tests": 8780,
+    "failed": 0,
+    "passed": 8778,
+    "cancelled": 0,
+    "skipped": 2,
+    "todo": 0,
+    "topLevel": 8663,
+    "suites": 39
+  },
+  "gatesPassed": 8,
+  "gates": [
+    "lint",
+    "tsc",
+    "assert:browser",
+    "test",
+    "db:gate (no schema change)",
+    "build",
+    "test:bundle",
+    "build:standalone"
+  ],
+  "additionalBuild": "complete-catalog-build.log: 429 app trace files against 430 ceiling; 0 tests traced; reader trace failures []",
+  "sourceDuringChecks": "Functional source fixed at 5e22c349165a086482121a2355f426a68b7ef4d3; measurement files and the reference-loader documentation were updated while checks ran.",
+  "headAtCompletion": "b19df51a5230683b2292c4c8f3106925f055d314"
+}

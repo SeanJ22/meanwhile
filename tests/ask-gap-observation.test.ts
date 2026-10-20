@@ -137,13 +137,13 @@ test("a synthetic run and an edge-only context record nothing — by name", asyn
   try {
     const stated = [{ bodyId: PIMA_BOARD, code: "AGENDA_NOT_HELD" as const }];
     assert.equal((planAskGapObservations({ stated, runClass: "SYNTHETIC", nowIso: NOW_ISO }) as { why?: string }).why, "NOT_A_READER");
-    /* The keep-warm context, entered in a callback of its own so it cannot outlive it (AsyncLocalStorage.enterWith). */
+    /* The edge-only context, entered in a callback of its own so it cannot outlive it (AsyncLocalStorage.enterWith). */
     const edgeOnly = await new Promise<ReturnType<typeof planAskGapObservations>>((resolve) => setImmediate(() => {
       enterReaderAuthorityEdge({ edgeOnly: true });
       resolve(planAskGapObservations({ stated, runClass: "ORGANIC", nowIso: NOW_ISO }));
     }));
     assert.equal(edgeOnly.kind, "SKIPPED");
-    assert.equal((edgeOnly as { why?: string }).why, "EDGE_ONLY_CONTEXT", "the keep-warm context never reaches a database");
+    assert.equal((edgeOnly as { why?: string }).why, "EDGE_ONLY_CONTEXT", "the edge-only context never reaches a database");
     assert.equal(planAskGapObservations({ stated, runClass: "ORGANIC", nowIso: NOW_ISO }).kind, "RECORD", "and the refusal did not leak out of that context");
     assert.equal((await recordAskGapObservations(edgeOnly)).kind, "SKIPPED");
     assert.deepEqual(await store.list(), []);

@@ -23,7 +23,7 @@ import {
  * question is scrubbed before it leaves.
  */
 
-/** The interpretation rung's whole budget, request to parsed reply. Measured median ~2.8-3.4 s. */
+/** The interpretation ceiling is a failure bound, not a latency target. */
 export const ASK_INTERPRET_TIMEOUT_MS = 6_000;
 
 export interface InterpretContext {
@@ -31,7 +31,7 @@ export interface InterpretContext {
    * What the reader could be naming: names and division types only. No ids,
    * since an echoed id would look like a resolution.
    */
-  inventory: readonly { name: string; divisionType?: string | null }[];
+  inventory: readonly { name: string; divisionType?: string | null; local?: boolean }[];
   /** `YYYY-MM-DD`. Supplied, never derived here — this module is not a clock. */
   today: string;
   /** The reader's own area, for orientation only. */
@@ -55,8 +55,7 @@ const MAX_PRIOR_TURNS = 4;
 
 /**
  * The READER role from `lib/ask/model.ts`, resolved per call so overrides
- * apply. Thinking is on here (unlike the classifier): this rung decides a
- * tense, an entity and a referent together.
+ * apply. This rung decides a tense, an entity and a referent together.
  */
 const askModel = (): string => resolveAskRoleModel("READER");
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
@@ -75,7 +74,7 @@ export function interpretSchema(): Record<string, unknown> {
         type: "array",
         items: { type: "string" },
         description:
-          "For each mention, the full name from the inventory it most likely means, or the mention unchanged when nothing in the inventory matches.",
+          "Resolve abbreviations, nicknames and loose wording using the reader's place and on-screen subject. Use the most likely full inventory name; repeat the mention only when no name fits. Two names are ambiguous only when both are equally plausible in this place.",
       },
       temporal: {
         type: "object",
@@ -98,8 +97,9 @@ export function interpretSchema(): Record<string, unknown> {
  */
 export function interpretSystem(context: InterpretContext): { stable: string; inventory: string; volatile: string } {
   const inventory = context.inventory
+    .toSorted((a, b) => Number(Boolean(b.local)) - Number(Boolean(a.local)))
     .slice(0, MAX_INVENTORY)
-    .map((e) => (e.divisionType ? `${e.name} (${e.divisionType})` : e.name));
+    .map((e) => `${e.name}${e.divisionType ? ` (${e.divisionType})` : ""}${e.local ? " — governs the reader's place" : ""}`);
 
   const stable = askPlaybook("ASK_READER");
   const inventoryText = ["Governments and people this product holds records for, as a reader would name them:",

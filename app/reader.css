@@ -81,8 +81,7 @@
 .mw-pill-ring {
   box-shadow: var(--ctl-shadow), inset 0 0 0 1px var(--ring);
 }
-.mw-link-btn,
-.mw-text-btn {
+.mw-link-btn {
   min-height: var(--mw-44);
   padding: 0 var(--space-3);
   border: 0;
@@ -93,9 +92,6 @@
   font-size: var(--text-mw-13);
   font-weight: 600;
   cursor: pointer;
-}
-.mw-text-btn {
-  padding: 0;
 }
 .mw-dim {
   color: var(--text-dim);
@@ -172,7 +168,7 @@
 }
 .mw-brand-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--mw-6);
 }
 .mw-reader .brand .theme-toggle-btn {
   position: static;
@@ -560,7 +556,6 @@
   height: 50px;
   flex: 0 0 50px;
   border-radius: var(--radius-lg);
-  box-shadow: var(--sheet-shadow);
   font-size: var(--text-mw-18);
 }
 .mw-header-logo {
@@ -574,7 +569,46 @@
   height: 50px;
   flex-basis: 50px;
   border-radius: var(--radius-lg);
-  box-shadow: var(--sheet-shadow);
+}
+.mw-reset-glyph {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-lumen) var(--ease-lumen);
+}
+.mw-reset-btn:active .mw-reset-glyph {
+  transform: rotate(-120deg);
+}
+.mw-header .mw-reset-btn {
+  width: 50px;
+  height: 50px;
+  flex-basis: 50px;
+  border-radius: var(--radius-lg);
+}
+/* Pressed: the control sinks into a well. */
+.mw-ctl-btn,
+.mw-reader .mw-header .mw-menu-btn {
+  transition:
+    box-shadow var(--dur-press) var(--ease-press),
+    transform var(--dur-shift) var(--ease-press);
+}
+.mw-ctl-btn:active,
+.mw-reader .mw-header .mw-menu-btn:active {
+  background-image: none;
+  background-color: var(--sheet);
+  box-shadow: var(--well) !important;
+  transform: translateY(1px);
+}
+/* Phone / closed-sidebar header: the same raised control material as the sidebar buttons. */
+.mw-reader .mw-header .mw-menu-btn,
+.mw-header .mw-theme-btn,
+.mw-header .mw-reset-btn {
+  box-shadow: var(--ctl-shadow);
+}
+/* Light: over the map there's no sheet underneath, so add a drop to match desktop. */
+[data-theme="light"] .mw-reader .mw-header .mw-menu-btn,
+[data-theme="light"] .mw-header .mw-theme-btn,
+[data-theme="light"] .mw-header .mw-reset-btn {
+  box-shadow: var(--ctl-shadow), 0 12px 24px -10px rgba(96, 104, 122, 0.55);
 }
 .mw-header-right {
   pointer-events: auto;
@@ -723,7 +757,6 @@
   z-index: 1010;
   pointer-events: none;
 }
-.mw-reader .map-reset-btn,
 .mw-reader .map-top-row {
   display: none;
 }
@@ -1126,6 +1159,11 @@
   }
   .mw-header-left {
     width: 100%;
+    container-type: inline-size;
+  }
+  /* Menu, reset and theme take 150px and their gaps 32px; the wordmark takes the rest. */
+  .mw-header-logo .wtp-logo {
+    font-size: clamp(16px, calc((100cqw - 200px) / 5.8), 38px);
   }
   .mw-header-spacer {
     display: block;

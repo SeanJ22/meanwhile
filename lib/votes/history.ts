@@ -46,7 +46,7 @@ const WINDOW_CURSOR = "window:";
 export async function readHistoricalFederalVotesForMember(
   member: string,
   window: Window,
-  options: Pick<ProvenCivicDataHistoryOptions, "cursor" | "pageSize" | "bypassCache"> = {},
+  options: Pick<ProvenCivicDataHistoryOptions, "cursor" | "pageSize" | "bypassCache" | "voteBill"> = {},
 ): Promise<HistoricalFederalVotePage> {
   const own = await readFederalMemberVotes(member, { bypassCache: options.bypassCache });
   const recent = new Set(own.kind === "PROMOTED" || own.kind === "BOOTSTRAP" ? own.value.votes.map(vote => vote.id) : []);

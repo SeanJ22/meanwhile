@@ -6,7 +6,8 @@ import { askPlaybook } from "../ask/runtime-settings.ts";
  * 1. A different result type: `UNSOURCED`, never a `RoutingAnswer`.
  * 2. No sources field exists on it (no `sources`, `provenance` or `sourceUrl`).
  * 3. The plain-language mark leads, above the answer.
- * 4. It is last, never first: `shouldFallBack` refuses unless the sourced path has already declined.
+ * 4. It is displayed only after the sourced path declines. A missing recent vote may prepare it while
+ * retained votes are checked; a held answer wins and cancels the unused call.
  * Every answer states the source it used (`sourceLine`, on the record) and is one or two sentences. An
  * unsourced answer is not reader signal, not a position, and is not aggregated.
  */
@@ -18,7 +19,7 @@ import { MODELS, modelRequestFields, modelTierFor } from "../models.ts";
  * The mark, in plain language: this did not come from a record the site holds.
  */
 export const UNSOURCED_MARK =
-  "This answer did not come from any public record, and we have not checked it. It is a general answer from an AI, not something this site sourced.";
+  "AI answer";
 
 /** The source an unsourced answer states, naming the model that wrote it. */
 export function unsourcedSourceLine(model: string): string {
@@ -30,7 +31,7 @@ export function unsourcedSourceLine(model: string): string {
 /** What an unsourced answer is. Deliberately not a `RoutingAnswer`. */
 export interface UnsourcedAnswer {
   readonly kind: "UNSOURCED";
-  /** The generated text, verbatim. */
+  /** The generated answer, or the model's explicit unknown response. */
   readonly text: string;
   /** Always the mark. Present on the record so it cannot be rendered without. */
   readonly mark: typeof UNSOURCED_MARK;
@@ -79,14 +80,7 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  */
 const askModel = (): string => resolveAskRoleModel("UNSOURCED");
 
-/**
- * The system prompt, and every line of it is a constraint rather than a style.
- *
- * The model is told what it is NOT for, because the failure that matters is a
- * general model answering a civic question confidently — the router already
- * refused to route it, and a model that decides to have a go anyway would put
- * an unsourced claim about a real government in front of a reader.
- */
+/** The same published instructions used by every general AI answer. */
 function fallbackPrompt(): string {
   return askPlaybook("ASK_FALLBACK");
 }
@@ -95,6 +89,8 @@ export interface FallbackOptions {
   /** Overridden in tests so the suite never touches the network. */
   fetchImpl?: typeof fetch;
   recordCost?: AskCostWriter;
+  place?: string | null;
+  signal?: AbortSignal;
 }
 
 export type FallbackOutcome =
@@ -118,6 +114,13 @@ export async function askUnsourced(
      leaves room for the thinking (lib/models.ts). */
   const model = askModel();
   const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.UNSOURCED.thinking, effort: ASK_MODEL_ROLES.UNSOURCED.effort });
+  const today = new Date();
+  const year = today.getUTCFullYear();
+  // A new Congress starts at noon Eastern on January 3 (17:00 UTC in January).
+  const congressionalYear = year % 2 === 1 && today.getTime() < Date.UTC(year, 0, 3, 17) ? year - 1 : year;
+  const congress = Math.floor((congressionalYear - 1789) / 2) + 1;
+  const firstYear = 1789 + (congress - 1) * 2;
+  const billQuestion = /\b(?:h\s*\.?\s*r\s*\.?|s\s*\.?)\s*\d+\b/i.test(question);
   try {
     const response = await impl(MESSAGES_URL, {
       method: "POST",
@@ -132,18 +135,27 @@ export async function askUnsourced(
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
         ...(fields.effort ? { output_config: { effort: fields.effort } } : {}),
         system: [{ type: "text", text: fallbackPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
+        tools: [{ name: "answer_reader", description: "Answer only what was asked. If you do not know the requested fact, return known=false and an empty answer; do not narrate uncertainty or suggest a lookup.",
+            input_schema: { type: "object", properties: { known: { type: "boolean" }, answer: { type: "string",
+              description: "The fewest words that fully answer the question, normally 5–20 words for a simple question. No background, caveats, extra figures, or repeated place/date. Empty if unknown; never substitute an approximate number for an unknown exact one." } },
+              required: ["known", "answer"], additionalProperties: false } }],
+        tool_choice: fields.thinking?.type === "disabled" ? { type: "tool", name: "answer_reader" } : { type: "auto" },
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address
         // leaves this origin.
-        messages: [{ role: "user", content: scrubFreeText(question) }],
+        messages: [{ role: "user", content: `Today: ${today.toISOString().slice(0, 10)}.${options.place ? ` Reader's ZIP or place: ${scrubFreeText(options.place)}.` : ""}${billQuestion ? ` Current Congress: ${congress} (${firstYear}–${firstYear + 1}). Unless the question gives another Congress or year, its bill number refers to this Congress.` : ""}\n\n${scrubFreeText(question)}\n\nGive only the answer; for a simple question, one short sentence. Return it with answer_reader.` }],
       }),
+      signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(2_500)]) : AbortSignal.timeout(2_500),
     });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
 
     const body = (await response.json()) as {
-      content?: Array<{ type?: string; text?: string }>;
+      content?: Array<{ type?: string; text?: string; name?: string; input?: { known?: boolean; answer?: unknown } }>;
     };
-    const text = (body.content?.find((b) => b.type === "text")?.text ?? "").trim();
+    const general = body.content?.find(b => b.type === "tool_use" && b.name === "answer_reader")?.input;
+    const text = general?.known === false ? "I don't know."
+      : general?.known && typeof general.answer === "string" ? general.answer.trim()
+      : (body.content?.find(b => b.type === "text")?.text ?? "").trim();
     if (text === "" || /^DECLINE\b/i.test(text)) {
       // The model judged it civic. That verdict is honoured rather than
       // second-guessed: it is the same direction our own guard points, and

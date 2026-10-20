@@ -4173,30 +4173,6 @@ button.jurisdiction-badge-action:focus-visible {
   border-radius: 26px;
 }
 
-.map-reset-btn {
-  position: absolute;
-  top: 18px;
-  left: 64px;
-  z-index: 1050;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-pill);
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  color: var(--text-muted);
-  box-shadow: var(--shadow-card);
-  cursor: pointer;
-}
-
-.map-reset-btn:hover,
-.map-reset-btn:focus-visible {
-  color: var(--text);
-  border-color: var(--signal);
-}
-
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
@@ -4206,8 +4182,7 @@ button.jurisdiction-badge-action:focus-visible {
 
 /* When the hamburger shows: explicitly closed at any width, or the phone
    default (hidden) when not explicitly opened. */
-main[data-sidebar="closed"] .sidebar-toggle,
-main[data-sidebar="closed"] .map-reset-btn {
+main[data-sidebar="closed"] .sidebar-toggle {
   display: inline-flex;
 }
 
@@ -4216,8 +4191,7 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 @media (max-width: 639px) {
-  main:not([data-sidebar="open"]) .sidebar-toggle,
-  main:not([data-sidebar="open"]) .map-reset-btn {
+  main:not([data-sidebar="open"]) .sidebar-toggle {
     display: inline-flex;
   }
 
@@ -5439,8 +5413,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 @media (min-width: 640px) and (max-width: 1023px) {
   :root { --sidebar-w: 332px; }
-  /* 38px measures 221px; beside the 96px of controls only 190px is left here. `Logo` writes its size inline. */
-  .mw-reader .brand .wtp-logo { --wtp-logo-size: 32px !important; font-size: 32px !important; }
 }
 [data-theme="light"] {
   --ground: #eceef1;

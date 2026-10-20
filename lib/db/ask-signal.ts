@@ -1,4 +1,7 @@
 import { createHash } from "node:crypto";
+import { getDb } from "./index.ts";
+import { askInteractions } from "./schema.ts";
+import { assertWriteAllowed } from "./write-guard.ts";
 
 import {
   contactShapesIn,
@@ -106,6 +109,14 @@ export interface AskInteractionRow {
 
 export const ASK_QUESTION_MAX_CHARS = 400;
 export const ASK_ANSWER_MAX_CHARS = 4000;
+
+/** Persist the already-scrubbed Ask contract through the existing reader store. */
+export async function writeAskInteraction(row: AskInteractionRow): Promise<void> {
+  if (!process.env.DATABASE_URL) throw new Error("Ask question store is unavailable");
+  if (row.answerMode === "OFF" || row.answerMode === "TRANSPORT_FAILED") return;
+  assertWriteAllowed("an Ask question");
+  await getDb().insert(askInteractions).values({ ...row, answerMode: row.answerMode });
+}
 
 /** A five-digit ZIP or a short place label with no digits; anything else is stored as null. */
 export function normalizeApproximateLocation(raw: string | null): string | null {

@@ -137,8 +137,18 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const doors = await shutDoorsOf(input.repos, governmentId).catch(() => [] as ShutDoorNote[]);
   const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
-  const packetNow = async (): Promise<HuntPacket | null> =>
-    (await read([governmentId], input.now(), await readAskedGaps(input.repos, input.now()))).get(governmentId) ?? null;
+  const readerQuestion = item.autonomousPlan?.readerQuestion;
+  const packetNow = async (): Promise<HuntPacket | null> => {
+    const divisions = readerQuestion?.divisions.length ? readerQuestion.divisions : [governmentId.split("#")[0]!];
+    const packets = await read(divisions, input.now(), await readAskedGaps(input.repos, input.now()));
+    if (!readerQuestion) return packets.get(governmentId) ?? null;
+    // Read all held facts for the place before hunting its unanswered question.
+    // The question is work instructions, never a new checklist or evidence.
+    const held = [...packets.values()];
+    if (held.length === 0) return null;
+    return { governmentId, label: readerQuestion.place ? `ZIP ${readerQuestion.place}` : governmentId,
+      held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks) };
+  };
   const opening = await packetNow();
   const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
@@ -155,7 +165,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
     toolkitFor: ctx => buildScoutToolkit({ ...ctx, root: input.root, ...(input.environment ? { sourceApi: { env: input.environment } } : {}) }),
     contextFor: async (row, job) => {
       packet = await packetNow();
-      if (packet === null || packet.blanks.length === 0) return null;
+      if (packet === null || packet.blanks.length === 0 && !readerQuestion) return null;
       const manual = await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: governmentId, divisions: [governmentId] })).catch(() => null);
       const notes = manual === null ? [] : scoutFieldManualProjection(manual, { subjectId: governmentId, divisions: [governmentId],
         recordClasses: recordClassesOf(packet.blanks.map(blank => blank.checklistId)), limit: NOTE_LIMIT }).lines;
@@ -163,9 +173,10 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       const bound = durableResearchTools(input.tools, { project: item.project, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id, subjectId: governmentId });
       const reportPacket = packet;
       return {
-        brief: huntBrief(reportPacket, { role, tried, notes }),
+        brief: huntBrief(reportPacket, { role, tried, notes }) + (readerQuestion ?
+          `\n\nREADER'S UNANSWERED QUESTION: ${readerQuestion.text}\nAnswer this question first, using what we hold above and then public sources. Report each missing fact with its actual field name and exact supporting sentence. Never treat the question or an AI answer as evidence.` : ""),
         reason: `${role === "DETECTIVE" ? "Detective" : "Hunter"} for ${reportPacket.label}: ${reportPacket.blanks.length} open blank(s)${due && due.due ? `; ${due.why}` : ""}`,
-        blanks: reportPacket.blanks.length,
+        blanks: reportPacket.blanks.length + (readerQuestion ? 1 : 0),
         handed: { artifactIds: [] },
         tools: {
           vault: bound.vault, vaultBytes: bound.vaultBytes, spaceOut: bound.spaceOut,

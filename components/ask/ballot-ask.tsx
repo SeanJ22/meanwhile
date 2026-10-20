@@ -189,7 +189,7 @@ export function BallotAsk({
             </p>
           )}
 
-          {reply.mode === "UNRESOLVED" && (
+          {reply.mode === "UNRESOLVED" && !reply.answer && (
             <p>{unresolvedReadLine(reply)}</p>
           )}
 
@@ -206,13 +206,17 @@ export function BallotAsk({
           )}
 
           {/* The grounded sentence, when there is one that passed validation. */}
-          {reply.answer && !reply.agendaLead && <p className="mt-2">{reply.answer}</p>}
+          {reply.answer && <p className="mt-2">{reply.answer}</p>}
+          {reply.aiAnswer && <div className="mt-2" data-ask-ai-answer>
+            <p className="t-detail text-[var(--text-muted)]">AI answer</p>
+            <p>{reply.aiAnswer}</p>
+          </div>}
 
           {/* Records render whether or not prose did. */}
-          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={reply.agendaLead} prose={reply.agendaLead ? reply.answer : null} />
+          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={!reply.answer && reply.agendaLead} />
 
           {/* Named gaps, each one saying whose gap it is. */}
-          {gaps.map((g) => (
+          {(!reply.answer ? gaps : []).map((g) => (
             <p key={g.statement} className="mt-2 text-[var(--text-muted)]" data-gap={g.whose}>
               {g.statement}
             </p>

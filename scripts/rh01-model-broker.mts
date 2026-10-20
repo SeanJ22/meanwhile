@@ -3,9 +3,10 @@ import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { DiagnosticModelBudget, type DiagnosticPhase, type DiagnosticRole } from "./rh01-model-budget.mts";
+import { DiagnosticModelBudget, type DiagnosticPhase } from "./rh01-model-budget.mts";
 import { anthropicTransport, ModelTransportError, type AnthropicRateLimits, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
+import { diagnosticRoleFor } from "./rh01-model-scope.mts";
 
 const option = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const nativeFetch = globalThis.fetch;
@@ -17,16 +18,6 @@ const budget = new DiagnosticModelBudget(budgetPath), auth = randomBytes(32).toS
 // A key is read only in the explicit diagnostic-send mode, never for preparation.
 const key = authorized ? process.env.ANTHROPIC_API_KEY?.trim() : undefined;
 if (authorized && !key) throw Error("RH01 diagnostic provider credential is unavailable");
-const government = "ocd-division/country:us/state:az/county:pima", board = `${government}#governing`;
-function roleFor(request: ModelRequest): DiagnosticRole {
-  if (request.tools.some(tool => tool.name === "record_audit")) {
-    const content = request.messages[0]?.content;
-    if (typeof content !== "string" || JSON.parse(content).subjectId !== board) throw Error("RH01 diagnostic audit escaped its genuine Pima capture");
-    return "ADVERSARIAL_AUDITOR";
-  }
-  if (request.batchContext?.priority?.subjectId === government && request.tools.some(tool => tool.name === "finish")) return "SCOUT";
-  throw Error("RH01 diagnostic request is outside the two prepared native roles");
-}
 const server = createServer(async (request, response) => {
   response.setHeader("content-type", "application/json");
   try {
@@ -36,7 +27,7 @@ const server = createServer(async (request, response) => {
       if (bytes > 32 * 1024 * 1024) throw Error("RH01 provider request protocol bound exceeded"); chunks.push(chunk); }
     const body = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { phase: DiagnosticPhase; request: ModelRequest };
     if (!["before", "after"].includes(body.phase)) throw Error("RH01 diagnostic phase is invalid");
-    const role = roleFor(body.request); let limits: AnthropicRateLimits | null = null;
+    const role = diagnosticRoleFor(body.request); let limits: AnthropicRateLimits | null = null;
     const transport = budget.transport({ phase: body.phase, role, authorized,
       transport: anthropicTransport(key ?? "", async (url, init) => {
         if (String(url) !== "https://api.anthropic.com/v1/messages" || init?.method !== "POST") throw Error("RH01 provider endpoint refused");

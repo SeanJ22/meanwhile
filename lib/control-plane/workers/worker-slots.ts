@@ -7,12 +7,13 @@ import { join, resolve } from "node:path";
 
 const MIB = 1024 * 1024;
 /** Measured RSS floors; host observations may raise these, never lower them. */
-export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 544, national: 3648 };
+// The completed 15af national worker's owned-tree HWM was 2,386,071,552 bytes; 2,432 MiB retains more than 5% room.
+export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 544, national: 2432 };
 const SCOPED_DATA_PEAK_MIB = 1258;
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
-/** The promoter's own peak. Its national child takes a separate reservation. */
-export const NATIONAL_PLACE_PEAK_MIB = 1923;
+/** Completed promoter peaks: 435,355,648 bytes on 15af and 482,476,032 on 0305. The national child reserves separately. */
+export const NATIONAL_PLACE_PEAK_MIB = 512;
 /** Parent high-water observations, rounded up with room for sampling. */
 export const RUNNER_PARENT_PEAK_MIB: Readonly<Record<string, number>> = {
   "pilot-runner.mts": 384,
@@ -398,6 +399,7 @@ export interface WorkerProcessSlots {
 
 function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
+  if (entry.startsWith("national-place:") && script === "promote-registry-runtime.mts") return NATIONAL_PLACE_PEAK_MIB * MIB;
   const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
   const scripted = ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script);
   return Math.max(family ? STATE_PUBLICATION_PEAK_MIB : 0, family || scripted ? ROUTINE_ENTRY_PEAK_MIB[script] ?? 0 : 0) * MIB;

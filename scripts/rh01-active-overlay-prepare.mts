@@ -34,7 +34,8 @@ const [{ createFileRepositories }, { createPgRepositories }, { submit }, { readI
 interface PreparedHandoff {
   format: number; phase: string;
   nativeHandoff: { workItemId: string; acquirerTaskId: string; plan: AutonomousWorkPlan; sourceWorkItemIds: string[];
-    sourceRouteTaskIds: string[]; sourceAttemptIds: string[]; sourceArtifacts: { record: ArtifactRecord; key: string }[] };
+    sourceRouteTaskIds: string[]; sourceAttemptIds: string[]; sourceArtifacts: { record: ArtifactRecord; key: string }[];
+    parserExpectedFields?: Readonly<Record<string, string | number | boolean>> };
 }
 const manifest = JSON.parse(await readFile(join(prepared, "rh01-model-replay.json"), "utf8")) as PreparedHandoff;
 if (manifest.phase !== phase) throw Error("RH01 prepared source phase differs");
@@ -137,17 +138,19 @@ async function execute(taskId: string, role: "ACQUIRER" | "PARSER" | "VALIDATOR"
 const acquired = await execute(handoff.acquirerTaskId, "ACQUIRER", "ACQUIRED");
 if (acquired.result.role !== "ACQUIRER") throw Error("RH01 actual source acquisition result is absent");
 const primary = acquired.result.artifacts.filter(row => row.completeness === "COMPLETE" && contract.schemaVersion === 2 && contract.sourceScope.canonicalUrls.includes(row.canonicalUrl));
-if (primary.length !== 1) throw Error("RH01 actual acquisition did not retain exactly its declared API representation");
+if (primary.length !== 1) throw Error("RH01 actual acquisition did not retain exactly its declared source representation");
 const artifactId = primary[0].artifactId;
 const parserTask = await enqueueWorkerTask(repos, { workItemId, role: "PARSER", artifactId, contract, now: at,
   purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
 const parser = await execute(parserTask.id, "PARSER", "EXTRACTED");
-if (parser.result.role !== "PARSER" || !parser.result.records.length || parser.result.records.some(row => row.fields.EventBodyId !== 138 || row.fields.EventBodyName !== "Board of Supervisors"))
-  throw Error("RH01 new source does not bind only the genuine declared Pima body");
+if (parser.result.role !== "PARSER" || !parser.result.records.length) throw Error("RH01 genuine source has no extracted records");
+if (!handoff.parserExpectedFields || parser.result.records.length !== 1 || parser.result.records.some(row =>
+    Object.entries(handoff.parserExpectedFields!).some(([field, value]) => row.fields[field] !== value)))
+  throw Error("RH01 extracted source differs from its actual held Pima observation");
 const validatorTask = await enqueueWorkerTask(repos, { workItemId, role: "VALIDATOR", artifactId, contract, now: at,
   producerResultId: parser.id, purpose: "DIAGNOSTIC_REPLAY", replayLabel: `RH01:${phase}:${process.env.WTP_WORKER_MEMORY_RELEASE}` });
 const validator = await execute(validatorTask.id, "VALIDATOR", "PASS");
-// Fail on canonical/first-party context before making the one allowed paid after-audit request.
+// Verify canonical first-party context before any paid audit work is offered.
 const method = await openRuntimeMethod(repos);
 try {
   const runtime = standingFleetRuntime({ root: codeRoot, repos, vaultRoot: join(shared, "vault"), method, now: () => new Date().toISOString() });

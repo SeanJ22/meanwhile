@@ -133,11 +133,14 @@ export function describePending(snapshot: PendingSnapshot): string {
  * in flight, as `<repository>.<method>`. Arguments are never recorded.
  */
 export function trackStoreCalls(repos: ControlPlaneRepositories, pending: PendingOperations): ControlPlaneRepositories {
+  const repositories = new WeakMap<object, object>();
   return new Proxy(repos, {
     get(target, key, receiver) {
       const value = Reflect.get(target, key, receiver);
       if (!value || typeof value !== "object") return value;
-      return new Proxy(value, {
+      const prior = repositories.get(value);
+      if (prior) return prior;
+      const repository = new Proxy(value, {
         get(repository, method) {
           const operation = Reflect.get(repository, method);
           if (typeof operation !== "function") return operation;
@@ -158,6 +161,8 @@ export function trackStoreCalls(repos: ControlPlaneRepositories, pending: Pendin
           };
         },
       });
+      repositories.set(value, repository);
+      return repository;
     },
   });
 }

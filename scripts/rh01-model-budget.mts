@@ -11,7 +11,9 @@ export type DiagnosticPhase = "before" | "after";
 export type DiagnosticRole = "SCOUT" | "ADVERSARIAL_AUDITOR";
 export const RH01_DIAGNOSTIC_LIMITS = {
   totalUsd: 5, model: MODELS.haiku.model,
-  perPhase: { SCOUT: { usd: 2.49, calls: 80, outputTokens: 8_192 }, ADVERSARIAL_AUDITOR: { usd: 0.01, calls: 1, outputTokens: 2_048 } },
+  // Parent sizing and the final simultaneous workload each need a real audit.
+  // Their separate role allowance remains inside the unchanged shared $5 cap.
+  perPhase: { SCOUT: { usd: 2.49, calls: 80, outputTokens: 8_192 }, ADVERSARIAL_AUDITOR: { usd: 0.02, calls: 2, outputTokens: 2_048 } },
   priceSource: MODEL_PRICE_SOURCE, pricesStatedOn: MODEL_PRICES_STATED_ON,
 } as const;
 const nanos = (usd: number) => Math.ceil(usd * 1_000_000_000);

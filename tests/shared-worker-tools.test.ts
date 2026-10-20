@@ -117,8 +117,8 @@ test("Linux cgroup availability credits only proved clean inactive disk cache", 
     const release = await slots.acquire("lib/control-plane/workers/national-worker.ts", Date.now() + 1000);
     try {
       host.transact(state => {
-        assert.equal(state.reservations[0]?.peak, 3648 * mib);
-        assert.equal(state.parents[0]?.peak, 1923 * mib);
+        assert.equal(state.reservations[0]?.peak, WORKER_ENTRY_PEAK_MIB.national! * mib);
+        assert.equal(state.parents[0]?.peak, NATIONAL_PLACE_PEAK_MIB * mib);
       }, false);
     } finally { release(); }
   });
@@ -566,6 +566,32 @@ test("national pairs retain both measured entry peaks and the 768 MiB margin", a
     for (const done of active) done();
     release();
   }
+});
+
+test("native national entries retain their completed promoter and child floors while ordinary publication and observations keep their own bounds", async () => {
+  const mib = 1048576, host = workerMemoryHost({ processes: () => [] });
+  let available = (768 + 512) * mib;
+  const sources = routineProcessSlots({ host, availableBytes: () => available });
+  const workers = workerProcessSlots(() => 2, { host, availableBytes: () => available });
+  const entry = "national-place:85535/scripts/promote-registry-runtime.mts";
+  const promoter = await sources.acquire(entry, Date.now() + 1000);
+  host.transact(state => assert.equal(state.reservations[0]?.peak, 512 * mib,
+    "the script's ordinary 768 MiB minimum must not override the measured national-place mode"), false);
+  available = (768 + 512 + 2432) * mib;
+  const child = await workers.acquire("lib/control-plane/workers/national-worker.ts", Date.now() + 1000);
+  host.transact(state => assert.deepEqual(state.reservations.map(row => row.peak), [512 * mib, 2432 * mib]), false);
+  await assert.rejects(workers.acquire("lease-worker.ts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/,
+    "the fully reserved native pair leaves exactly the unchanged 768 MiB margin");
+  child(); promoter();
+  available = (768 + 768) * mib;
+  const ordinary = await sources.acquire("worker-publication:registry-runtime:AZ/scripts/promote-registry-runtime.mts", Date.now() + 1000);
+  host.transact(state => assert.equal(state.reservations[0]?.peak, 768 * mib), false);
+  ordinary();
+  host.transact(state => { (state.peaks ??= {})[workerMemoryPeakKey(entry)!] = [600 * mib]; }, false);
+  const observed = await sources.acquire(entry, Date.now() + 1000);
+  host.transact(state => assert.equal(state.reservations[0]?.peak, reservedFor([600 * mib]),
+    "a larger actual observation still raises the measured floor with the existing shared key and 5% rounding"), false);
+  observed();
 });
 
 test("all publication siblings and routine script families reserve their measured peak", async () => {

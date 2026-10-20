@@ -45,20 +45,21 @@ test("one shared SQLite ledger enforces both phases, native calls and the five d
     for(const phase of ["before","after"]as const){
       const audit=first.transport({phase,role:"ADVERSARIAL_AUDITOR",authorized:true,transport:send});
       await audit({...request(),max_tokens:2048});
+      await audit({...request(),max_tokens:2048});
       await assert.rejects(audit({...request(),max_tokens:2048}),/call limit/);
     }
     const rows=first.snapshot().calls;
-    assert.equal(sent,4);assert.equal(rows.length,4);
+    assert.equal(sent,6);assert.equal(rows.length,6);
     assert.ok(rows.reduce((sum,row)=>sum+Number(row.reservedUsd),0)<=5);
     assert.ok(rows.every(row=>row.actualUsd!==null&&row.usageJson!==null));
     const descriptor=join(directory,"broker.json");await writeFile(descriptor,JSON.stringify({budgetPath:file}));
     const beforeReport=await diagnosticModelCalls(descriptor,"before",0),afterReport=await diagnosticModelCalls(descriptor,"after",0);
-    assert.deepEqual(beforeReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR"]);
-    assert.deepEqual(afterReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR"]);
+    assert.deepEqual(beforeReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR","ADVERSARIAL_AUDITOR"]);
+    assert.deepEqual(afterReport.map(row=>row.role),["SCOUT","ADVERSARIAL_AUDITOR","ADVERSARIAL_AUDITOR"]);
     assert.ok([...beforeReport,...afterReport].every(row=>row.usd!==null&&row.usd>0&&row.usage!==null));
     assert.deepEqual(await diagnosticModelCalls(descriptor,"before",Date.now()+1000),[]);
     assert.deepEqual(await diagnosticModelCalls(undefined,"before",0),[]);
-    assert.equal(first.snapshot().calls.length,4,"read-only component reporting must not reset the shared cap");
+    assert.equal(first.snapshot().calls.length,6,"read-only component reporting must not reset the shared cap");
   }finally{first.close();second.close();await rm(directory,{recursive:true,force:true});}
 });
 

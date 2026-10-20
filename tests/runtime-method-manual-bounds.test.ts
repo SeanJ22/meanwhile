@@ -17,6 +17,9 @@ import { unknownApplicability } from "../lib/method/portability.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { openRuntimeMethod, readRuntimeMethodVersion, requireRuntimeMethodVersion, readRuntimeMaturity,
   readMethodProgressionSnapshot, methodCatalogRequest, closeMethodCatalogHost } from "../lib/method/runtime-manual.ts";
+import { observeCyclePhases } from "../lib/control-plane/scheduler/cycle-phases.ts";
+import { PendingOperations, trackStoreCalls } from "../lib/control-plane/scheduler/cycle-stall.ts";
+import { closeAuditHistoryIndex, withIndexedAuditSample } from "../lib/control-plane/workers/audit-history-index.ts";
 
 const at = "2026-10-20T00:00:00.000Z";
 const request = { jurisdiction: { state: "az", governmentType: "county", platform: "legistar", publisher: "own.example.gov" },
@@ -25,6 +28,49 @@ const route = (id: string) => ({ ...methodFixture().routes[0]!, id, title: id, f
   applicability: unknownApplicability(), outcomes: [], subBranches: [] });
 const entry = (id: string, payload: unknown, source = "learned") => newFieldManualEntry(source, id, {
   kind: "ROUTE", role: "SHARED", title: id, summary: "Procedure retained", outcome: "REFERENCE", payload });
+
+for (const tracked of [false, true]) test(`native ${tracked ? "nested tracked" : "phase-observed"} method catalog keeps its token through floors and worker shutdown`, async () => {
+  const stores = createMemoryRepositories();
+  await writeFieldManual(stores, [methodVersionEntry({ ...methodFixture(), version: 23 }), entry("own", route("own"))], at);
+  const observer = observeCyclePhases(stores), pending = new PendingOperations();
+  const repos = tracked ? trackStoreCalls(observer.repos, pending) : observer.repos;
+  const first = await openRuntimeMethod(repos);
+  let second: Awaited<ReturnType<typeof openRuntimeMethod>> | undefined;
+  try {
+    assert.deepEqual((await first.floorFor(request)).routes.map(row => row.routeId), ["own", "adapter:own"]);
+    second = await openRuntimeMethod(repos);
+    await first.close();
+    assert.deepEqual((await second.floorFor(request)).routes.map(row => row.routeId), ["own", "adapter:own"],
+      "closing one worker token must preserve the same shared snapshot held by another");
+    assert.equal(repos.fieldManual, repos.fieldManual, "instrumentation preserves logical repository identity");
+    assert.notEqual(repos.fieldManual, stores.fieldManual, "calls still pass through their instrumentation");
+    assert.equal(second.version, 24);
+    assert.equal(observer.finish("runtime").repositoryCalls, 2, "the two actual projected reads remain counted");
+    assert.equal(pending.snapshot().storeInFlight, 0);
+  } finally {
+    await first.close(); await second?.close(); await closeMethodCatalogHost(repos);
+  }
+});
+
+test("nested repository observation reuses the shared audit index and preserves each sampler's counted history", async () => {
+  const stores = createMemoryRepositories(), read = stores.workerResults.readChangedSince;
+  let scans = 0;
+  stores.workerResults.readChangedSince = async (...args) => { scans++; return read(...args); };
+  const observer = observeCyclePhases(stores), pending = new PendingOperations();
+  const repos = trackStoreCalls(observer.repos, pending);
+  const input = { samplerId: "one-burst", stratum: "MEETING|own.example.gov", producerResultId: null };
+  const sample = (samplerId = input.samplerId) => withIndexedAuditSample(repos, { ...input, samplerId }, history => ({ value: history ?? null, count: true }));
+  try {
+    assert.equal(await sample(), null);
+    assert.deepEqual(await sample(), { reviewed: 1, survivedSinceBreak: 0, everBroken: false });
+    assert.equal(scans, 1, "the second sample reuses the burst's durable disk snapshot");
+    assert.equal(await sample("new-burst"), null, "a distinct burst still takes a genuine new source snapshot");
+    assert.equal(scans, 2);
+    assert.equal(repos.workerResults, repos.workerResults);
+    assert.equal(observer.finish("audit").repositoryCalls, 4, "both source refreshes and exact manual fallback reads are observed");
+    assert.equal(pending.snapshot().storeInFlight, 0);
+  } finally { await closeAuditHistoryIndex(repos); }
+});
 
 for (const count of [3, 2000]) test(`shared method host offers the same own-place floor with ${count} foreign routes and no country payload transfer`, async () => {
   const repos = createMemoryRepositories();

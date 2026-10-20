@@ -34,7 +34,7 @@ function breakpointFor(width: number): ReaderBreakpoint {
 export function useReaderLayout() {
   const [size, setSize] = useState({ w: 1440, h: 900 });
   const [header, setHeader] = useState<HTMLElement | null>(null);
-  const [measuredBottom, setMeasuredBottom] = useState<number | null>(null);
+  const [measured, setMeasured] = useState<{ width: number; bottom: number } | null>(null);
 
   useEffect(() => {
     const read = () => setSize({ w: window.innerWidth, h: window.innerHeight });
@@ -45,7 +45,13 @@ export function useReaderLayout() {
 
   useEffect(() => {
     if (!header) return;
-    const measure = () => setMeasuredBottom(Math.round(header.getBoundingClientRect().bottom));
+    const measure = () => {
+      const box = header.getBoundingClientRect();
+      if (header.isConnected && box.height > 0) {
+        const width = window.innerWidth, bottom = Math.round(box.bottom);
+        setMeasured(held => held?.width === width && held.bottom === bottom ? held : { width, bottom });
+      }
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(header);
@@ -57,8 +63,9 @@ export function useReaderLayout() {
 
   return useMemo(() => {
     const bp = breakpointFor(size.w);
-    const headerBottom =
-      header && measuredBottom !== null ? measuredBottom : FALLBACK_HEADER_BOTTOM[bp];
+    // Opening the menu unmounts this header. Retain its measured size until
+    // the viewport changes, so closing a card cannot jump through a fallback.
+    const headerBottom = measured?.width === size.w ? measured.bottom : FALLBACK_HEADER_BOTTOM[bp];
     const sidebarWidth = bp === "tablet" ? 332 : 368;
 
     const phoneTop = (sidebar: boolean, selection: number) =>
@@ -93,5 +100,5 @@ export function useReaderLayout() {
     };
 
     return { bp, headerBottom, measureHeader, sidebarWidth, mapInsets, sheetHeight };
-  }, [size, measuredBottom, header, measureHeader]);
+  }, [size, measured, measureHeader]);
 }

@@ -1,6 +1,6 @@
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { readStatePackage, readStateDistricts, primeStateDistrictPointers } from "../reader/state.ts";
+import { readStatePackage, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
 import { readZipPlace, stateForZip } from "../reader/national.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
@@ -37,6 +37,9 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const point = place.centroid;
   const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
   const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip), districts: readStateDistricts(state) }));
+  // Reserve these promises now: the ballot's early incumbent and portrait reads
+  // consume the state query's verified ZIP slices instead of opening another read.
+  if (zip) for (const {state,read} of packages) void primeStateReaderPointers(state,read).catch(()=>undefined);
   const [rawEntry, territories] = await Promise.all([
     place.zip ? readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : Promise.resolve(null),
     Promise.allSettled(states.map(readTerritory)),
@@ -54,7 +57,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [
     ...(["ballot-contests"] as const).flatMap(family =>
       stateAuthorityPointers(family, state)),
-    ...(state === "NH" ? [requiredRoutineContract("nh-members")] : []),
+    ...(state === "NH" && !zip ? [requiredRoutineContract("nh-members")] : []),
   ]);
   for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
   for (const division of divisions) {

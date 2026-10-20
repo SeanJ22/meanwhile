@@ -54,6 +54,16 @@ const states = serverReaderValue("state-reads", () => new Map<string, Promise<Re
 const districtReads = serverReaderValue("district-reads", () => new Map<string, Promise<Slice<GeographySlice>>>());
 const requests = serverReaderValue("state-requests", () => new WeakMap<object, Map<string, Promise<ReaderStatePackage>>>());
 const districtCanonical = serverReaderValue("state-district-canonical", () => new WeakMap<ReaderStatePackage, Awaited<ReturnType<typeof readCanonicalShelf>>>());
+const selectedCanonical = serverReaderValue("state-selected-canonical", () => new WeakMap<ReaderStatePackage, import("../civic-data/read-model.ts").CivicDataReadStore>());
+
+/** Reserve the ZIP's existing people and directory reads before ballot cards ask for them. */
+export function primeStateReaderPointers(state: string, read: Promise<ReaderStatePackage>): Promise<void> {
+  return primeReaderCanonicalStore([...zipSourcePointers(state), {recordClass:"STATE_LEGISLATOR",scope:`US-${state}`}], read.then(value => {
+    const canonical = selectedCanonical.get(value);
+    if (!canonical) throw new Error("READER_SELECTED_STATE_REQUIRED");
+    return canonical;
+  }));
+}
 
 /** The ZIP's district pointers travelled with its state and keep the same canonical proof. */
 export function primeStateDistrictPointers(state: ReaderStatePackage): Promise<void> {
@@ -159,7 +169,10 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     stateLegislatorAuthority: stateLegislatorCoverageAuthority(`US-${state}`, people),
     federal: directory, president, memberOffices, boundaryUrl: BOUNDARY_ARCHIVE_FALLBACK,
   };
-  if (zip) districtCanonical.set(result, canonical);
+  if (zip) {
+    districtCanonical.set(result, canonical);
+    selectedCanonical.set(result, options.store);
+  }
   return result;
 }
 

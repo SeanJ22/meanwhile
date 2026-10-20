@@ -1,4 +1,5 @@
 import {Suspense} from "react";
+import {preload as preloadResource} from "react-dom";
 import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
@@ -115,6 +116,7 @@ import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 import {
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
+  candidateProfilesReadState,
 } from "@/lib/civic-data/manual-read-models";
 import {
   settleBallotNavigationRead,
@@ -302,6 +304,7 @@ async function BallotBattlecard({
   context,
   authorityAvailability,
   readerSelection,
+  stanceTopics,
 }: {
   name: string;
   partyLine: React.ReactNode;
@@ -328,6 +331,7 @@ async function BallotBattlecard({
   authorityAvailability: BallotAuthorityAvailability;
 
   readerSelection: ReaderSelection | undefined;
+  stanceTopics: ReturnType<typeof readStanceTopics>;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
   const recordHolder = resolvedStanding?.holderFor.get(targetKey) ?? null;
@@ -346,7 +350,7 @@ async function BallotBattlecard({
   if (!positionsUnavailable) {
     try {
       positions = await withBallotReader(readerSelection, async () =>
-        positionsFor(state, targetKey, null, await readStanceTopics(), recordHolder?.id));
+        positionsFor(state, targetKey, null, await stanceTopics, recordHolder?.id));
     } catch {
       positionsUnavailable = true;
     }
@@ -499,6 +503,8 @@ export default readerRoute("/ballot", async function BallotPage({
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
   void pointDivisionsRead.catch(() => undefined);
   const readerData = await readBallotReaderData(place);
+  const stanceTopics = readStanceTopics();
+  void stanceTopics.catch(()=>undefined);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
   if (centroid && knownState) {
     startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
@@ -558,7 +564,25 @@ export default readerRoute("/ballot", async function BallotPage({
   if (set && matched) {
     const candidateDetails = readerData ? primeBallotCandidateDetails(set,matched.contests) : Promise.resolve();
     void candidateDetails.catch(() => {});
-    preload("candidate-profiles", async () => { await candidateDetails; return settleCandidateProfilesRead(set!.election.state); });
+    preload("candidate-profiles", async () => {
+      await candidateDetails;
+      const version = await settleCandidateProfilesRead(set!.election.state);
+      const read = candidateProfilesReadState(set!.election.state);
+      if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+        // Fetch the leading portraits while the independent money/office reads
+        // finish, instead of discovering them after the streamed cards lay out.
+        let portraits=0;
+        leadingPortraits: for (const contest of matched!.contests.filter(contest=>contest.type==="CANDIDACY")) {
+          const lineup = lineupForContest(set!.election.state,contest.id);
+          const keys = lineup ? lineup.nominees.map(n=>`${contest.id}|${n.name}`) : candidatesOf(set!,contest).map(c=>c.id);
+          for (const key of keys) {
+            const photo=read.value.cards.cards[key]?.photoUrl;
+            if(photo){preloadResource(photo,{as:"image"});if(++portraits===5)break leadingPortraits;}
+          }
+        }
+      }
+      return version;
+    });
     preload("candidate-publications", async () => { await candidateDetails; return settleCandidateCorpusRead(set!.election.state); });
     preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
@@ -1270,7 +1294,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
-                              readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                           />
                         }
                       />
@@ -1396,7 +1420,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                   : null
                               }
                               authorityAvailability={authorityAvailability}
-                              readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                             />
                           }
                         />
@@ -1449,7 +1473,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             contestId={contest.id} resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
                         />
                         <p className="mt-1 t-detail text-muted"><a href={provenance.sourceUrl ?? undefined} className="text-link underline" target="_blank" rel="noreferrer">{provenance.sourceOrg}</a> · read {formatDateMDY(provenance.collectedAt)}</p>
                       </li>;

@@ -20,7 +20,7 @@ const dmSans = DM_Sans({
 // might compare column-wise or copy.
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 

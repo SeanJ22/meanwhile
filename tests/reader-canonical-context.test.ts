@@ -6,7 +6,7 @@ import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
-import { readStatePackage, readStateDistricts, primeStateDistrictPointers } from "../lib/reader/state.ts";
+import { readStatePackage, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../lib/reader/authority-reads.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
@@ -159,12 +159,19 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   });
   try {
     await withReaderSelection(selection("AZ"),async()=>{
-      const zip = readStatePackage("AZ",[],"85701"), held = await zip;
+      const zip = readStatePackage("AZ",[],"85701");
+      const people = primeStateReaderPointers("AZ",zip);
+      const federalScope = stateAuthorityPointers("federal-directory","AZ")[0].scope;
+      assert.ok(readerCanonicalEntry("FEDERAL_DIRECTORY",federalScope),"early ballot readers reserve the in-flight state answer");
+      const held = await zip;
+      await people;
+      assert.equal((await readStateAuthorityProjection("federal-directory","AZ")).result.kind,"NOT_RECORDED");
+      assert.equal((await readPromotedCivicData("STATE_LEGISLATOR","US-AZ")).kind,"NOT_RECORDED");
       assert.equal(readStatePackage("AZ"),zip,"late incumbent reads reuse the ZIP's identical state data");
       assert.equal(await readStateDistricts("AZ"),held.districts);
       await primeStateDistrictPointers(held);
       assert.equal((await readerCanonicalEntry("CURATED_READER_RECORD",scope))?.kind,"NOT_RECORDED");
-      assert.equal(reads,1,"priming absent district pointers adds no query");
+      assert.equal(reads,1,"district, incumbent and federal readers reuse held absences without another query");
     });
     await withReaderSelection(selection("AZ"),()=>readStatePackage("AZ",[],"85003"));
     assert.equal(reads,2,"a different request and ZIP performs its own selected lookup");

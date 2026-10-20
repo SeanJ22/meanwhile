@@ -12,6 +12,7 @@ import {createSecureServer, type ServerHttp2Session} from "node:http2";
 import {tmpdir} from "node:os";
 import {join,resolve,extname} from "node:path";
 import {gzipSync} from "node:zlib";
+import {build as bundleFunction} from "esbuild";
 import {neon,neonConfig} from "@neondatabase/serverless";
 import type {Request as BrowserRequest} from "playwright";
 import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
@@ -34,12 +35,13 @@ assert.equal(zips.length*profiles.length*surfaces.length,1,"Each process measure
 await mkdir(output,{recursive:true});
 let directReadBytes=0,serverReadBytes=0,serverLog="";
 let server:ReturnType<typeof spawn>|undefined;
+const nativeServers:ReturnType<typeof spawn>[]=[];
 let relay:ReturnType<typeof createSecureServer>|undefined,certDirectory:string|undefined;
 const relaySessions=new Set<ServerHttp2Session>();
 const rows:Record<string,unknown>[]=[];
 let build:unknown,buildId:string|undefined,identity:unknown;
 const save=()=>writeFile(`${output}/timings.json`,JSON.stringify({at:new Date().toISOString(),origin,serverOrigin:built?serverOrigin:null,motion,build,buildId,identity,
-  transport:built?"Streaming HTTP/2 TLS loopback proxy; generated standalone server starts on the first dynamic request; browser-only DNS override":"Live production",
+  transport:built?"Streaming HTTP/2 TLS loopback proxy; separate cold native Meetings/geocode functions and generated standalone Next server start on demand; browser-only DNS override":"Live production",
   provider:{mode:browser.provider.policy.mode,spent:browser.provider.spent,blocked:browser.provider.blocked,refused:browser.provider.refused},
   productionCopyReadBytes:built?{direct:directReadBytes,server:serverReadBytes,total:directReadBytes+serverReadBytes}:null,
   method:built?"Fresh browser and generated standalone server process per ZIP/profile/surface; production-copy database; cold startup is inside the navigation clock; navigation through full rendering, load event, complete initial API reads, and two painted frames; one real first Ask opening, input tap and typing; no question submission":"Fresh browser process/context; live production server warmth is uncontrolled; complete page rendering and first Ask opening, input tap and typing; no question submission",rows},null,2)+"\n");
@@ -74,7 +76,38 @@ if(built){
  certDirectory=await mkdtemp(join(tmpdir(),"rs03-browser-"));
  execFileSync("openssl",["req","-x509","-newkey","rsa:2048","-nodes","-keyout",join(certDirectory,"key.pem"),"-out",join(certDirectory,"cert.pem"),"-days","1","-subj",`/CN=${publicUrl.hostname}`,"-addext",`subjectAltName=DNS:${publicUrl.hostname}`],{stdio:"ignore"});
  // Netlify serves build assets from its CDN, without invoking the Next function.
- // Project those same bytes here; dynamic documents and APIs stay on cold Next.
+ // Project those same bytes here; each dynamic host starts on its first request.
+ const nativeStarts=new Map<string,()=>Promise<void>>();
+ for(const [path,functionName,port] of [["/api/meetings","reader-meetings",3306],["/api/geocode","reader-geocode",3307]] as const){
+  const nativeEntry=join(certDirectory,`${functionName}.mjs`);
+  await bundleFunction({stdin:{resolveDir:process.cwd(),loader:"ts",contents:`
+   import {createServer} from 'node:http';
+   import reader from './netlify/functions/${functionName}.mts';
+   process.once('SIGTERM',()=>process.exit(0));
+   createServer(async(request,response)=>{
+    try {
+     const chunks=[];for await(const chunk of request)chunks.push(chunk);
+     const body=Buffer.concat(chunks);
+     const input=new Request('http://127.0.0.1:${port}'+request.url,{method:request.method,headers:request.headers,...(body.length?{body}:{} )});
+     const answer=await reader(input,{waitUntil:work=>work.catch(console.error)});
+     response.writeHead(answer.status,Object.fromEntries(answer.headers));
+     response.end(Buffer.from(await answer.arrayBuffer()));
+    }catch(error){console.error(error);response.writeHead(500).end()}
+   }).listen(${port},'127.0.0.1',()=>console.log('Reader function ready'));
+  `},bundle:true,platform:"node",format:"esm",target:"node24",external:["next","next/*"],outfile:nativeEntry,
+  banner:{js:"import {createRequire as __rs03Require} from 'node:module';const require=__rs03Require(import.meta.url);"},logLevel:"silent"});
+  let starting:Promise<void>|undefined;
+  nativeStarts.set(path,()=>starting??=(async()=>{
+   const child=spawn(process.execPath,[nativeEntry],{env:{...process.env,DATABASE_URL:connection,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"]});
+   nativeServers.push(child);
+   child.stdout!.on("data",chunk=>{serverLog+=String(chunk)});child.stderr!.on("data",chunk=>{serverLog+=String(chunk)});
+   await new Promise<void>((ready,reject)=>{
+    const timer=setTimeout(()=>reject(new Error("Native function did not start")),20000);
+    child.stdout!.on("data",chunk=>{if(String(chunk).includes("Reader function ready")){clearTimeout(timer);ready()}});
+    child.once("exit",()=>{clearTimeout(timer);reject(new Error("Native function exited"))});
+   });
+  })());
+ }
  const staticFiles=new Map<string,{body:Buffer;type:string;compressed:boolean}>();
  const {readdir}=await import("node:fs/promises");
  for(const [directory,prefix] of [[".next/static","/_next/static"],["public",""]]){
@@ -96,9 +129,10 @@ if(built){
   const requestUrl=new URL(request.url!,origin);
   const asset=request.method==="GET"&&!request.headers.rsc?staticFiles.get(requestUrl.pathname):undefined;
   if(asset){response.writeHead(200,{"content-type":asset.type,"content-length":asset.body.length,...(asset.compressed?{"content-encoding":"gzip"}:{}),"x-rs03-build":buildId});response.end(asset.body);return;}
-  try{await ensureServer();}catch{response.writeHead(502);response.end();return;}
+  const native=nativeStarts.get(requestUrl.pathname);
+  try{await (native?native():ensureServer());}catch{response.writeHead(502);response.end();return;}
   const headers=Object.fromEntries(Object.entries(request.headers).filter(([key])=>!key.startsWith(":")));
-  const upstream=httpRequest(`${serverOrigin}${request.url}`,{method:request.method,headers:{...headers,host:publicUrl.host}},reply=>{
+  const upstream=httpRequest(`${native?`http://127.0.0.1:${requestUrl.pathname==="/api/meetings"?3306:3307}`:serverOrigin}${request.url}`,{method:request.method,headers:{...headers,host:publicUrl.host}},reply=>{
    const headers=Object.fromEntries(Object.entries(reply.headers).filter(([key])=>!["connection","keep-alive","transfer-encoding","upgrade","proxy-connection"].includes(key)));
    response.writeHead(reply.statusCode??502,{...headers,"x-rs03-build":buildId});reply.pipe(response);
   });
@@ -185,6 +219,12 @@ try{
    if(request.url().includes("/api/"))requests.push({url:request.url(),timing:request.timing(),sizes,serverTiming:(await request.response())?.headers()["server-timing"]});
   });
   page.on("pageerror",error=>errors.push(error.message));
+  const ready = (selector: string) => page.waitForFunction(selector=>Array.from(document.querySelectorAll<HTMLElement>(selector)).some(element=>{
+   const box=element.getBoundingClientRect(),style=getComputedStyle(element);
+   return box.width>0&&box.height>0
+    &&style.visibility!=="hidden"&&style.display!=="none"&&element.getAttribute("aria-disabled")!=="true"
+    &&!(element as HTMLButtonElement).disabled;
+  }),selector,{timeout:20000});
   try{
    const navigation=await page.goto(`${origin}${surface==="ballot"?"/ballot":"/"}?zip=${zip}`,{waitUntil:"commit",timeout:45000});
    if(built)assert.equal(navigation?.headers()["x-rs03-build"],buildId,"The browser must receive the measured build through the streaming proxy");
@@ -199,13 +239,16 @@ try{
    }
    if(surface==="ask"){
     // A real first click waits for a usable control; a custom event before hydration is lost.
+    await ready(".ask-pill");
     await page.locator(".ask-pill").filter({visible:true}).first().click({timeout:15000});
-    const box=page.locator("[data-ask-panel] [data-ask-box]").first();await box.waitFor({state:"visible",timeout:15000});
+    const box=page.locator("[data-ask-panel] [data-ask-box]").first();await ready("[data-ask-panel] [data-ask-box]");
     await box.click({timeout:5000});
     await box.fill("Where can I attend a meeting?");
    }else if(surface==="ballot"){
-    await page.getByRole("heading",{name:/^What's on the ballot/}).first().waitFor({state:"visible",timeout:20000});
+    await page.waitForFunction(()=>/^What's on the ballot/.test(document.querySelector("h1")?.textContent??""),undefined,{timeout:20000});
+    await ready("[data-ballot-ask-pill]");
     await page.locator("[data-ballot-ask-pill]").first().click({timeout:15000});
+    await ready("[data-ballot-ask] [data-ask-input]");
     await page.locator("[data-ballot-ask] [data-ask-input]").first().click({timeout:5000});
     await page.locator("[data-ballot-ask] [data-ask-input]").first().fill("What is on my ballot?",{timeout:15000});
    }else{
@@ -216,8 +259,9 @@ try{
     },phone,{timeout:20000});
     if(surface==="meetings"||surface==="officials"){
      if(phone)await page.locator(".mw-sheet-handle").click({timeout:5000});
+     await ready(`[data-stat="${surface}"]`);
      await page.locator(`[data-stat="${surface}"]`).click({timeout:5000});
-     await page.locator(surface==="meetings"?".al-overlay-body":".door-panel").filter({visible:true}).first().waitFor({state:"visible",timeout:10000});
+     await ready(surface==="meetings"?".al-overlay-body":".door-panel");
     }
     if(surface==="home"||surface==="map"){
      await page.waitForFunction(()=>{
@@ -287,14 +331,18 @@ try{
 }finally{
  await browser.close();
  if(relay)await new Promise<void>(resolve=>{relay!.close(()=>resolve());for(const session of relaySessions)session.destroy();});
- if(certDirectory)await rm(certDirectory,{recursive:true,force:true});
  if(server&&server.exitCode===null&&server.signalCode===null){const stopped=once(server,"close");server.kill("SIGTERM");const timer=setTimeout(()=>server!.kill("SIGKILL"),2000);await stopped;clearTimeout(timer);}
+ for(const child of nativeServers)if(child.exitCode===null&&child.signalCode===null){const stopped=once(child,"close");child.kill("SIGTERM");const timer=setTimeout(()=>child.kill("SIGKILL"),2000);await stopped;clearTimeout(timer);}
+ if(certDirectory)await rm(certDirectory,{recursive:true,force:true});
  if(built){
   const reports=new Map<string,number>();for(const line of serverLog.split("\n"))if(line.startsWith("vital-signs-bytes ")){
-   const report=JSON.parse(line.slice("vital-signs-bytes ".length));reports.set(`${report.pid}:${report.hour}`,report.bytes.reader);
+   const report=JSON.parse(line.slice("vital-signs-bytes ".length)),key=`${report.pid}:${report.hour}`;reports.set(key,Math.max(reports.get(key)??0,report.bytes.reader));
   }
+  for(const secret of [process.env.RS03_READER_COPY_DATABASE_URL,process.env.RS03_CONTROL_COPY_DATABASE_URL,process.env.WTP_PRODUCTION_DATABASE_URL_READONLY]){
+   if(secret)serverLog=serverLog.split(secret).join("[readonly connection]");
+  }
+  await writeFile(`${output}/server.log`,serverLog);
   assert.ok(reports.size,"The built server must report production bytes");serverReadBytes=[...reports.values()].reduce((sum,value)=>sum+value,0);
-  const connection=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY!;await writeFile(`${output}/server.log`,serverLog.split(connection).join("[production readonly connection]"));
  }
  await save();
 }

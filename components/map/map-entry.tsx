@@ -1351,10 +1351,20 @@ function MapEntryInner() {
 
   const selectionTop =
     pillVenue || pillDistrict ? (layoutBp === "phone" && (parked || pillVenue) ? 112 : 64) : 0;
-  const mapInsets = useMemo(
+  const desiredMapInsets = useMemo(
     () => insetsFor({ sidebar: sidebarUp, selection: selectionTop }),
     [insetsFor, sidebarUp, selectionTop],
   );
+  // A phone detail card covers the map and makes it inert. Keep its current
+  // viewport while the drawer yields, then apply the visible layout on close.
+  // Otherwise opening a list downloads and paints a second, covered viewport.
+  const mapCovered = layoutBp === "phone" && Boolean(cardView) && !parked;
+  const [visibleMapInsets, setVisibleMapInsets] = useState(desiredMapInsets);
+  if (!mapCovered && (visibleMapInsets.top !== desiredMapInsets.top || visibleMapInsets.bottom !== desiredMapInsets.bottom
+    || visibleMapInsets.left !== desiredMapInsets.left || visibleMapInsets.right !== desiredMapInsets.right)) {
+    setVisibleMapInsets(desiredMapInsets);
+  }
+  const mapInsets = mapCovered ? visibleMapInsets : desiredMapInsets;
 
   const cluster = (
     <PillCluster

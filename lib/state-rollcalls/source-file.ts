@@ -4,6 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pipeline } from "node:stream/promises";
+import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, withKnownReleaseLock,
   type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
 import { sourceUserAgent } from "../sources/http.ts";
@@ -22,8 +23,8 @@ export async function acquireVoteSourceFile(options: Omit<KnownReleaseOptions, "
   const identity = digest(`${options.sourceId}\n${options.releaseId}\n${options.url}`);
   const prefix = `project/freshness/source/${options.sourceId}/files/${identity}`;
   const indexKey = `${prefix}/manifest.json`;
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-vote-source-")), path = join(directory, "source");
-  const dispose = () => rm(directory, { recursive: true, force: true });
+  const directory = await mkdtemp(temporaryPath(join(tmpdir(), "meanwhile-vote-source-"))), path = join(directory, "source");
+  const dispose = () => rm(temporaryPath(directory), { recursive: true, force: true });
   try {
     return await withKnownReleaseLock(locks, `vote-source:${identity}`, options.signal, async () => {
       const saved = await store.get(indexKey);
@@ -62,7 +63,7 @@ export async function acquireVoteSourceFile(options: Omit<KnownReleaseOptions, "
             hash.update(object.bytes); size += object.bytes.length; yield object.bytes;
           }
         }
-        await pipeline(chunks(), createWriteStream(path, { flags: "wx" }));
+        await pipeline(chunks(), createWriteStream(temporaryPath(path), { flags: "wx" }));
         if (size !== held.byteLength || hash.digest("hex") !== held.sha256) throw new Error("VOTE_SOURCE_HASH_INVALID");
         index = { ...held, ...(response ? { checkedAt: now, lastCheckStatus: 304 } : {}) }; reused = true;
       } else {
@@ -77,7 +78,7 @@ export async function acquireVoteSourceFile(options: Omit<KnownReleaseOptions, "
             hash.update(chunk.value); yield chunk.value;
           } } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
         }
-        await pipeline(chunks(), createWriteStream(path, { flags: "wx" }));
+        await pipeline(chunks(), createWriteStream(temporaryPath(path), { flags: "wx" }));
         if (!size || declared > 0 && !response.headers.get("content-encoding") && size !== declared) throw new Error("VOTE_SOURCE_TRUNCATED");
         const sha256 = hash.digest("hex"); reused = sha256 === prior?.sha256;
         index = { version: 1, sourceId: options.sourceId, releaseId: options.releaseId, requestedUrl: options.url,

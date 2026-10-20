@@ -3,9 +3,10 @@
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { createRequire } from "node:module";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { temporaryPath } from "../../civic-data/temporary-path.ts";
 import { parseCsv } from "../../reference/csv.ts";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { pluralVoteJurisdiction, pluralVoteState, type PluralBillEvidence, type PluralVoteFact } from "./votes.ts";
@@ -73,17 +74,6 @@ export interface PluralBulkSessionResult {
   rollCalls: number; memberVotes: number; unmatchedPositions: number;
 }
 
-/** Small byte callers stage once; production downloads feed the file reader. */
-export async function parsePluralBulkSession(state: string, session: string, bytes: Uint8Array, evidence: PluralBillEvidence,
-  options: PluralBulkParseOptions = {}): Promise<PluralBulkSessionResult> {
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-openstates-input-"));
-  try {
-    const path = join(directory, "session.zip");
-    await writeFile(path, bytes);
-    return await parsePluralBulkSessionFile(state, session, path, evidence, options);
-  } finally { await rm(directory, { recursive: true, force: true }); }
-}
-
 /** Arbitrarily ordered CSVs join on disk. Only one roll's positions enter memory;
  * the consumer must finish it before the next verified roll is assembled. */
 export async function parsePluralBulkSessionFile(state: string, session: string, path: string, evidence: PluralBillEvidence,
@@ -98,10 +88,10 @@ export async function parsePluralBulkSessionFile(state: string, session: string,
   const hash = createHash("sha256");
   for await (const chunk of createReadStream(path)) { options.signal?.throwIfAborted(); hash.update(chunk); }
   if (hash.digest("hex") !== evidence.sha256 || !Number.isFinite(Date.parse(evidence.retrievedAt))) throw new Error("PLURAL_BULK_SOURCE_EVIDENCE_INVALID");
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-openstates-join-"));
+  const directory = await mkdtemp(temporaryPath(join(tmpdir(), "meanwhile-openstates-join-")));
   let db: SqlDatabase | undefined;
   try {
-    db = new DatabaseSync(join(directory, "session.sqlite"));
+    db = new DatabaseSync(temporaryPath(join(directory, "session.sqlite")));
     db.exec(`PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA temp_store=FILE; PRAGMA cache_size=-8192; PRAGMA mmap_size=0;
       CREATE TABLE bills(id TEXT PRIMARY KEY, data TEXT NOT NULL);
       CREATE TABLE organizations(id TEXT PRIMARY KEY, data TEXT NOT NULL);
@@ -214,5 +204,5 @@ export async function parsePluralBulkSessionFile(state: string, session: string,
     }
     const held = query("SELECT key,detail FROM held ORDER BY sequence").all().map(row => ({ key: String(row.key), detail: String(row.detail) }));
     return { votes, held, members: selected, rollCalls, memberVotes, unmatchedPositions };
-  } finally { db?.close(); await rm(directory, { recursive: true, force: true }); }
+  } finally { db?.close(); await rm(temporaryPath(directory), { recursive: true, force: true }); }
 }

@@ -1,3 +1,4 @@
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -11,7 +12,7 @@ import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
 import type { CardSource } from "../lib/officials/card-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { normalize, rowsToPeople } from "../lib/sources/plural/index.ts";
-import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
+
 import { pluralVotesScope, PLURAL_VOTES_SOURCE, type PluralVoteFact } from "../lib/sources/plural/votes.ts";
 import { legiscanVotesScope } from "../lib/sources/legiscan/votes.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../lib/state-rollcalls/reader-votes.ts";

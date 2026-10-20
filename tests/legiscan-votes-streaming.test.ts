@@ -1,3 +1,4 @@
+import { parseLegiscanDataset } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -5,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
-import { digest, legiscanIdentityJoins, profileUrl, parseLegiscanDataset, parseLegiscanDatasetFile, parseLegiscanDatasetList } from "../lib/sources/legiscan/dataset.ts";
+import { digest, legiscanIdentityJoins, profileUrl, parseLegiscanDatasetFile, parseLegiscanDatasetList } from "../lib/sources/legiscan/dataset.ts";
 import { acquireLegiscanVotes, currentLegiscanSessions } from "../lib/sources/legiscan/vote-acquisition.ts";
 import { indexDivisions, normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";

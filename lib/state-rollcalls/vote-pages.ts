@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
+import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { join } from "node:path";
 import { canonicalCivicDataHash } from "../civic-data/changes.ts";
 import { getStore } from "@netlify/blobs";
@@ -91,8 +92,8 @@ export async function createVotePageSink(input: { state: string; sourceId: strin
   let prior = input.prior; input.prior = null;
   if (prior?.state !== undefined && prior.state !== state) throw new Error("VOTE_PAGE_PREDECESSOR_STATE_INVALID");
   if (prior?.formatVersion === 2) { const issue = votePagesIssue(prior); if (issue) throw new Error(issue); }
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-vote-pages-"));
-  const db = new DatabaseSync(join(directory, "votes.sqlite"));
+  const directory = await mkdtemp(temporaryPath(join(tmpdir(), "meanwhile-vote-pages-")));
+  const db = new DatabaseSync(temporaryPath(join(directory, "votes.sqlite")));
   db.exec("PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA cache_size=-8192; PRAGMA mmap_size=0; PRAGMA temp_store=FILE; CREATE TABLE rolls(id TEXT PRIMARY KEY,session TEXT NOT NULL,body TEXT NOT NULL); CREATE TABLE positions(roll_id TEXT,person_id TEXT,option TEXT,retrieved_at TEXT,PRIMARY KEY(roll_id,person_id)); CREATE INDEX people ON positions(person_id,roll_id); CREATE INDEX sessions ON rolls(session,id); BEGIN");
   const metadata = new Map<string, PluralVoteFact>();
   let memberPages: VoteMemberPage[] = prior?.formatVersion === 2 ? [...prior.memberPages!] : [];
@@ -111,7 +112,7 @@ export async function createVotePageSink(input: { state: string; sourceId: strin
   try {
     if (prior?.formatVersion === 2) for (const vote of prior.rollCalls) metadata.set(vote.id, vote);
     else if (prior) for (const vote of prior.rollCalls) { signal?.throwIfAborted(); importVote(vote); loadedSessions.add(vote.session); }
-  } catch (error) { db.close(); await rm(directory, { recursive: true, force: true }); throw error; }
+  } catch (error) { db.close(); await rm(temporaryPath(directory), { recursive: true, force: true }); throw error; }
   prior = null;
   const loadSession = async (session: string) => {
     if (loadedSessions.has(session)) return;
@@ -171,6 +172,6 @@ export async function createVotePageSink(input: { state: string; sourceId: strin
       return { formatVersion: 2, state, rollCalls: [...metadata.values()].sort((a,b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)),
         memberPages: [...memberPages].sort((a,b) => a.session.localeCompare(b.session) || a.personId.localeCompare(b.personId) || a.key.localeCompare(b.key)) };
     },
-    async close() { db.close(); await rm(directory, { recursive: true, force: true }); },
+    async close() { db.close(); await rm(temporaryPath(directory), { recursive: true, force: true }); },
   };
 }

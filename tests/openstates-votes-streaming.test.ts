@@ -1,3 +1,4 @@
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -7,7 +8,7 @@ import test from "node:test";
 import { toCsv, zip } from "../scripts/xlsx.mjs";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { readZipEntries } from "../lib/sources/archive.ts";
-import { parsePluralBulkSession, parsePluralBulkSessionFile } from "../lib/sources/plural/vote-bulk.ts";
+import { parsePluralBulkSessionFile } from "../lib/sources/plural/vote-bulk.ts";
 import type { PluralBillEvidence, PluralVoteFact } from "../lib/sources/plural/votes.ts";
 
 const root = new URL("./fixtures/state-votes/openstates/", import.meta.url);

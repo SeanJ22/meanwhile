@@ -1,3 +1,4 @@
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -6,7 +7,7 @@ import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/ev
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { createVotePageSink, bindVotePageVault, readVotePages, votePagesIssue, votePageVault, type VotePageProjection } from "../lib/state-rollcalls/vote-pages.ts";
-import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
+
 import { pluralVotesCandidate, pluralVotesContract, readPluralVotesForPerson } from "../lib/sources/plural/votes.ts";
 
 const root = new URL("./fixtures/state-votes/openstates/", import.meta.url);

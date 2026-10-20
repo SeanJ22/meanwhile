@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { decodeLegiscanDatasetEnvelope } from "../lib/sources/legiscan/dataset-envelope.ts";
 import { parseLegiscanDatasetList } from "../lib/sources/legiscan/dataset.ts";
@@ -45,4 +45,16 @@ test("LegiScan envelope rejects noncanonical base64 and malformed or duplicated 
   await assert.rejects(decode(`${valid}garbage`), /LEGISCAN_DATASET_RESPONSE_IDENTITY_INVALID/);
   await assert.rejects(decode(valid.slice(0, -1)), /LEGISCAN_DATASET_RESPONSE_IDENTITY_INVALID/);
   await assert.rejects(decode(valid.replace('"zip":"YWJj"', '"zip":"YWJj","zip":"YWJj"')), /LEGISCAN_DATASET_RESPONSE_IDENTITY_INVALID/);
+});
+
+test("LegiScan envelope refuses a repository output path before creating a file", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "vt01-legiscan-confined-"));
+  const archivePath = resolve(".scratch", `vt01-envelope-refused-${process.pid}.zip`);
+  try {
+    const path = join(directory, "response.json");
+    await writeFile(path, JSON.stringify({ status: "OK", dataset: { ...metadata, zip: "YWJj" } }));
+    await assert.rejects(decodeLegiscanDatasetEnvelope({ path, archivePath, session, signal: AbortSignal.timeout(10_000) }),
+      /filesystem destination must stay (?:inside the operating system temporary directory|outside the repository)/);
+    await assert.rejects(access(archivePath), { code: "ENOENT" });
+  } finally { await rm(directory, { recursive: true, force: true }); await rm(archivePath, { force: true }); }
 });

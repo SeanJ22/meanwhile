@@ -93,3 +93,17 @@ test("cancellation and size refusals cancel the source stream without accepting 
   assert.equal(oversizeCancelled, true);
   assert.equal(await h.manifest(), null);
 });
+
+test("a repository temp root is refused before source acquisition writes or fetches", async () => {
+  const prior = { TMPDIR: process.env.TMPDIR, TEMP: process.env.TEMP, TMP: process.env.TMP };
+  const h = setup(async () => { assert.fail("a refused destination must not fetch source bytes"); });
+  try {
+    process.env.TMPDIR = process.cwd(); process.env.TEMP = process.cwd(); process.env.TMP = process.cwd();
+    await assert.rejects(acquireVoteSourceFile(h.input), /outside the repository/);
+    assert.equal(await h.manifest(), null);
+  } finally {
+    for (const key of ["TMPDIR", "TEMP", "TMP"] as const) {
+      if (prior[key] === undefined) delete process.env[key]; else process.env[key] = prior[key];
+    }
+  }
+});

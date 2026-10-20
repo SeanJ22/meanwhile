@@ -1,5 +1,6 @@
 import { createReadStream, createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
+import { temporaryPath } from "../../civic-data/temporary-path.ts";
 import { object, type LegiscanSession } from "./dataset.ts";
 
 const MARKER = "__streamed_legiscan_dataset_zip__";
@@ -80,7 +81,7 @@ export async function decodeLegiscanDatasetEnvelope(input: {
     decoder.decode();
     if (mode !== "TEXT" || escape || zipFields !== 1) invalid();
   }
-  await pipeline(archive(), createWriteStream(input.archivePath, { flags: "wx" }));
+  await pipeline(archive(), createWriteStream(temporaryPath(input.archivePath), { flags: "wx" }));
   let payload: Record<string, unknown>;
   try { payload = object(JSON.parse(metadata)); } catch { invalid(); }
   const dataset = object(payload!.dataset), session = input.session;

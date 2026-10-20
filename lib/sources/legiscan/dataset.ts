@@ -1,7 +1,4 @@
 import { createHash } from "node:crypto";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { PLURAL_STATES } from "../plural/targets.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
@@ -119,15 +116,6 @@ async function readDatasetMember(entry: FileArchiveMember, signal: AbortSignal):
   for await (const chunk of entry.stream()) { signal.throwIfAborted(); chunks.push(chunk); }
   const body = new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks));
   return { body, value: object(JSON.parse(body)) };
-}
-/** Byte callers stage once; file acquisition can parse without loading an archive. */
-export async function parseLegiscanDataset(input: LegiscanDatasetInput & { bytes: Uint8Array }) {
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-legiscan-"));
-  try {
-    const path = join(directory, "dataset.zip");
-    await writeFile(path, input.bytes);
-    return await parseLegiscanDatasetFile({ ...input, path });
-  } finally { await rm(directory, { recursive: true, force: true }); }
 }
 /** The first pass keeps bill metadata and the member crosswalk only. Raw rolls
  * are discarded immediately; the second pass normalizes one roll at a time. */

@@ -1,3 +1,4 @@
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -9,7 +10,7 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createVoteRefreshSink } from "../lib/state-rollcalls/vote-predecessor.ts";
 import { readVotePages, votePagesIssue } from "../lib/state-rollcalls/vote-pages.ts";
-import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
+
 import { pluralVotesCandidate, readPluralVotesProjection, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 

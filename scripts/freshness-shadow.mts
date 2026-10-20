@@ -282,7 +282,7 @@ import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
-import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { admittedRuntimeChildEnvironment, assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
@@ -426,7 +426,7 @@ if(STATE===null) {
   }
   const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
     if(releaseDrainRequested){resolve(false);return;}
-    const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
+    const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,env:admittedRuntimeChildEnvironment({capability:"RESEARCH_CYCLE",parentPid:process.pid}),execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
     const forward=(message:unknown)=>{if(child.connected)child.send(message as object);};
     const terminate=()=>{releaseDrainRequested=true;child.kill("SIGTERM");};
     process.on("SIGTERM",terminate);

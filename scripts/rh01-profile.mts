@@ -15,7 +15,7 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { readCompletionLogEvidence } from "./rh01-completion-evidence.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
-import { commandIdentity, workloadAdmissionEntry, workloadOffers } from "./rh01-workload.mts";
+import { commandIdentity, workloadAdmissionEntry, workloadOffers, REPLAY_WRAPPER_PARENT_PEAK_MIB } from "./rh01-workload.mts";
 import { diagnosticModelCalls, diagnosticModelSpend, physicalRunReads, reserveProductionReadRun } from "./rh01-read-accounting.mts";
 import { processStartTicks } from "./rh01-remote-process.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
@@ -323,14 +323,16 @@ const workerRoles = new Map<number, { role: string; status: string; taskId: stri
 let leaseWorkersAtPeak: { pid: number; role: string; status: string }[] = [], maxSimultaneousLeaseWorkers = 0, maxSimultaneousWorkingLeaseWorkers = 0;
 const startedAt = Date.now(), results: JobResult[] = [];
 await writeFile(join(directory, "offers.json"), JSON.stringify({ allOfferedAt: new Date(startedAt).toISOString(), offers }, null, 2));
-const { routineProcessSlots, workerMemoryHost, memoryReading } = admissionCode;
+const { routineProcessSlots, workerMemoryHost, memoryReading, routineProcessPeakBytes } = admissionCode;
 const memoryHost = workerMemoryHost({ shared: true, processes: () => {
   const rows = sample(), included = new Set([process.pid]);
   for (const pid of active.keys()) included.add(pid);
   for (;;) { let changed = false; for (const [pid, row] of rows) if (included.has(row.parent) && pid !== facts.pid && !included.has(pid)) { included.add(pid); changed = true; } if (!changed) break; }
   return [...rows].filter(([pid]) => included.has(pid)).map(([pid, row]) => ({ pid, parentPid: row.parent, rss: row.rss, peakRss: row.peak }));
 } });
-const slots = routineProcessSlots({ availableBytes: () => {
+const slots = routineProcessSlots({ ...(phase === "after" ? { peakBytes: (entry: string) =>
+  /(?:^|\/)scripts\/rh01-(?:held-worker|model)-replay[.]mts$/.test(entry)
+    ? REPLAY_WRAPPER_PARENT_PEAK_MIB * 1024 * 1024 : routineProcessPeakBytes(entry) } : {}), availableBytes: () => {
   const rows = sample();
   return Math.max(0, hostBytes - (rows.get(process.pid)?.rss ?? 0) - [...active.keys()].reduce((sum, pid) => sum + tree(pid, rows), 0));
 }, host: memoryHost });

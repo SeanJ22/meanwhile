@@ -405,16 +405,18 @@ function statePublicationPeakBytes(entry: string): number {
   return Math.max(family ? STATE_PUBLICATION_PEAK_MIB : 0, family || scripted ? ROUTINE_ENTRY_PEAK_MIB[script] ?? 0 : 0) * MIB;
 }
 
+export function routineProcessPeakBytes(entry: string): number {
+  if (entry.startsWith("national-place:")) return NATIONAL_PLACE_PEAK_MIB * MIB;
+  const script = entry.split(/[\\/]/).at(-1)!;
+  return Math.max(statePublicationPeakBytes(entry), (RUNNER_PARENT_PEAK_MIB[script] ?? ROUTINE_ENTRY_PEAK_MIB[script] ??
+    (/^state-money-.+[.]mts$/.test(script) ? SCOPED_DATA_PEAK_MIB : WORKER_ENTRY_PEAK_MIB.lease!)) * MIB);
+}
+
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     parentPeakBytes: memory.parentPeakBytes ?? (RUNNER_PARENT_PEAK_MIB[process.argv[1]?.split(/[\\/]/).at(-1) ?? ""] ?? 0) * MIB,
     minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => {
-      if (entry.startsWith("national-place:")) return NATIONAL_PLACE_PEAK_MIB * MIB;
-      const script = entry.split(/[\\/]/).at(-1)!;
-      return Math.max(statePublicationPeakBytes(entry), (RUNNER_PARENT_PEAK_MIB[script] ?? ROUTINE_ENTRY_PEAK_MIB[script] ??
-        (/^state-money-.+[.]mts$/.test(script) ? SCOPED_DATA_PEAK_MIB : WORKER_ENTRY_PEAK_MIB.lease!)) * MIB);
-    }) });
+    peakBytes: memory.peakBytes ?? routineProcessPeakBytes });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

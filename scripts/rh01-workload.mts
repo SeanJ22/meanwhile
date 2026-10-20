@@ -7,6 +7,7 @@ export interface WorkloadOffer {
   readonly id: string; readonly ownerId: string | null; readonly aliasOf: string | null;
 }
 const pilotChildren = new Set(["routine-civic-data-runner", "publish-now-runner", "publish-owner-snapshot", "intake-tripwire", "platform-census-runner", "hunter-lane", "freshness-shadow"]);
+export const REPLAY_WRAPPER_PARENT_PEAK_MIB = 352;
 
 /** Supplemental inventory labels keep the exact native task's admission class. */
 export function workloadAdmissionEntry(job: WorkloadJob): string {

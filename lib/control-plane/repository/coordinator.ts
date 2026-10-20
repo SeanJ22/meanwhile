@@ -649,7 +649,27 @@ export interface ReconcileReport {
 export async function reconcile(
   repos: ControlPlaneRepositories,
   now: string,
+  scope?: { readonly workItemIds: readonly string[] },
 ): Promise<ReconcileReport> {
+  if (scope) {
+    let commitsSeen = 0;
+    const healed: string[] = [];
+    for (const workItemId of new Set(scope.workItemIds)) {
+      const tasks = await repos.routeTasks.listWhereNarrowed(["workItemId"], workItemId, {});
+      for (const task of tasks) await repos.dispositions.readChangedSince(null, undefined, { keys: [task.id], page: async rows => {
+        for (const { record: commit } of rows) {
+          if (commit.workItemId !== workItemId || commit.routeTaskId !== task.id) throw new Error("DISPOSITION_RECONCILE_SCOPE_MISMATCH");
+          commitsSeen++;
+          const [heldTask, heldAttempt] = await Promise.all([repos.routeTasks.read(task.id), repos.attempts.read(commit.attemptId)]);
+          if (heldTask && canonicalJson(heldTask.value) === canonicalJson(commit.disposedTask) &&
+              heldAttempt && canonicalJson(heldAttempt.value) === canonicalJson(commit.closedAttempt)) continue;
+          await applyDispositionCommit(repos, commit, now);
+          healed.push(commit.commitId);
+        }
+      } });
+    }
+    return { commitsSeen, healed };
+  }
   const commits = await repos.dispositions.readAll();
   const healed: string[] = [];
   if (commits.length === 0) return { commitsSeen: 0, healed };
@@ -781,11 +801,11 @@ export async function loadCompletionSnapshot(
     instrumentGreens?: ReadonlySet<string>;
   },
 ): Promise<CompletionSnapshot> {
-  await reconcile(repos, input.now);
-  await reconcileWorkerCompletions(repos);
+  await reconcile(repos, input.now, { workItemIds: [input.workItemId] });
+  await reconcileWorkerCompletions(repos, { workItemIds: [input.workItemId] });
   const workerEvidence = await loadWorkerCompletionEvidence(repos, input.workItemId);
   const item = await repos.workItems.mustRead(input.workItemId);
-  const tasks = await repos.routeTasks.list();
+  const tasks = await repos.routeTasks.listWhere(["workItemId"], input.workItemId);
   return {
     item: item.value,
     routeTasks: tasks

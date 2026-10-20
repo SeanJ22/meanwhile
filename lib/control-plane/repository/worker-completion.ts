@@ -110,8 +110,15 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
   return new Map(rows.map(row => [row.id, row.value]));
 }
 
-export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories): Promise<void> {
-  const state = reconcileState.get(repos);
+export interface WorkerCompletionScope { readonly workItemIds: readonly string[] }
+
+/** A task replays only its own keys. Its cursor and pending work live for this invocation;
+ * the parent's country cursor cannot skip another place, and task identities never accumulate in a cache. */
+export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories, scope?: WorkerCompletionScope): Promise<void> {
+  const keys = scope === undefined ? undefined : [...new Set(scope.workItemIds)].sort();
+  if (keys?.length === 0) return;
+  const selected = keys ? new Set(keys) : null;
+  const state = scope === undefined ? reconcileState.get(repos) : undefined;
   const pending = new Map<string, string>();
   for (const [id, key] of state?.pending ?? []) {
     const records = await repos.workerResults.readWhere(key, ["id"], id);
@@ -120,12 +127,15 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
   }
   const appended = await repos.workerResults.readChangedSince(state?.since
     ? new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString() : null, undefined, {
+    ...(keys ? { keys } : {}),
     page: async rows => {
+      if (selected && rows.some(row => !selected.has(row.key) || row.record.workItemId !== row.key))
+        throw new Error("WORKER_COMPLETION_SCOPE_MISMATCH");
       // Store pages and task batches are bounded even on a fresh process's first recovery pass.
       for (let at = 0; at < rows.length; at += 32) await reconcilePage(repos, rows.slice(at, at + 32).map(row => row.record), pending);
     },
   });
-  reconcileState.set(repos, { since: appended.through, pending });
+  if (scope === undefined) reconcileState.set(repos, { since: appended.through, pending });
 }
 
 async function reconcilePage(repos: ControlPlaneRepositories, offered: readonly WorkerResultRecord[],

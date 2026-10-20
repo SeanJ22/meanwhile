@@ -4,7 +4,7 @@
  * process runs none, so death is observed from outside by an expired lease (`sweepExpiredLeases`).
  */
 
-import { type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
+import { type AttemptCost, type AttemptOutcome, type ExecutionLease, type WorkerRef } from "../attempt.ts";
 import { forEachAggregate } from "../workers/streamed-history.ts";
 import {
   abandonAttempt,
@@ -751,16 +751,16 @@ export interface ReclaimSweep {
 
 export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
-  input: { readonly now: string; readonly observedBy: string },
+  input: { readonly now: string; readonly observedBy: string; readonly workItemIds?: readonly string[] },
 ): Promise<ReclaimSweep> {
   // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
-  await reconcileWorkerCompletions(repos);
+  await reconcileWorkerCompletions(repos, input.workItemIds === undefined ? undefined : { workItemIds: input.workItemIds });
   const reclaimed: string[] = [];
   const releasedSettled: string[] = [];
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];
 
-  await forEachAggregate(repos.leases, async row => {
+  const visitLease = async (row: { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> }) => {
     const lease = row.value;
     if (lease.released) return;
     if (!(Date.parse(lease.expiresAt) <= Date.parse(input.now))) {
@@ -782,6 +782,15 @@ export async function sweepExpiredLeases(
         why: error instanceof Error ? error.message : String(error),
       });
     }
-  }, { released: true, expiresAt: true, routeTaskId: true });
+  };
+  const projection = { released: true, expiresAt: true, routeTaskId: true } as const;
+  if (input.workItemIds === undefined) await forEachAggregate(repos.leases, visitLease, projection);
+  else for (const workItemId of new Set(input.workItemIds)) {
+    const tasks = await repos.routeTasks.listWhereNarrowed(["workItemId"], workItemId, {});
+    for (const task of tasks) {
+      const lease = await repos.leases.readNarrowed(task.id, projection);
+      if (lease) await visitLease(lease as { readonly value: Pick<ExecutionLease, "released" | "expiresAt" | "routeTaskId"> });
+    }
+  }
   return { reclaimed, releasedSettled, stillLive, refused };
 }

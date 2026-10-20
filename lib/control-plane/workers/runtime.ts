@@ -250,6 +250,11 @@ export async function dispatchWorkerTask(runtime: FleetRuntime, task: RouteTask)
       "PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED: meeting-partition contracts built from the meeting doors are the only standing acquisition authorities",
     );
   }
+  await reconcileWorkerCompletions(runtime.repos, { workItemIds: [task.workItemId] });
+  return dispatchRecoveredWorkerTask(runtime, task);
+}
+
+async function dispatchRecoveredWorkerTask(runtime: FleetRuntime, task: RouteTask): Promise<DispatchResult> {
   const modelAudit = task.workerTask?.role === "ADVERSARIAL_AUDITOR" && runtime.auditReasoner !== undefined
     ? (runtime.modelAuditSample ? await runtime.modelAuditSample(task.workerTask) : true) : false;
   return dispatchAdmittedWorkerTask(runtime, task, modelAudit);
@@ -320,7 +325,7 @@ export async function drainWorkerQueue(
       task = reauthorized;
     }
     if (!admitDispatch(task).admit) return;
-    out.push(await dispatchWorkerTask(runtime, task));
+    out.push(await dispatchRecoveredWorkerTask(runtime, task));
   });
   return out;
 }

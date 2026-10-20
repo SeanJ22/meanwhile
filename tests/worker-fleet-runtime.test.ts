@@ -18,7 +18,7 @@ import {
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
+import { loadWorkerCompletionEvidence, readCompletedWorkerResult, readCompletedWorkerResults, RECONCILE_APPEND_SLACK_MS, reconcileWorkerCompletions, visitCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { dischargesObligation, sweepExpiredLeases } from "../lib/control-plane/scheduler/dispatch.ts";
 import { runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
@@ -117,6 +117,57 @@ async function run(h: Harness, artifact: Artifact, role: FleetRole, options: {
   assert.equal(records.length, 1);
   return records[0];
 }
+
+test("scoped completion recovery replays only named keys and cannot advance another item's or the parent's cursor", async () => {
+  const repos = createMemoryRepositories();
+  const reads: { since: string | null; keys: readonly string[] | undefined }[] = [];
+  let clock = Date.parse(START);
+  const observed: ControlPlaneRepositories = { ...repos, workerResults: { ...repos.workerResults,
+    readChangedSince: async (since, _held, options) => {
+      reads.push({ since, keys: options?.keys });
+      assert.ok(options?.page);
+      return { records: [], through: new Date(clock += 60_000).toISOString() };
+    },
+  } };
+  await reconcileWorkerCompletions(observed, { workItemIds: ["place-a", "place-a"] });
+  await reconcileWorkerCompletions(observed, { workItemIds: ["place-b"] });
+  await reconcileWorkerCompletions(observed);
+  const parentThrough = new Date(clock).toISOString();
+  await reconcileWorkerCompletions(observed, { workItemIds: ["place-a"] });
+  await reconcileWorkerCompletions(observed, { workItemIds: [] });
+  await reconcileWorkerCompletions(observed);
+  assert.deepEqual(reads, [
+    { since: null, keys: ["place-a"] },
+    { since: null, keys: ["place-b"] },
+    { since: null, keys: undefined },
+    { since: null, keys: ["place-a"] },
+    { since: new Date(Date.parse(parentThrough) - RECONCILE_APPEND_SLACK_MS).toISOString(), keys: undefined },
+  ]);
+});
+
+test("a scoped recovery cannot inherit or discard the parent's pending completions", async () => {
+  const h = await harness();
+  const artifact = await h.hold(CAPTURE);
+  const result = await run(h, artifact, "PARSER");
+  let hideCost = true;
+  const pendingReads: string[] = [];
+  const observed: ControlPlaneRepositories = { ...h.repos,
+    costs: { ...h.repos.costs, read: async key => {
+      if (hideCost) { hideCost = false; return []; }
+      return h.repos.costs.read(key);
+    } },
+    workerResults: { ...h.repos.workerResults, readWhere: async (...args) => {
+      pendingReads.push(args[0]);
+      return h.repos.workerResults.readWhere(...args);
+    } },
+  };
+  await reconcileWorkerCompletions(observed);
+  await reconcileWorkerCompletions(observed, { workItemIds: ["unrelated-place"] });
+  assert.deepEqual(pendingReads, [], "a child cannot carry the parent's pending work into its place");
+  await reconcileWorkerCompletions(observed);
+  assert.deepEqual(pendingReads, [h.item.id], "the parent's pending commit survives the scoped pass");
+  assert.equal((await h.repos.costs.read(h.item.id)).filter(cost => cost.attemptId === result.attemptId).length, 1);
+});
 
 test("completed worker history recovers with bulk reads and no per-result replay calls", async () => {
   const h = await harness();
@@ -323,7 +374,7 @@ async function temporaryStore<T>(runTest: (root: string) => Promise<T>): Promise
   }
 }
 
-test("file-provider restart reconciles a committed result before an expired-lease sweep can manufacture failure", async () => temporaryStore(async (root) => {
+for (const scoped of [false, true]) test(`file-provider restart ${scoped ? "scoped recovery" : "global recovery"} reconciles a committed result before an expired-lease sweep can manufacture failure`, async () => temporaryStore(async (root) => {
   const storePath = path.join(root, "control-plane");
   const h = await harness(await createFileRepositories(storePath), new DurableEvidenceStore(path.join(root, "vault")));
   const artifact = await h.hold(CAPTURE);
@@ -342,10 +393,23 @@ test("file-provider restart reconciles a committed result before an expired-leas
   const reopened = await createFileRepositories(storePath);
   const lease = (await reopened.leases.mustRead(task.id)).value;
   const afterExpiry = new Date(Date.parse(lease.expiresAt) + 60_000).toISOString();
-  const sweep = await sweepExpiredLeases(reopened, { now: afterExpiry, observedBy: "restarted-supervisor" });
+  const fail = async (): Promise<never> => { throw new Error("UNRELATED_RECOVERY_HISTORY_READ"); };
+  const selected: ControlPlaneRepositories = { ...reopened,
+    workerResults: { ...reopened.workerResults, readAll: fail, readChangedSince: async (...args) => {
+      assert.deepEqual(args[2]?.keys, [h.item.id]);
+      return reopened.workerResults.readChangedSince(...args);
+    } },
+    routeTasks: { ...reopened.routeTasks, list: fail, listChangedSince: fail },
+    attempts: { ...reopened.attempts, list: fail, listChangedSince: fail },
+    leases: { ...reopened.leases, list: fail, listChangedSince: fail },
+    costs: { ...reopened.costs, readAll: fail },
+  };
+  const recoveryRepos = scoped ? selected : reopened;
+  const sweep = await sweepExpiredLeases(recoveryRepos, { now: afterExpiry, observedBy: "restarted-supervisor",
+    ...(scoped ? { workItemIds: [h.item.id] } : {}) });
   assert.deepEqual(sweep.reclaimed, [], "An appended result is already committed; lease expiry cannot rewrite it to LEASE_EXPIRED.");
   assert.deepEqual(sweep.refused, []);
-  await reconcileWorkerCompletions(reopened);
+  await reconcileWorkerCompletions(recoveryRepos, scoped ? { workItemIds: [h.item.id] } : undefined);
   const readback = await readCompletedWorkerResult(reopened, committed.id);
   assert.equal(readback.attempt.outcome, "COMPLETED");
   assert.equal((await reopened.routeTasks.mustRead(task.id)).value.state, "RESULT_RECORDED");

@@ -27,11 +27,11 @@ export async function selectedCycleRepositories(repos: ControlPlaneRepositories,
       for(const row of rows)await visit(row as Persisted<T>);
     }
   };
-  const log=<T>(repository:AppendOnlyRepository<T>,keys:ReadonlySet<string>):AppendOnlyRepository<T>=>{
+  const log=<T>(repository:AppendOnlyRepository<T>,keys:ReadonlySet<string>|(()=>AsyncIterable<string>)):AppendOnlyRepository<T>=>{
     const readChangedSince:AppendOnlyRepository<T>["readChangedSince"]=async(since,held,options={})=>{
       const records:ChangedRecord<T>[]=[],requested=options.keys===undefined?null:new Set(options.keys);
       let through:string|null=null;
-      for(const key of [...keys].sort()){
+      for await(const key of typeof keys==="function"?keys():[...keys].sort()){
         if(requested&&!requested.has(key))continue;
         const read=await repository.readChangedSince(since,held,{...options,keys:[key],page:async page=>{
           if(options.page)await options.page(page);else records.push(...page);
@@ -45,6 +45,9 @@ export async function selectedCycleRepositories(repos: ControlPlaneRepositories,
       readAllNarrowed:async projection=>(await readChangedSince(null,undefined,{projection})).records.map(row=>row.record),
     };
   };
+  async function* dispositionKeys():AsyncIterable<string>{
+    for(const workItemId of workIds)for(const task of await repos.routeTasks.listWhereNarrowed(["workItemId"],workItemId,{}))yield task.id;
+  }
   return {...repos,
     occurrences:aggregate(repos.occurrences,where(repos.occurrences,["obligationId"],selectedIds)),
     workItems:aggregate(repos.workItems,async(projection,visit)=>{for(const id of workIds){const row=projection?await repos.workItems.readNarrowed(id,projection):await repos.workItems.read(id);if(row)await visit(row as Persisted<WorkItem>);}}),
@@ -56,6 +59,6 @@ export async function selectedCycleRepositories(repos: ControlPlaneRepositories,
       }
     }),
     workerResults:log(repos.workerResults,workIds),costs:log(repos.costs,workIds),
-    dispositions:log(repos.dispositions,workIds),scoutResults:log(repos.scoutResults,selectedIds),
+    dispositions:log(repos.dispositions,dispositionKeys),scoutResults:log(repos.scoutResults,selectedIds),
   };
 }

@@ -278,6 +278,51 @@ test("a LIVE task's expired lease is still reclaimed and the task reopened, in t
   }
 });
 
+test("a work-item scoped sweep reclaims its dead lease without reading or changing another place", async () => {
+  for (const [label, repos] of await eachStore()) {
+    const tasks = await Promise.all([registered(repos, "wtp-body/selected"), registered(repos, "wtp-body/other-place")]);
+    const attempts = [];
+    for (const task of tasks) {
+      const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: task.id, now: T1, ttlMs: TTL });
+      attempts.push(await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: task.workItemId,
+        worker: walker(task.id), lease: claimed.lease.value, now: T1, methodVersion: 1, policyVersion: "p1" }));
+    }
+    const [selected, stranger] = tasks;
+    const strangerBefore = {
+      task: await repos.routeTasks.mustRead(stranger.id),
+      lease: await repos.leases.mustRead(stranger.id),
+      attempt: await repos.attempts.mustRead(attempts[1].id),
+    };
+    const fail = async (): Promise<never> => { throw new Error("UNRELATED_LEASE_HISTORY_READ"); };
+    const observed: ControlPlaneRepositories = { ...repos,
+      workerResults: { ...repos.workerResults, readAll: fail, readChangedSince: async (...args) => {
+        assert.deepEqual(args[2]?.keys, [selected.workItemId]);
+        return repos.workerResults.readChangedSince(...args);
+      } },
+      routeTasks: { ...repos.routeTasks, list: fail, listChangedSince: fail,
+        listWhereNarrowed: async (...args) => {
+          assert.deepEqual(args.slice(0, 2), [["workItemId"], selected.workItemId]);
+          return repos.routeTasks.listWhereNarrowed(...args);
+        } },
+      attempts: { ...repos.attempts, list: fail, listChangedSince: fail },
+      leases: { ...repos.leases, list: fail, listChangedSince: fail,
+        readNarrowed: async (...args) => {
+          assert.equal(args[0], selected.id);
+          return repos.leases.readNarrowed(...args);
+        } },
+    };
+    assert.deepEqual(await sweepExpiredLeases(observed, { now: T2, observedBy: "selected-place-supervisor",
+      workItemIds: [selected.workItemId, selected.workItemId] }),
+    { reclaimed: [selected.id], releasedSettled: [], stillLive: [], refused: [] }, label);
+    assert.equal((await repos.attempts.mustRead(attempts[0].id)).value.outcome, "LEASE_EXPIRED");
+    assert.deepEqual(await repos.routeTasks.mustRead(stranger.id), strangerBefore.task);
+    assert.deepEqual(await repos.leases.mustRead(stranger.id), strangerBefore.lease);
+    assert.deepEqual(await repos.attempts.mustRead(attempts[1].id), strangerBefore.attempt);
+    assert.deepEqual((await sweepExpiredLeases(repos, { now: T3, observedBy: "global-supervisor" })).reclaimed,
+      [stranger.id], `${label}: the parent still recovers the other place independently`);
+  }
+});
+
 test("an UNDISPOSED task whose lease expired before any Attempt opened is still refused as NothingToReclaim, and not released", async () => {
   /* A contention proof's claim that exited, by design, without opening an Attempt. */
   for (const [label, repos] of await eachStore()) {

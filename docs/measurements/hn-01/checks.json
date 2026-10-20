@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-20T18:20:43.368885+00:00",
-  "tested_code_sha": "3152bc197ce654a405c5425e4e11ad398e988a62",
+  "at": "2026-10-20T21:51:46.542910+00:00",
+  "tested_code_sha": "d879c6e0906770544e2f4f30310d3558a227aeb5",
   "command": "pnpm gates",
   "selection": "CI_TEST_FILES; newline-separated explicit affected tests",
   "test_files": [
@@ -57,10 +57,11 @@
   "scope": "Focused suite; no claim that the entire canonical repository test suite was run on this scoped implementation",
   "production_copy": "Six API answers plus meetings, ballot and Admin Now pages compared to shipped release code on identical copied databases; detailed limitations in production-copy-parity.json",
   "native_publication": "Real source child, original Box publisher, real Neon production copies, then actual /api/meetings?zip=88310 HTTP 200 with three new bodies",
-  "admin_priority": "A one-place $1 Admin order through existing gateway/intent/dispatch-work/hunt-packets/occurrence remains ahead of background government sources; owner instructions and budget unchanged",
+  "admin_priority": "A one-place $1 Admin order, including OFF-17 portraits first, preserves its gateway/intent/dispatch-work/hunt-packets/occurrence and budget; bound owner directions reach Exa\u2019s submitted request before the full blank list.",
   "no_send": "Four inert descriptor cases: zero child workers, requests and dollars",
   "database_bytes": "All metered production, copy, failed and superseded attempts included; initial unmetered baseline remains unknown",
   "source_files_unchanged_after_gates": true,
   "extra_source_identity_check": "Named library/advisory bodies stay distinct from governing bodies; a five-minute-later report retains original source_copy.fetched_at.",
-  "outside_scope_exa_budget_gap": "Exa takes the existing request/concurrency search gate; it does not use the shared model transport that reserves Send/area dollars. Shared standing-runtime.ts is DG-01-owned and unchanged. The production paid-research pause was not changed."
+  "outside_scope_exa_budget_gap": "Exa takes the existing request/concurrency search gate; it does not use the shared model transport that reserves Send/area dollars. Shared standing-runtime.ts is DG-01-owned and unchanged. The production paid-research pause was not changed.",
+  "exa_owner_directions": "The same Admin-bound owner instructions are read through narrowed WorkItem and occurrence projections; a real owner-order regression and captured Exa request verify OFF-17 portraits first without changing its $1 budget or order creation."
 }

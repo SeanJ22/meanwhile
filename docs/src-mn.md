@@ -53,7 +53,7 @@ The shipping configuration ran against the production people projection for all 
 | IN | [Indiana Election Division](https://cfa.in.gov/) | UNCONFIRMED | 369 | 0 | 0 | 0 | 140.3 |
 | IA | [Iowa Ethics and Campaign Disclosure Board](https://data.iowa.gov/catalog/dataset/917) | API | 333 | 0 | 0 | 0 | 140.7 |
 | KS | [Kansas Public Disclosure Commission](https://kpdc.kansas.gov/campaign-finance/campaign-contributor-data/) | UNCONFIRMED | 430 | 0 | 0 | 0 | 140.1 |
-| KY | [Kentucky Registry of Election Finance](https://secure.kentucky.gov/kref/publicsearch/CandidateSearch/) | BULK_API | 296 | 117 | 74,771 | 343,500 | 210.3 |
+| KY | [Kentucky Registry of Election Finance](https://secure.kentucky.gov/kref/publicsearch/CandidateSearch/) | BULK_API | 296 | 117 | 74,771 | 343,500 | 209.7 |
 | LA | [Louisiana Board of Ethics](https://ethics.la.gov/CampaignFinanceSearch/) | BULK | 198 | 0 | 0 | 0 | 139.2 |
 | ME | [Maine Commission on Governmental Ethics and Election Practices](https://www.mainecampaignfinance.com/) | UNCONFIRMED | 541 | 0 | 0 | 0 | 140.3 |
 | MD | [Maryland State Board of Elections](https://campaignfinance.maryland.gov/) | BULK | 440 | 0 | 0 | 0 | 140.3 |
@@ -76,7 +76,7 @@ The shipping configuration ran against the production people projection for all 
 | OR | [Oregon Secretary of State](https://sos.oregon.gov/elections/campaign-finance/pages/search-campaign-finance.aspx) | UNCONFIRMED | 233 | 0 | 0 | 0 | 139.0 |
 | PA | [Pennsylvania Department of State](https://www.campaignfinanceonline.pa.gov/Pages/CampaignFinanceHome.aspx) | BULK | 361 | 0 | 0 | 0 | 136.9 |
 | RI | [Rhode Island Board of Elections](https://www.ricampaignfinance.com/) | UNCONFIRMED | 280 | 0 | 0 | 0 | 138.1 |
-| SC | [South Carolina State Ethics Commission](https://ethicsfiling.sc.gov/filing/home) | API | 378 | 175 | 84,050 | 654,051 | 167.4 |
+| SC | [South Carolina State Ethics Commission](https://ethicsfiling.sc.gov/filing/home) | API | 378 | 175 | 84,050 | 654,051 | 168.2 |
 | SD | [South Dakota Secretary of State](https://sdcfr.sdsos.gov/) | UNCONFIRMED | 237 | 0 | 0 | 0 | 134.5 |
 | TN | [Tennessee Registry of Election Finance](https://apps.tn.gov/tncamp/) | UNCONFIRMED | 413 | 0 | 0 | 0 | 139.2 |
 | TX | [Texas Ethics Commission](https://www.ethics.state.tx.us/search/cf/) | BULK | 611 | 0 | 0 | 0 | 137.3 |
@@ -108,7 +108,15 @@ Live bulk/API committee/person/office/cycle binding is not configured yet for AL
 
 The largest real source response was South Carolina contributions, 197,906,018 bytes. Cold publication of Kentucky and South Carolina used fresh isolated stores and published 158,821 rows for 292 people. All source files stream; a matched batch contains at most 500 rows/two MiB. SQLite keeps record identities on disk with a one MiB page cache. The raw-file cache also contains files from earlier development attempts; its total is not claimed as this run's input. Cold publication of every disconnected source was not tested and no generated money was substituted.
 
-Each state child runs with a 112 MiB old-generation limit and four MiB semi-spaces, producing a 124 MiB JavaScript heap limit on this host. Limiting only the old generation left a 192 MiB young generation on this host and failed cold publication at the existing reservation. Final worker peak was 220,467,200 bytes. The measured active coordinator adds 81,842,176 bytes, giving a conservative combined peak of 302,309,376 bytes (288.3 MiB); its separate late report phase previously peaked at 282,562,560 bytes after the state exited. The existing money reservation stays 384 MiB. On the documented eight GiB runner, 19 reservations fit after the 0.75 GiB margin, or 11 alongside the existing 2,928 MiB research-parent reservation. The observed combined peak fits 25 copies after that margin, or 15 alongside the research parent. Actual campaign work runs one state at a time. Shared admission and database clients are unchanged.
+Fresh-store publication on the final code used two separate private reader/control connections. It took 551.3 worker-seconds. Source files were reused from the evidence cache.
+
+| Cold state | Matched rows | Reader response bytes | Reader request bytes | Control response bytes | Control request bytes | Private relation growth bytes |
+|---|---:|---:|---:|---:|---:|---:|
+| KY | 74,771 | 13,998,067 | 242,786,512 | 147,129 | 133,303 | 362,414,080 |
+| SC | 84,050 | 14,379,970 | 231,236,225 | 14,690 | 12,615 | 407,420,928 |
+
+
+Each state child runs with a 112 MiB old-generation limit and four MiB semi-spaces, producing a 124 MiB JavaScript heap limit on this host. Limiting only the old generation left a 192 MiB young generation on this host and failed cold publication at the existing reservation. Final worker peak was 219,865,088 bytes. The measured active coordinator adds 81,842,176 bytes, giving a conservative combined peak of 301,707,264 bytes (287.7 MiB); its separate late report phase previously peaked at 282,562,560 bytes after the state exited. The existing money reservation stays 384 MiB. On the documented eight GiB runner, 19 reservations fit after the 0.75 GiB margin, or 11 alongside the existing 2,928 MiB research-parent reservation. The observed combined peak fits 25 copies after that margin, or 15 alongside the research parent. Actual campaign work runs one state at a time. Shared admission and database clients are unchanged.
 
 The daily-due pass took 1122.5 seconds across its workers; the next-hour pass, including failed daily retries, took 615.1 seconds. Source doors use the configured control-plane connection; facts use the reader connection. Each worker holds its current state's people, one input page and one matched batch. No worker holds the country's financial rows or earlier state workers.
 
@@ -215,7 +223,9 @@ Before deployment, the October 20 9:46 AM Eastern read-only all-56 check found 1
 | MN | 14,081 |
 | WA | 164 |
 
-Retained metered production checks read 177,952,700 response bytes through the final split-reader/control per-state checks, marker reads and exact migration-receipt check. Production writes were zero. This includes unsuccessful measured configurations. Earlier interrupted probes and the failed private Connecticut measurement did not all retain byte counters, so the exact entire-session total is unknown. Final gates and post-release audits add their measured bytes in the READY commit. `scripts/src-money-check.mts --retirement` persists all 56 states' counts and measured response bytes and refuses any remaining old fact version, publication or candidate copy.
+Retained metered production checks read 178,666,596 response bytes through the final split-reader/control per-state checks, fresh-store KY/SC publication, retained-source hashes, marker reads and exact migration-receipt check. Production writes were zero. This includes unsuccessful measured configurations. Earlier interrupted probes and the failed private Connecticut measurement did not all retain byte counters, so the exact entire-session total is unknown. Final gates and post-release audits add their measured bytes in the READY commit. `scripts/src-money-check.mts --retirement` persists all 56 states' counts and measured response bytes and refuses any remaining old fact version, publication or candidate copy.
+
+The full merged gate run at `533247cd0` failed only the shared-origin and URL-path guards (8,739 registered tests, 8,735 pass, two fail, two skip). The money check and its regression now use the shared origin constant; source version parsing names its network URL before inspecting the path. No guard exception was added. All 52 focused origin, path and money/source checks then passed. River HF-01 is merged for the final full run.
 
 The first next-hour private Connecticut measurement failed with a WebSocket error. It did not complete or retain a full byte count; its failure log is preserved. A fresh private-connection probe and the same controlled-hour state retry succeeded. The specific connection-close cause remains unknown. This is reported as a failed measurement, not a successful first attempt. The verified last totals survive source failures and the failing daily source checks remain due.
 

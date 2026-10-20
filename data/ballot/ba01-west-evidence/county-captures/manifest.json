@@ -1,0 +1,127 @@
+[
+  {
+    "name": "nv-clark",
+    "sourceUrl": "https://www.clarkcountynv.gov/government/departments/elections/26g-info",
+    "finalUrl": "https://www.clarkcountynv.gov/government/departments/elections/26g-info",
+    "retrievedAt": "2026-10-20T23:33:49.477626+00:00",
+    "httpStatus": 200,
+    "rawHash": "7042a306aa682ed6e6fd6a015eb100417ad2d945b23ad43c70bf1a105dc77c5e",
+    "bytes": 31405,
+    "file": "nv-clark-local-page.gz"
+  },
+  {
+    "name": "ut-saltlake",
+    "sourceUrl": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/",
+    "finalUrl": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/",
+    "retrievedAt": "2026-10-20T23:33:49.181145+00:00",
+    "httpStatus": 200,
+    "rawHash": "051a5ecad07ba71006c4a33bf4230580d6057137cfb658c0f7149f0420837fc1",
+    "bytes": 536565,
+    "file": "ut-saltlake-local-page.gz"
+  },
+  {
+    "name": "wy-laramie",
+    "sourceUrl": "https://www.laramiecountywy.gov/County-Government/Elected-Officials/County-Clerk/Elections/Candidates",
+    "finalUrl": "https://www.laramiecountywy.gov/County-Government/Elected-Officials/County-Clerk/Elections/Candidates",
+    "retrievedAt": "2026-10-20T23:33:50.563265+00:00",
+    "httpStatus": 200,
+    "rawHash": "1af9f72f08c535add458f1afb8038d4cc3d0a6bf8eca18b5853691323d745532",
+    "bytes": 74864,
+    "file": "wy-laramie-local-page.gz"
+  },
+  {
+    "name": "mt-yellowstone",
+    "sourceUrl": "https://www.yellowstonecountymt.gov/elections/sampleballots/",
+    "finalUrl": "https://www.yellowstonecountymt.gov/elections/sampleballots/",
+    "retrievedAt": "2026-10-20T23:33:49.097224+00:00",
+    "httpStatus": 200,
+    "rawHash": "5eb9b870cbf7d87984f7c5fd5a20ecd533f7811e313ad9b385271dd387a6901b",
+    "bytes": 32044,
+    "file": "mt-yellowstone-local-page.gz"
+  },
+  {
+    "name": "sd-minnehaha",
+    "sourceUrl": "https://www.minnehahacounty.gov/dept/au/electionInfo/electionInfo.php",
+    "finalUrl": "https://www.minnehahacounty.gov/dept/au/electionInfo/electionInfo.php",
+    "retrievedAt": "2026-10-20T23:33:49.232036+00:00",
+    "httpStatus": 200,
+    "rawHash": "43adef385df49f2f4156dc63ee87073483aac670d94aab4eb320c1872664189a",
+    "bytes": 38676,
+    "file": "sd-minnehaha-local-page.gz"
+  },
+  {
+    "name": "nv-clark-candidates",
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+    "retrievedAt": "2026-10-20T23:34:28.500536+00:00",
+    "httpStatus": 200,
+    "rawHash": "f9e256f97332833676ec2362fb0e80aaf16497dc568f067e616b86df52e353e6",
+    "bytes": 63814,
+    "file": "nv-clark-candidates.gz",
+    "textSnapshot": "nv-clark-candidates.txt",
+    "textHash": "7590b9dab114211006137e0d53e2879f2a38d0cfcd917892df175c0890b44ceb"
+  },
+  {
+    "name": "nv-clark-questions",
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:e74294d7-218d-41cc-995f-0e16bc0a9e1f/original/as/all-quests-26g.pdf",
+    "retrievedAt": "2026-10-20T23:34:28.950473+00:00",
+    "httpStatus": 200,
+    "rawHash": "508f9b68b5603abb92a886c5b826b35caab09172de074be688782d544b03de1c",
+    "bytes": 1125484,
+    "file": "nv-clark-questions.gz",
+    "textSnapshot": "nv-clark-questions.txt",
+    "textHash": "9164fdcfdb8def9bb041c3d398f361ed86bc567866146d1080c934d40bdd474f"
+  },
+  {
+    "name": "ut-saltlake-bt1",
+    "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+    "retrievedAt": "2026-10-20T23:34:28.636152+00:00",
+    "httpStatus": 200,
+    "rawHash": "dbcee1a20ae5654c52bd372d24489fdff5dfcc2e9fc3010a5a2f72af9db30b08",
+    "bytes": 711844,
+    "file": "ut-saltlake-bt1.gz",
+    "textSnapshot": "ut-saltlake-bt1.txt",
+    "textHash": "0b9b295ec85fa63dae7aa0471eaad871ea6c2e7fa35225fafebd8cf41d2e6360"
+  },
+  {
+    "name": "ut-saltlake-types",
+    "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/list-of-ballot-types-2.pdf",
+    "retrievedAt": "2026-10-20T23:34:27.682948+00:00",
+    "httpStatus": 200,
+    "rawHash": "6c898fc737014f2c5d6827fad69145b27cdba37473cf2d8fcd94a3066d1c10b9",
+    "bytes": 178135,
+    "file": "ut-saltlake-types.gz",
+    "textSnapshot": "ut-saltlake-types.txt",
+    "textHash": "da7220c3ebd14d0b80801843c15c70f977b09eb1d31b8b0af18c2583ed9fa1ab"
+  },
+  {
+    "name": "sd-minnehaha-questions",
+    "sourceUrl": "https://www.minnehahacounty.gov/dept/au/electionInfo/2026GeneralBQPamphlet.pdf",
+    "retrievedAt": "2026-10-20T23:34:28.568881+00:00",
+    "httpStatus": 200,
+    "rawHash": "1f45a564a8ec7c091db5ca7b778f1f96ed3b1ffc4a0e4b82c5981f60545a9d46",
+    "bytes": 613412,
+    "file": "sd-minnehaha-questions.gz",
+    "textSnapshot": "sd-minnehaha-questions.txt",
+    "textHash": "fd4273723dfa6b1dc43806f0de298d7b84ec5a48cbfd6d89a0290aeb051f4d89"
+  },
+  {
+    "name": "co-elpaso-page",
+    "sourceUrl": "https://clerkandrecorder.elpasoco.com/elections/election-information/",
+    "retrievedAt": "2026-10-20T23:34:29.019373+00:00",
+    "httpStatus": 200,
+    "rawHash": "3f0757e98ff6f2878889f395bf2fc24af0eb6be957527ee208542b59164b4f67",
+    "bytes": 171817,
+    "file": "co-elpaso-page.gz"
+  },
+  {
+    "name": "az-phoenix-pamphlet",
+    "sourceUrl": "https://www.phoenix.gov/content/dam/phoenix/cityclerksite/documents/elections/WEB_ENG_Pub_Pamphlet_Nov_3_2026.pdf",
+    "retrievedAt": "2026-10-20T23:25:21.322856+00:00",
+    "httpStatus": 200,
+    "rawHash": "e5edf5180deccb833017cdfbb703faaa67127e697cfcc2a08882e8ee61de0453",
+    "bytes": 1359698,
+    "file": "az-phoenix-pamphlet.gz",
+    "textSnapshot": "az-phoenix-pamphlet.txt",
+    "textHash": "4865fe963f99044a4e681213b35e166a69c53042bd235cab067724322d90b13d"
+  }
+]

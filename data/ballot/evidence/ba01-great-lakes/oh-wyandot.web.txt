@@ -1,0 +1,223 @@
+(https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf)
+【turn591956view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 8; Source: open({"ref_id":"https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf","lineno":0}); Total lines: 221
+L0@P0: Form No. 120 Prescribed by Secretary of State (07-22)
+L1@P0: Election Notice for use with the Federal Write-In Absentee Ballot
+L2@P0: (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Wyandot County Board of Elections
+L5@P0: BOE to check one:  Initial notification (to be posted 100 days prior to date of election)
+L6@P0:  Updated notification (to be posted 46 days prior to date of election)
+L7@P0: NOVEMBER 3, 2026 GENERAL ELECTION
+L8@P0: (month, date, year, primary/general/special)
+L9@P0: State Executive Offices
+L10@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L11@P0: Name of Candidate Office Party Precincts
+L12@P0: Amy Acton & David Pepper Governor & Lieutenant Governor Democratic ALL
+L13@P0: Don Kissick & James L. Mills Governor & Lieutenant Governor Libertarian ALL
+L14@P0: Vivek Ramaswamy & Robert A. McColley Governor & Lieutenant Governor Republican ALL
+L15@P0: WRITE IN CANDIDATES:
+L16@P0: Timothy Grady & Andrea Neutzling
+L17@P0: Heather Hill & Patrick Manley
+L18@P0: Renea Turner & Jalen Turner
+L19@P0: Ron Ula & Michael C. Lehnerd
+L20@P0: Governor & Lieutenant Governor ALL
+L21@P0: John J. Kulewicz Attorney General Democratic ALL
+L22@P0: Keith Faber Attorney General Republican ALL
+L23@P0: Annette Blackwell Auditor of State Democratic ALL
+L24@P0: Frank LaRose Auditor of State Republican ALL
+L25@P0: Allison Russo Secretary of State Democratic ALL
+L26@P0: Tom Pruss Secretary of State Libertarian ALL
+L27@P0: Robert Sprague Secretary of State Republican ALL
+L28@P0: Seth Walsh Treasurer of State Democratic ALL
+L29@P0-1: Jay Edwards Treasurer of State Republican ALLOhio General Assembly (Ohio Senate and Ohio House of Representatives)
+L30@P1: Name of Candidate Office /District/Term Party Precincts
+L31@P1: Lora Covrett State Representative 87th District Democratic ALL
+L32@P1: Jeffrey A. McClain State Representative 87th District Republican ALL
+L33@P1: Craig Swartz State Representative 87th District Independent ALL
+L34@P1: WRITE IN CANDIDATE:
+L35@P1: Greg White
+L36@P1: State Representative 87th District ALL
+L37@P1: U.S. Senate and U.S. Congress
+L38@P1: Name of Candidate Office /District/Term Party Precincts
+L39@P1: Sherrod Brown US Senator UTE 01.03.2029 Democratic ALL
+L40@P1: William B. Redpath US Senator UTE 01.03.2029 Libertarian ALL
+L41@P1: Jon Husted US Senator UTE 01.03.2029 Republican ALL
+L42@P1: Greg Levy US Senator UTE 01.03.2029 Other Party Candidate ALL
+L43@P1: WRITE IN CANDIDATES:
+L44@P1: Stephen Faris
+L45@P1: Anthony Holliman
+L46@P1: Timohty Telymonde
+L47@P1: US Senator UTE 01.03.2029 ALL
+L48@P1: Brian A Shaver Representative to Congress 5
+L49@P1: th District Democratic ALL
+L50@P1: Michael J. Veloff Representative to Congress 5th District Libertarian ALL
+L51@P1: Bob Latta Representative to Congress 5th District Republican ALL
+L52@P1: Ohio Supreme Court
+L53@P1: Name of Candidate Office /Term Party Precincts
+L54@P1: Marilyn Zayas Justice of the Supreme Court FTC 01.01.2027 Democratic ALL
+L55@P1: Daniel R. Hawkins Justice of the Supreme Court FTC 01.01.2027 Republican ALL
+L56@P1: Jennifer Brunner Justice of the Supreme Court FTC 01.02.2027 Democratic ALL
+L57@P1-2: Colleen O’Donnell Justice of the Supreme Court FTC 01.02.2027 Republican ALLCourt of Appeals
+L58@P2: Name of Candidate Office /Term Party Precincts
+L59@P2: Mark C. Miller Court of Appeals 3rd District Republican ALL
+L60@P2: County Administrative Offices (County Commissioner or County Council, Prosecuting
+L61@P2: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L62@P2: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L63@P2: Name of Candidate Office /District/Term Party Precincts
+L64@P2: George Kitzler County Auditor Republican ALL
+L65@P2: Russell L. Smith County Commissioner FTC 01.01.2027 Republican ALL
+L66@P2: Kenneth Beamer County Commissioner FTC 01.01.2027 Independent ALL
+L67@P2: Jon Hathaway County Commissioner FTC 01.01.2027 Independent ALL
+L68@P2: Jason Yeater County Commissioner FTC 01.01.2027 Independent ALL
+L69@P2: State Issues
+L70@P2: Number Title Precincts
+L71@P2: 3 Proposed by Joint Resolution of the General Assembly To
+L72@P2: enact Section 5 of Article V of the Constitution of the State
+L73@P2: of Ohio
+L74@P2: A majority yes vote is required for the adoption of Section 5.
+L75@P2: This proposed amendment would: • Require voters to present
+L76@P2: an approved form of government-issued photo identification in
+L77@P2: order to vote. • Allow state law to provide for an alternative
+L78@P2: method of verifying a voter’s identity for a voter who has a
+L79@P2: sincere religious objection to being photographed and,
+L80@P2: therefore, does not possess an approved form of governmentissued photo identification. • Require that voters who do not
+L81@P2: vote in person provide an approved form of governmentissued photo identification, unless the law authorizes those
+L82@P2: persons to vote by providing a signature and at least one other
+L83@P2: specified unique identifier. • Define approved forms of
+L84@P2: government-issued photo identification as an unexpired Ohio
+L85@P2: driver license or state identification card; a United States
+L86@P2: passport or passport card; or a United States military
+L87@P2: identification card, Ohio National Guard identification card, or
+L88@P2: United States Department of Veterans Affairs identification
+L89@P2: card. If approved, the amendment shall take effect
+L90@P2: immediately.
+L91@P2-3: AllLocal Questions and Issues
+L92@P3: Number Title Precincts
+L93@P3: PROPOSED TAX LEVY (RENEWAL)
+L94@P3: A renewal of a tax for the benefit of Jackson Township for the
+L95@P3: purpose of current expenses that the county auditor estimates will
+L96@P3: collect $22,735 annually, at a rate not exceeding 1.5 mills for each
+L97@P3: $1 of taxable value, which amounts to $24 for each $100,000 of the
+L98@P3: county auditor’s market value, for five years, commencing in 2027,
+L99@P3: first due in calendar year 2028
+L100@P3: Jackson Township
+L101@P3: PROPOSED TAX LEVY (RENEWAL)
+L102@P3: A renewal of a tax for the benefit of Marseilles Township for the
+L103@P3: purpose of current expenses that the county auditor estimates will
+L104@P3: collect $19,124 annually, at a rate not exceeding 2 mills for each $1
+L105@P3: of taxable value, which amounts to $26 for each $100,000 of the
+L106@P3: county auditor’s market value, for five years, commencing in 2026,
+L107@P3: first due in calendar year 2027.
+L108@P3: Marseilles Township
+L109@P3: PROPOSED TAX LEVY (RENEWAL)
+L110@P3: A renewal of a tax for the benefit of Richland Township for the
+L111@P3: purpose of current expenses that the county auditor estimates will
+L112@P3: collect $22,088 annually, at a rate not exceeding 1 mill for each $1
+L113@P3: of taxable value, which amounts to $19 for each $100,000 of the
+L114@P3: county auditor’s market value, for five years, commencing in 2027,
+L115@P3: first due in calendar year 2028.
+L116@P3: Richland Township
+L117@P3: LOCAL LIQUOR OPTION
+L118@P3: FOR PARTICULAR USE AT A BUSINESS LOCATION
+L119@P3: Shall the sale of beer, wine, mixed beverages and spiritous liquor
+L120@P3: be permitted for sale on Sunday, by Elie Wine & Spirits a D-6 liquor
+L121@P3: permit applicant, holder of C-1, C-2, D-8 permit, who is engaged in
+L122@P3: the business of operating a liquor store at 117 E. Walker St. Upper
+L123@P3: Sandusky, OH 43351 in this precinct?
+L124@P3-4: Upper CLOCAL LIQUOR OPTION
+L125@P4: FOR PARTICULAR USE AT A BUSINESS LOCATION
+L126@P4: Shall the sale of wine and mixed beverages, and spirituous liquor
+L127@P4: be permitted for sale on Sunday by Ten Ducks Holding, Ltd an
+L128@P4: applicant for a D-6 liquor permit who is engaged in the business of
+L129@P4: operating bar and full-service restaurant at 124-132 N Sandusky
+L130@P4: Ave. Upper Sandusky, OH 43351 in this precinct?
+L131@P4: Upper C
+L132@P4: PROPOSED TAX LEVY (RENEWAL)
+L133@P4: A renewal of a tax for the benefit of Wyandot County for the
+L134@P4: purpose of providing for the operation of community addiction
+L135@P4: services providers and community mental health services providers
+L136@P4: and the acquisition, construction, renovation, financing,
+L137@P4: maintenance, and operation of alcohol and drug addiction facilities
+L138@P4: and mental health facilities by the Mental Health and Recovery
+L139@P4: Services Board of Seneca, Sandusky and Wyandot Counties, that
+L140@P4: the county auditor estimates will collect $361,454 annually, at a
+L141@P4: rate not exceeding 0.6 mills for each $1 of taxable value, which
+L142@P4: amounts to $13 for each $100,000 of the county auditor’s market
+L143@P4: value, for 10 years commencing in 2027, first due in calendar year
+L144@P4: 2028.
+L145@P4: ALL
+L146@P4: SALES AND USE TAX (CONTINUATION)
+L147@P4: The Board of County Commissioners of Wyandot County proposes
+L148@P4: a continuation of a sales and use tax in the amount of 0.5% for the
+L149@P4: purpose of providing additional revenue for the County’s general
+L150@P4: fund for the operation of the Wyandot County Sheriff’s Department
+L151@P4: and Emergency Medical Services for a period of 5 years.
+L152@P4: Shall the resolution of the Wyandot county commissioners
+L153@P4: proposing a 0.5% sales and use tax be approved?
+L154@P4: ALL
+L155@P4: PROPOSED CHARTER AMENDMENT (Ordinance 85-14)
+L156@P4: Shall the proposed charter amendment, Article XVII, Section 17.13:
+L157@P4: Prohibition of Construction of a Data Center, as reported by the
+L158@P4: charter commission of the city of Upper Sandusky be adopted?
+L159@P4: Upper A, Upper B,
+L160@P4: Upper C, Upper D,
+L161@P4-5: Upper E, Upper FPROPOSED TAX LEVY (RENEWAL)
+L162@P5: A renewal of a tax for the benefit of Wyandot East Fire District for
+L163@P5: the purpose of providing and maintaining fire protection services,
+L164@P5: that the county auditor estimates will collect $76,990 annually, at a
+L165@P5: rate not exceeding 2.5 mills for each $1 of taxable value, which
+L166@P5: amounts to $32 for each $100,000 of the county auditor's market
+L167@P5: value, for 5 years, commencing in 2026, first due in calendar year
+L168@P5: 2027.
+L169@P5: Wyandot East Fire
+L170@P5: District Residents
+L171@P5: PROPOSED INCOME TAX (ADDITIONAL)
+L172@P5: Shall an annual income tax of 1.74 percent on the earned income
+L173@P5: of individuals residing in the school district be imposed by the
+L174@P5: Wynford Local School District for 10 years, beginning January 1,
+L175@P5: 2027, for the purposes of current expenses?
+L176@P5: Wynford Local School
+L177@P5: District residents
+L178@P5: PROPOSED INCOME TAX (RENEWAL)
+L179@P5: Shall a fixed-sum levy renewing an existing levy be imposed by the
+L180@P5: Ridgedale Local School District for the purposed of paying current
+L181@P5: expenses of the district in the sum of $575,034 and a levy of taxes
+L182@P5: to be made outside of the ten-mill limitation estimated by the county
+L183@P5: auditor to average 2.44 mills for each $1 of taxable value, which
+L184@P5: amounts to $85 for each $100,000 of the county auditor’s market
+L185@P5: value, for a period of 5 years, commencing in 2027, first due in
+L186@P5: calendar year 2028?
+L187@P5: The county auditor has certified that the amount by which the carryover balance in the district’s general operating budget from the
+L188@P5: preceding fiscal year exceeds the district’s general fund
+L189@P5: expenditures made in the preceding fiscal year is $0, which is 0%
+L190@P5: of those expenditures.
+L191@P5: Ridgedale Local
+L192@P5: School District
+L193@P5: Residents
+L194@P5: PROPOSED (ORDINANCE/RESOLUTION)
+L195@P5: ELECTRIC AGGREGATION
+L196@P5: Shall Wyandot County have the authority to aggregate the retail
+L197@P5: electric loads located in the unincorporated areas of Wyandot
+L198@P5: County, and for that purpose, enter into service agreements to
+L199@P5: facilitate for those loads the sale and purchase of electricity, such
+L200@P5: aggregation to occur automatically except where any person elects
+L201@P5: to opt out?
+L202@P5: All unincorporated
+L203@P5-6: portions of the county INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L204@P6: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L205@P6: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of
+L206@P6: downloading a blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of
+L207@P6: the FWAB using the website’s FWAB Wizard.
+L208@P6: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to
+L209@P6: count.
+L210@P6: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before
+L211@P6: the election and the updated election notice issued on the 46
+L212@P6: th day before the election as a guide to:
+L213@P6: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L214@P6: (2) write the name of your choice of candidate or choice for or against an issue.
+L215@P6: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of
+L216@P6: elections at this address:
+L217@P6: Wyandot County Board of Elections 350 N Warpole St. Upper Sandusky, OH 43351
+L218@P6: A complete listing of all county board of elections mailing addresses and contact information is available at:
+L219@P6: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L220@P6: Do not send your ballot via e-mail or fax. Ohio law prohibits electronic transmission of a voted ballot.

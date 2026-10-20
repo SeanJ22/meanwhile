@@ -217,6 +217,1374 @@
             "verifiedAt": "2026-10-14T05:09:19.431021+00:00",
             "doorId": "fec-wi-chief"
           }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-15-sldu-15",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:15",
+          "divisionVintage": "2026",
+          "title": "State Senator District 15",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "State Senator District 15"
+          }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-27-sldu-27",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:27",
+          "divisionVintage": "2026",
+          "title": "State Senator District 27",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Dane-County-Type-B-ToD-Notice-for-Fall-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:06.958892Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "State Senator District 27"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-42-sldl-42",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:42",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 42",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 42"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-43-sldl-43",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:43",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 43",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 43"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-46-sldl-46",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:46",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 46",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 46"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-47-sldl-47",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:47",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 47",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 47"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-48-sldl-48",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:48",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 48",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 48"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-51-sldl-51",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:51",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 51",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 51"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-76-sldl-76",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:76",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 76",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 76"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-77-sldl-77",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:77",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 77",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 77"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-78-sldl-78",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:78",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 78",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 78"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-79-sldl-79",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:79",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 79",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 79"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-80-sldl-80",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:80",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 80",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 80"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-81-sldl-81",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:81",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 81",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Representative to the Assembly District 81"
+          }
+        },
+        {
+          "id": "wi-ba01-dane-county-sheriff-county-dane",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:dane",
+          "divisionVintage": "2026",
+          "title": "Dane County Sheriff",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Dane County Sheriff"
+          }
+        },
+        {
+          "id": "wi-ba01-dane-county-clerk-of-circuit-court-county-dane",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:dane",
+          "divisionVintage": "2026",
+          "title": "Dane County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Dane County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:6",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-8",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:8",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 8"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-13",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:13",
+          "divisionVintage": "2026",
+          "title": "State Senator District 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 13"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-19",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:19",
+          "divisionVintage": "2026",
+          "title": "State Senator District 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 19"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-39",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:39",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 39",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 39"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-53",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:53",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 53",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 53"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-54",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:54",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 54",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 54"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-55",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:55",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 55",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 55"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-57",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:57",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 57",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 57"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:winnebago",
+          "divisionVintage": "2026",
+          "title": "Winnebago County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:winnebago",
+          "divisionVintage": "2026",
+          "title": "Winnebago County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-3",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:3",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative in Congress District 3"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-40",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:40",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 40",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 40"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-41",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:41",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 41",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 41"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:sauk",
+          "divisionVintage": "2026",
+          "title": "Sauk County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-coroner",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:sauk",
+          "divisionVintage": "2026",
+          "title": "Sauk County Coroner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Coroner"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:sauk",
+          "divisionVintage": "2026",
+          "title": "Sauk County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:1",
+          "divisionVintage": "2026",
+          "title": "State Senator District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "State Senator District 1"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:1",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 1"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-2",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:2",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 2"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-4",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:4",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 4"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-5",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:5",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 5"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-6",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:6",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 6"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-88",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:88",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 88",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 88"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-89",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:89",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 89",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 89"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-90",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:90",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 90",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 90"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-brown-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:brown",
+          "divisionVintage": "2026",
+          "title": "Brown County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Brown County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-brown-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:brown",
+          "divisionVintage": "2026",
+          "title": "Brown County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Brown County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-1",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:1",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative in Congress District 1"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-11",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:11",
+          "divisionVintage": "2026",
+          "title": "State Senator District 11",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "State Senator District 11"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-32",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:32",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 32",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 32"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-64",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:64",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 64",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 64"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-65",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:65",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 65",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 65"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-kenosha-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:kenosha",
+          "divisionVintage": "2026",
+          "title": "Kenosha County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Kenosha County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-kenosha-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:kenosha",
+          "divisionVintage": "2026",
+          "title": "Kenosha County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Kenosha County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-5",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:5",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Representative in Congress District 5"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-33",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:33",
+          "divisionVintage": "2026",
+          "title": "State Senator District 33",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "State Senator District 33"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-97",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:97",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 97",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Representative to the Assembly District 97"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-waukesha-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:waukesha",
+          "divisionVintage": "2026",
+          "title": "Waukesha County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Waukesha County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-waukesha-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:waukesha",
+          "divisionVintage": "2026",
+          "title": "Waukesha County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Waukesha County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-7",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:7",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative in Congress District 7"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-34",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:34",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 34",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 34"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-oneida-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:oneida",
+          "divisionVintage": "2026",
+          "title": "Oneida County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Oneida County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-oneida-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:oneida",
+          "divisionVintage": "2026",
+          "title": "Oneida County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Oneida County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-35",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:35",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 35",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 35"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-columbia-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:columbia",
+          "divisionVintage": "2026",
+          "title": "Columbia County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Columbia County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-columbia-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:columbia",
+          "divisionVintage": "2026",
+          "title": "Columbia County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Columbia County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-37",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:37",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 37",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Representative to the Assembly District 37"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-adams-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:adams",
+          "divisionVintage": "2026",
+          "title": "Adams County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Adams County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-adams-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:adams",
+          "divisionVintage": "2026",
+          "title": "Adams County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Adams County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-21",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldu:21",
+          "divisionVintage": "2026",
+          "title": "State Senator District 21",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "State Senator District 21"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-63",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:63",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 63",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Representative to the Assembly District 63"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+          "divisionVintage": "2026",
+          "title": "Milwaukee County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Milwaukee County Sheriff"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+          "divisionVintage": "2026",
+          "title": "Milwaukee County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Milwaukee County Clerk of Circuit Court"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-4",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/cd:4",
+          "divisionVintage": "2026",
+          "title": "Representative in Congress District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative in Congress District 4"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-23",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:23",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly District 23",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative to the Assembly District 23"
+          }
         }
       ],
       "candidacies": [
@@ -491,6 +1859,2318 @@
             "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
             "doorId": "fec-wi-chief"
           }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-15-sldu-15-candidate-scott-fleming",
+          "contestId": "wi-ba01-state-senator-district-15-sldu-15",
+          "familyName": "Scott Fleming",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Scott Fleming (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-15-sldu-15-candidate-mark-spreitzer",
+          "contestId": "wi-ba01-state-senator-district-15-sldu-15",
+          "familyName": "Mark Spreitzer",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Mark Spreitzer (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-15-sldu-15-candidate-christopher-dean",
+          "contestId": "wi-ba01-state-senator-district-15-sldu-15",
+          "familyName": "Christopher Dean",
+          "givenName": "",
+          "partyLabel": "Serving People Not Parties",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Christopher Dean (Serving People Not Parties)"
+          }
+        },
+        {
+          "id": "wi-ba01-state-senator-district-27-sldu-27-candidate-dianne-hesselbein",
+          "contestId": "wi-ba01-state-senator-district-27-sldu-27",
+          "familyName": "Dianne Hesselbein",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Dane-County-Type-B-ToD-Notice-for-Fall-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:06.958892Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Dianne Hesselbein (Democratic)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-42-sldl-42-candidate-keith-f-miller",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-42-sldl-42",
+          "familyName": "Keith F. Miller",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Keith F. Miller (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-42-sldl-42-candidate-maureen-mccarville",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-42-sldl-42",
+          "familyName": "Maureen McCarville",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Maureen McCarville (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-43-sldl-43-candidate-paul-mcgraw",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-43-sldl-43",
+          "familyName": "Paul McGraw",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Paul McGraw (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-43-sldl-43-candidate-brienne-brown",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-43-sldl-43",
+          "familyName": "Brienne Brown",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Brienne Brown (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-46-sldl-46-candidate-john-donohue",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-46-sldl-46",
+          "familyName": "John Donohue",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "John Donohue (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-46-sldl-46-candidate-joan-fitzgerald",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-46-sldl-46",
+          "familyName": "Joan Fitzgerald",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Joan Fitzgerald (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-47-sldl-47-candidate-sandy-bakk",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-47-sldl-47",
+          "familyName": "Sandy Bakk",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Sandy Bakk (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-47-sldl-47-candidate-randy-udell",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-47-sldl-47",
+          "familyName": "Randy Udell",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Randy Udell (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-48-sldl-48-candidate-mark-kjorlie",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-48-sldl-48",
+          "familyName": "Mark Kjorlie",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Mark Kjorlie (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-48-sldl-48-candidate-andrew-hysell",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-48-sldl-48",
+          "familyName": "Andrew Hysell",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Andrew Hysell (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-todd-novak",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-51-sldl-51",
+          "familyName": "Todd Novak",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Todd Novak (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-ben-gruber",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-51-sldl-51",
+          "familyName": "Ben Gruber",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Ben Gruber (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-nathan-tataje",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-51-sldl-51",
+          "familyName": "Nathan Tataje",
+          "givenName": "",
+          "partyLabel": "American Solidarity Party",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Nathan Tataje (American Solidarity Party)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-nina-chat",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-76-sldl-76",
+          "familyName": "Nina Chat",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Nina Chat (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-dina-nina-martinez-rutherford",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-76-sldl-76",
+          "familyName": "Dina Nina Martinez-Rutherford",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Dina Nina Martinez-Rutherford (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-jane-mccormick",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-77-sldl-77",
+          "familyName": "Jane McCormick",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Jane McCormick (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-renuka-mayadev",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-77-sldl-77",
+          "familyName": "Renuka Mayadev",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Renuka Mayadev (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-78-sldl-78-candidate-henry-johnson",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-78-sldl-78",
+          "familyName": "Henry Johnson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Henry Johnson (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-78-sldl-78-candidate-shelia-stubbs",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-78-sldl-78",
+          "familyName": "Shelia Stubbs",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Shelia Stubbs (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-79-sldl-79-candidate-john-fons",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-79-sldl-79",
+          "familyName": "John Fons",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "John Fons (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-79-sldl-79-candidate-lisa-subeck",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-79-sldl-79",
+          "familyName": "Lisa Subeck",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Lisa Subeck (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-80-sldl-80-candidate-simran-arora",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-80-sldl-80",
+          "familyName": "Simran Arora",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Simran Arora (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-80-sldl-80-candidate-mike-bare",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-80-sldl-80",
+          "familyName": "Mike Bare",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Mike Bare (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-81-sldl-81-candidate-mark-s-maier",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-81-sldl-81",
+          "familyName": "Mark S. Maier",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Mark S. Maier (REP)"
+          }
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-81-sldl-81-candidate-alex-joers",
+          "contestId": "wi-ba01-representative-to-the-assembly-district-81-sldl-81",
+          "familyName": "Alex Joers",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Alex Joers (DEM)"
+          }
+        },
+        {
+          "id": "wi-ba01-dane-county-sheriff-county-dane-candidate-kalvin-d-barrett",
+          "contestId": "wi-ba01-dane-county-sheriff-county-dane",
+          "familyName": "Kalvin D. Barrett",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Kalvin D. Barrett (DEM) Dane County"
+          }
+        },
+        {
+          "id": "wi-ba01-dane-county-clerk-of-circuit-court-county-dane-candidate-jeff-okazaki",
+          "contestId": "wi-ba01-dane-county-clerk-of-circuit-court-county-dane",
+          "familyName": "Jeff Okazaki",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+            "sourceOrg": "Dane County Clerk",
+            "collectedAt": "2026-10-20T22:55:05.506881Z",
+            "verifiedAt": "2026-10-20T22:57:49.856078Z",
+            "quote": "Jeff Okazaki (DEM) Dane County"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6:7704f9ba9475adac",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-6",
+          "familyName": "Glenn Grothman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6\nGlenn Grothman — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6:a4f98e0965988eab",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-6",
+          "familyName": "Brad Smith",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6\nBrad Smith — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6:7d72610de1e9f395",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-6",
+          "familyName": "Matthew Arndt",
+          "givenName": "",
+          "partyLabel": "Wisconsin Green Party",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6\nMatthew Arndt — Wisconsin Green Party"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6:186ec894985e830d",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-6",
+          "familyName": "Elizabeth Anne Fitzgibbon",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6\nElizabeth Anne Fitzgibbon — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-6:72c271780bd4c66a",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-6",
+          "familyName": "Mike Thurow",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 6\nMike Thurow — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-8:d538574f010f9db2",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-8",
+          "familyName": "Tony Wied",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 8\nTony Wied — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-8:be62d9b94a1be7a7",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-8",
+          "familyName": "Rick Crosson",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative in Congress District 8\nRick Crosson — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-13:a6b501b0d152916d",
+          "contestId": "ba01-pacific-wi-state-senator-district-13",
+          "familyName": "John Jagler",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 13\nJohn Jagler — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-13:21b045b69d25c87b",
+          "contestId": "ba01-pacific-wi-state-senator-district-13",
+          "familyName": "Sasha Ripley",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 13\nSasha Ripley — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-19:a7b495bbaf31c540",
+          "contestId": "ba01-pacific-wi-state-senator-district-19",
+          "familyName": "Rachael Ann Cabral-Guevara",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 19\nRachael Ann Cabral-Guevara — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-19:1c05e3108d56996a",
+          "contestId": "ba01-pacific-wi-state-senator-district-19",
+          "familyName": "Emily Daniels Tseffos",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "State Senator District 19\nEmily Daniels Tseffos — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-39:3352c562a62c9c94",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-39",
+          "familyName": "Alex Dallman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 39\nAlex Dallman — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-39:5cc4ce340704047b",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-39",
+          "familyName": "Michael Skivington",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 39\nMichael Skivington — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-53:82ea9608d7710023",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-53",
+          "familyName": "David Daniels",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 53\nDavid Daniels — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-53:5fa2c37e0adc7fc6",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-53",
+          "familyName": "Becky Nichols",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 53\nBecky Nichols — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-53:3a1e85c26d66f421",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-53",
+          "familyName": "Rachael Dowling",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 53\nRachael Dowling — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-54:d95506c95657bad3",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-54",
+          "familyName": "Tim Paterson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 54\nTim Paterson — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-54:ba942000900fa0ae",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-54",
+          "familyName": "Lori Palmeri",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 54\nLori Palmeri — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-55:2a4e94656decbf0c",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-55",
+          "familyName": "Nate Gustafson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 55\nNate Gustafson — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-55:30fbddb5dee4842b",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-55",
+          "familyName": "Alex Corrigan",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 55\nAlex Corrigan — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-57:ee34baa25b4ea500",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-57",
+          "familyName": "Kevin Krentz",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 57\nKevin Krentz — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-57:6fb665afa35f2af4",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-57",
+          "familyName": "Joey Marschall",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Representative to the Assembly District 57\nJoey Marschall — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-sheriff:1499694d7a2a20fc",
+          "contestId": "ba01-pacific-wi-winnebago-county-sheriff",
+          "familyName": "Darin M. Rice",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Sheriff\nDarin M. Rice — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-sheriff:1fbbc612d46a45f6",
+          "contestId": "ba01-pacific-wi-winnebago-county-sheriff",
+          "familyName": "Jason W. Rippl",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Sheriff\nJason W. Rippl — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-sheriff:f3bcb3b56e59cf29",
+          "contestId": "ba01-pacific-wi-winnebago-county-sheriff",
+          "familyName": "Danielle Falesnik",
+          "givenName": "",
+          "partyLabel": "Strong. Fair. Ready to Lead",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Sheriff\nDanielle Falesnik — Strong. Fair. Ready to Lead"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-winnebago-county-clerk-of-circuit-court:e17e082b2c7ee5d5",
+          "contestId": "ba01-pacific-wi-winnebago-county-clerk-of-circuit-court",
+          "familyName": "Desiree Bongers",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+            "sourceOrg": "Winnebago County Clerk",
+            "collectedAt": "2026-10-20T23:16:26.526568Z",
+            "verifiedAt": "2026-10-20T23:16:26.526568Z",
+            "quote": "Winnebago County Clerk of Circuit Court\nDesiree Bongers — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-3:a3d2a7544f0a1eb9",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-3",
+          "familyName": "Derrick Van Orden",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative in Congress District 3\nDerrick Van Orden — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-3:9b64082b5bd7d546",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-3",
+          "familyName": "Rebecca Cooke",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative in Congress District 3\nRebecca Cooke — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-3:44f7aab60ab4db3c",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-3",
+          "familyName": "Alexander Valiensi Kent",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative in Congress District 3\nAlexander Valiensi Kent — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-3:004199ee54291282",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-3",
+          "familyName": "Rustin Provance",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative in Congress District 3\nRustin Provance — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-40:47f07cfb2a5e6d3e",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-40",
+          "familyName": "Julie Helmer",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 40\nJulie Helmer — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-40:8e0a96dfd00b1ca9",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-40",
+          "familyName": "Karen DeSanto",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 40\nKaren DeSanto — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-41:98102c371a10377f",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-41",
+          "familyName": "Tony Kurtz",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 41\nTony Kurtz — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-41:d97f6edae63ba878",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-41",
+          "familyName": "Zach Commons",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Representative to the Assembly District 41\nZach Commons — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-sheriff:f27b83545cc1fbde",
+          "contestId": "ba01-pacific-wi-sauk-county-sheriff",
+          "familyName": "Matt Burch",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Sheriff\nMatt Burch — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-sheriff:d7835c480cc4b602",
+          "contestId": "ba01-pacific-wi-sauk-county-sheriff",
+          "familyName": "Ryan P. Jesberger",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Sheriff\nRyan P. Jesberger — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-coroner:0173a07343ef64fd",
+          "contestId": "ba01-pacific-wi-sauk-county-coroner",
+          "familyName": "Don Skrabel",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Coroner\nDon Skrabel — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-coroner:0ec39bd7fedf1686",
+          "contestId": "ba01-pacific-wi-sauk-county-coroner",
+          "familyName": "Amber Giddings",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Coroner\nAmber Giddings — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-sauk-county-clerk-of-circuit-court:347816e537662f8f",
+          "contestId": "ba01-pacific-wi-sauk-county-clerk-of-circuit-court",
+          "familyName": "Carrie A. Wastlick",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+            "sourceOrg": "Sauk County Clerk",
+            "collectedAt": "2026-10-20T23:16:25.467716Z",
+            "verifiedAt": "2026-10-20T23:16:25.467716Z",
+            "quote": "Sauk County Clerk of Circuit Court\nCarrie A. Wastlick — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-1:d295fc2dd635849d",
+          "contestId": "ba01-pacific-wi-state-senator-district-1",
+          "familyName": "Nic Cravillion",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "State Senator District 1\nNic Cravillion — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-1:5f7c0ba96a4d959a",
+          "contestId": "ba01-pacific-wi-state-senator-district-1",
+          "familyName": "Mark Becker",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "State Senator District 1\nMark Becker — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-1:51eb53d41f267963",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-1",
+          "familyName": "Joel Kitchens",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 1\nJoel Kitchens — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-1:348b41ba350ef54b",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-1",
+          "familyName": "Renee A. Paplham",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 1\nRenee A. Paplham — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-2:324081738d5237bc",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-2",
+          "familyName": "Shae Sortwell",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 2\nShae Sortwell — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-2:1c8601412938d728",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-2",
+          "familyName": "Alicia Saunders",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 2\nAlicia Saunders — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-4:9b00da8769bc0950",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-4",
+          "familyName": "David Steffen",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 4\nDavid Steffen — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-4:c18e9e7f4244bb36",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-4",
+          "familyName": "Alexia Unertl",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 4\nAlexia Unertl — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-5:81ff811f753d4581",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-5",
+          "familyName": "Joy Goeben",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 5\nJoy Goeben — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-5:0ec8fcb159b196dd",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-5",
+          "familyName": "Justin Schumacher",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 5\nJustin Schumacher — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-5:6a5994373bb0248d",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-5",
+          "familyName": "David Schupbach",
+          "givenName": "",
+          "partyLabel": "Wisconsin Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 5\nDavid Schupbach — Wisconsin Green"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-6:4f22b90aaa54a9e5",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-6",
+          "familyName": "Elijah Behnke",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 6\nElijah Behnke — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-6:5a69edb4eeeffe48",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-6",
+          "familyName": "Shirley Hinze",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 6\nShirley Hinze — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-88:597caf92e08328f8",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-88",
+          "familyName": "Ben Franklin",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 88\nBen Franklin — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-88:a446e6e928a6429d",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-88",
+          "familyName": "Brandy Tollefson",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 88\nBrandy Tollefson — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-89:8a563d9256f02650",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-89",
+          "familyName": "Bobby R. Lindsey",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 89\nBobby R. Lindsey — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-89:cdb7913d197576bd",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-89",
+          "familyName": "Ryan Spaude",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 89\nRyan Spaude — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-90:485bdb83e5ad3800",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-90",
+          "familyName": "Jessica Henderson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 90\nJessica Henderson — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-90:73fe2278fb08d979",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-90",
+          "familyName": "Amaad Rivera-Wagner",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Representative to the Assembly District 90\nAmaad Rivera-Wagner — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-brown-county-sheriff:10d18441a0fc5b5a",
+          "contestId": "ba01-pacific-wi-brown-county-sheriff",
+          "familyName": "Todd J. Delain",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Brown County Sheriff\nTodd J. Delain — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-brown-county-clerk-of-circuit-court:eb2264e5ec3132cd",
+          "contestId": "ba01-pacific-wi-brown-county-clerk-of-circuit-court",
+          "familyName": "John A. Vander Leest",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.816857Z",
+            "verifiedAt": "2026-10-20T23:21:15.816857Z",
+            "quote": "Brown County Clerk of Circuit Court\nJohn A. Vander Leest — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-1:fe698f3890754a9a",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-1",
+          "familyName": "Bryan Steil",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative in Congress District 1\nBryan Steil — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-1:d640546e28ee134e",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-1",
+          "familyName": "Mitchell Berman",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative in Congress District 1\nMitchell Berman — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-11:63ce0a76badf66d5",
+          "contestId": "ba01-pacific-wi-state-senator-district-11",
+          "familyName": "Ellen Schutt",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "State Senator District 11\nEllen Schutt — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-11:6a6d0ed788a1c243",
+          "contestId": "ba01-pacific-wi-state-senator-district-11",
+          "familyName": "Adam Duda",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "State Senator District 11\nAdam Duda — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-32:4e03d8dfca4cc6ec",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-32",
+          "familyName": "Amanda Nedweski",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 32\nAmanda Nedweski — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-32:e7e37e92f1abc756",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-32",
+          "familyName": "Greg Miller",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 32\nGreg Miller — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-64:5fbe7f07f00d5e65",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-64",
+          "familyName": "Ed Hibsch",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 64\nEd Hibsch — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-64:1bcf5121eba3dc15",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-64",
+          "familyName": "Tip McGuire",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 64\nTip McGuire — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-65:0721565a0c5cdeeb",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-65",
+          "familyName": "Valerie Kretchmer",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 65\nValerie Kretchmer — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-65:b6cf91be6d99f615",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-65",
+          "familyName": "Ben DeSmidt",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Representative to the Assembly District 65\nBen DeSmidt — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-kenosha-county-sheriff:2ec5c6138ac7db90",
+          "contestId": "ba01-pacific-wi-kenosha-county-sheriff",
+          "familyName": "David W. Zoerner",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Kenosha County Sheriff\nDavid W. Zoerner — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-kenosha-county-clerk-of-circuit-court:b2cad68d328e9f2e",
+          "contestId": "ba01-pacific-wi-kenosha-county-clerk-of-circuit-court",
+          "familyName": "Zach Rodriguez",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Kenosha County Clerk of Circuit Court\nZach Rodriguez — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-kenosha-county-clerk-of-circuit-court:8fdfb5404cac44b4",
+          "contestId": "ba01-pacific-wi-kenosha-county-clerk-of-circuit-court",
+          "familyName": "Brian M. Sheffler",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Kenosha County Clerk of Circuit Court\nBrian M. Sheffler — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-5:82e8acb5f6330b51",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-5",
+          "familyName": "Scott Fitzgerald",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Representative in Congress District 5\nScott Fitzgerald — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-5:97e3c4fd4ed88d66",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-5",
+          "familyName": "Andrew Beck",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Representative in Congress District 5\nAndrew Beck — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-33:f2020c4aa783a3cd",
+          "contestId": "ba01-pacific-wi-state-senator-district-33",
+          "familyName": "Chris Kapenga",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "State Senator District 33\nChris Kapenga — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-33:3d02c4f9cec5ab9f",
+          "contestId": "ba01-pacific-wi-state-senator-district-33",
+          "familyName": "Mike Van Someren",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "State Senator District 33\nMike Van Someren — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-97:352f66415e577d99",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-97",
+          "familyName": "Cindi Duchow",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Representative to the Assembly District 97\nCindi Duchow — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-waukesha-county-sheriff:cff2f3aa8abb4289",
+          "contestId": "ba01-pacific-wi-waukesha-county-sheriff",
+          "familyName": "Nick Ollinger",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Waukesha County Sheriff\nNick Ollinger — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-waukesha-county-clerk-of-circuit-court:cf8ba11daa4901e6",
+          "contestId": "ba01-pacific-wi-waukesha-county-clerk-of-circuit-court",
+          "familyName": "Monica Paz",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+            "sourceOrg": "Town of Ottawa / Waukesha County Clerk",
+            "collectedAt": "2026-10-20T23:21:15.027106Z",
+            "verifiedAt": "2026-10-20T23:21:15.027106Z",
+            "quote": "Waukesha County Clerk of Circuit Court\nMonica Paz — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-7:98a34a28ba107ecd",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-7",
+          "familyName": "Michael Alfonso",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative in Congress District 7\nMichael Alfonso — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-7:0a9f7963bd1d8ffa",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-7",
+          "familyName": "Fred Clark",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative in Congress District 7\nFred Clark — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-34:fad02d55b80d90c5",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-34",
+          "familyName": "Rob Swearingen",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 34\nRob Swearingen — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-34:364713996f3adb09",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-34",
+          "familyName": "Merlin Van Buren",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 34\nMerlin Van Buren — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-oneida-county-sheriff:72f21f4dcdeae68d",
+          "contestId": "ba01-pacific-wi-oneida-county-sheriff",
+          "familyName": "Grady Hartman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Oneida County Sheriff\nGrady Hartman — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-oneida-county-clerk-of-circuit-court:f2583e9356db8b60",
+          "contestId": "ba01-pacific-wi-oneida-county-clerk-of-circuit-court",
+          "familyName": "Brenda Behrle",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Oneida County Clerk of Circuit Court\nBrenda Behrle — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-35:a851a3c0e587d7a7",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-35",
+          "familyName": "Calvin Callahan",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 35\nCalvin Callahan — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-35:b9493397750d29c0",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-35",
+          "familyName": "Elizabeth McCrank",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+            "sourceOrg": "Oneida County Clerk",
+            "collectedAt": "2026-10-20T23:27:31.969437Z",
+            "verifiedAt": "2026-10-20T23:27:31.969437Z",
+            "quote": "Representative to the Assembly District 35\nElizabeth McCrank — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-columbia-county-sheriff:c1b4c8da61a40c2a",
+          "contestId": "ba01-pacific-wi-columbia-county-sheriff",
+          "familyName": "Roger L. Brandner",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Columbia County Sheriff\nRoger L. Brandner — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-columbia-county-clerk-of-circuit-court:a258a4a1276a32c5",
+          "contestId": "ba01-pacific-wi-columbia-county-clerk-of-circuit-court",
+          "familyName": "Julie Kayartz",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Columbia County Clerk of Circuit Court\nJulie Kayartz — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-37:5dfc9589cc4f762c",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-37",
+          "familyName": "Mark Born",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Representative to the Assembly District 37\nMark Born — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-37:735698eeed66ca8a",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-37",
+          "familyName": "LaToya Bates",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Representative to the Assembly District 37\nLaToya Bates — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-adams-county-sheriff:6458e8e54841083f",
+          "contestId": "ba01-pacific-wi-adams-county-sheriff",
+          "familyName": "Brent R. York",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Adams County Sheriff\nBrent R. York — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-adams-county-clerk-of-circuit-court:0ff166103de95e6a",
+          "contestId": "ba01-pacific-wi-adams-county-clerk-of-circuit-court",
+          "familyName": "Miranda Christensen",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+            "sourceOrg": "Columbia County Clerk",
+            "collectedAt": "2026-10-20T23:26:37.055352Z",
+            "verifiedAt": "2026-10-20T23:26:37.055352Z",
+            "quote": "Adams County Clerk of Circuit Court\nMiranda Christensen — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-21:28b646f08e1ce9bd",
+          "contestId": "ba01-pacific-wi-state-senator-district-21",
+          "familyName": "Jim Croft",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "State Senator District 21\nJim Croft — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-state-senator-district-21:03011f1b285a5ab1",
+          "contestId": "ba01-pacific-wi-state-senator-district-21",
+          "familyName": "Trevor Jung",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "State Senator District 21\nTrevor Jung — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-63:84c456c8adfc6446",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-63",
+          "familyName": "Robert Wittke",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Representative to the Assembly District 63\nRobert Wittke — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-63:1da50ef7ee5ca6ea",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-63",
+          "familyName": "Eddie Phanichkul",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Representative to the Assembly District 63\nEddie Phanichkul — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-sheriff:6c2df89148b726dd",
+          "contestId": "ba01-pacific-wi-milwaukee-county-sheriff",
+          "familyName": "Denita R. Ball",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Milwaukee County Sheriff\nDenita R. Ball — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court:29853fa001e1ea6e",
+          "contestId": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court",
+          "familyName": "Anna Maria Hodges",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "City of Franklin Clerk",
+            "collectedAt": "2026-10-20T23:28:33.708649Z",
+            "verifiedAt": "2026-10-20T23:28:33.708649Z",
+            "quote": "Milwaukee County Clerk of Circuit Court\nAnna Maria Hodges — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-4:19457984e5d51718",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-4",
+          "familyName": "Tim Rogers",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative in Congress District 4\nTim Rogers — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-4:1d3bd4d8347626c1",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-4",
+          "familyName": "Gwen Moore",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative in Congress District 4\nGwen Moore — Democratic"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-in-congress-district-4:d4180a395caa4058",
+          "contestId": "ba01-pacific-wi-representative-in-congress-district-4",
+          "familyName": "Arthur Burks",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative in Congress District 4\nArthur Burks — Independent"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-23:4db2a5497ee7e916",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-23",
+          "familyName": "Aleaner Pabonnie",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative to the Assembly District 23\nAleaner Pabonnie — Republican"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-representative-to-the-assembly-district-23:ff532c281fe808a0",
+          "contestId": "ba01-pacific-wi-representative-to-the-assembly-district-23",
+          "familyName": "Deb Andraca",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+            "sourceOrg": "Village of Whitefish Bay Clerk",
+            "collectedAt": "2026-10-20T23:28:32.478791Z",
+            "verifiedAt": "2026-10-20T23:28:32.478791Z",
+            "quote": "Representative to the Assembly District 23\nDeb Andraca — Democratic"
+          }
         }
       ],
       "measures": [
@@ -551,13 +4231,71 @@
             ]
           }
         }
+      ],
+      "candidateTickets": [
+        {
+          "id": "ba01-pacific-wi-ticket-tom-tiffany",
+          "leadCandidacyId": "wi-green-county-2026-general-governor-candidate-tom-tiffany",
+          "runningMate": {
+            "id": "wi-green-county-2026-general-lieutenant-governor-candidate-david-varnam",
+            "contestId": "wi-green-county-2026-general-lieutenant-governor",
+            "familyName": "Varnam",
+            "givenName": "David",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+              "sourceOrg": "Green County Clerk",
+              "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+              "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+              "doorId": "fec-wi-chief"
+            }
+          },
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Governor/Lieutenant Governor\nTom Tiffany/David Varnam (Republican)"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-ticket-david-crowley",
+          "leadCandidacyId": "wi-green-county-2026-general-governor-candidate-david-crowley",
+          "runningMate": {
+            "id": "wi-green-county-2026-general-lieutenant-governor-candidate-sarah-godlewski",
+            "contestId": "wi-green-county-2026-general-lieutenant-governor",
+            "familyName": "Godlewski",
+            "givenName": "Sarah",
+            "partyLabel": "Democratic",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+              "sourceOrg": "Green County Clerk",
+              "collectedAt": "2026-10-14T05:09:53.173299+00:00",
+              "verifiedAt": "2026-10-14T05:09:53.173299+00:00",
+              "doorId": "fec-wi-chief"
+            }
+          },
+          "provenance": {
+            "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+            "sourceOrg": "Kenosha County Clerk",
+            "collectedAt": "2026-10-20T23:21:51.873265Z",
+            "verifiedAt": "2026-10-20T23:21:51.873265Z",
+            "quote": "Governor/Lieutenant Governor\nDavid Crowley/Sarah Godlewski (Democratic)"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:53.173299+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-20T23:28:33.708649Z",
+    "reviewedBy": "ba01-pacific-wi-source-replay",
     "sources": [
       {
         "requestedUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
@@ -588,6 +4326,116 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Green County Clerk",
         "reviewedEvidence": "Official statewide referendum notice for November 3, 2026: Questions 1, 2 and 3, full proposed constitutional texts and explanatory statements, printed September 30, 2026."
+      },
+      {
+        "requestedUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+        "finalUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:55:05.506881Z",
+        "rawHash": "56228b67806ac0c1efea6a8e762743118e8dfe320ada72743ad34dc7508ea3aa",
+        "publisher": "Dane County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/wi-dane.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Dane-County-Type-B-ToD-Notice-for-Fall-2026.pdf",
+        "finalUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Dane-County-Type-B-ToD-Notice-for-Fall-2026.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:55:06.958892Z",
+        "rawHash": "fb9d2fc3fea08bf7eb5a5d3b041af126fedd062158da2a7f4f03ac6858a9ce2c",
+        "publisher": "Dane County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/wi-town-dane.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+        "finalUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097/Election-Information-Packet-11326-AutoRecovered?bidId=",
+        "publisher": "Winnebago County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:16:26.526568Z",
+        "httpStatus": 200,
+        "rawHash": "6e53929a59fc42a9a29984b8c078de37ac525d773d31bd0e1c55ef26eb014beb",
+        "reviewedEvidence": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+        "finalUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+        "publisher": "Sauk County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:16:25.467716Z",
+        "httpStatus": 200,
+        "rawHash": "5ed436e552f0a884eacdb91b234bc524a24f045cf5fa8d8d1855f1950ab1964e",
+        "reviewedEvidence": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+      },
+      {
+        "requestedUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+        "finalUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+        "publisher": "Brown County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:21:15.816857Z",
+        "httpStatus": 200,
+        "rawHash": "288422f4aaa1e639643a6422db68e9d2b831f916820378e72f8a47ba56783367",
+        "reviewedEvidence": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+      },
+      {
+        "requestedUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+        "finalUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+        "publisher": "Kenosha County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:21:51.873265Z",
+        "httpStatus": 200,
+        "rawHash": "69df06578de420352befc91b32513ecf5b8f756aedffdec604267b2aa33b9ad3",
+        "reviewedEvidence": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+      },
+      {
+        "requestedUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+        "finalUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+        "publisher": "Town of Ottawa / Waukesha County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:21:15.027106Z",
+        "httpStatus": 200,
+        "rawHash": "6ea23fa6905fb02e0298ed1e51bbceb248f7088456c5b6f83f9ff1df1148103c",
+        "reviewedEvidence": "Official November 3 2026 Town of Ottawa sample ballot page1, before Statewide(cont.) overlay. Native ASCII text recovered by scripts/ba01-pacific-wi-pdf.py for missing standard Arial ToUnicode map; raw PDF unchanged. District and county races checked against printed ballot."
+      },
+      {
+        "requestedUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+        "finalUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+        "publisher": "Oneida County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:27:31.969437Z",
+        "httpStatus": 200,
+        "rawHash": "5a9875ba88a8893802afbe0c9fdcce7330b709a0e4ce85bb09338b2585e71819",
+        "reviewedEvidence": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices."
+      },
+      {
+        "requestedUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+        "finalUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+        "publisher": "Columbia County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:26:37.055352Z",
+        "httpStatus": 200,
+        "rawHash": "691d3ee37f7275e43f91d3b0fdfab72104d0fdf7213d44e91fe4c5618da25c78",
+        "reviewedEvidence": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices. City of Wisconsin Dells styles include Sauk (front97/back98) and Adams (front99/back100); county scope follows the explicit county printed on each reverse."
+      },
+      {
+        "requestedUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+        "finalUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+        "publisher": "City of Franklin Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:28:33.708649Z",
+        "httpStatus": 200,
+        "rawHash": "dd159ef4a40b295c05251e540f265f80e7af5f69bfd7e7cbf7ed02dc238c7be2",
+        "reviewedEvidence": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
+      },
+      {
+        "requestedUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+        "finalUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+        "publisher": "Village of Whitefish Bay Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:28:32.478791Z",
+        "httpStatus": 200,
+        "rawHash": "ae5631b72d5334cc0dfc07ec788a1d1fa9a13f6c5c2b0205a3a6423076619c34",
+        "reviewedEvidence": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
       }
     ]
   }

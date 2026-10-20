@@ -1,0 +1,4 @@
+# Source capture hashes refer to exact bytes, including original line endings.
+ba01-*/** -text -diff
+evidence/** -text -diff
+sources/** -text -diff

@@ -1,0 +1,303 @@
+{
+  "step": "BA-01",
+  "checkedAt": "2026-10-20T23:32:35.625347+00:00",
+  "scope": "Official-source comparison of assigned northeast states. Counts are measurements, never publication gates. Live ZIP parity is not yet established.",
+  "states": {
+    "PA": {
+      "held": {
+        "contests": 157,
+        "candidateContests": 153,
+        "candidacies": 262,
+        "measures": 4
+      },
+      "expectedRegularCandidateContests": 246,
+      "expectedDistrictCounts": {
+        "sldl": 203,
+        "sldu": 25,
+        "cd": 17
+      },
+      "missingContestDivisions": [
+        "ocd-division/country:us/state:pa/cd:14",
+        "ocd-division/country:us/state:pa/cd:15",
+        "ocd-division/country:us/state:pa/cd:7",
+        "ocd-division/country:us/state:pa/sldl:100",
+        "ocd-division/country:us/state:pa/sldl:101",
+        "ocd-division/country:us/state:pa/sldl:102",
+        "ocd-division/country:us/state:pa/sldl:107",
+        "ocd-division/country:us/state:pa/sldl:108",
+        "ocd-division/country:us/state:pa/sldl:109",
+        "ocd-division/country:us/state:pa/sldl:11",
+        "ocd-division/country:us/state:pa/sldl:110",
+        "ocd-division/country:us/state:pa/sldl:111",
+        "ocd-division/country:us/state:pa/sldl:115",
+        "ocd-division/country:us/state:pa/sldl:12",
+        "ocd-division/country:us/state:pa/sldl:122",
+        "ocd-division/country:us/state:pa/sldl:123",
+        "ocd-division/country:us/state:pa/sldl:124",
+        "ocd-division/country:us/state:pa/sldl:126",
+        "ocd-division/country:us/state:pa/sldl:127",
+        "ocd-division/country:us/state:pa/sldl:128",
+        "ocd-division/country:us/state:pa/sldl:129",
+        "ocd-division/country:us/state:pa/sldl:130",
+        "ocd-division/country:us/state:pa/sldl:132",
+        "ocd-division/country:us/state:pa/sldl:133",
+        "ocd-division/country:us/state:pa/sldl:134",
+        "ocd-division/country:us/state:pa/sldl:135",
+        "ocd-division/country:us/state:pa/sldl:136",
+        "ocd-division/country:us/state:pa/sldl:137",
+        "ocd-division/country:us/state:pa/sldl:138",
+        "ocd-division/country:us/state:pa/sldl:139",
+        "ocd-division/country:us/state:pa/sldl:14",
+        "ocd-division/country:us/state:pa/sldl:15",
+        "ocd-division/country:us/state:pa/sldl:16",
+        "ocd-division/country:us/state:pa/sldl:17",
+        "ocd-division/country:us/state:pa/sldl:171",
+        "ocd-division/country:us/state:pa/sldl:176",
+        "ocd-division/country:us/state:pa/sldl:183",
+        "ocd-division/country:us/state:pa/sldl:187",
+        "ocd-division/country:us/state:pa/sldl:189",
+        "ocd-division/country:us/state:pa/sldl:22",
+        "ocd-division/country:us/state:pa/sldl:37",
+        "ocd-division/country:us/state:pa/sldl:41",
+        "ocd-division/country:us/state:pa/sldl:43",
+        "ocd-division/country:us/state:pa/sldl:48",
+        "ocd-division/country:us/state:pa/sldl:49",
+        "ocd-division/country:us/state:pa/sldl:5",
+        "ocd-division/country:us/state:pa/sldl:50",
+        "ocd-division/country:us/state:pa/sldl:51",
+        "ocd-division/country:us/state:pa/sldl:52",
+        "ocd-division/country:us/state:pa/sldl:55",
+        "ocd-division/country:us/state:pa/sldl:56",
+        "ocd-division/country:us/state:pa/sldl:57",
+        "ocd-division/country:us/state:pa/sldl:58",
+        "ocd-division/country:us/state:pa/sldl:59",
+        "ocd-division/country:us/state:pa/sldl:60",
+        "ocd-division/country:us/state:pa/sldl:62",
+        "ocd-division/country:us/state:pa/sldl:63",
+        "ocd-division/country:us/state:pa/sldl:64",
+        "ocd-division/country:us/state:pa/sldl:65",
+        "ocd-division/country:us/state:pa/sldl:66",
+        "ocd-division/country:us/state:pa/sldl:67",
+        "ocd-division/country:us/state:pa/sldl:68",
+        "ocd-division/country:us/state:pa/sldl:69",
+        "ocd-division/country:us/state:pa/sldl:7",
+        "ocd-division/country:us/state:pa/sldl:71",
+        "ocd-division/country:us/state:pa/sldl:72",
+        "ocd-division/country:us/state:pa/sldl:73",
+        "ocd-division/country:us/state:pa/sldl:75",
+        "ocd-division/country:us/state:pa/sldl:76",
+        "ocd-division/country:us/state:pa/sldl:77",
+        "ocd-division/country:us/state:pa/sldl:78",
+        "ocd-division/country:us/state:pa/sldl:79",
+        "ocd-division/country:us/state:pa/sldl:8",
+        "ocd-division/country:us/state:pa/sldl:80",
+        "ocd-division/country:us/state:pa/sldl:81",
+        "ocd-division/country:us/state:pa/sldl:82",
+        "ocd-division/country:us/state:pa/sldl:83",
+        "ocd-division/country:us/state:pa/sldl:84",
+        "ocd-division/country:us/state:pa/sldl:89",
+        "ocd-division/country:us/state:pa/sldl:9",
+        "ocd-division/country:us/state:pa/sldl:90",
+        "ocd-division/country:us/state:pa/sldl:91",
+        "ocd-division/country:us/state:pa/sldl:96",
+        "ocd-division/country:us/state:pa/sldl:97",
+        "ocd-division/country:us/state:pa/sldl:98",
+        "ocd-division/country:us/state:pa/sldl:99",
+        "ocd-division/country:us/state:pa/sldu:14",
+        "ocd-division/country:us/state:pa/sldu:18",
+        "ocd-division/country:us/state:pa/sldu:32",
+        "ocd-division/country:us/state:pa/sldu:36",
+        "ocd-division/country:us/state:pa/sldu:46",
+        "ocd-division/country:us/state:pa/sldu:48",
+        "ocd-division/country:us/state:pa/sldu:50"
+      ],
+      "basis": "Official 2026 primary returns contain 17 Congressional, 25 even-numbered Senate and 203 House office districts. The November Philadelphia sample combines Governor/Lieutenant Governor into one contest. This measures regular contest coverage; it does not establish a complete final certified general-election candidate list.",
+      "sources": [
+        "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/bulk-data/2026-general-primary/er/electionreturns_2026_primary_precinctreturns.txt",
+        "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf"
+      ],
+      "originalReturnsSha256": "954119a4301f2dd6184b09cd25ff0d95c37b485ffbd92ec227f1b2b0b714b442",
+      "remaining": "Acquire all 93 missing regular districts and compare the entire final general-election candidate list; largest missing counties remain active acquisition work."
+    },
+    "NY": {
+      "held": {
+        "contests": 242,
+        "candidateContests": 242,
+        "candidacies": 442,
+        "measures": 0
+      },
+      "state": "NY",
+      "officialContests": 242,
+      "officialCandidates": 442,
+      "mismatches": [],
+      "officialCandidateContests": 242,
+      "officialCandidacies": 442,
+      "remaining": "Eleven judicial-district contests and 52 distinct court candidacies in the certification remain to be imported with their geography; county and city ballot contents need sample comparison."
+    },
+    "NJ": {
+      "held": {
+        "contests": 109,
+        "candidateContests": 109,
+        "candidacies": 304,
+        "measures": 0
+      },
+      "officialFederalContests": 13,
+      "officialFederalCandidacies": 39,
+      "remaining": "All federal candidate sets checked. County/city/school coverage outside Morris County remains incomplete; statewide legislative absence needs an explicit final-office check."
+    },
+    "CT": {
+      "held": {
+        "contests": 197,
+        "candidateContests": 197,
+        "candidacies": 544,
+        "measures": 0
+      },
+      "officialCandidateContests": 197,
+      "officialCandidacies": 544,
+      "differences": [],
+      "currentPartyMetadataMissing": [
+        {
+          "office": "State Senator 11",
+          "name": "Rosa Aurelia Pepper-Macias",
+          "partyId": "1072"
+        },
+        {
+          "office": "State Senator 23",
+          "name": "Natasha Williams",
+          "partyId": "1060"
+        },
+        {
+          "office": "State Representative 12",
+          "name": "Deena Steinberg",
+          "partyId": "1069"
+        },
+        {
+          "office": "State Representative 14",
+          "name": "Harrison Amadasun",
+          "partyId": "1064"
+        },
+        {
+          "office": "State Representative 124",
+          "name": "Alexander Leon",
+          "partyId": "1060"
+        }
+      ],
+      "sources": [
+        "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
+        "https://ctemspublic.tgstg.net/ng-app/data/election/108/47370/Lookupdata.json",
+        "https://ctemspublic.tgstg.net/ng-app/data/election/108/47370/stateVotes_Electiondata.json"
+      ],
+      "remaining": "Five party IDs have no label in the current lookup; retain their prior official List of Nominees labels. Local probate, municipal contests and questions remain to be mapped and compared."
+    },
+    "RI": {
+      "held": {
+        "contests": 126,
+        "candidateContests": 121,
+        "candidacies": 161,
+        "measures": 5
+      },
+      "officialCandidateContests": 121,
+      "officialCandidacies": 161,
+      "differences": [],
+      "sources": [
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=518&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=548&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=549&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=551&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=591&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=592&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=593&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=617&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=620&Election=18144",
+        "https://vote.sos.ri.gov/Candidates/CandidateSearchSummary?OfficeType=621&Election=18144"
+      ],
+      "remaining": "Local contests, local questions and statewide measure texts need sample-ballot comparison."
+    },
+    "MA": {
+      "held": {
+        "contests": 232,
+        "candidateContests": 223,
+        "candidacies": 304,
+        "measures": 9
+      },
+      "officialCandidateContests": 223,
+      "officialCandidacies": 304,
+      "remaining": "District/county offices, local measures and exact address sample-ballot parity remain open. Governor's Council address-to-district matching must be connected."
+    },
+    "VT": {
+      "held": {
+        "contests": 140,
+        "candidateContests": 138,
+        "candidacies": 369,
+        "measures": 2
+      },
+      "officialFederalStatewideLegislativeContests": 132,
+      "officialFederalStatewideLegislativeCandidacies": 319,
+      "verifiedLocalContests": 6,
+      "verifiedLocalCandidacies": 50,
+      "remaining": "Chittenden County's five offices and Burlington justice-of-the-peace list match the city's sample ballot. The other 65 county office groups /94 candidates and remaining municipal lists remain open."
+    },
+    "NH": {
+      "held": {
+        "contests": 13,
+        "candidateContests": 12,
+        "candidacies": 27,
+        "measures": 1
+      },
+      "officialStatewideCount": null,
+      "remaining": "Current official statewide September 17 candidate PDF and election page returned403 through HTTP and web routes. Held general-election sample ballots cover limited Merrimack County areas. Full state Legislature and House District1 remain incomplete; do not count400 House seats as400 contests."
+    },
+    "ME": {
+      "held": {
+        "contests": 190,
+        "candidateContests": 190,
+        "candidacies": 362,
+        "measures": 0
+      },
+      "officialCandidateContests": 190,
+      "officialCandidacies": 362,
+      "officialNonWriteInCandidacies": 352,
+      "officialStateWriteInCandidacies": 10,
+      "differences": [],
+      "unimportedRegularLocalCandidatesByOfficeCode": {
+        "JP": 8,
+        "RP": 3,
+        "CT": 13,
+        "RD": 15,
+        "SH": 18,
+        "DA": 10,
+        "CC": 32,
+        "KBC": 1,
+        "ACC": 1
+      },
+      "sources": [
+        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf",
+        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Post%20Primary%20Withdrawals%20%26%20Replacement%20Candidates%20-%20Updated%209.22.26_0.pdf"
+      ],
+      "remaining": "All 190 federal/statewide/legislative races and 362 names+party labels match the official workbook plus 10 declared write-ins. County offices, special county elections, local measures and exact address samples remain open. The official www1.maine.gov host resolves the main-host 403."
+    }
+  },
+  "sampleBallots": [
+    {
+      "place": "Philadelphia split3-xx-182",
+      "candidateContests": 3,
+      "candidacies": 6,
+      "measures": 2,
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf",
+      "zip": "19103",
+      "zipMappingVerified": false,
+      "liveVerified": false
+    },
+    {
+      "place": "Burlington Chittenden13",
+      "candidateContests": 15,
+      "candidacies": 81,
+      "measures": 2,
+      "url": "https://www.burlingtonvt.gov/DocumentCenter/View/12823/Chi-13-Sample?bidId=",
+      "zip": "05401",
+      "zipMappingVerified": false,
+      "liveVerified": false
+    }
+  ]
+}

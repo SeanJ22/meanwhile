@@ -1,0 +1,140 @@
+[
+  {
+    "county": "winnebago",
+    "url": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+    "finalUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097/Election-Information-Packet-11326-AutoRecovered?bidId=",
+    "publisher": "Winnebago County Clerk",
+    "file": "winnebago.pdf.gz",
+    "textFile": "winnebago.web.txt",
+    "retrievedAt": "2026-10-20T23:16:26.526568Z",
+    "rawHash": "6e53929a59fc42a9a29984b8c078de37ac525d773d31bd0e1c55ef26eb014beb",
+    "method": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+  },
+  {
+    "county": "sauk",
+    "url": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+    "finalUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+    "publisher": "Sauk County Clerk",
+    "file": "sauk.pdf.gz",
+    "textFile": "sauk.web.txt",
+    "retrievedAt": "2026-10-20T23:16:25.467716Z",
+    "rawHash": "5ed436e552f0a884eacdb91b234bc524a24f045cf5fa8d8d1855f1950ab1964e",
+    "method": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+  },
+  {
+    "county": "brown",
+    "url": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+    "finalUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+    "publisher": "Brown County Clerk",
+    "file": "brown.pdf.gz",
+    "textFile": "brown.txt",
+    "retrievedAt": "2026-10-20T23:21:15.816857Z",
+    "rawHash": "288422f4aaa1e639643a6422db68e9d2b831f916820378e72f8a47ba56783367",
+    "style": "parentheses",
+    "expected": [
+      12,
+      23
+    ],
+    "method": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+  },
+  {
+    "county": "kenosha",
+    "url": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+    "finalUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+    "publisher": "Kenosha County Clerk",
+    "file": "kenosha.pdf.gz",
+    "textFile": "kenosha.txt",
+    "retrievedAt": "2026-10-20T23:21:51.873265Z",
+    "rawHash": "69df06578de420352befc91b32513ecf5b8f756aedffdec604267b2aa33b9ad3",
+    "style": "parentheses",
+    "expected": [
+      7,
+      13
+    ],
+    "method": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+  },
+  {
+    "county": "waukesha",
+    "url": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+    "finalUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+    "publisher": "Town of Ottawa / Waukesha County Clerk",
+    "file": "ottawa.pdf.gz",
+    "textFile": "ottawa.txt",
+    "retrievedAt": "2026-10-20T23:21:15.027106Z",
+    "rawHash": "6ea23fa6905fb02e0298ed1e51bbceb248f7088456c5b6f83f9ff1df1148103c",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      7
+    ],
+    "method": "Official November 3 2026 Town of Ottawa sample ballot page1, before Statewide(cont.) overlay. Native ASCII text recovered by scripts/ba01-pacific-wi-pdf.py for missing standard Arial ToUnicode map; raw PDF unchanged. District and county races checked against printed ballot."
+  },
+  {
+    "county": "oneida",
+    "url": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+    "finalUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+    "publisher": "Oneida County Clerk",
+    "file": "oneida.pdf.gz",
+    "textFile": "oneida.txt",
+    "retrievedAt": "2026-10-20T23:27:31.969437Z",
+    "rawHash": "5a9875ba88a8893802afbe0c9fdcce7330b709a0e4ce85bb09338b2585e71819",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices."
+  },
+  {
+    "county": "columbia",
+    "url": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+    "finalUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+    "publisher": "Columbia County Clerk",
+    "file": "columbia.pdf.gz",
+    "textFile": "columbia.txt",
+    "retrievedAt": "2026-10-20T23:26:37.055352Z",
+    "rawHash": "691d3ee37f7275e43f91d3b0fdfab72104d0fdf7213d44e91fe4c5618da25c78",
+    "style": "ballot-lines",
+    "expected": [
+      15,
+      29
+    ],
+    "method": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices. City of Wisconsin Dells styles include Sauk (front97/back98) and Adams (front99/back100); county scope follows the explicit county printed on each reverse.",
+    "countyPageOverrides": {
+      "97": "sauk",
+      "99": "adams"
+    }
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+    "finalUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+    "publisher": "City of Franklin Clerk",
+    "file": "franklin.pdf.gz",
+    "textFile": "franklin.txt",
+    "retrievedAt": "2026-10-20T23:28:33.708649Z",
+    "rawHash": "dd159ef4a40b295c05251e540f265f80e7af5f69bfd7e7cbf7ed02dc238c7be2",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+    "finalUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+    "publisher": "Village of Whitefish Bay Clerk",
+    "file": "whitefish.pdf.gz",
+    "textFile": "whitefish.txt",
+    "retrievedAt": "2026-10-20T23:28:32.478791Z",
+    "rawHash": "ae5631b72d5334cc0dfc07ec788a1d1fa9a13f6c5c2b0205a3a6423076619c34",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
+  }
+]

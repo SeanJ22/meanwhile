@@ -1,0 +1,24 @@
+ (https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition)
+【turn533536view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: open({"ref_id":"turn339854view0","lineno":null}); Total lines: 21
+L0@P0: Form No. 126 Prescribed by Secretary of State (09-17)
+L1@P0: Notice of Election on Proposition
+L2@P0: R.C. 3501.11(G)
+L3@P0: Notice is hereby given that in pursuance of an Ordinance of the City Council of Columbus, Ohio, passed on the 31st day of August,
+L4@P0: 2026, there will be submitted to a vote of the people of City of Columbus, Ohio at the General Election to be held at the regular places
+L5@P0: of voting on Tuesday, the 3rd day of November, 2026 the question of:
+L6@P0: This proposed charter amendment would limit the ability to vote for candidates for Columbus City Council to only those electors
+L7@P0: living within the districts that those candidates seek to represent.
+L8@P0: The amendment specifies that ballots within council districts will include both citywide races as well as the district race.
+L9@P0: The amendment allows for the initiation of a recall election of a council district representative if a petition is submitted bearing the
+L10@P0: signatures of the electors of that district in an amount that is at least fifteen (15%) percent of the votes cast within the district in the
+L11@P0: preceding mayoral election.
+L12@P0: Shall the proposed charter amendment be approved?
+L13@P0: The polls for the election will be open at 6:30 a.m. and remain open until 7:30 p.m. on election day.
+L14@P0: By order of the Board of Elections,
+L15@P0: of Franklin County, Ohio.
+L16@P0: Douglas J. Preisse
+L17@P0: Chair
+L18@P0: Antone White
+L19@P0: Director
+L20@P0: Dated 09/14/2026
+

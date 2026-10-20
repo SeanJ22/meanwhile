@@ -2688,6 +2688,120 @@
             "doorId": "fec-vt-chief",
             "quote": "PROPOSAL 4\nTo see if the voters will amend the Vermont Constitution by adding Article 23 to read: Article 23. [Equality of rights] That the people are guaranteed equal protection under the law. The State shall not deny equal treatment under the law on account of a person’s race, ethnicity, sex, religion, disability, sexual orientation, gender identity, gender expression, or national origin. Nothing in this Article shall be interpreted or applied to prevent the adoption or implementation of measures intended to provide equality of treatment and opportunity for members of groups that have historically been subject to discrimination."
           }
+        },
+        {
+          "id": "vt-2026-chittenden-probate-judge",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden",
+          "divisionVintage": "2026",
+          "title": "PROBATE JUDGE — CHITTENDEN",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "PROBATE JUDGE | CHITTENDEN | GREGORY J. GLENNON | DEM/REP | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-assistant-judge",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden",
+          "divisionVintage": "2026",
+          "title": "ASSISTANT JUDGE — CHITTENDEN",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "ASSISTANT JUDGE | CHITTENDEN | CONNIE CAIN RAMSEY | DEM/REP | 4 | TWO"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-state-s-attorney",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden",
+          "divisionVintage": "2026",
+          "title": "STATE'S ATTORNEY — CHITTENDEN",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "STATE'S ATTORNEY | CHITTENDEN | SARAH GEORGE | DEM/PROG | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-sheriff",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden",
+          "divisionVintage": "2026",
+          "title": "SHERIFF — CHITTENDEN",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "SHERIFF | CHITTENDEN | DANIEL GAMELIN | DEM/REP | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-high-bailiff",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden",
+          "divisionVintage": "2026",
+          "title": "HIGH BAILIFF — CHITTENDEN",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "HIGH BAILIFF | CHITTENDEN | PAUL MCMANUS | REPUBLICAN | 2 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/place:burlington",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE — BURLINGTON",
+          "type": "CANDIDACY",
+          "voteFor": 15,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | SUE ALENICK | DEMOCRATIC | 2 | FIFTEEN"
+          }
         }
       ],
       "candidacies": [
@@ -8432,6 +8546,856 @@
             "doorId": "fec-vt-chief",
             "quote": "STATE REPRESENTATIVE | WDR WDH | WILLIAM \"WILL\" HOSER | DEMOCRATIC |  | 2 | ONE"
           }
+        },
+        {
+          "id": "vt-2026-chittenden-probate-judge:gregory-j-glennon",
+          "contestId": "vt-2026-chittenden-probate-judge",
+          "givenName": "",
+          "familyName": "GREGORY J. GLENNON",
+          "partyLabel": "DEM/REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "PROBATE JUDGE | CHITTENDEN | GREGORY J. GLENNON | DEM/REP | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-assistant-judge:connie-cain-ramsey",
+          "contestId": "vt-2026-chittenden-assistant-judge",
+          "givenName": "",
+          "familyName": "CONNIE CAIN RAMSEY",
+          "partyLabel": "DEM/REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "ASSISTANT JUDGE | CHITTENDEN | CONNIE CAIN RAMSEY | DEM/REP | 4 | TWO"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-assistant-judge:anne-nichols-williams",
+          "contestId": "vt-2026-chittenden-assistant-judge",
+          "givenName": "",
+          "familyName": "ANNE NICHOLS WILLIAMS",
+          "partyLabel": "DEM/REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "ASSISTANT JUDGE | CHITTENDEN | ANNE NICHOLS WILLIAMS | DEM/REP | 4 | TWO"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-state-s-attorney:sarah-george",
+          "contestId": "vt-2026-chittenden-state-s-attorney",
+          "givenName": "",
+          "familyName": "SARAH GEORGE",
+          "partyLabel": "DEM/PROG",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "STATE'S ATTORNEY | CHITTENDEN | SARAH GEORGE | DEM/PROG | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-state-s-attorney:jace-laquerre",
+          "contestId": "vt-2026-chittenden-state-s-attorney",
+          "givenName": "",
+          "familyName": "JACE LAQUERRE",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "STATE'S ATTORNEY | CHITTENDEN | JACE LAQUERRE | REPUBLICAN | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-sheriff:daniel-gamelin",
+          "contestId": "vt-2026-chittenden-sheriff",
+          "givenName": "",
+          "familyName": "DANIEL GAMELIN",
+          "partyLabel": "DEM/REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "SHERIFF | CHITTENDEN | DANIEL GAMELIN | DEM/REP | 4 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-high-bailiff:paul-mcmanus",
+          "contestId": "vt-2026-chittenden-high-bailiff",
+          "givenName": "",
+          "familyName": "PAUL MCMANUS",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "HIGH BAILIFF | CHITTENDEN | PAUL MCMANUS | REPUBLICAN | 2 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-high-bailiff:sean-miller",
+          "contestId": "vt-2026-chittenden-high-bailiff",
+          "givenName": "",
+          "familyName": "SEAN MILLER",
+          "partyLabel": "INDEPENDENT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "HIGH BAILIFF | CHITTENDEN | SEAN MILLER | INDEPENDENT | 2 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-chittenden-high-bailiff:amy-payne",
+          "contestId": "vt-2026-chittenden-high-bailiff",
+          "givenName": "",
+          "familyName": "AMY PAYNE",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "HIGH BAILIFF | CHITTENDEN | AMY PAYNE | DEMOCRATIC | 2 | ONE"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:sue-alenick",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "SUE ALENICK",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | SUE ALENICK | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:gene-bergman",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "GENE BERGMAN",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | GENE BERGMAN | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:bob-bolyard",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "BOB BOLYARD",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | BOB BOLYARD | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:marek-broderick",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "MAREK BRODERICK",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | MAREK BRODERICK | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:andy-brown",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ANDY BROWN",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ANDY BROWN | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:floyd-campbell",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "FLOYD CAMPBELL",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | FLOYD CAMPBELL | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:andrew-damian-champagne",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ANDREW DAMIAN CHAMPAGNE",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ANDREW DAMIAN CHAMPAGNE | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:brian-cina",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "BRIAN CINA",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | BRIAN CINA | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:zachary-cummings",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ZACHARY CUMMINGS",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ZACHARY CUMMINGS | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:aaliyah-davila",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "AALIYAH DAVILA",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | AALIYAH DAVILA | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:paul-decelles",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "PAUL DECELLES",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | PAUL DECELLES | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:sam-doherty",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "SAM DOHERTY",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | SAM DOHERTY | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:christopher-aaron-felker",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "CHRISTOPHER AARON FELKER",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | CHRISTOPHER AARON FELKER | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:michaela-finneran",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "MICHAELA FINNERAN",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | MICHAELA FINNERAN | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:adam-franz",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ADAM FRANZ",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ADAM FRANZ | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:carmen-george",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "CARMEN GEORGE",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | CARMEN GEORGE | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:melo-grant",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "MELO GRANT",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | MELO GRANT | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:grace-grundhauser",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "GRACE GRUNDHAUSER",
+          "partyLabel": "INDEPENDENT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | GRACE GRUNDHAUSER | INDEPENDENT | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:zoraya-hightower",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ZORAYA HIGHTOWER",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ZORAYA HIGHTOWER | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:jake-hofmann",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "JAKE HOFMANN",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | JAKE HOFMANN | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:ray-ingram",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "RAY INGRAM",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | RAY INGRAM | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:monika-ivancic",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "MONIKA IVANCIC",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | MONIKA IVANCIC | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:liam-johnson",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "LIAM JOHNSON",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | LIAM JOHNSON | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:kevin-king",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "KEVIN KING",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | KEVIN KING | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:erin-kranichfeld",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ERIN KRANICHFELD",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ERIN KRANICHFELD | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:jill-krowinski",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "JILL KROWINSKI",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | JILL KROWINSKI | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:mark-leopold",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "MARK LEOPOLD",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | MARK LEOPOLD | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:jim-letourneau",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "JIM LETOURNEAU",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | JIM LETOURNEAU | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:erhard-mahnke",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "ERHARD MAHNKE",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | ERHARD MAHNKE | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:louie-manno",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "LOUIE MANNO",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | LOUIE MANNO | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:patricia-myers",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "PATRICIA MYERS",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | PATRICIA MYERS | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:carter-neubieser",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "CARTER NEUBIESER",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | CARTER NEUBIESER | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:ryan-nick",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "RYAN NICK",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | RYAN NICK | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:bill-oetjen",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "BILL OETJEN",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | BILL OETJEN | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:barb-prine",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "BARB PRINE",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | BARB PRINE | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:helaine-lainey-rappaport",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "HELAINE \"LAINEY\" RAPPAPORT",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | HELAINE \"LAINEY\" RAPPAPORT | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:karen-rowell",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "KAREN ROWELL",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | KAREN ROWELL | REPUBLICAN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:lawrence-saveall",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "LAWRENCE SAVEALL",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | LAWRENCE SAVEALL | PROGRESSIVE | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:sean-selby",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "SEAN SELBY",
+          "partyLabel": "GREEN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | SEAN SELBY | GREEN | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:jeffrey-phinn-sonin",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "JEFFREY \"PHINN\" SONIN",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | JEFFREY \"PHINN\" SONIN | DEMOCRATIC | 2 | FIFTEEN"
+          }
+        },
+        {
+          "id": "vt-2026-burlington-justice-of-the-peace:jane-stromberg",
+          "contestId": "vt-2026-burlington-justice-of-the-peace",
+          "givenName": "",
+          "familyName": "JANE STROMBERG",
+          "partyLabel": "PROGRESSIVE",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-10-20T23:00:57.978131+00:00",
+            "verifiedAt": "2026-10-20T23:00:57.978131+00:00",
+            "quote": "JUSTICE OF THE PEACE | BURLINGTON | JANE STROMBERG | PROGRESSIVE | 2 | FIFTEEN"
+          }
         }
       ],
       "measures": [
@@ -8471,18 +9435,18 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:08:52.512327+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-20T23:03:42.451261+00:00",
+    "reviewedBy": "BA-01 official ballot PDF replay",
     "sources": [
       {
         "requestedUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
         "finalUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
-        "retrievedAt": "2026-10-14T05:06:47.135907+00:00",
-        "httpStatus": 200,
-        "rawHash": "f646b3960ea5a305ad24122a6e4023b5a93fcd14eb46400952c8e68e0037e5fc",
         "publisher": "Vermont Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 general election qualified candidates workbook, last updated September 23, 2026; all 319 federal, statewide and legislative candidates converted, covering all 30 Senate and 150 House seats."
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "f646b3960ea5a305ad24122a6e4023b5a93fcd14eb46400952c8e68e0037e5fc",
+        "reviewedEvidence": "Official workbook lists all 132 federal, statewide and legislative contests and 319 printed candidacies already held. Added all 9 candidates in 5 Chittenden County offices and all 41 Burlington justice-of-the-peace candidates, corroborated against the city's official Chittenden-13 sample ballot."
       },
       {
         "requestedUrl": "https://fairhavenvt.gov/wp-content/uploads/2026/09/Sample-Ballot-General-Election-Nov-3-2026.pdf",
@@ -8493,6 +9457,16 @@
         "publisher": "Town of Fair Haven, Vermont",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 sample ballot published by the town election office. Both statewide proposal questions and complete amendment text converted by OCR and visually verified against the source scan."
+      },
+      {
+        "requestedUrl": "https://www.burlingtonvt.gov/DocumentCenter/View/12823/Chi-13-Sample?bidId=",
+        "finalUrl": "https://www.burlingtonvt.gov/DocumentCenter/View/12823/Chi-13-Sample?bidId=",
+        "publisher": "Burlington City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "80edae08cc7f38ab97a2e569a012bad786f596a395fa9d43bbf5972ec806a753",
+        "reviewedEvidence": "November 3, 2026 Chittenden-13 official sample: 15 candidacy contests and 2 statewide proposals; 81 printed candidacies. Chittenden county and Burlington justice-of-the-peace candidate sets agree with the official statewide workbook. The city's official sample-ballot index links this document at https://www.burlingtonvt.gov/192/Sample-Ballots-Warnings-Notices."
       }
     ]
   }

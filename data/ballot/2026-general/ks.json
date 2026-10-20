@@ -2908,6 +2908,101 @@
             "doorId": "fec-ks-chief",
             "quote": "Shall the following be adopted?"
           }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-1",
+          "electionId": "ks-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ks/sbe:1",
+          "divisionVintage": "2026",
+          "title": "State Board of Education, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Jennifer Lloyd | Member, State Board of Education | 1 | 0 | 0 | Democratic\nAmy Cawvey | Member, State Board of Education | 1 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-3",
+          "electionId": "ks-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ks/sbe:3",
+          "divisionVintage": "2026",
+          "title": "State Board of Education, District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Amy Diediker | Member, State Board of Education | 3 | 0 | 0 | Democratic\nJim McMullen | Member, State Board of Education | 3 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-5",
+          "electionId": "ks-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ks/sbe:5",
+          "divisionVintage": "2026",
+          "title": "State Board of Education, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Lorie Wood | Member, State Board of Education | 5 | 0 | 0 | Democratic\nJean Clifford | Member, State Board of Education | 5 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-7",
+          "electionId": "ks-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ks/sbe:7",
+          "divisionVintage": "2026",
+          "title": "State Board of Education, District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Ann Zimmerman | Member, State Board of Education | 7 | 0 | 0 | Democratic\nAlana McWilliams | Member, State Board of Education | 7 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-9",
+          "electionId": "ks-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ks/sbe:9",
+          "divisionVintage": "2026",
+          "title": "State Board of Education, District 9",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Heather Guernsey | Member, State Board of Education | 9 | 0 | 0 | Democratic\nDestry Brown | Member, State Board of Education | 9 | 0 | 0 | Republican"
+          }
         }
       ],
       "candidacies": [
@@ -7514,6 +7609,176 @@
             "doorId": "fec-ks-chief",
             "quote": "Jacy Hurst | "
           }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-1-jennifer-lloyd",
+          "contestId": "ks-ba01-2026-state-board-of-education-1",
+          "familyName": "Jennifer Lloyd",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Jennifer Lloyd | Member, State Board of Education | 1 | 0 | 0 | Democratic\nAmy Cawvey | Member, State Board of Education | 1 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-1-amy-cawvey",
+          "contestId": "ks-ba01-2026-state-board-of-education-1",
+          "familyName": "Amy Cawvey",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Jennifer Lloyd | Member, State Board of Education | 1 | 0 | 0 | Democratic\nAmy Cawvey | Member, State Board of Education | 1 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-3-amy-diediker",
+          "contestId": "ks-ba01-2026-state-board-of-education-3",
+          "familyName": "Amy Diediker",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Amy Diediker | Member, State Board of Education | 3 | 0 | 0 | Democratic\nJim McMullen | Member, State Board of Education | 3 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-3-jim-mcmullen",
+          "contestId": "ks-ba01-2026-state-board-of-education-3",
+          "familyName": "Jim McMullen",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Amy Diediker | Member, State Board of Education | 3 | 0 | 0 | Democratic\nJim McMullen | Member, State Board of Education | 3 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-5-lorie-wood",
+          "contestId": "ks-ba01-2026-state-board-of-education-5",
+          "familyName": "Lorie Wood",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Lorie Wood | Member, State Board of Education | 5 | 0 | 0 | Democratic\nJean Clifford | Member, State Board of Education | 5 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-5-jean-clifford",
+          "contestId": "ks-ba01-2026-state-board-of-education-5",
+          "familyName": "Jean Clifford",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Lorie Wood | Member, State Board of Education | 5 | 0 | 0 | Democratic\nJean Clifford | Member, State Board of Education | 5 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-7-ann-zimmerman",
+          "contestId": "ks-ba01-2026-state-board-of-education-7",
+          "familyName": "Ann Zimmerman",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Ann Zimmerman | Member, State Board of Education | 7 | 0 | 0 | Democratic\nAlana McWilliams | Member, State Board of Education | 7 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-7-alana-mcwilliams",
+          "contestId": "ks-ba01-2026-state-board-of-education-7",
+          "familyName": "Alana McWilliams",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Ann Zimmerman | Member, State Board of Education | 7 | 0 | 0 | Democratic\nAlana McWilliams | Member, State Board of Education | 7 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-9-heather-guernsey",
+          "contestId": "ks-ba01-2026-state-board-of-education-9",
+          "familyName": "Heather Guernsey",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Heather Guernsey | Member, State Board of Education | 9 | 0 | 0 | Democratic\nDestry Brown | Member, State Board of Education | 9 | 0 | 0 | Republican"
+          }
+        },
+        {
+          "id": "ks-ba01-2026-state-board-of-education-9-destry-brown",
+          "contestId": "ks-ba01-2026-state-board-of-education-9",
+          "familyName": "Destry Brown",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+            "sourceOrg": "Kansas Secretary of State",
+            "collectedAt": "2026-10-20T23:01:41.268276+00:00",
+            "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
+            "quote": "Heather Guernsey | Member, State Board of Education | 9 | 0 | 0 | Democratic\nDestry Brown | Member, State Board of Education | 9 | 0 | 0 | Republican"
+          }
         }
       ],
       "measures": [
@@ -7540,7 +7805,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:59Z",
+    "reviewedAt": "2026-10-20T23:01:41.268276+00:00",
     "reviewedBy": "BL-12 Kansas official-source conversion",
     "sources": [
       {
@@ -7597,6 +7862,17 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "State of Kansas Official General Election Ballot; Constitutional Amendment; November 3, 2026.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+        "finalUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+        "retrievedAt": "2026-10-20T23:01:41.268276+00:00",
+        "httpStatus": 200,
+        "rawHash": "c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8",
+        "publisher": "Kansas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official 2026 General candidate table returned by the election-36 Submit control. scripts/ba01-south-kansas.py replays all ten listed State Board of Education candidate names, offices, district numbers and parties from the saved response. No residential contact fields are published."
       }
     ]
   }

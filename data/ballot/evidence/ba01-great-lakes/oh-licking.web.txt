@@ -1,0 +1,65 @@
+(https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf)
+【turn648666view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: open({"ref_id":"https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf","lineno":null}); Total lines: 63
+L0@P0: LICKING COUNTY BOARD OF ELECTIONS – CERTIFIED CANDIDATES
+L1@P0: NOVEMEBER 3, 2026 GENERAL ELECTION - ALL CANDIDATES INCLUDING WRITE-INS
+L2@P0: Governor and Lieutenant Governor of Ohio
+L3@P0: Amy Acton, and David Pepper (Democratic)
+L4@P0: Vivek Ramaswamy, and Robert A. McColley (Republican)
+L5@P0: Don Kissick, and James L. Mills (Libertarian)
+L6@P0: Write-In Timothy Grady and Andrea Neutzling
+L7@P0: Write-In Heather Hill and Patrick Manley
+L8@P0: Write-In Renea Turner and Jalen Turner
+L9@P0: Write-In Ron Ula and Michael C. Lehnerd
+L10@P0: Attorney General of Ohio
+L11@P0: John J. Kulewicz (Democratic)
+L12@P0: Keith Faber (Republican)
+L13@P0: Auditor of State of Ohio
+L14@P0: Annette Blackwell (Democratic)
+L15@P0: Frank LaRose (Republican)
+L16@P0: Secretary of State of Ohio
+L17@P0: Allison Russo (Democratic)
+L18@P0: Robert Sprague (Republican)
+L19@P0: Tom Pruss (Libertarian)
+L20@P0: Treasurer of State of Ohio
+L21@P0: Seth Walsh (Democratic)
+L22@P0: Jay Edwards (Republican)
+L23@P0: Ohio Supreme Court (Full Term Commencing 1-1-2027)
+L24@P0: Marilyn Zayas (Democratic)
+L25@P0: Daniel R. Hawkins (Republican)
+L26@P0: Ohio Supreme Court (Full Term Commencing 1-2-2027)
+L27@P0: Jennifer Brunner (Democratic)
+L28@P0: Colleen O'Donnell (Republican)
+L29@P0: U.S. Senate
+L30@P0: Sherrod Brown (Democratic)
+L31@P0: Jon Husted (Republican)
+L32@P0: William B. Redpath (Libertarian)
+L33@P0: Greg Levy (Other-party candidate)
+L34@P0: Write-In Stephen Faris
+L35@P0: Write-In Anthony Holliman
+L36@P0: Write-In Timothy Telymonde
+L37@P0: Representative to Congress – 12th District
+L38@P0: JERRAD CHRISTIAN (D) 8239 HICKORY AVE GALENA 43021
+L39@P0: TROY BALDERSON (R) 417 CONVENTRY CIRCLE ZANESVILLE 43701
+L40@P0-1: 8/28/2026 Page 1 of 2Ohio State Representative – 68th District
+L41@P1: MASON BLANKENSHIP (D) 453 WAGON AVE PATASKALA 43062
+L42@P1: THAD CLAGGETT (R) 3301 SHARON VALLEY RD NE NEWARK 43055
+L43@P1: Ohio State Representative – 69th District
+L44@P1: AMY RIGSBY (D) 7110 JULIAN RD SW AMANDA 43102
+L45@P1: KEVIN D. MILLER (R) 6170 PLEASANT CHAPEL RD SE NEWARK 43055
+L46@P1: Judge – Court of Appeals – 5th District (Full Term Commencing 2-9-2027)
+L47@P1: MATTHEW GEORGE (R) 1044 WOODLAWN AVE NEWARK 43055
+L48@P1: Licking County Auditor
+L49@P1: MICHAEL L. SMITH (R) 169 MILL RACE RD SE GRANVILLE 43023
+L50@P1: Licking County Commissioner
+L51@P1: Kathy MCLEISH (D) 14209 MARNE RD NEWARK 43055
+L52@P1: MARK A. VAN BUREN (R) 4832 KELLER RD SW HEBRON 43025
+L53@P1: Write-In BRIAN BELCHER 7317 CLOVER VALLEY RD JOHNSTOWN 43031
+L54@P1: Judge – Licking County Common Pleas – General Division
+L55@P1: THOMAS M. MARCELAIN 792 W CHURCH ST NEWARK 43055
+L56@P1: Judge – Licking County Common Pleas – Probate/Juvenile
+L57@P1: MICHAEL DALSANTO 277 CENTRAL AVE NEWARK 43055
+L58@P1: DEBORAH G. LANG 1684 N EMERALD CT NEWARK 43055
+L59@P1: Judge – Licking County Common Pleas – Domestic Relations
+L60@P1: ROBERT D. ESSEX 133 CONNEMARA DR GRANVILLE 43023
+L61@P1: RICHARD P. WRIGHT 11309 MIDLAND OIL RD SE GLENFORD 43739
+L62@P1: 8/28/2026 Page 2 of 2

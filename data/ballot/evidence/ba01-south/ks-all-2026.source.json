@@ -1,0 +1,15 @@
+{
+  "url": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+  "finalUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:01:41.268276+00:00",
+  "sha256": "c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8",
+  "request": {
+    "method": "POST",
+    "form": {
+      "ddlElections": "36",
+      "btnSubmit": "Submit"
+    },
+    "hiddenFields": "Retain hidden fields from the initial GET and use the same cookie session."
+  }
+}

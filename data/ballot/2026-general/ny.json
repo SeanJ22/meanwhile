@@ -12147,18 +12147,18 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:27.565348Z",
-    "reviewedBy": "Codex BL-14 New York source-file conversion",
+    "reviewedAt": "2026-10-20T23:03:42.451261+00:00",
+    "reviewedBy": "BA-01 official ballot PDF replay",
     "sources": [
       {
         "requestedUrl": "https://elections.ny.gov/certification-november-3-2026-general-election",
         "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
-        "httpStatus": 200,
-        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
-        "retrievedAt": "2026-10-14T05:04:06.312586Z",
         "publisher": "New York State Board of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Amended certification dated October 7, 2026, extracted by pdftotext bounding boxes. All 26 congressional, 63 state Senate, 150 Assembly and statewide executive office tables and their printed candidate party lines are accounted for; duplicate fusion lines are consolidated per identical source-listed name. Judicial district tables are outside this statewide/congressional/legislative scope."
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "reviewedEvidence": "Replayed every federal, statewide executive and legislative office/district table from the October 7 amended certification. All 242 contests and all 442 distinct printed candidacies match; fusion party lines are consolidated by identical printed name. Judicial districts are separate local acquisition work."
       },
       {
         "requestedUrl": "https://elections.ny.gov/certification-offices-be-filled-november-3-2026-general-election",

@@ -1,0 +1,196 @@
+(https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf)
+【turn569164view3】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 5; Source: click({"ref_id":"turn980114view4","id":1894}); Total lines: 194
+L0@P0: Candidate Filings for November 3rd, 2026 General Election
+L1@P0: Erie County Board of Elections
+L2@P0: President and Vice President (General Election) or
+L3@P0: Delegates and Alternate Delegates to a Political Party’s National Convention (Primary)
+L4@P0: Name(s) of Joint Candidates / Candidate Party Precincts
+L5@P0: n/a
+L6@P0: State Executive Offices
+L7@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L8@P0: Name of Candidate Office Party Precincts
+L9@P0: Amy Acton and David Pepper Governor and Lieutenant
+L10@P0: Governor
+L11@P0: Democratic All Precincts
+L12@P0: Don Kissick and James L. Mills Governor and Lieutenant
+L13@P0: Governor
+L14@P0: Libertarian All Precincts
+L15@P0: Vivek Ramaswamy and Robert
+L16@P0: A. McColley
+L17@P0: Governor and Lieutenant
+L18@P0: Governor
+L19@P0: Republican All Precincts
+L20@P0: Timothy Grady and Andrea
+L21@P0: Neutzling (write-in)
+L22@P0: Governor and Lieutenant
+L23@P0: Governor
+L24@P0: n/a All Precincts
+L25@P0: Heather Hill and Patrick Manley
+L26@P0: (write-in)
+L27@P0: Governor and Lieutenant
+L28@P0: Governor
+L29@P0: n/a All Precincts
+L30@P0: Renea Turner and Jalen Turner
+L31@P0: (write-in)
+L32@P0: Governor and Lieutenant
+L33@P0: Governor
+L34@P0: n/a All Precincts
+L35@P0: Ron Ula and Michael C. Lehnerd
+L36@P0: (write-in)
+L37@P0: Governor and Lieutenant
+L38@P0: Governor
+L39@P0: n/a All Precincts
+L40@P0: Keith Faber Attorney General. Vote for
+L41@P0: not more than 1.
+L42@P0: Republican All Precincts
+L43@P0: John J. Kulewicz Attorney General. Vote for
+L44@P0: not more than 1.
+L45@P0: Democratic All Precincts
+L46@P0: Annette Blackwell Auditor of State. Vote for
+L47@P0: not more than 1.
+L48@P0-1: Democratic All PrecinctsFrank LaRose Auditor of State. Vote for
+L49@P1: not more than 1.
+L50@P1: Republican All Precincts
+L51@P1: Tom Pruss Secretary of State. Vote
+L52@P1: for not more than 1.
+L53@P1: Libertarian All Precincts
+L54@P1: Allison Russo Secretary of State. Vote
+L55@P1: for not more than 1.
+L56@P1: Democratic All Precincts
+L57@P1: Robert Sprague Secretary of State. Vote
+L58@P1: for not more than 1.
+L59@P1: Republican All Precincts
+L60@P1: Jay Edwards Treasurer of State. Vote
+L61@P1: for not more than 1.
+L62@P1: Republican All Precincts
+L63@P1: Seth Walsh Treasurer of State. Vote
+L64@P1: for not more than 1.
+L65@P1: Democratic All Precincts
+L66@P1: U.S. Senate and U.S. Congress
+L67@P1: Name of Candidate Office /District/Term Party Precincts
+L68@P1: Sherrod Brown U.S. Senator. Unexpired
+L69@P1: term ending 1-3-2029.
+L70@P1: Vote for not more than 1.
+L71@P1: Democratic All Precincts
+L72@P1: Jon Husted U.S. Senator. Unexpired
+L73@P1: term ending 1-3-2029.
+L74@P1: Vote for not more than 1.
+L75@P1: Republican All Precincts
+L76@P1: Greg Levy U.S. Senator. Unexpired
+L77@P1: term ending 1-3-2029.
+L78@P1: Vote for not more than 1.
+L79@P1: Other-party
+L80@P1: candidate
+L81@P1: All Precincts
+L82@P1: William B. Redpath U.S. Senator. Unexpired
+L83@P1: term ending 1-3-2029.
+L84@P1: Vote for not more than 1.
+L85@P1: Libertarian All Precincts
+L86@P1: Stephen Faris (write-in) U.S. Senator. Unexpired
+L87@P1: term ending 1-3-2029.
+L88@P1: Vote for not more than 1.
+L89@P1: n/a All Precincts
+L90@P1: Anthony Holliman (writein)U.S. Senator. Unexpired
+L91@P1: term ending 1-3-2029.
+L92@P1: Vote for not more than 1.
+L93@P1: n/a All Precincts
+L94@P1: Timothy Telymonde
+L95@P1: (write-in)
+L96@P1: U.S. Senator. Unexpired
+L97@P1: term ending 1-3-2029.
+L98@P1: Vote for not more than 1.
+L99@P1-2: n/a All PrecinctsMarcy Kaptur Representative to
+L100@P2: Congress, 9th District. Vote
+L101@P2: for not more than 1.
+L102@P2: Democratic All Precincts
+L103@P2: Derek Merrin Representative to
+L104@P2: Congress, 9th District. Vote
+L105@P2: for not more than 1.
+L106@P2: Republican All Precincts
+L107@P2: Kathy McKinstry (write-in) Representative to
+L108@P2: Congress, 9th District. Vote
+L109@P2: for not more than 1.
+L110@P2: n/a All Precincts
+L111@P2: Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L112@P2: Name of Candidate Office /District/Term Party Precincts
+L113@P2: Easton Michael Retzke State Representative,
+L114@P2: 89th District. Vote for
+L115@P2: not more than 1.
+L116@P2: Democratic All Precincts
+L117@P2: Caleb Stidham State Representative,
+L118@P2: 89th District. Vote for
+L119@P2: not more than 1.
+L120@P2: Republican All Precincts
+L121@P2: Steve Kraus (write-in) State Representative,
+L122@P2: 89th District. Vote for
+L123@P2: not more than 1.
+L124@P2: n/a All Precincts
+L125@P2: County Administrative Offices (County Commissioner or County Council, Prosecuting
+L126@P2: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L127@P2: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L128@P2: Name of Candidate Office /District/Term Party Precincts
+L129@P2: Mindy Kayl County Commissioner. Full
+L130@P2: term commencing 1-1-2027.
+L131@P2: Vote for not more than 1.
+L132@P2: Democratic All Precincts
+L133@P2: Steve Shoffner County Commissioner. Full
+L134@P2: term commencing 1-1-2027.
+L135@P2: Vote for not more than 1.
+L136@P2: Republican All Precincts
+L137@P2: Richard Jeffrey County Auditor. Vote for not
+L138@P2: more than 1.
+L139@P2: Republican All Precincts
+L140@P2: Paul Meisel County Auditor. Vote for not
+L141@P2: more than 1.
+L142@P2-3: Democratic All PrecinctsOhio Supreme Court
+L143@P3: Name of Candidate Office /Term Party Precincts
+L144@P3: Daniel R. Hawkins Justice of the Supreme Court.
+L145@P3: Full term commencing 1-1-2027.
+L146@P3: Vote for not more than 1.
+L147@P3: Republican All Precincts
+L148@P3: Marilyn Zayas Justice of the Supreme Court.
+L149@P3: Full term commencing 1-1-2027.
+L150@P3: Vote for not more than 1.
+L151@P3: Democratic All Precincts
+L152@P3: Jennifer Brunner Justice of the Supreme Court.
+L153@P3: Full term commencing 1-2-2027.
+L154@P3: Vote for not more than 1.
+L155@P3: Democratic All Precincts
+L156@P3: Colleen O’Donnell Justice of the Supreme Court.
+L157@P3: Full term commencing 1-2-2027.
+L158@P3: Vote for not more than 1.
+L159@P3: Republican All Precincts
+L160@P3: Ohio Court of Appeals (6th District)
+L161@P3: Name of Candidate Office /Term Party Precincts
+L162@P3: Michael R. Goulding Judge of the Court of
+L163@P3: Appeals, 6th District. Full term
+L164@P3: commencing 2-9-2027. Vote
+L165@P3: for not more than 1.
+L166@P3: Republican All Precincts
+L167@P3: Myron C. Duhart Judge of the Court of
+L168@P3: Appeals, 6th District. Full term
+L169@P3: commencing 2-10-2027. Vote
+L170@P3: for not more than 1.
+L171@P3: Democratic All Precincts
+L172@P3: CJ Kamm Judge of the Court of
+L173@P3: Appeals, 6th District. Full term
+L174@P3: commencing 2-10-2027. Vote
+L175@P3: for not more than 1.
+L176@P3: Republican All Precincts
+L177@P3: County Court of Common Pleas or County Court
+L178@P3: Name of Candidate Office /Division/Term Party Precincts
+L179@P3: Thomas M. Dusza Judge of the Court of Common
+L180@P3: Pleas. General Division. Full
+L181@P3: term commencing 2-9-2027.
+L182@P3: Vote for not more than 1.
+L183@P3-4: n/a All PrecinctsMunicipal Court
+L184@P4: Name of Candidate Office /District/Term Party Precincts
+L185@P4: n/a
+L186@P4: Local Offices (Mayor, Attorney, Auditor, Treasurer, Council President, Council, Board of
+L187@P4: Public Affairs, Trustee, Fiscal Officer, Educational Service Center Board Member, Board of
+L188@P4: Education Member, etc.)
+L189@P4: Name of Candidate Office /District/Term Party Precincts
+L190@P4: n/a
+L191@P4: Party Offices (State and County Central Committee) (Primary Elections Only)
+L192@P4: Name of Candidate Office /District Party Precincts
+L193@P4: n/a

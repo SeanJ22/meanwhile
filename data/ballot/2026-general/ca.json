@@ -4848,6 +4848,294 @@
             "quote": "MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE. Amends California Environmental Quality Act (CEQA) to expedite environmental review for certain projects (including most housing, transportation, water, and health projects) by setting deadlines to complete environmental review and resolve lawsuits challenging project approvals. Fiscal Impact: Initial costs for state and local governments, likely in the high tens of millions of dollars—potentially exceeding $100 million—annually, partly covered by fees. Uncertain, potentially more significant positive or negative longer-term fiscal effects. Supporters: California Children’s Hospital Association; California Water Association; California Council for Affordable Housing Opponents: Coalition for Clean Air; CA Environmental Voters; Physicians for Social Responsibility, LA; National Wildlife Federation"
           },
           "measureTextUrl": "https://vig.cdn.sos.ca.gov/2026/general/pdf/prop45-text-proposed-laws.pdf"
+        },
+        {
+          "id": "ca-sf-2026-assessor-recorder",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Assessor-Recorder",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "ca-sf-2026-public-defender",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Public Defender",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "ca-sf-2026-board-education",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Board of Education (3 seats)",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "ca-sf-2026-community-college-board",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Community College Board (3 seats)",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-partial",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Community College Board Partial Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "ca-sf-2026-proposition-a",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition A — Charter Changes Affecting Various City Departments and Commissions",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-b",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition B — Establishing a Municipal Finance Corporation and a Public Bank",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-c",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition C — Contributions to the Housing Fund",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-d",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition D — Changes to Ballot Measure Process",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-e",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition E — City Administrator’s Authority and Changes to City Contracting",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-f",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition F — Changes to Executive Branch Management",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-g",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition G — Allowing Private Vehicles on the Great Highway in Sunset Dunes Park",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-h",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition H — Parcel Tax to Fund Public Muni Operations",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-i",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition I — Changes to Real Property Transfer Tax",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-proposition-j",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "Proposition J — Removal of Foreclosure Exemption for Real Property Transfer Tax",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          },
+          "measureTextUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+        },
+        {
+          "id": "ca-sf-2026-regional-transit-measure",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "divisionVintage": "2026",
+          "title": "RTM — Regional Transit Measure",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:55:55.383Z",
+            "verifiedAt": "2026-10-20T22:55:55.383Z"
+          },
+          "measureTextUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf"
         }
       ],
       "candidacies": [
@@ -11834,6 +12122,310 @@
             "doorId": "fec-ca-chief",
             "quote": "Shall Associate Justice ALLISON MARSTON DANNER be elected to the office for the term provided by law?"
           }
+        },
+        {
+          "id": "ca-sf-2026-assessor-recorder-bf1102ad3b382143",
+          "contestId": "ca-sf-2026-assessor-recorder",
+          "familyName": "Joaquin Torres",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-public-defender-5705b143187f74d3",
+          "contestId": "ca-sf-2026-public-defender",
+          "familyName": "Manohar Raju",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-044eda2266810853",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Autumn Brown Garibay",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-d79d92611fec3a7e",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Virginia Cheung",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-ce9f1f6b01226df8",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Alida Fisher",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-e8104bc2a4b9d1a3",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Ryan Hazelton",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-5a398de56d4af519",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Phil Kim",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-65a80c27a7474cc0",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Laurance Lee",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-9ee6295c15e80c81",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Reina Tello",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-board-education-123bc30906b9a678",
+          "contestId": "ca-sf-2026-board-education",
+          "familyName": "Tim Tung",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-12bbfc0670b5d436",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Elijah Ball",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-0515e05623ed73e3",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Rome Moses Jones",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-d1a57615912f7e3c",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Monroe Lace",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-78d3ce1924fb5820",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Leah LaCroix",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-4cca2cc403c71327",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Jeremy Lee",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-5987a116c2e80f0c",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Bunny McFadden",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-cc1d66686a2a855e",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Erwin Tam",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-462129902b5d9c98",
+          "contestId": "ca-sf-2026-community-college-board",
+          "familyName": "Lisa Wynn",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-partial-0f760316eb714cb5",
+          "contestId": "ca-sf-2026-community-college-board-partial",
+          "familyName": "Ruth Ferguson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-20T22:56:28.397Z"
+          }
         }
       ],
       "measures": [
@@ -12046,6 +12638,149 @@
             "doorId": "fec-ca-chief",
             "quote": "MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE. Amends California Environmental Quality Act (CEQA) to expedite environmental review for certain projects (including most housing, transportation, water, and health projects) by setting deadlines to complete environmental review and resolve lawsuits challenging project approvals. Fiscal Impact: Initial costs for state and local governments, likely in the high tens of millions of dollars—potentially exceeding $100 million—annually, partly covered by fees. Uncertain, potentially more significant positive or negative longer-term fiscal effects. Supporters: California Children’s Hospital Association; California Water Association; California Council for Affordable Housing Opponents: Coalition for Clean Air; CA Environmental Voters; Physicians for Social Responsibility, LA; National Wildlife Federation"
           }
+        },
+        {
+          "id": "ca-sf-2026-proposition-a#question",
+          "contestId": "ca-sf-2026-proposition-a",
+          "officialNumber": "A",
+          "questionText": "Shall the City amend the Charter to align it with how some City departments currently operate, change some processes, eliminate or reorganize certain commissions and advisory bodies, and require the Board of Supervisors to amend voter-approved laws to enact some of these changes?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-b#question",
+          "contestId": "ca-sf-2026-proposition-b",
+          "officialNumber": "B",
+          "questionText": "Shall the City amend the Charter to authorize the City to establish a municipal finance corporation and a public bank?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-c#question",
+          "contestId": "ca-sf-2026-proposition-c",
+          "officialNumber": "C",
+          "questionText": "Shall the City amend the Charter to change how the City’s annual contributions to the Housing Trust Fund are set, increase funding and expand programs for affordable housing, and extend the Fund to 2058?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-d#question",
+          "contestId": "ca-sf-2026-proposition-d",
+          "officialNumber": "D",
+          "questionText": "Shall the City amend the Charter to increase the requirements for signature initiatives from 2% to 8% of registered voters in San Francisco (currently from about 10,600 to about 42,500 signatures), increase the requirements for calling special elections, allow signature initiatives to be withdrawn before an election, and remove the ability of a minority of Board of Supervisors members or the Mayor to place measures on the ballot?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-e#question",
+          "contestId": "ca-sf-2026-proposition-e",
+          "officialNumber": "E",
+          "questionText": "Shall the City amend the Charter to give the City Administrator more authority by centralizing the City’s purchasing rules and processes, changing how the City approves purchasing rules, changing when contracts and leases require Board of Supervisors approval, and extending the City Administrator’s term?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-f#question",
+          "contestId": "ca-sf-2026-proposition-f",
+          "officialNumber": "F",
+          "questionText": "Shall the City amend the Charter to expand the Mayor’s authority to transfer responsibilities between departments, hire deputy mayors, and hire some and fire most department heads; and to allow City officials to remove members of boards and commissions without cause?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-g#question",
+          "contestId": "ca-sf-2026-proposition-g",
+          "officialNumber": "G",
+          "questionText": "Shall the City close Sunset Dunes Park from Monday at 4:00 a.m. through Friday at 6:00 p.m., unless a holiday falls on a weekday, in order to reopen the roadway known as the Upper Great Highway to private vehicles during that time?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-h#question",
+          "contestId": "ca-sf-2026-proposition-h",
+          "officialNumber": "H",
+          "questionText": "Shall the City fund Muni service through a new annual parcel tax on real estate at rates ranging from $129 per parcel up to a maximum of $400,000 per parcel, depending on the type of property and its size and adjusted annually for inflation, for estimated revenue of $177 million a year for 15 years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-i#question",
+          "contestId": "ca-sf-2026-proposition-i",
+          "officialNumber": "I",
+          "questionText": "Shall the City permanently dedicate half of the transfer tax revenues collected when certain real estate with a value or sales price of more than $10,000,000 changes hands, which will continue to be taxed at rates of 5.5% to 6%, to be spent only on affordable housing, including social housing developments and housing assistance, and exempt certain sales from the dedicated portion of the tax, for an estimated annual revenue decrease of approximately $1 million?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-proposition-j#question",
+          "contestId": "ca-sf-2026-proposition-j",
+          "officialNumber": "J",
+          "questionText": "Shall the City permanently apply a transfer tax of between 0.5% and 6% of a property’s fair market value, on the transfer of properties such as commercial, industrial, and large residential properties, that are transferred to a lender because of foreclosure or to avoid foreclosure, for estimated annual revenue of $100 million to $150 million?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:58:26.392Z",
+            "verifiedAt": "2026-10-20T22:58:26.392Z"
+          }
+        },
+        {
+          "id": "ca-sf-2026-regional-transit-measure#question",
+          "contestId": "ca-sf-2026-regional-transit-measure",
+          "officialNumber": "RTM",
+          "questionText": "To prevent major service cuts to BART and other transit, avoid increased traffic, and reduce pollution by: Preserving BART, Caltrain, VTA, SamTrans, AC Transit, Muni, other transit for everyone, including workers, students, seniors, persons with disabilities; Supporting transit safety, cleanliness, affordability, reliability; Repairing targeted roads/potholes; Requiring financial transparency, oversight, accountability; shall the measure enacting a 0.5% (Alameda, Contra Costa, San Mateo, Santa Clara counties), and 1% (San Francisco) sales tax for 14 years generating approximately $980,000,000 annually, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:55:55.383Z",
+            "verifiedAt": "2026-10-20T22:55:55.383Z"
+          }
         }
       ],
       "absences": [],
@@ -12054,7 +12789,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:02:38.503133Z",
+    "reviewedAt": "2026-10-20T22:58:26.392Z",
     "reviewedBy": "Codex",
     "sources": [
       {
@@ -12617,6 +13352,50 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Final English ballot labels and titles and summaries; memorandums certify no court changes."
+      },
+      {
+        "requestedUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "finalUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "publisher": "San Francisco Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:56:28.397Z",
+        "rawHash": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "requestedUrl": "https://www.sf.gov/qualified-ballot-measures",
+        "finalUrl": "https://www.sf.gov/qualified-ballot-measures",
+        "publisher": "San Francisco Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:56:28.435Z",
+        "rawHash": "6970baab061fc59e4816eadcbea31ed17ab7c39447bc256c9fb802f490ef72c3",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "requestedUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+        "finalUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+        "publisher": "San Francisco Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:26.392Z",
+        "rawHash": "9b2ea8145475b99f65f32e062ee8bf328a58996b10ea496a1ce2acc83c6d3753",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "requestedUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "finalUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "publisher": "San Francisco Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:55:55.383Z",
+        "rawHash": "9c6bcf0b49b5a04c1f03de363d5727458c673d8807ef2932c2912ed40d786136",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
       }
     ]
   }

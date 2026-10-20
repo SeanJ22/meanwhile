@@ -1,0 +1,11 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+  "httpStatus": 200,
+  "contentType": "application/pdf",
+  "retrievedAt": "2026-10-20T22:52:22.304384+00:00",
+  "rawHash": "6ae8b93549aa616235fa65aa39690c2411000aa8149f9ff4412b3d49ba0a9133",
+  "bytes": 7366661,
+  "convertedTextHash": "32f66245de4a60c7092e1930c4e0053a3a32d946b0e53449ac569e1b903dbda5",
+  "extraction": "pdftotext -layout; exact converted official ballot source text; original rawHash identifies PDF capture"
+}

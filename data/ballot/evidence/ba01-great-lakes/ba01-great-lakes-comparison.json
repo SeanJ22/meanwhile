@@ -1,0 +1,721 @@
+{
+  "capturedAt": "2026-10-20T23:33:15.745420+00:00",
+  "comparisonReplay": "python scripts/ba01-great-lakes.py",
+  "focusedTests": {
+    "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/ballot-state-file.test.ts tests/ballot-source-isolation.test.ts",
+    "passed": 16,
+    "failed": 0
+  },
+  "officialCoreReplays": [
+    {
+      "state": "OH",
+      "officialSource": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+      "sourceScope": "Franklin County candidate list, October 16; statewide district coverage remains incomplete",
+      "before": [
+        131,
+        273
+      ],
+      "after": [
+        131,
+        273
+      ],
+      "verifiedAdditions": [
+        {
+          "office": "Representative to Congress, District 3",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to Congress, District 15",
+          "candidates": 5
+        },
+        {
+          "office": "State Senator, District 3",
+          "candidates": 2
+        },
+        {
+          "office": "State Senator, District 15",
+          "candidates": 2
+        },
+        {
+          "office": "State Senator, District 25",
+          "candidates": 3
+        },
+        {
+          "office": "State Representative, District 1",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 2",
+          "candidates": 1
+        },
+        {
+          "office": "State Representative, District 3",
+          "candidates": 3
+        },
+        {
+          "office": "State Representative, District 4",
+          "candidates": 1
+        },
+        {
+          "office": "State Representative, District 5",
+          "candidates": 3
+        },
+        {
+          "office": "State Representative, District 6",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 7",
+          "candidates": 3
+        },
+        {
+          "office": "State Representative, District 8",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 9",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 10",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 11",
+          "candidates": 2
+        },
+        {
+          "office": "State Representative, District 12",
+          "candidates": 2
+        },
+        {
+          "office": "Franklin County \u2014 Judge of Court of Appeals, 10th District (term commencing 02/09/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of Court of Appeals, 10th District (term commencing 07/01/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (General Division) (term commencing 01/01/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (General Division) (term commencing 02/09/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (General Division) (term commencing 07/01/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (General Division) (term commencing 07/02/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/02/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/03/2027)",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 Judge of the Court of Common Pleas (Probate) (term commencing 02/09/2027)",
+          "candidates": 2
+        },
+        {
+          "office": "Franklin County \u2014 County Auditor",
+          "candidates": 1
+        },
+        {
+          "office": "Franklin County \u2014 County Commissioner (term commencing 01/01/2027)",
+          "candidates": 2
+        }
+      ]
+    },
+    {
+      "state": "OH",
+      "districtSourceComparisons": [
+        {
+          "source": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+          "districtContests": 15,
+          "candidateRows": 30
+        },
+        {
+          "source": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+          "districtContests": 7,
+          "candidateRows": 15
+        },
+        {
+          "source": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+          "districtContests": 7,
+          "candidateRows": 16
+        },
+        {
+          "source": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+          "districtContests": 11,
+          "candidateRows": 21
+        },
+        {
+          "source": "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+          "districtContests": 2,
+          "candidateRows": 6
+        },
+        {
+          "source": "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+          "districtContests": 3,
+          "candidateRows": 6
+        },
+        {
+          "source": "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+          "districtContests": 2,
+          "candidateRows": 5
+        },
+        {
+          "source": "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 5
+        },
+        {
+          "source": "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 3,
+          "candidateRows": 6
+        },
+        {
+          "source": "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+          "districtContests": 3,
+          "candidateRows": 6
+        },
+        {
+          "source": "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+          "districtContests": 1,
+          "candidateRows": 1
+        },
+        {
+          "source": "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 4
+        },
+        {
+          "source": "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+          "districtContests": 2,
+          "candidateRows": 3
+        },
+        {
+          "source": "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 2,
+          "candidateRows": 5
+        },
+        {
+          "source": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+          "districtContests": 5,
+          "candidateRows": 11
+        },
+        {
+          "source": "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+          "districtContests": 7,
+          "candidateRows": 17
+        }
+      ],
+      "before": [
+        131,
+        273
+      ],
+      "after": [
+        133,
+        278
+      ]
+    },
+    {
+      "state": "WI",
+      "officialSource": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+      "sourceScope": "Dane County; remaining statewide districts still owed",
+      "before": [
+        83,
+        152
+      ],
+      "after": [
+        83,
+        152
+      ],
+      "verifiedAdditions": [
+        {
+          "office": "State Senator District 15",
+          "candidates": 3
+        },
+        {
+          "office": "State Senator District 27",
+          "candidates": 1
+        },
+        {
+          "office": "Representative to the Assembly District 42",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 43",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 46",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 47",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 48",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 51",
+          "candidates": 3
+        },
+        {
+          "office": "Representative to the Assembly District 76",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 77",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 78",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 79",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 80",
+          "candidates": 2
+        },
+        {
+          "office": "Representative to the Assembly District 81",
+          "candidates": 2
+        },
+        {
+          "office": "Dane County Sheriff",
+          "candidates": 1
+        },
+        {
+          "office": "Dane County Clerk of Circuit Court",
+          "candidates": 1
+        }
+      ]
+    },
+    {
+      "state": "MI",
+      "officialCandidateContests": 170,
+      "repositoryCandidateContests": 170,
+      "officialCandidateRows": 455,
+      "repositoryCandidateRows": 455,
+      "missingCoreContests": [],
+      "missingCoreCandidates": [],
+      "source": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+      "remaining": "166 district and local judicial contests in the same state report are outside the acquired core coverage; county/city sample-ballot comparison still owed."
+    },
+    {
+      "state": "IN",
+      "officialCandidateContests": 137,
+      "repositoryCandidateContests": 137,
+      "officialCandidateRows": 271,
+      "repositoryCandidateRows": 271,
+      "missingCoreContests": [],
+      "missingCoreCandidates": [],
+      "source": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+      "remaining": "County, township, city, school, judicial-district contests and local questions need sample-ballot reconciliation."
+    },
+    {
+      "state": "IA",
+      "officialCandidateContests": 136,
+      "repositoryCandidateContests": 136,
+      "officialCandidateRows": 243,
+      "repositoryCandidateRows": 243,
+      "officialIndividualNames": 245,
+      "missingCoreContests": [],
+      "missingCoreCandidates": [],
+      "source": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+      "remaining": "Governor/lieutenant governor are two rows per ticket in the state PDF and one joint contest in the repository. Local/sample-ballot coverage remains owed."
+    },
+    {
+      "state": "MO",
+      "officialCandidateContests": 189,
+      "repositoryCandidateContests": 189,
+      "officialCandidateRows": 366,
+      "repositoryCandidateRows": 366,
+      "missingCoreContests": [],
+      "missingCoreCandidates": [],
+      "source": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+      "remaining": "District/local judicial contests and county/city sample-ballot comparisons remain owed."
+    }
+  ],
+  "states": [
+    {
+      "state": "OH",
+      "repositoryContests": 133,
+      "repositoryCandidacies": 278,
+      "repositoryMeasures": 3,
+      "officialSources": [
+        "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+        "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council",
+        "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+        "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+        "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+        "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+        "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+        "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+        "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+        "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+        "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+        "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+        "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+        "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+        "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+        "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+        "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+        "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+        "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+        "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf"
+      ],
+      "districtCoverage": {
+        "cd": {
+          "held": 15,
+          "electionDistricts": 15,
+          "missing": []
+        },
+        "sldu": {
+          "held": 15,
+          "electionDistricts": 17,
+          "missing": [
+            11,
+            29
+          ]
+        },
+        "sldl": {
+          "held": 81,
+          "electionDistricts": 99,
+          "missing": [
+            41,
+            42,
+            43,
+            44,
+            48,
+            49,
+            50,
+            51,
+            55,
+            56,
+            60,
+            62,
+            72,
+            75,
+            77,
+            79,
+            80,
+            88
+          ]
+        }
+      },
+      "remaining": "18 lower-house districts and Senate 11/29 remain unacquired; county/city/school/special-district and address-specific sample-ballot reconciliation remain open. Franklin countywide contests and Columbus Issues 8/9 added; 43215 full sample-ballot acceptance not yet established.",
+      "repositoryRemovals": 1
+    },
+    {
+      "state": "IL",
+      "repositoryContests": 163,
+      "repositoryCandidacies": 255,
+      "repositoryMeasures": 0,
+      "officialSources": [
+        "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+        "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+        "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
+        "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+        "https://applications.kanecountyil.gov/ElectionWebsite/en-US/Candidates/List/31/NP",
+        "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List?bidId=",
+        "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+        "https://mcleancountyil.gov/DocumentCenter/View/32912/2026-General-McLean-County-Specimen-Ballot",
+        "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+        "https://www.co.st-clair.il.us/webdocuments/departments/countyclerk/elections/2026%20General%20Election%20Voters%20Guide.pdf",
+        "https://cms3.revize.com/revize/grundycounty/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+        "https://effinghamcountyil.gov/wp-content/uploads/2026/09/FULL-SPECIMEN-General-Election-November-3-2026.pdf",
+        "https://www.pikecountyil.org/wp-content/uploads/2026/09/2026-General-Election-Publication-Ballot-1.pdf",
+        "https://www.williamsoncountyil.gov/wp-content/uploads/2026/09/sample-ballot-001.pdf",
+        "https://maconcounty.illinois.gov/download/specimen-ballot/?wpdmdl=14661&ind=1789592172553&refresh=19e0973f&filename=2026-General-Specimen-Ballot.pdf",
+        "https://www.lasallecountyil.gov/DocumentCenter/View/4565/Specimen-Ballot-PDF",
+        "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+        "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
+        "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
+        "https://www.lakecountyil.gov//DocumentCenter/View/21161/Referenda",
+        "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Proposition%20Listing.pdf?t=202609300917350",
+        "https://app.chicagoelections.gov/documents/general/BoardMeetingMinutes-2020-02-25.pdf",
+        "https://app.chicagoelections.gov/documents/general/BoardMeetingMinutes-2021-05-11.pdf",
+        "https://douglascountyil.gov/clerk-recorder/elections",
+        "https://vr.platinumvrms.com/county/rslrequest/103?t=2",
+        "https://vr.platinumvrms.com/county/rslrequest/13?t=2",
+        "https://vr.platinumvrms.com/county/rslrequest/10?t=2",
+        "https://vr.platinumvrms.com/county/rslrequest/21?t=2",
+        "https://vr.platinumvrms.com/county/rslrequest/14?t=2",
+        "https://www.pikecountyil.org/county-clerk/elections/2026-election/",
+        "https://randolphcountyil.gov/county-clerk-recorder/elections-voting/",
+        "https://platinumelectionresults.com/",
+        "https://www.madisoncountyil.gov/departments/county_clerk/elections/candidates.php",
+        "https://il-coles.pollresults.net/",
+        "https://www.colesco.illinois.gov/coclerk/elections/",
+        "https://www.macoupinvotes.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=23&lang=en&callback=soeSampleBallotObj.processSampleBallot",
+        "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026WriteIns.pdf",
+        "https://vr.platinumvrms.com/county/RSLRequest/119?t=2",
+        "https://vr.platinumvrms.com/county/rslrequest/6?t=2",
+        "https://vr.platinumvrms.com/county/RSLRequest/66?t=2",
+        "https://wincoil.gov/departments/clerks-office/election-information",
+        "https://www.co.st-clair.il.us/departments/county-clerk/elections",
+        "https://dekalbcountyclerkil.gov/",
+        "https://il-macon.pollresults.net/",
+        "https://maconcounty.illinois.gov/voting-election-information/",
+        "https://il-tazewell.pollresults.net/",
+        "https://tazewell-il.gov/countyclerkrecorder/countyclerkelections/",
+        "https://il-bureau.pollresults.net/",
+        "https://bureaucountyclerk.com/",
+        "https://il-livingston.pollresults.net/",
+        "https://www.livingstoncountyil.gov/department/elections/index.php",
+        "https://il-livingston.accessliberty.com/Default.aspx",
+        "https://il-shelby.pollresults.net/",
+        "https://shelbycounty-il.gov/coclerk.aspx",
+        "https://il-shelby.accessliberty.com/",
+        "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_county20_st17.txt",
+        "https://il-ogle.pollresults.net/",
+        "https://www.oglecountyil.gov/",
+        "https://il-whiteside.pollresults.net/",
+        "https://www.whitesidecountyil-elections.gov/",
+        "https://montgomerycountyil.gov/wp-content/uploads/MontgomeryCountyILGeneralElectionSpecimenBallot11032026-.pdf",
+        "https://www.henrycty.com/DocumentCenter/View/1202/HENRY-COUNTY-GENERAL-ELECTION-2026-SAMPLE-BALLOT",
+        "https://cms2.revize.com/revize/knoxcounty/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
+        "https://files-accl.zohoexternal.com/public/workdrive-external/download/7xc3r013726b9e9794986beae531fa69c0ec6?x-cli-msg=null",
+        "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_county20_st17.txt",
+        "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026ReferendaList.pdf"
+      ],
+      "missingLowerDistricts": [
+        2,
+        17,
+        30,
+        37,
+        38,
+        44,
+        53,
+        54,
+        63,
+        80,
+        86,
+        97,
+        98,
+        99,
+        103,
+        104
+      ],
+      "missingSenateDistricts": [
+        27
+      ],
+      "remaining": "State Board general candidate pages and several counties returned 403. Indexed official records identify leads, but no blocked response is represented as HTTP200 or certified complete. County and per-ZIP reconciliation remain open."
+    },
+    {
+      "state": "MI",
+      "repositoryContests": 172,
+      "repositoryCandidacies": 455,
+      "repositoryMeasures": 2,
+      "officialSources": [
+        "https://www.michigan.gov/en/sos/elections",
+        "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D"
+      ],
+      "remaining": "Source/repository core equality is replayed above; local/judicial-district/per-ZIP sample-ballot reconciliation remains open."
+    },
+    {
+      "state": "IN",
+      "repositoryContests": 142,
+      "repositoryCandidacies": 274,
+      "repositoryMeasures": 2,
+      "officialSources": [
+        "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+        "https://www.in.gov/dA/fdebb4ee35/Dispatch.Aug-2026.FINAL.pdf?language_id=1",
+        "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+        "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+        "https://www.in.gov/courts/retention/",
+        "https://www.in.gov/courts/appeals/districts/",
+        "https://www.in.gov/courts/tax/about/",
+        "https://www.in.gov/dA/51ae0a2155/2025-tax-court-annual-report.pdf?language_id=1",
+        "https://www.indianasenaterepublicans.com/keeping-dangerous-criminal-suspects-off-the-streets",
+        "https://iga.in.gov/legislative/2026/resolutions/senate/joint/1/details",
+        "https://www.indianahouserepublicans.com/news/press-releases/rep.-aylesworth-authors-resolution-to-address-indiana-s-judicial-shortage-in-rural-areas/",
+        "https://iga.in.gov/legislative/2025/resolutions/house/joint/1/details",
+        "https://www.in.gov/sos/elections/files/Fall%202026%20Clerks%20Meetings.FINAL.pptx"
+      ],
+      "remaining": "Source/repository core equality is replayed above; local/judicial-district/per-ZIP sample-ballot reconciliation remains open."
+    },
+    {
+      "state": "MN",
+      "repositoryContests": 222,
+      "repositoryCandidacies": 427,
+      "repositoryMeasures": 1,
+      "officialSources": [
+        "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651",
+        "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+        "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/"
+      ],
+      "remaining": "Held core appears full by district inventory (8CD,67Senate,134House) but final general-election roster comparison is not complete. Fresh public ASP.NET search works and includes primary losers; general media export redirects to Error.aspx?NoMatchesFound. Local/sample-ballot reconciliation remains open."
+    },
+    {
+      "state": "IA",
+      "repositoryContests": 140,
+      "repositoryCandidacies": 246,
+      "repositoryMeasures": 1,
+      "officialSources": [
+        "https://sos.iowa.gov/general-election",
+        "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "https://sos.iowa.gov/general-election"
+      ],
+      "remaining": "Source/repository core equality is replayed above; local/judicial-district/per-ZIP sample-ballot reconciliation remains open."
+    },
+    {
+      "state": "MO",
+      "repositoryContests": 195,
+      "repositoryCandidacies": 367,
+      "repositoryMeasures": 5,
+      "officialSources": [
+        "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+        "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+        "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf",
+        "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR95.pdf",
+        "https://www.senate.mo.gov/26info/pdf-bill/tat/SJR87.pdf",
+        "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026Referendums/2026-R004.pdf"
+      ],
+      "remaining": "Source/repository core equality is replayed above; local/judicial-district/per-ZIP sample-ballot reconciliation remains open."
+    }
+  ],
+  "delivery": "Repository data prepared; production-copy/publication/live verification belongs to root and is not established by this comparison.",
+  "explicitWithdrawals": [
+    {
+      "state": "OH",
+      "explicitWithdrawals": 1,
+      "candidacyId": "oh-sos-2026-general-governor-and-lieutenant-governor-c36be62900f6",
+      "firstObserved": "2026-10-20",
+      "officialWithdrawalDate": "2026-10-15",
+      "source": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450"
+    }
+  ]
+}

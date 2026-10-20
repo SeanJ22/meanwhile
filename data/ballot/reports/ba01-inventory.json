@@ -1,0 +1,684 @@
+{
+  "base": "7dbad3bb5f2ebdee6ab41f9e094237aa00eecb83",
+  "baseline": {
+    "contests": 6036,
+    "candidacies": 11670,
+    "measures": 142
+  },
+  "current": {
+    "contests": 9073,
+    "candidacies": 16449,
+    "measures": 282
+  },
+  "added": {
+    "contests": 3037,
+    "candidacies": 4779,
+    "measures": 140
+  },
+  "states": [
+    {
+      "state": "AK",
+      "held": {
+        "contests": 76,
+        "candidacies": 153,
+        "measures": 2
+      },
+      "added": {
+        "contests": 20,
+        "candidacies": 20,
+        "measures": 0
+      }
+    },
+    {
+      "state": "AL",
+      "held": {
+        "contests": 187,
+        "candidacies": 264,
+        "measures": 4
+      },
+      "added": {
+        "contests": 16,
+        "candidacies": 23,
+        "measures": 0
+      }
+    },
+    {
+      "state": "AR",
+      "held": {
+        "contests": 117,
+        "candidacies": 177,
+        "measures": 13
+      },
+      "added": {
+        "contests": 95,
+        "candidacies": 144,
+        "measures": 9
+      }
+    },
+    {
+      "state": "AZ",
+      "held": {
+        "contests": 151,
+        "candidacies": 278,
+        "measures": 5
+      },
+      "added": {
+        "contests": 60,
+        "candidacies": 61,
+        "measures": 1
+      }
+    },
+    {
+      "state": "CA",
+      "held": {
+        "contests": 258,
+        "candidacies": 407,
+        "measures": 25
+      },
+      "added": {
+        "contests": 16,
+        "candidacies": 19,
+        "measures": 11
+      }
+    },
+    {
+      "state": "CO",
+      "held": {
+        "contests": 149,
+        "candidacies": 303,
+        "measures": 19
+      },
+      "added": {
+        "contests": 22,
+        "candidacies": 27,
+        "measures": 5
+      }
+    },
+    {
+      "state": "CT",
+      "held": {
+        "contests": 197,
+        "candidacies": 544,
+        "measures": 0
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "DC",
+      "held": {
+        "contests": 16,
+        "candidacies": 51,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 1,
+        "measures": 0
+      }
+    },
+    {
+      "state": "DE",
+      "held": {
+        "contests": 66,
+        "candidacies": 114,
+        "measures": 0
+      },
+      "added": {
+        "contests": 9,
+        "candidacies": 11,
+        "measures": 0
+      }
+    },
+    {
+      "state": "FL",
+      "held": {
+        "contests": 200,
+        "candidacies": 394,
+        "measures": 3
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "GA",
+      "held": {
+        "contests": 264,
+        "candidacies": 463,
+        "measures": 3
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "HI",
+      "held": {
+        "contests": 92,
+        "candidacies": 138,
+        "measures": 32
+      },
+      "added": {
+        "contests": 47,
+        "candidacies": 44,
+        "measures": 30
+      }
+    },
+    {
+      "state": "IA",
+      "held": {
+        "contests": 140,
+        "candidacies": 246,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "ID",
+      "held": {
+        "contests": 119,
+        "candidacies": 231,
+        "measures": 4
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "IL",
+      "held": {
+        "contests": 163,
+        "candidacies": 255,
+        "measures": 0
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "IN",
+      "held": {
+        "contests": 142,
+        "candidacies": 274,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "KS",
+      "held": {
+        "contests": 150,
+        "candidacies": 263,
+        "measures": 1
+      },
+      "added": {
+        "contests": 5,
+        "candidacies": 10,
+        "measures": 0
+      }
+    },
+    {
+      "state": "KY",
+      "held": {
+        "contests": 127,
+        "candidacies": 206,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "LA",
+      "held": {
+        "contests": 18,
+        "candidacies": 44,
+        "measures": 10
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MA",
+      "held": {
+        "contests": 232,
+        "candidacies": 304,
+        "measures": 9
+      },
+      "added": {
+        "contests": 8,
+        "candidacies": 11,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MD",
+      "held": {
+        "contests": 277,
+        "candidacies": 640,
+        "measures": 3
+      },
+      "added": {
+        "contests": 144,
+        "candidacies": 318,
+        "measures": 0
+      }
+    },
+    {
+      "state": "ME",
+      "held": {
+        "contests": 190,
+        "candidacies": 362,
+        "measures": 0
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MI",
+      "held": {
+        "contests": 172,
+        "candidacies": 455,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MN",
+      "held": {
+        "contests": 222,
+        "candidacies": 427,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MO",
+      "held": {
+        "contests": 195,
+        "candidacies": 367,
+        "measures": 5
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MS",
+      "held": {
+        "contests": 7,
+        "candidacies": 22,
+        "measures": 0
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "MT",
+      "held": {
+        "contests": 134,
+        "candidacies": 256,
+        "measures": 3
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NC",
+      "held": {
+        "contests": 560,
+        "candidacies": 998,
+        "measures": 6
+      },
+      "added": {
+        "contests": 368,
+        "candidacies": 632,
+        "measures": 3
+      }
+    },
+    {
+      "state": "ND",
+      "held": {
+        "contests": 63,
+        "candidacies": 148,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NE",
+      "held": {
+        "contests": 48,
+        "candidacies": 94,
+        "measures": 4
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NH",
+      "held": {
+        "contests": 13,
+        "candidacies": 27,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NJ",
+      "held": {
+        "contests": 109,
+        "candidacies": 304,
+        "measures": 0
+      },
+      "added": {
+        "contests": 10,
+        "candidacies": 29,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NM",
+      "held": {
+        "contests": 97,
+        "candidacies": 136,
+        "measures": 7
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NV",
+      "held": {
+        "contests": 72,
+        "candidacies": 137,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NY",
+      "held": {
+        "contests": 242,
+        "candidacies": 442,
+        "measures": 0
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "OH",
+      "held": {
+        "contests": 133,
+        "candidacies": 278,
+        "measures": 3
+      },
+      "added": {
+        "contests": 124,
+        "candidacies": 251,
+        "measures": 2
+      }
+    },
+    {
+      "state": "OK",
+      "held": {
+        "contests": 95,
+        "candidacies": 191,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "OR",
+      "held": {
+        "contests": 116,
+        "candidacies": 262,
+        "measures": 3
+      },
+      "added": {
+        "contests": 33,
+        "candidacies": 95,
+        "measures": 3
+      }
+    },
+    {
+      "state": "PA",
+      "held": {
+        "contests": 157,
+        "candidacies": 262,
+        "measures": 4
+      },
+      "added": {
+        "contests": 89,
+        "candidacies": 157,
+        "measures": 4
+      }
+    },
+    {
+      "state": "RI",
+      "held": {
+        "contests": 126,
+        "candidacies": 161,
+        "measures": 5
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "SC",
+      "held": {
+        "contests": 298,
+        "candidacies": 501,
+        "measures": 0
+      },
+      "added": {
+        "contests": 158,
+        "candidacies": 220,
+        "measures": 0
+      }
+    },
+    {
+      "state": "SD",
+      "held": {
+        "contests": 85,
+        "candidacies": 178,
+        "measures": 4
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "TN",
+      "held": {
+        "contests": 129,
+        "candidacies": 266,
+        "measures": 3
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "TX",
+      "held": {
+        "contests": 1466,
+        "candidacies": 1837,
+        "measures": 8
+      },
+      "added": {
+        "contests": 1235,
+        "candidacies": 1355,
+        "measures": 8
+      }
+    },
+    {
+      "state": "UT",
+      "held": {
+        "contests": 111,
+        "candidacies": 232,
+        "measures": 2
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "VA",
+      "held": {
+        "contests": 427,
+        "candidacies": 1068,
+        "measures": 64
+      },
+      "added": {
+        "contests": 411,
+        "candidacies": 1028,
+        "measures": 61
+      }
+    },
+    {
+      "state": "VT",
+      "held": {
+        "contests": 140,
+        "candidacies": 369,
+        "measures": 2
+      },
+      "added": {
+        "contests": 6,
+        "candidacies": 50,
+        "measures": 0
+      }
+    },
+    {
+      "state": "WA",
+      "held": {
+        "contests": 156,
+        "candidacies": 275,
+        "measures": 4
+      },
+      "added": {
+        "contests": 16,
+        "candidacies": 20,
+        "measures": 1
+      }
+    },
+    {
+      "state": "WI",
+      "held": {
+        "contests": 83,
+        "candidacies": 152,
+        "measures": 3
+      },
+      "added": {
+        "contests": 72,
+        "candidacies": 136,
+        "measures": 0
+      }
+    },
+    {
+      "state": "WV",
+      "held": {
+        "contests": 196,
+        "candidacies": 360,
+        "measures": 3
+      },
+      "added": {
+        "contests": 73,
+        "candidacies": 117,
+        "measures": 2
+      }
+    },
+    {
+      "state": "WY",
+      "held": {
+        "contests": 90,
+        "candidacies": 133,
+        "measures": 1
+      },
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    }
+  ],
+  "scope": "Raw held records, before reader joint-ticket and documented-withdrawal projection. These counts are not official completeness denominators or live-page acceptance."
+}

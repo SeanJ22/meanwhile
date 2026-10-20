@@ -1,4 +1,6 @@
 import type { BallotAbsence, BallotSet, Contest, HeldBallotContest } from "./types.ts";
+import { withCandidateTickets } from "./tickets.ts";
+import { withCurrentCandidacies } from "./filing-changes.ts";
 
 export function contestsForDivisions(
   set: BallotSet,
@@ -17,12 +19,13 @@ export function contestsForDivisions(
 }
 
 export function ballotForDivisions(set: BallotSet, divisions: readonly string[]): BallotSet {
+  set = withCurrentCandidacies(set);
   const matched = contestsForDivisions(set, divisions);
   const contests = new Set(matched.contests.map(row => row.id));
   const candidacies = set.candidacies.filter(row => contests.has(row.contestId));
   const filingContests = new Set([...contests, ...(matched.heldContests ?? []).map(row => row.id)]);
   const candidates = new Set(candidacies.map(row => row.id));
-  return {
+  return withCandidateTickets({
     ...set, ...matched, candidacies,
     ...(set.filingCandidacies ? { filingCandidacies: set.filingCandidacies.filter(row => filingContests.has(row.contestId)) } : {}),
     measures: set.measures.filter(row => contests.has(row.contestId)),
@@ -32,5 +35,5 @@ export function ballotForDivisions(set: BallotSet, divisions: readonly string[])
     ...(set.generalLineup ? { generalLineup: { ...set.generalLineup, contests: set.generalLineup.contests.filter(row => contests.has(row.contestId)) } } : {}),
     ...(set.measureAnalyses ? { measureAnalyses: { ...set.measureAnalyses, analyses: set.measureAnalyses.analyses.filter(row => contests.has(row.contestId)) } } : {}),
     ...(set.lineupReconciliation ? { lineupReconciliation: { ...set.lineupReconciliation, rows: set.lineupReconciliation.rows.filter(row => contests.has(row.contestId)) } } : {}),
-  };
+  });
 }

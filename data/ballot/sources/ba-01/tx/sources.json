@@ -1,0 +1,28 @@
+[
+  {
+    "file": "SD22.txt",
+    "url": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/SD22_Ballot-Certification-final.pdf",
+    "publisher": "Texas Secretary of State",
+    "retrievedAt": "2026-10-20T23:08:10.043Z",
+    "rawHash": "33bd44264f6f2f464dc8a20dfc7cc289cfc9ea4de0bf64cb62034c565f712401",
+    "textHash": "870fb12165341ada416c6efb8ba57fe69a17bfbb41efa16fa1d2330ae4d83239",
+    "extraction": "OCR of the signed certification"
+  },
+  {
+    "file": "HD93.txt",
+    "url": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/HD93_Ballot-Certification-final.pdf",
+    "publisher": "Texas Secretary of State",
+    "retrievedAt": "2026-10-20T23:08:10.212Z",
+    "rawHash": "41b936baf732adfe4e73f076e0ae35325ac9f20d15288c45668f2343cde02f79",
+    "textHash": "52551d27d50ab03d5863ee34c97d45e365d288ff921aa385926a3e720156eb08",
+    "extraction": "OCR of the signed certification"
+  },
+  {
+    "file": "travis-sample.pdf",
+    "url": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "publisher": "Travis County Clerk",
+    "retrievedAt": "2026-10-20T23:05:12.035Z",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "extraction": "pdftotext -nodiag; each 198-point column separately to prevent candidate/office column mixing"
+  }
+]

@@ -1,0 +1,118 @@
+Allen County Board of Elections – 204 N. Main, Lima OH 45801-4457 – Ph: (419) 223-8530 (https://allen.boe.ohio.gov/)
+【turn845559view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://allen.boe.ohio.gov/","lineno":null}); Total lines: 116
+L0:   *   * # 【0†Allen County Board of Elections】
+L1: 
+L2: 204 N. Main, Lima OH 45801-4457 - Ph: (419) 223-8530
+L3: ## 【1†General Election November 3, 2026】
+L4: 
+L5: 【1†July 23, 2026】Written by 【2†Staff】
+L6: 
+L7: 【3†Image】
+L8: 
+L9: REGISTRATION DEADLINE – October 5, 2026
+L10: Voter Registration closes at 9:00 P.M. at the Board of Elections. Voters may register online at VOTEOHIO.GOV until midnight.
+L11: ABSENTEE VOTING BEGINS – October 6, 2026
+L12: Ballots requested by application start being mailed out. In-person voting at our office begins.
+L13: DEADLINE TO SUBMIT APPLICATIONS FOR A BALLOT TO BE MAILED OUT – October 27, 2026
+L14: BALLOT RETURN DEADLINE – All absentee ballots must be received by the Board of Elections or placed in the office dropbox by 7:30 p.m. on Election Day (November 3, 2026) to be counted. Ballots that arrive after this time will NOT be counted.
+L15: NOTE: Military and overseas voters have different deadlines. Visit our 【4†Military and Overseas Voters page†www.perplexity.ai】 for more
+L16: ## Candidates & Issues Lists
+L17: 
+L18:   * Military and Overseas Citizens Notice- 【5†UOCAVA Notice – Federal Write-In Absentee Ballot (FWAB)†www.dropbox.com】. When the 46 Day Notice is posted it will Contain All Candidates and Issues that will be on the ballot.
+L19:   * 【6†List of Candidates filed†lookup.boe.ohio.gov】 (updated daily just after 4:30 p.m.)
+L20:   * 【7†List of Open Offices, Filing Deadlines†www.dropbox.com】, commencing/ending dates
+L21: ## View Ballots
+L22: 
+L23:   * 【8†Search To See My Ballot†lookup.boe.ohio.gov】: The ballots for the current election will be viewable 46 days prior to the election. Click on the provided link above. Then Enter your name, click on submit button on that page. Verify that the registered address is correct. Then click on the “Sample Ballots” link.
+L24:   * 【9†All Ballots – View all the ballots. You may also search for ballots by district†lookup.boe.ohio.gov】
+L25: ## Absentee Voting Hours at the Board of Elections
+L26: 
+L27: Voting begins the day after the close of registration for the election.
+L28: Boards must not be open for early in-person absentee voting on any holiday established by state or federal law.
+L29: For the November 3, 2026 General Election, the uniform statewide early in-person absentee voting hours are:
+L30: 
+L31: Week 1–2: October 6–16, 2026
+L32: 
+L33:   * 8:00 a.m. to 5:00 p.m. on each weekday (Monday through Friday)
+L34: 
+L35: Week 3: October 19–24, 2026
+L36:   * 8:00 a.m. to 5:00 p.m. on each weekday (Monday through Friday)
+L37:   * 8:00 a.m. to 4:00 p.m. (Saturday)
+L38: 
+L39: Week 4: October 26–November 1, 2026
+L40: 
+L41:   *  7:30 a.m. to 7:30 p.m. (Monday)
+L42:   *  7:30 a.m. to 8:30 p.m. (Tuesday)
+L43:   *  7:30 a.m. to 7:30 p.m. (Wednesday through Friday)
+L44:   * 8:00 a.m. to 4:00 p.m. (Saturday)
+L45:   * 1:00 p.m. to 5:00 p.m. (Sunday)
+L46: 
+L47: 【10†Election Info】
+L48: ## 【11†Official Results – May 5, 2026 Primary Election】
+L49: 
+L50: 【11†May 21, 2026】Written by 【2†Staff】
+L51: 
+L52: 【12†Image】
+L53: Audit of the May 5, 2026 Primary – 【13†AUDIT†www.dropbox.com】
+L54: Official Results of the May 5, 2026 Primary – 【14†Summary Results with Group†www.dropbox.com】
+L55: Official Results of the May 5, 2026 Primary – 【15†Statement of Votes Cast by Precinct†www.dropbox.com】
+L56: Official Results of the May 5, 2026 Primary – 【16†Most populous candidates†www.dropbox.com】
+L57: Official Results of the May 5, 2026 Primary – 【17†Most populous issues†www.dropbox.com】
+L58: 
+L59: 【18†Election Results】
+L60: ## 【19†Special Election – August 4, 2026】
+L61: 
+L62: 【19†April 28, 2026】Written by 【2†Staff】
+L63: 
+L64: There are no anticipated issues.
+L65: 
+L66: 【10†Election Info】
+L67: 
+L68:   * 1
+L69:   * 【20†2】
+L70:   * 【21†3】
+L71:   * …
+L72:   * 【22†29】
+L73:   * 【23†30】
+L74:   * 【24†31】
+L75:   * 【20†Next】
+L76: 
+L77: IN PERSON AT OUR OFFICE: EARLY ABSENTEE VOTING
+L78: MONDAY - FRIDAY - 8:00 a.m. - 5:00 p.m.
+L79: REQUESTED BALLOTS BY MAIL were mailed out OCTOBER 6, 2026.
+L80: 
+L81: Absentee Voting
+L82: 
+L83: Search
+L84: 
+L85: [Input: Search the site][Button: Search]
+L86: FOR IMMEDIATE RELEASE
+L87: Allen County Board of Elections to Hold A Rescheduled Regular Public Meeting
+L88: Date: Thursday, October 22, 2026
+L89: Time: 8:30 a.m.
+L90: Location: Conference Room, First Floor, Third Court of Appeals Building
+L91: Meeting Agenda
+L92: Approval of minutes
+L93: Approval of bills
+L94: Communications
+L95: Old business:
+L96: New Business:
+L97: - Review Machine and Ballot Allocation
+L98: - Other Business
+L99: - Public Test
+L100: For more information, please contact the Allen County Board of Elections
+L101: MEMBERS OF THE BOARD
+L102: Keith A. Cheney - Chairman
+L103: Rochelle D. Twining - Member
+L104: Mona L. Willamowski - Member
+L105: Lisa G. Robeson - Member
+L106: Director and Deputy Director
+L107: Morgan Bode - Director
+L108: Mark C. Vernik - Deputy Director
+L109: ## Additional Links
+L110: 
+L111: 【25† 】
+L112: 
+L113: Early In Person Voting at our office: 8 a.m. - 5:00 p.m.
+L114: 
+L115: 【25†Close Welcome Bar】

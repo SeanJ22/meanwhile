@@ -1,0 +1,15 @@
+{
+  "url": "https://web.sos.ky.gov/CandidateFilings/",
+  "finalUrl": "https://web.sos.ky.gov/CandidateFilings/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:01:28.374924+00:00",
+  "sha256": "2c45e4a8f693ddd9e85775114262b9ac8d0670195dca635ee6c3bf76305097c0",
+  "request": {
+    "method": "POST",
+    "form": {
+      "ctl00$MainContent$ddlElection": "87",
+      "ctl00$MainContent$bListAll": "List All Candidates"
+    },
+    "hiddenFields": "Retain hidden fields from the initial GET and use the same cookie session."
+  }
+}

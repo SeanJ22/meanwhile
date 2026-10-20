@@ -1,0 +1,235 @@
+(https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf)
+【turn994948view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 6; Source: open({"ref_id":"https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf","lineno":0}); Total lines: 233
+L0@P0: Form No. 120 Prescribed by Secretary of State (07-22)
+L1@P0: ELECTION NOTICE FOR USE WITH THE
+L2@P0: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Jefferson County Board of Elections
+L5@P0: BOE to check one:  Initial notification (to be posted 100 days prior to date of election)
+L6@P0: √ Updated notification (to be posted 46 days prior to date of election)
+L7@P0: NOVEMBER 3, 2026 GENERAL ELECTION
+L8@P0: State Executive Offices
+L9@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L10@P0: Name of Candidate Office Party Precincts
+L11@P0: Amy Acton and
+L12@P0:  David Pepper
+L13@P0: Governor Dem All Precincts
+L14@P0: Don Kissick and
+L15@P0:  James L. Mills
+L16@P0: Governor Lib All Precincts
+L17@P0: Vivek Ramaswamy and
+L18@P0:  Robert A. McColley
+L19@P0: Governor Rep All Precincts
+L20@P0: Timothy Grady and
+L21@P0:  Andrea Neutzling(W-I)
+L22@P0: Governor All Precincts
+L23@P0: Heather Hill and
+L24@P0:  Patrick Manley(W-I)
+L25@P0: Governor All Precincts
+L26@P0: Renea Turner and
+L27@P0:  Jalen Turner(W-I)
+L28@P0: Governor All Precincts
+L29@P0: John J. Kulewicz Attorney General Dem All Precincts
+L30@P0: Keith Faber Attorney General Rep All Precincts
+L31@P0: Annette Blackwell Auditor Dem All Precincts
+L32@P0: Frank LaRose Auditor Rep All Precincts
+L33@P0: Allison Russo Secretary of State Dem All Precincts
+L34@P0: Tom Pruss Secretary of State Lib All Precincts
+L35@P0: Robert Sprague Secretary of State Rep All Precincts
+L36@P0: Seth Walsh Treasurer Dem All Precincts
+L37@P0-1: Jay Edwards Treasurer Rep All PrecinctsU.S. Senate and U.S. Congress
+L38@P1: Name of Candidate Office /District/Term Party Precincts
+L39@P1: Sherrod Brown Senate Dem All Precincts
+L40@P1: William B. Redpath Senate Lib All Precincts
+L41@P1: Jon Husted Senate Rep All Precincts
+L42@P1: Greg Levy Senate OtherPartyAll Precincts
+L43@P1: Stephen Faris(W-I) Senate All Precincts
+L44@P1: Anthony Holliman(W-I) Senate All Precincts
+L45@P1: Timothy Telymonde(W-I) Senate All Precincts
+L46@P1: Elizabeth Kirtley Congress 6th Dem All Precincts, Stark County largest
+L47@P1: overlap
+L48@P1: Michael A. Rulli Congress 6th Rep All Precincts, Stark County largest
+L49@P1: overlap
+L50@P1: Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L51@P1: Name of Candidate Office /District/Term Party Precincts
+L52@P1: Ron Ferguson House of Rep 96th Rep All Precincts, Overlaps with Belmont
+L53@P1: and Monroe
+L54@P1: Charrie L. Foglio House of Rep 96th Dem All Precincts, Overlaps with Belmont
+L55@P1: and Monroe
+L56@P1: County Administrative Offices (County Commissioner or County Council, Prosecuting
+L57@P1: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L58@P1: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L59@P1: Name of Candidate Office /District/Term Party Precincts
+L60@P1: Eric Timmons Commissioner (1-1-2027) Rep All Precincts
+L61@P1: Brent G. Nemeth Commissioner (1-1-2027) Dem All Precincts
+L62@P1-2: E. J. Conn Auditor Rep All PrecinctsOhio Supreme Court
+L63@P2: Name of Candidate Office /Term Party Precincts
+L64@P2: Marilyn Zayas Supreme Court 01/01/27 Dem All Precincts
+L65@P2: Daniel R. Hawkins Supreme Court 01/01/27 Rep All Precincts
+L66@P2: Jennifer Brunner Supreme Court 01/02/27 Dem All Precincts
+L67@P2: Colleen O’Donnell Supreme Court 01/02/27 Rep All Precincts
+L68@P2: Ohio Court of Appeals (7
+L69@P2: th District)
+L70@P2: Name of Candidate Office /Term Party Precincts
+L71@P2: Molly K. Johnson Judge 02/09/2027 Rep All Precincts, Mahoning County largest
+L72@P2: overlap
+L73@P2: Mark Anthony Hanni Judge 02/10/2027 Rep All Precincts, Mahoning County largest
+L74@P2: overlap
+L75@P2: Katherine Rudzik Judge 02/10/2027 Dem All Precincts, Mahoning County largest
+L76@P2: overlap
+L77@P2: County Court of Common Pleas or County Court
+L78@P2: Name of Candidate Office /Division/Term Party Precincts
+L79@P2: Michelle Garcia Miller Common Pleas Judge
+L80@P2: (1-1-2027)
+L81@P2: All Precincts
+L82@P2: Michael C. Bednar Common Pleas Judge
+L83@P2: (2-9-2027)
+L84@P2: All Precincts
+L85@P2: Frank W. Noble, Jr. Common Pleas Judge
+L86@P2: Probate and Juvenile
+L87@P2: (2-9-2027)
+L88@P2-3: All PrecinctsFiling deadline for Questions and Issues is August 5, 2026, 4:00 p.m.
+L89@P3: State Issues
+L90@P3: Number Title Precincts
+L91@P3: 3 Constitution amendment to require voter ID for
+L92@P3: voting in the Ohio constitution
+L93@P3: All Precincts
+L94@P3: Local Questions and Issues
+L95@P3: Number Title Precincts
+L96@P3: 4
+L97@P3: Edison Local School District - PROPERTY
+L98@P3: TAX (RENEWAL - 1.85 mills, 5 YEARS,
+L99@P3: COMMENCING 2027, FIRST DUE 2028)
+L100@P3: current expense
+L101@P3: *Brush Creek, *Island Creek, Mt Tabor, Pleas Hill 1 & 2,
+L102@P3: *Two Ridge, *Welsmar, *Wintringer, Stratton, *Grant,
+L103@P3: New Somerset, Ross, Richmond, *Salem, *Shelley,
+L104@P3: Saline, Amsterdam, Elk and Overlaps into Carroll and
+L105@P3: Harrison Counties
+L106@P3: 5
+L107@P3: Jefferson County JVS - PROPERTY TAX
+L108@P3: (RENEWAL - 1 mill, 10 YEARS,
+L109@P3: COMMENCING 2027, FIRST DUE 2028)
+L110@P3: CURRENT EXPENSES - 0.67 MILLS; - 0.33
+L111@P3: MILLS reconditioning and/or purchasing or
+L112@P3: acquiring additional or replacement tools,
+L113@P3: equipment or furnishings; and for repairing,
+L114@P3: improving
+L115@P3: All precincts and overlaps into Belmont,
+L116@P3: Carroll and Harrison Counties
+L117@P3: 6
+L118@P3: Jefferson County JVS - PROPERTY TAX
+L119@P3: (RENEWAL - 1 mill, 10 YEARS,
+L120@P3: COMMENCING 2027, FIRST DUE 2028)
+L121@P3: CURRENT EXPENSES - 0.67 MILLS;
+L122@P3: PURCHASING EQUIPMENT FOR
+L123@P3: BUILDINGS; AND IMPROVING BUILDINGS -
+L124@P3: 0.33 MILLS
+L125@P3: All precincts and overlaps into Belmont,
+L126@P3: Carroll and Harrison Counties
+L127@P3: 7
+L128@P3: Warren Township Park District - PROPERTY
+L129@P3: TAX (ADDITIONAL - 1 mill, 5 YEARS,
+L130@P3: COMMENCING 2026, FIRST DUE 2027) parks
+L131@P3: and recreational facilities
+L132@P3: Tiltonsville, Yorkville, Glen Robbins, overlaps
+L133@P3: into Belmont County
+L134@P3: 8
+L135@P3: Jefferson County - PROPERTY TAX
+L136@P3: (RENEWAL - 1.7 mills, 10 YEARS,
+L137@P3: COMMENCING 2027, FIRST DUE
+L138@P3: 2028) operation of community programs and
+L139@P3: services authorized by county board of
+L140@P3: development disabilities, for the acquisition,
+L141@P3: construction, renovation, financing,
+L142@P3: maintenance, and operation of developmental
+L143@P3: disabilities facilities, or for both of such
+L144@P3: purposes
+L145@P3-4: All Precincts9
+L146@P4: Jefferson County - PROPERTY TAX
+L147@P4: (RENEWAL - 1.5 mills, 5 YEARS,
+L148@P4: COMMENCING 2028, FIRST DUE 2029)
+L149@P4: providing funds for the operation of the county
+L150@P4: 9-1-1 system
+L151@P4: All Precincts
+L152@P4: 10
+L153@P4: Amsterdam - PROPERTY TAX (RENEWAL -
+L154@P4: 3 mills, 5 YEARS, COMMENCING 2027,
+L155@P4: FIRST DUE 2028) proving funds for recreation,
+L156@P4: operation and maintenance
+L157@P4: Amsterdam
+L158@P4: 11
+L159@P4: Irondale - PROPERTY TAX (RENEWAL - 4
+L160@P4: mills, 5 YEARS, COMMENCING 2027, FIRST
+L161@P4: DUE 2028) current expenses
+L162@P4: *Saline
+L163@P4: 12
+L164@P4: Mount Pleasant - PROPERTY TAX
+L165@P4: (RENEWAL - 8 mills, 5 YEARS,
+L166@P4: COMMENCING 2026, FIRST DUE 2027)
+L167@P4: current expenses
+L168@P4: *Emerson
+L169@P4: 13
+L170@P4: Mount Pleasant - PROPERTY TAX
+L171@P4: (RENEWAL - 1 mill, 5 YEARS, COMMENCING
+L172@P4: 2026, FIRST DUE 2027) maintaining and
+L173@P4: operating cemeteries of the village of Mount
+L174@P4: Pleasant
+L175@P4: *Emerson
+L176@P4: 14
+L177@P4: Rayland - PROPERTY TAX (RENEWAL - 4
+L178@P4: mills, 5 YEARS, COMMENCING 2026, FIRST
+L179@P4: DUE 2027) police protection
+L180@P4: *Tiltonsville
+L181@P4: 15
+L182@P4: Richmond - PROPERTY TAX (RENEWAL - 2
+L183@P4: mills, 5 YEARS, COMMENCING 2027, FIRST
+L184@P4: DUE 2028) current expense
+L185@P4: Richmond
+L186@P4: 16
+L187@P4: Stratton - PROPERTY TAX (RENEWAL - 5
+L188@P4: mills, 5 YEARS, COMMENCING 2027, FIRST
+L189@P4: DUE 2028) police and fire expenses.
+L190@P4: Stratton
+L191@P4: 17 068/02 - PINEY FORK Adena Post 525 – D6
+L192@P4: Liquor Petition
+L193@P4: *Piney Fork
+L194@P4: 18
+L195@P4: Salem Township - PROPERTY TAX
+L196@P4: (RENEWAL - 1.5 mills, 5 YEARS,
+L197@P4: COMMENCING 2027, FIRST DUE 2028)
+L198@P4: fire protection
+L199@P4: Richmond, Salem, Shelley
+L200@P4: 19
+L201@P4: Mount Pleasant Township - PROPERTY TAX
+L202@P4: (ADDITIONAL - 4 mills, a continuing period of
+L203@P4: time, COMMENCING 2026, FIRST DUE 2027)
+L204@P4: fire and emergency medical services
+L205@P4: *Emerson
+L206@P4: 20
+L207@P4: Saline Township - PROPERTY TAX
+L208@P4: (RENEWAL - 2.5 mills, 5 YEARS,
+L209@P4: COMMENCING 2027, FIRST DUE 2028)
+L210@P4: ambulance and emergency medical services
+L211@P4-5: Saline, *Stratton21
+L212@P5: Saline Township - PROPERTY TAX
+L213@P5: (ADDITIONAL - 3 mills, 5 YEARS,
+L214@P5: COMMENCING 2026, FIRST DUE 2027)
+L215@P5: current operating expense police department
+L216@P5: Saline, *Stratton
+L217@P5: INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L218@P5: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L219@P5: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of downloading a
+L220@P5: blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the
+L221@P5: website’s FWAB Wizard.
+L222@P5: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L223@P5: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the
+L224@P5: election and the updated election notice issued on the 46
+L225@P5: th day before the election as a guide to:
+L226@P5: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L227@P5: (2) write the name of your choice of candidate or choice for or against an issue.
+L228@P5: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at
+L229@P5: this address: Jefferson County Board of Elections, 500 Market Street 1st Floor, Suite 1, Steubenville OH 43952.
+L230@P5: A complete listing of all county board of elections mailing addresses and contact information is available at:
+L231@P5: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L232@P5: Do not send your ballot via e-mail or fax. Ohio law prohibits electronic transmission of a voted ballot.

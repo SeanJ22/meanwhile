@@ -821,12 +821,11 @@
           "scopeNote": null,
           "candidateListComplete": true,
           "provenance": {
-            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+            "sourceUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
             "sourceOrg": "Colorado Secretary of State",
-            "collectedAt": "2026-10-14T05:01:00.114Z",
-            "verifiedAt": "2026-10-14T05:01:00.114Z",
-            "doorId": "fec-co-chief",
-            "quote": "Rod Pelton | State Senate | 35 | Republican Party | N; Richard Graf | State Senate | 35 | Libertarian Party | N; Travis Star Nelson | State Senate | 35 | Unaffiliated | N"
+            "collectedAt": "2026-10-20T22:53:06.911820+00:00",
+            "verifiedAt": "2026-10-20T22:53:06.911820+00:00",
+            "quote": "Rod Pelton | State Senate | 35 | Republican Party | N; Duane L Gurule | State Senate | 35 | Democratic Party | N; Richard Graf | State Senate | 35 | Libertarian Party | N; Travis Star Nelson | State Senate | 35 | Unaffiliated | N"
           }
         },
         {
@@ -2547,6 +2546,424 @@
             "verifiedAt": "2026-10-14T05:01:00.508Z",
             "doorId": "fec-co-chief",
             "quote": "Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado’s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Councilmember At-Large — Seat B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nAlfredo Reyes\nCouncilmember At-Large - Seat B\nWhitney Traylor\nCouncilmember At-Large - Seat B\nJeff Walker\nCouncilmember At-Large - Seat B\nJulissa Soto\nCouncilmember At-Large - Seat B\nGabriel Konkle\nCouncilmember At-Large - Seat B\nCynthia Diaz\nCouncilmember At-Large - Seat B\nMelissa Adriana Mejía\nCouncilmember At-Large - Seat B\nJake Browne\nCouncilmember At-Large - Seat B\nMonica Martinez\nCouncilmember At-Large - Seat B\nRaymon Anthony Doane"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — Michael W.V. Angel — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — Christopher J. Baumann — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — John Eric Elliff — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — Andrew Luxen — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — Jon J. Olafson — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District — Sarah Block Wallace — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/ Juvenile — Lisa Gomez — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/Juvenile — Elizabeth Joan McCarthy — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/ Probate — Elizabeth D. Leith — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Andrea Eddy — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Isaam L. Shamsid-Deen — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-judith-smith-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Judith Smith — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2h",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Referred Question 2H",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2i",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Referred Question 2I",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2j",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Referred Question 2J",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2k",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Referred Question 2K",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?"
+          }
+        },
+        {
+          "id": "co-denver-2026-initiated-ordinance-311",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Initiated Ordinance 311",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Olympia Z. Fay — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Kerri Lombardi — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Chelsea Malone — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court — Michelle Martinez-Thomas — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office?"
           }
         }
       ],
@@ -7518,6 +7935,465 @@
             "doorId": "fec-co-chief",
             "quote": "Grant Sullivan | Colorado Court of Appeals | State |  | "
           }
+        },
+        {
+          "id": "co-sos-2026-general-state-senate-35-duane-l-gurule",
+          "contestId": "co-sos-2026-general-state-senate-35",
+          "givenName": "Duane L",
+          "familyName": "Gurule",
+          "partyLabel": "Democratic Party",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+            "sourceOrg": "Colorado Secretary of State",
+            "collectedAt": "2026-10-20T22:53:06.911820+00:00",
+            "verifiedAt": "2026-10-20T22:53:06.911820+00:00",
+            "quote": "Duane L Gurule | State Senate | 35 | Democratic Party | N"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-alfredo-reyes",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Reyes",
+          "givenName": "Alfredo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nAlfredo Reyes"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-whitney-traylor",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Traylor",
+          "givenName": "Whitney",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nWhitney Traylor"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-jeff-walker",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Walker",
+          "givenName": "Jeff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nJeff Walker"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-julissa-soto",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Soto",
+          "givenName": "Julissa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nJulissa Soto"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-gabriel-konkle",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Konkle",
+          "givenName": "Gabriel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nGabriel Konkle"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-cynthia-diaz",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Diaz",
+          "givenName": "Cynthia",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nCynthia Diaz"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-melissa-adriana-mej-a",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Mejía",
+          "givenName": "Melissa Adriana",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nMelissa Adriana Mejía"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-jake-browne",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Browne",
+          "givenName": "Jake",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nJake Browne"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-monica-martinez",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Martinez",
+          "givenName": "Monica",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nMonica Martinez"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-raymon-anthony-doane",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Doane",
+          "givenName": "Raymon Anthony",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Councilmember At-Large - Seat B\nRaymon Anthony Doane"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel",
+          "contestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+          "familyName": "Angel",
+          "givenName": "Michael W.V.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann",
+          "contestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+          "familyName": "Baumann",
+          "givenName": "Christopher J.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff",
+          "contestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+          "familyName": "Elliff",
+          "givenName": "John Eric",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen",
+          "contestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+          "familyName": "Luxen",
+          "givenName": "Andrew",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson",
+          "contestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+          "familyName": "Olafson",
+          "givenName": "Jon J.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace",
+          "contestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+          "familyName": "Wallace",
+          "givenName": "Sarah Block",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez",
+          "contestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+          "familyName": "Gomez",
+          "givenName": "Lisa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy",
+          "contestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+          "familyName": "McCarthy",
+          "givenName": "Elizabeth Joan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith",
+          "contestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+          "familyName": "Leith",
+          "givenName": "Elizabeth D.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy",
+          "contestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+          "familyName": "Eddy",
+          "givenName": "Andrea",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen",
+          "contestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+          "familyName": "Shamsid-Deen",
+          "givenName": "Isaam L.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith",
+          "contestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+          "familyName": "Smith",
+          "givenName": "Judith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay",
+          "contestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+          "familyName": "Fay",
+          "givenName": "Olympia Z.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi",
+          "contestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+          "familyName": "Lombardi",
+          "givenName": "Kerri",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone",
+          "contestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+          "familyName": "Malone",
+          "givenName": "Chelsea",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas",
+          "contestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+          "familyName": "Martinez-Thomas",
+          "givenName": "Michelle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office?"
+          }
         }
       ],
       "measures": [
@@ -7730,6 +8606,76 @@
             "doorId": "fec-co-chief",
             "quote": "Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado’s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?"
           }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2h#question",
+          "contestId": "co-denver-2026-referred-question-2h",
+          "officialNumber": "2H",
+          "questionText": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2i#question",
+          "contestId": "co-denver-2026-referred-question-2i",
+          "officialNumber": "2I",
+          "questionText": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2j#question",
+          "contestId": "co-denver-2026-referred-question-2j",
+          "officialNumber": "2J",
+          "questionText": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?"
+          }
+        },
+        {
+          "id": "co-denver-2026-referred-question-2k#question",
+          "contestId": "co-denver-2026-referred-question-2k",
+          "officialNumber": "2K",
+          "questionText": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?"
+          }
+        },
+        {
+          "id": "co-denver-2026-initiated-ordinance-311#question",
+          "contestId": "co-denver-2026-initiated-ordinance-311",
+          "officialNumber": "311",
+          "questionText": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?"
+          }
         }
       ],
       "absences": [],
@@ -7737,13 +8683,275 @@
         "The Secretary of State states: 'This list is official and reflects what was certified to the counties on September 4.' The list was last updated September 15, 2026, 11:09 AM.",
         "The official list does not provide candidate incumbency or campaign websites; these fields are unknown.",
         "The official list marks Duane L Gurule (State Senate, District 35) as withdrawn; this candidacy is excluded."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-denver-2026-referred-question-2h",
+          "whatItDoes": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2i",
+          "whatItDoes": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2j",
+          "whatItDoes": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2k",
+          "whatItDoes": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        },
+        {
+          "contestId": "co-denver-2026-initiated-ordinance-311",
+          "whatItDoes": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        }
+      ],
+      "candidateTickets": [
+        {
+          "id": "co-denver-general-2026-ticket-victormarx",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-victor-marx",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-george-washington-markert",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "George Washington",
+            "familyName": "Markert",
+            "partyLabel": "Republican Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nVictor Marx /\nGeorge Washington Markert"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nVictor Marx /\nGeorge Washington Markert"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-philweiser",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-phil-weiser",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-lesley-dahlkemper",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "Lesley",
+            "familyName": "Dahlkemper",
+            "partyLabel": "Democratic Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nPhil Weiser /\nLesley Dahlkemper"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nPhil Weiser /\nLesley Dahlkemper"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-stephenthamilton",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-stephen-t-hamilton",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-james-k-treibert",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "James K",
+            "familyName": "Treibert",
+            "partyLabel": "American Constitution Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nStephen T. Hamilton /\nJames K Treibert"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nStephen T. Hamilton /\nJames K Treibert"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-ericmulder",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-eric-mulder",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-wayne-harlos",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "Wayne",
+            "familyName": "Harlos",
+            "partyLabel": "Libertarian Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nEric Mulder /\nWayne Harlos"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nEric Mulder /\nWayne Harlos"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-jeffpeckman",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-jeff-peckman",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-t-j-cole",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "T.J.",
+            "familyName": "Cole",
+            "partyLabel": "Unity Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nJeff Peckman /\nT.J. Cole"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nJeff Peckman /\nT.J. Cole"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-erikunderwood",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-erik-underwood",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-frank-atwood",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "Frank",
+            "familyName": "Atwood",
+            "partyLabel": "Approval Voting Party",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nErik Underwood /\nFrank Atwood"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nErik Underwood /\nFrank Atwood"
+          }
+        },
+        {
+          "id": "co-denver-general-2026-ticket-greglopez",
+          "leadCandidacyId": "co-sos-2026-general-governor-state-greg-lopez",
+          "runningMate": {
+            "id": "co-sos-2026-general-lt-governor-state-taralyn-romero",
+            "contestId": "co-sos-2026-general-governor-state",
+            "givenName": "Taralyn",
+            "familyName": "Romero",
+            "partyLabel": "Unaffiliated",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+              "sourceOrg": "Denver Elections Division",
+              "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+              "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+              "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nGreg Lopez /\nTaralyn Romero"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nGreg Lopez /\nTaralyn Romero"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:01:56.742Z",
+    "reviewedBy": "Codex BA-01 official-source replay",
+    "reviewedAt": "2026-10-20T23:03:13.867465+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
@@ -7934,6 +9142,28 @@
         "publisher": "Colorado Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official election-office navigation from fec-co-chief; certified 2026 candidate list, certified statewide ballot questions, or linked official measure text, converted by convert.py."
+      },
+      {
+        "requestedUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+        "finalUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+        "httpStatus": 200,
+        "rawHash": "aa4a36f29654ea925a207fbd566e7fca22571047184976a4d403fc9c12bb7cae",
+        "retrievedAt": "2026-10-20T22:53:06.911820+00:00",
+        "publisher": "Colorado Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved full source document in co-general-candidates.html; code extracted the exact published office, name, party or ballot text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "httpStatus": 200,
+        "rawHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+        "retrievedAt": "2026-10-20T23:03:13.867465+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved full source document in denver-sample-ballot.txt; code extracted the exact published office, name, party or ballot text.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

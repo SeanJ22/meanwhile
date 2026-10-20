@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lincoln%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lincoln%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:35.843976+00:00",
+  "rawHash": "3c63bd56b00e3493a749831570122bd09867fd28cd2d0a44bb5d138b04c2281e",
+  "httpStatus": 200,
+  "bytes": 745234,
+  "extractedTextHash": "bfe7732cdc1e2f61b609a6bcebf0ba857f563163fb3ab1f1bc054e564ce8441d",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

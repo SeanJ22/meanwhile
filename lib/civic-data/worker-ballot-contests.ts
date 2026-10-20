@@ -313,11 +313,17 @@ export class BallotContestMerge {
       const hold = state.rows.get("heldContests")?.get(id) as HeldBallotContest | undefined;
       const previous = old ?? hold;
       if (previous && observedAt(previous) > observedAt(contest)) return;
-      const complete = contest.candidateListComplete === true && this.official.has(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`);
+      const authoritative = this.official.has(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`);
+      const complete = contest.candidateListComplete === true && authoritative;
       const held = field === "heldContests" || contest.type !== "MEASURE" && !complete;
       if (held && old?.candidateListComplete === true) return;
-      if (this.checkAuthority && previous && this.priorAuthorities.get(previous.provenance.sourceUrl ?? "") !==
-        this.currentAuthorities.get(contest.provenance.sourceUrl ?? "")) throw new Error("Contest authority conflicts with the published ballot.");
+      const priorAuthority = previous && this.priorAuthorities.get(previous.provenance.sourceUrl ?? "");
+      const currentAuthority = this.currentAuthorities.get(contest.provenance.sourceUrl ?? "");
+      if (this.checkAuthority && previous && priorAuthority !== currentAuthority &&
+        !(priorAuthority && currentAuthority && authoritative && observedAt(contest) > observedAt(previous) &&
+          previous.electionId === contest.electionId && previous.ocdId === contest.ocdId)) {
+        throw new Error("Contest authority conflicts with the published ballot.");
+      }
       if (held) {
         const holds = state.rows.get("heldContests") ?? new Map();
         const next = immutableStateValue(field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,

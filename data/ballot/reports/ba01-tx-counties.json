@@ -1,0 +1,1035 @@
+{
+  "source": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+  "retrievedAt": "2026-10-20T22:52:30.537Z",
+  "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+  "scope": "Printed final-certification candidates for explicitly countywide offices; not complete county sample ballots or a later write-in census.",
+  "countyCount": 254,
+  "candidateContests": 1222,
+  "candidacies": 1346,
+  "writeIns": {
+    "source": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "retrievedAt": "2026-10-20T23:31:05.471162+00:00",
+    "coreCandidacies": 14,
+    "countyCandidacies": 1,
+    "unmappedRegionalJudicialCandidacies": 2
+  },
+  "remaining": "Precinct offices, judicial districts, municipal offices, local questions and later write-in certifications remain open.",
+  "counties": {
+    "HARRIS": {
+      "candidateContests": 9,
+      "candidacies": 18
+    },
+    "DALLAS": {
+      "candidateContests": 13,
+      "candidacies": 17
+    },
+    "TARRANT": {
+      "candidateContests": 22,
+      "candidacies": 31
+    },
+    "BEXAR": {
+      "candidateContests": 21,
+      "candidacies": 29
+    },
+    "TRAVIS": {
+      "candidateContests": 12,
+      "candidacies": 12
+    },
+    "ANDERSON": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "ANDREWS": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "ANGELINA": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "ARANSAS": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "ARCHER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "ARMSTRONG": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "ATASCOSA": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "AUSTIN": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "BAILEY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "BANDERA": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "BASTROP": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "BAYLOR": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "BEE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "BELL": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "BLANCO": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "BORDEN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "BOSQUE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "BOWIE": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "BRAZORIA": {
+      "candidateContests": 9,
+      "candidacies": 16
+    },
+    "BRAZOS": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "BREWSTER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "BRISCOE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "BROOKS": {
+      "candidateContests": 3,
+      "candidacies": 4
+    },
+    "BROWN": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "BURLESON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "BURNET": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "CALDWELL": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "CALHOUN": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "CALLAHAN": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "CAMERON": {
+      "candidateContests": 7,
+      "candidacies": 10
+    },
+    "CAMP": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "CARSON": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "CASS": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "CASTRO": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "CHAMBERS": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "CHEROKEE": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "CHILDRESS": {
+      "candidateContests": 2,
+      "candidacies": 2
+    },
+    "CLAY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "COCHRAN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "COKE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "COLEMAN": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "COLLIN": {
+      "candidateContests": 11,
+      "candidacies": 13
+    },
+    "COLLINGSWORTH": {
+      "candidateContests": 1,
+      "candidacies": 1
+    },
+    "COLORADO": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "COMAL": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "COMANCHE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "CONCHO": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "COOKE": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "CORYELL": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "COTTLE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "CRANE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "CROCKETT": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "CROSBY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "CULBERSON": {
+      "candidateContests": 3,
+      "candidacies": 6
+    },
+    "DALLAM": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "DAWSON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "DEAF SMITH": {
+      "candidateContests": 5,
+      "candidacies": 6
+    },
+    "DELTA": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "DENTON": {
+      "candidateContests": 7,
+      "candidacies": 9
+    },
+    "DEWITT": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "DICKENS": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "DIMMIT": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "DONLEY": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "DUVAL": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "EASTLAND": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "ECTOR": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "EDWARDS": {
+      "candidateContests": 3,
+      "candidacies": 4
+    },
+    "EL PASO": {
+      "candidateContests": 12,
+      "candidacies": 13
+    },
+    "ELLIS": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "ERATH": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "FALLS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "FANNIN": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "FAYETTE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "FISHER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "FLOYD": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "FOARD": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "FORT BEND": {
+      "candidateContests": 9,
+      "candidacies": 18
+    },
+    "FRANKLIN": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "FREESTONE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "FRIO": {
+      "candidateContests": 4,
+      "candidacies": 7
+    },
+    "GAINES": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "GALVESTON": {
+      "candidateContests": 7,
+      "candidacies": 8
+    },
+    "GARZA": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "GILLESPIE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "GLASSCOCK": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "GOLIAD": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "GONZALES": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "GRAY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "GRAYSON": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "GREGG": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "GRIMES": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "GUADALUPE": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "HALE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "HALL": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "HAMILTON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HANSFORD": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "HARDEMAN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "HARDIN": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HARRISON": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "HARTLEY": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "HASKELL": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HAYS": {
+      "candidateContests": 7,
+      "candidacies": 11
+    },
+    "HEMPHILL": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HENDERSON": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "HIDALGO": {
+      "candidateContests": 13,
+      "candidacies": 16
+    },
+    "HILL": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "HOCKLEY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HOOD": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "HOPKINS": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "HOUSTON": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "HOWARD": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HUDSPETH": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "HUNT": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "HUTCHINSON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "IRION": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "JACK": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "JACKSON": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "JASPER": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "JEFF DAVIS": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "JEFFERSON": {
+      "candidateContests": 8,
+      "candidacies": 10
+    },
+    "JIM HOGG": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "JIM WELLS": {
+      "candidateContests": 5,
+      "candidacies": 8
+    },
+    "JOHNSON": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "JONES": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "KARNES": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "KAUFMAN": {
+      "candidateContests": 8,
+      "candidacies": 8
+    },
+    "KENDALL": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "KENEDY": {
+      "candidateContests": 3,
+      "candidacies": 4
+    },
+    "KENT": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "KERR": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "KIMBLE": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "KING": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "KINNEY": {
+      "candidateContests": 3,
+      "candidacies": 5
+    },
+    "KLEBERG": {
+      "candidateContests": 5,
+      "candidacies": 8
+    },
+    "KNOX": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "LAMAR": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "LAMB": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LAMPASAS": {
+      "candidateContests": 5,
+      "candidacies": 6
+    },
+    "LASALLE": {
+      "candidateContests": 3,
+      "candidacies": 4
+    },
+    "LAVACA": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LEE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LEON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LIBERTY": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "LIMESTONE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LIPSCOMB": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "LIVE OAK": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "LLANO": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "LOVING": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "LUBBOCK": {
+      "candidateContests": 8,
+      "candidacies": 9
+    },
+    "LYNN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MADISON": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "MARION": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MARTIN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MASON": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MATAGORDA": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MAVERICK": {
+      "candidateContests": 5,
+      "candidacies": 8
+    },
+    "MCCULLOCH": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MCLENNAN": {
+      "candidateContests": 8,
+      "candidacies": 8
+    },
+    "MCMULLEN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MEDINA": {
+      "candidateContests": 5,
+      "candidacies": 6
+    },
+    "MENARD": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MIDLAND": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "MILAM": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MILLS": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "MITCHELL": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MONTAGUE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MONTGOMERY": {
+      "candidateContests": 8,
+      "candidacies": 9
+    },
+    "MOORE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "MORRIS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "MOTLEY": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "NACOGDOCHES": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "NAVARRO": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "NEWTON": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "NOLAN": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "NUECES": {
+      "candidateContests": 8,
+      "candidacies": 14
+    },
+    "OCHILTREE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "OLDHAM": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "ORANGE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "PALO PINTO": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "PANOLA": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "PARKER": {
+      "candidateContests": 5,
+      "candidacies": 6
+    },
+    "PARMER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "PECOS": {
+      "candidateContests": 4,
+      "candidacies": 5
+    },
+    "POLK": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "POTTER": {
+      "candidateContests": 6,
+      "candidacies": 8
+    },
+    "PRESIDIO": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "RAINS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "RANDALL": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "REAGAN": {
+      "candidateContests": 2,
+      "candidacies": 2
+    },
+    "REAL": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "RED RIVER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "REEVES": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "REFUGIO": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "ROBERTS": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "ROBERTSON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "ROCKWALL": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "RUNNELS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "RUSK": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "SABINE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "SAN AUGUSTINE": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "SAN JACINTO": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "SAN PATRICIO": {
+      "candidateContests": 6,
+      "candidacies": 7
+    },
+    "SAN SABA": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "SCHLEICHER": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "SCURRY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "SHACKELFORD": {
+      "candidateContests": 2,
+      "candidacies": 2
+    },
+    "SHELBY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "SHERMAN": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "SMITH": {
+      "candidateContests": 8,
+      "candidacies": 8
+    },
+    "SOMERVELL": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "STARR": {
+      "candidateContests": 5,
+      "candidacies": 6
+    },
+    "STEPHENS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "STERLING": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "STONEWALL": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "SUTTON": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "SWISHER": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "TAYLOR": {
+      "candidateContests": 7,
+      "candidacies": 8
+    },
+    "TERRELL": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "TERRY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "THROCKMORTON": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "TITUS": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "TOM GREEN": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "TRINITY": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "TYLER": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "UPSHUR": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "UPTON": {
+      "candidateContests": 3,
+      "candidacies": 3
+    },
+    "UVALDE": {
+      "candidateContests": 4,
+      "candidacies": 7
+    },
+    "VAL VERDE": {
+      "candidateContests": 6,
+      "candidacies": 8
+    },
+    "VAN ZANDT": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "VICTORIA": {
+      "candidateContests": 7,
+      "candidacies": 8
+    },
+    "WALKER": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "WALLER": {
+      "candidateContests": 6,
+      "candidacies": 6
+    },
+    "WARD": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "WASHINGTON": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "WEBB": {
+      "candidateContests": 6,
+      "candidacies": 8
+    },
+    "WHARTON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "WHEELER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "WICHITA": {
+      "candidateContests": 7,
+      "candidacies": 7
+    },
+    "WILBARGER": {
+      "candidateContests": 4,
+      "candidacies": 5
+    },
+    "WILLACY": {
+      "candidateContests": 4,
+      "candidacies": 6
+    },
+    "WILLIAMSON": {
+      "candidateContests": 8,
+      "candidacies": 10
+    },
+    "WILSON": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "WINKLER": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "WISE": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "WOOD": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "YOAKUM": {
+      "candidateContests": 5,
+      "candidacies": 5
+    },
+    "YOUNG": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "ZAPATA": {
+      "candidateContests": 4,
+      "candidacies": 4
+    },
+    "ZAVALA": {
+      "candidateContests": 4,
+      "candidacies": 5
+    }
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "checkedAt": "2026-10-20T23:24:02.349016+00:00",
+  "delivery": "Corrected repository data; production-copy publication and live runner verification are separate.",
+  "scope": "Federal, statewide and state legislative candidate contests; DC includes its main District and ward-office list. Regional and local additions are counted separately. Statewide measure counts below are held counts, not a new complete measure census.",
+  "states": [
+    {
+      "state": "FL",
+      "officialCoreCandidateContests": 175,
+      "matchedCoreCandidateContests": 175,
+      "officialCoreCandidacies": 372,
+      "matchedCoreCandidacies": 372,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List"
+      ],
+      "remaining": "County and city candidate rosters and local questions are not yet measured against county sample ballots. The existing 22 regional appellate retention contests are outside the core count.",
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "GA",
+      "officialCoreCandidateContests": 261,
+      "matchedCoreCandidateContests": 261,
+      "officialCoreCandidacies": 463,
+      "matchedCoreCandidacies": 463,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+        "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf"
+      ],
+      "remaining": "10 district-attorney circuit contests with 11 source-listed candidates remain unmapped. County and city sample-ballot coverage is still open.",
+      "added": {
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0
+      }
+    },
+    {
+      "state": "NC",
+      "officialCoreCandidateContests": 189,
+      "matchedCoreCandidateContests": 189,
+      "officialCoreCandidacies": 366,
+      "matchedCoreCandidacies": 366,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv"
+      ],
+      "remaining": "770 distinct source-listed candidate contest titles remain outside the held projection, chiefly district, court and local contests. Mecklenburg sample B0009 still lacks Superior Court District 26F Seat 1 and County Commissioner District 4. Charlotte bond questions are now included.",
+      "added": {
+        "contests": 368,
+        "candidacies": 632,
+        "measures": 3
+      }
+    },
+    {
+      "state": "SC",
+      "officialCoreCandidateContests": 140,
+      "matchedCoreCandidateContests": 140,
+      "officialCoreCandidacies": 281,
+      "matchedCoreCandidacies": 281,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 0,
+      "sources": [
+        "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults",
+        "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults"
+      ],
+      "remaining": "676 active local candidacy rows in the official general-election export remain outside the held projection, chiefly electoral districts, school districts and special districts. Local referendum acquisition remains open.",
+      "added": {
+        "contests": 158,
+        "candidacies": 220,
+        "measures": 0
+      }
+    },
+    {
+      "state": "VA",
+      "officialCoreCandidateContests": 13,
+      "matchedCoreCandidateContests": 13,
+      "officialCoreCandidacies": 40,
+      "matchedCoreCandidacies": 40,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx"
+      ],
+      "remaining": "135 local candidate office/locality/district source groups have unresolved or ambiguous geographic scope; 3 district-scoped referendums also remain. All 61 locality-wide questions with exact registered locality matches were added.",
+      "added": {
+        "contests": 411,
+        "candidacies": 1028,
+        "measures": 61
+      }
+    },
+    {
+      "state": "WV",
+      "officialCoreCandidateContests": 122,
+      "matchedCoreCandidateContests": 122,
+      "officialCoreCandidacies": 243,
+      "matchedCoreCandidacies": 243,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 1,
+      "sources": [
+        "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+        "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf"
+      ],
+      "remaining": "Printed federal and legislative counts match all55county bundles. The official named write-in portal returned503 for both regular and write-in routes; registered write-in completeness remains unmeasured. Nonpartisan and local measure work remains outside the completed Kanawha reference sample.",
+      "added": {
+        "contests": 73,
+        "candidacies": 117,
+        "measures": 2
+      },
+      "sourceCountScope": "Printed sample-ballot names, including independently filed candidates printed in any county. Six named independents are present; county ballot omissions do not delete a name supported elsewhere. Registered write-ins remain unknown.",
+      "registeredWriteInComparison": "UNMEASURED: official portal returned503."
+    },
+    {
+      "state": "DC",
+      "officialCoreCandidateContests": 15,
+      "matchedCoreCandidateContests": 15,
+      "officialCoreCandidacies": 51,
+      "matchedCoreCandidacies": 51,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 1,
+      "sources": [
+        "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+        "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en"
+      ],
+      "remaining": "The official ANC roster lists345districts and356printed candidates; the current separate write-in list includes29ANC rows. These require ANC-SMD geographic mapping and are not yet in the ballot projection.",
+      "added": {
+        "contests": 0,
+        "candidacies": 1,
+        "measures": 0
+      },
+      "partyCorrections": [
+        {
+          "candidate": "Rebekkah Green",
+          "contest": "Delegate to the House of Representatives",
+          "before": "Independent",
+          "officialCurrentValue": "Libertarian",
+          "source": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en"
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "officialCoreCandidateContests": 130,
+      "matchedCoreCandidateContests": 130,
+      "officialCoreCandidacies": 322,
+      "matchedCoreCandidacies": 322,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv"
+      ],
+      "remaining": "296 active local candidate rows and29 other circuit-court candidates remain outside the held projection. Montgomery sample BS1 still lacks County Council District7. Local measures outside the held statewide questions remain open.",
+      "added": {
+        "contests": 144,
+        "candidacies": 318,
+        "measures": 0
+      }
+    },
+    {
+      "state": "DE",
+      "officialCoreCandidateContests": 57,
+      "matchedCoreCandidateContests": 57,
+      "officialCoreCandidacies": 103,
+      "matchedCoreCandidacies": 103,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 0,
+      "sources": [
+        "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html"
+      ],
+      "remaining": "11 county legislative-district contests with16qualified candidates remain outside the held projection. Sample-ballot measure comparison remains open.",
+      "added": {
+        "contests": 9,
+        "candidacies": 11,
+        "measures": 0
+      }
+    }
+  ],
+  "referenceBallots": [
+    {
+      "source": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+      "scope": "Fairfax County, 11th Congressional District full ballot",
+      "officialContests": 7,
+      "heldForSourceDivisions": 7,
+      "missing": []
+    },
+    {
+      "source": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+      "scope": "Herndon full ballot",
+      "officialContests": 9,
+      "heldForSourceDivisions": 9,
+      "missing": []
+    },
+    {
+      "source": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+      "scope": "Kanawha sample precinct103: CD1, Senate17regular+special, Delegate52",
+      "officialContests": 10,
+      "heldForSourceDivisions": 10,
+      "missing": []
+    },
+    {
+      "source": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+      "scope": "Mecklenburg official address lookup1800EThePlaza, Charlotte28205, precinct015; CD12, Senate41, House102, commissioner4, superior26F",
+      "officialContests": 31,
+      "heldForSourceDivisions": 29,
+      "missing": [
+        "NC Superior Court Judge District26F Seat1",
+        "Mecklenburg County Board of Commissioners District4"
+      ]
+    },
+    {
+      "source": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "scope": "Montgomery official BS1: CD8, Senate14, Delegate14, county council7",
+      "officialContests": 22,
+      "heldForSourceDivisions": 21,
+      "missing": [
+        "Montgomery County Council District7"
+      ]
+    }
+  ],
+  "evidence": "data/ballot/ba01-southeast-sources: gzip original captures or exact pdftotext source documents, with original byte hashes and converted text hashes. Source documents are not loaded by the reader application.",
+  "replay": "python scripts/ba01-southeast-compare.py; source importers scripts/ba01-southeast-local-ballots.py and scripts/ba01-southeast-west-virginia.py replay with --captures data/ballot/ba01-southeast-sources.",
+  "validation": "Five focused geography/source regressions pass in tests/ba01-southeast-ballots.test.ts. All prior contests, candidates and measures retained; one existing DC party field and its provenance corrected from the newer official source. Production-copy checks owned by the parent lane."
+}

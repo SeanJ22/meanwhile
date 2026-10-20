@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-20T23:36:25.229836+00:00",
+  "owner": "BA-01 west",
+  "delivery": "AZ and CO are frozen for parent integration; all later source captures remain acquisition work pending resume. These are coverage facts, not publication gates.",
+  "states": {
+    "AZ": {
+      "core": "77 contests/218 raw candidacies match checked official sources; see az-comparison.json certification limit.",
+      "verifiedCountywide": {
+        "Maricopa": 59
+      },
+      "knownRemaining": {
+        "Maricopa": "40 additional district contests with47 certified candidacies are in the official county candidate and write-in lists:18 justice precinct races(19 candidates),18 constable precinct races(19 candidates),two community-college district races(five candidates),two healthcare district races(four candidates). These require district eligibility resolution; Canyon Trails justice is write-in-only Christopher Sumner. Four Phoenix council districts have16 certified candidates; school districts and local measures also remain. The actual85003 precinct sample has not been retrieved.",
+        "Pima": "Official general list already captured contains14 missing countywide candidate contests: clerk1 + appeals retention3 + superior retention10. District Supervisor5, justice/constable, school/fire/municipal contests and measures also remain."
+      }
+    },
+    "CO": {
+      "core": "113 raw candidate contests/277 candidacies match complete state table. Seven Governor/LG ticket choices preserve all14 raw lead/mate candidacies.",
+      "verifiedCountywide": {
+        "Denver": 22
+      },
+      "knownRemaining": {
+        "Denver": "Master sample includes RTD Director DistrictB (John Glenn,Bianka Emerson), DistrictC (Joe Meyer), Denver Public Schools4A, and RTD7A. They have not been imported; correct electorates must be resolved. The county master is a union of styles, not proof of80202 completeness.",
+        "El Paso": "Official master sample link acquired; county and district local contests and measures still need parsing/comparison."
+      },
+      "nextSource": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf"
+    },
+    "NM": {
+      "core": "90 contests/136 candidacies match complete Qualified state list.",
+      "knownRemaining": "County/city/regional judicial contests and local measures unmeasured. Bernalillo election page returned403; state portal retains full local candidate rows.",
+      "nextSource": "https://www.bernco.gov/clerk/elections/"
+    },
+    "NV": {
+      "core": "70 contests/137 candidacies match statewide certified master.",
+      "knownRemaining": "Clark complete general list and four ballot questions acquired, not yet parsed or imported. Other county/city/regional contests and local measures remain.",
+      "nextSource": "https://www.clarkcountynv.gov/government/departments/elections/26g-info"
+    },
+    "UT": {
+      "core": "109 contests/232 candidacies match amended certification and three certified write-ins.",
+      "knownRemaining": "Salt Lake BT1 sample and complete ballot-type inventory acquired. Countywide council-at-large, DA,auditor,clerk,sheriff,county bond plus regional/municipal retention decisions remain; districts/styles must be matched. Other counties unmeasured.",
+      "nextSource": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/"
+    },
+    "WY": {
+      "core": "89 contests/133 candidacies match complete current general CSV.",
+      "knownRemaining": "Regional district/circuit courts and county/city/school/fire/conservation contests and local questions unmeasured. Laramie final general county/municipal/special-district roster URLs discovered.",
+      "nextSource": "https://www.laramiecountywy.gov/County-Government/Elected-Officials/County-Clerk/Elections/Candidates"
+    },
+    "MT": {
+      "core": "131 contests/256 candidacies match actual portal general CSV export.",
+      "knownRemaining": "13 regional judicial candidates in statewide file remain local scope work. Yellowstone county/city/district races and jail bond/levy local questions unmeasured; generic sampleballots path returns site shell and needs proper current election route.",
+      "nextSource": "https://www.yellowstonecountymt.gov/Elections/"
+    },
+    "ID": {
+      "core": "115 contests/231 candidacies match all Approved federal/statewide/legislative rows of final-list API.",
+      "knownRemaining": "State API has all592 filings, including Ada county/local candidates. Fourth District regional judicial race and county/city/school/special-district races/measures unmeasured; Ada current general sample not acquired.",
+      "nextSource": "https://adacounty.id.gov/elections/"
+    },
+    "ND": {
+      "core": "61 contests/148 candidacies match full official state table.",
+      "knownRemaining": "Full state portal includes Cass eight rows across seven local contests: commissioner2/4,state attorney,sheriff,soil conservation,Garrison diversion,and official newspaper(two choices). District eligibility, county measures and Fargo city contests remain. County election page returned403.",
+      "nextSource": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348"
+    },
+    "SD": {
+      "core": "81 contests/178 candidacies match complete official general export.",
+      "knownRemaining": "Official state export has12 Minnehaha candidate rows across five source contest headings: auditor,sheriff,register of deeds,commissioner at-large,and conservation district supervisor. County sample must establish voteFor and electorate; local county/city measures unmeasured. Questions pamphlet acquired.",
+      "nextSource": "https://www.minnehahacounty.gov/dept/au/electionInfo/electionInfo.php"
+    }
+  },
+  "failedRoutes": [
+    {
+      "name": "nd-cass",
+      "sourceUrl": "https://www.casscountynd.gov/our-county/finance-office/elections",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "nm-bernalillo",
+      "sourceUrl": "https://www.bernco.gov/clerk/elections/",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}

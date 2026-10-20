@@ -1091,6 +1091,177 @@
             "verifiedAt": "2026-10-14T05:01:26.066098Z",
             "doorId": "fec-de-chief"
           }
+        },
+        {
+          "id": "de-local-2026-cde2a2dc1e2f5efa6c65",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kent County Levy Court At-Large",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court At-Large"
+          }
+        },
+        {
+          "id": "de-local-2026-701b15180ca05dc3bc95",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kent County Recorder of Deeds",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Recorder of Deeds"
+          }
+        },
+        {
+          "id": "de-local-2026-e8dc884c95c3cbc120ef",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kent County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Sheriff"
+          }
+        },
+        {
+          "id": "de-local-2026-c0bf3dfcb67f0614d391",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "New Castle County Recorder of Deeds",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Recorder of Deeds"
+          }
+        },
+        {
+          "id": "de-local-2026-0b966db2f9c8e524fe72",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "New Castle County Register of Wills",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Register of Wills"
+          }
+        },
+        {
+          "id": "de-local-2026-fa0f8e785739f1da426d",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "New Castle County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Sheriff"
+          }
+        },
+        {
+          "id": "de-local-2026-83d82df229cf665f28ba",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:sussex",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sussex County Recorder of Deeds",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Recorder of Deeds"
+          }
+        },
+        {
+          "id": "de-local-2026-9c9122cd82051996671c",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:sussex",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sussex County Register of Wills",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Register of Wills"
+          }
+        },
+        {
+          "id": "de-local-2026-305399726cf53644872f",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:sussex",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sussex County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Sheriff"
+          }
         }
       ],
       "candidacies": [
@@ -2844,6 +3015,193 @@
             "verifiedAt": "2026-10-14T05:01:26.262934Z",
             "doorId": "fec-de-chief"
           }
+        },
+        {
+          "id": "de-local-2026-cde2a2dc1e2f5efa6c65:c9b2ded8434a3344",
+          "contestId": "de-local-2026-cde2a2dc1e2f5efa6c65",
+          "givenName": "",
+          "familyName": "Frank E Coleman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court At-Large | Frank E Coleman | Republican"
+          }
+        },
+        {
+          "id": "de-local-2026-cde2a2dc1e2f5efa6c65:0fab12b0b8c893f2",
+          "contestId": "de-local-2026-cde2a2dc1e2f5efa6c65",
+          "givenName": "",
+          "familyName": "Terry L. Pepper",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court At-Large | Terry L. Pepper | Democratic"
+          }
+        },
+        {
+          "id": "de-local-2026-701b15180ca05dc3bc95:67cde5bf1f94aeac",
+          "contestId": "de-local-2026-701b15180ca05dc3bc95",
+          "givenName": "",
+          "familyName": "Eugenia Thornton",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Recorder of Deeds | Eugenia Thornton | Republican"
+          }
+        },
+        {
+          "id": "de-local-2026-701b15180ca05dc3bc95:039854237a94bedd",
+          "contestId": "de-local-2026-701b15180ca05dc3bc95",
+          "givenName": "",
+          "familyName": "Ramona Bracy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Recorder of Deeds | Ramona Bracy | Democratic"
+          }
+        },
+        {
+          "id": "de-local-2026-e8dc884c95c3cbc120ef:60abc194b0136961",
+          "contestId": "de-local-2026-e8dc884c95c3cbc120ef",
+          "givenName": "",
+          "familyName": "Norman R. Barlow",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Sheriff | Norman R. Barlow | Republican"
+          }
+        },
+        {
+          "id": "de-local-2026-c0bf3dfcb67f0614d391:e5fd984d4300ebaf",
+          "contestId": "de-local-2026-c0bf3dfcb67f0614d391",
+          "givenName": "",
+          "familyName": "David Tackett",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Recorder of Deeds | David Tackett | Democratic"
+          }
+        },
+        {
+          "id": "de-local-2026-0b966db2f9c8e524fe72:33be9e9620982cbe",
+          "contestId": "de-local-2026-0b966db2f9c8e524fe72",
+          "givenName": "",
+          "familyName": "Ciro Poppiti",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Register of Wills | Ciro Poppiti | Democratic"
+          }
+        },
+        {
+          "id": "de-local-2026-fa0f8e785739f1da426d:daf6518e7ca5cd0d",
+          "contestId": "de-local-2026-fa0f8e785739f1da426d",
+          "givenName": "",
+          "familyName": "Scott Phillips",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Sheriff | Scott Phillips | Democratic"
+          }
+        },
+        {
+          "id": "de-local-2026-83d82df229cf665f28ba:83fb0e35d04ef98e",
+          "contestId": "de-local-2026-83d82df229cf665f28ba",
+          "givenName": "",
+          "familyName": "Alexandra Reed Baker",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Recorder of Deeds | Alexandra Reed Baker | Republican"
+          }
+        },
+        {
+          "id": "de-local-2026-9c9122cd82051996671c:8d693a5e15fac96c",
+          "contestId": "de-local-2026-9c9122cd82051996671c",
+          "givenName": "",
+          "familyName": "Greg Fuller",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Register of Wills | Greg Fuller | Republican"
+          }
+        },
+        {
+          "id": "de-local-2026-305399726cf53644872f:7d697256131515fd",
+          "contestId": "de-local-2026-305399726cf53644872f",
+          "givenName": "",
+          "familyName": "Robert T. Lee",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Sheriff | Robert T. Lee | Republican"
+          }
         }
       ],
       "measures": [],
@@ -2857,8 +3215,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T16:13:21.019634Z",
+    "reviewedBy": "BA-01 official county office list replay",
+    "reviewedAt": "2026-10-20T22:52:22.311841+00:00",
     "sources": [
       {
         "requestedUrl": "https://elections.delaware.gov/",
@@ -2914,6 +3272,16 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Parsed every Qualified declared write-in in the covered contests. Preserved the Provisional status gap and official status explanation.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "httpStatus": 200,
+        "rawHash": "6cf7af3dc3dfbf88435bb3e88e55884340ca88cb245c593ec8d95ce0015fbf07",
+        "retrievedAt": "2026-10-20T22:52:22.311841+00:00",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact qualified or active names and printed parties replayed from the current official all-office list. County-wide offices match the source county and existing registered county division. Local electoral districts remain separate coverage work."
       }
     ]
   }

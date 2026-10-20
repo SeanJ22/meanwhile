@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { openZipFile } from "../archive.ts";
+import { openZipFile, type FileArchiveMember } from "../archive.ts";
 import { PLURAL_STATES } from "../plural/targets.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
 import type { Officeholder } from "../../officials/types.ts";
@@ -22,19 +22,22 @@ export function legiscanState(state: string) {
   if (!PLURAL_STATES.includes(normalized)) throw new Error(`LEGISCAN_STATE_UNSUPPORTED:${normalized}`);
   return normalized.toUpperCase();
 }
-/** Official .gov www aliases share their publisher namespace; paths and queries remain exact. */
+/** Equivalent path encodings share a profile; path separators and queries remain exact. */
 export function profileUrl(value: unknown): string | null {
   try {
     const url = new URL(text(value));
     if (!/^https?:$/.test(url.protocol) || url.username || url.password || url.hash || !url.pathname.replace(/\/$/, "")) return null;
     if (/^www\..+\.gov$/.test(url.hostname)) url.hostname = url.hostname.slice(4);
-    url.pathname = url.pathname.replace(/\/$/, "");
+    url.pathname = url.pathname.replace(/%[0-9a-f]{2}/gi, encoded => {
+      const character = String.fromCharCode(Number.parseInt(encoded.slice(1), 16));
+      return /^[A-Za-z0-9._~()-]$/.test(character) ? character : encoded.toUpperCase();
+    }).replace(/\/$/, "");
     return url.href;
   } catch { return null; }
 }
 export interface LegiscanSession {
   state: string; stateId: number; sessionId: number; sessionName: string; datasetHash: string; datasetDate: string;
-  yearStart: number; yearEnd: number;
+  yearStart: number; yearEnd: number; special?: boolean; prefile?: boolean;
 }
 /** Current and immediately previous legislative years include intervening special sessions. */
 export function parseLegiscanDatasetList(body: string, state: string): LegiscanSession[] {
@@ -45,11 +48,13 @@ export function parseLegiscanDatasetList(body: string, state: string): LegiscanS
     if (!positiveId(row.state_id) || !positiveId(row.session_id) || !positiveId(row.year_start) || !positiveId(row.year_end) ||
       !text(row.session_name) || !/^[a-f0-9]{32,64}$/.test(text(row.dataset_hash)) || !validDay(row.dataset_date)) throw new Error("LEGISCAN_DATASET_LIST_SESSION_INVALID");
     return { state: normalized, stateId: row.state_id, sessionId: row.session_id, sessionName: text(row.session_name), datasetHash: text(row.dataset_hash),
-      datasetDate: row.dataset_date, yearStart: row.year_start, yearEnd: row.year_end };
+      datasetDate: row.dataset_date, yearStart: row.year_start, yearEnd: row.year_end, special: row.special === 1 || row.special === "1" || /\b(?:special|extra(?:ordinary)?)\b/i.test(text(row.session_name)), prefile: row.prefile === 1 || row.prefile === "1" || /\bprefil(?:e|ing)\b/i.test(text(row.session_name)) };
   });
   if (new Set(rows.map(row => row.stateId)).size > 1 || new Set(rows.map(row => row.sessionId)).size !== rows.length) throw new Error("LEGISCAN_DATASET_LIST_SCOPE_OR_DUPLICATE");
-  const years = [...new Set(rows.map(row => row.yearStart))].sort((a, b) => b - a).slice(0, 2);
-  return rows.filter(row => years.includes(row.yearStart)).sort((a, b) => b.yearStart - a.yearStart || b.sessionId - a.sessionId);
+  const regularYears = [...new Set(rows.filter(row => !row.special).map(row => row.yearStart))].sort((a, b) => b - a);
+  const fallbackYears = [...new Set(rows.map(row => row.yearStart))].sort((a, b) => b - a);
+  const cutoff = regularYears[1] ?? regularYears[0] ?? fallbackYears[1] ?? fallbackYears[0];
+  return rows.filter(row => row.yearStart >= cutoff).sort((a, b) => b.yearStart - a.yearStart || b.sessionId - a.sessionId);
 }
 export interface LegiscanDatasetEvidence {
   requestedUrl: string; finalUrl: string; retrievedAt: string; sha256: string; vaultKey?: string; sourceCheck?: SourceCheckEvidence;
@@ -74,8 +79,14 @@ export function legiscanIdentityJoins(holders: readonly Officeholder[], people: 
   const matches = new Map<number, Map<string, LegiscanPersonJoin>>();
   for (const person of people) {
     if (!positiveId(person.people_id)) continue;
-    const bio = object(person.bio), social = object(bio.social), official = object(object(bio.links).official);
-    const urls = new Map([social.biography, official.website].flatMap(value => profileUrl(value) ? [[profileUrl(value)!, text(value)] as const] : []));
+    const bio = object(person.bio), social = object(bio.social), links = object(bio.links), official = object(links.official), personal = object(links.personal);
+    const ballotpedia = text(person.ballotpedia);
+    const ballotpediaUrl = ballotpedia && !/[\s/?#]/.test(ballotpedia) ? `https://ballotpedia.org/${ballotpedia}` : null;
+    const votesmartId = text(person.votesmart_id) || (positiveId(person.votesmart_id) ? String(person.votesmart_id) : "");
+    const votesmartUrl = /^[1-9]\d*$/.test(votesmartId) ? `https://justfacts.votesmart.org/candidate/biography/${votesmartId}` : null;
+    const urls = new Map([social.biography, official.website, personal.website, social.ballotpedia, social.votesmart,
+      social.campaign, social.campaign_website, ballotpediaUrl, votesmartUrl]
+      .flatMap(value => profileUrl(value) ? [[profileUrl(value)!, text(value)] as const] : []));
     const candidates = new Map<string, LegiscanPersonJoin>();
     for (const holder of holders) {
       const sourceUrl = holder.provenance?.sourceUrl;
@@ -97,52 +108,76 @@ export function legiscanIdentityJoins(holders: readonly Officeholder[], people: 
   const repeated = new Set(one.filter((row, at, all) => all.findIndex(other => other.personId === row.personId) !== at).map(row => row.personId));
   return one.filter(row => !repeated.has(row.personId)).sort((a, b) => a.legiscanPeopleId - b.legiscanPeopleId);
 }
-export async function parseLegiscanDataset(input: { state: string; session: LegiscanSession; bytes: Uint8Array; evidence: LegiscanDatasetEvidence;
-  holders: readonly Officeholder[]; signal: AbortSignal }) {
-  const state = legiscanState(input.state);
-  const stagingDirectory = await mkdtemp(join(tmpdir(), "meanwhile-legiscan-"));
-  const bills = new Map<number, Record<string, unknown>>(), rolls: Record<string, unknown>[] = [], people: Record<string, unknown>[] = [];
-  const members: { name: string; sha256: string }[] = [];
+interface LegiscanDatasetInput {
+  state: string; session: LegiscanSession; evidence: LegiscanDatasetEvidence;
+  holders: readonly Officeholder[]; signal: AbortSignal;
+  /** A consumer can publish each verified roll without retaining the session. */
+  onVote?: (vote: PluralVoteFact) => Promise<void>;
+}
+async function readDatasetMember(entry: FileArchiveMember, signal: AbortSignal): Promise<{ body: string; value: Record<string, unknown> }> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of entry.stream()) { signal.throwIfAborted(); chunks.push(chunk); }
+  const body = new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks));
+  return { body, value: object(JSON.parse(body)) };
+}
+/** Byte callers stage once; file acquisition can parse without loading an archive. */
+export async function parseLegiscanDataset(input: LegiscanDatasetInput & { bytes: Uint8Array }) {
+  const directory = await mkdtemp(join(tmpdir(), "meanwhile-legiscan-"));
   try {
-    const path = join(stagingDirectory, "dataset.zip"); await writeFile(path, input.bytes);
-    const entries = await openZipFile(path, { maxEntries: 250_000, maxMemberBytes: 32 * 1024 * 1024, maxTotalBytes: 2 * 1024 * 1024 * 1024 });
-    if (!entries.length || entries.some(entry => !entry.name.startsWith(`${state}/`))) throw new Error("LEGISCAN_DATASET_STATE_MISMATCH");
-    for (const entry of entries) {
-      input.signal.throwIfAborted();
-      const relevant = /\/(bill|vote|people)\/[^/]+\.json$/.exec(entry.name)?.[1];
-      const chunks: Uint8Array[] = [];
-      for await (const chunk of entry.stream()) { input.signal.throwIfAborted(); if (relevant) chunks.push(chunk); }
-      if (!relevant) continue;
-      const body = new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)), value = object(JSON.parse(body));
-      // Original archive bytes live once in the vault. Member hashes make every row replayable.
-      members.push({ name: entry.name, sha256: digest(body) });
-      if (relevant === "bill") {
-        const bill = object(value.bill);
-        if (!positiveId(bill.bill_id) || bill.state !== state || bill.session_id !== input.session.sessionId) throw new Error("LEGISCAN_BILL_SCOPE_INVALID");
-        if (bills.has(bill.bill_id)) throw new Error("LEGISCAN_BILL_DUPLICATE");
-        // Bill text, amendments, sponsor lists and history remain in the archive;
-        // the member-position join needs only these native roll metadata fields.
-        bills.set(bill.bill_id, { bill_id: bill.bill_id, bill_number: bill.bill_number, title: bill.title,
-          url: bill.url, state_link: bill.state_link, votes: bill.votes });
-      } else if (relevant === "vote") rolls.push(object(value.roll_call));
-      else {
-        const person = object(value.person);
-        if (!positiveId(person.people_id) || person.state_id !== input.session.stateId) throw new Error("LEGISCAN_PERSON_SCOPE_INVALID");
-        people.push(person);
-      }
+    const path = join(directory, "dataset.zip");
+    await writeFile(path, input.bytes);
+    return await parseLegiscanDatasetFile({ ...input, path });
+  } finally { await rm(directory, { recursive: true, force: true }); }
+}
+/** The first pass keeps bill metadata and the member crosswalk only. Raw rolls
+ * are discarded immediately; the second pass normalizes one roll at a time. */
+export async function parseLegiscanDatasetFile(input: LegiscanDatasetInput & { path: string }) {
+  const state = legiscanState(input.state);
+  const entries = await openZipFile(input.path, { maxEntries: 250_000, maxMemberBytes: 32 * 1024 * 1024, maxTotalBytes: 2 * 1024 * 1024 * 1024 });
+  if (!entries.length || entries.some(entry => !entry.name.startsWith(`${state}/`))) throw new Error("LEGISCAN_DATASET_STATE_MISMATCH");
+  const bills = new Map<number, Record<string, unknown>>(), people: Record<string, unknown>[] = [];
+  const members: { name: string; sha256: string }[] = [], seenRolls = new Set<number>(), repeatedRolls = new Set<number>();
+  const voteEntries: FileArchiveMember[] = [];
+  for (const entry of entries) {
+    input.signal.throwIfAborted();
+    const relevant = /\/(bill|vote|people)\/[^/]+\.json$/.exec(entry.name)?.[1];
+    if (!relevant) {
+      for await (const _chunk of entry.stream()) input.signal.throwIfAborted();
+      continue;
     }
-  } finally { await rm(stagingDirectory, { recursive: true, force: true }); }
+    const { body, value } = await readDatasetMember(entry, input.signal);
+    // Original archive bytes live once in the vault. Hashes retain exact replay.
+    members.push({ name: entry.name, sha256: digest(body) });
+    if (relevant === "bill") {
+      const bill = object(value.bill);
+      if (!positiveId(bill.bill_id) || bill.state !== state || bill.session_id !== input.session.sessionId) throw new Error("LEGISCAN_BILL_SCOPE_INVALID");
+      if (bills.has(bill.bill_id)) throw new Error("LEGISCAN_BILL_DUPLICATE");
+      bills.set(bill.bill_id, { bill_id: bill.bill_id, bill_number: bill.bill_number, title: bill.title,
+        url: bill.url, state_link: bill.state_link, votes: bill.votes });
+    } else if (relevant === "people") {
+      const person = object(value.person);
+      if (!positiveId(person.people_id) || person.state_id !== input.session.stateId) throw new Error("LEGISCAN_PERSON_SCOPE_INVALID");
+      people.push(person);
+    } else {
+      const rollId = Number(object(value.roll_call).roll_call_id);
+      if (seenRolls.has(rollId)) repeatedRolls.add(rollId);
+      seenRolls.add(rollId); voteEntries.push(entry);
+    }
+  }
   if (new Set(people.map(person => person.people_id)).size !== people.length) throw new Error("LEGISCAN_PERSON_DUPLICATE");
   const joins = legiscanIdentityJoins(input.holders, people), peopleById = new Map(joins.map(identity => [identity.legiscanPeopleId, identity.personId]));
   const votes: PluralVoteFact[] = [], held: { key: string; detail: string }[] = people.filter(person => !peopleById.has(Number(person.people_id)))
     .map(person => ({ key: `legiscan:people:${person.people_id}`, detail: "No unique source-backed OpenStates person identity joined this vendor person." }));
-  const repeated = new Set(rolls.filter((roll, at, all) => all.findIndex(other => other.roll_call_id === roll.roll_call_id) !== at).map(roll => roll.roll_call_id));
-  for (const roll of rolls) {
+  let rollCalls = 0, memberVotes = 0, unmatchedPositions = 0;
+  for (const entry of voteEntries) {
+    input.signal.throwIfAborted();
+    const { value } = await readDatasetMember(entry, input.signal), roll = object(value.roll_call);
     const key = `legiscan:roll_call:${roll.roll_call_id}`;
+    let vote: PluralVoteFact;
     try {
       const bill = bills.get(Number(roll.bill_id)), meta = (Array.isArray(bill?.votes) ? bill.votes : []).map(object).find(meta => meta.roll_call_id === roll.roll_call_id);
-      if (!positiveId(roll.roll_call_id) || repeated.has(roll.roll_call_id) || !bill || !meta || !text(bill.bill_number) || !text(bill.title) ||
-        !validDay(roll.date) || roll.date > input.evidence.retrievedAt.slice(0, 10) || !text(roll.desc) || !["H", "S"].includes(text(roll.chamber)) ||
+      if (!positiveId(roll.roll_call_id) || repeatedRolls.has(roll.roll_call_id) || !bill || !meta || !text(bill.bill_number) || !text(bill.title) ||
+        !validDay(roll.date) || roll.date > input.evidence.retrievedAt.slice(0, 10) || !text(roll.desc) || !["H", "S", ...(state === "NE" ? ["L"] : [])].includes(text(roll.chamber)) ||
         !positiveId(roll.chamber_id) || ![0, 1].includes(Number(roll.passed)) || !Array.isArray(roll.votes)) throw new Error("native roll identity, bill, date or chamber is unresolved");
       const positions: PluralVoteFact["positions"] = [], seen = new Set<number>();
       let unresolvedPositions = 0;
@@ -154,6 +189,7 @@ export async function parseLegiscanDataset(input: { state: string; session: Legi
         if (!personId) { unresolvedPositions++; continue; }
         positions.push({ personId, option: text(row.vote_text), retrievedAt: input.evidence.retrievedAt });
       }
+      unmatchedPositions += unresolvedPositions;
       if (!positions.length) throw new Error("no exact OpenStates person identity joined this roll");
       const counts = ["yea", "nay", "nv", "absent"].map(option => {
         if (!Number.isSafeInteger(roll[option]) || Number(roll[option]) < 0) throw new Error("publisher tally is invalid");
@@ -162,11 +198,13 @@ export async function parseLegiscanDataset(input: { state: string; session: Legi
       if (counts.reduce((sum, row) => sum + row.value, 0) !== roll.total || roll.total !== roll.votes.length) throw new Error("publisher tally does not reconcile to native positions");
       const sourceUrls = [...new Set([meta.url, meta.state_link, bill.url, bill.state_link].flatMap(value => profileUrl(value) ? [profileUrl(value)!] : []))];
       if (!sourceUrls.some(url => url.startsWith(`https://legiscan.com/${state}/rollcall/`))) throw new Error("vendor roll source is unresolved");
-      votes.push({ id: key, billId: `legiscan:bill:${bill.bill_id}`, billNumber: text(bill.bill_number), billTitle: text(bill.title),
-        session: input.session.sessionName, organizationId: `legiscan:chamber:${state}:${roll.chamber_id}`, chamber: roll.chamber === "S" ? "upper" : "lower",
+      vote = { id: key, billId: `legiscan:bill:${bill.bill_id}`, billNumber: text(bill.bill_number), billTitle: text(bill.title),
+        session: input.session.sessionName, organizationId: `legiscan:chamber:${state}:${roll.chamber_id}`, chamber: roll.chamber === "S" ? "upper" : roll.chamber === "L" ? "legislature" : "lower",
         date: roll.date, motion: text(roll.desc), result: roll.passed === 1 ? "Passed" : "Failed", counts, positions, unresolvedPositions,
-        sourceUrls, sourceApiUrl: input.evidence.finalUrl, retrievedAt: input.evidence.retrievedAt });
-    } catch (error) { held.push({ key, detail: error instanceof Error ? error.message : String(error) }); }
+        sourceUrls, sourceApiUrl: input.evidence.finalUrl, retrievedAt: input.evidence.retrievedAt };
+    } catch (error) { held.push({ key, detail: error instanceof Error ? error.message : String(error) }); continue; }
+    rollCalls++; memberVotes += vote.positions.length;
+    if (input.onVote) await input.onVote(vote); else votes.push(vote);
   }
-  return { votes, held, joins, evidence: { ...input.evidence, members } };
+  return { votes, held, joins, rollCalls, memberVotes, unmatchedPositions, evidence: { ...input.evidence, members } };
 }

@@ -12,7 +12,7 @@ import type { CardSource } from "../lib/officials/card-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { normalize, rowsToPeople } from "../lib/sources/plural/index.ts";
 import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { mergePluralVotes, pluralVotesScope, PLURAL_VOTES_SOURCE, type PluralVoteFact } from "../lib/sources/plural/votes.ts";
+import { pluralVotesScope, PLURAL_VOTES_SOURCE, type PluralVoteFact } from "../lib/sources/plural/votes.ts";
 import { legiscanVotesScope } from "../lib/sources/legiscan/votes.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../lib/state-rollcalls/reader-votes.ts";
 import { officialStateVotesRenderToReader, stateVoteStateForMember } from "../lib/state-rollcalls/reader-vote-visibility.ts";
@@ -108,7 +108,7 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
     const parsed = await parsePluralBulkSession(sample.state, sample.session, bytes, {
       requestedUrl: sample.sourceUrl, finalUrl: sample.sourceUrl, body: "", sha256: sample.fixtureArchiveSha256, retrievedAt: manifest.capturedAt,
     });
-    const projection = mergePluralVotes(sample.state, null, parsed.votes);
+    const projection = { formatVersion: 1 as const, state: sample.state.toUpperCase(), rollCalls: parsed.votes };
     assert.equal(projection.rollCalls.length, 1, `${sample.state}: ${JSON.stringify(parsed.held)}`);
     assert.ok(sample.personSource);
     const people = rowsToPeople(readFileSync(new URL(sample.personSource.fixture, fixtureRoot), "utf8"), sample.state.toLowerCase());

@@ -83,7 +83,7 @@ function transport() {
   }) as typeof fetch;
   return { fetchImpl, requests };
 }
-test("weekly listing changes trigger source checks while immutable saved datasets reuse original evidence and never retain keys", async () => {
+test("daily listing checks reuse immutable saved datasets and never retain keys", async () => {
   const { fetchImpl, requests } = transport(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   let now = at;
   const acquire = () => acquireLegiscanVotes({ state: "tx", holders: holders(), apiKey: "private-test-api-key", store, locks, fetchImpl,
@@ -91,7 +91,7 @@ test("weekly listing changes trigger source checks while immutable saved dataset
   const first = await acquire(); assert.equal(first.results[0].votes.length, 1); assert.deepEqual(requests, ["getDatasetList", "getDataset"]);
   assert.equal(JSON.stringify(first).includes("private-test-"), false);
   await acquire(); assert.equal(requests.length, 2);
-  now = "2026-10-21T12:00:00.000Z";
+  now = "2026-10-14T12:00:00.000Z";
   const checked = await acquire(); assert.deepEqual(requests, ["getDatasetList", "getDataset", "getDatasetList"]);
   assert.equal(checked.listing.retrievedAt, at); assert.equal(checked.listing.sourceCheck?.checkedAt, now);
   assert.equal(checked.results[0].votes[0].retrievedAt, at);
@@ -104,7 +104,12 @@ test("actual source fixtures promote through the per-state routine contract and 
   assert.ok(published.outcome.promoted);
   const input = { state: "tx", civicStore, store, locks, fetchImpl, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000) };
   const first = await refreshLegiscanVotes(input); assert.equal(first.rollCalls, 1); assert.equal(first.positions, 1);
+  assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
   assert.equal(legiscanVotesProjectionIssue(first.publication.candidate.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]), null);
+  const unboundPages = structuredClone(first.publication.candidate.readModel) as Parameters<typeof legiscanVotesProjectionIssue>[0];
+  unboundPages.identityAuthority.joins = [];
+  unboundPages.identityAuthority.crosswalkSha256 = digest([]);
+  assert.equal(legiscanVotesProjectionIssue(unboundPages), "LEGISCAN_VOTE_NATIVE_FACT_INVALID");
   const votes = await readLegiscanVotesForPerson("tx", personId, { store: civicStore, now: at, bypassCache: true });
   assert.equal(votes.length, 1); assert.equal(votes[0].position, "Yea");
   const second = await refreshLegiscanVotes(input); assert.ok(second.publication.outcome.confirmed);
@@ -122,7 +127,7 @@ test("actual source fixtures promote through the per-state routine contract and 
   (historical.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]).identityAuthority.versionId = republished.outcome.promoted.versionId;
   assert.equal(await legiscanVoteIdentityAuthorityIssue(civicStore, historical), null);
 });
-test("a successful empty weekly listing is a confirmed unchanged check and establishes no absent votes", async () => {
+test("a successful empty daily listing is a confirmed unchanged check and establishes no absent votes", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
   await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",

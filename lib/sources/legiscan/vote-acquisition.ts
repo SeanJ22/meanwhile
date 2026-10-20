@@ -1,15 +1,31 @@
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { readCompleteResponse } from "../source-bytes.ts";
-import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, object, parseLegiscanDataset, parseLegiscanDatasetList,
+import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, object, parseLegiscanDatasetFile, parseLegiscanDatasetList,
   text, type LegiscanDatasetEvidence, type LegiscanSession } from "./dataset.ts";
+import { acquireVoteSourceFile } from "../../state-rollcalls/source-file.ts";
+import { decodeLegiscanDatasetEnvelope } from "./dataset-envelope.ts";
+import type { PluralVoteFact } from "../plural/votes.ts";
 import type { Officeholder } from "../../officials/types.ts";
 
-const WEEK = 7 * 86_400_000;
+const DAY = 86_400_000;
 const DATASET_RESPONSE_LIMIT = 384 * 1024 * 1024;
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
 export const legiscanDatasetListUrl = (state: string) => `https://api.legiscan.com/?op=getDatasetList&state=${legiscanState(state)}`;
 const datasetUrl = (session: LegiscanSession) => `https://api.legiscan.com/?op=getDataset&id=${session.sessionId}&dataset_hash=${session.datasetHash}`;
-type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDataset>> & { session: LegiscanSession };
+export type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDatasetFile>> & { session: LegiscanSession };
+export interface LegiscanCompletedDataset {
+  session: LegiscanSession; evidence: LegiscanDatasetEvidence; rollCalls: number; memberVotes: number; unmatchedPositions: number;
+}
+/** The current regular cycle includes later special sessions, without
+ * downloading prior cycles or next year's prefile before they begin. */
+export function currentLegiscanSessions(sessions: readonly LegiscanSession[], asOf: string): LegiscanSession[] {
+  const year = Number(asOf.slice(0, 4));
+  if (!Number.isSafeInteger(year)) throw new Error("LEGISCAN_SESSION_AS_OF_INVALID");
+  const started = sessions.filter(session => session.yearStart <= year && !session.prefile && !/\bprefil(?:e|ing)\b/i.test(session.sessionName));
+  const regular = started.filter(session => !session.special && !/\b(?:special|extra(?:ordinary)?)\b/i.test(session.sessionName));
+  const latestYear = Math.max(...(regular.length ? regular : started).map(session => session.yearStart));
+  return started.filter(session => session.yearStart >= latestYear);
+}
 
 /** Neither the API credential nor vendor dataset access keys enter source URLs or saved bytes. */
 function privateTransport(state: string, apiKey: string | undefined, transport: typeof fetch): typeof fetch {
@@ -56,46 +72,47 @@ function privateTransport(state: string, apiKey: string | undefined, transport: 
     return new Response(response.body, { status: response.status, headers: response.headers });
   }) as typeof fetch;
 }
-function datasetBytes(bytes: Uint8Array, session: LegiscanSession): Uint8Array {
-  const payload = object(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))), dataset = object(payload.dataset);
-  if (payload.status !== "OK" || dataset.session_id !== session.sessionId || dataset.state_id !== session.stateId || dataset.dataset_hash !== session.datasetHash ||
-    dataset.dataset_date !== session.datasetDate || dataset.mime_type !== "application/zip" || typeof dataset.zip !== "string" || !/^[A-Za-z0-9+/]*={0,2}$/.test(dataset.zip)) throw new Error("LEGISCAN_DATASET_RESPONSE_IDENTITY_INVALID");
-  const archive = Buffer.from(dataset.zip, "base64");
-  if (!archive.length || archive.length > 256 * 1024 * 1024 || archive.toString("base64") !== dataset.zip) throw new Error("LEGISCAN_DATASET_BASE64_INVALID");
-  return archive;
-}
-const evidence = (release: KnownRelease): LegiscanDatasetEvidence => ({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl,
+const evidence = (release: Omit<KnownRelease, "bytes">): LegiscanDatasetEvidence => ({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl,
   retrievedAt: release.retrievedAt, sha256: release.sha256, ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}), sourceCheck: knownReleaseSourceCheck(release) });
 
 /** Every request is state bounded; a missing session leaves other verified sessions publishable. */
 export async function acquireLegiscanVotes(input: SharedOptions & { state: string; signal: AbortSignal; apiKey?: string; holders: readonly Officeholder[];
-  onDataset?: (result: LegiscanDatasetResult) => Promise<void> }) {
+  onDataset?: (result: LegiscanDatasetResult) => Promise<void>;
+  onVote?: (vote: PluralVoteFact) => Promise<void> }) {
   const state = legiscanState(input.state), url = legiscanDatasetListUrl(state), fetchImpl = privateTransport(state, input.apiKey ?? process.env.LEGISCAN_API_KEY, input.fetchImpl ?? fetch);
   const shared = { store: input.store, locks: input.locks, now: input.now, fetchImpl, sourceId: LEGISCAN_VOTES_SOURCE, parserVersion: LEGISCAN_VOTES_PARSER,
     signal: input.signal, allowedHosts: ["api.legiscan.com"] };
-  const listing = await acquireKnownRelease({ ...shared, releaseId: `dataset-list:${state}`, url, maxBytes: 4 * 1024 * 1024, checkAfterMs: WEEK,
+  const listing = await acquireKnownRelease({ ...shared, releaseId: `dataset-list:${state}`, url, maxBytes: 4 * 1024 * 1024, checkAfterMs: DAY,
     validate: bytes => { parseLegiscanDatasetList(new TextDecoder("utf-8", { fatal: true }).decode(bytes), state); } });
-  const sessions = parseLegiscanDatasetList(new TextDecoder("utf-8", { fatal: true }).decode(listing.bytes), state);
-  const results: LegiscanDatasetResult[] = [], held: { key: string; detail: string }[] = [];
+  const sessions = currentLegiscanSessions(parseLegiscanDatasetList(new TextDecoder("utf-8", { fatal: true }).decode(listing.bytes), state), input.now?.() ?? new Date().toISOString());
+  const results: LegiscanDatasetResult[] = [], completed: LegiscanCompletedDataset[] = [], held: { key: string; detail: string }[] = [];
   for (const session of sessions) {
     input.signal.throwIfAborted();
-    let result: LegiscanDatasetResult;
+    let result: LegiscanDatasetResult, consumerFailed = false;
     try {
       const url = datasetUrl(session);
-      let parsed: Awaited<ReturnType<typeof parseLegiscanDataset>> | undefined;
-      const release = await acquireKnownRelease({ ...shared, releaseId: `dataset:${state}:${session.sessionId}:${session.datasetHash}`, url,
-        maxBytes: DATASET_RESPONSE_LIMIT, checkAfterMs: Number.MAX_SAFE_INTEGER,
-        validate: async (bytes, release) => { parsed = await parseLegiscanDataset({ state, session, bytes: datasetBytes(bytes, session),
-          evidence: {requestedUrl: url, finalUrl: release.finalUrl, retrievedAt: release.retrievedAt, sha256: release.sha256}, holders: input.holders, signal: input.signal }); } });
-      const source = evidence(release);
-      const facts = parsed ?? await parseLegiscanDataset({ state, session, bytes: datasetBytes(release.bytes, session), evidence: source, holders: input.holders, signal: input.signal });
-      result = { ...facts, evidence: { ...facts.evidence, ...source, members: facts.evidence.members }, session };
+      const release = await acquireVoteSourceFile({ ...shared, releaseId: `dataset:${state}:${session.sessionId}:${session.datasetHash}`, url,
+        maxBytes: DATASET_RESPONSE_LIMIT, checkAfterMs: Number.MAX_SAFE_INTEGER });
+      try {
+        const source = evidence(release), archivePath = `${release.path}.zip`;
+        await decodeLegiscanDatasetEnvelope({ path: release.path, archivePath, session, signal: input.signal });
+        await release.capture();
+        const facts = await parseLegiscanDatasetFile({ state, session, path: archivePath, evidence: source, holders: input.holders, signal: input.signal,
+          onVote: input.onVote ? async vote => { try { await input.onVote!(vote); } catch (error) { consumerFailed = true; throw error; } } : undefined });
+        await release.accept();
+        result = { ...facts, evidence: { ...facts.evidence, ...source, members: facts.evidence.members }, session };
+      } finally { await release.dispose(); }
     } catch (error) {
+      if (consumerFailed) throw error;
       input.signal.throwIfAborted();
       held.push({ key: `session:${session.sessionId}`, detail: error instanceof Error ? error.message : String(error) }); continue;
     }
-    results.push(result); held.push(...result.held);
+    // Callback consumers publish and release one session before fetching the next.
+    // Only standalone callers asking for the result retain normalized sessions.
+    if (!input.onDataset) results.push(result);
+    completed.push({ session, evidence: result.evidence, rollCalls: result.rollCalls, memberVotes: result.memberVotes, unmatchedPositions: result.unmatchedPositions });
+    held.push(...result.held);
     await input.onDataset?.(result);
   }
-  return { state, results, held, listing: evidence(listing), listingHash: digest(listing.sha256) };
+  return { state, results, completed, held, listing: evidence(listing), listingHash: digest(listing.sha256) };
 }

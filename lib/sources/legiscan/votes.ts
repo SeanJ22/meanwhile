@@ -1,3 +1,4 @@
+import { votePagesIssue, readVotePages, votePageVault, type VoteMemberPage } from "../../state-rollcalls/vote-pages.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
@@ -10,23 +11,13 @@ import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, na
 export const legiscanVotesScope = (state: string) => `US-${legiscanState(state)}:legiscan-votes:v1`;
 export const legiscanVotesContract = (state: string) => `legiscan-votes-${legiscanState(state).toLowerCase()}`;
 export interface LegiscanVotesProjection {
-  formatVersion: 1; state: string; rollCalls: PluralVoteFact[]; datasets: LegiscanDatasetRecord[];
+  formatVersion: 1 | 2; memberPages?: VoteMemberPage[]; state: string; rollCalls: PluralVoteFact[]; datasets: LegiscanDatasetRecord[];
   identityAuthority: LegiscanIdentityAuthority;
 }
-export function mergeLegiscanVotes(prior: LegiscanVotesProjection | null, input: { state: string; votes: readonly PluralVoteFact[];
-  datasets: readonly LegiscanDatasetRecord[]; identityAuthority: LegiscanIdentityAuthority }): LegiscanVotesProjection {
+export function mergeLegiscanVoteMetadata(prior: Pick<LegiscanVotesProjection, "state" | "datasets" | "identityAuthority"> | null,
+  input: { state: string; datasets: readonly LegiscanDatasetRecord[]; identityAuthority: LegiscanIdentityAuthority }) {
   const state = legiscanState(input.state);
   if (prior && prior.state !== state) throw new Error("LEGISCAN_VOTE_PREDECESSOR_STATE_INVALID");
-  const votes = new Map(prior?.rollCalls.map(vote => [vote.id, vote]) ?? []);
-  for (const incoming of input.votes) {
-    const old = votes.get(incoming.id);
-    if (old && (old.billId !== incoming.billId || old.session !== incoming.session || old.organizationId !== incoming.organizationId)) throw new Error("LEGISCAN_VOTE_IDENTITY_CONFLICT");
-    if (!old || incoming.retrievedAt >= old.retrievedAt) {
-      const positions = new Map(old?.positions.map(position => [position.personId, position]) ?? []);
-      for (const position of incoming.positions) positions.set(position.personId, position);
-      votes.set(incoming.id, { ...incoming, positions: [...positions.values()].sort((a, b) => a.personId.localeCompare(b.personId)) });
-    }
-  }
   const datasets = new Map(prior?.datasets.map(dataset => [dataset.sessionId, dataset]) ?? []);
   for (const dataset of input.datasets) datasets.set(dataset.sessionId, dataset);
   const joins = new Map(prior?.identityAuthority.joins.map(join => [join.legiscanPeopleId, join]) ?? []);
@@ -36,14 +27,15 @@ export function mergeLegiscanVotes(prior: LegiscanVotesProjection | null, input:
     joins.set(join.legiscanPeopleId, { ...join, sourceRosterVersionId: input.identityAuthority.versionId });
   }
   const orderedJoins = [...joins.values()].sort((a, b) => a.legiscanPeopleId - b.legiscanPeopleId);
-  return { formatVersion: 1, state, rollCalls: [...votes.values()].sort((a, b) => a.id.localeCompare(b.id)),
+  return { state,
     datasets: [...datasets.values()].sort((a, b) => a.sessionId - b.sessionId),
     identityAuthority: { ...input.identityAuthority, joins: orderedJoins, crosswalkSha256: digest(orderedJoins) } };
 }
 export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): string | null {
   let state: string;
   try { state = legiscanState(value?.state); } catch { return "LEGISCAN_VOTE_STATE_INVALID"; }
-  if (value.formatVersion !== 1 || value.state !== state || !Array.isArray(value.rollCalls) || !Array.isArray(value.datasets) || !value.identityAuthority) return "LEGISCAN_VOTE_PROJECTION_INVALID";
+  if (![1, 2].includes(value.formatVersion) || value.state !== state || !Array.isArray(value.rollCalls) || !Array.isArray(value.datasets) || !value.identityAuthority) return "LEGISCAN_VOTE_PROJECTION_INVALID";
+  if (value.formatVersion === 2) { const issue = votePagesIssue(value); if (issue) return issue; }
   const authority = value.identityAuthority;
   if (authority.sourceId !== "plural-openstates" || authority.scope !== `US-${state}:openstates-people:v1` || !authority.versionId || !Array.isArray(authority.joins) ||
     authority.crosswalkSha256 !== digest(authority.joins) || new Set(authority.joins.map(join => join.legiscanPeopleId)).size !== authority.joins.length ||
@@ -56,14 +48,15 @@ export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): st
     !dataset.downloadedAt || !Number.isFinite(Date.parse(dataset.downloadedAt)))) return "LEGISCAN_DATASET_IDENTITY_INVALID";
   if (new Set(value.rollCalls.map(vote => vote.id)).size !== value.rollCalls.length) return "LEGISCAN_VOTE_DUPLICATE";
   const people = new Set(authority.joins.map(join => join.personId));
+  if (value.formatVersion === 2 && (value.memberPages!.some(page => !people.has(page.personId)) || value.rollCalls.some(vote => !people.has(vote.firstPersonId!)))) return "LEGISCAN_VOTE_NATIVE_FACT_INVALID";
   for (const vote of value.rollCalls) {
     if (!/^legiscan:roll_call:[1-9]\d*$/.test(vote.id) || !/^legiscan:bill:[1-9]\d*$/.test(vote.billId) || !new RegExp(`^legiscan:chamber:${state}:[1-9]\\d*$`).test(vote.organizationId) ||
-      !vote.billNumber || !vote.billTitle || !vote.session || !vote.motion || !["Passed", "Failed"].includes(vote.result) || !["upper", "lower"].includes(vote.chamber) ||
+      !vote.billNumber || !vote.billTitle || !vote.session || !vote.motion || !["Passed", "Failed"].includes(vote.result) || !(state === "NE" ? ["upper", "lower", "legislature"] : ["upper", "lower"]).includes(vote.chamber) ||
       !validDay(vote.date) || !Number.isFinite(Date.parse(vote.retrievedAt)) || vote.date > vote.retrievedAt.slice(0, 10) ||
       !/^https:\/\/api\.legiscan\.com\/\?op=getDataset&id=[1-9]\d*&dataset_hash=[a-f0-9]{32,64}$/.test(vote.sourceApiUrl) ||
       !Number.isSafeInteger(vote.unresolvedPositions) || vote.unresolvedPositions < 0 || !Array.isArray(vote.sourceUrls) || !vote.sourceUrls.length || vote.sourceUrls.some(url => !profileUrl(url)) ||
       !Array.isArray(vote.counts) || vote.counts.length !== 4 || vote.counts.some(row => !["yea", "nay", "nv", "absent"].includes(row.option) || !Number.isSafeInteger(row.value) || row.value < 0) ||
-      new Set(vote.counts.map(row => row.option)).size !== 4 || !Array.isArray(vote.positions) || !vote.positions.length || vote.positions.some(position =>
+      new Set(vote.counts.map(row => row.option)).size !== 4 || !Array.isArray(vote.positions) || value.formatVersion === 1 && !vote.positions.length || vote.positions.some(position =>
         !nativePersonId(position.personId) || !people.has(position.personId) || !position.option || !Number.isFinite(Date.parse(position.retrievedAt)) || position.retrievedAt > vote.retrievedAt) ||
       new Set(vote.positions.map(position => position.personId)).size !== vote.positions.length) return "LEGISCAN_VOTE_NATIVE_FACT_INVALID";
   }
@@ -112,10 +105,10 @@ export function legiscanVotesCandidate(input: { projection: LegiscanVotesProject
     sourceProjectionEvidence: sourceProjectionEvidence(LEGISCAN_VOTES_SOURCE, "STATE_ROLL_CALL", scope),
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: acquisition?.requestedUrl ?? `https://api.legiscan.com/?op=getDatasetList&state=${projection.state}`,
       finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough, rawHash: digest(input.acquired.map(row => row.sha256).sort()), ...(sourceCheck ? { sourceCheck } : {}) },
-    normalization: { succeeded: !issue, parserVersion: LEGISCAN_VOTES_PARSER, schemaVersion: "legiscan-person-votes/1", normalizedHash: digest(projection), normalizedPayloadHash: digest(payload),
+    normalization: { succeeded: !issue, parserVersion: LEGISCAN_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "legiscan-person-votes/2" : "legiscan-person-votes/1", normalizedHash: digest(projection), normalizedPayloadHash: digest(payload),
       inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length, droppedRecords: 0, missingRequiredFields: [] },
     identities: projection.rollCalls.map(vote => ({ subjectId: vote.id, jurisdiction, chamber: vote.chamber, term: vote.session, session: vote.session,
-      identifiers: { rollCallId: vote.id, eventId: vote.id, roll_call_id: vote.id, session_id: vote.session, people_id: vote.positions[0]?.personId ?? "" }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+      identifiers: { rollCallId: vote.id, eventId: vote.id, roll_call_id: vote.id, session_id: vote.session, people_id: vote.positions[0]?.personId ?? vote.firstPersonId ?? "" }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     temporal: { version: sourceThrough, expectedVersion: sourceThrough, sourceThrough, staleAtRetrieval: false },
     semantics: { factKind: "LegiScan attributed native roll calls and exact OpenStates person positions", violations: issue ? [issue] : [] },
     horizon: { kind: "OPEN_FACT_SET", query: `${jurisdiction} weekly vendor datasets; independently joined member positions`, returnedRecords: projection.rollCalls.length,
@@ -134,7 +127,8 @@ export async function readLegiscanVotesForPerson(state: string, personId: string
   const read = await readLegiscanVotesProjection(state, options);
   if (read.kind === "NOT_RECORDED") return [];
   if (read.kind !== "PROMOTED") throw new Error("LEGISCAN_VOTES_UNAVAILABLE");
-  return read.value.rollCalls.flatMap(vote => {
+  const votes = read.value.formatVersion === 2 ? await readVotePages(votePageVault(options.store), read.value, personId) : read.value.rollCalls;
+  return votes.flatMap(vote => {
     const position = vote.positions.find(position => position.personId === personId);
     return position ? [{ ...vote, position: position.option, retrievedAt: position.retrievedAt }] : [];
   }).sort((a, b) => b.date.localeCompare(a.date));

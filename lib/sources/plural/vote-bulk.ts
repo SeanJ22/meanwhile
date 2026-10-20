@@ -1,6 +1,8 @@
 /** Public Open States session CSV archives retain native person IDs. JSON
  * session exports contain names only, so they cannot provide these joins. */
 import { createHash } from "node:crypto";
+import { createReadStream } from "node:fs";
+import { createRequire } from "node:module";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -15,7 +17,7 @@ const archiveLimits = { maxEntries: 64, maxMemberBytes: 512 * 1024 * 1024, maxTo
 
 /** Decode a CSV record at a time: position files can be much larger than the
  * normalized votes. Embedded quoted newlines and chunk-split quotes survive. */
-async function* rows(member: FileArchiveMember, required: readonly string[]): AsyncIterable<Row> {
+async function* rows(member: FileArchiveMember, required: readonly string[], signal?: AbortSignal): AsyncIterable<Row> {
   const decoder = new TextDecoder("utf-8", { fatal: true });
   let record = "", quoted = false, headers: string[] | undefined;
   const decodeRecord = (): Row | null => {
@@ -34,6 +36,7 @@ async function* rows(member: FileArchiveMember, required: readonly string[]): As
     return Object.fromEntries(headers.map((header, index) => [header, values[index]!]));
   };
   for await (const bytes of member.stream()) {
+    signal?.throwIfAborted();
     const chunk = decoder.decode(bytes, { stream: true });
     for (const character of chunk) {
       record += character;
@@ -56,19 +59,67 @@ function date(value: string | undefined, checkedAt: string): string | null {
   return /^\d{4}-\d{2}-\d{2}(?:$|[ T])/.test(raw) && Number.isFinite(stamp) && new Date(stamp).toISOString().slice(0, 10) === day && day <= checkedAt.slice(0, 10) ? day : null;
 }
 
-export async function parsePluralBulkSession(state: string, session: string, bytes: Uint8Array, evidence: PluralBillEvidence): Promise<{
+interface SqlStatement {
+  run(...values: (string | number | null)[]): { changes: number | bigint };
+  get(...values: (string | number | null)[]): Record<string, string | number> | undefined;
+  all(...values: (string | number | null)[]): Record<string, string | number>[];
+  iterate(...values: (string | number | null)[]): Iterable<Record<string, string | number>>;
+}
+interface SqlDatabase { exec(sql: string): void; prepare(sql: string): SqlStatement; close(): void }
+const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new (path: string) => SqlDatabase };
+export interface PluralBulkParseOptions { onVote?: (vote: PluralVoteFact) => Promise<void>; signal?: AbortSignal }
+export interface PluralBulkSessionResult {
   votes: PluralVoteFact[]; held: { key: string; detail: string }[]; members: string[];
-}> {
-  const normalizedState = pluralVoteState(state), stateCode = normalizedState.toUpperCase();
-  if (!session || !/^[A-Za-z0-9_-]+$/.test(session)) throw new Error("PLURAL_BULK_SESSION_INVALID");
-  const source = new URL(evidence.finalUrl);
-  if (source.origin !== "https://data.openstates.org" || source.username || source.password ||
-      !source.pathname.startsWith(`/csv/latest/${stateCode}_${session}_csv_`) || !source.pathname.endsWith(".zip")) throw new Error("PLURAL_BULK_SOURCE_ROUTE_INVALID");
-  if (createHash("sha256").update(bytes).digest("hex") !== evidence.sha256 || !Number.isFinite(Date.parse(evidence.retrievedAt))) throw new Error("PLURAL_BULK_SOURCE_EVIDENCE_INVALID");
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-openstates-votes-"));
+  rollCalls: number; memberVotes: number; unmatchedPositions: number;
+}
+
+/** Small byte callers stage once; production downloads feed the file reader. */
+export async function parsePluralBulkSession(state: string, session: string, bytes: Uint8Array, evidence: PluralBillEvidence,
+  options: PluralBulkParseOptions = {}): Promise<PluralBulkSessionResult> {
+  const directory = await mkdtemp(join(tmpdir(), "meanwhile-openstates-input-"));
   try {
     const path = join(directory, "session.zip");
     await writeFile(path, bytes);
+    return await parsePluralBulkSessionFile(state, session, path, evidence, options);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+}
+
+/** Arbitrarily ordered CSVs join on disk. Only one roll's positions enter memory;
+ * the consumer must finish it before the next verified roll is assembled. */
+export async function parsePluralBulkSessionFile(state: string, session: string, path: string, evidence: PluralBillEvidence,
+  options: PluralBulkParseOptions = {}): Promise<PluralBulkSessionResult> {
+  const normalizedState = pluralVoteState(state), stateCode = normalizedState.toUpperCase();
+  if (!session.trim() || /[\/\\\u0000-\u001f\u007f]/.test(session) || session === "." || session === "..") throw new Error("PLURAL_BULK_SESSION_INVALID");
+  const source = new URL(evidence.finalUrl);
+  let sourcePath: string;
+  try { sourcePath = decodeURIComponent(source.pathname); } catch { throw new Error("PLURAL_BULK_SOURCE_ROUTE_INVALID"); }
+  if (source.origin !== "https://data.openstates.org" || source.username || source.password ||
+      !sourcePath.startsWith(`/csv/latest/${stateCode}_${session}_csv_`) || !sourcePath.endsWith(".zip")) throw new Error("PLURAL_BULK_SOURCE_ROUTE_INVALID");
+  const hash = createHash("sha256");
+  for await (const chunk of createReadStream(path)) { options.signal?.throwIfAborted(); hash.update(chunk); }
+  if (hash.digest("hex") !== evidence.sha256 || !Number.isFinite(Date.parse(evidence.retrievedAt))) throw new Error("PLURAL_BULK_SOURCE_EVIDENCE_INVALID");
+  const directory = await mkdtemp(join(tmpdir(), "meanwhile-openstates-join-"));
+  let db: SqlDatabase | undefined;
+  try {
+    db = new DatabaseSync(join(directory, "session.sqlite"));
+    db.exec(`PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA temp_store=FILE; PRAGMA cache_size=-8192; PRAGMA mmap_size=0;
+      CREATE TABLE bills(id TEXT PRIMARY KEY, data TEXT NOT NULL);
+      CREATE TABLE organizations(id TEXT PRIMARY KEY, data TEXT NOT NULL);
+      CREATE TABLE seen_votes(id TEXT PRIMARY KEY);
+      CREATE TABLE votes(id TEXT PRIMARY KEY, data TEXT NOT NULL, rejected INTEGER NOT NULL DEFAULT 0, unresolved INTEGER NOT NULL DEFAULT 0);
+      CREATE TABLE positions(vote_id TEXT, person_id TEXT, option TEXT, conflicted INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(vote_id,person_id));
+      CREATE TABLE counts(vote_id TEXT, option TEXT, value INTEGER, PRIMARY KEY(vote_id,option));
+      CREATE TABLE sources(vote_id TEXT, url TEXT, PRIMARY KEY(vote_id,url));
+      CREATE TABLE held(sequence INTEGER PRIMARY KEY, key TEXT, detail TEXT);
+      BEGIN;`);
+    const query = (sql: string) => db!.prepare(sql);
+    const addBill = query("INSERT OR IGNORE INTO bills VALUES(?,?)"), getBill = query("SELECT data FROM bills WHERE id=?");
+    const addOrg = query("INSERT OR IGNORE INTO organizations VALUES(?,?)"), getOrg = query("SELECT data FROM organizations WHERE id=?");
+    const seeVote = query("INSERT OR IGNORE INTO seen_votes VALUES(?)"), addVote = query("INSERT INTO votes(id,data) VALUES(?,?)");
+    const getVote = query("SELECT rejected FROM votes WHERE id=?"), rejectVote = query("UPDATE votes SET rejected=1 WHERE id=?");
+    const unresolved = query("UPDATE votes SET unresolved=unresolved+1 WHERE id=?"), addHeld = query("INSERT INTO held(key,detail) VALUES(?,?)");
+    const hold = (key: string, detail: string) => { addHeld.run(key, detail); };
+    const live = (id: string) => getVote.get(id)?.rejected === 0;
     const entries = await openZipFile(path, archiveLimits), prefix = `${stateCode}/${session}/${stateCode}_${session}_`;
     if (entries.some(entry => entry.name !== "README" && !entry.name.startsWith(prefix))) throw new Error("PLURAL_BULK_ARCHIVE_SCOPE_INVALID");
     const readme = entries.find(entry => entry.name === "README");
@@ -77,7 +128,7 @@ export async function parsePluralBulkSession(state: string, session: string, byt
     for await (const chunk of readme.stream()) metadataChunks.push(chunk);
     const metadata = new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(metadataChunks));
     if (!metadata.split(/\r?\n/).includes(`State: ${stateCode}`) || !metadata.split(/\r?\n/).includes(`Session: ${session}`)) throw new Error("PLURAL_BULK_ARCHIVE_METADATA_SCOPE_INVALID");
-    const selected: string[] = [];
+    const selected: string[] = [], consumed = new Set(["README"]);
     const member = (suffix: string, required = false) => {
       const entry = entries.find(entry => entry.name === `${prefix}${suffix}.csv`);
       if (!entry && required) throw new Error(`PLURAL_BULK_MEMBER_MISSING:${suffix}`);
@@ -86,78 +137,82 @@ export async function parsePluralBulkSession(state: string, session: string, byt
     };
     const billFile = member("bills", true)!, voteFile = member("votes"), orgFile = member("organizations");
     const peopleFile = member("vote_people"), countFile = member("vote_counts"), sourceFile = member("vote_sources");
-    const bills = new Map<string, Row>(), organizations = new Map<string, Row>();
+    const readRows = (entry: FileArchiveMember, required: readonly string[]) => { consumed.add(entry.name); return rows(entry, required, options.signal); };
     let jurisdictionName: string | undefined;
-    for await (const bill of rows(billFile, ["id", "identifier", "title", "session_identifier", "jurisdiction"])) {
-      if (!nativeId(bill.id, "bill") || bill.session_identifier !== session || !text(bill.jurisdiction) || !text(bill.identifier) || !text(bill.title) || bills.has(bill.id!)) throw new Error("PLURAL_BULK_BILL_IDENTITY_INVALID");
+    for await (const bill of readRows(billFile, ["id", "identifier", "title", "session_identifier", "jurisdiction"])) {
+      if (!nativeId(bill.id, "bill") || bill.session_identifier !== session || !text(bill.jurisdiction) || !text(bill.identifier) || !text(bill.title) ||
+          !addBill.run(bill.id!, JSON.stringify({ id: bill.id, identifier: bill.identifier, title: bill.title, jurisdiction: bill.jurisdiction })).changes) throw new Error("PLURAL_BULK_BILL_IDENTITY_INVALID");
       jurisdictionName ??= bill.jurisdiction;
       if (bill.jurisdiction !== jurisdictionName) throw new Error("PLURAL_BULK_BILL_JURISDICTION_CONFLICT");
-      bills.set(bill.id!, bill);
     }
-    // The exporter omits a file when its query has zero rows. An archive with
-    // bills and no vote file is an unchanged/empty successful source read.
-    if (!voteFile) return { votes: [], held: [], members: selected };
-    if (!orgFile) throw new Error("PLURAL_BULK_MEMBER_MISSING:organizations");
-    for await (const organization of rows(orgFile, ["id", "jurisdiction_id", "classification"])) {
-      if (!nativeId(organization.id, "organization") || organization.jurisdiction_id !== pluralVoteJurisdiction(normalizedState) || organizations.has(organization.id!)) throw new Error("PLURAL_BULK_ORGANIZATION_IDENTITY_INVALID");
-      organizations.set(organization.id!, organization);
-    }
-    const votes = new Map<string, PluralVoteFact>(), seen = new Set<string>(), rejected = new Set<string>();
-    const held: { key: string; detail: string }[] = [];
-    for await (const row of rows(voteFile, ["id", "bill_id", "organization_id", "session_identifier", "jurisdiction", "start_date", "motion_text", "result"])) {
-      const key = text(row.id), bill = bills.get(row.bill_id!), organization = organizations.get(row.organization_id!), day = date(row.start_date, evidence.retrievedAt);
-      if (!nativeId(key, "vote") || seen.has(key) || !bill || !organization || !["upper", "lower", "legislature"].includes(text(organization.classification)) ||
-          row.session_identifier !== session || row.jurisdiction !== bill.jurisdiction || !day || !text(row.motion_text) || !text(row.result)) {
-        rejected.add(key); votes.delete(key); held.push({ key, detail: "native vote identity, session, date, motion or legislative chamber is unresolved" });
-      } else {
-        votes.set(key, { id: key, billId: bill.id!, billNumber: bill.identifier!, billTitle: bill.title!, session,
-          organizationId: organization.id!, chamber: organization.classification as PluralVoteFact["chamber"], date: day,
-          motion: row.motion_text!, result: row.result!, counts: [], positions: [], unresolvedPositions: 0,
-          sourceUrls: [], sourceApiUrl: evidence.finalUrl, retrievedAt: evidence.retrievedAt });
+    if (voteFile) {
+      if (!orgFile) throw new Error("PLURAL_BULK_MEMBER_MISSING:organizations");
+      for await (const org of readRows(orgFile, ["id", "jurisdiction_id", "classification"])) {
+        if (!nativeId(org.id, "organization") || org.jurisdiction_id !== pluralVoteJurisdiction(normalizedState) ||
+            !addOrg.run(org.id!, JSON.stringify({ id: org.id, classification: org.classification })).changes) throw new Error("PLURAL_BULK_ORGANIZATION_IDENTITY_INVALID");
       }
-      seen.add(key);
-    }
-    const people = new Map<string, Map<string, string>>(), conflictingPeople = new Map<string, Set<string>>();
-    if (peopleFile) for await (const row of rows(peopleFile, ["vote_event_id", "voter_id", "option"])) {
-      const vote = votes.get(row.vote_event_id!);
-      if (!vote || rejected.has(vote.id)) continue;
-      if (!nativeId(row.voter_id, "person") || !text(row.option)) { vote.unresolvedPositions++; continue; }
-      const joined = people.get(vote.id) ?? new Map<string, string>(), conflicts = conflictingPeople.get(vote.id) ?? new Set<string>();
-      if (conflicts.has(row.voter_id!)) continue;
-      const previous = joined.get(row.voter_id!);
-      if (previous === row.option) continue;
-      if (previous !== undefined) {
-        conflicts.add(row.voter_id!); conflictingPeople.set(vote.id, conflicts);
-        joined.delete(row.voter_id!);
-        vote.positions = vote.positions.filter(position => position.personId !== row.voter_id);
-        // Count a conflicting native person once; its raw contradictory rows
-        // remain in the source archive, while neighboring facts still publish.
-        vote.unresolvedPositions++;
-        held.push({ key: `${vote.id}:${row.voter_id}`, detail: "the native person has conflicting publisher positions" });
-        continue;
+      for await (const row of readRows(voteFile, ["id", "bill_id", "organization_id", "session_identifier", "jurisdiction", "start_date", "motion_text", "result"])) {
+        const key = text(row.id), savedBill = getBill.get(row.bill_id!), savedOrg = getOrg.get(row.organization_id!);
+        const bill = savedBill ? JSON.parse(String(savedBill.data)) as Row : null, org = savedOrg ? JSON.parse(String(savedOrg.data)) as Row : null;
+        const day = date(row.start_date, evidence.retrievedAt), fresh = seeVote.run(key).changes;
+        if (!nativeId(key, "vote") || !fresh || !bill || !org || !["upper", "lower", "legislature"].includes(text(org.classification)) ||
+            row.session_identifier !== session || row.jurisdiction !== bill.jurisdiction || !day || !text(row.motion_text) || !text(row.result)) {
+          rejectVote.run(key); hold(key, "native vote identity, session, date, motion or legislative chamber is unresolved"); continue;
+        }
+        addVote.run(key, JSON.stringify({ id: key, billId: bill.id!, billNumber: bill.identifier!, billTitle: bill.title!, session,
+          organizationId: org.id!, chamber: org.classification, date: day, motion: row.motion_text!, result: row.result!,
+          sourceApiUrl: evidence.finalUrl, retrievedAt: evidence.retrievedAt }));
       }
-      joined.set(row.voter_id!, row.option!); people.set(vote.id, joined);
-      vote.positions.push({ personId: row.voter_id!, option: row.option!, retrievedAt: evidence.retrievedAt });
-    }
-    if (countFile) for await (const row of rows(countFile, ["vote_event_id", "option", "value"])) {
-      const vote = votes.get(row.vote_event_id!);
-      if (!vote || rejected.has(vote.id)) continue;
-      if (!text(row.option) || !/^\d+$/.test(text(row.value)) || !Number.isSafeInteger(Number(row.value)) || vote.counts.some(count => count.option === row.option)) {
-        rejected.add(vote.id); held.push({ key: vote.id, detail: "publisher count is invalid or repeats an option" }); continue;
+      const getPosition = query("SELECT option,conflicted FROM positions WHERE vote_id=? AND person_id=?");
+      const addPosition = query("INSERT INTO positions(vote_id,person_id,option) VALUES(?,?,?)");
+      const conflictPosition = query("UPDATE positions SET conflicted=1 WHERE vote_id=? AND person_id=?");
+      if (peopleFile) for await (const row of readRows(peopleFile, ["vote_event_id", "voter_id", "option"])) {
+        const voteId = row.vote_event_id!;
+        if (!live(voteId)) continue;
+        if (!nativeId(row.voter_id, "person") || !text(row.option)) { unresolved.run(voteId); continue; }
+        const previous = getPosition.get(voteId, row.voter_id!);
+        if (previous?.conflicted || previous?.option === row.option) continue;
+        if (previous) {
+          conflictPosition.run(voteId, row.voter_id!); unresolved.run(voteId);
+          hold(`${voteId}:${row.voter_id}`, "the native person has conflicting publisher positions");
+        } else addPosition.run(voteId, row.voter_id!, row.option!);
       }
-      vote.counts.push({ option: row.option!, value: Number(row.value) });
+      const addCount = query("INSERT OR IGNORE INTO counts VALUES(?,?,?)");
+      if (countFile) for await (const row of readRows(countFile, ["vote_event_id", "option", "value"])) {
+        const voteId = row.vote_event_id!;
+        if (!live(voteId)) continue;
+        if (!text(row.option) || !/^\d+$/.test(text(row.value)) || !Number.isSafeInteger(Number(row.value)) ||
+            !addCount.run(voteId, row.option!, Number(row.value)).changes) {
+          rejectVote.run(voteId); hold(voteId, "publisher count is invalid or repeats an option");
+        }
+      }
+      const addSource = query("INSERT OR IGNORE INTO sources VALUES(?,?)");
+      if (sourceFile) for await (const row of readRows(sourceFile, ["vote_event_id", "url"])) {
+        if (!live(row.vote_event_id!)) continue;
+        try { const url = new URL(row.url!);
+          if (url.protocol === "https:" && !url.username && !url.password) addSource.run(row.vote_event_id!, url.href);
+        } catch { /* A missing official link does not hide a verified native vote. */ }
+      }
     }
-    if (sourceFile) for await (const row of rows(sourceFile, ["vote_event_id", "url"])) {
-      const vote = votes.get(row.vote_event_id!);
-      if (!vote || rejected.has(vote.id)) continue;
-      try {
-        const url = new URL(row.url!);
-        if (url.protocol === "https:" && !url.username && !url.password && !vote.sourceUrls.includes(url.href)) vote.sourceUrls.push(url.href);
-      } catch { /* A missing official link does not hide a verified native vote. */ }
+    // Every ZIP member finishes its CRC check before a consumer sees any facts.
+    for (const entry of entries) if (!consumed.has(entry.name)) for await (const _chunk of entry.stream()) options.signal?.throwIfAborted();
+    db.exec("COMMIT;");
+    const positions = query("SELECT person_id,option FROM positions WHERE vote_id=? AND conflicted=0 ORDER BY rowid");
+    const counts = query("SELECT option,value FROM counts WHERE vote_id=? ORDER BY rowid"), sources = query("SELECT url FROM sources WHERE vote_id=? ORDER BY rowid");
+    const votes: PluralVoteFact[] = [];
+    let rollCalls = 0, memberVotes = 0, unmatchedPositions = 0;
+    for (const row of query("SELECT id,data,unresolved FROM votes WHERE rejected=0 ORDER BY rowid").iterate()) {
+      options.signal?.throwIfAborted();
+      const vote = { ...JSON.parse(String(row.data)), unresolvedPositions: Number(row.unresolved),
+        positions: positions.all(String(row.id)).map(position => ({ personId: String(position.person_id), option: String(position.option), retrievedAt: evidence.retrievedAt })),
+        counts: counts.all(String(row.id)).map(count => ({ option: String(count.option), value: Number(count.value) })),
+        sourceUrls: sources.all(String(row.id)).map(source => String(source.url)) } as PluralVoteFact;
+      unmatchedPositions += vote.unresolvedPositions;
+      if (!vote.positions.length) { hold(vote.id, "no exact native person position was acquired"); continue; }
+      rollCalls++; memberVotes += vote.positions.length;
+      if (options.onVote) await options.onVote(vote); else votes.push(vote);
     }
-    for (const vote of votes.values()) if (!rejected.has(vote.id) && !vote.positions.length) {
-      rejected.add(vote.id); held.push({ key: vote.id, detail: "no exact native person position was acquired" });
-    }
-    return { votes: [...votes.values()].filter(vote => !rejected.has(vote.id)), held, members: selected };
-  } finally { await rm(directory, { recursive: true, force: true }); }
+    const held = query("SELECT key,detail FROM held ORDER BY sequence").all().map(row => ({ key: String(row.key), detail: String(row.detail) }));
+    return { votes, held, members: selected, rollCalls, memberVotes, unmatchedPositions };
+  } finally { db?.close(); await rm(directory, { recursive: true, force: true }); }
 }

@@ -91,6 +91,32 @@ test("list() of an empty table is the read clock and one empty bounded page", as
   assert.equal(calls.length, 2);
 });
 
+test("identity-only door pages count every row without loading door values", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const db = new PGlite();
+  try {
+    await db.exec(`CREATE TABLE cp_doors(id text PRIMARY KEY, revision bigint NOT NULL,
+      updated_at timestamptz NOT NULL, changed_at timestamptz NOT NULL DEFAULT now(), value jsonb NOT NULL);
+      INSERT INTO cp_doors SELECT 'door-' || lpad(n::text, 6, '0'), 1, now(), now(),
+        jsonb_build_object('publisherBody', repeat('source record', 4000)) FROM generate_series(1, 201) n`);
+    let pages = 0, counted = 0;
+    const repo = pgAggregateRepository({ query: async (text, params = []) => (await db.query(text, [...params])).rows }, "Door", "cp_doors");
+    const result = await repo.listChangedSince!(null, undefined, { projection: {}, page: rows => {
+      pages++;
+      assert.ok(rows.length <= AGGREGATE_LIST_READ_PAGE);
+      for (const row of rows) {
+        assert.deepEqual(row.value, {}, "the database must return metadata without the source body");
+        assert.equal(row.id, `door-${String(++counted).padStart(6, "0")}`);
+        assert.equal(row.revision, 1);
+      }
+    } });
+    assert.equal(counted, 201);
+    assert.equal(pages, 3);
+    assert.deepEqual(result.rows, [], "the page visitor must not accumulate the country inventory");
+    assert.ok(Number.isFinite(Date.parse(result.through)));
+  } finally { await db.close(); }
+});
+
 test("listNarrowed reads the same bounded pages and projects each row exactly as the database projection would", async () => {
   const rows = seq(AGGREGATE_LIST_READ_PAGE * 2 + 1).map(row => ({ ...row, value: { ...row.value, dropped: "x".repeat(20), nested: { kept: 1, gone: 2 } } }));
   const { sql, calls } = fakeAggregateSql(rows);

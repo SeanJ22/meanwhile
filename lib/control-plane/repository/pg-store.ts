@@ -327,7 +327,7 @@ export function pgAggregateRepository<T>(
     /* Rows the database stamped at or after `since` (all when null), less the held ones, in id order; `through` is the database clock before the first page. */
     const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
-    const selected = read.projection ? recordProjectionSql(table, read.projection, "value") : "value";
+    const selected = read.projection ? Object.keys(read.projection).length ? recordProjectionSql(table, read.projection, "value") : "'{}'::jsonb" : "value";
     const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {

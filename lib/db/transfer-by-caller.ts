@@ -157,11 +157,20 @@ export function callerFromStack(stack: string | undefined): string {
   const cached = siteCache.get(stack);
   if (cached !== undefined) return cached;
   let site = "unknown";
+  let sharedClient: string | undefined;
   for (const line of stack.split("\n").slice(1)) {
-    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/(?:facts\/db|reader\/database|civic-data\/(?:store|read-model))\.|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
+    if (/node:|node_modules|\/lib\/control-plane\/repository\/|\/lib\/db\/|\/lib\/ops\/neon-request-deadline\.|\/lib\/control-plane\/scheduler\/cycle-(?:phases|stall)\.|\(<anonymous>\)/.test(line)) continue;
     const match = line.match(/.*[/\\]((?:lib|scripts|app|netlify|tests)[/\\][^:()]+):(\d+):\d+/);
-    if (match) { site = `${match[1].replace(/\\/g, "/")}:${match[2]}`; break; }
+    if (!match) continue;
+    const candidate = `${match[1].replace(/\\/g, "/")}:${match[2]}`;
+    if (/\/lib\/(?:facts\/db|reader\/database|civic-data\/(?:store|read-model))\./.test(line)) {
+      sharedClient ??= candidate;
+      continue;
+    }
+    site = candidate;
+    break;
   }
+  if (site === "unknown" && sharedClient) site = sharedClient;
   if (siteCache.size >= SITE_CACHE_LIMIT) siteCache.clear();
   siteCache.set(stack, site);
   return site;

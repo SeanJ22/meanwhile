@@ -79,6 +79,12 @@ test("completion evidence refuses exit-only, failed receipts, incomplete parents
   assert.equal(check("scripts/rh01-control-replay.mts", 'RH01_REPLAY {"complete":true,"reports":[{"claimed":true,"outcome":"FAILED"}]}'), false);
   assert.equal(check("scripts/rh01-control-replay.mts", 'RH01_REPLAY {"complete":true,"committedResultId":"wr-measured","reports":[{"claimed":true,"outcome":"WORKED"}]}'), true);
   assert.equal(check("scripts/rh01-control-replay.mts", 'RH01_REPLAY {"complete":true,"reports":[{"claimed":true,"outcome":"COMPLETED"}]}', "RH01_REMOTE_WRITE_BLOCKED:POST"), false);
+  for (const role of ["SCOUT", "ADVERSARIAL_AUDITOR"]) {
+    const replay = { complete: true, role, taskId: "rt-native", reports: [{ claimed: true, outcome: "WORKED", attemptId: "at-native" }] };
+    assert.equal(check("scripts/rh01-model-replay.mts", `RH01_REPLAY ${JSON.stringify(replay)}`), true);
+    assert.equal(check("scripts/rh01-model-replay.mts", `RH01_REPLAY ${JSON.stringify({ ...replay, complete: false })}`), false);
+    assert.equal(check("scripts/rh01-model-replay.mts", `RH01_REPLAY ${JSON.stringify({ ...replay, reports: [{ claimed: true, outcome: "FAILED" }] })}`), false);
+  }
   assert.equal(check("scripts/freshness-shadow.mts", 'RH01_FRESHNESS_RESULT {"state":"SUCCEEDED","durable":true,"simulated":false,"filtered":false,"registeredUnits":10,"workedUnits":9,"cycleId":"one"}'), false);
   assert.equal(check("scripts/freshness-shadow.mts", 'RH01_FRESHNESS_RESULT {"state":"SUCCEEDED","durable":true,"simulated":false,"filtered":false,"registeredUnits":10,"workedUnits":10,"cycleId":"one"}'), true);
   assert.equal(check("scripts/hunter-lane.mts", 'hunter lane: armed; paid work held\nhunter lane: ended after 1 wave(s), 2 task result(s): a release asked it to drain'), false);

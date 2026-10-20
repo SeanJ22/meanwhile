@@ -32,6 +32,15 @@ export function measuredCompletion(input: { readonly script: string; readonly st
     return replay?.complete === true ? yes("The actual pending production route acquired and processed fresh source bytes with local lifecycle writes", 1)
       : no("The route did not finish fresh source acquisition and its canonical local Attempt");
   }
+  if (script === "rh01-model-replay.mts") {
+    const replay = jsonLine(stdout, "RH01_REPLAY ");
+    const reports = replay?.reports as { claimed?: boolean; outcome?: string; attemptId?: unknown }[] | undefined;
+    return replay?.complete === true && ["SCOUT", "ADVERSARIAL_AUDITOR"].includes(String(replay.role)) &&
+      typeof replay.taskId === "string" && reports?.length === 1 && reports[0]?.claimed === true &&
+      reports[0].outcome === "WORKED" && typeof reports[0].attemptId === "string"
+      ? yes("The native model role committed its completed Attempt and role result over authentic held inputs", 1)
+      : no("The model role did not commit its completed Attempt and role result");
+  }
   if (script === "rh01-control-replay.mts" || script === "rh01-held-worker-replay.mts") {
     const replay = jsonLine(stdout, "RH01_REPLAY ");
     const reports = replay?.reports as { claimed?: boolean; outcome?: string }[] | undefined;

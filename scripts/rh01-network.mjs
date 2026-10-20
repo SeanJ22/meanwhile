@@ -6,6 +6,10 @@ import http from "node:http";
 import https from "node:https";
 import subprocess from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { AsyncLocalStorage } from "node:async_hooks";
+
+const productionReadOwner = new AsyncLocalStorage();
+export const withProductionReadOwner = (owner, work) => productionReadOwner.run(owner, work);
 
 const blockedHosts = /(?:^|\.)(?:anthropic\.com|openai\.com|exa\.ai|brave\.com|openrouter\.ai|generativelanguage\.googleapis\.com)$/i;
 const sourcePosts = new Set();
@@ -72,12 +76,14 @@ function responseDatabase(url, headers) {
   return null;
 }
 
-function recordDatabaseBytes(database, requestId, bytes, transport, status) {
+function recordDatabaseBytes(database, requestId, bytes, transport, status, owner) {
   const ledger = process.env.WTP_RH01_PRODUCTION_READ_LEDGER;
   if (!ledger || !database || !bytes) return;
   appendFileSync(ledger, JSON.stringify({ at: new Date().toISOString(), requestId, pid: process.pid,
     phase: process.env.WTP_RH01_PHASE ?? "preparation", runId: process.env.WTP_RH01_RUN_ID ?? null, database, bytes,
-    jobId: process.env.WTP_RH01_JOB_ID ?? null, transport, status }) + "\n");
+    ownerPid: owner?.ownerPid ?? process.pid,
+    jobId: owner?.jobId ?? (process.env.WTP_RUNTIME_AUTHORITY_CONTRACT || process.env.WTP_RH01_JOB_ID || null),
+    ownerTaskId: owner?.taskId ?? process.env.WTP_RH01_WORKER_TASK_ID ?? null, transport, status }) + "\n");
 }
 
 function accountDatabaseResponse(response, url, headers) {
@@ -85,9 +91,10 @@ function accountDatabaseResponse(response, url, headers) {
   const database = responseDatabase(url, headers);
   if (!ledger || !database || !response.body) return response;
   const requestId = `${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const owner = productionReadOwner.getStore();
   const body = response.body.pipeThrough(new TransformStream({
     transform(chunk, controller) {
-      recordDatabaseBytes(database, requestId, chunk.byteLength, "http-body", response.status);
+      recordDatabaseBytes(database, requestId, chunk.byteLength, "http-body", response.status, owner);
       controller.enqueue(chunk);
     },
   }));
@@ -155,11 +162,12 @@ export function installMeasurementNetworkBoundary(options = {}) {
       const database = responseDatabase(url);
       if (!database) return;
       const requestId = `${process.pid}-socket-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const owner = productionReadOwner.getStore();
       this.addEventListener("message", event => {
         const data = event.data;
         const bytes = typeof data === "string" ? Buffer.byteLength(data)
           : data instanceof ArrayBuffer || ArrayBuffer.isView(data) ? data.byteLength : data instanceof Blob ? data.size : 0;
-        recordDatabaseBytes(database, requestId, bytes, "websocket-message", null);
+        recordDatabaseBytes(database, requestId, bytes, "websocket-message", null, owner);
       });
     }
   };

@@ -116,6 +116,9 @@ const routineOverlays = new WeakSet<object>();
 const routineIdentities = new WeakMap<object, object>();
 export const isRoutineOverlay = (value: unknown): boolean => typeof value === "object" && value !== null && routineOverlays.has(value);
 export const routineStoreIdentity = (value: object): object => routineIdentities.get(value) ?? value;
+const rpcHeaders = () => ({ "content-type": "application/json", "x-rh01-owner-pid": String(process.pid),
+  "x-rh01-owner-job": process.env.WTP_RUNTIME_AUTHORITY_CONTRACT || process.env.WTP_RH01_JOB_ID || "",
+  "x-rh01-owner-task": process.env.WTP_RH01_WORKER_TASK_ID ?? "" });
 
 /** The real PG repositories keep their SQL, projections, CAS and log allocation behavior. */
 export function controlSql<T extends { query: (...args: never[]) => unknown }>(production: T): T {
@@ -124,7 +127,7 @@ export function controlSql<T extends { query: (...args: never[]) => unknown }>(p
   return new Proxy(production, { get(target, name) {
     if (name !== "query") return Reflect.get(target, name);
     return async (text: string, params: readonly unknown[] = []) => {
-      const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, params }) });
+      const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ text, params }) });
       const result = await response.json() as { rows?: unknown[]; error?: string };
       if (!response.ok) throw Error(result.error ?? "RH01 local control SQL failed");
       return result.rows ?? [];
@@ -138,7 +141,7 @@ export function readonlyReaderQuery(): ((statements: readonly { text: string; pa
   const endpoint = process.env.WTP_RH01_FACTS_URL?.replace(/\/query$/, "/reader-select");
   if (!endpoint) return null;
   return async statements => {
-    const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ statements }) });
+    const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ statements }) });
     const body = await response.json() as { results?: Record<string, unknown>[][]; error?: string };
     if (!response.ok) throw Error(body.error ?? "RH01 canonical read SQL failed");
     return body.results ?? [];
@@ -326,7 +329,7 @@ export function readonlyFactDb(): FactDb & { readonly query: Query } {
   const endpoint = process.env.WTP_RH01_FACTS_URL;
   if (!endpoint) throw Error("RH01 local fact PostgreSQL endpoint is missing");
   const request = async (path: string, body: unknown) => {
-    const response = await fetch(endpoint.replace(/\/query$/, path), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const response = await fetch(endpoint.replace(/\/query$/, path), { method: "POST", headers: rpcHeaders(), body: JSON.stringify(body) });
     const result = await response.json() as { rows?: Record<string, unknown>[]; error?: string };
     if (!response.ok) throw Error(result.error ?? `RH01 local fact query HTTP ${response.status}`);
     return result;
@@ -348,7 +351,7 @@ export function controlOverlay(production: ControlPlaneRepositories): ControlPla
   const pacing = new Proxy(production.websitePacing, { get(target, method) {
     if (typeof method !== "string" || typeof Reflect.get(target, method) !== "function") return Reflect.get(target, method);
     return async (...args: unknown[]) => {
-      const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ method, args }) });
+      const response = await fetch(endpoint, { method: "POST", headers: rpcHeaders(), body: JSON.stringify({ method, args }) });
       const body = await response.json() as { result?: unknown; map?: readonly (readonly [string, number])[]; error?: string };
       if (!response.ok) throw Error(body.error ?? "RH01 local pacing operation failed");
       return body.map ? new Map(body.map) : body.result;

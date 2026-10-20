@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { allowedMeasurementRequest, assertNeededProductionRead } from "../scripts/rh01-network.mjs";
 import { spawn } from "node:child_process";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { once } from "node:events";
@@ -10,6 +10,7 @@ import { DatabaseSync } from "node:sqlite";
 import { measuredCompletion } from "../scripts/rh01-completion.mts";
 import { projectedRead, updateRead, shadowRead } from "../scripts/rh01-sql.mts";
 import { commandIdentity, workloadOffers } from "../scripts/rh01-workload.mts";
+import { physicalRunReads } from "../scripts/rh01-read-accounting.mts";
 
 test("all-offer ownership retains exact modes and aliases only identical authority and commands", () => {
   const job = (id: string, command: readonly string[], source = "standing runner") => ({ id, command, source, script: command[0] });
@@ -168,7 +169,7 @@ test("production byte accounting consumes one streaming body and separates reade
     globalThis.fetch=async()=>{const response=new Response(text,{headers:{'content-type':'application/json'}});
       Object.defineProperty(response,'url',{value:'https://reader.example/sql'});return response;};
     globalThis.WebSocket=class extends EventTarget{constructor(){super();}};
-    const{enableProductionReadAccounting}=await import(${JSON.stringify(moduleUrl)});enableProductionReadAccounting('fixture');
+    const{enableProductionReadAccounting,withProductionReadOwner}=await import(${JSON.stringify(moduleUrl)});enableProductionReadAccounting('fixture');
     const request=url=>fetch(url,{method:'POST',body:JSON.stringify({query:'SELECT 1'})});
     const first=await request('https://reader.example/sql');assert.equal(first.url,'https://reader.example/sql');
     assert.deepEqual(await first.json(),{rows:[{name:'Málaga'}]});
@@ -178,13 +179,16 @@ test("production byte accounting consumes one streaming body and separates reade
     assert.equal(await(await aliased(process.env.WTP_PRODUCTION_DATABASE_URL_READONLY)).text(),text);
     assert.equal(await(await aliased(process.env.WTP_CONTROL_PLANE_DATABASE_URL)).text(),text);
     assert.equal(await(await request('https://api.example/sql')).text(),text);
+    const delegated=await Promise.all([111,222].map(ownerPid=>withProductionReadOwner({ownerPid,jobId:'source:'+ownerPid},()=>request('https://reader.example/sql'))));
+    for(const response of delegated)assert.equal(await response.text(),text);
     const socket=new WebSocket('wss://reader.example/v2');
     for(const data of ['Málaga',new Uint8Array([1,2]),new Blob(['abc'])])socket.dispatchEvent(new MessageEvent('message',{data}));
     const rows=readFileSync(process.env.WTP_RH01_PRODUCTION_READ_LEDGER,'utf8').trim().split('\\n').map(JSON.parse);
-    assert.equal(rows.filter(row=>row.database==='reader'&&row.transport==='http-body').reduce((n,row)=>n+row.bytes,0),Buffer.byteLength(text)*2);
+    assert.equal(rows.filter(row=>row.database==='reader'&&row.transport==='http-body').reduce((n,row)=>n+row.bytes,0),Buffer.byteLength(text)*4);
+    for(const ownerPid of [111,222])assert.equal(rows.filter(row=>row.ownerPid===ownerPid).reduce((n,row)=>n+row.bytes,0),Buffer.byteLength(text));
     assert.equal(rows.filter(row=>row.database==='reader'&&row.transport==='websocket-message').reduce((n,row)=>n+row.bytes,0),Buffer.byteLength('Málaga')+5);
     assert.equal(rows.filter(row=>row.database==='control-plane').reduce((n,row)=>n+row.bytes,0),Buffer.byteLength(text)*2);
-    assert.equal(new Set(rows.map(row=>row.requestId)).size,5);console.log('single-stream-bytes-verified');`;
+    assert.equal(new Set(rows.map(row=>row.requestId)).size,7);console.log('single-stream-bytes-verified');`;
   try {
     const child = spawn(process.execPath, ["--input-type=module", "-e", source], { cwd: process.cwd(), env: { ...process.env,
       WTP_RH01_PRODUCTION_READ_LEDGER: join(directory, "bytes.jsonl"),
@@ -192,6 +196,19 @@ test("production byte accounting consumes one streaming body and separates reade
       WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://wtp_cp_release_readonly:fixture@control.example/db" }, stdio: ["ignore", "pipe", "pipe"] });
     let stdout = "", stderr = ""; child.stdout.on("data", chunk => { stdout += chunk; }); child.stderr.on("data", chunk => { stderr += chunk; });
     const [status] = await once(child, "close"); assert.equal(status, 0, stderr + stdout); assert.match(stdout, /single-stream-bytes-verified/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("physical run totals attribute delegated database bytes once and exclude other runs and preparation", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "rh01-owner-ledger-")), path = join(directory, "reads.jsonl");
+  const row = { at: "2026-10-20T09:00:00Z", runId: "measured", pid: 99, ownerPid: 7, database: "reader", bytes: 123 };
+  try {
+    await writeFile(path, [row, { ...row, database: "control-plane", bytes: 10 }, { ...row, runId: "other" },
+      { ...row, at: "2026-10-20T08:59:00Z" }, { ...row, ownerPid: 8, bytes: 50 }].map(value => JSON.stringify(value)).join("\n") + "\n");
+    const totals = await physicalRunReads(path, "measured", Date.parse("2026-10-20T09:00:00Z"));
+    assert.equal(totals.reader, 173); assert.equal(totals.control, 10);
+    assert.deepEqual(totals.owners.get(7), { reader: 123, control: 10 });
+    assert.deepEqual(totals.owners.get(8), { reader: 50, control: 0 }); assert.equal(totals.owners.has(99), false);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 

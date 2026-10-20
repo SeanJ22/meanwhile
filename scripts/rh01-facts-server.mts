@@ -1,5 +1,6 @@
 /** A separate disposable PostgreSQL for RH-01 publication writes; empty reads consult production read-only. */
 import { createServer } from "node:http";
+import { withProductionReadOwner } from "./rh01-network.mjs";
 import { PGlite, type Transaction } from "@electric-sql/pglite";
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -320,7 +321,10 @@ async function execute(connection: LocalConnection, text: string, params: readon
 // Local publication IDs must never collide with later hydrated production IDs.
 await pg.exec("SELECT setval(pg_get_serial_sequence('fact','id'),1000000000000,true); SELECT setval(pg_get_serial_sequence('source_copy','id'),1000000000000,true)");
 trace("sequences");
-const server = createServer(async (request, response) => {
+const server = createServer((request, response) => withProductionReadOwner({
+  ownerPid: Number(request.headers["x-rh01-owner-pid"]) || process.pid,
+  jobId: String(request.headers["x-rh01-owner-job"] ?? ""), taskId: String(request.headers["x-rh01-owner-task"] ?? ""),
+}, async () => {
   if (request.method !== "POST" || !["/query", "/begin", "/commit", "/rollback", "/control", "/control-sql", "/reader-select", "/pacing"].includes(request.url ?? "")) { response.writeHead(404).end(); return; }
   try {
     let body = "";
@@ -385,7 +389,7 @@ const server = createServer(async (request, response) => {
     const rows = await pending;
     response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ rows }));
   } catch (error) { response.writeHead(500, { "content-type": "application/json" }).end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) })); }
-});
+}));
 server.listen(0, "127.0.0.1", () => {
   const address = server.address();
   if (!address || typeof address === "string") throw Error("RH01 facts server address missing");

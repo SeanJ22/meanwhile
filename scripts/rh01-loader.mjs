@@ -102,7 +102,7 @@ export async function load(url, context, nextLoad) {
     });\n    return context;`);
     add(`import { allowedMeasurementRequest as rhAllowedRequest } from ${JSON.stringify(pathToFileURL(join(process.env.WTP_RH01_HARNESS_ROOT ?? root, "scripts/rh01-network.mjs")).href)};`);
   } else if (url.endsWith("/lib/control-plane/workers/lease-worker.ts")) {
-    source = source.replace('broker.send("task-start", "", id);', 'broker.send("task-start", "", id); console.log("RH01_WORKER_ROLE " + JSON.stringify({pid:process.pid,role:task.workerTask?.role ?? "SCOUT",status:"RUNNING",taskId:id}));');
+    source = source.replace('broker.send("task-start", "", id);', 'broker.send("task-start", "", id); process.env.WTP_RH01_WORKER_TASK_ID=id; console.log("RH01_WORKER_ROLE " + JSON.stringify({pid:process.pid,role:task.workerTask?.role ?? "SCOUT",status:"RUNNING",taskId:id}));');
     source = source.replace('broker.send("result", "", { ...result,', 'console.log("RH01_WORKER_ROLE " + JSON.stringify({pid:process.pid,role:task.workerTask?.role ?? "SCOUT",status:"IDLE",taskId:id})); broker.send("result", "", { ...result,');
   } else if (url.endsWith("/scripts/promote-registry-runtime.mts")) {
     source = source.replace('onResult: place => {', 'onResult: place => { console.log("RH01_NATIONAL_RESULT " + JSON.stringify({zip:place.zip,completed:!("deferred" in place),deferred:"deferred" in place ? place.deferred : null}));');

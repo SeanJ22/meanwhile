@@ -15,11 +15,13 @@ import { neon } from "@neondatabase/serverless";
 import { measuredCompletion } from "./rh01-completion.mts";
 import { enableProductionReadAccounting } from "./rh01-network.mjs";
 import { commandIdentity, workloadOffers } from "./rh01-workload.mts";
+import { physicalRunReads } from "./rh01-read-accounting.mts";
 import type { RoutineSourceTask } from "../lib/civic-data/runner.ts";
 
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const harnessRoot = process.cwd(), codeRoot = resolve(arg("code-root") ?? harnessRoot);
 const phase = arg("phase") ?? "after", directory = resolve(arg("out") ?? `.scratch/rh01/${phase}`);
+const activePima = process.argv.includes("--active-pima-diagnostic");
 const only = arg("only")?.split(",");
 const hostBytes = Number(arg("host-bytes") ?? 8326938624);
 const admissionCode = await import(pathToFileURL(join(codeRoot, "lib/control-plane/workers/worker-slots.ts")).href);
@@ -45,6 +47,7 @@ interface JobResult extends Job {
   readonly successful?: boolean;
   readonly execution?: "DIRECT" | "ACTUAL_PARENT_CHILD" | "IDENTICAL_COMMAND_ALIAS";
   readonly coveredByJobId?: string; readonly actualPid?: number; readonly offeredAt?: string;
+  productionReaderResponseBytes?: number; productionControlResponseBytes?: number;
 }
 interface ObservedChild {
   readonly file: string; readonly id: string; readonly command: readonly string[]; readonly pid: number; readonly parentPid: number;
@@ -102,7 +105,9 @@ if (arg("extra-jobs")) {
 }
 const inventory = [...new Map([...(savedInventory?.jobs ?? jobs), ...(savedInventory ? jobs.filter(job => job.source !== "standing source contract" && job.source !== "audit clock" && job.source !== "standing runner") : [])].map(job => [job.id, job])).values()]
   .map(job => ["runtime:hunter-lane", "runtime:platform-census-runner"].includes(job.id)
-    ? { ...job, authority: { capability: job.id === "runtime:hunter-lane" ? "RESEARCH_CYCLE" : "ROUTINE_SUPERVISOR", contract: null } } : job);
+    ? { ...job, authority: { capability: job.id === "runtime:hunter-lane" ? "RESEARCH_CYCLE" : "ROUTINE_SUPERVISOR", contract: null } } : job)
+  .map(job => activePima && job.id === "runtime:freshness-shadow"
+    ? { ...job, command: job.command.filter(argument => argument !== "--no-model") } : job);
 if (savedInventory) nativeDoorInventory = savedInventory.nativeDoorInventory ?? null;
 let selection = inventory.filter(job => !only || only.includes(job.id) || only.includes(job.script.split("/").at(-1)!));
 if (!selection.length) throw Error("RH01 selected no registered jobs");
@@ -182,6 +187,17 @@ if (process.argv.includes("--runtime-controlled")) {
   environment.WTP_RUNTIME_MODE = "staging"; environment.WTP_DB_ROLE = "local";
   environment.WTP_RUNTIME_AUTHORITY_SHA = codeRevision;
 }
+if (activePima) {
+  if (!process.argv.includes("--runtime-controlled") || !savedInventory) throw Error("RH01 active diagnostic requires controlled authority and the saved exact inventory");
+  const descriptor = arg("model-broker") ?? environment.WTP_RH01_MODEL_BROKER;
+  if (!descriptor || JSON.parse(await readFile(descriptor, "utf8")).authorized !== true) throw Error("RH01 active diagnostic requires the explicitly authorized shared broker");
+  environment.WTP_RH01_MODEL_BROKER = resolve(descriptor);
+  environment.WTP_RH01_MODEL_PHASE = phase;
+  environment.WTP_CONTINUOUS_HUNTERS = "1";
+  environment.WTP_HUNTER_LANE_ARMING = join(directory, "hunter-arming.sqlite");
+  delete environment.WTP_RH01_MODEL_CAPTURE; // The full run executes native production-scoped reads.
+  environment.NODE_OPTIONS += ` --import=${join(harnessRoot, "scripts/rh01-model-preload.mjs")}`;
+}
 environment.WTP_WORKER_HOST_MEMORY_MIB = String(hostBytes / (1024 * 1024));
 process.env.WTP_WORKER_HOST_MEMORY_MIB = environment.WTP_WORKER_HOST_MEMORY_MIB;
 const facts = spawn(process.execPath, ["--experimental-strip-types", join(harnessRoot, "scripts/rh01-facts-server.mts")], { cwd: codeRoot, env: environment, stdio: ["ignore", "pipe", "pipe"] });
@@ -201,6 +217,18 @@ const factsUrl = await new Promise<string>((accept, reject) => {
   });
 });
 environment.WTP_RH01_FACTS_URL = factsUrl;
+if (activePima) {
+  const preparation = spawn(process.execPath, ["--experimental-strip-types", "--import", join(harnessRoot, "scripts/register-test-loader.mjs"),
+    join(harnessRoot, "scripts/rh01-active-overlay-prepare.mts"), `--phase=${phase}`,
+    `--prepared=${resolve(arg("model-prepared") ?? `.scratch/rh01/active-model-${phase}`)}`], {
+    cwd: harnessRoot, env: environment, stdio: ["ignore", "pipe", "pipe"],
+  });
+  let detail = "";
+  preparation.stdout.on("data", chunk => { detail += chunk; process.stdout.write(chunk); });
+  preparation.stderr.on("data", chunk => { detail += chunk; process.stderr.write(chunk); });
+  const [status] = await once(preparation, "close");
+  if (status !== 0) { facts.kill("SIGTERM"); throw Error(`RH01 genuine local gateway preparation failed:${detail.slice(-4096)}`); }
+}
 const active = new Map<number, { readonly job: Job; peak: number; ownPeak: number; readonly startedAt: number; readonly nested: Map<number, NestedPeak> }>();
 const observed = new Map<string, ObservedChild>(), observedMemory = new Map<number, MemorySample>();
 const observedByCommand = new Map<string, ObservedChild[]>();
@@ -461,16 +489,28 @@ try {
 const elapsedMs = Date.now() - startedAt;
 refreshObserved();
 const logicalReaderBytes = factsBytes + [...allParts.values()].reduce((sum, part) => sum + (part.bytes.reader ?? 0), 0);
+const physical = await physicalRunReads(environment.WTP_RH01_PRODUCTION_READ_LEDGER!, environment.WTP_RH01_RUN_ID!, startedAt);
+const attributed = new Set<number>();
+for (const result of results) {
+  const pids = new Set([...(result.actualPid ? [result.actualPid] : []), ...(result.nestedProcesses ?? []).map(row => row.pid)]);
+  result.productionReaderResponseBytes = 0; result.productionControlResponseBytes = 0;
+  for (const pid of pids) {
+    const counts = physical.owners.get(pid); attributed.add(pid);
+    result.productionReaderResponseBytes += counts?.reader ?? 0; result.productionControlResponseBytes += counts?.control ?? 0;
+  }
+}
 const headroomBytes = 768 * 1024 * 1024;
 const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).toISOString(), elapsedMs, headroomBytes, comparisonLeaseWorkerBytes: leaseBytes,
   temporaryDirectory: process.env.TMPDIR ?? process.env.TEMP ?? process.env.TMP ?? null,
   observationRequestedMs: observationMs, observedFullHour: elapsedMs >= 3600000 && !watchdogExceeded,
   workload: "Every selected command offered simultaneously. Actual parent descendants cover identical child commands; never-spawned offers enter admission after their owner ends. No cadence replay or synthetic clock advance",
   watchdogExceeded, watchdogBytes,
-  aggregatePeakRssBytes: aggregatePeak, localDatabasePeakRssBytes: factsPeak, controlHydrationBytes, readerBytes: logicalReaderBytes,
-  readerBytesPerHour: logicalReaderBytes * 3600000 / elapsedMs,
+  aggregatePeakRssBytes: aggregatePeak, localDatabasePeakRssBytes: factsPeak, controlHydrationBytes, readerBytes: physical.reader,
+  readerBytesPerHour: physical.reader * 3600000 / elapsedMs, logicalReaderBytes,
   productionReadAccounting: { runId: environment.WTP_RH01_RUN_ID, path: environment.WTP_RH01_PRODUCTION_READ_LEDGER,
-    definition: "Actual production response body bytes are streamed once to the separate task accounting log; logical workload bytes above may include local overlay reads." },
+    readerResponseBytes: physical.reader, controlResponseBytes: physical.control,
+    unattributedReaderResponseBytes: [...physical.owners].filter(([pid]) => !attributed.has(pid)).reduce((sum, [, row]) => sum + row.reader, 0),
+    definition: "Actual production HTTP bodies and WebSocket payloads are counted once during this run. RPC owner PID attributes delegated reads to the calling job. Per-job native readerBytes are partial logical counters; productionReaderResponseBytes includes delegated reads. Parent owned-tree rows include descendants; aggregate bytes are never the sum of overlapping job rows." },
   observedSpareLeaseWorkers: Math.max(0, Math.floor((hostBytes - aggregatePeak - headroomBytes) / leaseBytes)),
   fitLeaseWorkers: (admissionAtPeak as { fitLeaseWorkers: number } | null)?.fitLeaseWorkers ?? null,
   additionalAdmissibleLeaseWorkers: (admissionAtPeak as { fitLeaseWorkers: number } | null)?.fitLeaseWorkers ?? null,
@@ -480,7 +520,7 @@ const report = { phase, codeRoot, codeRevision, startedAt: new Date(startedAt).t
   jobs: results, complete: !watchdogExceeded && results.length === selection.length && results.every(result => result.complete) && admissionAtPeak !== null,
   limits: ["The temporary fact database is separate from runner RSS, as production PostgreSQL is remote.", "Only a completed executable is a full-job measurement; every incomplete executable remains required work.",
     elapsedMs >= 3600000 && !watchdogExceeded ? "Reader bytes were observed for at least one real hour of this simultaneous-offer replay; this does not reproduce production cadence." : "Reader bytes per hour extrapolates this controlled interval, rather than observing a full hour of production cadence.",
-    "The no-model research parent cannot prove the paid hunter workload; that requires source-backed saved-response replay."] };
+    activePima ? "Only the explicitly authorized Pima model requests may spend; other production model work retains its existing controls and the broker scope." : "The no-model research parent cannot prove the paid hunter workload; that requires authentic replay or the explicitly approved isolated diagnostic."] };
 await writeFile(output, JSON.stringify(report, null, 2));
 process.stdout.write(`RH01_RESULT ${JSON.stringify({ output, complete: report.complete, peak: aggregatePeak, fitLeaseWorkers: report.fitLeaseWorkers })}\n`);
 if (!report.complete) process.exitCode = 1;

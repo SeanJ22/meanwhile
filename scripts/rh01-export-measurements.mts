@@ -5,6 +5,7 @@ import { basename, dirname, resolve } from "node:path";
 interface Job {
   id: string; script: string; command: readonly string[]; scope?: string; recordClass?: string;
   ownPeakRssBytes?: number; peakRssBytes?: number; readerBytes?: number; controlPlaneBytes?: number; elapsedMs?: number;
+  productionReaderResponseBytes?: number; productionControlResponseBytes?: number;
   complete?: boolean; successful?: boolean; completionReason?: string; error?: string; code?: number | null;
   sourceReceipt?: { state?: string; decision?: string; acquisitionSucceeded?: boolean } | null;
 }
@@ -12,7 +13,7 @@ interface Run { phase: string; codeRevision?: string; codeRoot: string; startedA
 const options = (name: string) => process.argv.filter(value => value.startsWith(`--${name}=`)).map(value => value.slice(name.length + 3));
 const output = resolve(options("output")[0] ?? "docs/rh01-job-measurements.csv");
 const columns = ["run", "phase", "code_label", "code_sha", "started_at_utc", "job_id", "script", "command_json", "scope", "record_class", "status", "source_result",
-  "own_peak_rss_bytes", "owned_tree_peak_rss_bytes", "reader_bytes", "control_plane_bytes", "elapsed_ms", "exit_code", "completion_reason"];
+  "own_peak_rss_bytes", "owned_tree_peak_rss_bytes", "logical_reader_bytes", "logical_control_plane_bytes", "elapsed_ms", "exit_code", "completion_reason", "production_reader_response_bytes", "production_control_response_bytes"];
 const rows: (string | number | boolean | null | undefined)[][] = [columns];
 for (const path of options("run")) {
   const run = JSON.parse(await readFile(resolve(path), "utf8")) as Run;
@@ -23,7 +24,7 @@ for (const path of options("run")) {
     job.complete ? job.successful === false ? "COMPLETE_HELD" : "COMPLETE" : "INCOMPLETE_LOWER_BOUND",
     job.sourceReceipt?.state ?? job.sourceReceipt?.decision,
     job.ownPeakRssBytes, job.peakRssBytes, job.readerBytes, job.controlPlaneBytes, job.elapsedMs, job.code,
-    job.completionReason ?? job.error,
+    job.completionReason ?? job.error, job.productionReaderResponseBytes, job.productionControlResponseBytes,
   ]);
 }
 for (const path of options("inventory")) {
@@ -31,7 +32,7 @@ for (const path of options("inventory")) {
   for (const job of inventory.jobs) rows.push([
     basename(dirname(path)), inventory.phase ?? "after", "final-frozen-workload-outstanding", "", "", job.id, job.script,
     JSON.stringify(job.command), job.scope, job.recordClass, "UNMEASURED_FINAL_OFFER", "", "", "", "", "", "", "",
-    "Required final exact-offer measurement remains outstanding; diagnostic rows do not substitute.",
+    "Required final exact-offer measurement remains outstanding; diagnostic rows do not substitute.", "", "",
   ]);
 }
 if (rows.length === 1) throw Error("RH01 export requires at least one --run or --inventory");

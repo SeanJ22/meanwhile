@@ -10,6 +10,7 @@ import {
   resolveVoteIdentity,
   statesOf,
   voteEvidenceFor,
+  voteEvidenceForIncludingHistory,
 } from "../lib/ask/votes.ts";
 import { readFederalMemberVotes } from "../lib/votes/snapshot.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
@@ -23,6 +24,19 @@ const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const CD6 = "ocd-division/country:us/state:az/cd:6";
 const READER = [AZ, PIMA, CD6];
+
+test("an already answering recent vote skips fallback preparation; only a missing federal topic prepares it before history", async () => {
+  let prepared = 0;
+  const held = await memberVotes("congress:C001133");
+  assert.ok(held?.votes[0]?.legisNum);
+  const ready = await voteEvidenceForIncludingHistory("Juan Ciscomani", { withinStates: ["AZ"],
+    officeholderId: "congress:C001133", topic: held!.votes[0].legisNum!, onRecentMiss: () => { prepared++; } });
+  assert.ok(ready.records.length);
+  assert.equal(prepared, 0);
+  await assert.rejects(voteEvidenceForIncludingHistory("Juan Ciscomani", { withinStates: ["AZ"],
+    officeholderId: "congress:C001133", topic: "HR99999999", onRecentMiss: () => { prepared++; throw new Error("recent-miss-before-history"); } }), /recent-miss-before-history/);
+  assert.equal(prepared, 1);
+});
 
 test("historical Ask totals retain the recent chamber denominator under an explicit name", () => {
   const totals = federalVoteDenominatorsWithHistory({ officeholderSeatsMatched: 1,

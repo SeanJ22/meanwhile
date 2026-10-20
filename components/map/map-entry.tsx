@@ -43,6 +43,7 @@ import { ReaderCard } from "@/components/shell/reader-card";
 import { ReaderPopup } from "@/components/shell/reader-popup";
 import { SelectionPill } from "@/components/shell/selection-pill";
 import { Logo } from "@/components/brand/logo";
+import { ResetViewButton } from "@/components/reset-view-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
 import { ZipSwitcher } from "./zip-switcher";
@@ -1714,6 +1715,7 @@ function MapEntryInner() {
                 <Logo variant="wordmark" size={38} />
               </span>
               <span className="mw-header-spacer" />
+              <ResetViewButton onReset={onReset} />
               <ThemeToggle className="mw-header-theme" />
             </div>
             <div className="mw-header-right">{cluster}</div>

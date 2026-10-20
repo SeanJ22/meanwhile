@@ -99,7 +99,11 @@ export function contestsForBallotAsk(contests: readonly Contest[], ask: Extract<
 
 /** The contests of one office, in the ballot's own vocabulary. */
 export function contestsOfOffice(contests: readonly Contest[], key: OfficeKey): Contest[] {
-  return contests.filter((contest) => contest.type === "CANDIDACY" && officeIdentity(contest.title) === key);
+  return contests.filter(contest => {
+    if (contest.type !== "CANDIDACY") return false;
+    const office = officeIdentity(contest.title.replace(/^for\s+/i, ""));
+    return office === key || office === "governor_and_lieutenant_governor" && (key === "governor" || key === "lieutenant_governor");
+  });
 }
 
 /** "United States" for "U.S.": the length contract counts every "U.S. " as a sentence end. */
@@ -182,7 +186,7 @@ export function composeOfficeField(input: OfficeFieldInput & { key: OfficeKey | 
     if (fielded.length === 0) {
       const statement = `We have not recorded who is running for ${title}.`;
       gaps.push(statement);
-      clauses.push(statement.slice(0, -1).replace(/^We/, "we"));
+      clauses.push(statement.slice(0, -1));
       continue;
     }
     for (const candidate of fielded) {
@@ -194,7 +198,6 @@ export function composeOfficeField(input: OfficeFieldInput & { key: OfficeKey | 
     }
     clauses.push(`${title}: ${list(fielded.map((candidate) => candidate.party ? `${candidate.name} (${candidate.party})` : candidate.name))}`);
   }
-  const lead = `On your ballot for ${electionName(input.election)}${electionDate(input.election)}`;
-  const answer = `${lead}, ${clauses.join("; ")}.`;
+  const answer = `${clauses.join("; ")}.`;
   return { answer, citedUrls: [...new Set(records.flatMap((record) => record.sourceUrl ? [record.sourceUrl] : []))], records, gaps };
 }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
-import { composeMeetingBody, type BodyPartitionRead } from "../lib/meetings/body-records.ts";
+import { readPlacePackage } from "../lib/reader/place.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { PIMA } from "./helpers/meeting-body-fixtures.ts";
@@ -25,16 +25,17 @@ test("CP-18: a second same-day sitting stays distinct, and an exact cross-door m
   assert.equal(mergeReaderSittings([a, b, meeting("calendar:1")]).rows.length, 2);
   assert.equal(mergeReaderSittings([a, meeting("calendar:1", { bodyId: "another-body" })]).rows.length, 2);
 });
-test("CP-18: a body's composition retains both source ids and an agenda belonging to the merged-away row", () => {
+test("CP-18: a body's composition retains both source ids and an agenda belonging to the merged-away row", async () => {
   const owned = { bodyId: PIMA.bodyId, ocdId: PIMA.ocdId };
   const old = meeting("calendar:1", owned);
   const fresh = meeting("portal:1", { ...owned, startsAt: "2026-10-06T19:00:00Z", provenance: { ...old.provenance, collectedAt: "2026-10-05T13:00:00Z" } });
   const report = (source: string) => ({ source, ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } });
   const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [report("calendar"), report("portal")], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
-  const metadata = { recordClass: "MEETING", scope: PIMA.scope, sourceId: PIMA.sourceId, version: null, versionId: "v-1", lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: at, promotedAt: at, stale: "CURRENT", staleAt: null } as const;
-  const composed = composeMeetingBody({ bodyId: PIMA.bodyId, divisions: [PIMA.ocdId!], histories: [],
-    reads: [{ partition: PIMA, held: null, read: { kind: "PROMOTED", value: snapshot, metadata } as unknown as BodyPartitionRead["read"] }] });
-  const result = composed!.snapshot;
+  const held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},async()=>[{
+    entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:[],
+    meeting_rows:[{scope:PIMA.scope,payload:snapshot,current_version_id:"v-1",confirmation:null}],parts:{},governments:[],divisions:[],registration_held:false,
+  }]);
+  const result = held.snapshot;
   assert.equal(result.meetings.length, 1);
   assert.equal(result.meetings[0].startsAt, fresh.startsAt);
   assert.equal(result.agendaDocuments[0].meetingId, fresh.id);

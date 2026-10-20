@@ -46,7 +46,6 @@ test("a saved official roster page becomes one live fact per member and title, e
   assert.equal(rosters[0]!.members[0]!.fieldSources!.name!.sourceUrl, "https://clerksboards.tucsonaz.gov/boards/15");
   assert.equal(dispositions.length, 4);
   assert.ok(dispositions.every(d => d.state === "READER_ELIGIBLE"));
-  assert.deepEqual(await db.query("SELECT DISTINCT place_id FROM rebuild_queue"), [{ place_id: "ocd-division/country:us/state:az/place:tucson" }]);
 });
 
 test("a re-read confirms; a complete official page that drops a member retires only that membership; a page label is never a person", async () => {

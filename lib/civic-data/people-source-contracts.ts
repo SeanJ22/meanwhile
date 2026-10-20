@@ -17,6 +17,18 @@ export const peopleSourceContractId = (state: string, sourceId: StandingPeopleSo
 
 /** Each invocation holds one state. The upstream transport owns shared release and host pacing. */
 export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
+  {
+    id: peopleSourceContractId("us", "statewide-executive-sources"), sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR",
+    scope: peopleSourceScope("US", "statewide-executive-sources"), acquisitionFailureDomain: "routine-source:statewide-executive-sources:us",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/national-people-refresh.mts", "--promote", "--state=us", "--source=statewide-executive-sources"] },
+    parserNormalizerVersion: sourceAuthority("statewide-executive-sources")!.parserVersion,
+    cadence: { description: "daily current President refresh from the White House administration", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "retry the White House; failed reads preserve the verified President" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "statewide-executive-sources" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "us-current-president", consumers: ["registry", "people", "representation", "map", "Ask", "Admin"] },
+    lkgBehavior: "The administration's current President link and the captured own page establish the holder. Failed reads preserve the last verified record.",
+    autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  },
   ...PEOPLE_SOURCE_STATES.flatMap(state => STANDING_PEOPLE_SOURCE_IDS.map((sourceId): RoutineSourceContract => ({
     id: peopleSourceContractId(state, sourceId), sourceId,
     recordClass: peopleSourceRecordClass(sourceId),

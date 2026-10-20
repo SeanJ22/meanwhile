@@ -9,8 +9,8 @@ import { federalDirectoryCandidate } from "../lib/officials/federal-directory-da
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { federalDirectoryEdge } from "./helpers/promoted-fixtures.ts";
+import { installFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import { GET } from "../app/api/directory/route.ts";
 import { DirectoryRecordsContent } from "../components/officials/member-directory.tsx";
 import { representationNoteFor } from "../lib/registry/representation.ts";
@@ -104,7 +104,9 @@ test("official Capitol contacts publish independently and reach the actual direc
       ...captures.map(capture => ({ ...capture, requestedUrl: capture.finalUrl, httpStatus: 200 }))] });
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster:CA", candidate, at);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
-  await withReaderAuthorityEdge({ edgeOnly: true, ...federalDirectoryEdge(value) }, async () => {
+  await installFederalDirectory(value);
+  activateCanonicalFixture("default");
+  {
     const response = await GET(new Request("https://meanwhile.example/api/directory?member=congress:G000607&state=CA"));
     assert.equal(response.status, 200);
     const directory = await response.json();
@@ -114,7 +116,7 @@ test("official Capitol contacts publish independently and reach the actual direc
     const markup = renderToStaticMarkup(createElement(DirectoryRecordsContent, { holderId: "congress:G000607", state: "CA", only: "offices", directory, failed: false }));
     assert.match(markup, /408 Cannon House Office Building/);
     assert.match(markup, /Capitol office/);
-  });
+  }
   const afterFailedOptionalFeed = withChamberDirectories(core, "CA", [], value);
   assert.deepEqual(afterFailedOptionalFeed.roster.officeholders[0].offices, value.roster.officeholders[0].offices);
 });

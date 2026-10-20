@@ -18,7 +18,7 @@ for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]
 await installRegistryAuthority();
 
 import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
-import { snapshotSourceFor } from "../lib/meetings/registry.ts";
+import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 

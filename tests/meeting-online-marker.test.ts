@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
+import { jsx } from "react/jsx-runtime";
 import { renderToStaticMarkup } from "react-dom/server";
 import { tsImport } from "tsx/esm/api";
 
@@ -29,6 +30,9 @@ import {
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { EntityModal, type ModalSubject } from "../components/map/popup/entity-modal.tsx";
+import { DataProvider, type ShellData } from "../lib/state/data.tsx";
+import { rowMarkup } from "./helpers/reader-markup.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string): string => readFileSync(join(ROOT, p), "utf8");
@@ -45,7 +49,7 @@ const CONTROL = fixtures.online.find((m) => m.id === "clerksboards:3:2026-09-16"
 /** Surfaces that must read online-ness from `lib/meetings/online.ts`. */
 const ROUTED = [
   "components/map/list-overlay.tsx",
-  "components/map/door-overlay.tsx",
+  "components/map/popup/entity-modal.tsx",
   "lib/meetings/venues.ts",
   "components/ui/meeting-row.tsx",
 ];
@@ -110,17 +114,43 @@ test("MTG-14: the shared files are in ONE of the two honest states, never half-w
   );
 });
 
-test("MTG-14: discovery surfaces show the held online label without a missing join-link placeholder", async () => {
-  for (const file of ["components/map/list-overlay.tsx", "components/map/door-overlay.tsx"]) {
+test("MTG-14: meeting lists and body cards show the held online label without a missing join-link placeholder", async (t) => {
+  for (const file of ["components/map/list-overlay.tsx", "components/map/popup/entity-modal.tsx"]) {
     const src = read(file);
     assert.match(src, /<MeetingRow/, `${file} must mount the shared row`);
   }
   const { MeetingRow } = await tsImport("../components/ui/meeting-row.tsx", import.meta.url) as typeof import("../components/ui/meeting-row.tsx");
+  t.mock.timers.enable({ apis: ["Date"], now: 0 });
   for (const meeting of [NAMED, CONTROL]) {
     const markup = renderToStaticMarkup(createElement(MeetingRow, { meeting }));
     const label = renderToStaticMarkup(createElement("span", null, meeting.online!.label)).slice(6, -7);
     assert.ok(markup.includes(`data-meeting-where="online">Online · ${label}</div>`), meeting.id);
     assert.doesNotMatch(markup, /data-working-on-it|working on getting this info|Want us|Join online/);
+    const subject: ModalSubject = {
+      subjectId: meeting.bodyId!, subjectKind: "BODY", title: meeting.bodyName,
+      subtitle: meeting.jurisdiction, tier: "local", facts: [], representation: [],
+      representationNote: "", meetings: [meeting], sources: [],
+      bodyCard: {
+        whatItDoes: { classDefinition: null, formDefinition: null, unreadNote: null },
+        superintendent: null, isSchoolDistrict: false, contact: [], jurisdiction: [],
+      },
+    };
+    const value: ShellData = {
+      allMeetings: [meeting], meetings: [meeting], venues: [], result: null,
+      location: null, drawnDistricts: [], dropped: 0, searchFailed: false,
+      atAddress: false, governing: null, zipPartial: null, basis: "ZIP",
+    };
+    // The same saved sitting appears as next before its start and last after it.
+    for (const [heading, offset] of [["Next meeting", -1000], ["Last meeting", 1000]] as const) {
+      t.mock.timers.setTime(Date.parse(meeting.startsAt) + offset);
+      const card = renderToStaticMarkup(jsx(DataProvider, {
+        value, children: jsx(EntityModal, { subject, onClose: () => {} }),
+      }));
+      const row = rowMarkup(card, meeting.id);
+      assert.ok(row.includes(`>${heading}</h3>`), `${meeting.id}: ${heading}`);
+      assert.ok(row.includes(`data-meeting-where="online">Online · ${label}</div>`), `${meeting.id}: ${heading}`);
+      assert.doesNotMatch(row, /data-working-on-it|working on getting this info|Want us|Join online/);
+    }
   }
 });
 

@@ -1,5 +1,6 @@
 import { decodeEntities } from "../extract/visible-text.ts";
-import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
+import type { FederalDirectoryReadModel, FederalVacancy } from "./federal-directory-data-plane.ts";
+export type { FederalVacancy } from "./federal-directory-data-plane.ts";
 import type { Officeholder } from "./types.ts";
 import { districtIdentity, FIPS_TO_STATE } from "../ocd/fips.ts";
 
@@ -7,13 +8,6 @@ export const CHAMBER_DIRECTORY_URLS = {
   house: "https://clerk.house.gov/xml/lists/MemberData.xml",
   senate: "https://www.senate.gov/general/contact_information/senators_cfm.xml",
 } as const;
-export interface FederalVacancy {
-  readonly ocdId: string;
-  readonly sourceUrl: string;
-  readonly sourceOrg: string;
-  readonly collectedAt: string;
-  readonly reason: string;
-}
 export interface ChamberCapture {
   readonly finalUrl: string;
   readonly body: string;

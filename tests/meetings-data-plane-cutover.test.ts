@@ -6,21 +6,13 @@ import test from "./helpers/playbooks.ts";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { meetingCompositionOf } from "../lib/meetings/body-records.ts";
-import {
-  readMeetingPartitionProjection,
-  type MeetingsSnapshot,
-} from "../lib/meetings/snapshot.ts";
-import {
-  candidateForMeetingPartition,
-  promoteMeetingPartition,
-  readPreviousMeetingPartition,
-} from "../scripts/ingest.ts";
+import { readMeetingPartitionProjection, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { candidateForMeetingPartition, promoteMeetingPartition, readPreviousMeetingPartition } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { bodyPointerOf, readEveryBody } from "./helpers/meeting-body-national.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -157,11 +149,10 @@ test("meetings candidate proves its meeting door's obligations independently of 
   const previous = await readPreviousMeetingPartition(store, partition);
   assert.ok(previous);
 
-  const { read, edge } = await readEveryBody(store, GENERATED_AT);
+  const { read } = await readEveryBody(store, GENERATED_AT);
   assert.equal(read.kind, "PROMOTED");
   assert.deepEqual(read.kind === "PROMOTED" && read.value.meetings.map((row) => row.id).sort(), evidenced.meetings.map((row) => row.id).sort());
-  assert.equal((await bodyPointerOf(edge, "AZ", partition.bodyId))?.composition,
-    meetingCompositionOf([{ contractId: partition.id, versionId: promoted.candidate.id }]), "the served body is composed from the promoted version");
+
 });
 
 test("meetings promotion fails closed without per-child bytes or on an untrusted child redirect", async () => {

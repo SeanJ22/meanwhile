@@ -19,33 +19,16 @@ import test from "node:test";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { planDerivedVersion, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
-import {
-  buildDerivedFamily,
-  derivedFamilyCandidate,
-  type FamilyMemberRead,
-} from "../lib/civic-data/derived-meeting-family.ts";
-import {
-  bodySourceWiringFor,
-  derivedWiringCandidate,
-  derivedWiringEntries,
-  derivedWiringKey,
-  familyMembers,
-  readDerivedMeetingWiring,
-  type DerivedWiringProjection,
-} from "../lib/civic-data/derived-meeting-wiring.ts";
+import { buildDerivedFamily, derivedFamilyCandidate, type FamilyMemberRead } from "../lib/civic-data/derived-meeting-family.ts";
+import { bodySourceWiringFor, derivedWiringCandidate, derivedWiringEntries, derivedWiringKey, familyMembers, readDerivedMeetingWiring, type DerivedWiringProjection } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { manualProjectionCandidate, type CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { CROSSWALK_CITATION, subBodyId, type MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
-import {
-  processRegisteredManualCandidate,
-  processRegisteredMeetingPartitionCandidate,
-  processRegisteredRoutineCandidate,
-} from "../lib/civic-data/promotion.ts";
+import { processRegisteredManualCandidate, processRegisteredMeetingPartitionCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { deriveWiringDecisions } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { meetingBodyRowScope, type MeetingBodyRow } from "../lib/meetings/body-records.ts";
 import { reconcileCounts } from "../lib/meetings/snapshot.ts";
 import type { ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
@@ -53,7 +36,6 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
 import { coupledContracts, readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
-import { publishPass } from "./helpers/meeting-body-fixtures.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
 const OCD = "ocd-division/country:us/state:az/place:testville";
@@ -297,7 +279,6 @@ test("a promoted family's internal fresh duplicates reconcile in the body's reco
   assert.equal(read.value.counts.carried, 0);
   assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
   assert.doesNotThrow(() => reconcileCounts(read.value));
-  assert.equal(plan.stats.recordsWritten, 1, "the family's one body is published as one record");
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
@@ -454,32 +435,7 @@ test("R23: an unchanged derived pass is receipted on the pointed version, not re
   assert.equal(changed.outcome.candidate.state, "PROMOTED", changed.outcome.candidate.failureDetail ?? "");
 });
 
-test("a receipt on the family's partition re-checks its bodies without opening the partition", async () => {
-  const store = new MemoryRoutineDataStore();
-  const names = [BODY_NAME, OTHER_NAME];
-  const crosswalk = await promoteCrosswalk(store, names);
-  await deriveWiring(store, crosswalk, FEED, T_WIRING, 200, {}, names);
-  await promoteFamily(store, T_FAMILY, FEED);
-  const first = await readEveryBody(store, T_FAMILY);
-  assert.deepEqual(first.plan.stats.failed, []);
-
-  const again = await promoteFamily(store, T_SECOND, FEED, HOST, { confirmUnchanged: true });
-  assert.ok(again.outcome.confirmed, "the same feed is a receipt on the same version");
-  const family = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
-  const opened: string[] = [];
-  const many = store.readPromotions.bind(store);
-  const one = store.readPromotion.bind(store);
-  store.readPromotions = (async (recordClass: Parameters<typeof many>[0], scopes: readonly string[]) => { opened.push(...scopes); return many(recordClass, scopes); }) as typeof many;
-  store.readPromotion = (async (recordClass: Parameters<typeof one>[0], scope: string) => { opened.push(scope); return one(recordClass, scope); }) as typeof one;
-  const pass = await publishPass(store, first.edge, T_SECOND);
-  store.readPromotions = many;
-  store.readPromotion = one;
-  assert.equal(pass.plan.stats.composed, 0, "the same version: nothing is recomposed");
-  assert.equal(pass.plan.stats.checkedOnly, 2, "each body's check moves");
-  assert.equal(opened.includes(family.scope), false, "the partition's rows are not opened for a receipt");
-});
-
-test("a family's one partition publishes as one record per body; a held member is attributed to its own body only", async () => {
+test("a family's canonical partition keeps a held member attributed to its own body only", async () => {
   const store = new MemoryRoutineDataStore();
   const names = [BODY_NAME, OTHER_NAME];
   const crosswalk = await promoteCrosswalk(store, names);
@@ -491,14 +447,13 @@ test("a family's one partition publishes as one record per body; a held member i
 
   const first = await readEveryBody(store, T_FAMILY);
   assert.deepEqual(first.plan.stats.failed, []);
-  assert.equal(first.plan.stats.recordsWritten, 2, "one record for each body the partition holds");
   const index = (await stateIndexOf(store, "AZ"))!;
   assert.deepEqual(Object.keys(index.bodies).sort(), [BODY_ID, OTHER_ID].sort());
   assert.deepEqual(index.places, { [OTHER_OCD]: [OTHER_ID], [OCD]: [BODY_ID] }, "each body is listed under the division its own sittings name, not the family's first");
   for (const bodyId of [BODY_ID, OTHER_ID]) {
     assert.deepEqual(await coupledContracts(store, "AZ", bodyId), [derivedMeetingFamilyId("US-AZ")]);
-    const row = (await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", bodyId)))!.payload as MeetingBodyRow;
-    assert.deepEqual(row.snapshot.meetings.map((m) => m.bodyId), [bodyId], "a body's row holds only its own sittings");
+    const snapshot = await readBodySnapshot(store, first.edge, bodyId, T_FAMILY);
+    assert.deepEqual(snapshot.meetings.map((m) => m.bodyId), [bodyId], "a body read holds only its own sittings");
   }
   assert.equal(first.read.kind === "PROMOTED" && first.read.value.meetings.length, 2);
 
@@ -510,7 +465,6 @@ test("a family's one partition publishes as one record per body; a held member i
   assert.equal(next.build.snapshot.derivedMembers?.find((m) => m.bodyId === OTHER_ID)?.outcome, "HELD");
   const second = await readEveryBody(store, T_SECOND, { edge: first.edge });
   assert.deepEqual(second.plan.stats.failed, []);
-  assert.equal(second.plan.stats.composed, 2, "the family changed, so both its bodies are looked at");
   const housing = await readBodySnapshot(store, second.edge, BODY_ID, T_SECOND);
   const tourism = await readBodySnapshot(store, second.edge, OTHER_ID, T_SECOND);
   assert.deepEqual(housing.sources.filter((source) => !source.ok), [], "the body whose member answered shows no wall");

@@ -1,17 +1,18 @@
 
+import { POST as askHandler } from "@/app/api/ask/grounded/route";
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import { settleFundingRead } from "@/lib/funding/snapshot";
 import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
-import { lookupZctaAsync } from "@/lib/geo/zcta-table";
+import { lookupZcta } from "@/lib/geo/zcta";
 import { publishedCountyDivisions, warmPlacesForCounties, type WarmPlace } from "@/lib/ops/warm-places";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderManifest, readServedMeetingIndex } from "@/lib/meetings/edge-serving";
-import { resolveReaderArtifactStore } from "@/lib/meetings/edge-store";
+import { readNationalShelf } from "@/lib/reader/national";
+import { factReader } from "@/lib/facts/db";
 import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
-import { enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal } from "@/lib/registry/runtime-edge";
+import { ReaderEdgeOnlyRefusal } from "@/lib/registry/runtime-edge";
 import { settleCommentAccessRead } from "@/lib/registry/server";
 import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 import { settleFederalVotesRead } from "@/lib/votes/snapshot";
@@ -42,35 +43,26 @@ const bootedAt = new Date().toISOString();
 export interface AskPrimed {
   /** Milliseconds to load the Ask route's module graph here (near 0 once loaded); null when the import failed or outran the budget. */
   readonly graphMs: number | null;
-  /** Ask sources that settled from the edge. */
+  /** Ask sources that settled from their canonical stores. */
   readonly sources: number;
-  /** Ask sources the edge does not carry, refused rather than read from the database. */
+  /** Ask sources that refused the read. */
   readonly sourcesRefused: number;
-  /** Ask sources whose edge read failed some other way (the Ask reports its own gap for these). */
+  /** Ask sources whose read failed (the Ask reports its own gap for these). */
   readonly sourcesFailed: number;
   /** Milliseconds the source preloads took, or null when they outran the budget. */
   readonly sourcesMs: number | null;
 }
 
-export interface ReaderEdgePrimed {
-  readonly manifest: boolean;
-  readonly authorityFamilies: number;
-  readonly meetings: boolean;
-  /** States whose place resolved end to end (divisions, area, coverage) from the edge within the budget. */
-  readonly places: number;
-  /** States whose place needed a family the manifest does not carry, so it was refused rather than read from the database. */
-  readonly placesRefused: number;
-  /** The Ask's code and sources on this instance; null when there is no edge to load them from. */
+export interface ReaderPrimed {
+  readonly nationalShelf: boolean;
   readonly ask: AskPrimed | null;
 }
-
-const NOTHING_PRIMED: ReaderEdgePrimed = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0, ask: null };
 
 async function primeAsk(): Promise<AskPrimed> {
   const primed: { -readonly [K in keyof AskPrimed]: AskPrimed[K] } = { graphMs: null, sources: 0, sourcesRefused: 0, sourcesFailed: 0, sourcesMs: null };
   const work = (async () => {
     const graphStarted = Date.now();
-    await import("@/app/api/ask/grounded/route").then(() => { primed.graphMs = Date.now() - graphStarted; }, () => undefined);
+    if (typeof askHandler === "function") primed.graphMs = Date.now() - graphStarted;
     const sourcesStarted = Date.now();
     await Promise.all(Object.values(ASK_SOURCE_PRELOADS).map((preload) =>
       Promise.resolve().then(preload).then(
@@ -88,29 +80,17 @@ async function primeAsk(): Promise<AskPrimed> {
   return { ...primed };
 }
 
-/** Loads, on this instance, what a cold Ask or a cold map reads first from the reader edge, and the Ask's own code. Never the database. */
-async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
-  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  if (!manifest) return NOTHING_PRIMED;
-  const bundle = await ensureReaderAuthorityEdge(manifest).catch(error => holdReaderAuthorityEdge(error));
-  // Entered here, before the reads below, in the function that makes them.
-  enterReaderAuthorityEdge({ ...bundle, edgeOnly: true });
-  const meetings = Object.keys(manifest.meetingStates ?? {}).length > 0;
-  // Both started here, after the edge-only context was entered, so every read they make is inside it.
-  const ask = await primeAsk();
-  return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, places: 0, placesRefused: 0, ask };
+/** Loads the national shelf and Ask's code on this instance. */
+async function primeReader(): Promise<ReaderPrimed> {
+  const shelf = await readNationalShelf().catch(() => null);
+  return { nationalShelf: shelf !== null, ask: shelf ? await primeAsk() : null };
 }
 
-
 async function publishedWarmPlaces(): Promise<{ readonly places: readonly WarmPlace[]; readonly skipped: number }> {
-  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  if (!manifest) return { places: [], skipped: 0 };
-  const store = resolveReaderArtifactStore();
-  const divisions: string[] = [];
-  for (const [state, ref] of Object.entries(manifest.meetingStates ?? {})) {
-    const index = store ? await readServedMeetingIndex(state, ref, store).catch(() => null) : null;
-    if (index) divisions.push(...Object.keys(index.places));
-  }
+  const query = factReader();
+  if (!query) return { places: [], skipped: 0 };
+  const rows = await query("SELECT DISTINCT place_id FROM entity_place WHERE place_id LIKE '%/county:%'");
+  const divisions = rows.map(row => String(row.place_id));
   const counties = publishedCountyDivisions(divisions);
   const states = [...new Set(counties.map((county) => county.split("/state:")[1].split("/")[0]))];
   const zipByDivision = new Map<string, string>();
@@ -120,7 +100,7 @@ async function publishedWarmPlaces(): Promise<{ readonly places: readonly WarmPl
   const zips = [...new Set(counties.flatMap((county) => zipByDivision.get(county) ?? []))];
   const centroids = new Map<string, { lat: number; lng: number }>();
   await Promise.all(zips.map(async (zip) => {
-    const centroid = await lookupZctaAsync(zip);
+    const centroid = lookupZcta(zip);
     if (centroid) centroids.set(zip, centroid);
   }));
   return warmPlacesForCounties({ counties, zipFor: (county) => zipByDivision.get(county), centroidFor: (zip) => centroids.get(zip) });
@@ -136,7 +116,7 @@ export async function GET(request: Request): Promise<Response> {
   if (marked && params.get("places") === "1") {
     return Response.json(await publishedWarmPlaces(), { headers: { "cache-control": "no-store, max-age=0" } });
   }
-  const primed = marked ? await primeReaderEdge() : null;
+  const primed = marked ? await primeReader() : null;
   const heldMs = marked ? Math.round(asked.value) : 0;
   if (heldMs > 0) await new Promise((resolve) => setTimeout(resolve, heldMs));
   return Response.json(

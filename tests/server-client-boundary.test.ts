@@ -1,3 +1,4 @@
+import ts from "typescript";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -69,36 +70,51 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-/**
- * Prop declarations inside a component's props type, as `name: type` pairs.
- *
- * Deliberately a text scan rather than a TypeScript program: the suite runs
- * under `node --experimental-strip-types` with no type checker in the loop,
- * and the shape being caught — a prop whose type is an arrow — is
- * unambiguous in source. A scan that over-reports would be a nuisance; this
- * one under-reports on exotic type gymnastics, which is the safe direction
- * for a guard whose failure mode is a false alarm on someone else's PR.
- */
+/** Read actual property types; an arrow value in a local object is not a prop declaration. */
 function functionProps(source: string): string[] {
   const found: string[] = [];
-  // `name?: (args) => Ret` and `name: (args) => Ret`, at any indent, inside
-  // an interface or an inline props object.
-  for (const m of source.matchAll(
-    /^\s{2,}(\w+)\??:\s*\(([^)]*)\)\s*=>/gm,
-  )) {
-    const name = m[1];
-    if (HANDLER.test(name)) continue;
-    found.push(name);
+  const candidates = new Set<number>();
+  // Keep the existing declaration shapes and use syntax to distinguish a
+  // property type from the same-looking runtime object property.
+  for (const pattern of [/^\s{2,}(\w+)\??:\s*\(([^)]*)\)\s*=>/gm, /^\s{2,}(children|render\w*)\??:\s*$/gm]) {
+    for (const match of source.matchAll(pattern)) candidates.add(match.index + match[0].indexOf(match[1]));
   }
-  // `children: (fact: AreaFact) => React.ReactNode` written across lines is
-  // the same defect; catch the multi-line form too.
-  for (const m of source.matchAll(
-    /^\s{2,}(children|render\w*)\??:\s*$/gm,
-  )) {
-    found.push(m[1]);
-  }
+  const file = ts.createSourceFile("client.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const callable = (type: ts.TypeNode): boolean => ts.isFunctionTypeNode(type)
+    || (ts.isParenthesizedTypeNode(type) && callable(type.type))
+    || ((ts.isUnionTypeNode(type) || ts.isIntersectionTypeNode(type)) && type.types.some(callable));
+  const visit = (node: ts.Node): void => {
+    if (ts.isPropertySignature(node) && candidates.has(node.name.getStart(file)) && node.type && callable(node.type)
+      && (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name)) && !HANDLER.test(node.name.text)) {
+      found.push(node.name.text);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
   return [...new Set(found)];
 }
+
+test("function prop detection distinguishes declarations from local request callbacks", () => {
+  assert.deepEqual(functionProps(`
+    interface Props {
+      state: () => Promise<unknown>;
+      render?: (value: string) => React.ReactNode;
+      children:
+        (value: string) => React.ReactNode;
+      nullable?: (() => React.ReactNode) | null;
+      onClick: () => void;
+      title: string;
+    }
+  `), ["state", "render", "children", "nullable"]);
+  assert.deepEqual(functionProps(`
+    export function MapEntry() {
+      void loadStateAndPlace({
+        state: () => loadReaderState(),
+        place: async () => fetch("/api/meetings"),
+      });
+    }
+  `), []);
+});
 
 test("no client component takes a render prop or an injected function", () => {
   const offenders: string[] = [];

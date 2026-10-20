@@ -1,25 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { officialStateLegislatorsCandidate } from "../lib/civic-data/candidate-builders.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { routineTaskSelection } from "../lib/civic-data/runner.ts";
-import { promotedEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
-import { READER_BALLOT_AUTHORITY_FAMILIES } from "../lib/meetings/edge-serving.ts";
-import type { Officeholder, OfficeholderDivision } from "../lib/officials/types.ts";
+import type { Officeholder } from "../lib/officials/types.ts";
 import { officeRecordsForHolder, openStatesUrl, OPEN_STATES_ORG, type MemberOfficeRecord } from "../lib/officials/member-offices.ts";
-import { publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
-import { currentMemberOffices, refreshMemberOfficesFromPromoted } from "../lib/officials/member-offices-read.ts";
-import { officialStateLegislatorTargetByScope, officialStateOfficeholderId } from "../lib/state-rollcalls/authority.ts";
+
 import { mergeStatePeople } from "../lib/state-rollcalls/legislators.ts";
 
 const T0 = "2026-09-27T12:00:00.000Z";
 const T1 = "2026-09-28T12:00:00.000Z";
-const T2 = "2026-09-29T12:00:00.000Z";
 
 function holder(id: string, name: string, chamber: "upper" | "lower", phone: string | null = null): Officeholder {
   return { id, name, officeTitle: chamber === "lower" ? "State Representative" : "State Senator", level: "STATE", termStart: "2025-01-01",
@@ -55,7 +48,7 @@ test("a member office read from a reference publisher can never be marked offici
   assert.ok(candidate.semantics.violations.some(violation => /cannot be marked official/.test(violation)));
 });
 
-test("the runner refreshes member offices daily with no owner step, and the reader edge carries them", () => {
+test("the runner refreshes member offices daily with no owner step", () => {
   const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "member-offices");
   assert.ok(task);
   assert.equal(task.ownerInvocation, undefined);
@@ -63,6 +56,5 @@ test("the runner refreshes member offices daily with no owner step, and the read
   assert.equal(task.cadenceMs, 24 * 60 * 60_000);
   assert.equal(routineTaskSelection(["--only=member-offices"], AUTOMATIC_REFRESH_TASKS).ok, true);
   const contract = requiredManualProductionContract("member-offices");
-  assert.deepEqual(promotedEdgePointers()["member-offices"].map(row => [row.recordClass, row.scope]), [[contract.recordClass, contract.scope]]);
-  assert.ok(READER_BALLOT_AUTHORITY_FAMILIES.includes("member-offices"));
+  assert.equal(contract.recordClass, "CURATED_READER_RECORD");
 });

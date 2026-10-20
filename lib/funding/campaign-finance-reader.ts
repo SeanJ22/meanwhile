@@ -1,3 +1,4 @@
+import { readerCanonicalEntries, readerCanonicalEntry } from "../reader/canonical-context.ts";
 import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
@@ -62,14 +63,15 @@ export async function readCampaignFinance(ocdId: string, options: PromotedCivicD
 const checkedRequests = new WeakMap<object, Map<string, readonly CampaignFinanceRecord[]>>();
 export async function settleCampaignFinanceReads(divisions?: readonly string[]): Promise<string[]> {
   const edge = currentReaderAuthorityEdge(), context = edge ?? currentReaderSelection();
-  const scopes = divisions ? [...new Set(divisions.map(campaignFinanceStateScope))] : [...edge?.promoted?.keys() ?? []]
+  const scopes = divisions ? [...new Set(divisions.map(campaignFinanceStateScope))]
+    : [...new Set([...readerCanonicalEntries().keys(), ...edge?.promoted?.keys() ?? []])]
     .filter(key => key.startsWith("CURATED_READER_RECORD:")).map(key => key.slice("CURATED_READER_RECORD:".length)).filter(isCampaignFinanceStateScope);
   const held = context ? checkedRequests.get(context) ?? new Map<string, readonly CampaignFinanceRecord[]>() : null;
   if (context && held) checkedRequests.set(context, held);
   const read = await Promise.allSettled(scopes.map(async scope => {
-    await ensurePromotedEdge("CURATED_READER_RECORD", scope);
     held?.delete(scope);
-    const entry = edge?.promoted?.get(`CURATED_READER_RECORD:${scope}`);
+    const canonical = edge ? undefined : readerCanonicalEntry("CURATED_READER_RECORD", scope);
+    const entry = canonical ? await canonical : (await ensurePromotedEdge("CURATED_READER_RECORD", scope))?.value;
     const result = await readCampaignFinance(scope, entry ? { edge: entry } : {});
     if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
     if (result.kind !== "PROMOTED") return null;

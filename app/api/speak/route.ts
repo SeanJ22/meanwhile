@@ -142,4 +142,4 @@ async function postWithSettings(request: Request) {
 
 export const POST = readerRoute("/api/speak", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}, ["registry-runtime"]);
+});

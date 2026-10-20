@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import { readPublicRecords } from "@/lib/civic-data/public-records";
 import { isScopedManualContractScope, scopedManualContractScope } from "@/lib/civic-data/scoped-manual-contracts";
 import { governmentListingsForState } from "@/lib/registry/server";
-import { ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
-import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { FIPS_TO_STATE } from "@/lib/ocd/fips";
 
 export const GET = readerRoute("/api/public-records", async function GET(request: Request) {
@@ -17,8 +15,7 @@ export const GET = readerRoute("/api/public-records", async function GET(request
       return NextResponse.json({ error: "A US state or territory and a valid offset are required." }, { status: 400 });
     }
     try {
-      const edge = await ensureReaderAuthorityEdge(null, undefined, ["government-domains"]).catch(() => null);
-      const page = await withReaderAuthorityEdge(edge, () => governmentListingsForState(state, offset));
+      const page = await governmentListingsForState(state, offset);
       return NextResponse.json(page, { headers: { "Cache-Control": "no-store" } });
     } catch { return NextResponse.json({ status: "UNAVAILABLE", records: [] }, { status: 503 }); }
   }
@@ -37,4 +34,4 @@ export const GET = readerRoute("/api/public-records", async function GET(request
   } catch {
     return NextResponse.json({ status: "UNAVAILABLE", records: [] }, { status: 503 });
   }
-}, ["government-domains","other-reader-data"]);
+});

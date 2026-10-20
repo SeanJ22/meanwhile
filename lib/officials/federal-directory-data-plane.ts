@@ -8,7 +8,7 @@ import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scope
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
-import { CHAMBER_DIRECTORY_URLS, type FederalVacancy } from "./chamber-directory.ts";
+import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export type FederalDirectoryState = typeof REGISTRY_STATES[number];
@@ -34,13 +34,22 @@ export interface FederalDirectoryAcquisition {
 /** An acquisition as the candidate holds it: the bytes stay in the raw-capture vault. */
 export type FederalDirectoryCapture = Omit<FederalDirectoryAcquisition, "body"> & { readonly raw: RawCaptureRef };
 
+/** An explicit vacancy statement from the chamber, retained with its source. */
+export interface FederalVacancy {
+  readonly ocdId: string;
+  readonly sourceUrl: string;
+  readonly sourceOrg: string;
+  readonly collectedAt: string;
+  readonly reason: string;
+}
+
 export interface FederalDirectoryReadModel {
   readonly formatVersion: 1;
+  readonly vacancies?: readonly FederalVacancy[];
   readonly currentMembershipComplete?: boolean;
   readonly sourceSha: string;
   readonly roster: OfficeholderSet;
   readonly directory: DirectoryFile;
-  readonly vacancies?: readonly FederalVacancy[];
 }
 
 function sha256(value: string): string {

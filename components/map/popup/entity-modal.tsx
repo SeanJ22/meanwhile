@@ -13,6 +13,7 @@ import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
 import { PlacePublicRecords } from "../public-records";
 import { PlaceOpenData } from "../open-data";
+import { MeetingRow } from "@/components/ui/meeting-row";
 import { MeetingCard } from "@/components/ui/meeting-card";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -317,6 +318,9 @@ function BodySections({
   // The flat ordering gives the count; <Meetings> groups the raw list.
   const meetings = orderByUpcomingFirst(subject.meetings, now);
   const upcoming = meetings.filter((m) => !hasConcluded(m, now)).length;
+  const next = meetings.find((m) => m.status === "SCHEDULED" && Number.isFinite(Date.parse(m.startsAt)) && !hasConcluded(m, now));
+  const last = meetings.find((m) => m.status !== "CANCELED" && hasConcluded(m, now));
+  const otherMeetings = meetings.filter((m) => m !== next && m !== last);
 
   const sections: BodyCardSection[] = [
     {
@@ -384,7 +388,20 @@ function BodySections({
       id: "meetings",
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
-      content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
+      content: meetings.length > 0 ? (
+        <>
+          {next ? <MeetingRow meeting={next} compact title="Next meeting" sourcesInParent />
+            : <CardGapContribution id="body:next-meeting" label="the next meeting" />}
+          {last ? <MeetingRow meeting={last} compact title="Last meeting" sourcesInParent />
+            : <CardGapContribution id="body:last-meeting" label="the last meeting" />}
+          {otherMeetings.length > 0 && (
+            <details>
+              <summary className="mt-3 cursor-pointer t-detail text-muted">More meetings ({otherMeetings.length})</summary>
+              <Meetings meetings={otherMeetings} />
+            </details>
+          )}
+        </>
+      ) : null,
     },
     {
       id: "contact",
@@ -439,7 +456,7 @@ function BodySections({
       {/* One group, one open pill. */}
       <CardSectionGroup>
         {sections.map((section) => section.content ? (
-          <CardSection key={section.id} title={section.title} meta={section.meta}>{section.content}</CardSection>
+          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>{section.content}</CardSection>
         ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
         <PublicRecordSection subject={subject} zip={homeZip} />
         <MoneyRecordSection subject={subject} />

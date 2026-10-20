@@ -1,10 +1,33 @@
 import { contentHash } from "../control-plane/ids.ts";
 import { OWNER_SURFACE_FORMAT_VERSION } from "../control-plane/owner-surface.ts";
-import { canonicalJson, AppendOnlyViolation, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { canonicalJson, AppendOnlyViolation, type AggregateRepository, type ControlPlaneRepositories, type Persisted } from "../control-plane/repository/types.ts";
+import type { WorkItem } from "../control-plane/work-item.ts";
+import { registryJurisdictions } from "./state-scopes.ts";
+import { invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
 import { countVitalSign } from "../db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../control-plane/vital-signs.ts";
 
 export const PUBLICATION_FLOW_LOG_KEY = "publication-flow";
+
+type PublicationItem = Pick<WorkItem, "id" | "publicationOutcome"> & {
+  readonly autonomousPlan?: Pick<NonNullable<WorkItem["autonomousPlan"]>, "publication" | "jurisdiction">;
+};
+
+/** The body's visible attempt changes only after its outcome has been retained successfully. */
+export async function saveWorkerPublicationOutcome<T extends PublicationItem>(
+  repos: { readonly workItems: Pick<AggregateRepository<T>, "compareAndSet"> }, current: Persisted<T>,
+  outcome: NonNullable<WorkItem["publicationOutcome"]>, at: string, options: { readonly purge?: ReaderCachePurger } = {},
+): Promise<Persisted<T>> {
+  const saved = await repos.workItems.compareAndSet(current.id, current.revision, { ...current.value, publicationOutcome: outcome }, at);
+  const plan = current.value.autonomousPlan;
+  if (plan?.publication?.bodyId && canonicalJson(current.value.publicationOutcome) !== canonicalJson(outcome)) {
+    const bodyStates = registryJurisdictions(plan.publication.bodyId);
+    const states = bodyStates.length ? bodyStates : registryJurisdictions(plan.jurisdiction);
+    await invalidateReaderCache(states.length ? { states } : { national: true }, options.purge);
+  }
+  return saved;
+}
+
 export interface PublicationFlowReceipt {
   readonly candidateId: string;
   readonly workerResultId: string;

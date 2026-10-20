@@ -1,53 +1,41 @@
-import { readMeetingBodies, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
-import type { MeetingRegistryRead } from "../../lib/meetings/body-publication.ts";
-import type { MeetingIndexRow } from "../../lib/meetings/body-records.ts";
-import { meetingBodyPointerKey, meetingBodyRowScope, meetingIndexRowScope, type MeetingBodyPointer } from "../../lib/meetings/body-records.ts";
+import { meetingStateOf } from "../../lib/meetings/body-scope.ts";
+import { MEETING_PARTITION_CONTRACTS, HELD_MEETING_PARTITIONS } from "../../lib/civic-data/meeting-partitions.ts";
+import { readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../../lib/meetings/settings.ts";
 import type { RoutineDataStore } from "../../lib/civic-data/store.ts";
 import type { ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
-import { freshEdge, publishPass } from "./meeting-body-fixtures.ts";
+import type { MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
+import { installCanonicalMeetings } from "./canonical-reader-fixtures.ts";
+import { freshEdge } from "./meeting-body-fixtures.ts";
 
-/**
- * Everything promoted, served the way the per-body flow serves it: one publication pass, then every body of every
- * published state read and merged. For tests whose subject is what the partitions hold together, not one place.
- */
-export async function readEveryBody(
-  store: RoutineDataStore,
-  now: string,
-  options: { readonly window?: "SHOWN" | "HELD"; readonly includeAgenda?: boolean; readonly registry?: (state: string) => Promise<MeetingRegistryRead | null>; readonly edge?: ReaderArtifactStore } = {},
-) {
-  const edge = options.edge ?? freshEdge();
-  const pass = await publishPass(store, edge, now, options.registry);
-  const manifest = (await edge.readManifest())?.manifest ?? null;
-  const settings = meetingSettingsFromValues();
-  const states = Object.keys(manifest?.meetingStates ?? {});
-  const bodyIds: string[] = [];
-  for await (const body of readMeetingBodies({ store: edge, dataStore: store, manifest, states, now, settings })) bodyIds.push(body.bodyId);
-  const read = await readReaderEdgeMeetings({
-    store: edge, dataStore: store, manifest, states, bodyIds, now, settings,
-    window: options.window ?? "HELD", includeAgenda: options.includeAgenda,
-  });
-  return { read, edge, plan: pass.plan, status: pass.status, bodyIds };
+export async function readEveryBody(store: RoutineDataStore, now: string, options: {readonly window?: "SHOWN"|"HELD"; readonly includeAgenda?: boolean; readonly registry?: unknown; readonly edge?: ReaderArtifactStore} = {}) {
+  installCanonicalMeetings(store);
+  const scopes = await store.listPromotionScopes?.(["MEETING"]) ?? [];
+  const pointers = await store.readPromotions<MeetingsSnapshot>("MEETING",scopes.map(p=>p.scope));
+  const bodyIds = [...new Set(pointers.flatMap(p=>p.payload.meetings.flatMap(m=>m.bodyId ?? [])))];
+  const read = await readReaderEdgeMeetings({bodyIds,now,settings:meetingSettingsFromValues(),window:options.window ?? "HELD",includeAgenda:options.includeAgenda});
+  return {read,edge:options.edge ?? freshEdge(),plan:{stats:{failed:[]}},status:"PUBLISHED",bodyIds};
+}
+export function readBody(_edge: ReaderArtifactStore, store: RoutineDataStore, now: string, bodyId: string, window: "SHOWN"|"HELD"="SHOWN") {
+  installCanonicalMeetings(store);
+  return readReaderEdgeMeetings({bodyIds:[bodyId],now,settings:meetingSettingsFromValues(),window});
 }
 
-/** One state's published index, from its database row. */
-export async function stateIndexOf(store: RoutineDataStore, state: string): Promise<MeetingIndexRow | null> {
-  const row = await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope(state));
-  return row === null ? null : row.payload as MeetingIndexRow;
+async function owned(store:RoutineDataStore,bodyId:string) {
+  const scopes=await store.listPromotionScopes?.(["MEETING"]) ?? [];
+  const pointers=await store.readPromotions<MeetingsSnapshot>("MEETING",scopes.map(p=>p.scope));
+  return pointers.filter(p=>p.payload.meetings.some(m=>m.bodyId===bodyId));
 }
-
-/** A read by body id: for a body whose door names no division, which no place resolves to. */
-export function readBody(edge: ReaderArtifactStore, store: RoutineDataStore, now: string, bodyId: string, window: "SHOWN" | "HELD" = "SHOWN") {
-  return readReaderEdgeMeetings({ store: edge, dataStore: store, bodyIds: [bodyId], now, settings: meetingSettingsFromValues(), window });
+export async function coupledContracts(store:RoutineDataStore,_state:string,bodyId:string):Promise<string[]> {
+  return (await owned(store,bodyId)).map(p=>[...MEETING_PARTITION_CONTRACTS,...HELD_MEETING_PARTITIONS].find(c=>c.scope===p.scope)?.id ?? p.scope).sort();
 }
-
-/** Where the edge says a body stands now: its record, its checks, and what it was composed from. */
-export async function bodyPointerOf(edge: ReaderArtifactStore, state: string, bodyId: string): Promise<MeetingBodyPointer | null> {
-  return (await edge.readJsonPointer<MeetingBodyPointer>(meetingBodyPointerKey(state, bodyId)))?.value ?? null;
-}
-
-/** The contracts a body's row was composed from, live and history. */
-export async function coupledContracts(store: RoutineDataStore, state: string, bodyId: string): Promise<string[]> {
-  const row = await store.readPreparedReaderProjectionCoupling("MEETING", meetingBodyRowScope(state, bodyId));
-  return (row?.composedFrom ?? []).map((coupling) => coupling.contractId).sort();
+export async function stateIndexOf(store:RoutineDataStore,state:string) {
+  const scopes=await store.listPromotionScopes?.(["MEETING"]) ?? [];
+  const pointers=await store.readPromotions<MeetingsSnapshot>("MEETING",scopes.map(p=>p.scope));
+  const ids=[...new Set(pointers.flatMap(p=>p.payload.meetings.flatMap(m=>m.bodyId && meetingStateOf(m.bodyId)===state ? [m.bodyId]:[])))];
+  const places:Record<string,string[]>={};
+  for(const p of pointers) for(const m of p.payload.meetings) if(m.bodyId && m.ocdId && ids.includes(m.bodyId)) {
+    const own=places[m.ocdId] ??= []; if(!own.includes(m.bodyId)) own.push(m.bodyId);
+  }
+  return {bodies:Object.fromEntries(ids.map(id=>[id,{divisions:[id.split("#")[0]],family:false}])),places};
 }

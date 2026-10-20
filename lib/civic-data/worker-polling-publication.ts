@@ -1,4 +1,5 @@
 import { rememberStatePublicationPrior } from "./state-publication.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { Registry } from "../registry/types.ts";
 import { parseStateBallotContractId, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
@@ -100,7 +101,7 @@ export async function publishWorkerPollingResults(input: {
         code: "POLLING_PUBLICATION_HELD", detail: sanitizedErrorDiagnostic(error), recovery: "WORKER" };
     }
     const latest = await input.repos.workItems.mustRead(id);
-    if (!await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now)) throw new Error("Polling outcome changed during retention.");
+    if (!await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now)) throw new Error("Polling outcome changed during retention.");
     report.push({ workItemId: id, outcome });
   }
   return report;

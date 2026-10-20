@@ -21,10 +21,13 @@ export function useOfficePins(
     () => officeOwners(coverage).filter(owner => memberDirectoryReaches(owner.holder.id, "offices", owner.holder.state)),
     [coverage],
   );
-  const key = JSON.stringify(owners.map(owner => [owner.holder.id, owner.holder.state ?? "", owner.tier, owner.role]));
+  // State and place responses may describe the same owners with new objects.
+  // Only a changed owner record should restart directory and location work.
+  const key = JSON.stringify(owners);
   const [resolved, setResolved] = useState<{ key: string; pins: OfficePin[] }>({ key: "", pins: [] });
   useEffect(() => {
     let active = true;
+    const owners = JSON.parse(key) as ReturnType<typeof officeOwners>;
     const locate = async (offices: readonly NamedOffice[]) => {
       const rows = await Promise.all(offices.map(async office => {
         const point = office.point ?? await officePointFor(office.address);
@@ -34,7 +37,7 @@ export function useOfficePins(
     };
     const byId = new Map<string, OfficePin>();
     const publish = (pins: OfficePin[]) => {
-      if (!active) return;
+      if (!active || pins.length === 0) return;
       for (const pin of pins) byId.set(pin.id, pin);
       setResolved({ key, pins: [...byId.values()] });
     };
@@ -43,7 +46,7 @@ export function useOfficePins(
         .then(publish).catch(() => { /* Failed directory reads are retried on the next open, never counted as no offices. */ });
     }
     return () => { active = false; };
-  }, [key, owners]);
+  }, [key]);
   const pins = resolved.key === key ? resolved.pins : EMPTY;
   return useMemo(() => officePinSet(pins, { bounds, venues }), [pins, bounds, venues]);
 }

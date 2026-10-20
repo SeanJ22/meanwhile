@@ -14,4 +14,4 @@ export const GET = readerRoute("/api/government-finance", async function GET(req
       records:read.kind==="PROMOTED"?read.value.records.filter(row=>row.bodyId===bodyId):[],versionId:read.metadata.versionId},
       {headers:{"Cache-Control":"no-store"}});
   }catch{return NextResponse.json({status:"UNAVAILABLE",records:[]},{status:503});}
-}, ["other-reader-data"]);
+});

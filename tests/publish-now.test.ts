@@ -9,7 +9,6 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
 import { routineSupervisorCycleId, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
-import type { ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-outcome.ts";
 const NOW = "2026-10-05T18:00:00.000Z";
 
 test("BX-12: publish-now runs each minute while a routine pass remains in flight", async () => {
@@ -135,23 +134,16 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
-  assert.match(runner, /const publishNowEdgeChecks = PUBLISH_NOW \? startPublishNowEdgeChecks\(/, "publish-now alone publishes the reader edge");
-  assert.equal(runner.match(/publishChangedReaderEdge\(\)/g)?.length, 2, "its one call is the minute check");
+  assert.doesNotMatch(runner, /publishChangedReaderEdge|publishNowEdgeChecks/);
 });
 
 test("a publish-now minute with nothing owed ends quietly with exit 0, before any outcome or count", () => {
-  const current: ReaderEdgePublicationOutcome = { ok: true, readerEdge: "CURRENT", store: "Netlify Blobs", sequence: 1, detail: null };
-  assert.equal(publishNowHasNothingOwed(true, 0, 0, current), true);
-  assert.equal(publishNowHasNothingOwed(true, 1, 0, current), false, "owed work runs");
-  assert.equal(publishNowHasNothingOwed(true, 0, 1, current), false, "a failure on the way is still reported");
-  assert.equal(publishNowHasNothingOwed(false, 0, 0, current), false, "the routine pass keeps its floor");
-  assert.equal(publishNowHasNothingOwed(true, 0, 0, { ...current, readerEdge: "PUBLISHED" }), false, "a copied source pointer receives a zero-source-attempt receipt");
-  assert.equal(publishNowHasNothingOwed(true, 0, 0, { ...current, ok: false, readerEdge: "FAILED" }), false, "edge failure remains owed even with no worker tasks");
-  assert.equal(publishNowHasNothingOwed(true, 0, 0, { ...current, readerEdge: "SKIPPED_OWNER_PAUSE" }), true, "the existing full publication pause ends an empty minute quietly");
+  assert.equal(publishNowHasNothingOwed(true, 0, 0), true);
+  assert.equal(publishNowHasNothingOwed(true, 1, 0), false);
+  assert.equal(publishNowHasNothingOwed(true, 0, 1), false);
+  assert.equal(publishNowHasNothingOwed(false, 0, 0), false);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const initial = runner.indexOf("await publishNowEdgeChecks.run()");
-  assert.ok(initial > 0 && initial < runner.indexOf("huntTasks = await readHuntSourceTasks(store, supervisorFailures)"), "promoted pointers publish before a large worker admission read");
-  const quiet = runner.indexOf("if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {");
+  const quiet = runner.indexOf("if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {");
   assert.ok(quiet > runner.indexOf("const selectedTasks = "), "decided once the minute's tasks are selected");
   const quietBranch = runner.slice(quiet, runner.indexOf("  } else {", quiet));
   assert.match(quietBranch, /console\.log\("publish-now: nothing owed this minute"\);/);
@@ -160,7 +152,7 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
   assert.match(exit, /await ROUTINE_DATA_PROCESS_LEASE\.release\(\);[\s\S]*process\.exit\(supervisorFailures\.length === 0 \? 0 : 2\);/);
   assert.match(exit, /attemptedTasks: 0, verifiedSourceSuccesses: 0, verifiedSourceFailures: 0/);
   assert.match(exit, /taskReceipts: \[\], dueRequestLines: \[\]/);
-  assert.doesNotMatch(exit, /floored|RCD_RUN=/, "an edge-only publication does not fabricate a source denominator");
+  assert.doesNotMatch(exit, /floored|RCD_RUN=/, "an empty publication pass does not fabricate a source denominator");
   for (const later of ["RCD_OPERATIONAL_OUTCOME=", 'floored(\n  "attempted routine source tasks"']) {
     assert.ok(runner.indexOf(later) > quiet, `${later.split("(")[0]} comes after the quiet exit`);
   }

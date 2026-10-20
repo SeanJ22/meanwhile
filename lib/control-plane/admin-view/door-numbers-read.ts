@@ -3,9 +3,8 @@ import { MEETING_PARTITION_CONTRACTS } from "../../civic-data/meeting-partitions
 import { readPostingToLive, type PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
 import { MEETINGS_RECORD_CLASS } from "../../meetings/snapshot.ts";
 import { readMeetingBodies } from "../../meetings/edge-serving.ts";
-import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
-import { doorFactsAt, meetingSittingsByDoor, overdueDoors, type DoorFacts, type DoorSittings, type OverdueDoor } from "../../doors/overdue.ts";
+import { doorFactsAt, meetingSittingsByDoor, overdueDoors, type DoorFacts, type OverdueDoor } from "../../doors/overdue.ts";
 import { readOnSchedule, type DoorRecord } from "../../doors/registry.ts";
 import { ensureMeetingDoors } from "../../doors/meeting-doors.ts";
 import { fixItems } from "../fix-list.ts";
@@ -16,23 +15,13 @@ async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
   try { return await read(); } catch { return null; }
 }
 
-/** What each body's record said about its doors, kept by record so a pass reads only the bodies that changed. */
-const sittingsByRecord = new Map<string, ReadonlyMap<string, DoorSittings>>();
-
 /** The live facts behind every meeting door, read one state and one body at a time. A body that cannot be read leaves the whole count unread. */
 async function meetingDoorFacts(now: string): Promise<ReadonlyMap<string, DoorFacts> | null> {
   const facts = new Map<string, DoorFacts>();
-  for await (const body of readMeetingBodies({ store: resolveReaderArtifactWriteStore(), includeAgenda: false, now })) {
-    let held = body.sha === null ? undefined : sittingsByRecord.get(body.sha);
-    if (held === undefined) {
-      const read = await body.load();
-      if (read === null) return null;
-      held = meetingSittingsByDoor(read.snapshot);
-      if (body.sha !== null) {
-        if (sittingsByRecord.size >= 200_000) sittingsByRecord.delete(sittingsByRecord.keys().next().value!);
-        sittingsByRecord.set(body.sha, held);
-      }
-    }
+  for await (const body of readMeetingBodies({ includeAgenda: false, now })) {
+    const read = await body.load();
+    if (read === null) return null;
+    const held = meetingSittingsByDoor(read.snapshot);
     for (const [key, sittings] of held) facts.set(key, doorFactsAt(sittings, now));
   }
   return facts;

@@ -10,6 +10,7 @@ import {
   containersOfCode,
   oneContainer,
   stateContainers,
+  geographyOfRows,
   type ReadOnlyQuery,
   type Row,
   type Statement,
@@ -148,4 +149,51 @@ test("every statement is scoped to the promoted pointer, the state is matched up
     assert.match(s.text, /^(SELECT|WITH) /, "reads only");
   }
   assert.ok(seen.some((s) => s.params[3] === "AZ"));
+});
+
+test("real state geography SQL carries each scope's metadata once and preserves every selected plan and overlap", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const pg = new PGlite();
+  const held = { ...dataset, scopes: dataset.scopes.map(scope => ({ ...scope, versionMeta: { ...scope.versionMeta,
+    applicability: [{ purpose: "representation", from: "2025-01-03", through: "2027-01-02" }],
+    states: ["AZ"], retrievalComplete: true,
+  } })) };
+  const beforeRows: Row[] = [], afterRows: Row[] = [];
+  const query: ReadOnlyQuery = async statements => {
+    const results: Row[][] = [];
+    for (const statement of statements) {
+      const result = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
+      results.push(result.rows);
+      if (statement.text.includes("'grouping'")) {
+        afterRows.push(...result.rows);
+        const previous = statement.text.replace(", NULL::jsonb FROM scopes CROSS JOIN LATERAL", ", scope->'versionMeta' FROM scopes CROSS JOIN LATERAL");
+        assert.notEqual(previous, statement.text);
+        beforeRows.push(...(await pg.query<Record<string, unknown>>(previous, [...statement.params])).rows);
+      }
+    }
+    return results;
+  };
+  try {
+    await pg.exec("CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
+    await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4)",[CENSUS_GEO_RECORD_CLASS,CENSUS_GEO_SCOPE,"cv-real-sql",JSON.stringify(held)]);
+    const slice = await stateContainers("AZ", TYPES, true, query);
+    assert.equal(slice.kind,"HELD");
+    if (slice.kind !== "HELD") return;
+    assert.equal(slice.versionId,"cv-real-sql");
+    assert.deepEqual(slice.value,geographyOfRows(beforeRows,true),"scope selection, provenance, applicability, refs, and overlaps are unchanged");
+    assert.equal(slice.value.scopes.length,held.scopes.length);
+    for (const scope of slice.value.scopes) {
+      const expected = held.scopes.find(row => row.type === scope.type && row.version === scope.version)!;
+      assert.deepEqual(scope.applicability,expected.versionMeta.applicability);
+      assert.deepEqual(scope.states,["AZ"]);
+      assert.equal(scope.retrievalComplete,true);
+      assert.deepEqual(scope.sourceUrls,expected.versionMeta.provenance.sourceUrls);
+      assert.equal(scope.observedAt,expected.versionMeta.provenance.computedAt);
+    }
+    assert.ok(slice.value.containers.length > 1 && slice.value.containers.some(row => row.overlaps?.length));
+    assert.ok(afterRows.filter(row => row.row_kind === "scope").every(row => row.version_meta));
+    assert.ok(afterRows.filter(row => row.row_kind === "grouping").every(row => row.version_meta === null));
+    assert.ok(beforeRows.filter(row => row.row_kind === "grouping").every(row => row.version_meta));
+    assert.ok(JSON.stringify(afterRows).length < JSON.stringify(beforeRows).length,"per-district copies of the same source metadata do not travel to readers");
+  } finally { await pg.close(); }
 });

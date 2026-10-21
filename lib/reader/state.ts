@@ -18,7 +18,7 @@ import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from ".
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
-import { mergePeopleSets } from "../officials/merge-people.ts";
+import { statePeopleWithLegislativeAuthority } from "./state-people.ts";
 import { readCuratedReaderProjection, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
 import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
@@ -109,10 +109,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   if (issues.length) throw new Error(`STATE_PACKAGE_INVALID:${state}:${issues.join(",")}`);
   const roster = people.kind === "PROMOTED" || people.kind === "BOOTSTRAP" ? people.value.roster : null;
   const authoritative = official?.kind === "PROMOTED" || official?.kind === "BOOTSTRAP" ? official.value.roster : null;
-  const authoritativeKeys = new Set(authoritative?.officeholders.flatMap(holder => [...personIdentityKeys(holder)]) ?? []);
-  const matching = authoritative && roster ? roster.officeholders.filter(holder => [...personIdentityKeys(holder)].some(key => authoritativeKeys.has(key))) : [];
-  const matchingIds = new Set(matching.map(holder => holder.id));
-  const legislativePeople = authoritative ? mergePeopleSets([authoritative, ...(roster ? [{ ...roster, officeholders: matching, divisions: roster.divisions.filter(link => matchingIds.has(link.officeholderId)) }] : [])]) : roster;
+  const legislativePeople = statePeopleWithLegislativeAuthority(roster, authoritative, runtime.value.statewideExecutives);
   const heldFederal = federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP" ? federal.value : null;
   const directoryWithPortraits = heldFederal && roster ? { ...heldFederal, roster: withFederalPortraits(heldFederal.roster, roster) } : heldFederal;
   const sites = campaigns.kind === "PROMOTED" || campaigns.kind === "BOOTSTRAP" ? campaigns.value.records as unknown as CampaignSiteProjectionRecord[] : [];

@@ -1,0 +1,5109 @@
+{
+  "checkedOn": "2026-10-20",
+  "purpose": "OF-01 reporting inventory only; not a source acquisition or publication feed. No missing holder is acquired by this file.",
+  "scope": "Offices elected by all voters of a state/DC, including retention-election seats and elected statewide boards. Federal offices and district-only electorates are outside the statewide count. Normally elected seats remain included while their current holder was appointed to a vacancy.",
+  "counting": "One expected seat per office membership, not per unique person. Court chief-justice roles chosen internally are included in the court seat total, not counted twice.",
+  "status": "Source-list reporting inventory, checked against official state election, government, constitutional/statutory and court sources. It inventories office types and seat memberships, not verified current holders or completed reader coverage.",
+  "states": [
+    {
+      "state": "AK",
+      "name": "Alaska",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://akleg.gov/docs/pdf/AK_Const_layout.pdf",
+            "https://www.elections.alaska.gov/election-information/",
+            "https://www.elections.alaska.gov/research/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://akleg.gov/docs/pdf/AK_Const_layout.pdf",
+            "https://www.elections.alaska.gov/election-information/",
+            "https://www.elections.alaska.gov/research/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://courts.alaska.gov/soj/docs/2024.pdf",
+            "https://courts.alaska.gov/admin/docs/fy07.pdf"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 4,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://courts.alaska.gov/soj/docs/2024.pdf",
+            "https://courts.alaska.gov/admin/docs/fy07.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 2,
+      "otherStatewideSeats": 9,
+      "scopeNote": null,
+      "expectedSeats": 11
+    },
+    {
+      "state": "AL",
+      "name": "Alabama",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture and Industries",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Agriculture",
+            "Agriculture Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Public Service Commissioner",
+          "seats": 3,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Public Service Commission Chairman",
+            "Public Service Commission Chair"
+          ],
+          "sourceUrls": [
+            "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "https://psc.alabama.gov/about-us/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://judicial.alabama.gov/Appellate/JudgeQualification",
+            "https://judicial.alabama.gov/library/tour6"
+          ]
+        },
+        {
+          "title": "Court of Civil Appeals Judge",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://judicial.alabama.gov/Appellate/CivilAppeals"
+          ]
+        },
+        {
+          "title": "Court of Criminal Appeals Judge",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://judicial.alabama.gov/Appellate/CriminalAppeals"
+          ]
+        }
+      ],
+      "executiveSeats": 10,
+      "otherStatewideSeats": 19,
+      "scopeNote": null,
+      "expectedSeats": 29
+    },
+    {
+      "state": "AR",
+      "name": "Arkansas",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Auditor of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Commissioner of State Lands",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://portal.arkansas.gov/elected-officials/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://arcourts.gov/courts/supreme-court"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 14
+    },
+    {
+      "state": "AZ",
+      "name": "Arizona",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "State Mine Inspector",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "Corporation Commissioner",
+          "seats": 5,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Corporation Commission Chair",
+            "Corporation Commission Chairman"
+          ],
+          "sourceUrls": [
+            "https://azsos.gov/elections/candidates/elected-office-terms"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.azcourts.gov/AZ-Supreme-Court/Meet-the-Justices"
+          ]
+        }
+      ],
+      "executiveSeats": 11,
+      "otherStatewideSeats": 7,
+      "scopeNote": "The Lieutenant Governor office first takes office in January 2027; it is not a current seat on October 20, 2026. Corporation Commission has five statewide-elected seats. Court of Appeals retention electorates are regional, not statewide.",
+      "expectedSeats": 18
+    },
+    {
+      "state": "CA",
+      "name": "California",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "State Controller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Controller"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Insurance Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://clerk.assembly.ca.gov/legislative-information/elected-officials",
+            "https://www.sos.ca.gov/administration/california-roster"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://courts.ca.gov/news/what-know-about-judicial-selection",
+            "https://appellate.courts.ca.gov/ko/node/3886"
+          ]
+        }
+      ],
+      "executiveSeats": 8,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 15
+    },
+    {
+      "state": "CO",
+      "name": "Colorado",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://content.leg.colorado.gov/agencies/legislative-council-staff/salaries-legislators-statewide-elected-officials-and-county"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://content.leg.colorado.gov/agencies/legislative-council-staff/salaries-legislators-statewide-elected-officials-and-county"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://content.leg.colorado.gov/agencies/legislative-council-staff/salaries-legislators-statewide-elected-officials-and-county"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://content.leg.colorado.gov/agencies/legislative-council-staff/salaries-legislators-statewide-elected-officials-and-county"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://content.leg.colorado.gov/agencies/legislative-council-staff/salaries-legislators-statewide-elected-officials-and-county"
+          ]
+        },
+        {
+          "title": "State Board of Education Member, At Large",
+          "seats": 1,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://ed.cde.state.co.us/cdeboard/board-member-profiles"
+          ]
+        },
+        {
+          "title": "University of Colorado Regent, At Large",
+          "seats": 1,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://regents.cu.edu/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.coloradojudicial.gov/supreme-court"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 22,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.coloradojudicial.gov/topic/77/court-appeals-protocols?topic=77&wrapped=true"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 31,
+      "scopeNote": "Include only the one at-large State Board of Education seat and one at-large CU Regent; district seats are not statewide.",
+      "expectedSeats": 36
+    },
+    {
+      "state": "CT",
+      "name": "Connecticut",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        },
+        {
+          "title": "Secretary of the State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        },
+        {
+          "title": "State Comptroller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Comptroller",
+            "State Auditor",
+            "Auditor of State"
+          ],
+          "sourceUrls": [
+            "https://portal.ct.gov/Government/Departments-and-Agencies/Constitutional-Offices"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "State judges are appointed following Governor nomination and General Assembly approval; no statewide popular judicial ballot.",
+        "sourceUrl": "https://portal.ct.gov/sots/register-manual/section-v/judicial-department---state-courts"
+      },
+      "expectedSeats": 6
+    },
+    {
+      "state": "DC",
+      "name": "District Of Columbia",
+      "offices": [
+        {
+          "title": "Mayor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-1001.08",
+            "https://dcboe.org/getmedia/b5579707-fd07-40f0-9d1e-9ff3c8ff071f/05-List-of-Elected-Offices-in-the-District-of-Columbia.pdf"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-1001.08",
+            "https://dcboe.org/getmedia/b5579707-fd07-40f0-9d1e-9ff3c8ff071f/05-List-of-Elected-Offices-in-the-District-of-Columbia.pdf"
+          ]
+        },
+        {
+          "title": "Chairman of the Council",
+          "seats": 1,
+          "category": "LEGISLATIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-1001.08"
+          ]
+        },
+        {
+          "title": "At-Large Councilmember",
+          "seats": 4,
+          "category": "LEGISLATIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-1001.08"
+          ]
+        },
+        {
+          "title": "State Board of Education Member, At Large",
+          "seats": 1,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sboe.dc.gov/page/board-biographies"
+          ]
+        },
+        {
+          "title": "United States Senator (shadow)",
+          "seats": 2,
+          "category": "SHADOW_DELEGATION",
+          "aliases": [],
+          "sourceUrls": [
+            "https://dcboe.org/getmedia/b5579707-fd07-40f0-9d1e-9ff3c8ff071f/05-List-of-Elected-Offices-in-the-District-of-Columbia.pdf",
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-123"
+          ]
+        },
+        {
+          "title": "United States Representative (shadow)",
+          "seats": 1,
+          "category": "SHADOW_DELEGATION",
+          "aliases": [],
+          "sourceUrls": [
+            "https://dcboe.org/getmedia/b5579707-fd07-40f0-9d1e-9ff3c8ff071f/05-List-of-Elected-Offices-in-the-District-of-Columbia.pdf",
+            "https://code.dccouncil.gov/us/dc/council/code/sections/1-123"
+          ]
+        }
+      ],
+      "executiveSeats": 2,
+      "otherStatewideSeats": 9,
+      "scopeNote": "District-wide offices are the DC counterpart of statewide. Ward council/education/ANC seats are excluded. Shadow Senators and Representative are DC elected advocacy offices, distinct from the federal congressional Delegate.",
+      "judicialExclusion": {
+        "reason": "DC Court of Appeals and Superior Court judges are Presidentially nominated and Senate confirmed, not elected by DC voters.",
+        "sourceUrl": "https://newsroom.dccourts.gov/faqs"
+      },
+      "expectedSeats": 11
+    },
+    {
+      "state": "DE",
+      "name": "Delaware",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        },
+        {
+          "title": "Auditor of Accounts",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        },
+        {
+          "title": "Insurance Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://delaware.gov/guides/your-government/"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "State judges are appointed by the Governor with Senate confirmation, not popular statewide election.",
+        "sourceUrl": "https://delcode.delaware.gov/constitution/constitution-05.html"
+      },
+      "expectedSeats": 6
+    },
+    {
+      "state": "FL",
+      "name": "Florida",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.flsenate.gov/Laws/Constitution",
+            "https://www.cabinet.myflorida.com/structure_of_the_florida_cabinet"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.flsenate.gov/Laws/Constitution",
+            "https://www.cabinet.myflorida.com/structure_of_the_florida_cabinet"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.flsenate.gov/Laws/Constitution",
+            "https://www.cabinet.myflorida.com/structure_of_the_florida_cabinet"
+          ]
+        },
+        {
+          "title": "Chief Financial Officer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.flsenate.gov/Laws/Constitution",
+            "https://www.cabinet.myflorida.com/structure_of_the_florida_cabinet"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://www.flsenate.gov/Laws/Constitution",
+            "https://www.cabinet.myflorida.com/structure_of_the_florida_cabinet"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://supremecourt.flcourts.gov/the-court/about-the-court/Justices/Merit-Selection-Retention-Retirement",
+            "https://supremecourt.flcourts.gov/the-court/about-the-court/Court-System"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 12
+    },
+    {
+      "state": "GA",
+      "name": "Georgia",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "State School Superintendent",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "Superintendent of Public Instruction",
+            "State Superintendent"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Commissioner of Insurance and Safety Fire",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner",
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Commissioner of Labor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Labor Commissioner"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Public Service Commissioner",
+          "seats": 5,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Public Service Commission Chairman",
+            "Public Service Commission Chair"
+          ],
+          "sourceUrls": [
+            "https://georgia.gov/elected-officials",
+            "https://sos.ga.gov/page/elected-officials-state-georgia"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://law.georgia.gov/opinions/96-9",
+            "https://www.gasupreme.us/court-information/history/"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 15,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://law.georgia.gov/opinions/96-9",
+            "https://georgiacourts.gov/court-of-appeals-of-georgia/"
+          ]
+        }
+      ],
+      "executiveSeats": 13,
+      "otherStatewideSeats": 24,
+      "scopeNote": null,
+      "expectedSeats": 37
+    },
+    {
+      "state": "HI",
+      "name": "Hawaii",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://elections.hawaii.gov/resources/elected-officials/",
+            "https://elections.hawaii.gov/office-of-hawaiian-affairs-elections/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://elections.hawaii.gov/resources/elected-officials/",
+            "https://elections.hawaii.gov/office-of-hawaiian-affairs-elections/"
+          ]
+        },
+        {
+          "title": "Office of Hawaiian Affairs Trustee",
+          "seats": 9,
+          "category": "STATEWIDE_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://elections.hawaii.gov/office-of-hawaiian-affairs-elections/"
+          ]
+        }
+      ],
+      "executiveSeats": 2,
+      "otherStatewideSeats": 9,
+      "scopeNote": "All nine OHA trustees are elected by the statewide electorate, including island-residency seats. Other executive department heads are appointed.",
+      "judicialExclusion": {
+        "reason": "Judges are initially appointed; retention is decided by the Judicial Selection Commission, not the statewide electorate.",
+        "sourceUrl": "https://www.courts.state.hi.us/our-judges"
+      },
+      "expectedSeats": 11
+    },
+    {
+      "state": "IA",
+      "name": "Iowa",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Treasurer of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Treasurer",
+            "Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Auditor of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Secretary of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.legis.iowa.gov/publications/otherResources/register"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.iowacourts.gov/iowa-courts/supreme-court/constitution-day-2025/what-is-an-oral-argument"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.iowacourts.gov/iowa-courts/supreme-court/constitution-day-2025/what-is-an-oral-argument"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 16,
+      "scopeNote": null,
+      "expectedSeats": 23
+    },
+    {
+      "state": "ID",
+      "name": "Idaho",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "State Controller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Controller"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://idaho.gov/government/executive-branch/",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://isc.idaho.gov/about-the-courts/sc-justices",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 4,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://isc.idaho.gov/about-the-courts/ica-judges",
+            "https://voteidaho.gov/idaho-elected-officials/"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 9,
+      "scopeNote": "The fiscal office is State Controller, not State Auditor.",
+      "expectedSeats": 16
+    },
+    {
+      "state": "IL",
+      "name": "Illinois",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        },
+        {
+          "title": "State Comptroller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Comptroller",
+            "State Auditor",
+            "Auditor of State"
+          ],
+          "sourceUrls": [
+            "https://www.illinois.gov/government/executive-branch.html"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "Supreme Court and Appellate Court elections and retention use judicial districts, not the whole-state electorate.",
+        "sourceUrl": "https://www.illinoiscourts.gov/courts/supreme-court/"
+      },
+      "expectedSeats": 6
+    },
+    {
+      "state": "IN",
+      "name": "Indiana",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "Treasurer of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Treasurer",
+            "Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "State Comptroller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Comptroller",
+            "State Auditor",
+            "Auditor of State"
+          ],
+          "sourceUrls": [
+            "https://www.in.gov/dA/1eada35c3e/2026-Candidate-Guide.FINAL.pdf?language_id=1"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.in.gov/courts/supreme/about"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge, Districts 4 and 5",
+          "seats": 6,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://secure.in.gov/courts/appeals/districts/"
+          ]
+        },
+        {
+          "title": "Tax Court Judge",
+          "seats": 1,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.in.gov/courts/news/2026/0827"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 12,
+      "scopeNote": "The constitutional Auditor of State office now uses State Comptroller. Court of Appeals Districts 1-3 retention is regional; Districts 4-5 retention is statewide (six seats). Tax Court judge has statewide retention.",
+      "expectedSeats": 18
+    },
+    {
+      "state": "KS",
+      "name": "Kansas",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "Commissioner of Insurance",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ks.gov/publications/sessionlaws/2018/2018_Session_Laws.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.ks.gov/elections/election-standards/Kansas-Election-Standards-Chapter-II-Election-Administration.pdf"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 14,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.ks.gov/elections/election-standards/Kansas-Election-Standards-Chapter-II-Election-Administration.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 21,
+      "scopeNote": null,
+      "expectedSeats": 27
+    },
+    {
+      "state": "KY",
+      "name": "Kentucky",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "Auditor of Public Accounts",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://transparency.ky.gov/accountability/Pages/officers.aspx"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "Supreme Court and Court of Appeals judges are elected by geographic judicial districts.",
+        "sourceUrl": "https://www.kycourts.gov/Courts/Pages/default.aspx"
+      },
+      "expectedSeats": 7
+    },
+    {
+      "state": "LA",
+      "name": "Louisiana",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture and Forestry",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Agriculture",
+            "Agriculture Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        },
+        {
+          "title": "Commissioner of Insurance",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.la.gov/government/executive-branch-elected-officials/"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 0,
+      "scopeNote": "The current state executive list has seven elected officers. Superintendent of Education is appointed; Commissioner of Elections is no longer a separate elected office. PSC and BESE elected seats have district electorates.",
+      "judicialExclusion": {
+        "reason": "Supreme Court and lower appellate judges are elected by judicial districts.",
+        "sourceUrl": "https://www.legis.la.gov/Legis/Law.aspx?d=1387456"
+      },
+      "expectedSeats": 7
+    },
+    {
+      "state": "MA",
+      "name": "Massachusetts",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        },
+        {
+          "title": "Secretary of the Commonwealth",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Chief Election Officer"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        },
+        {
+          "title": "Treasurer and Receiver General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Treasurer",
+            "Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.mass.gov/topics/constitutionals-independents",
+            "https://budget.digital.mass.gov/bb/gaa/fy2024/app_24/ga_24/hcdefault.htm"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "State judges are appointed by the Governor with Governor Council approval, not popularly elected.",
+        "sourceUrl": "https://www.mass.gov/info-details/supreme-judicial-court-justices"
+      },
+      "expectedSeats": 6
+    },
+    {
+      "state": "MD",
+      "name": "Maryland",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://elections.maryland.gov/candidacy/requirements.html"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://elections.maryland.gov/candidacy/requirements.html"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://elections.maryland.gov/candidacy/requirements.html"
+          ]
+        },
+        {
+          "title": "Comptroller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Comptroller"
+          ],
+          "sourceUrls": [
+            "https://elections.maryland.gov/candidacy/requirements.html"
+          ]
+        },
+        {
+          "title": "Appellate Court Judge, At Large",
+          "seats": 8,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.mdcourts.gov/acm",
+            "https://elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.html",
+            "https://mgaleg.maryland.gov/Pubs/LegisLegal/2022-legislativehandbookseries-vol-2.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 4,
+      "otherStatewideSeats": 8,
+      "scopeNote": "Supreme Court retention is by appellate circuit. Appellate Court has seven circuit-based and eight at-large judges; only the eight at-large seats are counted here.",
+      "expectedSeats": 12
+    },
+    {
+      "state": "ME",
+      "name": "Maine",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.legislature.maine.gov/doc/10674",
+            "https://www.maine.gov/portal/government/branches.html"
+          ]
+        }
+      ],
+      "executiveSeats": 1,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Only Governor is popularly elected statewide. Secretary, Treasurer, Attorney General and State Auditor are selected by the Legislature, so their current reader rows are preserved but do not increase the elected-seat target.",
+      "judicialExclusion": {
+        "reason": "State judges are appointed by the Governor and confirmed by the Senate, not popularly elected statewide.",
+        "sourceUrl": "https://www.courts.maine.gov/about/"
+      },
+      "expectedSeats": 1
+    },
+    {
+      "state": "MI",
+      "name": "Michigan",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.michigan.gov/government/branches-of-government/executive-branch"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.michigan.gov/government/branches-of-government/executive-branch"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.michigan.gov/government/branches-of-government/executive-branch"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.michigan.gov/government/branches-of-government/executive-branch"
+          ]
+        },
+        {
+          "title": "State Board of Education Member",
+          "seats": 8,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.legislature.mi.gov/documents/2023-2024/michiganmanual/2023-MM-P0447-p0455.pdf"
+          ]
+        },
+        {
+          "title": "University of Michigan Regent",
+          "seats": 8,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.legislature.mi.gov/documents/mcl/pdf/mcl-Constitution-VIII.pdf"
+          ]
+        },
+        {
+          "title": "Michigan State University Trustee",
+          "seats": 8,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.legislature.mi.gov/documents/mcl/pdf/mcl-Constitution-VIII.pdf"
+          ]
+        },
+        {
+          "title": "Wayne State University Governor",
+          "seats": 8,
+          "category": "EDUCATION_BOARD",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.legislature.mi.gov/documents/mcl/pdf/mcl-Constitution-VIII.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.courts.michigan.gov/4add7e/siteassets/msc-learning-center/justitia_micourtsystem.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 4,
+      "otherStatewideSeats": 39,
+      "scopeNote": "Four independently elected executive roles plus eight State Board members and three eight-member university boards elected statewide.",
+      "expectedSeats": 43
+    },
+    {
+      "state": "MN",
+      "name": "Minnesota",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.revisor.mn.gov/constitution/",
+            "https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/filing-for-other-state-constitutional-offices/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.revisor.mn.gov/constitution/",
+            "https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/filing-for-other-state-constitutional-offices/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.revisor.mn.gov/constitution/",
+            "https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/filing-for-other-state-constitutional-offices/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.revisor.mn.gov/constitution/",
+            "https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/filing-for-other-state-constitutional-offices/"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.revisor.mn.gov/constitution/",
+            "https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/filing-for-other-state-constitutional-offices/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://mncourts.gov/supremecourt"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 19,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://mncourts.gov/about-the-courts/fast-facts",
+            "https://www.mncourts.gov/courtofappeals.aspx",
+            "https://www.mncourts.gov/about-the-courts"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 26,
+      "scopeNote": "The State Treasurer office was abolished in 2003. The current constitution and current SOS filing page list five constitutional offices; an old legislature FAQ still lists Treasurer and is not used as authority.",
+      "expectedSeats": 31
+    },
+    {
+      "state": "MO",
+      "name": "Missouri",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/bluebook/2025-2026"
+          ]
+        },
+        {
+          "title": "Supreme Court Judge",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.sos.mo.gov/archives/judiciary/supremecourt/history.asp",
+            "https://www.courts.mo.gov/file.jsp?id=116513"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 13
+    },
+    {
+      "state": "MS",
+      "name": "Mississippi",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture and Commerce",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Agriculture",
+            "Agriculture Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        },
+        {
+          "title": "Commissioner of Insurance",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.ms.gov/government/government-branches"
+          ]
+        }
+      ],
+      "executiveSeats": 8,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "Supreme Court and Court of Appeals seats have district electorates.",
+        "sourceUrl": "https://www.ms.gov/agencies/mississippi-supreme-court"
+      },
+      "expectedSeats": 8
+    },
+    {
+      "state": "MT",
+      "name": "Montana",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://mtgovtemplate.mt.gov/govt/elected_officials"
+          ]
+        },
+        {
+          "title": "Clerk of the Supreme Court",
+          "seats": 1,
+          "category": "JUDICIAL_ADMINISTRATION",
+          "aliases": [
+            "Supreme Court Clerk"
+          ],
+          "sourceUrls": [
+            "https://courts.mt.gov/clerk/about/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://courts.mt.gov/external/supreme/docs/Overview%20Montana%20Supreme%20Court.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 8,
+      "scopeNote": "State Auditor also serves as Commissioner of Securities and Insurance; count that one seat once. Supreme Court Clerk is a separately elected statewide office.",
+      "expectedSeats": 14
+    },
+    {
+      "state": "NC",
+      "name": "North Carolina",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Commissioner of Insurance",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Commissioner of Labor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Labor Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/executive"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/judicial"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 15,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.nc.gov/your-government/judicial"
+          ]
+        }
+      ],
+      "executiveSeats": 10,
+      "otherStatewideSeats": 22,
+      "scopeNote": null,
+      "expectedSeats": 32
+    },
+    {
+      "state": "ND",
+      "name": "North Dakota",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Agriculture Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Agriculture",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Insurance and Securities Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Insurance Commissioner",
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Tax Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Public Service Commissioner",
+          "seats": 3,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Public Service Commission Chairman",
+            "Public Service Commission Chair"
+          ],
+          "sourceUrls": [
+            "https://www.psc.nd.gov/commission",
+            "https://www.tax.nd.gov/about/commissioner-bio",
+            "https://www.sos.nd.gov/elections/candidate/become-candidate/state-legislative-judicial",
+            "https://vip.sos.nd.gov/pdfs/Portals/qual-terms-elec.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.ndcourts.gov/legal-resources/nd-constitution/article-vi-judicial-branch"
+          ]
+        }
+      ],
+      "executiveSeats": 13,
+      "otherStatewideSeats": 5,
+      "scopeNote": null,
+      "expectedSeats": 18
+    },
+    {
+      "state": "NE",
+      "name": "Nebraska",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "Auditor of Public Accounts",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://www.nebraska.gov/",
+            "https://sos.nebraska.gov/sites/sos.nebraska.gov/files/doc/elections/2022/2022%20Elected%20Offices%20and%20Maps.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Chief Justice",
+          "seats": 1,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.nebraska.gov/sites/default/files/doc/elections/2022/Statewide-Judicial-Retention.pdf"
+          ]
+        },
+        {
+          "title": "Workers Compensation Court Judge",
+          "seats": 6,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.newcc.gov/home/judges-of-the-court"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 7,
+      "scopeNote": "Public Service Commission, Education Board, Regents, six associate Supreme Court justices and six Court of Appeals judges have district electorates; only Chief Justice and the six Workers Compensation judges are counted as statewide judicial seats.",
+      "expectedSeats": 13
+    },
+    {
+      "state": "NH",
+      "name": "New Hampshire",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://gc.nh.gov/rsa/html/LXIII/653/653-1.htm"
+          ]
+        }
+      ],
+      "executiveSeats": 1,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Governor is the only statewide popular executive election. Executive Council members are elected by five separate districts. Secretary, Treasurer and judges are not popularly elected statewide.",
+      "judicialExclusion": {
+        "reason": "State judges are appointed by Governor and Executive Council, not popularly elected.",
+        "sourceUrl": "https://gc.nh.gov/rsa/html/I/4/4-44.htm"
+      },
+      "expectedSeats": 1
+    },
+    {
+      "state": "NJ",
+      "name": "New Jersey",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.nj.gov/state/elections/election-information-2025.shtml",
+            "https://www.nj.gov/nj/gov/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.nj.gov/state/elections/election-information-2025.shtml",
+            "https://www.nj.gov/nj/gov/"
+          ]
+        }
+      ],
+      "executiveSeats": 2,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Governor and Lieutenant Governor are the only statewide popular executive offices. Attorney General and Secretary of State are appointed. A Lieutenant Governor who also serves as Secretary holds an additional appointed role, not another elected seat.",
+      "judicialExclusion": {
+        "reason": "State Supreme Court judges are appointed by Governor with Senate advice and consent.",
+        "sourceUrl": "https://www.njleg.state.nj.us/constitution"
+      },
+      "expectedSeats": 2
+    },
+    {
+      "state": "NM",
+      "name": "New Mexico",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "Commissioner of Public Lands",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Land Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.sos.nm.gov/about-new-mexico/nm-government/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://nmcourts.gov/resources/judicial-terms-and-retention-schedule/"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 10,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://nmcourts.gov/resources/judicial-terms-and-retention-schedule/"
+          ]
+        }
+      ],
+      "executiveSeats": 7,
+      "otherStatewideSeats": 15,
+      "scopeNote": null,
+      "expectedSeats": 22
+    },
+    {
+      "state": "NV",
+      "name": "Nevada",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "State Controller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Controller"
+          ],
+          "sourceUrls": [
+            "https://nv.gov/",
+            "https://nsla.nv.gov/archives-SOS-office"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://nvcourts.gov/supreme/court_information/overview_of_the_supreme_court_and_court_of_appeals"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 3,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://nvcourts.gov/supreme/court_information/court_of_appeals"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 10,
+      "scopeNote": null,
+      "expectedSeats": 16
+    },
+    {
+      "state": "NY",
+      "name": "New York",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://elections.ny.gov/new-york-state-elected-officials"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://elections.ny.gov/new-york-state-elected-officials"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://elections.ny.gov/new-york-state-elected-officials"
+          ]
+        },
+        {
+          "title": "State Comptroller",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Comptroller",
+            "State Auditor",
+            "Auditor of State"
+          ],
+          "sourceUrls": [
+            "https://elections.ny.gov/new-york-state-elected-officials"
+          ]
+        }
+      ],
+      "executiveSeats": 4,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Governor, Lieutenant Governor, Comptroller and Attorney General are statewide popular offices; Court of Appeals is appointed and Supreme Court judges are elected by judicial district.",
+      "judicialExclusion": {
+        "reason": "Highest Court of Appeals is appointed; elected Supreme Court trial judges use judicial districts.",
+        "sourceUrl": "https://www.nycourts.gov/courts/8th-judicial-district/court-structure"
+      },
+      "expectedSeats": 4
+    },
+    {
+      "state": "OH",
+      "name": "Ohio",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Treasurer of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Treasurer",
+            "Treasurer"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Auditor of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://codes.ohio.gov/ohio-constitution/section-3.1"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.supremecourt.ohio.gov/courts/judicial-system/supreme-court-of-ohio/history-of-the-court/"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 13
+    },
+    {
+      "state": "OK",
+      "name": "Oklahoma",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "State Auditor and Inspector",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Insurance Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Commissioner of Labor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Labor Commissioner"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Corporation Commissioner",
+          "seats": 3,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Corporation Commission Chair",
+            "Corporation Commission Chairman"
+          ],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+            "https://oklahoma.gov/omes/about-omes/boards-and-commissions/statewide-official-legislative-compensation-board.html"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html"
+          ]
+        },
+        {
+          "title": "Court of Criminal Appeals Judge",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://oklahoma.gov/top/agency/199.html"
+          ]
+        },
+        {
+          "title": "Court of Civil Appeals Judge",
+          "seats": 12,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.oklegislature.gov/OK_Statutes/CompleteTitles/os20.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 11,
+      "otherStatewideSeats": 26,
+      "scopeNote": "All three appellate courts have statewide retention ballots, including the twelve Court of Civil Appeals seats; district residency for appointment does not make their retention electorate regional. Title 20 section 30.16 explicitly submits Civil Appeals retention to qualified electors of the state; this controls over an older state-library summary describing district retention.",
+      "expectedSeats": 37
+    },
+    {
+      "state": "OR",
+      "name": "Oregon",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.oregon.gov/Pages/new-to-oregon.aspx"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.oregon.gov/Pages/new-to-oregon.aspx"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.oregon.gov/Pages/new-to-oregon.aspx"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.oregon.gov/Pages/new-to-oregon.aspx"
+          ]
+        },
+        {
+          "title": "Commissioner of the Bureau of Labor and Industries",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Labor Commissioner",
+            "Commissioner of Labor and Industries"
+          ],
+          "sourceUrls": [
+            "https://www.oregon.gov/Pages/new-to-oregon.aspx"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.oregon.gov/blue-book/government/Pages/supreme.aspx"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 13,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.oregon.gov/blue-book/government/Pages/appeals-description.aspx"
+          ]
+        },
+        {
+          "title": "Tax Court Judge",
+          "seats": 1,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sos.oregon.gov/blue-book/government/Pages/tax.aspx"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 21,
+      "scopeNote": null,
+      "expectedSeats": 26
+    },
+    {
+      "state": "PA",
+      "name": "Pennsylvania",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.pa.gov/agencies/vote/elections/types-of-elections"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.pa.gov/agencies/vote/elections/types-of-elections"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.pa.gov/agencies/vote/elections/types-of-elections"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.pa.gov/agencies/vote/elections/types-of-elections"
+          ]
+        },
+        {
+          "title": "Auditor General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://www.pa.gov/agencies/vote/elections/types-of-elections"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.pacourts.us/learn"
+          ]
+        },
+        {
+          "title": "Superior Court Judge",
+          "seats": 15,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.pacourts.us/learn"
+          ]
+        },
+        {
+          "title": "Commonwealth Court Judge",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.pacourts.us/learn"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 31,
+      "scopeNote": "Secretary of the Commonwealth and Secretary of Education are appointed, not elected statewide. Supreme, Superior and Commonwealth courts are statewide electoral offices.",
+      "expectedSeats": 36
+    },
+    {
+      "state": "RI",
+      "name": "Rhode Island",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ri.gov/divisions/open-government-center/glossary"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ri.gov/divisions/open-government-center/glossary"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ri.gov/divisions/open-government-center/glossary"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ri.gov/divisions/open-government-center/glossary"
+          ]
+        },
+        {
+          "title": "General Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Treasurer",
+            "Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.ri.gov/divisions/open-government-center/glossary"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 0,
+      "scopeNote": null,
+      "judicialExclusion": {
+        "reason": "Supreme Court appointments require Governor nomination and General Assembly approval, not public statewide election.",
+        "sourceUrl": "https://www.rilegislature.gov/riconstitution/Constitution/C10.aspx"
+      },
+      "expectedSeats": 5
+    },
+    {
+      "state": "SC",
+      "name": "South Carolina",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "Comptroller General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Comptroller"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "State Superintendent of Education",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "Superintendent of Public Instruction",
+            "State Superintendent"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://www.sc.gov/government/getting-know-your-government/elected-officials/constitutional-officers"
+          ]
+        }
+      ],
+      "executiveSeats": 8,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Adjutant General has been appointed since 2019; do not count it as an elected seat. Judges elected by the General Assembly are not statewide popular-election seats.",
+      "judicialExclusion": {
+        "reason": "General Assembly elects appellate judges; the public does not elect or retain them in statewide ballots.",
+        "sourceUrl": "https://www.scstatehouse.gov/JudicialMeritPage/How%20Judges%20Are%20Elected%20in%20South%20Carolina.pdf"
+      },
+      "expectedSeats": 8
+    },
+    {
+      "state": "SD",
+      "name": "South Dakota",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Commissioner of School and Public Lands",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Public Utilities Commissioner",
+          "seats": 3,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://boardsandcommissions.sd.gov/Information.aspx?BoardID=213",
+            "https://electionresults.sd.gov/ResultsSW.aspx?cty=33&eid=471&type=CTYALL",
+            "https://sdsos.gov/Information/current-elected-officials.aspx",
+            "https://sdsos.gov/Information/executive-branch.aspx"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://sdlegislature.gov/Statutes/16-1-2"
+          ]
+        }
+      ],
+      "executiveSeats": 10,
+      "otherStatewideSeats": 5,
+      "scopeNote": null,
+      "expectedSeats": 15
+    },
+    {
+      "state": "TN",
+      "name": "Tennessee",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://capitol.tn.gov/Archives/Senate/107GA/publications/ChamberBook106.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://tncourts.gov/courts/supreme-court/about"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 12,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://tncourts.gov/news/2015/12/10/susano-step-down-chief-judge-will-remain-court-appeals"
+          ]
+        },
+        {
+          "title": "Court of Criminal Appeals Judge",
+          "seats": 12,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.tn.gov/content/dam/tn/attorneygeneral/documents/victims/victimbrochure.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 1,
+      "otherStatewideSeats": 29,
+      "scopeNote": "Governor is the sole statewide popularly elected executive office. Lieutenant Governor is elected by the Senate; Secretary, Comptroller and Treasurer are elected by the General Assembly. All appellate courts use statewide retention.",
+      "expectedSeats": 30
+    },
+    {
+      "state": "TX",
+      "name": "Texas",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Comptroller of Public Accounts",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Commissioner of General Land Office",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Land Commissioner",
+            "Commissioner of the General Land Office"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Railroad Commissioner",
+          "seats": 3,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner, Railroad Commission of Texas"
+          ],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml",
+            "https://www.rrc.texas.gov/about-us/commissioners/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml"
+          ]
+        },
+        {
+          "title": "Court of Criminal Appeals Judge",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.sos.texas.gov/elections/voter/elected.shtml"
+          ]
+        }
+      ],
+      "executiveSeats": 9,
+      "otherStatewideSeats": 18,
+      "scopeNote": null,
+      "expectedSeats": 27
+    },
+    {
+      "state": "UT",
+      "name": "Utah",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.utah.gov/government/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.utah.gov/government/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.utah.gov/government/"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.utah.gov/government/"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.utah.gov/government/"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://governor.utah.gov/press/gov-cox-announces-appointments-of-jay-jorgensen-and-stephen-dent-to-the-utah-supreme-court/",
+            "https://legacy.utcourts.gov/utc/news/2026/09/11/news-release-justice-stephen-dent-takes-oath-of-office/"
+          ]
+        },
+        {
+          "title": "Court of Appeals Judge",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.utcourts.gov/content/dam/court-records-publications/publications/court-publications/court-reports/2025-CourtsAnnualReport.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 14,
+      "scopeNote": "Supreme Court expanded from five to seven justices in 2026; Governor appointments and September oath report establish the two new seats. State Board of Education seats are district-elected.",
+      "expectedSeats": 19
+    },
+    {
+      "state": "VA",
+      "name": "Virginia",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://law.lis.virginia.gov/vacodefull/title24.2/chapter2/article3/"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://law.lis.virginia.gov/vacodefull/title24.2/chapter2/article3/"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://law.lis.virginia.gov/vacodefull/title24.2/chapter2/article3/"
+          ]
+        }
+      ],
+      "executiveSeats": 3,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Judges selected by the General Assembly are not statewide popular-election seats.",
+      "judicialExclusion": {
+        "reason": "General Assembly selects state judges; the public does not elect them statewide.",
+        "sourceUrl": "https://law.lis.virginia.gov/constitution/article6/section7/"
+      },
+      "expectedSeats": 3
+    },
+    {
+      "state": "VT",
+      "name": "Vermont",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        },
+        {
+          "title": "Auditor of Accounts",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "State Auditor",
+            "Auditor"
+          ],
+          "sourceUrls": [
+            "https://legislature.vermont.gov/statutes/section/32/015/01003",
+            "https://legislature.vt.gov/statutes/constitution-of-the-state-of-vermont/",
+            "https://www.vermont.gov/government/statewide-officials",
+            "https://sos.vermont.gov/vsara/learn/elections/state-officers"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 0,
+      "scopeNote": "Supreme Court retention is decided by the General Assembly, not a statewide popular ballot.",
+      "judicialExclusion": {
+        "reason": "Supreme Court appointment and General Assembly retention are not statewide popular elections.",
+        "sourceUrl": "https://www.vtcourts.gov/supreme-court"
+      },
+      "expectedSeats": 6
+    },
+    {
+      "state": "WA",
+      "name": "Washington",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Commissioner of Public Lands",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Land Commissioner"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Insurance Commissioner",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Commissioner of Insurance"
+          ],
+          "sourceUrls": [
+            "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+            "https://apps.leg.wa.gov/rcW/default.aspx?cite=43.01.020"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 9,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.courts.wa.gov/appellate_trial_courts/supremecourt/?fa=supremecourt.justices"
+          ]
+        }
+      ],
+      "executiveSeats": 9,
+      "otherStatewideSeats": 9,
+      "scopeNote": null,
+      "expectedSeats": 18
+    },
+    {
+      "state": "WI",
+      "name": "Wisconsin",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "Lieutenant Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "lieutenant governor",
+            "Lt. Governor",
+            "Lt Governor"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://doa.wi.gov/DEBFCapitalFinance/2022/2022CompleteAnnualReport.pdf"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 7,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.wicourts.gov/courts/supreme/justices/"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 7,
+      "scopeNote": null,
+      "expectedSeats": 13
+    },
+    {
+      "state": "WV",
+      "name": "West Virginia",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "Attorney General",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Attorney General",
+            "State Attorney General",
+            "attorney general"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "Commissioner of Agriculture",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Agriculture Commissioner",
+            "Secretary of Agriculture"
+          ],
+          "sourceUrls": [
+            "https://ethics.wv.gov/election-booklet"
+          ]
+        },
+        {
+          "title": "Supreme Court of Appeals Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.courtswv.gov/appellate-courts/supreme-court-of-appeals/about-the-court"
+          ]
+        },
+        {
+          "title": "Intermediate Court of Appeals Judge",
+          "seats": 3,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://code.wvlegislature.gov/51-11-3/",
+            "https://code.wvlegislature.gov/51-11-6/"
+          ]
+        }
+      ],
+      "executiveSeats": 6,
+      "otherStatewideSeats": 8,
+      "scopeNote": null,
+      "expectedSeats": 14
+    },
+    {
+      "state": "WY",
+      "name": "Wyoming",
+      "offices": [
+        {
+          "title": "Governor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "governor"
+          ],
+          "sourceUrls": [
+            "https://www.wyo.gov/state-government/elected-officials",
+            "https://sos.wyo.gov/Services/HistoricalInfo.aspx"
+          ]
+        },
+        {
+          "title": "Secretary of State",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Secretary of State",
+            "Secretary of the State",
+            "Secretary of the Commonwealth"
+          ],
+          "sourceUrls": [
+            "https://www.wyo.gov/state-government/elected-officials",
+            "https://sos.wyo.gov/Services/HistoricalInfo.aspx"
+          ]
+        },
+        {
+          "title": "State Treasurer",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Treasurer",
+            "Treasurer of State",
+            "General Treasurer",
+            "State Treasurer"
+          ],
+          "sourceUrls": [
+            "https://www.wyo.gov/state-government/elected-officials",
+            "https://sos.wyo.gov/Services/HistoricalInfo.aspx"
+          ]
+        },
+        {
+          "title": "State Auditor",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Auditor",
+            "Auditor of State",
+            "Auditor of Public Accounts"
+          ],
+          "sourceUrls": [
+            "https://www.wyo.gov/state-government/elected-officials",
+            "https://sos.wyo.gov/Services/HistoricalInfo.aspx"
+          ]
+        },
+        {
+          "title": "Superintendent of Public Instruction",
+          "seats": 1,
+          "category": "EXECUTIVE",
+          "aliases": [
+            "Superintendent",
+            "State Superintendent",
+            "State Superintendent of Public Instruction",
+            "State School Superintendent"
+          ],
+          "sourceUrls": [
+            "https://www.wyo.gov/state-government/elected-officials",
+            "https://sos.wyo.gov/Services/HistoricalInfo.aspx"
+          ]
+        },
+        {
+          "title": "Supreme Court Justice",
+          "seats": 5,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.wyocourts.gov/supreme-court/"
+          ]
+        },
+        {
+          "title": "Chancery Court Judge",
+          "seats": 1,
+          "category": "JUDICIAL",
+          "aliases": [],
+          "sourceUrls": [
+            "https://www.wyocourts.gov/court/chancery-court/",
+            "https://sos.wyo.gov/Elections/Docs/2026/2026_Judges_Standing_for_Retention.pdf"
+          ]
+        }
+      ],
+      "executiveSeats": 5,
+      "otherStatewideSeats": 6,
+      "scopeNote": "Include the single full-time Chancery Court judge, subject to statewide retention in November 2026, as well as five Supreme Court seats.",
+      "expectedSeats": 11
+    }
+  ],
+  "limitations": "No current-holder acquisition was performed. A displayed title alone does not establish correct/current occupancy, an official holder source or contact. Counts include existing seats subject to future retention even if an incumbent was appointed. Official pages can retain obsolete summaries; current laws and current court organization take precedence. This file is READY gap evidence, never a runtime completeness gate.",
+  "totals": {
+    "statesAndDC": 51,
+    "executiveSeats": 312,
+    "otherStatewideSeats": 515,
+    "expectedSeats": 827
+  },
+  "sourceAudit": {
+    "officialSourceLinks": 167,
+    "method": "Read official office lists, constitutional/statutory provisions and court organization/election pages; current rules take precedence over obsolete summaries. Raw source responses and alternate web-reader evidence were retained with the production-copy task artifacts. Sources that failed one retrieval route were checked using alternate official sources or the web reader. No automated source-access outcome is used as a publication gate."
+  }
+}

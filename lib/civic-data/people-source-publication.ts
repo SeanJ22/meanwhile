@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { OfficeholderSet } from "../officials/types.ts";
+import type { Officeholder, OfficeholderSet } from "../officials/types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceAuthority, isOfficialSource } from "./source-authority.ts";
@@ -12,7 +12,7 @@ import { mergePeopleSets } from "../officials/merge-people.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
-import { verifiedPresident, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
+import { verifiedWhiteHouseOfficial, whiteHouseOffice, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
@@ -40,17 +40,18 @@ type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acqui
 const words = (text:string) => text.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 
 /* Each person must be named, with office and quote, on an official page this source saved; pages not read this run come from the vault. */
-async function peopleSourceViolations(input:{state:string;sourceId:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];read:readonly StatePeopleAcquisition[];vault:EvidenceStore}):Promise<string[]> {
+async function peopleSourceViolations(input:{state:string;sourceId:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];read:readonly StatePeopleAcquisition[];vault:EvidenceStore;verifyNationalCurrent?:boolean}):Promise<string[]> {
   if (!["official-state-people", "statewide-executive-sources"].includes(input.sourceId)) return [];
-  const texts=new Map(input.read.map(row=>[row.finalUrl,row.body]));
+  const captureKey = (row: Pick<StatePeopleCapture,"finalUrl"|"retrievedAt">) => `${row.finalUrl}|${row.retrievedAt}`;
+  const texts=new Map(input.read.map(row=>[captureKey(row),row.body]));
   const textOf=async (row:StatePeopleCapture)=>{
-    if (!texts.has(row.finalUrl)) texts.set(row.finalUrl,await capturedText(input.vault,row));
-    return texts.get(row.finalUrl)!;
+    const key = captureKey(row);
+    if (!texts.has(key)) texts.set(key,await capturedText(input.vault,row));
+    return texts.get(key)!;
   };
   const violations:string[]=[];
   const national = input.state.toUpperCase() === "US" && input.sourceId === "statewide-executive-sources";
-  const currentPresidents = new Set(input.roster.divisions.filter(link => link.ocdId === "ocd-division/country:us").map(link => link.officeholderId));
-  if (national && currentPresidents.size !== 1) violations.push("PRESIDENT_CURRENT_HOLDER_UNRESOLVED");
+  const countryIds = new Set(input.roster.divisions.filter(link => link.ocdId === "ocd-division/country:us").map(link => link.officeholderId));
   for (const person of input.roster.officeholders) {
     const quote = person.provenance.quote ?? person.provenance.evidenceExcerpt;
     const own = input.captures.filter(row=>row.finalUrl === person.provenance.sourceUrl);
@@ -65,14 +66,15 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
     if (!capture || !quote || !pageText.includes(words(quote)) || !isOfficialSource(capture.finalUrl,linkingPage) ||
       !(input.sourceId === "official-state-people" ? legislaturePageNamesPerson(body,person.name) : pageText.includes(words(person.name)))
       || !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);
-    else if (national && currentPresidents.has(person.id)) {
-      const index = input.captures.find(row => row.finalUrl === ADMINISTRATION_URL);
+    else if (national && input.verifyNationalCurrent !== false) {
+      const index = input.captures.filter(row => row.finalUrl === ADMINISTRATION_URL).sort((a,b)=>b.retrievedAt.localeCompare(a.retrievedAt))[0];
       try {
-        if (!index) throw new Error("PRESIDENT_ADMINISTRATION_INDEX_MISSING");
-        const verified = verifiedPresident({ url: index.finalUrl, html: await textOf(index) }, { url: capture.finalUrl, html: body, retrievedAt: capture.retrievedAt });
+        const office = whiteHouseOffice(person.officeTitle);
+        if (!index || !office || !countryIds.has(person.id)) throw new Error("NATIONAL_OFFICIAL_CURRENT_OFFICE_UNRESOLVED");
+        const verified = verifiedWhiteHouseOfficial(office, { url: index.finalUrl, html: await textOf(index), retrievedAt:index.retrievedAt }, { url: capture.finalUrl, html: body, retrievedAt: capture.retrievedAt });
         const held = verified.officeholders[0];
         if (held.id !== person.id || held.name !== person.name || held.officeTitle !== person.officeTitle ||
-          !input.roster.divisions.some(link => link.officeholderId === person.id && link.ocdId === "ocd-division/country:us")) throw new Error("PRESIDENT_PUBLISHED_IDENTITY_MISMATCH");
+          !person.memberships?.some(membership=>membership.id === held.memberships?.[0].id && membership.current === true && membership.divisionId === "ocd-division/country:us" && membership.officeTitle === held.officeTitle)) throw new Error("NATIONAL_OFFICIAL_PUBLISHED_IDENTITY_MISMATCH");
       } catch { violations.push(`PEOPLE_OWN_OFFICIAL_OFFICE_UNVERIFIED:${person.id}`); }
     }
     else if (!national && input.sourceId === "statewide-executive-sources") {
@@ -116,14 +118,63 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const old = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
   const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const national = jurisdiction === "US" && input.sourceId === "statewide-executive-sources";
-  const incomingIds = new Set(input.roster.officeholders.map(person => person.id));
-  // The administration lists one current President; earlier source-backed people retain their ended roles.
-  const ended = national ? held?.officeholders.filter(person => !incomingIds.has(person.id)).map(person => ({ ...person,
-    memberships: person.memberships?.map(membership => ({ ...membership, current: false })),
-  })) ?? [] : [];
-  let roster = national ? { ...input.roster, officeholders: [...input.roster.officeholders, ...ended], endedMemberships: [
-    ...(held?.endedMemberships ?? []), ...ended.flatMap(person => person.memberships ?? []),
-  ] } : mergePeopleSets([...(held ? [held] : []), input.roster])!;
+  const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
+  const reread = new Set(read.map(row=>row.finalUrl));
+  // A failed reread of one national official must retain the earlier bytes
+  // behind that official's still-current last verified facts.
+  const priorCaptures = national ? (old?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? []
+    : priorPeopleCaptures(old?.candidate.normalizedPayload);
+  const carried = priorCaptures.filter(row=>national || !reread.has(row.finalUrl));
+  let captures = [...new Map([...carried,...read].map(row=>[national ? `${row.finalUrl}|${row.retrievedAt}` : row.finalUrl,row])).values()];
+  const nationalExcluded: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];
+  let incoming = input.roster;
+  if (national) {
+    const counts = new Map<string,number>();
+    for (const person of incoming.officeholders) {
+      const office = whiteHouseOffice(person.officeTitle);
+      if (office) counts.set(office,(counts.get(office) ?? 0)+1);
+    }
+    const accepted: Officeholder[] = [];
+    for (const person of incoming.officeholders) {
+      const selected = { ...incoming,officeholders:[person],divisions:incoming.divisions.filter(link=>link.officeholderId === person.id) };
+      const office = whiteHouseOffice(person.officeTitle);
+      const failures = office && counts.get(office) === 1
+        ? await peopleSourceViolations({...input,roster:selected,captures,read:input.acquisitions})
+        : ["NATIONAL_OFFICIAL_OFFICE_UNRESOLVED"];
+      if (failures.length) nationalExcluded.push({key:person.id,code:"NATIONAL_OFFICIAL_UNVERIFIED",detail:failures.join("; "),record:{officeTitle:person.officeTitle,sourceUrl:person.provenance.sourceUrl}});
+      else accepted.push(person);
+    }
+    const ids = new Set(accepted.map(person=>person.id));
+    incoming = { ...incoming,officeholders:accepted,divisions:incoming.divisions.filter(link=>ids.has(link.officeholderId)),unmatched:incoming.unmatched.filter(row=>ids.has(row.officeholderId)) };
+  }
+  const replacing = new Map(incoming.officeholders.flatMap(person=>{
+    const office = whiteHouseOffice(person.officeTitle);
+    return office ? [[office,person.id] as const] : [];
+  }));
+  const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
+  const priorPeople = national ? held?.officeholders.map(person=>({ ...person,memberships:person.memberships?.map(membership=>{
+    const office = whiteHouseOffice(membership.officeTitle);
+    if (!office || membership.current === false || !replacing.has(office) || replacing.get(office) === person.id) return membership;
+    const ended = { ...membership,current:false };
+    endedMemberships.push(ended);
+    return ended;
+  }) })) ?? [] : [];
+  const priorById = new Map(priorPeople.map(person=>[person.id,person]));
+  const priorRoster = national && held ? { ...held,officeholders:priorPeople,
+    divisions:held.divisions.filter(link=>{
+      const person = priorById.get(link.officeholderId);
+      if (!person) return false;
+      if (link.membershipId) return person.memberships?.find(membership=>membership.id === link.membershipId)?.current !== false;
+      const office = whiteHouseOffice(person.officeTitle);
+      return !office || !replacing.has(office) || replacing.get(office) === person.id;
+    }),endedMemberships:[...(held.endedMemberships ?? []),...endedMemberships] } : held;
+  let roster = mergePeopleSets([...(priorRoster ? [priorRoster] : []),incoming])!;
+  if (national) {
+    const referenced = new Set(roster.officeholders.flatMap(person=>[person.provenance,...Object.values(person.fieldSources ?? {})])
+      .map(source=>`${source.sourceUrl}|${source.collectedAt}`));
+    const fresh = new Set(read.map(row=>`${row.finalUrl}|${row.retrievedAt}`));
+    captures = captures.filter(row=>referenced.has(`${row.finalUrl}|${row.retrievedAt}`) || fresh.has(`${row.finalUrl}|${row.retrievedAt}`));
+  }
   const comparisonFacts: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];
   // Source comparisons are standing blanks on the existing roster evidence,
   // not a publication gate or another store. Publish only this source's people.
@@ -139,13 +190,9 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
       comparisonFacts.push({key:`${jurisdiction}:source-comparison`,code:"PEOPLE_SOURCE_COMPARISON_PENDING",detail:"Another held source could not be read for comparison. This source's verified people publish; comparison remains standing work.",record:{state:jurisdiction,owner:"BL-01",status:"OPEN"}});
     }
   }
-  // A page read this run replaces its earlier capture; pages not read again keep theirs.
-  const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
-  const reread = new Set(read.map(row=>row.finalUrl));
-  const carried = priorPeopleCaptures(old?.candidate.normalizedPayload).filter(row=>!reread.has(row.finalUrl));
-  const captures = [...new Map(read.map(row=>[row.finalUrl,row])).values(), ...carried];
-  const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault});
-  const candidate = peopleSourceCandidate({...input,roster,captures,violations,excludedFacts:[...(input.excludedFacts ?? []),...comparisonFacts]});
+  const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
+  if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
+  const candidate = peopleSourceCandidate({...input,roster,captures,violations,excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`

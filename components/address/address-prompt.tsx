@@ -5,7 +5,6 @@ import type { GeographySelection } from "@/lib/census-geography/selection";
 
 import {
   houseNumberReason,
-  LEVEL_LABEL,
   type AddressResolution,
   type LevelKey,
 } from "@/lib/geo/address-resolution";
@@ -215,10 +214,9 @@ export function AddressPrompt({
             : street.trim().length > 0
               ? `Set to ${street.trim()}.`
               : "Set to your address."}{" "}
-          <span className="address-prompt-kept">Kept on this device for this visit only.</span>
         </p>
         <button type="button" className="address-prompt-undo" onClick={reset}>
-          Show the whole area again
+          Forget this address
         </button>
       </div>
     );
@@ -296,10 +294,6 @@ export function AddressPrompt({
           Show the {elsewhere} ballot instead
         </button>
       )}
-        <p className="address-prompt-promise">
-          The number is used to find {split.length === 1 ? LEVEL_LABEL[split[0]] : "your districts"} and
-          is not kept.
-        </p>
       </div>
     );
   }
@@ -339,15 +333,9 @@ export function AddressPrompt({
           Show the {elsewhere} ballot instead
         </button>
       )}
-      <p className="address-prompt-promise">
-        We ask for your street, and for a house number when the street crosses a boundary or when
-        we can&apos;t place it from the name on its own. It passes through our server to the U.S.
-        Census Bureau&apos;s free address lookup and is not tied to an account. What comes back
-        stays on this device for this visit.{" "}
-        <button type="button" className="address-prompt-skip" onClick={() => setPhase("IDLE")}>
-          No thanks
-        </button>
-      </p>
+      <button type="button" className="address-prompt-skip" onClick={() => setPhase("IDLE")}>
+        No thanks
+      </button>
     </div>
   );
 }

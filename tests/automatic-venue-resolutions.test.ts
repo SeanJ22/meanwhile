@@ -41,6 +41,20 @@ test("one exact published address and Census match can place a meeting", async (
   assert.equal(placed.meetings[0]?.venueGap, undefined);
 });
 
+test("a named venue's street address is queried while its complete original wording remains the address evidence", async () => {
+  const published = "Community Library at 1415 W Melody Ln Bldg G Bisbee AZ 85603 (use the rear entrance)";
+  const named = { ...snapshot, meetings: [{ ...snapshot.meetings[0]!, venueGap: { kind: "STATED_NOT_PLACED", publishedText: published, publisher: "County" } }] } as MeetingsSnapshot;
+  const result = await automaticVenuePackage({ snapshot: named, existingIds: new Set(), memberRoutes: ROUTES, clock: () => NOW,
+    fetchImpl: async request => {
+      assert.equal(new URL(String(request)).searchParams.get("address"), "1415 W Melody Ln Bldg G Bisbee AZ 85603");
+      return new Response(JSON.stringify(GEO));
+    } });
+  const row = (result.package?.payload as { records: readonly (Readonly<Record<string, unknown>> & { id: string })[] }).records[0];
+  assert.equal(row.address, published);
+  assert.equal(row.match, published);
+  assert.equal(verifiedCensusVenuePoint(published.replace("Bisbee", "Tucson"), GEO), null);
+});
+
 test("a different city or an ambiguous response cannot create a pin", () => {
   assert.equal(verifiedCensusVenuePoint(RAW.replace("Bisbee", "Tucson"), GEO), null);
   assert.equal(verifiedCensusVenuePoint(RAW, { result: { addressMatches: [GEO.result.addressMatches[0], GEO.result.addressMatches[0]] } }), null);

@@ -15,9 +15,10 @@
 import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
+import { neon } from "@neondatabase/serverless";
+import { changedMeetingDoors } from "../lib/doors/changed-meeting-doors.ts";
 import { MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate } from "../lib/doors/meeting-doors.ts";
-import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
 if (!process.argv.includes("--promote")) {
@@ -29,7 +30,7 @@ prepareProductionCivicDataWrite();
 const connection = controlPlaneUrlFromEnv();
 if (connection === null) throw new Error("MEETING_DOORS_REGISTRY_UNCONFIGURED: the door registry's database is not configured, so no doors were published");
 const now = new Date().toISOString();
-const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
-const rows = (await repos.doors.list()).flatMap((row) => isDoorRecord(row.value) ? [{ revision: row.revision, updatedAt: row.updatedAt, value: row.value as DoorRecord }] : []);
+const sql = neon(connection);
+const rows = await changedMeetingDoors({ connection, query: (text, parameters) => sql.query(text, [...parameters]) });
 const outcome = await promoteDerivedCandidate(new PostgresRoutineDataStore(), MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(rows, now), now);
 console.log(`meeting doors: ${outcome.promoted ? "published" : "not published"} from ${rows.length} registry rows`);

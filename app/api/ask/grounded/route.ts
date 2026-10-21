@@ -1132,9 +1132,6 @@ async function answerWithSettings(request: Request) {
         delete trace.preloadSources![key];
       }
       if (calendarReading) delete trace.preloadSources!.federalDirectory;
-      if (sittingShapes.has(lexical.shape)) for (const key of ["funding", "campaignFinance", "stateMoney", "candidateProfiles", "candidateCorpus"]) {
-        delete trace.preloadSources![key];
-      }
     } else {
       // Enter in this async scope, not inside a preload helper: otherwise the
       // AsyncLocalStorage context would not reach the subsequent readers.
@@ -1221,7 +1218,7 @@ async function answerWithSettings(request: Request) {
     }
 
     const lexicalActor = lexical && ["PERSON_VOTES", "MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"].includes(lexical.shape) ? inventory.find(entity => entity.id === lexical.subjectId) : null;
-    const initialResolution: ReturnType<typeof resolveInterpretation> = lexical && !lexical.subjectId && !lexical.areaChoices
+    const initialResolution: ReturnType<typeof resolveInterpretation> = lexical && !lexical.subjectId && !lexical.areaChoices && !readerVoteReading
       ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
       : readerVoteReading && readerVoteAsk
       ? { binding: readerVoteChoices.length === 1

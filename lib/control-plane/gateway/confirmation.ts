@@ -125,6 +125,21 @@ interface AssignmentReading {
   readonly assignments?: { readonly assignments?: readonly { readonly ref?: unknown }[] };
 }
 
+/** Shared only for one history read; a later request always reads the store again. */
+export function confirmationReadSession(repos: ControlPlaneRepositories): ControlPlaneRepositories {
+  const reads = new Map<string, Promise<unknown>>();
+  const once = <T>(key: string, read: () => Promise<T>): Promise<T> => {
+    if (!reads.has(key)) reads.set(key, read());
+    return reads.get(key) as Promise<T>;
+  };
+  return {
+    ...repos,
+    runnerHeartbeat: { ...repos.runnerHeartbeat, read: id => once(`heartbeat:${id}`, () => repos.runnerHeartbeat.read(id)) },
+    researchState: { ...repos.researchState, readNarrowed: (id, projection) =>
+      once(`research:${id}:${JSON.stringify(projection)}`, () => repos.researchState.readNarrowed(id, projection)) },
+  };
+}
+
 export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt, nowMs, readPlaceScore);
@@ -217,7 +232,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
   if (type === "queue.add") {
     try {
       const item = (await repos.adminConfig.read("current", { fixList: { ids: [receipt.subject] } }))?.value.fixList?.find(i=>i.id === receipt.subject);
-      if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
+      if (item?.dispatch) return confirmReceipt(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
     } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
   }
   const inIntent = INTENT_ACTIONS.has(type);
@@ -231,9 +246,21 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
   const waiting: Confirmation = { state: "waiting", at: null, words: WAITING_WORDS[type] };
   try {
     if(type==="expansion.scope.remove" || type==="expansion.scope.stopAll") {
+      // These receipts record the completed synchronous removal used before runner stop orders.
+      if (type === "expansion.scope.remove" && receipt.outcome === "DONE" && receipt.completedAt &&
+        /^(?:Removed:|That geography was not on your expansion list, so nothing changed\.)/.test(receipt.says)) {
+        return applied(receipt.completedAt);
+      }
       const orders=await repos.huntOrders.listWhere(["receiptId"],receipt.receiptId);
-      return orders.length>0 && orders.every(row=>row.value.confirmedAt!==null)
-        ? applied(orders.map(row=>row.value.confirmedAt!).sort().at(-1)??null):waiting;
+      if (!orders.length) return { state: "unread", at: null, words: "The stop request is saved, but its runner order could not be found." };
+      const done = orders.filter(row => row.value.confirmedAt !== null);
+      const expected = type === "expansion.scope.stopAll" && receipt.subject === "us" ? HUNT_STATES.length : 1;
+      if (new Set(orders.map(row => row.value.state)).size < expected) {
+        return { state: "unread", at: null, words: "The stop request is saved, but some of its runner orders could not be found." };
+      }
+      if (done.length === orders.length) return { ...applied(done.map(row => row.value.confirmedAt!).sort().at(-1)!), progress: { done: done.length, of: orders.length } };
+      return done.length ? { state: "in-progress", at: done.map(row => row.value.confirmedAt!).sort()[0],
+        words: `Stopped in ${done.length} of ${orders.length} states.`, progress: { done: done.length, of: orders.length } } : waiting;
     }
     if (inIntent) {
       const rows: readonly ResearchIntent[] = await repos.researchIntents.readWhere(RESEARCH_INTENT_LOG_KEY, ["honors"], receipt.subject);
@@ -243,11 +270,28 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
     if(type==="expansion.scope.budget") {
       const policy=await repos.adminConfig.read("current",{expansionScopes:{ids:[receipt.subject]}});
       const scope=policy?.value.expansionScopes?.find(scope=>scope.key===receipt.subject);
-      if(!scope)return waiting;
+      if(!scope) {
+        const stops = await repos.huntOrders.listWhere(["scopeKey"], receipt.subject);
+        const place = parseV6PlaceKey(receipt.requestedSubject ?? "");
+        const allStopped = place && place.kind !== "country" ? await repos.huntOrders.latestStop(place.state) : null;
+        const stopped = [...stops, ...(allStopped ? [allStopped] : [])].map(row => row.value)
+          .filter(order => order.confirmedAt && later(order.requestedAt, receipt.completedAt ?? receipt.startedAt))
+          .sort((a, b) => a.confirmedAt!.localeCompare(b.confirmedAt!)).at(-1);
+        return stopped ? { state: "applied", at: stopped.confirmedAt, words: "The hunt was stopped; this budget order is closed." }
+          : { state: "unread", at: null, words: "The budget change is saved, but its hunt could not be found." };
+      }
+      if (scope.latestDecisionReceiptId && scope.latestDecisionReceiptId !== receipt.receiptId && later(scope.decidedAt, receipt.completedAt ?? receipt.startedAt)) {
+        return { state: "applied", at: scope.decidedAt, words: "A later hunt change replaced this budget order." };
+      }
       const state=await repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${scope.geography.stateAbbr.toLowerCase()}`,
         {scopeControls:[scopeControlKey(scope.key)],cycleFinishedAt:true});
       const reading=state?.value as {scopeControls?:Record<string,string>;cycleFinishedAt?:string|null}|undefined;
-      return reading?.cycleFinishedAt && reading.scopeControls?.[scopeControlKey(scope.key)]===receipt.receiptId?applied(reading.cycleFinishedAt):waiting;
+      if (reading?.cycleFinishedAt && reading.scopeControls?.[scopeControlKey(scope.key)]===receipt.receiptId) return applied(reading.cycleFinishedAt);
+      if (state) return waiting;
+      // Older rounds recorded the applied policy in the shared research state.
+      const legacy = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { cycleStartedAt: true, cycleFinishedAt: true });
+      const round = legacy?.value as { cycleStartedAt?: string; cycleFinishedAt?: string | null } | undefined;
+      return later(round?.cycleStartedAt, receipt.completedAt ?? receipt.startedAt) && round?.cycleFinishedAt ? applied(round.cycleFinishedAt) : waiting;
     }
     const heartbeat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
     if (type === "config.setDiscoverySearch" && heartbeat?.discoverySearch?.receiptId === receipt.receiptId) {
@@ -261,15 +305,19 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
         const held=await repos.adminConfig.read("current",{expansionScopes:{ids:[receipt.subject]}});
         for(const scope of held?.value.expansionScopes??[])states.add(scope.geography.stateAbbr.toLowerCase());
       }
-      if(states.size===0)return waiting;
       let at:string|null=null;
-      for(const code of states) {
-        const state=await repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${code}`,{assignments:true,beatAt:true});
+      let pickedUp = states.size > 0;
+      const readings = await Promise.all([...states].map(code =>
+        repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${code}`, { assignments: true, beatAt: true })));
+      for(const state of readings) {
         const refs=(state?.value as AssignmentReading|undefined)?.assignments?.assignments??[];
-        if(!refs.some(a=>a.ref===receipt.receiptId))return waiting;
+        if(!refs.some(a=>a.ref===receipt.receiptId))pickedUp = false;
         at=(state?.value as {beatAt?:string}|undefined)?.beatAt??at;
       }
-      return applied(at);
+      if (pickedUp) return applied(at);
+      const legacy = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { assignments: true, beatAt: true });
+      const legacyRefs = (legacy?.value as AssignmentReading | undefined)?.assignments?.assignments ?? [];
+      return legacyRefs.some(a => a.ref === receipt.receiptId) ? applied((legacy?.value as { beatAt?: string }).beatAt ?? null) : waiting;
     }
     if (later(heartbeat?.lastCycleStartedAt, receipt.completedAt ?? receipt.startedAt)) return applied(heartbeat?.lastCycleStartedAt ?? null);
     return waiting;
@@ -282,14 +330,21 @@ async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionR
   if (receipt.type !== "fleet.deployHere" || receipt.outcome === "REFUSED") return core;
   try {
     let work:OwnerDispatchWork|null=null;
-    for(const code of HUNT_STATES) {
-      const held=await repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${code}`,{ownerDispatch:true,dispatchWork:true});
+    const states = await Promise.all(HUNT_STATES.map(code =>
+      repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${code}`, { ownerDispatch: true, dispatchWork: true })));
+    for(const held of states) {
       const state=held?.value as {ownerDispatch?:{intentId:string;work?:OwnerDispatchWork|null};dispatchWork?:DispatchWorkReading|null}|undefined;
       const scoped=ownerDispatchWorkOf(state?.dispatchWork??null,receipt.subject)
         ??(state?.ownerDispatch?.intentId===receipt.subject?state.ownerDispatch.work??null:null);
       if(!scoped)continue;
       const prior=work as OwnerDispatchWork|null;
       work=prior?{...prior,created:prior.created+scoped.created,deferred:prior.deferred+scoped.deferred}:scoped;
+    }
+    if (!work) {
+      const held = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { ownerDispatch: true, dispatchWork: true });
+      const state = held?.value as { ownerDispatch?: { intentId: string; work?: OwnerDispatchWork | null }; dispatchWork?: DispatchWorkReading | null } | undefined;
+      work = ownerDispatchWorkOf(state?.dispatchWork ?? null, receipt.subject)
+        ?? (state?.ownerDispatch?.intentId === receipt.subject ? state.ownerDispatch.work ?? null : null);
     }
     if (!work || work.key !== `dispatch:${receipt.subject}`) return core;
     const of = work.created + work.deferred;

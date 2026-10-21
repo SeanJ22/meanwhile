@@ -5,7 +5,6 @@ import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
-import type { RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 
 const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
@@ -16,10 +15,16 @@ export const votingSitesContract = (state: string) => ({
   recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), parserVersion: "official-voting-sites/4",
 } as const);
 
-/** One acquired source response; its bytes stay in the raw-capture vault. */
-export interface VotingRawCapture extends RawCaptureRef {
+/** One acquired source response, held as exact bytes outside the reader projection. */
+export interface VotingRawCapture {
   readonly url: string;
   readonly contentType: string;
+  readonly rawHash: string;
+  readonly byteLength: number;
+  /** A capture already held in the shared evidence vault. */
+  readonly vaultKey?: string;
+  /** The data plane deduplicates this document in its existing immutable payload parts. */
+  readonly savedDocument?: { readonly encoding: "gzip-base64"; readonly body: string };
 }
 
 export interface VotingSiteAcquisitionFailure {
@@ -120,7 +125,7 @@ export function votingSitesProjectionIssues(file: VotingSitesFile): string[] {
   if (file.jurisdictions.some((jurisdiction) => !jurisdiction.sourceOrg || !/^\d{4}-\d{2}-\d{2}$/.test(jurisdiction.collectedAt))) {
     problems.push("A voting-site jurisdiction lacks its official publisher or retrieval date.");
   }
-  if (file.jurisdictions.some((jurisdiction) => jurisdiction.sites.length === 0 && !jurisdiction.publication && !jurisdiction.office && !jurisdiction.rules?.length && !jurisdiction.addressLookups?.length && (!jurisdiction.refusal || jurisdiction.refusal.rungs.length === 0))) {
+  if (file.jurisdictions.some((jurisdiction) => jurisdiction.sites.length === 0 && !jurisdiction.boundaries?.length && !jurisdiction.publication && !jurisdiction.office && !jurisdiction.rules?.length && !jurisdiction.addressLookups?.length && (!jurisdiction.refusal || jurisdiction.refusal.rungs.length === 0))) {
     problems.push("A jurisdiction with no sites lacks a fail-closed refusal and acquisition rungs.");
   }
   const siteKeys = file.jurisdictions.flatMap((jurisdiction) => jurisdiction.sites.map((site) => `${jurisdiction.ocdId}:${site.id}`));
@@ -131,7 +136,7 @@ export function votingSitesProjectionIssues(file: VotingSitesFile): string[] {
     (site.lat !== null && (!Number.isFinite(site.lat) || site.lat < -90 || site.lat > 90)) ||
     (site.lng !== null && (!Number.isFinite(site.lng) || site.lng < -180 || site.lng > 180))
   ))) problems.push("A voting site lacks its published identity/address or carries an invalid point.");
-  if (!file.jurisdictions.some(jurisdiction => jurisdiction.sites.length > 0 || jurisdiction.publication || jurisdiction.office || jurisdiction.rules?.length || jurisdiction.addressLookups?.length)) {
+  if (!file.jurisdictions.some(jurisdiction => jurisdiction.sites.length > 0 || jurisdiction.boundaries?.length || jurisdiction.publication || jurisdiction.office || jurisdiction.rules?.length || jurisdiction.addressLookups?.length)) {
     problems.push("No official voting site was acquired; an empty run cannot replace LKG.");
   }
   return problems;

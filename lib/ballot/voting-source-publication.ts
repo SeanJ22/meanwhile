@@ -1,12 +1,11 @@
 import { requireBallotState } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
 import { upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
-import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { holdRawCapture } from "../civic-data/raw-capture-vault.ts";
-import { VOTING_SITES_SOURCE_ID, type VotingRawCapture } from "./voting-sites-data-plane.ts";
-import type { VotingJurisdiction, VotingSitesFile, VotingSource } from "./voting-sites.ts";
+import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
+import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
@@ -51,11 +50,31 @@ const complete = (read: VotingSourceRead) => !read.blanks.some(blank => ["access
 /** Replace a successfully re-read source only. A failed sibling door cannot hide a new fact. */
 export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, door: VotingSourceDoor, read: VotingSourceRead, now: string): VotingJurisdiction {
   const currentUrls = new Set([door.url, ...read.sources.map(sourceKey)]);
-  const sourceSucceeded = read.rawBodies.length > 0 && !read.blanks.some(blank => blank.reason === "access");
-  const readIds = new Set(read.sites.map(site => site.id));
-  const previousSites = (prior?.sites ?? []).filter(site => !(sourceSucceeded && door.publication?.status === "NO_GENERAL_ELECTION" && site.electionDate === door.electionDate) && !readIds.has(site.id) &&
-    !(complete(read) && read.sites.length > 0 && site.sources?.some(source => currentUrls.has(source.url))));
-  const sites = unique([...previousSites, ...read.sites], site => site.id);
+  const sourceSucceeded = read.rawBodies.length > 0 && !read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction");
+  const previousSites = (prior?.sites ?? []).flatMap(previous => {
+    const site = previous.sources?.length || !prior ? previous : { ...previous,
+      sources: [{ publisher: prior.sourceOrg, url: prior.sourceUrl, checkedAt: prior.collectedAt }] };
+    const replaces = sourceSucceeded && (read.sites.some(next => next.id === site.id) || complete(read) && read.sites.length > 0);
+    if (sourceSucceeded && door.publication?.status === "NO_GENERAL_ELECTION" && site.electionDate === door.electionDate) return [];
+    if (!replaces || !site.sources?.some(source => currentUrls.has(source.url))) return [site];
+    // A shared facility can retain a different publisher's drop box or early-voting service.
+    const sources = site.sources.filter(source => !currentUrls.has(source.url));
+    if (!sources.length) return [];
+    const schedules = site.schedules?.filter(schedule => !currentUrls.has(schedule.source.url));
+    const assignments = site.assignments?.filter(assignment => !currentUrls.has(assignment.source.url));
+    const kinds = schedules?.length ? [...new Set(schedules.map(schedule => schedule.kind))] : site.kinds ?? [site.kind];
+    const retained: VotingSite = { ...site, sources, schedules, assignments, kinds, kind: kinds[0],
+      precincts: assignments?.map(assignment => assignment.precinct), precinct: assignments?.[0]?.precinct,
+      serves: assignments?.map(assignment => assignment.precinct).join(", ") || null,
+      hours: schedules?.[0]?.hours, days: schedules?.[0]?.days };
+    return [retained];
+  });
+  const locations = new Map<string, typeof read.sites[number]>();
+  for (const site of [...previousSites, ...read.sites]) {
+    const priorSite = locations.get(site.id);
+    locations.set(site.id, priorSite ? mergeVotingSiteRows(priorSite, site) : site);
+  }
+  const sites = [...locations.values()];
   const sources = unique([...(prior?.sources ?? []), ...read.sources], sourceKey);
   const rules = unique([...(prior?.rules ?? []).filter(rule => !sourceSucceeded || !currentUrls.has(rule.source.url)), ...read.rules], rule => `${rule.source.url}\n${rule.text}`);
   const blanks = unique([...(prior?.blanks ?? []).filter(blank => blank.doorId !== door.id), ...read.blanks], blank => blank.id);
@@ -77,19 +96,20 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
     office: sourceSucceeded ? read.office ?? prior?.office : prior?.office,
     sources, rules, blanks, addressLookups: lookups, publication,
     allMail: (sourceSucceeded && door.model === "ALL_MAIL") || prior?.allMail,
-    boundaries: sourceSucceeded ? door.boundaries ?? prior?.boundaries : prior?.boundaries,
+    boundaries: sourceSucceeded && (read.boundaries || door.boundaries)
+      ? unique([...(prior?.boundaries ?? []).filter(boundary => !currentUrls.has(boundary.source.url)), ...(read.boundaries ?? door.boundaries ?? [])],
+        boundary => `${boundary.countyFips ?? ""}:${boundary.ward ?? ""}:${boundary.precinct}`) : prior?.boundaries,
     refusal: sites.length || publication ? null : { wall: "We're working on getting this info", rungs: read.attempts.length ?
       read.attempts.map(attempt => ({ rung: attempt.route === "browser-ua" ? 2 : 1, what: attempt.url, result: attempt.outcome, attemptedAt: now })) :
       [{ rung: 1, what: door.url, result: read.blanks.map(blank => blank.owed).join("; ") || "Official list remains open acquisition work", attemptedAt: now }] },
   };
 }
 
-/** Source bytes, including binary originals, go to the raw-capture vault; the candidate keeps their refs. */
-export async function holdVotingRawEvidence(vault: EvidenceStore, read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
-  const held: VotingRawCapture[] = [];
-  for (const body of read.rawBodies) held.push({ url: body.url, contentType: body.contentType,
-    ...await holdRawCapture(vault, VOTING_SITES_SOURCE_ID, body.bytes, body.contentType) });
-  return held;
+/** Save original bytes with the publication, atomically, in the standing data system. */
+export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
+  return read.rawBodies.map(body => ({ url: body.url, contentType: body.contentType,
+    rawHash: createHash("sha256").update(body.bytes).digest("hex"), byteLength: body.bytes.byteLength,
+    savedDocument: { encoding: "gzip-base64", body: gzipSync(body.bytes).toString("base64") } }));
 }
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
@@ -99,8 +119,10 @@ export async function recordVotingSourceRead(repo: DoorRepository, door: VotingS
     pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
   if (!old) return;
   const doorId = old.id;
-  await recordDoorOutcome(repo, doorId, read.blanks.some(blank => blank.reason === "access") ? "FAILURE" : "SUCCESS", now,
-    Boolean(old?.value.validators?.contentHash && old.value.validators.contentHash !== hash));
+  const failures = read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction");
+  await recordDoorOutcome(repo, doorId, failures.length ? "FAILURE" : "SUCCESS", now,
+    Boolean(old?.value.validators?.contentHash && old.value.validators.contentHash !== hash),
+    failures.length ? failures.flatMap(blank => blank.tried).join("; ").slice(0, 4000) : undefined);
   const current = await repo.read(doorId);
   if (current && read.rawBodies.length) await repo.compareAndSet(doorId, current.revision, { ...current.value,
     validators: { etag: null, lastModified: read.fileUpdatedAt ?? null, contentHash: hash, checkedAt: now,

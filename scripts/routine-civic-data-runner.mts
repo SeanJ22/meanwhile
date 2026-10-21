@@ -106,6 +106,7 @@ import {
 } from "../lib/civic-data/routine-due-request.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { installMeetingClockFrom } from "../lib/meetings/settings.ts";
+import { installVotingRefreshFrom } from "../lib/ballot/voting-refresh.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
@@ -214,9 +215,11 @@ if (controlPlaneUrlFromEnv() !== null) {
   try {
     const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
-    installMeetingClockFrom(owner !== null && isAdminConfig(owner.value) ? owner.value : null);
+    const settingsConfig = owner !== null && isAdminConfig(owner.value) ? owner.value : null;
+    installMeetingClockFrom(settingsConfig);
+    installVotingRefreshFrom(settingsConfig);
   } catch (error) {
-    console.warn(`RCD_TASK routine-civic-data-runner: the meeting check clock could not be read, so this pass uses the last installed one — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
+    console.warn(`RCD_TASK routine-civic-data-runner: the meeting and voting check clocks could not be read, so this pass uses the last installed values — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([

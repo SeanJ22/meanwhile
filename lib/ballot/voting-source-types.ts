@@ -63,6 +63,7 @@ export interface VotingSourceDoor {
   publication?: VotingPublication;
   delegation?: "county" | "town";
   boundaries?: VotingBoundary[];
+  boundaryLayer?: boolean;
   changeNotices?: VotingChangeNotice[];
   platform?: VotingPlatform;
   extraction?: VotingExtraction;
@@ -90,6 +91,7 @@ export interface VotingSourceRead {
   doorId: string;
   contacts?: VotingSourceContact[];
   sites: VotingSite[];
+  boundaries?: VotingBoundary[];
   office?: VotingOfficeContact;
   rules: VotingRule[];
   sources: VotingSource[];
@@ -100,7 +102,6 @@ export interface VotingSourceRead {
   fileUpdatedAt?: string;
   publicationMessage?: string;
 }
-export interface VotingAddressInput { address: string; streetNumber?: string; street?: string; city?: string; state?: string; zip?: string; }
 export interface VotingSourceRuntime {
   captureCache?: Map<string, Promise<import("./voting-source-fetch.ts").VotingCapture[]>>;
   discoverySeen?: Set<string>;
@@ -115,8 +116,6 @@ export interface VotingSourceRuntime {
   /** The established browser-UA rung only; it must not solve a challenge. */
   browserFetch?: typeof fetch;
   geocode?: (address: string) => Promise<{ lat: number; lng: number } | null>;
-  /** Supplied only for a reader's address request; never during refresh. */
-  readerAddress?: VotingAddressInput;
 }
 export interface VotingChangeNotice {
   publishedAt: string;

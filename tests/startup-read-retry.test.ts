@@ -13,6 +13,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createContext, runInContext } from "node:vm";
 
 import { CivicDataStoreUnavailableError } from "../lib/civic-data/read-model.ts";
 import { CONTROL_PLANE_CONNECT_MAX_ATTEMPTS } from "../lib/control-plane/repository/connect-retry.ts";
@@ -199,9 +200,32 @@ test("nothing is retried while the Neon circuit is latched", async () => {
  * WIRING TRIPWIRE, deliberately strict: the helper above only matters if the
  * research cycle actually routes its startup authority reads through it.
  */
-test("freshness-shadow routes its startup reads through retryStartupRead", () => {
+test("freshness-shadow retries its named state reference read after installing the Neon deadline", async () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const src = readFileSync(join(root, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(src, /retryStartupRead\(\s*\(\)\s*=>\s*preloadOperationalReferenceBundle\(/);
-  assert.doesNotMatch(src, /^await preloadOperationalReferenceBundle\(/m);
+  const read = src.match(/const operationalReference = PLANNING_STATE === "system" \? null : await pending\.step\("startup:operational-reference", \(\) => retryStartupRead\(\s*\(\) => preloadOperationalReferenceState\(PLANNING_STATE\), \(\) => null, startupReadRetry,\s*\)\);/);
+  assert.ok(read, "the actual state preload must be inside the named pending step and bounded retry");
+  const deadline = src.indexOf("installNeonRequestDeadline();");
+  assert.ok(deadline >= 0 && deadline < read.index!, "install the deadline before the startup read");
+  assert.doesNotMatch(src, /await preloadOperationalReference(?:State|Bundle)\(/);
+
+  for (const state of ["wv", "wy", "system"]) {
+    const r = recorder();
+    const calls: string[] = [];
+    const reference = { state };
+    const timeout = new DOMException("NEON_REQUEST_DEADLINE: body read timed out after 30000ms", "TimeoutError");
+    const context = createContext({ PLANNING_STATE: state, startupReadRetry: r.options, retryStartupRead,
+      pending: { step: async (name: string, run: () => Promise<unknown>) => { calls.push(name); return run(); } },
+      preloadOperationalReferenceState: async (requested: string) => {
+        calls.push(requested);
+        if (calls.length === 2) throw timeout;
+        return reference;
+      },
+    });
+    const result = await runInContext(`(async () => { ${read[0]} return operationalReference; })()`, context);
+    assert.equal(result, state === "system" ? null : reference);
+    assert.deepEqual(calls, state === "system" ? [] : ["startup:operational-reference", state, state]);
+    assert.deepEqual(r.retries, state === "system" ? [] : [timeout.message]);
+    assert.equal(r.delays.length, state === "system" ? 0 : 1);
+  }
 });

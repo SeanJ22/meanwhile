@@ -317,12 +317,14 @@ test("isolation: the lane hands a running wave the round's newer queue once, and
 test("isolation: the runner's heartbeat carries the host's memory, its process tree, the reservations and how many workers fit", async () => {
   const MIB = 1024 * 1024;
   const reading = memoryReading({ at: "2026-10-06T05:30:00.000Z", totalBytes: 8192 * MIB, availableBytes: 3000 * MIB, rootPid: 10,
-    rows: [{ pid: 10, parentPid: 1, rss: 100 * MIB }, { pid: 11, parentPid: 10, rss: 900 * MIB }, { pid: 12, parentPid: 11, rss: 200 * MIB },
+    rows: [{ pid: 10, parentPid: 1, rss: 100 * MIB }, { pid: 11, parentPid: 10, rss: 900 * MIB, peakRss: 950 * MIB }, { pid: 12, parentPid: 11, rss: 200 * MIB },
       { pid: 13, parentPid: 12, rss: 50 * MIB }, { pid: 99, parentPid: 1, rss: 500 * MIB }],
-    state: { parents: [{ pid: 11, peak: 1000 * MIB }], reservations: [{ pid: 12, peak: 342 * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
+    state: { parents: [{ pid: 11, peak: 1000 * MIB, entry: "freshness-shadow.mts:az" }], reservations: [{ pid: 12, peak: 342 * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
   assert.equal(reading.runnerTreeRssBytes, 1250 * MIB, "the runner and everything under it, not other host processes");
   assert.equal(reading.runnerTreeProcesses, 4);
-  assert.deepEqual(reading.parents, [{ pid: 11, peakBytes: 1000 * MIB, rssBytes: 900 * MIB }]);
+  assert.deepEqual(reading.parents, [{ pid: 11, peakBytes: 1000 * MIB, rssBytes: 900 * MIB,
+    peakRssBytes: 950 * MIB, entry: "freshness-shadow.mts:az" }]);
+  assert.equal(typeof reading.parents[0]!.peakRssBytes, "number", "the OS high-water RSS is reported in bytes");
   assert.deepEqual(reading.reservations, [{ entry: "lease-worker.ts", peakBytes: 342 * MIB, rssBytes: 250 * MIB }], "a worker's tree, grandchildren included");
   assert.equal(reading.reservedGrowthBytes, (100 + 92) * MIB);
   assert.equal(reading.headroomBytes, 768 * MIB);

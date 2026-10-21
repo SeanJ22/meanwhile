@@ -63,6 +63,14 @@ test("an empty place list is a no-op, including expansion planning before a free
   const empty = await loadPublishedAreaLookupState([], query);
   assert.deepEqual(await empty.lookup.listVersions(), []);
   assert.equal(empty.versionId, "NO_PLACES_REQUESTED");
+  const previous = process.env.DATABASE_URL;
+  try {
+    process.env.DATABASE_URL = "invalid: no database is needed for an empty list";
+    assert.equal((await loadPublishedAreaLookupState([])).versionId, "NO_PLACES_REQUESTED");
+  } finally {
+    if (previous === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previous;
+  }
   const repos = createMemoryRepositories();
   repos.adminConfig.read = async () => assert.fail("no places must not read state instructions");
   assert.deepEqual((await readExpansionScopesForZips(repos, [])).scopes, []);

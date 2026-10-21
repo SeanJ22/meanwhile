@@ -10,7 +10,7 @@ const place: VotingReaderPlace = { precision: "ADDRESS", point: null, states: ["
 const now = () => "2026-10-12T23:13:00.000Z";
 
 test("VS-01 voting reader renders held records without invoking the Google adapter", async () => {
-  const held = await readGoogleVotingAnswer("public source sample", place, { apiKey: "test-key", now,
+  const { jurisdictions: held } = await readGoogleVotingAnswer("public source sample", place, { apiKey: "test-key", now,
     fetchImpl: (async (url: URL) => new Response(fixture(url.pathname.endsWith("elections") ? "elections" : "mi-voterinfo"))) as unknown as typeof fetch });
   held.forEach(jurisdiction => { jurisdiction.ocdId = place.divisionIds[0]; jurisdiction.sites.forEach(site => { site.countyName = "Ingham"; }); });
   const previous = globalThis.fetch;

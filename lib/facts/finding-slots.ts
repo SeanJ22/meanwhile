@@ -5,7 +5,7 @@ import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 export type FindingSlot =
   | { readonly class: "rosters"; readonly slot: "member_name" | "member_office" | "term_note" | "term_start" | "term_end" }
   | { readonly class: "contacts"; readonly slot: "email" | "phone" | "website" }
-  | { readonly class: "office contacts"; readonly slot: "office_address" | "office_phone" }
+  | { readonly class: "office contacts"; readonly slot: "office_address" | "office_phone" | "office_email" }
   | { readonly class: "body links"; readonly slot: "name" | "homepage" }
   | { readonly class: "schedules"; readonly slot: "meeting_cadence" }
   | { readonly class: "meeting routes"; readonly slot: "agenda_url" }
@@ -17,7 +17,7 @@ export type FindingSlot =
   | { readonly class: string; readonly waiting: string };
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "5";
+export const FINDING_SLOTS_VERSION = "6";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -28,6 +28,15 @@ const PHONE = /^\+?[\d\s().-]{7,}(\s*(x|ext\.?)\s*\d+)?$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 const URL_VALUE = /^https?:\/\//i;
 const DATE = /\b(19|20)\d{2}\b/;
+/** Ten digits, or eleven with a leading 1, before any extension: a date or a ZIP+4 is not a telephone number. */
+const isTelephone = (value: string): boolean => {
+  const digits = value.replace(/\s*(x|ext\.?)\s*\d+$/i, "").replace(/\D/g, "");
+  return digits.length === 10 || digits.length === 11 && digits.startsWith("1");
+};
+
+/** A phone or email that its own words give to another office is that office's, not the governing body's. */
+const OTHER_OFFICE = /recorder|election|voter|public[ _-]?works|police|sheriff|\bfire\b|library|utilit|assessor|treasurer|\bservice|transportation|attendance|athletic|nutrition|cafeteria|transit|airport|human[ _-]?resources|help ?desk|department|\bdept\b/i;
+export const namesOtherOffice = (...words: readonly string[]): boolean => OTHER_OFFICE.test(words.join(" "));
 
 const lookup = (quote: string): ElectionFieldKind | null => /polling|vote center|voting location|where to vote/i.test(quote) ? "polling_lookup"
   : /sample ballot|my ballot|ballot (lookup|status)/i.test(quote) ? "ballot_lookup" : /regist/i.test(quote) ? "registration_lookup" : null;
@@ -41,7 +50,7 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => Findi
   "GOV-01": () => ({ class: "body links", slot: "name" }),
   "GOV-02": () => ({ class: "body links", slot: "name" }),
   "GOV-08": value => PHONE.test(value) ? { class: "office contacts", slot: "office_phone" } : URL_VALUE.test(value) ? { class: "body links", slot: "homepage" }
-    : EMAIL.test(value) ? { class: "body links", waiting: "NO_READER_FIELD" } : { class: "office contacts", slot: "office_address" },
+    : EMAIL.test(value) ? { class: "office contacts", slot: "office_email" } : { class: "office contacts", slot: "office_address" },
   "REF-07": () => ({ class: "official hosts", slot: "host" }),
   "OFF-02": () => ({ class: "rosters", slot: "member_office" }),
   "OFF-04": () => ({ class: "rosters", slot: "member_name" }),
@@ -101,8 +110,6 @@ const TERM: Readonly<Record<string, "term_note" | "term_start" | "term_end">> = 
   termend: "term_end", termends: "term_end", termexpires: "term_end", termexpiration: "term_end",
 };
 const BODY = /^(district|body|office|organization|contact|governingbody|board|council|district\.office|district\.contact|body\.office)$/;
-const SERVICES = /(recorder|election|publicworks|service|clerk|treasurer|assessor|sheriff|police|fire|utility|library)/;
-const DIRECTORY = /^(body\.name|bodyname|subordinatebody\.name|district\.name|office\.name|homepageurl|jurisdictionname|jurisdiction\.county|district\.county|district\.website|body\.website)$/;
 const COMMENT: Readonly<Record<string, "comment:detail" | "comment:signup" | "comment:written" | "comment:attend" | "comment:time_limit">> = {
   commentperioddetail: "comment:detail", "publiccomment.calltothepublic": "comment:detail", "publiccomment.detail": "comment:detail",
   "publiccomment.signup": "comment:signup", signup: "comment:signup",
@@ -124,7 +131,7 @@ export function candidateChecklistId(field: string, value: unknown): string | nu
 }
 
 /** A checklist id, or a hunter's own field name matched to a slot by its words; candidate findings belong to the ballot classes. */
-export function slotFor(field: string, value: unknown, recordClass: string | null, quote = ""): FindingSlot {
+export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = ""): FindingSlot {
   const item = /^([A-Z]{3})-\d{2}$/.exec(field.trim());
   if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote)
     ?? { class: CHECKLIST_FAMILIES[item[1]!]?.name.toLowerCase() ?? "other", waiting: checklistWait(item[0]) };
@@ -145,11 +152,14 @@ export function slotFor(field: string, value: unknown, recordClass: string | nul
   }
   if (last === "member" && /^(officeholder|board|council|governingboard|governingbody)$/.test(head)) return { class: "rosters", slot: "member_name" };
   if (/^(officeholder(\.contact)?)?$/.test(head) && (last === "email" || last === "phone")) return { class: "contacts", slot: last };
-  if (BODY.test(head) && (last === "phone" || last === "mainphone")) return { class: "office contacts", slot: "office_phone" };
-  if (BODY.test(head) && (last === "address" || last === "physicaladdress" || last === "officeaddress")) return { class: "office contacts", slot: "office_address" };
-  if (SERVICES.test(key)) return { class: "services", waiting: "SERVICES_CLASS_NOT_MOVED" };
+  const elsewhere = namesOtherOffice(key, String(value), quote, sourceUrl);
+  if (!elsewhere && BODY.test(head) && (last === "phone" || last === "mainphone")) return { class: "office contacts", slot: "office_phone" };
+  if (!elsewhere && BODY.test(head) && (last === "address" || last === "physicaladdress" || last === "officeaddress")) return { class: "office contacts", slot: "office_address" };
   if (/^(homepageurl|district\.website|body\.website)$/.test(key) && URL_VALUE.test(String(value))) return { class: "body links", slot: "homepage" };
-  if (DIRECTORY.test(key)) return { class: "directory", waiting: "DIRECTORY_CLASS_NOT_MOVED" };
   if (key.startsWith("meeting")) return { class: "meetings", waiting: "FINDING_NAMES_NO_SITTING" };
+  const shape = String(value).trim();
+  if (elsewhere && (EMAIL.test(shape) || PHONE.test(shape))) return { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" };
+  if (EMAIL.test(shape)) return { class: "office contacts", slot: "office_email" };
+  if (PHONE.test(shape) && isTelephone(shape) && !/fax/.test(key)) return { class: "office contacts", slot: "office_phone" };
   return { class: "other", waiting: "NO_FACT_SLOT" };
 }

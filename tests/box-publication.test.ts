@@ -15,9 +15,10 @@ import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
-import { slotFor } from "../lib/facts/finding-slots.ts";
+import { FINDING_SLOTS_VERSION, slotFor } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
+import { fetchCapture } from "../lib/facts/capture.ts";
 import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -67,8 +68,15 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("meeting.schedule"), { class: "schedules", slot: "meeting_cadence" });
   assert.deepEqual(slot("commentPeriod", "Yes"), { class: "comment rules", slot: "comment:period" });
   assert.deepEqual(slot("publicComment.timeLimit"), { class: "comment rules", slot: "comment:time_limit" });
-  assert.deepEqual(slot("body.name"), { class: "directory", waiting: "DIRECTORY_CLASS_NOT_MOVED" });
-  assert.deepEqual(slot("recorder.phone"), { class: "services", waiting: "SERVICES_CLASS_NOT_MOVED" });
+  assert.deepEqual(slot("body.name"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("recorder.phone", "(928) 865-2632"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
+  assert.deepEqual(slot("contact.phone", "(520) 724-4330", null, "Contact Pima County Recorder Voter Services at (520) 724-4330"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
+  assert.deepEqual(slot("office.phone", "520-225-4800", null, "You can also call Transportation at 520-225-4800."), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
+  assert.deepEqual(slotFor("office.email", "bnavarro@coolidgeaz.com", null, "Email: bnavarro@coolidgeaz.com", "https://www.coolidgeaz.com/publicworks"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
+  assert.deepEqual(slot("office.email", "CityClerk@SierraVistaAZ.gov"), { class: "office contacts", slot: "office_email" });
+  assert.deepEqual(slot("townHall.phone", "(520) 487-2331"), { class: "office contacts", slot: "office_phone" });
+  assert.deepEqual(slot("office.fax", "(520) 487-2331"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("policy.adopted", "2023-08-24"), { class: "other", waiting: "NO_FACT_SLOT" });
   assert.deepEqual(slot("meeting.location"), { class: "meetings", waiting: "FINDING_NAMES_NO_SITTING" });
   assert.deepEqual(slot("officeholder.name", "x", "candidate-enrichment"), { class: "candidates", waiting: "NO_FACT_SLOT" });
   assert.deepEqual(slot("candidate.bio", "x", "candidate-enrichment"), { class: "candidates", lead: "candidate-profile" });
@@ -82,7 +90,7 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("GOV-08", "520-791-4213"), { class: "office contacts", slot: "office_phone" });
   assert.deepEqual(slot("GOV-08", "255 W. Alameda St., Tucson, AZ 85701"), { class: "office contacts", slot: "office_address" });
   assert.deepEqual(slot("GOV-08", "https://www.tucsonaz.gov"), { class: "body links", slot: "homepage" });
-  assert.deepEqual(slot("GOV-08", "clerk@tucsonaz.gov"), { class: "body links", waiting: "NO_READER_FIELD" });
+  assert.deepEqual(slot("GOV-08", "clerk@tucsonaz.gov"), { class: "office contacts", slot: "office_email" });
   assert.deepEqual(slot("OFF-06", "January 2027", null, "Term expires January 2027"), { class: "rosters", slot: "term_end" });
   assert.deepEqual(slot("OFF-06", "2023", null, "Appointed in 2023"), { class: "rosters", slot: "term_start" });
   assert.deepEqual(slot("OFF-08", "https://tucsonaz.gov/ward2"), { class: "contacts", slot: "website" });
@@ -145,7 +153,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   const report = await publishBoxFindings(input);
   assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3 },
-    waitingByClass: { directory: 1, rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
+    waitingByClass: { other: 1, rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 2 });
   assert.deepEqual(report.byPlace[AGENDA], { published: 1, refused: 1, waiting: 0 });
   assert.deepEqual(fetched.sort(), [AGENDA_URL, "https://unreachable.tucsonaz.gov/agenda"], "the held TCCC copy is inside its clock; the stale agenda copy is read again once");
@@ -159,7 +167,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   assert.deepEqual(await facts.query("SELECT stage, reason FROM blank WHERE entity_id = $1 AND field = 'member_name'", [AGENDA]), [{ stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }]);
 
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
+  assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "NO_FACT_SLOT", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
   assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
 });
 
@@ -311,4 +319,41 @@ test("a name joins a council only when its own words name the seat: staff and ba
   assert.deepEqual(members, ["Lane Santa Cruz", "Richard Fimbres", "Selina Barajas"]);
   assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 2 }, "both members named for Ward 5 go to Sean");
   assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 0 }, "an open flag is raised once");
+});
+
+test("a government with no governing board gets one; a phone or email with no person named goes on the office; a refused finding is looked at again when the slot map moves, however old", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const CLIFTON = "az:city:town-of-clifton", URL = "https://www.townofclifton.example.gov/clerk";
+  assert.deepEqual(await facts.query("SELECT id FROM entity WHERE kind = 'body' AND parent_id = $1", [CLIFTON]), [], "the town starts with no board");
+  const page = await hold(URL, "<html><body><h1>Clifton, AZ</h1><p>Town offices: (928) 865-4146. Email the clerk at clerk@cliftonaz.gov.</p><p>Mayor Pat Doe</p></body></html>", "2026-09-01T15:00:00.000Z");
+  const OLD = "2026-01-01T00:00:00.000Z";
+  let index = 0;
+  const drop = (field: string, value: string, quote: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-clifton",
+    missionPart: null, finding: { subjectId: CLIFTON, field, value, exactQuote: quote, sourceUrl: URL, artifactIds: [page], subjectHint: null, index: index++ } }, OLD);
+  await drop("officeholder.phone", "(928) 865-4146", "Town offices: (928) 865-4146");
+  await drop("office.email", "clerk@cliftonaz.gov", "Email the clerk at clerk@cliftonaz.gov");
+  const fetch: ProbeFetch = async () => { throw new Error("the cited page is held inside its clock"); };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const first = await publishBoxFindings(input);
+  assert.equal(first.published, 2, JSON.stringify(first));
+  const [board] = await facts.query("SELECT id FROM entity WHERE kind = 'body' AND parent_id = $1", [CLIFTON]);
+  assert.equal(board!.id, "ocd-division/country:us/state:az/place:clifton#governing");
+  assert.deepEqual(await facts.query("SELECT field, value FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [board!.id]),
+    [{ field: "office_email", value: "clerk@cliftonaz.gov" }, { field: "office_phone", value: "(928) 865-4146" }]);
+
+  const [refused] = await repos.boxFindings.list();
+  await repos.boxFindings.compareAndSet(refused!.value.id, refused!.revision, { ...refused!.value, state: "refused", refusal: "PAGE_NOT_ABOUT_ENTITY", publicationId: null,
+    waitingFor: undefined, attempts: [{ builder: "fact-publisher", token: "t", generation: 1, takenAt: OLD, expiresAt: OLD, outcome: "refused", endedAt: OLD, detail: "PAGE_NOT_ABOUT_ENTITY" }] }, NOW);
+  const due = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 });
+  assert.deepEqual(due.map(row => row.state), ["refused"], "a refusal from the older slot map is due again, with no age limit");
+  assert.equal((await publishBoxFindings(input)).looked, 1);
+  assert.equal((await publishBoxFindings(input)).looked, 0, "once looked at under this slot map, it is not looked at again");
+});
+
+test("two addresses that serve the same bytes in one pass are both saved", async () => {
+  const repos = createMemoryRepositories(), vault = new MemoryEvidenceStore();
+  const fetch: ProbeFetch = async () => ({ status: 200, headers: new Headers({ "content-type": "text/html" }), bytes: async () => new TextEncoder().encode("<html><body>Clifton, AZ</body></html>") });
+  for (const url of ["https://www.cliftonaz.gov/board", "https://www.cliftonaz.gov/board/"]) {
+    assert.ok("capture" in await fetchCapture({ url, repos, vault, fetch, now: NOW }), url);
+  }
 });

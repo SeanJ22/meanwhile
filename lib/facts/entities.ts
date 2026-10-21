@@ -191,6 +191,19 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<void> 
   [row.id, row.kind, row.name, row.state, row.parentId]);
 }
 
+/** A city's, county's or school district's governing board when the fact store holds none: a board on its own place, where readers look for it. */
+export async function ensureGoverningBody(query: Query, governmentId: string): Promise<void> {
+  const kind = /^[a-z]{2}:(city|county|school):/.exec(governmentId)?.[1];
+  if (!kind) return;
+  const [government] = await query(`SELECT g.state, g.parent_id, p.name AS place_name FROM entity g JOIN entity p ON p.id = g.parent_id
+    WHERE g.id = $1 AND g.kind = 'government' AND p.kind = 'place'`, [governmentId]);
+  if (!government) return;
+  const id = `${government.parent_id}${kind === "school" ? "#board" : "#governing"}`;
+  await ensureEntity(query, { id, kind: "body", name: `${government.place_name} ${kind === "school" ? "school board" : `${kind} governing`}`,
+    state: government.state as string | null, parentId: governmentId });
+  await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, government.parent_id]);
+}
+
 /** A .gov page code has already matched to this entity is one of its own sites. */
 export async function learnOfficialHost(query: Query, entityId: string, url: string): Promise<void> {
   if (isOfficialUrl(url, [])) await learnSite(query, entityId, hostOf(url));

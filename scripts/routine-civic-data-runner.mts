@@ -460,7 +460,7 @@ async function settlePublishNowCursor(tasks: readonly RoutineSourceTask[], failu
   catch (error) { console.log(`RCD_PUBLISH_NOW_CURSOR not saved — ${safeFailure(sanitizedErrorDiagnostic(error))}; the next pass reads the same window again`); }
 }
 
-const BOX_FINDINGS_PER_PASS = 300;
+const BOX_FINDINGS_PER_PASS = 1000;
 
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
 

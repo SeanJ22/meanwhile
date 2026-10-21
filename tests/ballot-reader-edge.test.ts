@@ -247,6 +247,7 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
   // `money`, which is `CandidateFunding`), so plain objects are walked too, once each.
   const seen = new WeakSet<object>();
   const walk = async (node: unknown): Promise<void> => {
+    node = await node;
     if (typeof node === "string") { text.push(node); return; }
     if (node === null || typeof node !== "object" || seen.has(node)) return;
     seen.add(node);

@@ -6,7 +6,7 @@ import test from "node:test";
 import { build } from "esbuild";
 import { basename } from "node:path";
 import { launchGuarded } from "../scripts/browser.mts";
-import { GET as zipLocation } from "../app/api/location/zip/route.ts";
+import { lookupZcta } from "../lib/geo/zcta.ts";
 
 test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and mail destinations have a working address box", async () => {
   const output = await build({ stdin: { contents: `
@@ -43,10 +43,11 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
   const server = createServer(async (request, response) => {
     if (scripts.has(request.url!)) { fetchedScripts.push(request.url!); response.writeHead(200, { "content-type": "application/javascript" }).end(scripts.get(request.url!)!); }
     else if (request.url === "/entry.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
-    else if (request.url?.startsWith("/api/location/zip?")) {
+    else if (request.url?.startsWith("/geo/reader-zips/")) {
       zipRequests.push(request.url);
-      const result = await zipLocation(new Request(new URL(request.url, "http://localhost")));
-      response.writeHead(result.status, { "content-type": "application/json" }).end(await result.text());
+      const prefix=/\/(\d{2})\.json$/.exec(request.url)?.[1];assert.ok(prefix);
+      const locations=Object.fromEntries(["73960","05009","11249","10540","10008","00501"].filter(zip=>zip.startsWith(prefix)).map(zip=>[zip,lookupZcta(zip)]));
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({locations}));
     }
     else if (request.url === "/api/address/resolve") {
       let body = ""; for await (const chunk of request) body += chunk;
@@ -105,7 +106,7 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
       await page.getByRole("textbox", { name: "Street address", exact: true }).waitFor();
       await page.screenshot({ path: `.scratch/ci/zip-01-unplaced-${viewport.width}.png`, fullPage: true });
       assert.deepEqual(errors, []);
-      assert.ok(zipRequests.length > 0, "entry uses the real server-resident ZIP route");
+      assert.ok(zipRequests.length > 0, "entry reads its regional source projection");
       await context.close();
     }
   } finally {

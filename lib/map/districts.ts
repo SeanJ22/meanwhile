@@ -236,6 +236,9 @@ function districtStyleLayers(type: DistrictType, state: string | null): LayerSpe
       "source-layer": "districts",
       filter,
       paint: {
+        // Keep the hit area, but skip the GPU fill pass until it has shading.
+        "fill-layer-opacity": selected?.type === type || narrowedApplied.some(entry => entry.type === type) ? 1 : 0,
+        "fill-layer-opacity-transition": { duration: 0, delay: 0 },
         "fill-color": accent,
         "fill-opacity": [
           "case",
@@ -351,11 +354,19 @@ export function removeDistrictLayers(map: MapLibreMap): void {
 
 let selected: { type: DistrictType; ocdId: string } | null = null;
 
+function updateDistrictFill(map: MapLibreMap, type: DistrictType): void {
+  const id = fillLayerId(type);
+  if (!map.getLayer(id)) return;
+  const opacity = selected?.type === type || narrowedApplied.some(entry => entry.type === type) ? 1 : 0;
+  if (map.getPaintProperty(id, "fill-layer-opacity") !== opacity) map.setPaintProperty(id, "fill-layer-opacity", opacity);
+}
+
 export function setSelectedDistrict(
   map: MapLibreMap,
   type: DistrictType | null,
   ocdId: string | null,
 ): void {
+  const previousType = selected?.type;
   if (selected) {
     const source = sourceId(selected.type);
     if (map.getSource(source)) {
@@ -364,6 +375,7 @@ export function setSelectedDistrict(
     selected = null;
   }
 
+  if (previousType) updateDistrictFill(map, previousType);
   if (!type || !ocdId) return;
 
   const source = sourceId(type);
@@ -371,6 +383,7 @@ export function setSelectedDistrict(
 
   map.setFeatureState({ source, sourceLayer: "districts", id: ocdId }, { selected: true });
   selected = { type, ocdId };
+  updateDistrictFill(map, type);
 }
 
 let narrowedApplied: { type: DistrictType; ocdId: string }[] = [];
@@ -379,6 +392,7 @@ export function setNarrowedDistricts(
   map: MapLibreMap,
   entries: { type: DistrictType; ocdId: string }[],
 ): void {
+  const types = new Set([...narrowedApplied, ...entries].map(entry => entry.type));
   for (const prev of narrowedApplied) {
     const source = sourceId(prev.type);
     if (map.getSource(source)) {
@@ -393,6 +407,7 @@ export function setNarrowedDistricts(
     map.setFeatureState({ source, sourceLayer: "districts", id: entry.ocdId }, { narrowed: true });
     narrowedApplied.push(entry);
   }
+  for (const type of types) updateDistrictFill(map, type);
 }
 
 export interface DistrictHit {

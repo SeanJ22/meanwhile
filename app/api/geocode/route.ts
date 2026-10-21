@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         // Identified, with a contact address, as every retrieval here is.
         "user-agent": OUTBOUND_USER_AGENT,
       },
-      signal: controller.signal,
+      signal: AbortSignal.any([request.signal, controller.signal]),
       cache: "no-store",
     });
     if (!upstream.ok) {

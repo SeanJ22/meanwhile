@@ -1,5 +1,6 @@
 "use client";
 
+import {fetchReaderResponse} from "@/lib/reader/bootstrap";
 import { useSyncExternalStore } from "react";
 import { linkHealthKey, readLinkHealth } from "@/lib/design/link-health";
 
@@ -13,7 +14,7 @@ async function refresh() {
   if (inFlight) return inFlight;
   inFlight = (async () => {
     try {
-      const response = await fetch("/api/reader/link-health", { cache: "no-cache" });
+      const response = await fetchReaderResponse("/api/reader/link-health", { cache: "no-cache" });
       if (!response.ok) return;
       const snapshot = readLinkHealth(await response.json());
       if (!snapshot || Date.parse(snapshot.sweptAt) <= sweptAt) return;

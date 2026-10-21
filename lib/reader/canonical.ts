@@ -9,20 +9,27 @@ import { serverReaderValue } from "./memory.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
+type Additional = Statement & { readonly canonicalKeys?: true };
+type CanonicalRead = Awaited<ReturnType<typeof readCanonicalShelf>>;
 
-/** One network read, with each group's decoding and publication failures kept independent. */
-export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerDatabaseQuery()): CivicDataReadStore {
+/** One network read with independent group failures; accompanying geography belongs to the first group. */
+export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): CivicDataReadStore & { readGroup(index: number): Promise<CanonicalRead> } {
   const keys = [...new Set(groups.flatMap(group => group.map(entry => `${entry.recordClass}:${entry.scope}`)))];
   const batch = (async () => {
     if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
-    return query([{ text: SHELF_WITH_PARTS, params: [keys, keys.flatMap(key => cached.get(key)?.projection.versionId ?? [])] }]);
+    return query([canonicalStatement(keys, additional)]);
   })();
   void batch.catch(() => undefined);
   const stores = new Map<string, Promise<CivicDataReadStore>>();
-  for (const group of groups) {
+  const reads: Promise<CanonicalRead>[] = [];
+  for (const [index,group] of groups.entries()) {
     const selected = new Set(group.map(entry => `${entry.recordClass}:${entry.scope}`));
     const read = readCanonicalShelf(group, async () => {
       const [rows] = await batch;
+      const extra = index === 0 ? rows.find(row => row.row_kind === "additional") : undefined;
+      if (extra && additional?.canonicalKeys) for (const row of extra.part_payload as readonly Row[]) {
+        for (const key of row.canonical_keys as readonly string[] ?? []) selected.add(key);
+      }
       const promotions = rows.filter(row => row.row_kind === "promotion" && selected.has(String(row.key)));
       const parts = new Map(rows.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row]));
       const needed = new Set<string>();
@@ -37,12 +44,19 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
       for (const row of promotions) { visit(row.payload); visit(row.validation_receipt); }
       const selectedRows: Row[] = [...promotions];
       for (const hash of needed) { const part = parts.get(hash); if (part) selectedRows.push(part); }
+      if (extra) selectedRows.push(extra);
       return [structuredClone(selectedRows)];
-    });
+    }, index === 0 ? additional : undefined);
+    reads.push(read);
     void read.catch(() => undefined);
     for (const entry of group) stores.set(`${entry.recordClass}:${entry.scope}`, read);
   }
   return {
+    async readGroup(index) {
+      const read = reads[index];
+      if (!read) throw new Error("READER_GROUP_NOT_SELECTED");
+      return read;
+    },
     async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
     async readPromotedEntry(recordClass, scope) {
@@ -88,10 +102,7 @@ SELECT 'part',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,p
 
 const cached = serverReaderValue("canonical", () => new Map<string, Extract<PromotedEdgeEntry, { kind: "PROMOTED" }>>());
 
-/** Read canonical promotions once; source evidence was checked when each fact was published. */
-export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Statement & { readonly canonicalKeys?: true }): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
-  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
-  const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
+function canonicalStatement(keys: readonly string[], additional?: Additional): Statement {
   const additionalSql = additional?.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 2}`);
   const shelfSql = additional?.canonicalKeys ? SHELF_WITH_PARTS
     .replace("WITH RECURSIVE shelf", () => `WITH RECURSIVE additional AS MATERIALIZED (${additionalSql}), shelf`)
@@ -102,7 +113,14 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
     ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
   const versions = additional?.canonicalKeys ? [...cached.values()].map(entry => entry.projection.versionId)
     : keys.flatMap(key => cached.get(key)?.projection.versionId ?? []);
-  const [loaded] = await query([{ text: shelfSql + extra, params: [keys, versions, ...additional?.params ?? []] }]);
+  return {text:shelfSql+extra,params:[keys,versions,...additional?.params ?? []]};
+}
+
+/** Read canonical promotions once; source evidence was checked when each fact was published. */
+export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
+  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+  const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
+  const [loaded] = await query([canonicalStatement(keys,additional)]);
   const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
   const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
     .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];

@@ -29,6 +29,8 @@ export function statePeopleScopeForId(id: string, stateHint?: string): StatePeop
   return scope && STATE_PEOPLE_JURISDICTIONS.includes(scope) ? scope : null;
 }
 
+export const PERSON_ID_NAMESPACES: Readonly<Record<string,string>> = {bioguide:"congress",congress:"congress",legiscan:"legiscan",legiscanapi:"legiscan",votesmart:"votesmart",followthemoney:"followthemoney",opensecrets:"opensecrets",ballotpedia:"ballotpedia",wikidata:"wikidata",openstates:"ocd-person",ocdperson:"ocd-person",plural:"ocd-person"};
+
 /** Only exact publisher identity participates in a cross-source person join. */
 export function personIdentityKeys(person: Pick<Officeholder, "id" | "personId" | "nativeIds">): ReadonlySet<string> {
   const keys = new Set([person.id, person.personId ?? person.id]);
@@ -36,8 +38,8 @@ export function personIdentityKeys(person: Pick<Officeholder, "id" | "personId" 
     for (const id of ids) if (id) {
       keys.add(source === "reader" ? id : `${source}:${id}`);
       const namespace = source.toLowerCase().replace(/[^a-z0-9]/g, "");
-      const aliases: Readonly<Record<string,string>> = {bioguide:"congress",congress:"congress",legiscan:"legiscan",legiscanapi:"legiscan",votesmart:"votesmart",followthemoney:"followthemoney",opensecrets:"opensecrets",ballotpedia:"ballotpedia",wikidata:"wikidata",openstates:"ocd-person",ocdperson:"ocd-person",plural:"ocd-person"};
-      const canonical = aliases[namespace];
+
+      const canonical = PERSON_ID_NAMESPACES[namespace];
       if (canonical) keys.add(`${canonical}:${canonical === "ocd-person" ? id.replace(/^ocd-person\//, "") : id}`);
       if (source === "ocd-person" && id.startsWith("ocd-person/")) keys.add(id);
     }

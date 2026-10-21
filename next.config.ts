@@ -37,6 +37,8 @@ const nextConfig: NextConfig = {
   },
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
+  // ZIP startup projections are browser assets, never server lookup inputs.
+  outputFileTracingExcludes: { "/*": ["./public/geo/reader-zips/**"] },
   outputFileTracingIncludes: {
     "/api/reader/state": ["./data/derived/zip-divisions/*.json", ...stateOfficeTrace],
     "/api/reader/places": ["./data/derived/zip-divisions/*.json"],

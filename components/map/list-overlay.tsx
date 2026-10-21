@@ -2,7 +2,9 @@
 
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import { meetingCardSources } from "@/lib/officials/card-sources";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { useEffect, useMemo, useState } from "react";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
@@ -325,6 +327,7 @@ export function ListOverlay({
               )}
 
               {!collapsed && <CardSourcesContribution id={`meeting-list:${group.key}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
+              {!collapsed && <CardGapsContribution id={`meeting-list:${group.key}`} gaps={group.items.flatMap(meetingCardGaps)} />}
 
               {!collapsed && groupBadge !== null && (
                 <p className="al-group-jurisdiction">
@@ -350,7 +353,7 @@ export function ListOverlay({
 
                   return (
                     <div key={meeting.id} className="al-row" style={tierVars(tierForMeeting(meeting))}>
-                      <MeetingRow meeting={meeting} compact sourcesInParent
+                      <MeetingRow meeting={meeting} compact sourcesInParent gapsInParent
                         title={meetingRowTitle(meeting, { jurisdictionShown: ui.listGroupBy === "jurisdiction" })}
                         onOpen={() => { onPickMeeting(meeting); dispatch({ type: "list/open", open: false }); }}
                         jurisdiction={groupBadge === null ? <JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} detail={false} /> : undefined}

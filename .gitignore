@@ -48,6 +48,8 @@ yarn-error.log*
 
 # generated on dev/build
 /public/maplibre-gl-worker.mjs
+/public/map-boundary-worker.mjs
+/public/geo/reader-zips/
 /public/states/
 /data/derived/place-reference/
 

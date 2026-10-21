@@ -49,6 +49,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
   const globalStyles = await postcss([tailwindcss()]).process(readFileSync("app/globals.css", "utf8"), { from: "app/globals.css" });
   const stylesheet = globalStyles.css + readFileSync("app/reader.css", "utf8") + (output.outputFiles.find(file => file.path.endsWith(".css"))?.text ?? "");
   const received: Record<string, unknown>[] = [];
+  let finishStalled: (() => void) | undefined;
   const server = createServer(async (request, response) => {
     if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     else if (request.url === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(stylesheet);
@@ -58,7 +59,12 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       if (data.address === "Server failure") {
         response.writeHead(503, { "content-type": "application/json" }).end("{}"); return;
       }
-      if (data.address === "Stalled request") return;
+      if (data.address === "Stalled request") {
+        response.writeHead(200, { "content-type": "application/x-ndjson" });
+        response.write('{"pending":true}\n');
+        finishStalled = () => response.end(JSON.stringify({ answer: answers.get(cases[0].zip) }) + "\n");
+        return;
+      }
       const answer = answers.get(data.address); assert.ok(answer);
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(answer));
     } else if (cases.some(item => item.path === request.url)) response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"></head><body class="mw-reader"><main id="root"></main><script src="/fixture.js"></script></body></html>');
@@ -145,13 +151,27 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
           Object.assign(window, { lookupTiming: state });
           document.querySelector("form")!.addEventListener("submit", () => { state.started = performance.now(); }, { once: true, capture: true });
           const observer = new MutationObserver(() => {
-            if (state.started && document.querySelector("[data-voting-coverage-gap]")) {
+            if (state.started && document.querySelector("[data-voting-coverage-gap], [role=status]")) {
               state.elapsed = performance.now() - state.started; observer.disconnect();
             }
           });
           observer.observe(document.body, { childList: true, subtree: true });
         });
         await page.getByRole("button", { name: "Show me", exact: true }).click();
+        if (input === "Stalled request") {
+          const pending = page.getByRole("status");
+          await pending.waitFor({ state: "visible", timeout: 2500 });
+          assert.match(await pending.innerText(), /working on getting this info/i);
+          const initial = await pending.innerText();
+          await page.waitForFunction(text => document.querySelector("[role=status]")?.textContent !== text, initial);
+          // Cross the old request timeout, then prove the same request still delivers its answer.
+          await page.waitForTimeout(3100);
+          assert.equal(await page.locator("[data-voting-site]").count(), 0);
+          finishStalled!();
+          await page.locator("[data-voting-site]").first().waitFor({ state: "visible", timeout: 1000 });
+          assert.equal(await pending.count(), 0);
+          continue;
+        }
         const gap = page.locator("[data-voting-coverage-gap]");
         await gap.waitFor({ state: "visible", timeout: 5000 });
         const elapsed = await page.evaluate(() => (window as unknown as { lookupTiming: { elapsed: number } }).lookupTiming.elapsed);
@@ -162,7 +182,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /Something went wrong/i);
       }
       assert.ok(diagnostics.some(line => line.includes('"stage":"reader-response"')));
-      assert.ok(diagnostics.some(line => line.includes('"stage":"reader-request"')));
+      assert.ok(!diagnostics.some(line => line.includes('"stage":"reader-request"')), "the slow stream must not be aborted by the panel");
       assert.deepEqual(errors, []);
       await context.close();
     }

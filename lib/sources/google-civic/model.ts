@@ -31,6 +31,7 @@ export interface CivicLookup {
   reason: string | null;
   rows: CivicFact[];
   counts: { loaded: number; joined: number; unjoined: number };
+  electionOffices?: { name: string; url: string }[];
 }
 export interface CivicStateCoverage {
   state: string;
@@ -104,9 +105,19 @@ export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: s
       value: row, sources: civicSources(row, checkedAt, "voterinfo") });
   }
   const joined = rows.filter(row => row.joinedDivisionId !== null).length;
+  const electionOffices: { name: string; url: string }[] = [];
+  for (const jurisdiction of civicArray(data.state)) {
+    const local = jurisdiction.local_jurisdiction ?? jurisdiction.localJurisdiction;
+    for (const area of [jurisdiction, ...(local ? [civicObject(local)] : [])]) {
+      if (!area.electionAdministrationBody) continue;
+      const office = civicObject(area.electionAdministrationBody);
+      const url = string(office.electionInfoUrl) || string(office.votingLocationFinderUrl);
+      if (/^https?:\/\//i.test(url)) electionOffices.push({ name: string(office.name) || string(area.name) || "Election office", url });
+    }
+  }
   return { formatVersion: 1, kind: "LOOKUP", electionId, state, checkedAt, status: rows.length ? "AVAILABLE" : "NO_DATA",
     reason: rows.length ? null : "Google Civic has not supplied contests or voting sites for this address.", rows,
-    counts: { loaded: rows.length, joined, unjoined: rows.length - joined } };
+    counts: { loaded: rows.length, joined, unjoined: rows.length - joined }, electionOffices };
 }
 export function unavailableCivicLookup(reason: string, checkedAt: string, electionId = ""): CivicLookup {
   return { formatVersion: 1, kind: "LOOKUP", electionId, state: null, checkedAt, status: "OUTAGE", reason, rows: [], counts: { loaded: 0, joined: 0, unjoined: 0 } };

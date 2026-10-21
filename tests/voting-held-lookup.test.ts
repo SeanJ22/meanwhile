@@ -46,7 +46,12 @@ async function holding(): Promise<ReaderAuthorityEdgeBundle> {
 test("street requests use one Census geocode, held polygons and held sites; ZIP requests need no external lookup", async () => {
   const edge = await holding(), previous = globalThis.fetch, requests: string[] = [];
   globalThis.fetch = async input => {
-    const url = new URL(String(input)); requests.push(url.origin + url.pathname);
+    const url = new URL(String(input));
+    if (url.origin !== "https://geocoding.geo.census.gov") {
+      assert.ok(/neon|proxy|localhost/.test(url.hostname), "Only the anonymous count database may be called alongside Census");
+      return Response.json({ fields: [], rows: [], rowCount: 0, command: "INSERT", rowAsArray: false });
+    }
+    requests.push(url.origin + url.pathname);
     assert.equal(url.origin, "https://geocoding.geo.census.gov");
     return Response.json({ result: { addressMatches: [{ coordinates: { x: -95.37, y: 29.76 }, geographies: {
       Counties: [{ STATE: "48", GEOID: "48201", NAME: "Harris County" }],

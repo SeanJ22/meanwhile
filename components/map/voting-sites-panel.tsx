@@ -77,10 +77,10 @@ export function VotingSitesPanel({
       try {
         const res = await fetch("/api/voting-sites", {
           method: "POST",
-          headers: { "content-type": "application/json" },
+          headers: { "content-type": "application/json", accept: "application/x-ndjson" },
           body: JSON.stringify({ address: value }),
           cache: "no-store",
-          signal: AbortSignal.any([controller.signal, AbortSignal.timeout(2800)]),
+          signal: controller.signal,
         });
         if (controller.signal.aborted) return;
         if (!res.ok) {
@@ -88,9 +88,30 @@ export function VotingSitesPanel({
           setState({ kind: "failed" });
           return;
         }
-        const answer = (await res.json()) as VotingSitesAnswer;
-        if (controller.signal.aborted) return;
-        setState({ kind: "answered", answer });
+        if (res.headers.get("content-type")?.includes("application/x-ndjson") && res.body) {
+          const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+          let buffer = "";
+          let answered = false;
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (controller.signal.aborted) return;
+              buffer += value ?? "";
+              const lines = buffer.split("\n");
+              buffer = lines.pop() ?? "";
+              if (done && buffer.trim()) lines.push(buffer);
+              for (const line of lines.filter(line => line.trim())) {
+                const message = JSON.parse(line) as { answer?: VotingSitesAnswer };
+                if (message.answer) { answered = true; setState({ kind: "answered", answer: message.answer }); }
+              }
+              if (done) break;
+            }
+            if (!answered) throw new Error("Voting lookup ended before an answer arrived");
+          } finally { reader.releaseLock(); }
+        } else {
+          const answer = (await res.json()) as VotingSitesAnswer;
+          if (!controller.signal.aborted) setState({ kind: "answered", answer });
+        }
       } catch (error) {
         if (!controller.signal.aborted) {
           recordVotingFailure({ stage: "reader-request" }, error, value);
@@ -100,6 +121,12 @@ export function VotingSitesPanel({
     },
     [address],
   );
+
+  useEffect(() => {
+    if (state.kind !== "answered" || !state.answer.expiresAt) return;
+    const timer = setTimeout(() => setState({ kind: "idle" }), Math.max(0, Date.parse(state.answer.expiresAt) - Date.now()));
+    return () => clearTimeout(timer);
+  }, [state]);
 
   // Lift the pins on each answer and clear them on unmount.
   useEffect(() => {
@@ -156,7 +183,7 @@ export function VotingSitesPanel({
       </form>
 
       {state.kind === "asking" && (
-        <p className="voting-panel-status">Looking&hellip;</p>
+        <VotingLookupPending />
       )}
 
       {state.kind === "answered" && !state.answer.match && !state.answer.outsideCoverage && (
@@ -372,4 +399,14 @@ export function votingSources(j: VotingJurisdiction) {
     what: `${source.title ?? "Voting locations, hours and rules"}${source.lastUpdated ? ` — file last updated ${source.lastUpdated}` : ""}`,
     provenance: { sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt ?? j.collectedAt, verifiedAt: null },
   }));
+}
+
+/** Keep the status moving until the late answer replaces it. */
+export function VotingLookupPending() {
+  const [dots, setDots] = useState(1);
+  useEffect(() => {
+    const timer = setInterval(() => setDots(value => value % 3 + 1), 400);
+    return () => clearInterval(timer);
+  }, []);
+  return <p className="voting-panel-status" role="status" aria-live="polite">We&apos;re working on getting this info<span aria-hidden="true">{".".repeat(dots)}</span><span className="sr-only">.</span></p>;
 }

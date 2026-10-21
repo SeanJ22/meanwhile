@@ -5,10 +5,11 @@ import { GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../../ballot/v
 import type { VotingJurisdiction, VotingSite } from "../../ballot/voting-sites.ts";
 
 const words = (value: unknown): string => typeof value === "string" ? value : "";
+export const GOOGLE_CIVIC_ATTRIBUTION = "Voting information powered by the Civic Information API";
 
 /** Adapt the shared source parser's safe projection; no second Google response parser. */
 function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace): VotingJurisdiction[] {
-  if (!lookup.state || !place.states.includes(lookup.state)) return [];
+  if (!lookup.state || place.states.length > 0 && !place.states.includes(lookup.state)) return [];
   const sites: VotingSite[] = lookup.rows.flatMap(row => {
     const kind = row.kind === "POLLING_LOCATION" ? "ELECTION_DAY" : row.kind === "EARLY_VOTE_SITE" ? "EARLY_VOTING" : row.kind === "DROP_OFF_LOCATION" ? "DROP_BOX" : null;
     if (!kind) return [];
@@ -21,13 +22,16 @@ function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace)
       locationNotes: words(row.value.notes) || undefined,
       sources: row.sources.map(source => ({ publisher: `${source.sourceOrg} — ${GOOGLE_VOTING_DATA_LABEL}`, url: source.sourceUrl, checkedAt: source.collectedAt })) }];
   });
-  if (!sites.length) return [];
+  if (!sites.length && !lookup.electionOffices?.length) return [];
   return [{ ocdId: `${place.divisionIds.find(id => /\/county:/.test(id)) ?? `ocd-division/country:us/state:${lookup.state.toLowerCase()}`}#vip`,
     name: "Voting locations", state: lookup.state, model: "UNKNOWN", election: "November 3, 2026", electionDate: GOOGLE_CIVIC_ELECTION_DAY,
-    sites, sourceOrg: GOOGLE_VOTING_DATA_LABEL, sourceUrl: GOOGLE_CIVIC_DOCS, collectedAt: lookup.checkedAt.slice(0, 10), refusal: null }];
+    sites, assignedSiteIds: place.precision === "ADDRESS" ? sites.filter(site => site.kind === "ELECTION_DAY").map(site => site.id) : [],
+    sources: [{ publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt },
+      ...(lookup.electionOffices ?? []).map(office => ({ publisher: office.name, title: "Election office", url: office.url, checkedAt: lookup.checkedAt }))],
+    sourceOrg: GOOGLE_CIVIC_ATTRIBUTION, sourceUrl: GOOGLE_CIVIC_DOCS, collectedAt: lookup.checkedAt, refusal: null }];
 }
 
-/** Only answerVotingSites invokes this after explicit fallback consent and an empty official-source check. */
+/** Request-only fallback after the held-source check. No cache, publication, or address retention. */
 export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<VotingJurisdiction[]> {
   const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal: options.signal ?? AbortSignal.timeout(2200) });
   return civicVotingJurisdictions(lookup, place);

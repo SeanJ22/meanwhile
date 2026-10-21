@@ -28,37 +28,52 @@ This moves §0's requirement that a reader can look at any place.
 
 ## Times and screenshots
 
-Times run from Show me until the answer and settled camera/markers are usable.
-Normal camera animation is enabled. All individual readings are under 3 seconds.
-`protocol-timings.json` also contains the phone readings.
+Times run from Show me until the answer and settled, visible map markers are
+usable, including the existing map presentation reveal after animation. Normal
+camera animation is enabled. All individual readings are under 3 seconds.
+`protocol-timings.json` also contains the phone wiring readings.
 
-| State | Input | Protocol pins | Connected serving store |
+| State | Controlled input | Time and screenshot |
+| --- | --- | --- |
+| AZ | 255 W Alameda St, Tucson, AZ 85701 | [1352 ms](protocol-az-address.png) |
+| AZ | 85701 | [385 ms](protocol-az-zip.png) |
+| NH | 229 Main St, Nashua, NH 03060 | [1641 ms](protocol-nh-address.png) |
+| NH | 03060 | [1721 ms](protocol-nh-zip.png) |
+| NJ | 1 E Main St, Rockaway, NJ 07866 | [1442 ms](protocol-nj-address.png) |
+| NJ | 07866 | [463 ms](protocol-nj-zip.png) |
+
+## Connected production responses
+
+The six connected browser lookups used this branch's production-built map and
+real responses from `https://meanwhileusa.com/api/voting-sites`. A request bridge
+relayed the public API's exact response through the managed session proxy; no
+fixture supplied any API facts. Other reader API reads also used production.
+The frontend, styles and map worker were served by the local production build.
+All six requests returned HTTP 200. The reader's original view stayed in CA.
+
+| State | Connected input | Sites / map pins | Time and screenshot |
 | --- | --- | --- | --- |
-| AZ | 255 W Alameda St, Tucson, AZ 85701 | [1352 ms](protocol-az-address.png) | [1895 ms, no sites](connected-az-address.png) |
-| AZ | 85701 | [385 ms](protocol-az-zip.png) | [646 ms, no sites](connected-az-zip.png) |
-| NH | 229 Main St, Nashua, NH 03060 | [1641 ms](protocol-nh-address.png) | [1525 ms, no sites](connected-nh-address.png) |
-| NH | 03060 | [1721 ms](protocol-nh-zip.png) | [814 ms, no sites](connected-nh-zip.png) |
-| NJ | 1 E Main St, Rockaway, NJ 07866 | [1442 ms](protocol-nj-address.png) | [1478 ms, no sites](connected-nj-address.png) |
-| NJ | 07866 | [463 ms](protocol-nj-zip.png) | [566 ms, no sites](connected-nj-zip.png) |
+| AZ | 255 W Alameda St, Tucson, AZ 85701 | 168 / 168 | [2376 ms](connected-az-address.png) |
+| AZ | 85701 | 168 / 168 | [2086 ms](connected-az-zip.png) |
+| NH | 41 Green St, Concord, NH 03301 | 0 / 0, coverage gap | [1916 ms](connected-nh-address.png) |
+| NH | 03301 | 0 / 0, coverage gap | [511 ms](connected-nh-zip.png) |
+| NJ | 200 South St, Morristown, NJ 07960 | 7 / 7 | [2459 ms](connected-nj-address.png) |
+| NJ | 07960 | 44 / 38, six have no coordinates | [1876 ms](connected-nj-zip.png) |
 
-## Connected result and remaining limitation
+The AZ and NJ pins are visible in the screenshots. Census returned real address
+points in all three states, and the camera reached each returned point. ZIP
+answers with coordinates focused a returned site. `connected-results.json`
+records the responses, timings, marker counts and camera coordinates. The
+connected checks waited for the existing map presentation reveal, not just
+marker elements in the DOM.
 
-The six connected browser lookups used the production build with the configured
-serving database, without response interception. All returned HTTP 200 with
-zero jurisdictions/sites and `outsideCoverage: true`. Census returned real
-address points in all three states, and the camera reached each returned point.
-`connected-results.json` records the responses, timings, marker counts and
-camera coordinates. The configured store independently reported `NOT_RECORDED`
-for `VOTING_SITE:US-AZ:voting-sites`, `VOTING_SITE:US-NH:voting-sites` and
-`VOTING_SITE:US-NJ:voting-sites`. A public-site ZIP probe also returned no sites.
-The initial meeting request also returned 503 in this environment; that failure
-is visible in the connected screenshots and does not prevent voting lookup.
-
-**Populated live pins are unverified.** The data lane needs to publish/restore
-the state voting-site records, then rerun these connected browser lookups.
-Neither those records nor the voting API were changed by VS-03. River owns
-integration and the data dependency; this evidence does not claim deployment
-or populated live-site success.
+**Populated NH pins remain unverified:** production returned a New Hampshire
+jurisdiction with no sites and `outsideCoverage: true` for both NH lookups.
+VS-04/the data lane owns restoring the NH records; VS-02 owns live Google
+fallback. Once either supplies sites, rerun the NH connected lookups. The map's
+provider-independent NH wiring passed the controlled browser check. Neither
+those records nor the voting API changed in VS-03. River owns integration;
+this evidence does not claim deployment of the map fix.
 
 Reproduce the regression check from the repository root:
 

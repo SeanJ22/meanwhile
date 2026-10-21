@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 72 TESTING (all eight: OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04, with two River fixes)
+build_state: RELEASE 72 PR #782 OPEN (8 lanes, gates 8 of 8, run-full-ci label on); RELEASE 73 TESTING (VS-05, DT-01)
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
@@ -10,7 +10,9 @@ heartbeat: 2026-10-21T21:01:12Z
 ## Where things stand (Oct 21, 3:50 PM EDT)
 
 - River session session_017bJhG9VbQvb1KubNxKCKjA took over at 3:32 PM EDT. Main is fc3b4a00b (release 71, live). Next release number: 72.
-- Release 72 fold on river-next: River 84ab315f8 + OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, VS-04, main merged in, then RS-03, then the limit fix. pnpm gates running.
+- Release 72: river f4a3a289d (gates 8 of 8 green, 9,076 tests pass, 0 fail). PR #782 https://github.com/SeanJ22/meanwhile/pull/782 open, run-full-ci label added, merging by hand when green.
+- Release 73 fold (VS-05 fd1daab0a + DT-01 9017d2c16 on river f4a3a289d): gates running while PR 782 runs CI. After 72 merges, main merges into river-next (the merge commit carries no new content); the tested tree hash is checked to be the same.
+- Release 72 fold on river-next (earlier note): River 84ab315f8 + OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, VS-04, main merged in, then RS-03, then the limit fix. pnpm gates running.
 - New rule from Sean (3:55 PM EDT): a small problem in a READY is fixed by River and shipped, not sent back. Small = two lanes clash in one file, a limit that only counts files or size, a flaky test, a missing merge. Only real failures go back (the lane's own code is wrong, or readers would see something worse).
 - River fixed, in release 72:
   - HN-01: lib/civic-data/firewall.ts EXECUTABLE_CLOSURE_NODE_LIMIT 512 to 1024 (line 529). The limit only counts files; HN-01, EX-01 and VS-04 each pass at 512 alone and reach 514 together. tests/civic-data-firewall.test.ts "executable closure permits its exact bound" moved with it (1023 chained modules pass, the next is rejected); 20 of 20 pass.
@@ -21,7 +23,7 @@ heartbeat: 2026-10-21T21:01:12Z
 ## Waiting on a new READY
 
 - VS-05: READY fd1daab0a (preflight clean alone); goes in release 73.
-- DT-01: stream/dt-01 tip ccc78c9b0 (committed 3:47 PM EDT) is not a READY commit yet. Sean approved its change to scripts/control-plane-migrations.mts (needed for its migration to run). On river + main: tests/debt-state and tests/control-plane-migrations 11 of 11 pass, preflight clean. Folds the moment READY lands.
+- DT-01: READY 9017d2c16, in release 73 (earlier tip ccc78c9b0 was not READY). Sean approved its change to scripts/control-plane-migrations.mts (needed for its migration to run). On river + main: tests/debt-state and tests/control-plane-migrations 11 of 11 pass, preflight clean. Folds the moment READY lands.
 - SL-01: no stream/sl-01 branch yet. BP-01 (stream/bp-01, tip 3f4f8023e) has no READY commit yet.
 
 ## Runner (read from cp_log_owner_digests, per state, at 3:45 PM EDT)

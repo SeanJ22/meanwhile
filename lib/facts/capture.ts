@@ -66,6 +66,6 @@ async function saveCapture(input: Parameters<typeof vaultCapture>[0] & { readonl
   Promise<{ readonly capture: WorkerPublicationCapture } | { readonly error: string }> {
   const saved = await vaultCapture(input);
   if ("error" in saved) return saved;
-  await input.repos.artifacts.append(RECEIPT_WORK_ITEM, `${saved.record.artifactId}:${input.retrievedAt}`, saved.record, input.retrievedAt);
+  await input.repos.artifacts.append(RECEIPT_WORK_ITEM, `${saved.record.artifactId}:${input.retrievedAt}:${input.url}`, saved.record, input.retrievedAt);
   return { capture: saved.capture };
 }

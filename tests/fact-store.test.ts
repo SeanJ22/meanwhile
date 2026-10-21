@@ -34,9 +34,21 @@ test("the quote must be on the saved copy and hold the value", () => {
   assert.equal(boundedIndexOf("Ward 2", "2"), 5);
 });
 
-test("a page that is not about the entity fails; a third-party page naming it in its state passes alone", () => {
+test("a page that is not about the entity fails unless it is a .gov page; a page naming it in its state passes, spelled out or abbreviated", () => {
   const vail: CheckEntity = { id: "ocd-body/vail", fullName: "Vail Unified School District", stateName: "Arizona", hosts: ["vailschooldistrict.org"], externalIds: [] };
-  assert.deepEqual(checkFact(chair({ entity: vail }), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  const elsewhere = boardCopy({ finalUrl: "https://example.com/boards/15" });
+  assert.deepEqual(checkFact(chair({ entity: vail, copy: elsewhere }), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  assert.equal(checkFact(chair({ entity: vail }), NOW, window).ok, true, "any .gov page is official");
+  const coolidge: CheckEntity = { id: "az:city:city-of-coolidge", fullName: "City Of Coolidge", stateName: "Arizona", hosts: [], externalIds: [] };
+  const town = (text: string) => boardCopy({ finalUrl: "https://www.coolidgeaz.com/council", text });
+  const claim = (text: string) => chair({ entity: coolidge, valueText: "(520) 723-5361", quote: "Call (520) 723-5361", copy: town(text) });
+  assert.equal(checkFact(claim("Coolidge, AZ 85128. Call (520) 723-5361"), NOW, window).ok, true, "the town and its state's letters");
+  assert.equal(checkFact(claim("Coolidge, Arizona 85128. Call (520) 723-5361"), NOW, window).ok, true);
+  assert.deepEqual(checkFact(claim("Coolidge Pizza. Call (520) 723-5361"), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  const board: CheckEntity = { id: "ocd-division/country:us/state:az/place:duncan#governing", fullName: "Duncan town governing", stateName: "Arizona", hosts: [], externalIds: [] };
+  assert.equal(checkFact(chair({ entity: board, valueText: "Ned Beman", copy: town("Duncan, AZ. Ned Beman Chairperson Ward 2") }), NOW, window).ok, true, "a body is named for its place");
+  const eloy: CheckEntity = { id: "az:school:eloy-school-district-11", fullName: "Eloy School District 11", stateName: "Arizona", hosts: [], externalIds: [] };
+  assert.equal(checkFact(chair({ entity: eloy, valueText: "Ned Beman", copy: town("Eloy, AZ. Ned Beman Chairperson Ward 2") }), NOW, window).ok, true);
   const news = boardCopy({ finalUrl: "https://news.example.com/tccc", text: `${tucsonBoardPage}\nTucson, Arizona 85701` });
   assert.equal(checkFact(chair({ copy: news, entity: { ...tccc, hosts: [] }, provenance: "NEWS" }), NOW, window).ok, true);
 });

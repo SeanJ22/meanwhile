@@ -1,3 +1,5 @@
+import { stateCodeOf } from "./entity-read.ts";
+
 export type FieldKind =
   | "officeholder" | "contact" | "comment_rule" | "meeting" | "agenda" | "outcome" | "vote"
   | "money" | "statement" | "portrait" | "ballot" | "law" | "news" | "same_person_link";
@@ -92,14 +94,21 @@ function quoteHolds(copy: SavedCopy, quote: string, valueText: string): "ARCHIVE
 export const linkQuote = (value: string, quote: string): string =>
   /^https?:\/\//i.test(value) && boundedIndexOf(normalizeText(quote), value) === -1 ? value : quote;
 
-/** The page is the entity's own site, carries one of its ids, or names it in its state. */
+/** A place as people write it on its own pages: "City Of Coolidge" and "Coolidge city governing" are "Coolidge", "Eloy School District 11" is "Eloy". */
+const placeCore = (name: string): string => name.replace(/^(city|town|village|borough|township|county|municipality)\s+of\s+/i, "")
+  .replace(/\s+((city|town|village|borough|township|county)\s+)?governing$|\s+school board$/i, "")
+  .replace(/\s+((elementary|unified|union|high|joint)\s+)*(school\s+)?district(\s+(no\.?\s*)?\d+)?$/i, "").trim();
+
+/** The page is on a .gov host or the entity's own site, carries one of its ids, or names it with its state spelled out or abbreviated. */
 function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
-  if (entity.hosts.some(site => ownSite(copy.finalUrl, site))) return true;
+  if (isOfficialUrl(copy.finalUrl, entity.hosts)) return true;
   const text = normalizeText(copy.text);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();
-  return boundedIndexOf(lower, entity.fullName.toLowerCase()) !== -1 &&
-    (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1);
+  const named = [entity.fullName, placeCore(entity.fullName)].some(name => name !== "" && boundedIndexOf(lower, name.toLowerCase()) !== -1);
+  const code = entity.stateName === null ? null : stateCodeOf(entity.stateName);
+  return named && (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1 ||
+    code !== null && boundedIndexOf(text, code) !== -1);
 }
 
 /** The value is on a saved page about this entity, captured inside its freshness window, and nothing more. */

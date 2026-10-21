@@ -124,7 +124,6 @@ test("a Box row keeps its finding's field and value; a row from before that gain
   await backfillBox(repos, LATER);
   const row = (await repos.boxFindings.mustRead(id)).value;
   assert.deepEqual([row.fact, row.lastRecordedAt], [{ field: "officeholder.name", value: "Alice Adams", recordClass: "roster" }, NOW]);
-  assert.deepEqual((await repos.boxFindings.due({ slots: "5", now: LATER, since: NOW, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
-  assert.deepEqual(await repos.boxFindings.due({ slots: "5", now: LATER, since: LATER, limit: 10 }), [], "recorded before the window");
+  assert.deepEqual((await repos.boxFindings.due({ slots: "5", now: LATER, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
   assert.deepEqual(await repos.boxFindings.waitingFor("ANY_REASON", 10), []);
 });

@@ -103,7 +103,7 @@ export function projectVotingJurisdiction(j: VotingJurisdiction, place: VotingRe
     narrowing = { kind: "EXACT", siteId: matchingAssigned[0].id,
       sentence: `${uniquePrecinct!.kind === "CENSUS_2020_VTD" ? "The Census 2020 voting district" : "The official precinct boundary"} matches precinct ${uniquePrecinct!.name}: ${sites.find(site => site.id === matchingAssigned[0].id)!.name}.` };
   } else if (place.precision === "ZIP" && j.model === "ASSIGNED" && j.publication?.status !== "NO_GENERAL_ELECTION") {
-    narrowing = { kind: "REFUSED", sentence: "A ZIP can cross precincts. These are the published sites for the places it covers. Your precinct is on your voter card; a street address can narrow the list.", rungs: [] };
+    narrowing = { kind: "REFUSED", sentence: "A ZIP can cross precincts. These are the published sites for the places it covers. A street address can narrow the list.", rungs: [] };
   }
   // The browser receives facts, never lookup descriptors, saved linking-page HTML, or full precinct geometry.
   const { addressLookups: _lookups, boundaries: _boundaries, sourceLinkingPage: _linking, ...publicJurisdiction } = projected;

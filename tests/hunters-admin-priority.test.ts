@@ -1,0 +1,55 @@
+import {readFileSync} from 'node:fs';
+import type {JurisdictionRegistry} from "../lib/hunt/jurisdiction-universe.ts";
+import {fileURLToPath} from "node:url";
+import test from "node:test";
+import {meetingsDiscoveryProvider} from '../lib/control-plane/scheduler/providers/meetings-discovery.ts';
+import assert from 'node:assert/strict';
+import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
+import {submit} from '../lib/control-plane/gateway/gateway.ts';
+import {readIntents,RESEARCH_INTENT_LOG_KEY} from '../lib/control-plane/scheduler/research-policy.ts';
+import {dispatchWorkTarget,planDispatchWork,applyDispatchWork} from '../lib/control-plane/expansion/dispatch-work.ts';
+import {huntPacketsProvider} from '../lib/control-plane/scheduler/providers/hunt-packets.ts';
+import {buildRegistry} from '../lib/control-plane/scheduler/registry.ts';
+import {syncObligations,openOccurrence} from '../lib/control-plane/scheduler/durable.ts';
+import {placeFirstRows} from '../lib/control-plane/scheduler/shadow-loop.ts';
+import {unitMatchesTarget} from '../lib/control-plane/scheduler/dispatch-target.ts';
+import {workItemHuntDirections} from '../lib/hunt/directions.ts';
+
+const ROOT=fileURLToPath(new URL("../",import.meta.url));
+
+test("an Admin order retains its budget and receipt while its place precedes background source work", async () => {
+  const now='2026-10-20T10:00:00.000Z',repos=createMemoryRepositories(),place='ocd-division/country:us/state:az/place:example';
+  const note='Send agents to Example AZ. Fill OFF-17 portraits first.';
+  const accepted=await submit({type:'fleet.deployHere',subject:'fleet',input:{note,budgetUsd:1},stateVersion:null,idempotencyKey:'hn01-priority-check',caller:'OWNER_SESSION',actorRef:'isolated-check'}, {repos,now:()=>now,currentStateVersion:null,codeSha:null,readPlaceScore:async()=>null,wake:null});
+  assert.equal(accepted.ok,true,accepted.receipt.says);
+  const [intent]=readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch;
+  assert.equal(intent.budgetUsd,1);
+  const original=(JSON.parse(readFileSync(new URL('../tests/fixtures/jurisdiction-registries.json',import.meta.url),'utf8')) as Record<string,JurisdictionRegistry>).az;
+  const template=original.jurisdictions.find(row=>row.govClass==='CITY_OR_TOWN');
+  assert.ok(template);
+  const focus={...template,id:'az:city:example',name:'Example',ocdId:place,ownWebAddress:'https://example.gov/'},background={...template,id:'az:city:background',name:'Background',ocdId:place.replace('example','background'),ownWebAddress:'https://background.gov/'};
+  const registry={...original,jurisdictions:[focus,background]};
+  const target={...dispatchWorkTarget({intentId:intent.intentId,note:intent.note!,requestedAt:intent.requestedAt}),budgetUsd:intent.budgetUsd};
+  if(target.kind!=='DISPATCH')throw new Error('expected the existing Admin dispatch target');
+  const freeProvider=meetingsDiscoveryProvider({registered:()=>({registries:new Map(),refused:new Map()}),materialized:()=>({ids:new Set()}),background:()=>[focus,background].map(row=>({jurisdictionId:row.id,name:row.name,state:'AZ',govClass:row.govClass,website:row.ownWebAddress,directorySeeds:[],citation:'isolated exact source'}))} as never);
+  const sourceRegistry=buildRegistry([freeProvider],{root:ROOT,nowIso:now,state:'az'} as never);
+  assert.equal(sourceRegistry.units.length,2);
+  assert.ok(sourceRegistry.units.every(unit=>unit.route.open.kind==='HTTP_GET'));
+  const sourceRows=sourceRegistry.units.map(unit=>({id:unit.obligation.id,subjectId:unit.obligation.subjectId}));
+  const plan=planDispatchWork({targets:[target],world:{registries:new Map([['az',registry]]),territory:null,territoryDetail:null,corpus:sourceRows,durable:new Map(),meetingPartitions:{ownerOf:()=> 'NONE',source:'isolated canonical reading'},packetDivisions:new Map([[target.key,[place]]])}});
+  const applied=await applyDispatchWork(repos,plan,{now});assert.deepEqual(applied.failed,[]);
+  const materialized=new Set((await repos.obligations.list()).map(row=>row.id));
+  const provider=huntPacketsProvider({materialized:()=>({ids:materialized})});
+  const pass=buildRegistry([provider],{root:ROOT,nowIso:now});assert.equal(pass.units.length,1);assert.equal(pass.units[0].obligation.subjectId,place);
+  const synchronized=await syncObligations(repos,pass.units.map(unit=>unit.obligation),now);
+  const packet=synchronized.all.find(row=>row.recordClass==='HUNT_PACKET');assert.ok(packet);
+  const occurrence=await openOccurrence(repos,{obligation:packet,dueAt:now,now});assert.ok(occurrence);
+  assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions,[intent.intentId]);
+  assert.deepEqual(await workItemHuntDirections(repos,{workItemId:occurrence.workItem.id,governmentId:place}),[note]);
+  const priority=new Set([...sourceRows, ...pass.units.map(unit=>({id:unit.obligation.id,subjectId:unit.obligation.subjectId}))].filter(row=>unitMatchesTarget(target.target,row)).map(row=>row.id));
+  const queue=placeFirstRows([sourceRows.find(row=>row.subjectId===background.id)!,sourceRows.find(row=>row.subjectId===focus.id)!].map(row=>({obligation:row})),priority);
+  assert.equal(queue[0].obligation.subjectId,focus.id);
+  const result={isolate:true,productionWrites:0,orderReceipt:accepted.receipt.receiptId,budgetUsd:intent.budgetUsd,packet:packet.id,ownerInstructions:occurrence.workItem.autonomousPlan?.ownerInstructions,sourceQueue:queue.map(row=>row.obligation.subjectId),unchangedOwnerPath:'Admin gateway → intent → dispatch work → hunt-packets provider → standing occurrence'};
+  console.log(JSON.stringify(result));
+
+});

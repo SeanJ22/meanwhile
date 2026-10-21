@@ -41,7 +41,9 @@ interface ExaAgentFinding {
   readonly sentence: string;
 }
 
-interface ExaAgentRun {
+export interface ExaAgentRun {
+  readonly requestCount: number;
+  readonly bytesFetched: number;
   readonly runId: string | null;
   readonly status: string;
   readonly findings: readonly ExaAgentFinding[];
@@ -62,7 +64,7 @@ function findingsOf(structured: unknown): { findings: ExaAgentFinding[]; summary
 
 const costOf = (body: { costDollars?: { total?: unknown } | number }): number | null => {
   const raw = typeof body.costDollars === "number" ? body.costDollars : body.costDollars?.total;
-  return typeof raw === "number" && Number.isFinite(raw) ? raw : null;
+  return typeof raw === "number" && Number.isFinite(raw) && raw >= 0 ? raw : null;
 };
 
 /** Start one run for a packet and wait for it to end, or for `deadlineMs` to pass. */
@@ -75,35 +77,57 @@ export async function runExaAgent(input: {
   readonly sleep?: (ms: number) => Promise<void>;
   readonly clock?: () => number;
   readonly onPoll?: () => void;
+  readonly onCreated?: (runId: string) => Promise<void>;
+  readonly resumeRunId?: string;
 }): Promise<ExaAgentRun> {
   const fetchImpl = input.fetchImpl ?? ((url, init) => fetch(url, init as RequestInit) as unknown as ReturnType<FetchLike>);
   const sleep = input.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
   const clock = input.clock ?? Date.now;
   const headers = { "Content-Type": "application/json", Authorization: `Bearer ${input.key}` };
-  const created = await fetchImpl(AGENT_RUNS, { method: "POST", headers, body: JSON.stringify({
-    query: huntBrief(input.packet, { role: "HUNTER", tried: [] }), systemPrompt: input.instructions,
-    effort: EXA_AGENT_EFFORT, outputSchema: EXA_AGENT_OUTPUT_SCHEMA }) });
-  const createdText = await created.text();
-  if (!created.ok) return { runId: null, status: "failed", findings: [], summary: "", costUsd: null,
-    error: `exa HTTP ${created.status}: ${createdText.split(input.key).join("[REDACTED]").slice(0, 200)}` };
-  let body = JSON.parse(createdText) as { id?: string; status?: string; output?: { structured?: unknown }; costDollars?: { total?: unknown }; error?: { message?: string } };
-  const runId = typeof body.id === "string" ? body.id : null;
-  while (runId !== null && !TERMINAL.has(String(body.status)) && clock() < input.deadlineMs) {
-    await sleep(POLL_MS);
-    input.onPoll?.();
-    const polled = await fetchImpl(`${AGENT_RUNS}/${encodeURIComponent(runId)}`, { method: "GET", headers });
-    if (!polled.ok) continue;
-    body = JSON.parse(await polled.text()) as typeof body;
-  }
+  let requestCount = 0, bytesFetched = 0;
+  type RunBody = { id?: string; status?: string; output?: { structured?: unknown }; costDollars?: { total?: unknown } | number; error?: { message?: string } };
+  const request = async (url: string, method: string, body?: string): Promise<RunBody> => {
+    const remaining = input.deadlineMs - clock();
+    if (remaining <= 0 && !url.endsWith('/cancel')) throw new Error('Exa request deadline reached');
+    const signal = AbortSignal.timeout(Math.max(1, Math.min(20_000, url.endsWith('/cancel') ? 20_000 : remaining)));
+    requestCount += 1;
+    const response = await fetchImpl(url, {method,headers,signal,...(body === undefined ? {} : {body})});
+    const text = await response.text();
+    bytesFetched += Buffer.byteLength(text);
+    if (!response.ok) throw new Error(`exa HTTP ${response.status}: ${text.split(input.key).join('[REDACTED]').slice(0,200)}`);
+    return JSON.parse(text) as RunBody;
+  };
+  let runId = input.resumeRunId ?? null;
+  let body: RunBody = {};
+  let failure: string | null = null;
+  try {
+    body = runId ? await request(`${AGENT_RUNS}/${encodeURIComponent(runId)}`, 'GET')
+      : await request(AGENT_RUNS, 'POST', JSON.stringify({
+          query: huntBrief(input.packet, {role:'HUNTER',tried:[]}),
+          systemPrompt: `${input.instructions}\nAs of ${new Date().toISOString().slice(0,10)}, report currently serving officials using the government's standing roster or an explicit current term. Keep former officials, future appointees and candidates separate. Use published public pages for contacts. Do not buy contact enrichment or use premium data providers.`,
+          effort: EXA_AGENT_EFFORT, outputSchema: EXA_AGENT_OUTPUT_SCHEMA,
+          metadata: {governmentId: input.packet.governmentId},
+        }));
+    runId = typeof body.id === 'string' ? body.id : runId;
+    if (!runId) throw new Error('Exa did not return a run id');
+    await input.onCreated?.(runId);
+    while (!TERMINAL.has(String(body.status)) && clock() < input.deadlineMs) {
+      await sleep(Math.min(POLL_MS, Math.max(0,input.deadlineMs-clock())));
+      input.onPoll?.();
+      if (clock() >= input.deadlineMs) break;
+      try { body = await request(`${AGENT_RUNS}/${encodeURIComponent(runId)}`, 'GET'); }
+      catch(error) { failure = error instanceof Error ? error.message : String(error); }
+    }
+  } catch(error) { failure = error instanceof Error ? error.message : String(error); }
   let timedOut = false;
-  if (runId !== null && !TERMINAL.has(String(body.status))) {
-    timedOut = true;
-    const cancelled = await fetchImpl(`${AGENT_RUNS}/${encodeURIComponent(runId)}/cancel`, { method: "POST", headers });
-    if (cancelled.ok) body = JSON.parse(await cancelled.text()) as typeof body;
+  if (runId && !TERMINAL.has(String(body.status))) {
+    timedOut = clock() >= input.deadlineMs;
+    try { body = await request(`${AGENT_RUNS}/${encodeURIComponent(runId)}/cancel`, 'POST'); }
+    catch(error) { failure = error instanceof Error ? error.message : String(error); }
   }
   const status = String(body.status ?? "unknown");
   const { findings, summary } = findingsOf(body.output?.structured);
-  return { runId, status, findings, summary, costUsd: costOf(body),
+  return { requestCount, bytesFetched, runId, status, findings, summary, costUsd: costOf(body),
     error: status === "completed" ? null : timedOut ? `the run passed its time limit and was ${status === "cancelled" ? "cancelled" : "left running: the cancel was not accepted"}`
-      : body.error?.message ?? status };
+      : body.error?.message ?? failure ?? status };
 }

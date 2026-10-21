@@ -1,0 +1,126 @@
+{
+  "at": "2026-10-21T03:49:15.663Z",
+  "readOnly": true,
+  "readerDaily": [
+    {
+      "state": "NH",
+      "family": "starts_at",
+      "facts": "1"
+    },
+    {
+      "state": "NH",
+      "family": "title",
+      "facts": "1"
+    },
+    {
+      "state": "NJ",
+      "family": "starts_at",
+      "facts": "1"
+    },
+    {
+      "state": "NJ",
+      "family": "title",
+      "facts": "2"
+    }
+  ],
+  "admin": [
+    {
+      "exa_agent": null,
+      "discovery_search": true,
+      "fleet_usd": 100
+    }
+  ],
+  "pause": [
+    {
+      "action": "RESUME",
+      "requested_at": "2026-10-20T23:05:47.345Z"
+    },
+    {
+      "action": "RESUME_RUNNER",
+      "requested_at": "2026-10-01T22:41:01.226Z"
+    }
+  ],
+  "exaTasks": [
+    {
+      "route_id": "hunter:packet",
+      "state": "PENDING",
+      "tasks": "181"
+    }
+  ],
+  "exaAttempts": [],
+  "searchBudget": [
+    {
+      "vendor": {
+        "vendor": "discovery-search",
+        "backoffUntil": null,
+        "maxConcurrent": 2,
+        "dailyRequestCap": 200
+      },
+      "exa_host_state": {
+        "day": "2026-10-20",
+        "inFlight": 0,
+        "backoffUntil": null,
+        "backoffReason": null,
+        "lastRequestAt": "2026-10-20T18:52:48.447Z",
+        "requestsToday": 5
+      },
+      "exa_host": {
+        "host": "api.exa.ai",
+        "vendor": "discovery-search",
+        "backoffUntil": null,
+        "maxConcurrent": 1,
+        "minIntervalMs": 1000,
+        "dailyRequestCap": null,
+        "observedCrawlDelayMs": null
+      }
+    }
+  ],
+  "memory": [
+    {
+      "memory": {
+        "at": "2026-10-21T03:49:16.527Z",
+        "parents": [
+          {
+            "pid": 1006748,
+            "rssBytes": 227958784,
+            "peakBytes": 0
+          },
+          {
+            "pid": 1007511,
+            "rssBytes": 270106624,
+            "peakBytes": 3070230528
+          }
+        ],
+        "totalBytes": 8326938624,
+        "reservations": [
+          {
+            "entry": "platform-census-runner.mts",
+            "rssBytes": 201474048,
+            "peakBytes": 506462208
+          }
+        ],
+        "headroomBytes": 805306368,
+        "availableBytes": 5217517568,
+        "fitLeaseWorkers": 3,
+        "runnerTreeRssBytes": 3333455872,
+        "reservedGrowthBytes": 3105112064,
+        "runnerTreeProcesses": 18,
+        "leaseWorkerPeakBytes": 358612992
+      },
+      "tested_sha": "4c4f7f8fd528f6f5d435829dad4d1efbb3b9186f",
+      "beat_at": "2026-10-21T03:49:16.675Z"
+    }
+  ],
+  "transfer": {
+    "reader": {
+      "requests": 1,
+      "requestBytes": 261,
+      "responseBytes": 517
+    },
+    "control-plane": {
+      "requests": 6,
+      "requestBytes": 1711,
+      "responseBytes": 3756
+    }
+  }
+}

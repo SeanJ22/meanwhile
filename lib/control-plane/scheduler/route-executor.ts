@@ -22,6 +22,14 @@ import { DEFAULT_USER_AGENT } from "./user-agent.ts";
 import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 
 const RAN_AS = "DETERMINISTIC" as const;
+const NO_SEND_COST={...ZERO_COST,usd:0,requestCount:0,bytesFetched:0,durationMs:0};
+
+/** Descriptors with no public HTTP request run in the dispatching process. */
+export function routeCanSend(route:RouteDescriptor|null):boolean{
+ if(!route || !['HTTP_GET','HTTP_POST'].includes(route.open.kind))return false;
+ try{assertPublicUrl((route.open as {url:string}).url);return true;}catch{return false;}
+}
+
 
 /** The seam a test replaces. Nothing else in this module touches the network. */
 export type OpenOne = (input: {
@@ -30,12 +38,13 @@ export type OpenOne = (input: {
   readonly headers: Readonly<Record<string, string>>;
   readonly body?: string;
   readonly timeoutMs: number;
-}) => Promise<FetchOutcome>;
+  readonly followRedirects?:boolean;
+}) => Promise<FetchOutcome & {readonly finalUrl?:string|null;readonly location?:string|null}>;
 
 /** The default identification: named, never disguised. A descriptor may move it into `From:` and `X-Purpose:`. */
 export { DEFAULT_USER_AGENT };
 
-export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs }) => {
+export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs, followRedirects=true }) => {
   const started = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -43,12 +52,13 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
     const response = await fetch(url, {
       method,
       signal: controller.signal,
-      redirect: "follow",
+      redirect: followRedirects ? "follow" : "manual",
       headers,
       ...(body === undefined ? {} : { body }),
     });
     const text = await response.text();
     return {
+      finalUrl:response.url||url,location:response.headers.get("location"),
       status: response.status,
       bytes: Buffer.byteLength(text, "utf8"),
       contentType: response.headers.get("content-type") ?? "application/octet-stream",
@@ -203,12 +213,14 @@ export function routeExecutor(input: {
   const timeoutMs = input.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
   const clock = input.now ?? (() => new Date().toISOString());
 
-  return async ({ obligation, workItemId, attemptId }): Promise<WorkOutcome> => {
+  return async (job): Promise<WorkOutcome> => {
+    const {obligation,workItemId,attemptId}=job;
     const obligationId = obligation.obligation.id;
     const route = input.routeFor(obligationId);
 
     if (route === null) {
       return {
+        cost:NO_SEND_COST,
         ranAs: RAN_AS,
         kind: "ABORTED",
         detail:
@@ -216,6 +228,8 @@ export function routeExecutor(input: {
           "This is a gap in OUR registry, not evidence about a publisher, and it stays owed.",
       };
     }
+
+    if((route as NonNullable<typeof route> & {placeHunt:import("../../hunt/own-site-runtime.ts").HuntSourceScope}).placeHunt)return {ranAs:RAN_AS,kind:'ABORTED',cost:NO_SEND_COST,detail:'Government source reads require the standing route worker and its repositories; this place stays owed'};
 
     /* A route we hold no client for commits REQUIRES_NEW_ADAPTER: debt accrues and the next-due stands. */
     if (route.open.kind === "NOT_MACHINE_EXECUTABLE") {
@@ -233,7 +247,7 @@ export function routeExecutor(input: {
             `about the host. ${route.open.reason}` +
             (route.awaitingAdapter ? ` NEXT MOVE: ${route.awaitingAdapter}` : ""),
         },
-        cost: ZERO_COST,
+        cost: NO_SEND_COST,
         detail:
           `${route.open.target} needs an adapter this process does not have. A capability gap on ` +
           "our side, named — the record is still owed and its clock still runs.",
@@ -257,7 +271,7 @@ export function routeExecutor(input: {
             `contract reads. ${route.open.reason}`,
         },
         /* Measured, not absent: no request was sent and no byte fetched. */
-        cost: { ...ZERO_COST, requestCount: 0, bytesFetched: 0 },
+        cost: NO_SEND_COST,
         detail:
           failure === null
             ? `${route.open.target} is carried by its routine read; the record is still owed and closes when that read holds it.`
@@ -272,6 +286,7 @@ export function routeExecutor(input: {
       return {
         ranAs: RAN_AS,
         kind: "ABORTED",
+        cost:NO_SEND_COST,
         detail: `the descriptor's URL is not a public http(s) address: ${
           error instanceof Error ? error.message : String(error)
         }`,

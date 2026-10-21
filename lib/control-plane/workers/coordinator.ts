@@ -1,3 +1,4 @@
+import {exaAgentEnabled} from '../../hunt/exa-admission.ts';
 import { BOX_PARSER_IMPLEMENTATION } from "./quoted-proof.ts";
 import { readSpendWindow } from "../spend-window.ts";
 import { readCoordinatorWorkItems } from "../repository/pg-store.ts";
@@ -129,14 +130,14 @@ export async function registerAutonomousPlan(repos: ControlPlaneRepositories, wo
 /** Typed state chooses one next operation. Absence is never inferred from an empty list. */
 export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRuntime, workItemId: string, knownItems?: readonly WorkItem[],
   knownHistory?: { readonly attempts: readonly Attempt[]; readonly routeTasks: readonly RouteTask[];
-    readonly completedRecords?: readonly WorkerResultRecord[] }): Promise<AutonomousDecision> {
+    readonly completedRecords?: readonly WorkerResultRecord[];readonly exaAgentEnabled?:boolean }): Promise<AutonomousDecision> {
   const repos = runtime.repos;
   const selected = knownItems?.find(row => row.id === workItemId) ?? (await repos.workItems.mustRead(workItemId)).value;
   const item = await runtime.prepareWorkItem?.(selected) ?? selected;
   const plan = item.autonomousPlan;
   const decision = (action:AutonomousDecision["action"],reason:string,task:RouteTask|null=null):AutonomousDecision => ({workItemId,action,task,reason});
   if (!plan) return decision("BLOCKED","No versioned autonomous work instructions are registered for this obligation.");
-  if (isHuntPacketPlan(plan)) return huntOperation(runtime, item, knownHistory);
+  if (isHuntPacketPlan(plan)) return huntOperation({...runtime,exaAgentLane:knownHistory?.exaAgentEnabled??await exaAgentEnabled(repos)}, item, knownHistory);
   type LinkedItem = WorkItem & { planRepair?: { parentWorkItemId: string; authority: string }; planRepairObservation?: { successorWorkItemId: string | null } };
   const children = (await repos.workItems.listWhere(["planRepair", "parentWorkItemId"], item.id)).map(row => row.value);
   const linkedId = (item as LinkedItem).planRepairObservation?.successorWorkItemId;
@@ -334,7 +335,7 @@ async function huntOperation(runtime: AutonomousCoordinatorRuntime, item: WorkIt
     tasks = [...tasks, (await repos.routeTasks.read(created.id))?.value ?? (await registerRouteTask(repos, created, now)).value];
   }
   const attempts = knownHistory?.attempts ?? (await repos.attempts.listWhere(["workItemId"], item.id)).map(row => row.value);
-  for (const task of tasks.filter(task => task.routeId === HUNT_PACKET_ROUTE_ID || task.routeId === EXA_AGENT_ROUTE_ID)) {
+  for (const task of tasks.filter(task => task.routeId === HUNT_PACKET_ROUTE_ID || runtime.exaAgentLane && task.routeId === EXA_AGENT_ROUTE_ID)) {
     const latest = attempts.filter(attempt => attempt.routeTaskId === task.id).sort((a, b) => a.startedAt.localeCompare(b.startedAt)).at(-1);
     if (task.state === "POLICY_DENIED" && latest?.endedAt) {
       const recheckAt = Date.parse(latest.endedAt) + FIRST_BACKOFF_MINUTES * 60_000;
@@ -351,7 +352,7 @@ async function huntOperation(runtime: AutonomousCoordinatorRuntime, item: WorkIt
     if (latest?.endedAt && latest.outcome !== "COMPLETED" && Date.parse(now) < Date.parse(latest.endedAt) + FIRST_BACKOFF_MINUTES * 60_000) continue;
     return decision("SCOUT", task.routeLabel, task);
   }
-  return tasks.every(task => task.state === "DISPOSED")
+  return tasks.filter(task=>task.routeId!==EXA_AGENT_ROUTE_ID || runtime.exaAgentLane).every(task => task.state === "DISPOSED")
     ? decision("STAGED", "This packet's job finished; every fact it reported is in the Box, and its blanks are recomputed before any next job.")
     : decision("BLOCKED", "This packet's job is running or waiting out a short backoff.");
 }
@@ -434,6 +435,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
 }={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
+  runtime={...runtime,exaAgentLane:await exaAgentEnabled(runtime.repos)};
   const allItems=await readCoordinatorWorkItems(runtime.repos,runtime.exaAgentLane);
   const open=await runtime.repos.dispatchState.readOpen();
   const snapshot=new Map([...open.workItems.values()].map(row=>[row.id,row.value] as const));
@@ -517,7 +519,7 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
           readCompletedWorkerResults(runtime.repos,id),
         ]);
         d=await nextAutonomousOperation(runtime,id,knownItems,{
-          attempts:attempts.map(row=>row.value),routeTasks:tasks.map(row=>row.value),completedRecords,
+          attempts:attempts.map(row=>row.value),routeTasks:tasks.map(row=>row.value),completedRecords,exaAgentEnabled:runtime.exaAgentLane,
         });
       } catch (error) {
         if (error instanceof Error && /^WORKER_ARTIFACT_MISSING_OR_PARTIAL(?::|$)/.test(error.message)) {

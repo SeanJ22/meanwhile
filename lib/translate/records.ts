@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { pageWords } from "../control-plane/promotion/section3.ts";
 
 export const TRANSLATION_SCOPE = "US:plain-english-translations";
 export function translationScope(ocdId: string): string {
@@ -13,6 +14,21 @@ export function isTranslationScope(scope: string): boolean {
   return scope.startsWith(`${TRANSLATION_SCOPE}:`) && Boolean(jurisdictionFromOcdId(ocdId));
 }
 export const translationHash = (text: string) => createHash("sha256").update(text).digest("hex");
+
+/** Replay visible source text under the same whitespace/entity rules as §3. */
+export function translationSourceContains(source: string, quote: string): boolean {
+  if (typeof quote !== "string" || !quote.trim()) return false;
+  if (source.includes(quote) || source.replace(/\s+/g, " ").includes(quote.replace(/\s+/g, " "))) return true;
+  const words = pageWords(quote);
+  return Boolean(words) && pageWords(source).includes(words);
+}
+
+/** A complete ballot name cannot bind to the prefix of another measure's name. */
+export function translationSourceNames(source: string, name: string | null | undefined): boolean {
+  if (!name?.trim()) return false;
+  const words = pageWords(name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return Boolean(words) && new RegExp(`(?:^|[^a-z0-9])${words}(?=$|[^a-z0-9])`).test(pageWords(source));
+}
 
 export interface TranslationSentence {
   readonly field: string;
@@ -91,7 +107,7 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
   for (const [field, value] of fieldsAndValues) {
     const sentences = row.sentences.filter(sentence => sentence.field === field);
     if (!sentences.length || sentences.map(sentence => sentence.text).join(" ") !== value ||
-        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || /[.!?]\s+[A-Z]/.test(sentence.text) || typeof sentence.quote !== "string" || !sentence.quote.trim() || !row.sourceText.includes(sentence.quote) ||
+        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || /[.!?]\s+[A-Z]/.test(sentence.text) || !translationSourceContains(row.sourceText, sentence.quote) ||
           row.checked.filter(check => check.field === field && check.text === sentence.text && check.supported === true).length !== 1)) {
       return "A translated sentence lacks a confirmed source passage or independent support.";
     }

@@ -1,0 +1,3184 @@
+{
+  "at": "2026-10-21T04:24:54.561413+00:00",
+  "source_commit": "949315355985e6ac5e4f25f772ddc8db8814ed30",
+  "states": 51,
+  "database": "Actual HN Neon production reader copy, with its production schema and data; no handmade tables/views or seeded government/place records.",
+  "box": "Existing Box repository interface in a per-place in-memory scope, followed by the unchanged publishBoxFindings checker and publisher.",
+  "source_replay": "Immutable saved real government source captures from the 51-state/DC public read sample; current copied holdings read first; no new source request or refetch.",
+  "bodies_added_definition": "New native body records confirmed visible by the actual reader place package after publication.",
+  "bodies_updated_definition": "Existing native bodies with newly published or changed fact values.",
+  "meetings_added_definition": "Native meeting entities with a newly published or changed live starts_at fact; actual reader calendar differences are separate columns.",
+  "production_writes": 0,
+  "admin_settings_writes": 0,
+  "paid_provider_calls": 0,
+  "totals": {
+    "source_pages_replayed": 1292,
+    "findings_reported": 5067,
+    "distinct_box_findings": 4570,
+    "findings_passed_check": 884,
+    "bodies_added": 95,
+    "bodies_updated": 1,
+    "meetings_added": 0,
+    "reader_bodies_added": 95,
+    "reader_meetings_added": 0,
+    "additional_native_fact_rows": 300,
+    "source_http_requests_this_replay": 0,
+    "provider_usd": 0,
+    "validation_worker_seconds": 1887.984,
+    "database_request_bytes": 6322917,
+    "database_response_bytes": 5530088,
+    "peak_worker_rss_bytes": 528723968
+  },
+  "state_results": [
+    {
+      "state": "AK",
+      "government": "ak:city:city-and-borough-of-juneau",
+      "source_pages_replayed": 24,
+      "findings_reported": 268,
+      "distinct_box_findings": 192,
+      "findings_passed_check": 1,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 1,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 35.284,
+      "peak_worker_rss_bytes": 448749568,
+      "database_request_bytes": 137075,
+      "database_response_bytes": 104640,
+      "at": "2026-10-21T04:05:47.010Z",
+      "workerPid": 213580,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "ak:city:city-and-borough-of-juneau#body:docks-and-harbors-board",
+          "name": "Docks & Harbors Board"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 192,
+        "published": 1,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 1
+        },
+        "waitingByClass": {
+          "governments": 45,
+          "meeting routes": 46,
+          "agendas and documents": 92,
+          "comment rules": 4,
+          "schedules": 2,
+          "government money": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "AL",
+      "government": "al:city:city-of-abbeville",
+      "source_pages_replayed": 9,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.265,
+      "peak_worker_rss_bytes": 275472384,
+      "database_request_bytes": 71530,
+      "database_response_bytes": 82496,
+      "at": "2026-10-21T04:06:44.047Z",
+      "workerPid": 213757,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "AR",
+      "government": "ar:city:city-of-altus",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.115,
+      "peak_worker_rss_bytes": 274632704,
+      "database_request_bytes": 71478,
+      "database_response_bytes": 82402,
+      "at": "2026-10-21T04:06:44.050Z",
+      "workerPid": 213756,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "AZ",
+      "government": "az:city:city-of-apache-junction",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.004,
+      "peak_worker_rss_bytes": 274292736,
+      "database_request_bytes": 73702,
+      "database_response_bytes": 123764,
+      "at": "2026-10-21T04:07:17.152Z",
+      "workerPid": 213835,
+      "before": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "CA",
+      "government": "ca:city:city-and-county-of-san-francisco",
+      "source_pages_replayed": 36,
+      "findings_reported": 217,
+      "distinct_box_findings": 203,
+      "findings_passed_check": 1,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 1,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.939,
+      "peak_worker_rss_bytes": 503808000,
+      "database_request_bytes": 117237,
+      "database_response_bytes": 99119,
+      "at": "2026-10-21T04:07:17.192Z",
+      "workerPid": 213856,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "ca:city:city-and-county-of-san-francisco#body:rent-board",
+          "name": "Rent Board"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 203,
+        "published": 1,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 1
+        },
+        "waitingByClass": {
+          "governments": 131,
+          "agendas and documents": 31,
+          "comment rules": 3,
+          "meeting routes": 31,
+          "government money": 3,
+          "elections": 3
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "CO",
+      "government": "co:city:city-and-county-of-broomfield",
+      "source_pages_replayed": 8,
+      "findings_reported": 35,
+      "distinct_box_findings": 30,
+      "findings_passed_check": 7,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 2,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 34.011,
+      "peak_worker_rss_bytes": 343175168,
+      "database_request_bytes": 107346,
+      "database_response_bytes": 96971,
+      "at": "2026-10-21T04:07:56.034Z",
+      "workerPid": 213943,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "co:city:city-and-county-of-broomfield#body:broomfield-council",
+          "name": "Broomfield Council"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 30,
+        "published": 7,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 6,
+          "body links": 1
+        },
+        "waitingByClass": {
+          "meeting routes": 17,
+          "governments": 5,
+          "government money": 1
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "CT",
+      "government": "ct:city:borough-of-groton-long-point-association",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.114,
+      "peak_worker_rss_bytes": 276172800,
+      "database_request_bytes": 71754,
+      "database_response_bytes": 82754,
+      "at": "2026-10-21T04:07:56.449Z",
+      "workerPid": 213960,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "DC",
+      "government": "dc:city:city-of-washington-dc",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.595,
+      "peak_worker_rss_bytes": 320040960,
+      "database_request_bytes": 71588,
+      "database_response_bytes": 82576,
+      "at": "2026-10-21T04:08:29.553Z",
+      "workerPid": 214017,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "DE",
+      "government": "de:city:city-of-delaware-city",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.284,
+      "peak_worker_rss_bytes": 273698816,
+      "database_request_bytes": 71582,
+      "database_response_bytes": 82566,
+      "at": "2026-10-21T04:08:32.660Z",
+      "workerPid": 214038,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "FL",
+      "government": "fl:city:city-of-alachua",
+      "source_pages_replayed": 128,
+      "findings_reported": 108,
+      "distinct_box_findings": 101,
+      "findings_passed_check": 43,
+      "bodies_added": 8,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 8,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 67,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 48.13,
+      "peak_worker_rss_bytes": 387174400,
+      "database_request_bytes": 270168,
+      "database_response_bytes": 182202,
+      "at": "2026-10-21T04:09:03.074Z",
+      "workerPid": 214101,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 8,
+        "readerBodies": 8,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "fl:city:city-of-alachua#governing",
+          "name": "City Commission"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:community-redevelopment-agency-cra",
+          "name": "Community Redevelopment Agency (CRA)"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:cra-advisory-board-craab",
+          "name": "CRA Advisory Board (CRAAB)"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:parks-and-recreation-advisory-board",
+          "name": "Parks & Recreation Advisory Board"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:planning-and-zoning-board",
+          "name": "Planning & Zoning Board"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:senior-resources-advisory-board",
+          "name": "Senior Resources Advisory Board"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:youth-advisory-council",
+          "name": "Youth Advisory Council"
+        },
+        {
+          "id": "fl:city:city-of-alachua#body:community-redevelopment-agency",
+          "name": "Community Redevelopment Agency"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 101,
+        "published": 43,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "rosters": 29,
+          "body links": 9,
+          "meeting routes": 5
+        },
+        "waitingByClass": {
+          "governments": 58
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "GA",
+      "government": "ga:city:city-of-acworth",
+      "source_pages_replayed": 21,
+      "findings_reported": 60,
+      "distinct_box_findings": 57,
+      "findings_passed_check": 14,
+      "bodies_added": 2,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 2,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 5,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.087,
+      "peak_worker_rss_bytes": 321429504,
+      "database_request_bytes": 156669,
+      "database_response_bytes": 119641,
+      "at": "2026-10-21T04:09:05.800Z",
+      "workerPid": 214122,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 2,
+        "readerBodies": 2,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "ga:city:city-of-acworth#body:planning-and-zoning-commission",
+          "name": "Planning & Zoning Commission"
+        },
+        {
+          "id": "ga:city:city-of-acworth#body:work-session-mayor-and-board-of-aldermen",
+          "name": "Work Session \u2013 Mayor & Board of Aldermen"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 57,
+        "published": 14,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 9,
+          "body links": 4,
+          "schedules": 1
+        },
+        "waitingByClass": {
+          "schedules": 8,
+          "meeting routes": 27,
+          "governments": 7,
+          "agendas and documents": 1
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "HI",
+      "government": "hi:city:city-and-county-of-honolulu",
+      "source_pages_replayed": 26,
+      "findings_reported": 260,
+      "distinct_box_findings": 208,
+      "findings_passed_check": 138,
+      "bodies_added": 2,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 2,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 3,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 46.295,
+      "peak_worker_rss_bytes": 392060928,
+      "database_request_bytes": 300748,
+      "database_response_bytes": 186089,
+      "at": "2026-10-21T04:09:43.545Z",
+      "workerPid": 214222,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 2,
+        "readerBodies": 2,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "hi:city:city-and-county-of-honolulu#body:honolulu-city-council",
+          "name": "Honolulu City Council"
+        },
+        {
+          "id": "hi:city:city-and-county-of-honolulu#body:ethics-commission",
+          "name": "ETHICS COMMISSION"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 208,
+        "published": 138,
+        "refused": 2,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 136,
+          "body links": 2
+        },
+        "waitingByClass": {
+          "government money": 6,
+          "governments": 58,
+          "agendas and documents": 4
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 2
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "IA",
+      "government": "ia:city:city-of-ackley",
+      "source_pages_replayed": 9,
+      "findings_reported": 17,
+      "distinct_box_findings": 17,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.331,
+      "peak_worker_rss_bytes": 310984704,
+      "database_request_bytes": 77524,
+      "database_response_bytes": 84485,
+      "at": "2026-10-21T04:09:52.653Z",
+      "workerPid": 214270,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 17,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "schedules": 3,
+          "agendas and documents": 8,
+          "governments": 4,
+          "meeting routes": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "ID",
+      "government": "id:city:city-of-aberdeen",
+      "source_pages_replayed": 5,
+      "findings_reported": 15,
+      "distinct_box_findings": 15,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.669,
+      "peak_worker_rss_bytes": 283312128,
+      "database_request_bytes": 75364,
+      "database_response_bytes": 84231,
+      "at": "2026-10-21T04:10:26.115Z",
+      "workerPid": 214413,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 15,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "governments": 12,
+          "rosters": 3
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "IL",
+      "government": "il:city:city-of-aledo",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.627,
+      "peak_worker_rss_bytes": 274305024,
+      "database_request_bytes": 71478,
+      "database_response_bytes": 82832,
+      "at": "2026-10-21T04:10:31.919Z",
+      "workerPid": 214434,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "IN",
+      "government": "in:city:city-of-anderson",
+      "source_pages_replayed": 10,
+      "findings_reported": 20,
+      "distinct_box_findings": 18,
+      "findings_passed_check": 7,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 2,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 34.694,
+      "peak_worker_rss_bytes": 360656896,
+      "database_request_bytes": 90061,
+      "database_response_bytes": 90775,
+      "at": "2026-10-21T04:11:00.509Z",
+      "workerPid": 214455,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "in:city:city-of-anderson#governing",
+          "name": "City Council"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 18,
+        "published": 7,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 6,
+          "body links": 1
+        },
+        "waitingByClass": {
+          "governments": 11
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "KS",
+      "government": "ks:city:city-of-abilene",
+      "source_pages_replayed": 7,
+      "findings_reported": 18,
+      "distinct_box_findings": 17,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 34.333,
+      "peak_worker_rss_bytes": 276299776,
+      "database_request_bytes": 88602,
+      "database_response_bytes": 88076,
+      "at": "2026-10-21T04:11:06.649Z",
+      "workerPid": 214476,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 17,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "meeting routes": 15,
+          "governments": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "KY",
+      "government": "ky:city:city-of-alexandria",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.532,
+      "peak_worker_rss_bytes": 275947520,
+      "database_request_bytes": 71543,
+      "database_response_bytes": 82955,
+      "at": "2026-10-21T04:11:37.221Z",
+      "workerPid": 214562,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "LA",
+      "government": "la:city:city-of-abbeville",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.563,
+      "peak_worker_rss_bytes": 273666048,
+      "database_request_bytes": 71530,
+      "database_response_bytes": 82512,
+      "at": "2026-10-21T04:11:43.139Z",
+      "workerPid": 214583,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MA",
+      "government": "ma:city:city-of-agawam-town",
+      "source_pages_replayed": 183,
+      "findings_reported": 224,
+      "distinct_box_findings": 213,
+      "findings_passed_check": 45,
+      "bodies_added": 14,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 14,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 25,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 49.297,
+      "peak_worker_rss_bytes": 512868352,
+      "database_request_bytes": 260942,
+      "database_response_bytes": 168718,
+      "at": "2026-10-21T04:12:11.859Z",
+      "workerPid": 214604,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 14,
+        "readerBodies": 14,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "ma:city:city-of-agawam-town#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:board-of-health",
+          "name": "Board of Health"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:cable-television-commission",
+          "name": "Cable Television Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:agawam-disability-commission",
+          "name": "Agawam Disability Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:conservation-commission",
+          "name": "Conservation Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:council-on-aging-board-of-directors",
+          "name": "Council on Aging Board of Directors"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:energy-commission",
+          "name": "Energy Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:golf-commission",
+          "name": "Golf Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:planning-board",
+          "name": "Planning Board"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:zoning-board-of-appeals",
+          "name": "Zoning Board of Appeals"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:council-on-aging-and-senior-center",
+          "name": "Council on Aging & Senior Center"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:agawam-license-commission",
+          "name": "Agawam License Commission"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:commission-on-disabilities",
+          "name": "Commission on Disabilities"
+        },
+        {
+          "id": "ma:city:city-of-agawam-town#body:community-preservation-act-committee-cpac",
+          "name": "Community Preservation Act Committee (CPAC)"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 213,
+        "published": 45,
+        "refused": 6,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 17,
+          "meeting routes": 20,
+          "schedules": 5,
+          "rosters": 2,
+          "comment rules": 1
+        },
+        "waitingByClass": {
+          "governments": 150,
+          "agendas and documents": 11,
+          "government money": 1
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 6
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MD",
+      "government": "md:city:city-of-aberdeen",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.024,
+      "peak_worker_rss_bytes": 275394560,
+      "database_request_bytes": 71517,
+      "database_response_bytes": 82881,
+      "at": "2026-10-21T04:12:17.383Z",
+      "workerPid": 214625,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "ME",
+      "government": "me:city:city-of-auburn",
+      "source_pages_replayed": 32,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.275,
+      "peak_worker_rss_bytes": 359866368,
+      "database_request_bytes": 71616,
+      "database_response_bytes": 80714,
+      "at": "2026-10-21T04:12:50.612Z",
+      "workerPid": 215246,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MI",
+      "government": "mi:city:charter-township-of-allendale",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.73,
+      "peak_worker_rss_bytes": 274366464,
+      "database_request_bytes": 71781,
+      "database_response_bytes": 82905,
+      "at": "2026-10-21T04:13:03.302Z",
+      "workerPid": 215449,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MN",
+      "government": "mn:city:city-of-ada",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.932,
+      "peak_worker_rss_bytes": 275218432,
+      "database_request_bytes": 71547,
+      "database_response_bytes": 80651,
+      "at": "2026-10-21T04:13:25.016Z",
+      "workerPid": 216014,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MO",
+      "government": "mo:city:city-of-albany",
+      "source_pages_replayed": 4,
+      "findings_reported": 35,
+      "distinct_box_findings": 29,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 33.726,
+      "peak_worker_rss_bytes": 272752640,
+      "database_request_bytes": 88544,
+      "database_response_bytes": 88061,
+      "at": "2026-10-21T04:13:37.483Z",
+      "workerPid": 216165,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 29,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "governments": 14,
+          "meeting routes": 15
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MS",
+      "government": "ms:city:city-of-aberdeen",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.048,
+      "peak_worker_rss_bytes": 273256448,
+      "database_request_bytes": 71517,
+      "database_response_bytes": 82471,
+      "at": "2026-10-21T04:13:58.846Z",
+      "workerPid": 217118,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "MT",
+      "government": "mt:city:city-and-county-of-butte-silver-bow",
+      "source_pages_replayed": 61,
+      "findings_reported": 427,
+      "distinct_box_findings": 374,
+      "findings_passed_check": 112,
+      "bodies_added": 30,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 30,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 74,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 70.871,
+      "peak_worker_rss_bytes": 490954752,
+      "database_request_bytes": 591842,
+      "database_response_bytes": 337594,
+      "at": "2026-10-21T04:14:13.474Z",
+      "workerPid": 217288,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 30,
+        "readerBodies": 30,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:friends-of-the-urban-forest-board",
+          "name": "Friends of the Urban Forest Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:greenway-authority-board",
+          "name": "Greenway Authority Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:harrison-avenue-urban-revitalization-district-board",
+          "name": "Harrison Avenue Urban Revitalization District Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:law-enforcement-commission",
+          "name": "Law Enforcement Commission"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:mile-high-conservation-district-board",
+          "name": "Mile High Conservation District Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:montana-connections-targeted-economic-development-district-board",
+          "name": "Montana Connections Targeted Economic Development District Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:mosquito-control-district-board",
+          "name": "Mosquito Control District Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:parking-commission",
+          "name": "Parking Commission"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:parks-and-recreation-board",
+          "name": "Parks & Recreation Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:planning-board",
+          "name": "Planning Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:council-of-commissioners",
+          "name": "Council of Commissioners"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:school-district-trustees",
+          "name": "School District Trustees"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:board-of-health",
+          "name": "Board of Health"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:airport-authority-board",
+          "name": "Airport Authority Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:animal-services-board",
+          "name": "Animal Services Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:behavioral-health-local-advisory-council",
+          "name": "Behavioral Health Local Advisory Council"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:butte-natural-resource-damage-restoration-council",
+          "name": "Butte Natural Resource Damage Restoration Council"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:civic-center-board",
+          "name": "Civic Center Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:council-on-aging",
+          "name": "Council on Aging"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:divide-refuse-board",
+          "name": "Divide Refuse Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:east-butte-rra-board",
+          "name": "East Butte RRA Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:fair-board",
+          "name": "Fair Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:fire-commission",
+          "name": "Fire Commission"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:port-of-montana-authority-board",
+          "name": "Port of Montana Authority Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:public-library-board",
+          "name": "Public Library Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:tax-appeal-board",
+          "name": "Tax Appeal Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:tourism-business-improvement-district-board-of-trustees-tbid",
+          "name": "Tourism Business Improvement District Board of Trustees (TBID)"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:urban-revitalization-agency-board",
+          "name": "Urban Revitalization Agency Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:weed-control-board",
+          "name": "Weed Control Board"
+        },
+        {
+          "id": "mt:city:city-and-county-of-butte-silver-bow#body:zoning-board-of-adjustment",
+          "name": "Zoning Board of Adjustment"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 374,
+        "published": 112,
+        "refused": 15,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 31,
+          "meeting routes": 72,
+          "rosters": 5,
+          "comment rules": 2,
+          "schedules": 2
+        },
+        "waitingByClass": {
+          "elections": 1,
+          "government money": 65,
+          "governments": 101,
+          "meeting routes": 68,
+          "agendas and documents": 6,
+          "schedules": 2,
+          "officeholders": 2,
+          "comment rules": 1,
+          "rosters": 1
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 15
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NC",
+      "government": "nc:city:city-of-albemarle",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 30.111,
+      "peak_worker_rss_bytes": 275800064,
+      "database_request_bytes": 72028,
+      "database_response_bytes": 83689,
+      "at": "2026-10-21T04:14:32.773Z",
+      "workerPid": 217531,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "ND",
+      "government": "nd:city:city-of-argusville",
+      "source_pages_replayed": 9,
+      "findings_reported": 2,
+      "distinct_box_findings": 2,
+      "findings_passed_check": 1,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 1,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.331,
+      "peak_worker_rss_bytes": 276054016,
+      "database_request_bytes": 77785,
+      "database_response_bytes": 85459,
+      "at": "2026-10-21T04:15:05.383Z",
+      "workerPid": 218261,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "nd:city:city-of-argusville#body:park-board",
+          "name": "Park Board"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 2,
+        "published": 1,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 1
+        },
+        "waitingByClass": {
+          "governments": 1
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NE",
+      "government": "ne:city:city-of-albion",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 33.033,
+      "peak_worker_rss_bytes": 273879040,
+      "database_request_bytes": 71491,
+      "database_response_bytes": 82475,
+      "at": "2026-10-21T04:15:27.432Z",
+      "workerPid": 218795,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NH",
+      "government": "nh:city:city-of-berlin",
+      "source_pages_replayed": 7,
+      "findings_reported": 21,
+      "distinct_box_findings": 21,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 38.597,
+      "peak_worker_rss_bytes": 289497088,
+      "database_request_bytes": 74328,
+      "database_response_bytes": 100200,
+      "at": "2026-10-21T04:15:39.900Z",
+      "workerPid": 218870,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 21,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "governments": 18,
+          "meeting routes": 2,
+          "elections": 1
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NJ",
+      "government": "nj:city:borough-of-allendale",
+      "source_pages_replayed": 9,
+      "findings_reported": 264,
+      "distinct_box_findings": 262,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 38.152,
+      "peak_worker_rss_bytes": 282632192,
+      "database_request_bytes": 76692,
+      "database_response_bytes": 100375,
+      "at": "2026-10-21T04:16:02.157Z",
+      "workerPid": 219263,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 262,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "agendas and documents": 245,
+          "governments": 13,
+          "meeting routes": 4
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NM",
+      "government": "nm:city:city-of-alamogordo",
+      "source_pages_replayed": 6,
+      "findings_reported": 42,
+      "distinct_box_findings": 28,
+      "findings_passed_check": 16,
+      "bodies_added": 1,
+      "bodies_updated": 1,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 2,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.664,
+      "peak_worker_rss_bytes": 388931584,
+      "database_request_bytes": 113385,
+      "database_response_bytes": 112760,
+      "at": "2026-10-21T04:16:20.543Z",
+      "workerPid": 219519,
+      "before": {
+        "nativeBodies": 3,
+        "readerBodies": 3,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 4,
+        "readerBodies": 4,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "nm:city:city-of-alamogordo#body:mayor-s-youth-advisory-commission",
+          "name": "Mayor's Youth Advisory Commission"
+        }
+      ],
+      "updatedBodyIds": [
+        "nm:city:city-of-alamogordo#governing"
+      ],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 28,
+        "published": 16,
+        "refused": 1,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 3,
+          "schedules": 1,
+          "meeting routes": 12
+        },
+        "waitingByClass": {
+          "agendas and documents": 8,
+          "governments": 3
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 1
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NV",
+      "government": "nv:city:city-of-boulder",
+      "source_pages_replayed": 140,
+      "findings_reported": 200,
+      "distinct_box_findings": 189,
+      "findings_passed_check": 47,
+      "bodies_added": 4,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 4,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 22,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 46.901,
+      "peak_worker_rss_bytes": 490258432,
+      "database_request_bytes": 236582,
+      "database_response_bytes": 163597,
+      "at": "2026-10-21T04:16:42.624Z",
+      "workerPid": 219744,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 4,
+        "readerBodies": 4,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "nv:city:city-of-boulder#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "nv:city:city-of-boulder#body:charter-commission",
+          "name": "Charter Commission"
+        },
+        {
+          "id": "nv:city:city-of-boulder#body:parks-and-recreation-commission",
+          "name": "Parks & Recreation Commission"
+        },
+        {
+          "id": "nv:city:city-of-boulder#body:planning-commission",
+          "name": "Planning Commission"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 189,
+        "published": 47,
+        "refused": 20,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 21,
+          "comment rules": 12,
+          "rosters": 3,
+          "body links": 6,
+          "contacts": 2,
+          "schedules": 3
+        },
+        "waitingByClass": {
+          "governments": 87,
+          "elections": 30,
+          "officeholders": 3,
+          "government money": 1,
+          "campaign finance": 1
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 16,
+          "NO_PERSON_NAMED_IN_QUOTE": 4
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "NY",
+      "government": "ny:city:city-of-albany",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.784,
+      "peak_worker_rss_bytes": 275783680,
+      "database_request_bytes": 71586,
+      "database_response_bytes": 80672,
+      "at": "2026-10-21T04:16:59.463Z",
+      "workerPid": 219974,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "OH",
+      "government": "oh:city:city-of-akron",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.797,
+      "peak_worker_rss_bytes": 274284544,
+      "database_request_bytes": 71478,
+      "database_response_bytes": 82412,
+      "at": "2026-10-21T04:17:32.393Z",
+      "workerPid": 220986,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "OK",
+      "government": "ok:city:city-of-ada",
+      "source_pages_replayed": 85,
+      "findings_reported": 55,
+      "distinct_box_findings": 55,
+      "findings_passed_check": 9,
+      "bodies_added": 2,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 2,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 3,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.107,
+      "peak_worker_rss_bytes": 374632448,
+      "database_request_bytes": 99595,
+      "database_response_bytes": 94734,
+      "at": "2026-10-21T04:17:33.816Z",
+      "workerPid": 221022,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 2,
+        "readerBodies": 2,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "ok:city:city-of-ada#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "ok:city:city-of-ada#body:library-board",
+          "name": "Library Board"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 55,
+        "published": 9,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 6,
+          "body links": 3
+        },
+        "waitingByClass": {
+          "governments": 36,
+          "agendas and documents": 10
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "OR",
+      "government": "or:city:city-of-adair-village",
+      "source_pages_replayed": 195,
+      "findings_reported": 26,
+      "distinct_box_findings": 22,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 36.032,
+      "peak_worker_rss_bytes": 528723968,
+      "database_request_bytes": 77720,
+      "database_response_bytes": 84620,
+      "at": "2026-10-21T04:18:07.205Z",
+      "workerPid": 221525,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 22,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "agendas and documents": 12,
+          "governments": 3,
+          "comment rules": 2,
+          "rosters": 2,
+          "meeting routes": 1,
+          "government money": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "PA",
+      "government": "pa:city:borough-of-adamstown",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.59,
+      "peak_worker_rss_bytes": 275505152,
+      "database_request_bytes": 71679,
+      "database_response_bytes": 80735,
+      "at": "2026-10-21T04:18:12.302Z",
+      "workerPid": 221643,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "RI",
+      "government": "ri:city:city-of-central-falls",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.12,
+      "peak_worker_rss_bytes": 274493440,
+      "database_request_bytes": 71697,
+      "database_response_bytes": 80749,
+      "at": "2026-10-21T04:18:45.306Z",
+      "workerPid": 222670,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "SC",
+      "government": "sc:city:city-of-abbeville",
+      "source_pages_replayed": 6,
+      "findings_reported": 10,
+      "distinct_box_findings": 9,
+      "findings_passed_check": 6,
+      "bodies_added": 1,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 1,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 2,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 32.862,
+      "peak_worker_rss_bytes": 275632128,
+      "database_request_bytes": 88584,
+      "database_response_bytes": 90242,
+      "at": "2026-10-21T04:18:46.978Z",
+      "workerPid": 222687,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 1,
+        "readerBodies": 1,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "sc:city:city-of-abbeville#governing",
+          "name": "City Council"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 9,
+        "published": 6,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "body links": 1,
+          "meeting routes": 5
+        },
+        "waitingByClass": {
+          "governments": 3
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "SD",
+      "government": "sd:city:city-of-aberdeen",
+      "source_pages_replayed": 30,
+      "findings_reported": 70,
+      "distinct_box_findings": 64,
+      "findings_passed_check": 29,
+      "bodies_added": 9,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 9,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 24,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 40.688,
+      "peak_worker_rss_bytes": 326389760,
+      "database_request_bytes": 187568,
+      "database_response_bytes": 141553,
+      "at": "2026-10-21T04:19:19.034Z",
+      "workerPid": 223199,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 9,
+        "readerBodies": 9,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "sd:city:city-of-aberdeen#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:aberdeen-regional-airport-board",
+          "name": "Aberdeen Regional Airport Board"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:planning-commission",
+          "name": "Planning Commission"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:residential-contractor-board",
+          "name": "Residential Contractor Board"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:board-of-trustees",
+          "name": "Board of Trustees"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:park-and-recreation-board",
+          "name": "Park & Recreation Board"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:mayor-s-advisory-committee-for-people-with-disabilities",
+          "name": "Mayor's Advisory Committee for People with Disabilities"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:board-of-ethics",
+          "name": "Board of Ethics"
+        },
+        {
+          "id": "sd:city:city-of-aberdeen#body:k-o-lee-aberdeen-public-library-board-of-trustees",
+          "name": "K.O. Lee Aberdeen Public Library Board of Trustees"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 64,
+        "published": 29,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 12,
+          "body links": 11,
+          "rosters": 5,
+          "schedules": 1
+        },
+        "waitingByClass": {
+          "governments": 28,
+          "agendas and documents": 7
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "TN",
+      "government": "tn:city:city-of-adams",
+      "source_pages_replayed": 1,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.558,
+      "peak_worker_rss_bytes": 284303360,
+      "database_request_bytes": 71478,
+      "database_response_bytes": 82412,
+      "at": "2026-10-21T04:19:22.207Z",
+      "workerPid": 223242,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "TX",
+      "government": "tx:city:city-of-abernathy",
+      "source_pages_replayed": 50,
+      "findings_reported": 16,
+      "distinct_box_findings": 16,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 34.365,
+      "peak_worker_rss_bytes": 358830080,
+      "database_request_bytes": 84274,
+      "database_response_bytes": 86682,
+      "at": "2026-10-21T04:19:56.158Z",
+      "workerPid": 224451,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 16,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {
+          "meeting routes": 11,
+          "governments": 3,
+          "agendas and documents": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "UT",
+      "government": "ut:city:city-of-alpine",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 31.961,
+      "peak_worker_rss_bytes": 274960384,
+      "database_request_bytes": 71491,
+      "database_response_bytes": 82439,
+      "at": "2026-10-21T04:20:01.969Z",
+      "workerPid": 224568,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "VA",
+      "government": "va:city:city-of-alexandria",
+      "source_pages_replayed": 21,
+      "findings_reported": 552,
+      "distinct_box_findings": 401,
+      "findings_passed_check": 342,
+      "bodies_added": 2,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 2,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 7,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 72.933,
+      "peak_worker_rss_bytes": 330645504,
+      "database_request_bytes": 568067,
+      "database_response_bytes": 312162,
+      "at": "2026-10-21T04:20:32.938Z",
+      "workerPid": 225250,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 2,
+        "readerBodies": 2,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "va:city:city-of-alexandria#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "va:city:city-of-alexandria#body:alexandria-city-council",
+          "name": "Alexandria City Council"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 401,
+        "published": 342,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 328,
+          "comment rules": 11,
+          "body links": 2,
+          "schedules": 1
+        },
+        "waitingByClass": {
+          "governments": 42,
+          "elections": 2,
+          "agendas and documents": 10,
+          "government money": 3,
+          "campaign finance": 2
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "VT",
+      "government": "vt:city:city-of-barre",
+      "source_pages_replayed": 9,
+      "findings_reported": 111,
+      "distinct_box_findings": 110,
+      "findings_passed_check": 5,
+      "bodies_added": 2,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 2,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 5,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 34.517,
+      "peak_worker_rss_bytes": 274685952,
+      "database_request_bytes": 110039,
+      "database_response_bytes": 97680,
+      "at": "2026-10-21T04:20:36.362Z",
+      "workerPid": 225302,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 2,
+        "readerBodies": 2,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "vt:city:city-of-barre#body:barre-city-council",
+          "name": "Barre City Council"
+        },
+        {
+          "id": "vt:city:city-of-barre#body:board-of-abatement",
+          "name": "Board of Abatement"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 110,
+        "published": 5,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 2,
+          "schedules": 1,
+          "body links": 2
+        },
+        "waitingByClass": {
+          "government money": 2,
+          "governments": 78,
+          "meeting routes": 15,
+          "agendas and documents": 6,
+          "elections": 3,
+          "schedules": 1
+        },
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "WA",
+      "government": "wa:city:city-of-aberdeen",
+      "source_pages_replayed": 36,
+      "findings_reported": 104,
+      "distinct_box_findings": 91,
+      "findings_passed_check": 18,
+      "bodies_added": 7,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 7,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 11,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 35.845,
+      "peak_worker_rss_bytes": 355348480,
+      "database_request_bytes": 138092,
+      "database_response_bytes": 116928,
+      "at": "2026-10-21T04:21:12.884Z",
+      "workerPid": 225935,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 7,
+        "readerBodies": 7,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "wa:city:city-of-aberdeen#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:planning-commission",
+          "name": "Planning Commission"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:library-board",
+          "name": "Library Board"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:pension-board",
+          "name": "Pension Board"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:arts-commission",
+          "name": "Arts Commission"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:park-board",
+          "name": "Park Board"
+        },
+        {
+          "id": "wa:city:city-of-aberdeen#body:opioid-abatement-council",
+          "name": "Opioid Abatement Council"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 91,
+        "published": 18,
+        "refused": 8,
+        "handed": 0,
+        "publishedByRoute": {
+          "meeting routes": 9,
+          "schedules": 2,
+          "body links": 7
+        },
+        "waitingByClass": {
+          "government money": 10,
+          "governments": 45,
+          "officeholders": 7,
+          "agendas and documents": 3
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 8
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "WI",
+      "government": "wi:city:city-of-abbotsford",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 40.39,
+      "peak_worker_rss_bytes": 274698240,
+      "database_request_bytes": 71633,
+      "database_response_bytes": 80693,
+      "at": "2026-10-21T04:21:48.829Z",
+      "workerPid": 226936,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "WV",
+      "government": "wv:city:city-of-beckley",
+      "source_pages_replayed": 0,
+      "findings_reported": 0,
+      "distinct_box_findings": 0,
+      "findings_passed_check": 0,
+      "bodies_added": 0,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 0,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 0,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 42.85,
+      "peak_worker_rss_bytes": 275099648,
+      "database_request_bytes": 71504,
+      "database_response_bytes": 82832,
+      "at": "2026-10-21T04:21:51.103Z",
+      "workerPid": 226982,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "newBodies": [],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 0,
+        "published": 0,
+        "refused": 0,
+        "handed": 0,
+        "publishedByRoute": {},
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    },
+    {
+      "state": "WY",
+      "government": "wy:city:city-of-casper",
+      "source_pages_replayed": 125,
+      "findings_reported": 1890,
+      "distinct_box_findings": 1826,
+      "findings_passed_check": 43,
+      "bodies_added": 6,
+      "bodies_updated": 0,
+      "meetings_added": 0,
+      "reader_bodies_added": 6,
+      "reader_meetings_added": 0,
+      "additional_native_fact_rows": 43,
+      "source_http_requests_this_replay": 0,
+      "provider_usd": 0,
+      "validation_worker_seconds": 61.021,
+      "peak_worker_rss_bytes": 429838336,
+      "database_request_bytes": 307856,
+      "database_response_bytes": 198907,
+      "at": "2026-10-21T04:22:31.434Z",
+      "workerPid": 227415,
+      "before": {
+        "nativeBodies": 0,
+        "readerBodies": 0,
+        "readerMeetings": 0
+      },
+      "after": {
+        "nativeBodies": 6,
+        "readerBodies": 6,
+        "readerMeetings": 0
+      },
+      "newBodies": [
+        {
+          "id": "wy:city:city-of-casper#governing",
+          "name": "City Council"
+        },
+        {
+          "id": "wy:city:city-of-casper#body:council-of-people-with-disabilities",
+          "name": "Council of People with Disabilities"
+        },
+        {
+          "id": "wy:city:city-of-casper#body:lgbtq-advisory-committee",
+          "name": "LGBTQ+ Advisory Committee"
+        },
+        {
+          "id": "wy:city:city-of-casper#body:old-yellowstone-committee",
+          "name": "Old Yellowstone Committee"
+        },
+        {
+          "id": "wy:city:city-of-casper#body:planning-and-zoning-commission",
+          "name": "Planning and Zoning Commission"
+        },
+        {
+          "id": "wy:city:city-of-casper#body:joint-powers-board",
+          "name": "Joint Powers Board"
+        }
+      ],
+      "updatedBodyIds": [],
+      "newNativeMeetingIds": [],
+      "newReaderMeetings": [],
+      "publication": {
+        "looked": 1826,
+        "published": 43,
+        "refused": 40,
+        "handed": 0,
+        "publishedByRoute": {
+          "rosters": 16,
+          "body links": 6,
+          "schedules": 5,
+          "meeting routes": 10,
+          "comment rules": 6
+        },
+        "waitingByClass": {
+          "agendas and documents": 1680,
+          "governments": 29,
+          "government money": 31,
+          "elections": 3
+        },
+        "failuresByReason": {
+          "SEAT_NOT_IN_QUOTE": 40
+        },
+        "byPlace": {},
+        "seats": {
+          "flagged": 0
+        }
+      }
+    }
+  ],
+  "database_bytes": {
+    "actual_production": {
+      "reader": {
+        "requestBytes": 799593,
+        "responseBytes": 3764015,
+        "httpRequests": 910,
+        "socketFrames": 0
+      },
+      "control-plane": {
+        "requestBytes": 9036,
+        "responseBytes": 20242,
+        "httpRequests": 31,
+        "socketFrames": 0
+      }
+    },
+    "production_copies_including_all_failed_and_superseded_attempts": {
+      "reader-copy": {
+        "requestBytes": 9750032,
+        "responseBytes": 104122308,
+        "httpRequests": 1482,
+        "socketFrames": 27014
+      },
+      "control-copy": {
+        "requestBytes": 16722753,
+        "responseBytes": 410240050,
+        "httpRequests": 4924,
+        "socketFrames": 0
+      }
+    },
+    "metered_production_response_bytes": 3784257,
+    "metered_copy_response_bytes": 514362358,
+    "total_metered_database_response_bytes": 518146615,
+    "unmetered_initial_baseline": "Unknown wire bytes; approximately 121 KB saved output is not a transfer measurement.",
+    "all_database_bytes_known": false,
+    "production_reader_transfer_usd_at_010_per_gb": 0.0003764015,
+    "all_reader_labeled_transfer_usd_at_010_per_gb": 0.0107886323,
+    "copy_compute_usd": null,
+    "control_project_allowance_status": "unknown"
+  }
+}

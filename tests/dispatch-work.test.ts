@@ -53,6 +53,7 @@ import { ensureEntity } from "@/lib/facts/entities.ts";
 import { MemoryEvidenceStore, putArtifact } from "@/lib/control-plane/evidence/store.ts";
 import { factDb } from "./helpers/hunters-db.ts";
 import { beginAttempt, claim } from "@/lib/control-plane/attempt.ts";
+import { nextAutonomousOperation } from "@/lib/control-plane/workers/coordinator.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
@@ -698,9 +699,15 @@ test("an Admin order still creates its paid hunt packet beside the free meeting 
   assert.equal(packet.route.executorClass, "BOUNDED_MODEL_WORKER", "free meeting reads do not replace the ordered paid hunt");
   const synced = await syncObligations(repos, [packet.obligation], T0);
   const occurrence = await openOccurrence(repos, { obligation: synced.all[0], dueAt: T0, now: T0 });
+  assert.ok(occurrence);
   assert.equal(occurrence.routeTask.state, "PENDING");
   assert.equal(occurrence.routeTask.routeId, "hunter:packet");
   assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions, [intent.intentId]);
+  const next = await nextAutonomousOperation({ repos, now: () => T0, methodVersion: 0,
+    readEvidence: async () => { throw new Error("No evidence read is needed to schedule the paid hunt"); },
+    independentContext: async () => { throw new Error("No audit is needed to schedule the paid hunt"); } }, occurrence.workItem.id);
+  assert.equal(next.action, "SCOUT");
+  assert.equal(next.task?.id, occurrence.routeTask.id, "the ordered paid task is handed to the hunter, not replaced by the free route");
   assert.equal(readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch[0].budgetUsd, 1,
     "materializing the paid job preserves the owner's budget");
 });

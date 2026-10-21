@@ -54,6 +54,7 @@ const states = serverReaderValue("state-reads", () => new Map<string, Promise<Re
 const districtReads = serverReaderValue("district-reads", () => new Map<string, Promise<Slice<GeographySlice>>>());
 const requests = serverReaderValue("state-requests", () => new WeakMap<object, Map<string, Promise<ReaderStatePackage>>>());
 const districtCanonical = serverReaderValue("state-district-canonical", () => new WeakMap<ReaderStatePackage, Awaited<ReturnType<typeof readCanonicalShelf>>>());
+const pendingDistrictCanonical = serverReaderValue("state-district-pending", () => new Map<string, Promise<Awaited<ReturnType<typeof readCanonicalShelf>>>>());
 const selectedCanonical = serverReaderValue("state-selected-canonical", () => new WeakMap<ReaderStatePackage, import("../civic-data/read-model.ts").CivicDataReadStore>());
 
 /** Reserve the ZIP's existing people and directory reads before ballot cards ask for them. */
@@ -66,12 +67,18 @@ export function primeStateReaderPointers(state: string, read: Promise<ReaderStat
 }
 
 /** The ZIP's district pointers travelled with its state and keep the same canonical proof. */
-export function primeStateDistrictPointers(state: ReaderStatePackage): Promise<void> {
+export function primeStateDistrictPointers(state: ReaderStatePackage | Promise<ReaderStatePackage>): Promise<void> {
+  if (state instanceof Promise) {
+    const key = [...states].find(([, read]) => read === state)?.[0];
+    const pending = key ? pendingDistrictCanonical.get(key) : undefined;
+    return pending ? pending.then(canonical => primeReaderCanonicalStore(canonical.additionalEntries, canonical))
+      : state.then(value => primeStateDistrictPointers(value));
+  }
   const canonical = districtCanonical.get(state);
   return canonical ? primeReaderCanonicalStore(canonical.additionalEntries, canonical) : Promise.resolve();
 }
 
-/** Ballot and its streamed cards share the geography from the state's one query. */
+/** Ballot and its streamed cards share the state's held geography. */
 export function readStateDistricts(value: string): Promise<Slice<GeographySlice>> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   const pending = readStatePackage(state);
@@ -81,7 +88,7 @@ export function readStateDistricts(value: string): Promise<Slice<GeographySlice>
   return districts ?? pending.then(value => value.districts);
 }
 
-async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string): Promise<ReaderStatePackage> {
+async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string, earlyDistricts: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   let needsPresident = false;
   const presidentRead = readNationalPresident(() => {
@@ -98,11 +105,22 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: `${jurisdiction}:openstates-people:v1` }] : []),
     ...(!zip ? PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })) : []),
   ];
+  const query = readerDatabaseQuery();
+  const idsRead = zip && !divisionIds.length ? readZipPlace(zip).then(value=>value?.ids ?? []) : Promise.resolve(divisionIds);
+  const split = earlyDistricts && Boolean(zip);
   const load = (ids: readonly string[]) => readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []],
-    readerDatabaseQuery(), statePackageStatement(state, ids, zip));
+    query, split ? stateContainersStatement(state, ids, zip) : statePackageStatement(state, ids, zip));
   // The resident President reader requests its group only on a cache miss or refresh.
-  const groupsRead = Promise.resolve().then(async () => load(zip && !divisionIds.length ? (await readZipPlace(zip))?.ids ?? [] : divisionIds));
+  const groupsRead = Promise.resolve().then(async () => load(await idsRead));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
+  pendingDistrictCanonical.set(key, canonicalRead);
+  const selectedRead = split ? canonicalRead.then(async canonical => {
+    if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+    const statement = statePackageStatement(state, await idsRead, zip, canonical.additionalRows[0]);
+    const [rows] = await query([statement]);
+    return rows[0];
+  }) : canonicalRead.then(canonical => canonical.additionalRows[0]);
+  void selectedRead.catch(() => {});
   const districtsRead = canonicalRead.then((canonical): Slice<GeographySlice> => {
     const geoVersion = canonical.additionalRows[0]?.version_id;
     return typeof geoVersion === "string"
@@ -111,14 +129,14 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   });
   if (!divisionIds.length) districtReads.set(key, districtsRead);
   void districtsRead.catch(() => {});
-  const canonical = await canonicalRead, districts = await districtsRead;
-  const openStates = zip ? zipPeopleEntry(state, canonical.additionalRows[0]?.zip_people as Record<string, unknown> | null) : undefined;
+  const [canonical, districts, selectedRow] = await Promise.all([canonicalRead, districtsRead, selectedRead]);
+  const openStates = zip ? zipPeopleEntry(state, selectedRow?.zip_people as Record<string, unknown> | null) : undefined;
   const registry = zip ? selectedStateEntry("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state),
-    canonical.additionalRows[0]?.zip_registry as Record<string, unknown> | null) : undefined;
+    selectedRow?.zip_registry as Record<string, unknown> | null) : undefined;
   const localDivisions = (canonical.additionalRows[0]?.local_divisions ?? []) as readonly Division[];
   const selected = new Map<string,PromotedEdgeEntry>();
   if (zip) {
-    for (const row of canonical.additionalRows[0]?.zip_sources as readonly Record<string,unknown>[] ?? []) {
+    for (const row of selectedRow?.zip_sources as readonly Record<string,unknown>[] ?? []) {
       const key=String(row.key),pointer=zipSourcePointers(state).find(pointer=>`${pointer.recordClass}:${pointer.scope}`===key);
       if(!pointer)throw new Error("READER_SCOPE_NOT_SELECTED");
       selected.set(key,selectedStateEntry(pointer.recordClass,pointer.scope,row));
@@ -130,7 +148,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     selected.set(`STATE_LEGISLATOR:${jurisdiction}:openstates-people:v1`,openStates!);
     selected.set(`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`,registry!);
     selected.set(`STATE_LEGISLATOR:${jurisdiction}`,selectedStateEntry("STATE_LEGISLATOR",jurisdiction,
-      canonical.additionalRows[0]?.zip_official as Record<string,unknown>|null));
+      selectedRow?.zip_official as Record<string,unknown>|null));
   }
   const options = {store:selected.size ? {...canonical,readPromotedEntry:(recordClass:import("../civic-data/types.ts").RoutineRecordClass,scope:string)=>
     selected.has(`${recordClass}:${scope}`) ? Promise.resolve(selected.get(`${recordClass}:${scope}`)!) : canonical.readPromotedEntry!(recordClass,scope)} : canonical};
@@ -184,7 +202,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
 }
 
 /** Reuse one state's read within a request; other requests share only work still in progress. */
-export function readStatePackage(value: string, divisionIds: readonly string[] = [], zip?: string): Promise<ReaderStatePackage> {
+export function readStatePackage(value: string, divisionIds: readonly string[] = [], zip?: string, options: {readonly earlyDistricts?: true} = {}): Promise<ReaderStatePackage> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   const divisions = [...new Set(divisionIds)].sort();
   const base = `${state}|${divisions.join("|")}`, key = zip ? `${base}|zip:${zip}` : base;
@@ -195,9 +213,10 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
   if (held) return held;
   let read = states.get(key);
   if (!read) {
-    read = loadState(state, divisions, zip, key).finally(() => {
+    read = loadState(state, divisions, zip, key, options.earlyDistricts === true).finally(() => {
       if (states.get(key) === read) {
         states.delete(key);
+        pendingDistrictCanonical.delete(key);
         if (!divisions.length) districtReads.delete(key);
       }
     });
@@ -208,9 +227,10 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
   return read;
 }
 
-/** Geography and selected people share the canonical batch and its database snapshot. */
-export function statePackageStatement(state: string, divisions: readonly string[] = [], zip?: string) {
-  const geography = stateContainersStatement(state, divisions, zip);
+/** Select people against either this query's geography or its already held exact snapshot. */
+export function statePackageStatement(state: string, divisions: readonly string[] = [], zip?: string, heldGeography?: Record<string, unknown>) {
+  const geography = heldGeography ? {text:"SELECT $1::text AS version_id,$2::jsonb AS geography,$3::jsonb AS local_divisions,$4::text[] AS canonical_keys",
+    params:[heldGeography.version_id,JSON.stringify(heldGeography.geography),JSON.stringify(heldGeography.local_divisions),heldGeography.canonical_keys]} : stateContainersStatement(state, divisions, zip);
   if (!zip) return geography;
   const jurisdiction=Object.values(FIPS_TO_STATE).find(entry=>entry.postal===requireRegistryState(state));
   if(!jurisdiction)throw new Error("READER_JURISDICTION_UNAVAILABLE");

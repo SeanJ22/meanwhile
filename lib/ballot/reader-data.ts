@@ -36,7 +36,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   if (!states.length) return null;
   const point = place.centroid;
   const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
-  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip), districts: readStateDistricts(state) }));
+  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip, {earlyDistricts:true}), districts: readStateDistricts(state) }));
   // Reserve these promises now: the ballot's early incumbent and portrait reads
   // consume the state query's verified ZIP slices instead of opening another read.
   if (zip) for (const {state,read} of packages) void primeStateReaderPointers(state,read).catch(()=>undefined);
@@ -80,7 +80,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
     return value;
   };
   const districtRead = entry().then(async value => {
-    const pointersRead = Promise.all(packages.map(async ({ read }) => primeStateDistrictPointers(await read)));
+    const pointersRead = Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
     const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
       { recordClass: "CURATED_READER_RECORD" as const, scope: campaignFinanceStateScope(id) },

@@ -189,11 +189,18 @@ test("the ballot submits state and place reads before its independent auxiliary 
   const auxiliaryKeys: string[] = [];
   let release: (()=>void) | undefined;
   const blocked = new Promise<void>(resolve=>{ release=resolve; });
+  let releasePeople: (()=>void) | undefined;
+  const peopleBlocked = new Promise<void>(resolve=>{ releasePeople=resolve; });
   installReaderDatabaseQuery(async statements=>{
     assert.equal(statements.length,1);
     const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    if(statement.text.includes("AS zip_registry")&&!Array.isArray(statement.params[0])) {
+      order.push("state-people");await peopleBlocked;
+      const row=stateRows("priority-state",[],true).find(row=>"part_payload" in row);
+      assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
+    }
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
-    const family=statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
+    const family=statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices") ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
@@ -211,9 +218,12 @@ test("the ballot submits state and place reads before its independent auxiliary 
     assert.ok(auxiliaryKeys.every(key=>!key.startsWith("CANDIDATE_PROFILE:")&&!key.startsWith("CANDIDATE_PUBLICATION:")&&!key.endsWith(":candidate-campaign-sites-derived")),
       "candidate details wait for the displayed contests instead of reading the whole state's candidates");
     release!();
-    await Promise.all([data.registryRead,data.districtRead]);
-    assert.equal(order.length,3,"the selected ZIP people travel in the state batch without another connection");
-  } finally { release?.(); installReaderDatabaseQuery(undefined); }
+    let registryFinished=false;void data.registryRead.then(()=>{registryFinished=true},()=>{registryFinished=true});
+    await data.districtRead;
+    assert.equal(registryFinished,false,"the ballot's district selection and translations do not wait for people");
+    assert.deepEqual(order,["state","place","auxiliary","state-people"]);
+    releasePeople!();await data.registryRead;
+  } finally { release?.();releasePeople?.(); installReaderDatabaseQuery(undefined); }
 });
 
 test("an unavailable local territory file leaves the ballot's canonical families available", async () => {
@@ -222,9 +232,13 @@ test("an unavailable local territory file leaves the ballot's canonical families
   const failure=new Error("The local territory file is unavailable");
   let auxiliaries=0;
   installReaderDatabaseQuery(async statements=>{
+    if(statements[0].text.includes("AS zip_registry")&&!Array.isArray(statements[0].params[0])) {
+      const row=stateRows("territory-failure-state",[],true).find(row=>"part_payload" in row);
+      assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
+    }
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
-    if (statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
+    if (statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices")) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
     if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     auxiliaries++;
     return [[]];

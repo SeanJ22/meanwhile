@@ -1,6 +1,9 @@
 export type OfficePoint = { lat: number; lng: number };
 
 const MAILBOX_ONLY = /^\s*(?:p[\s.]*o[\s.]*box|post\s+office\s+box)(?=\s|#|\d)/i;
+export const isOfficeStreetAddress = (address: string) => !MAILBOX_ONLY.test(address);
+const validPoint = (point: OfficePoint) => Number.isFinite(point.lat) && Number.isFinite(point.lng)
+  && Math.abs(point.lat) <= 90 && Math.abs(point.lng) <= 180;
 
 /** One slow Census request must not hold up an otherwise complete office map. */
 function locateOffice(address: string, fetchImpl: typeof fetch): Promise<OfficePoint | null> {
@@ -36,9 +39,9 @@ function locateOffice(address: string, fetchImpl: typeof fetch): Promise<OfficeP
 /** Concurrent readers and the arriving ZIP share only a short, bounded public-address lookup. */
 export function createOfficeLocator(fetchImpl: typeof fetch = (...args) => fetch(...args), now = Date.now) {
   const points = new Map<string, { promise: Promise<OfficePoint | null>; expires: number }>();
-  return (address: string): Promise<OfficePoint | null> => {
+  const locate = (address: string): Promise<OfficePoint | null> => {
     // A postal box remains a contact address, but cannot locate a public office.
-    if (MAILBOX_ONLY.test(address)) return Promise.resolve(null);
+    if (!isOfficeStreetAddress(address)) return Promise.resolve(null);
     const held = points.get(address);
     if (held && held.expires > now()) return held.promise;
     const promise = locateOffice(address, fetchImpl).then(point => {
@@ -52,4 +55,10 @@ export function createOfficeLocator(fetchImpl: typeof fetch = (...args) => fetch
     points.set(address, { promise, expires: Infinity });
     return promise;
   };
+  return Object.assign(locate, { prime(held: Readonly<Record<string, OfficePoint>>) {
+    for (const [address, point] of Object.entries(held)) if (isOfficeStreetAddress(address) && validPoint(point)) {
+      if (points.size >= 256) points.delete(points.keys().next().value!);
+      points.set(address, { promise: Promise.resolve(point), expires: now() + 30_000 });
+    }
+  } });
 }

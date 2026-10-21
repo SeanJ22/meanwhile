@@ -17,6 +17,7 @@ async function readWorker(request: ReaderWorkerRequest, signal: AbortSignal) {
   const state = place.stateResponse ?? {value:{error:"The state's information could not be loaded"},status:503,headers:[["cache-control","no-store"]]};
   delete place.stateResponse;
   const value = state.value as ReaderStateResponse;
+  if (value.officePoints) locate.prime(value.officePoints);
   if (state.status >= 200 && state.status < 300 && value.coverage && value.memberDirectories) {
     for (const owner of officeOwners(value.coverage)) {
       const keys = personIdentityKeys(owner.holder);

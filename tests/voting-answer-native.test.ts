@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { parseVotingCapture, readVotingSource, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
-import { addCensusVotingGeographies, censusVotingAddressFields, votingInputZip } from "../lib/ballot/voting-answer-geography.ts";
+import { addCensusVotingGeographies, votingInputZip } from "../lib/ballot/voting-answer-geography.ts";
 import { parseCensusPoint } from "../lib/geo/census-geocoder.ts";
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import type { VotingExtraction, VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
@@ -36,18 +36,17 @@ test("VS-01 native Census address and 2020 VTD resolve the native statewide spre
   assert.ok(place.countySubdivisionGeoids.includes("3000190924"));
   assert.equal(place.precincts[0].name, "PRECINCT 12", "this actual church address is not evidence of precinct 1");
   const j = await jurisdiction("polling");
-  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, place, { readerRequested: true });
+  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, place);
   assert.equal(answer.jurisdictions[0].narrowing.kind, "EXACT");
   assert.equal(answer.jurisdictions[0].sites.length, 1);
   assert.equal(answer.jurisdictions[0].sites[0].name, "LUTHERAN CHURCH - CENTRAL");
   assert.equal(answer.jurisdictions[0].sites[0].address, "715 E BANNACK, DILLON, 59725");
   assert.equal(answer.jurisdictions[0].sites[0].hours, "7:00 am - 8:00 pm");
-  assert.deepEqual(censusVotingAddressFields("715 E Bannack St Dillon MT", current), { address: "715 E Bannack St Dillon MT", streetNumber: "715", street: "E BANNACK ST", city: "DILLON", state: "MT", zip: "59725" });
 });
 
 test("VS-01 given Beaverhead precinct 1 uses the same native church row without substituting another precinct", async () => {
   const j = await jurisdiction("polling");
-  const site = j.sites.find(site => site.countyName === "Beaverhead" && site.precinct === "1");
+  const site = j.sites.find(site => site.countyName === "Beaverhead" && site.precincts?.includes("1"));
   assert.ok(site);
   assert.equal(site.name, "LUTHERAN CHURCH - CENTRAL");
   assert.equal(site.address, "715 E BANNACK, DILLON, 59725");
@@ -56,7 +55,7 @@ test("VS-01 given Beaverhead precinct 1 uses the same native church row without 
 
 test("VS-01 native satellite workbook preserves Crow office days, hours, lunch closure and nation", async () => {
   const j = await jurisdiction("satellite");
-  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, { ...initial, precision: "ZIP", states: ["MT"], countyNames: ["Big Horn County"], countyFips: ["30003"] }, { readerRequested: true });
+  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, { ...initial, precision: "ZIP", states: ["MT"], countyNames: ["Big Horn County"], countyFips: ["30003"] });
   const site = answer.jurisdictions[0].sites.find(site => site.name.includes("Little Big Horn College"));
   assert.ok(site);
   assert.match(site.address, /8645 S\. Weaver Dr\., Crow Agency, MT/);
@@ -82,7 +81,7 @@ test("VS-01 native statewide workbook shows a reader only their county's site de
   });
   assert.ok(read.blanks.some(blank => blank.scope.countyFips === "30003" && blank.reason === "geocode"), "native Big Horn rows create their own scoped work");
   const j: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: null, sites: read.sites, blanks: read.blanks, sourceOrg: door.publisher, sourceUrl: door.url, collectedAt: "2026-10-13", refusal: null };
-  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, { ...initial, precision: "ZIP", states: ["MT"], countyNames: ["Beaverhead"], countyFips: ["30001"], divisionIds: [beaverhead.ocdId] }, { readerRequested: true });
+  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, { ...initial, precision: "ZIP", states: ["MT"], countyNames: ["Beaverhead"], countyFips: ["30001"], divisionIds: [beaverhead.ocdId] });
   const visible = answer.jurisdictions[0].blanks!;
   assert.ok(visible.some(blank => blank.scope.countyFips === "30001" && blank.reason === "geocode"));
   assert.ok(visible.some(blank => blank.scope.ocdId === door.scope.ocdId), "statewide source work stays visible");

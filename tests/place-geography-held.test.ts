@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "../lib/control-plane/expansion/national-geography.ts";
 import { loadPublishedAreaLookupState } from "../lib/census-geography/area-lookup.ts";
+import { readExpansionScopesForZips } from "../lib/control-plane/expansion/runner-load.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { PublishedLookupState } from "../lib/census-geography/reader.ts";
 
 test("held county display prefixes do not become division identities or lose split memberships", async () => {
@@ -54,6 +56,19 @@ test("a place reuses all held serving districts and county before acquiring miss
   assert.ok(held.every(row => found.some(division => division.id === row.id)));
   assert.ok(requests.some(url => url.includes("School")), "unheld local geography remains acquisition work");
   assert.ok(!found.some(row => row.id.includes("/state:ca")), "a touching county subdivision in another state is outside this job");
+});
+
+test("an empty place list is a no-op, including expansion planning before a free-data pass", async () => {
+  const query = async () => assert.fail("no places must not read national geography");
+  const empty = await loadPublishedAreaLookupState([], query);
+  assert.deepEqual(await empty.lookup.listVersions(), []);
+  assert.equal(empty.versionId, "NO_PLACES_REQUESTED");
+  const repos = createMemoryRepositories();
+  repos.adminConfig.read = async () => assert.fail("no places must not read state instructions");
+  assert.deepEqual((await readExpansionScopesForZips(repos, [])).scopes, []);
+  for (const zips of [[""], ["9411"], ["94110", "invalid"]]) {
+    await assert.rejects(loadPublishedAreaLookupState(zips, query), /A five-digit ZIP is required/);
+  }
 });
 
 test("an unavailable promoted place has typed absence rather than a bootstrap or country payload", async () => {

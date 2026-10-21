@@ -60,6 +60,8 @@ import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggre
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
+import { parseRoutineReaderRepairRecords, routineReaderRepairRecord,
+  serializeRoutineReaderRepairRecord } from "../lib/civic-data/reader-repair-protocol.ts";
 
 function functionSource(source:string,name:string):string {
   const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
@@ -117,6 +119,59 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
     assert.ok(lines.some(line => line.startsWith(`RCD_DEFER ${id}: WORKER_MEMORY_DEADLINE`)));
   }
+});
+
+test("Reader repairs can acquire memory after the source launch deadline", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const deadlines: number[] = [];
+  const acquire = runInNewContext(transpileModule(functionSource(source, "acquireChildMemory"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nacquireChildMemory", {
+    Date: { now: () => 150 }, PASS_LAUNCH_DEADLINE_MS: 100, PASS_REPAIR_DEADLINE_MS: 200,
+    ROUTINE_CHILD_TIMEOUT_MS: 1_000, childMemoryReleases: new Map(), startedSourceChildren: new Set(), ranThisPass: new Set(),
+    routineMemorySlots: { acquire: async (_id: string, deadline: number) => {
+      deadlines.push(deadline);
+      if (deadline <= 150) throw Error("WORKER_MEMORY_DEADLINE: work remains owed");
+      return () => {};
+    } },
+  });
+  await assert.rejects(acquire({ id: "source", args: ["scripts/assemble-ballot-package.mts"] }), /WORKER_MEMORY_DEADLINE/);
+  await acquire({ id: "reader", args: ["scripts/routine-civic-data-reader-repair.mts"] });
+  assert.deepEqual(deadlines, [100, 200]);
+});
+
+test("deferred Reader repairs retain completed records and account for every unfinished contract without a receipt", () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const contracts = ["ballot-contests:CA", "ballot-contests:OH"].map(id => MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === id)!);
+  const references: { contractId: string; disposition: string; receipt: unknown }[] = [], failures: unknown[] = [];
+  const settle = runInNewContext(transpileModule(functionSource(source, "settleReaderDomain"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nsettleReaderDomain", {
+    routineDeferral, parseRoutineReaderRepairRecords, reconcileRoutineReaderRepairDomain,
+    readerReadbackReferences: references, supervisorFailures: failures, safeFailure: (value: string) => value,
+    readerDomainExecutionFailure: () => ({ taskId: "domain", code: "CHILD_FAILED", detail: "reader failed" }),
+    console: { log: () => {} },
+  });
+  const domain = { id: "domain", mode: "MEETING_AGGREGATE", contracts, timeoutMs: 1000 };
+  const run = { id: "domain", status: null, signal: null, stdout: "", stderr: "", termination: "SPAWN_FAILED",
+    errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
+  settle(domain, run);
+  assert.deepEqual(references.map(row => [row.contractId, row.disposition, row.receipt]), contracts.map(row => [row.id, "BACKOFF", null]));
+  assert.equal(failures.length, 0);
+  references.length = 0;
+  const completed = serializeRoutineReaderRepairRecord(routineReaderRepairRecord(contracts[0], { ok: true,
+    value: { kind: "NO_PROMOTION", receipt: null } }));
+  settle(domain, { ...run, termination: "TIMED_OUT", stdout: completed,
+    errorMessage: "PASS_TIME_BUDGET: the pass reached its deadline; the next pass continues this work" });
+  assert.deepEqual(references.map(row => [row.contractId, row.disposition]), [[contracts[0].id, "NO_PROMOTION"], [contracts[1].id, "BACKOFF"]]);
+  assert.equal(failures.length, 0);
+  references.length = 0;
+  settle(domain, { ...run, termination: "EXITED", status: 1, errorMessage: "reader failed" });
+  assert.equal(references.length, contracts.length);
+  assert.ok(references.every(row => row.disposition === "REPAIR_FAILED"));
+  assert.ok(failures.length > 0, "an actual reader failure stays a failure");
+  const guard = source.slice(source.indexOf("const readerContractIds ="), source.indexOf("const readerReadbacksRecordedPass ="));
+  assert.throws(() => runInNewContext(guard, { readerContracts: contracts, readerReadbackReferences: [] }), /READER_REPAIR_DENOMINATOR_MISMATCH/);
 });
 
 test("an unstarted empty-output memory deadline or spent pass budget, or a child ended at the pass deadline, is a deferral", () => {

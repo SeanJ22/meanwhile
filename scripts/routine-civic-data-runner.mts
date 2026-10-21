@@ -130,6 +130,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-con
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
+  parseRoutineReaderRepairRecords,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
   selectedReaderRepairContracts,
@@ -303,7 +304,8 @@ const startedSourceChildren = new Set<string>();
 const ranThisPass = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
-  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, PASS_LAUNCH_DEADLINE_MS));
+  const deadline = script === "routine-civic-data-reader-repair.mts" ? PASS_REPAIR_DEADLINE_MS : PASS_LAUNCH_DEADLINE_MS;
+  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
@@ -1283,6 +1285,15 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
   }
   const deferral = routineDeferral(run, run.termination !== "SPAWN_FAILED");
   if (deferral !== null) {
+    const output = `${run.stdout}\n${run.stderr}`;
+    const completed = new Set(parseRoutineReaderRepairRecords(output, domain.contracts).records.map(record => record.contractId));
+    const reconciled = reconcileRoutineReaderRepairDomain({ ...domain,
+      contracts: domain.contracts.filter(contract => completed.has(contract.id)) }, output, null);
+    readerReadbackReferences.push(...reconciled.references, ...domain.contracts
+      .filter(contract => !completed.has(contract.id))
+      .map(contract => ({ contractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass,
+        scope: contract.scope, projectionId: contract.readerProjection!.id, disposition: "BACKOFF" as const, receipt: null })));
+    supervisorFailures.push(...reconciled.failures);
     console.log(`RCD_DEFER ${domain.id}: ${safeFailure(deferral)}; the reader repair remains owed`);
     return;
   }

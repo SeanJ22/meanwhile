@@ -288,7 +288,7 @@ export function narrowingFor(j: VotingJurisdiction): Narrowing {
     sentence: `The official address lookup assigns you to ${assigned[0].name}.` };
   return {
     kind: "REFUSED",
-    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published. Your precinct is on your voter card.",
+    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published.",
     rungs: j.refusal?.rungs ?? [],
   };
 }

@@ -23,7 +23,6 @@ test("VS-01 real county rows preserve precinct names; one loaded place never pro
   const result = projectVotingJurisdiction(jurisdiction, place);
   assert.ok(result.sites.some(site => site.name === "Baker Area Recreation Bldg" && site.address === "5503 HWY 4 Baker, FL 32531"));
   assert.equal(result.narrowing.kind, "REFUSED");
-  assert.match(result.narrowing.sentence, /precinct is on your voter card/);
   assert.equal(narrowingFor({ ...jurisdiction, sites: sites.slice(0, 1) }).kind, "REFUSED");
 });
 

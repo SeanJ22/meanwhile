@@ -136,7 +136,6 @@ test("VS-01: one loaded location does not prove precinct assignment", () => {
   assert.ok(single, "no single-location jurisdiction to check");
   const n = narrowingFor(single);
   assert.equal(n.kind, "REFUSED");
-  assert.match(n.sentence, /voter card/);
 });
 
 test("B16: several locations and no current geometry REFUSES, with rungs", () => {
@@ -146,7 +145,6 @@ test("B16: several locations and no current geometry REFUSES, with rungs", () =>
   assert.ok(many, "no multi-location NJ jurisdiction to check");
   const n = narrowingFor(many);
   assert.equal(n.kind, "REFUSED");
-  assert.match(n.sentence, /voter card/);
   assert.ok(
     !/probably|likely|closest|nearest/i.test(n.sentence),
     "a refusal that hints at an answer is a guess with a disclaimer",

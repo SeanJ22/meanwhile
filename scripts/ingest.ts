@@ -709,6 +709,7 @@ async function main() {
         meetingPartitions: partitions.map((partition) => ({
           sourceName: partition.meetingSource,
           bodyId: partition.bodyId,
+          route: partition.wiring?.config.partitionRoute,
         })),
       })
     : SOURCES[name](state);

@@ -7,7 +7,7 @@ import type { BallotSet } from "../lib/ballot/types.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import { saveVotingSourceDoor } from "../lib/ballot/voting-source-publication.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
-import { ADMIN_CONFIG_ID, defaultAdminConfig, withDiscoverySearch, withFleetSpendCeiling } from "../lib/control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig, withFleetSpendCeiling } from "../lib/control-plane/gateway/admin-config.ts";
 import { seedRolePlaybooks } from "../lib/control-plane/playbook-seed.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { WORKER_CREDENTIAL_VAR } from "../lib/control-plane/scheduler/research-policy.ts";
@@ -52,8 +52,8 @@ if (fromState) {
   selections.splice(0, at);
 }
 const plan = { mode: "ISOLATED_LOCAL_COPY", run, selections, nationwideHeldMeasures,
-  controls: { rolling24HourModelCeilingUsd: 100, paidPause: false, runnerPause: false, discoverySearch: true, apiFallback: false },
-  controlBasis: "Sean's supplied live control values copied locally, with the paid pause cleared only in this isolated copy. Other live control settings were unavailable.",
+  controls: { rolling24HourModelCeilingUsd: 100, paidPause: false, runnerPause: false, apiFallback: false },
+  controlBasis: "Sean's supplied model ceiling copied locally, with the paid pause cleared only in this isolated copy. Other controls retain their defaults; this script makes no search calls.",
   publication: "Memory only; no production reader data or live Admin setting is written." };
 console.log("MEASURE_TRANSLATION_COST_PLAN=" + JSON.stringify(plan));
 if (!run) process.exit(0);
@@ -70,9 +70,9 @@ process.env.WTP_VAULT_PROVIDER = "local";
 const repos = await createFileRepositories(join(output, "control-plane"));
 const observedAt = now();
 if (await repos.adminConfig.read(ADMIN_CONFIG_ID)) throw new Error("The output already contains a control copy; choose a fresh --output directory.");
-const config = withDiscoverySearch(withFleetSpendCeiling(defaultAdminConfig(observedAt), {
+const config = withFleetSpendCeiling(defaultAdminConfig(observedAt), {
   rollingCeilingUsd: 100, previousUsd: 100, decidedAt: observedAt, decidedBy: "Sean", receiptId: "isolated-cost-check-ceiling",
-}), { enabled: true, decidedAt: observedAt, decidedBy: "Sean", receiptId: "isolated-cost-check-search" });
+});
 await repos.adminConfig.put(ADMIN_CONFIG_ID, config, observedAt);
 await seedRolePlaybooks(repos, observedAt);
 await writeFile(join(output, "plan.json"), JSON.stringify({ ...plan, credentialVariable: keyVariable, output }, null, 2) + "\n");

@@ -223,14 +223,14 @@ test("a crashed task is a successful cycle's recorded attempt, and its next offe
   assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), true, "offered again after its hour");
 });
 
-test("source refreshes are admitted daily without a Send and retry failed sources hourly", () => {
+test("source refreshes use their standing clocks without a Send and retry failed sources hourly", () => {
   const now = Date.parse("2026-09-30T12:00:00Z");
   for (const task of AUTOMATIC_REFRESH_TASKS) {
     assert.equal(task.ownerInvocation, undefined);
     assert.equal(automaticRefreshContract(task.id), task.id);
     assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
     assert.equal(routineTaskDue(task, undefined, now), true);
-    const checked = "2026-09-29T12:00:00Z";
+    const checked = task.id.startsWith("voting-sites:") ? "2026-09-30T00:00:00Z" : "2026-09-29T12:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
     const failed = "2026-09-30T11:00:00Z";

@@ -6,8 +6,7 @@
  */
 import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { refreshDoorsForPass } from "../lib/doors/install.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
@@ -70,11 +69,10 @@ const store = stage
   : new PostgresRoutineDataStore();
 
 step = "reading the meeting doors";
-if (meetingAggregate || contractId?.startsWith("meetings:")) {
-  // The runner lists meeting partitions from the door registry, so this child reads back the same list.
-  const connection = controlPlaneUrlFromEnv();
-  const doors = connection ? await refreshDoorsForPass((await createPgRepositories(connection, observedAt, { skipBootstrap: true })).doors) : null;
-  if (!doors || doors.reason) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors?.reason ?? "the door registry is not configured"}`);
+{
+  // The meeting partitions read back here are the published doors' partitions; other contracts do not need them.
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready && (meetingAggregate || contractId?.startsWith("meetings:"))) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 }
 
 let failed = false;

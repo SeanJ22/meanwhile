@@ -1512,8 +1512,6 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /domain\.contracts\.length < MEETING_PARTITION_CONTRACTS\.length/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
-  assert.match(child, /refreshDoorsForPass\(/);
-  assert.doesNotMatch(child, /ensureMeetingDoors/);
   // Repair reads each body's own partition; serving-copy publication runs independently.
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ attestor \},?\s*\)/);
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);

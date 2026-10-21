@@ -414,6 +414,23 @@ const requests = serverReaderValue("place-requests", () => new WeakMap<object, M
 /** Reuse one place read within a request; concurrent requests share only work still in progress. */
 export function readPlacePackage(input: PlaceInput, query?: Query | null): Promise<PlacePackage> {
   if (query !== undefined || currentReaderAuthorityEdge()) return loadPlacePackage(input, query === undefined ? factReader() : query);
+  return readCachedPlacePackage(input, () => {
+    const socket=readerDatabaseQuery();
+    return socket ? statementQuery(socket) : factReader();
+  });
+}
+
+/** A one-shot API read avoids opening a socket session after database suspension. */
+export function readPlacePackageHttp(input: PlaceInput): Promise<PlacePackage> {
+  if(currentReaderAuthorityEdge())return loadPlacePackage(input,factReader());
+  return readCachedPlacePackage(input,()=>{
+    installDatabaseTransferCounter();
+    const http=factReader(),socket=http ? null : readerDatabaseQuery();
+    return http ?? (socket ? statementQuery(socket) : null);
+  });
+}
+
+function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<PlacePackage> {
   const selected = { state: input.state.toUpperCase(), divisionIds: [...new Set(input.divisionIds)].sort(), bodyIds: [...new Set(input.bodyIds ?? [])].sort(),
     allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false,
     meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false };
@@ -422,10 +439,7 @@ export function readPlacePackage(input: PlaceInput, query?: Query | null): Promi
   if (selection && !request) { request = new Map(); requests.set(selection, request); }
   const prior = request?.get(key) ?? places.get(key);
   if (prior) { request?.set(key, prior); return prior; }
-  // This is one statement; HTTP avoids opening a socket session after database suspension.
-  installDatabaseTransferCounter();
-  const http = factReader(), socket = http ? null : readerDatabaseQuery();
-  const read = loadPlacePackage(selected, http ?? (socket ? statementQuery(socket) : null));
+  const read = loadPlacePackage(selected,query());
   request?.set(key, read);
   places.set(key, read);
   const settled = () => { if (places.get(key) === read) places.delete(key); };

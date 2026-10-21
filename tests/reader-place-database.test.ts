@@ -4,7 +4,7 @@ import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import {BOOTSTRAP_DDL} from "../lib/control-plane/repository/pg-schema.ts";
 import {installFactReader} from "../lib/facts/db.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
-import {PLACE_PACKAGE_SQL,readPlacePackage} from "../lib/reader/place.ts";
+import {PLACE_PACKAGE_SQL,readPlacePackage,readPlacePackageHttp} from "../lib/reader/place.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
 
 test("place reads preserve the migrated state type, use the existing one-shot client and share request work",async()=>{
@@ -25,13 +25,14 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
     installFactReader(async(text,params=[])=>{reads++;await held;return(await pg.query<Record<string,unknown>>(text,[...params])).rows;});
     installReaderDatabaseQuery(async()=>{throw new Error("A one-shot place read must not open a socket session")});
     await withReaderSelection({states:["AZ"],keys:new Set(input.divisionIds)},async()=>{
-      const first=readPlacePackage(input);
-      assert.equal(readPlacePackage(input),first);
+      const first=readPlacePackageHttp(input);
+      assert.equal(readPlacePackageHttp(input),first);
+      assert.equal(readPlacePackage(input),first,"other readers share the same in-flight query");
       assert.equal(reads,1);release();
       assert.deepEqual((await first).meetings,[]);
-      assert.equal(readPlacePackage(input),first,"a request keeps its settled answer");
+      assert.equal(readPlacePackageHttp(input),first,"a request keeps its settled answer");
     });
-    await withReaderSelection({states:["AZ"],keys:new Set(input.divisionIds)},()=>readPlacePackage(input));
+    await withReaderSelection({states:["AZ"],keys:new Set(input.divisionIds)},()=>readPlacePackageHttp(input));
     assert.equal(reads,2,"a later request checks current facts again");
   }finally{release();installFactReader(undefined);installReaderDatabaseQuery(undefined);await pg.close();}
 });

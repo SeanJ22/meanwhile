@@ -1,0 +1,536 @@
+{
+  "at": "2026-10-21T04:26:36.980213+00:00",
+  "production_read_only": true,
+  "production_writes": 0,
+  "admin_settings_writes": 0,
+  "code_scope": "Hunters, meetings-discovery provider, route executor and named standing route workers; original shared Box publisher and reader/Admin code",
+  "source_states_and_dc": 51,
+  "source_runs": 69,
+  "source_http_requests": 2828,
+  "provider_usd": 0,
+  "findings_reported": 5067,
+  "distinct_box_findings": 4570,
+  "findings_passed_check": 884,
+  "additional_native_fact_rows": 302,
+  "reader_bodies": 96,
+  "reader_roster_entries": 58,
+  "blanks_worked": 417,
+  "source_worker_active_seconds": 1114.434,
+  "validation_worker_active_seconds": 211.75,
+  "peak_fresh_source_worker_rss_bytes": 621502464,
+  "peak_saved_source_worker_rss_bytes": 384237568,
+  "peak_isolated_pglite_validation_rss_bytes": 1173782528,
+  "production_observed_at": "2026-10-21T03:49:15.663Z",
+  "production_noncampaign_facts_last24h": 5,
+  "production_facts_per_hour_today": 0.20833333333333334,
+  "actual_exa": {
+    "findings": 0,
+    "passed_check": 0,
+    "native_reader_fact_rows": 0,
+    "usd": 0,
+    "usd_per_native_reader_fact": null
+  },
+  "exa_high_effort_documented_base_usd_per_place": 0.5,
+  "actual_exa_cost_is_provider_reported_and_can_exceed_base": true,
+  "metered_production": {
+    "reader": {
+      "requestBytes": 799593,
+      "responseBytes": 3764015,
+      "httpRequests": 910,
+      "socketFrames": 0
+    },
+    "control-plane": {
+      "requestBytes": 9036,
+      "responseBytes": 20242,
+      "httpRequests": 31,
+      "socketFrames": 0
+    }
+  },
+  "metered_copy_and_initial_misconfigured_parity": {
+    "reader-copy": {
+      "requestBytes": 9750032,
+      "responseBytes": 104122308,
+      "httpRequests": 1482,
+      "socketFrames": 27014
+    },
+    "control-copy": {
+      "requestBytes": 16722753,
+      "responseBytes": 410240050,
+      "httpRequests": 4924,
+      "socketFrames": 0
+    }
+  },
+  "metered_copy_by_process": {
+    "149986:hn:reader-copy": {
+      "requestBytes": 142267,
+      "responseBytes": 779243
+    },
+    "150181:live:reader-copy": {
+      "requestBytes": 53158,
+      "responseBytes": 469830
+    },
+    "151082:hn:reader-copy": {
+      "requestBytes": 1493856,
+      "responseBytes": 51074939
+    },
+    "151129:live:reader-copy": {
+      "requestBytes": 1481951,
+      "responseBytes": 45920609
+    },
+    "151082:hn:control-copy": {
+      "requestBytes": 85248,
+      "responseBytes": 195617346
+    },
+    "151129:live:control-copy": {
+      "requestBytes": 80856,
+      "responseBytes": 195614640
+    },
+    "155246:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1164
+    },
+    "155246:copy-source-worker:control-copy": {
+      "requestBytes": 3628,
+      "responseBytes": 173313
+    },
+    "155259:copy-source-worker:control-copy": {
+      "requestBytes": 3119112,
+      "responseBytes": 3375200
+    },
+    "155259:copy-source-worker:reader-copy": {
+      "requestBytes": 3952,
+      "responseBytes": 28748
+    },
+    "155297:copy-source-worker:control-copy": {
+      "requestBytes": 620,
+      "responseBytes": 1897
+    },
+    "155446:copy-source-worker:control-copy": {
+      "requestBytes": 105,
+      "responseBytes": 22591
+    },
+    "155542:copy-source-worker:reader-copy": {
+      "requestBytes": 259,
+      "responseBytes": 582
+    },
+    "155542:copy-source-worker:control-copy": {
+      "requestBytes": 1271,
+      "responseBytes": 2188
+    },
+    "155669:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1164
+    },
+    "155669:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 50924
+    },
+    "155682:copy-source-worker:control-copy": {
+      "requestBytes": 4413775,
+      "responseBytes": 4913617
+    },
+    "155682:copy-source-worker:reader-copy": {
+      "requestBytes": 3952,
+      "responseBytes": 28748
+    },
+    "156888:copy-source-worker:control-copy": {
+      "requestBytes": 617,
+      "responseBytes": 1544
+    },
+    "157195:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1266
+    },
+    "157195:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 53375
+    },
+    "157208:copy-source-worker:control-copy": {
+      "requestBytes": 3719768,
+      "responseBytes": 4135048
+    },
+    "157208:copy-source-worker:reader-copy": {
+      "requestBytes": 6817,
+      "responseBytes": 30073
+    },
+    "157314:copy-source-worker:control-copy": {
+      "requestBytes": 386,
+      "responseBytes": 90635
+    },
+    "157314:copy-source-worker:reader-copy": {
+      "requestBytes": 45906,
+      "responseBytes": 33967
+    },
+    "158171:copy-source-worker:control-copy": {
+      "requestBytes": 596,
+      "responseBytes": 449
+    },
+    "158210:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1368
+    },
+    "158210:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 29715
+    },
+    "158223:copy-source-worker:control-copy": {
+      "requestBytes": 2724798,
+      "responseBytes": 3051191
+    },
+    "158223:copy-source-worker:reader-copy": {
+      "requestBytes": 8269,
+      "responseBytes": 32279
+    },
+    "158583:copy-source-worker:control-copy": {
+      "requestBytes": 710,
+      "responseBytes": 29210
+    },
+    "158583:copy-source-worker:reader-copy": {
+      "requestBytes": 40081,
+      "responseBytes": 32177
+    },
+    "158642:copy-source-worker:control-copy": {
+      "requestBytes": 710,
+      "responseBytes": 29210
+    },
+    "158642:copy-source-worker:reader-copy": {
+      "requestBytes": 40081,
+      "responseBytes": 32177
+    },
+    "158906:copy-source-worker:reader-copy": {
+      "requestBytes": 523,
+      "responseBytes": 1606
+    },
+    "158906:copy-source-worker:control-copy": {
+      "requestBytes": 3678,
+      "responseBytes": 73481
+    },
+    "158919:copy-source-worker:control-copy": {
+      "requestBytes": 2554331,
+      "responseBytes": 2879132
+    },
+    "158919:copy-source-worker:reader-copy": {
+      "requestBytes": 14144,
+      "responseBytes": 34456
+    },
+    "159274:copy-source-worker:control-copy": {
+      "requestBytes": 1510,
+      "responseBytes": 95344
+    },
+    "159274:copy-source-worker:reader-copy": {
+      "requestBytes": 56218,
+      "responseBytes": 42710
+    },
+    "159424:copy-source-worker:reader-copy": {
+      "requestBytes": 33589,
+      "responseBytes": 45114
+    },
+    "213580:copy-source-worker:reader-copy": {
+      "requestBytes": 137075,
+      "responseBytes": 104640
+    },
+    "213756:copy-source-worker:reader-copy": {
+      "requestBytes": 71478,
+      "responseBytes": 82402
+    },
+    "213757:copy-source-worker:reader-copy": {
+      "requestBytes": 71530,
+      "responseBytes": 82496
+    },
+    "213856:copy-source-worker:reader-copy": {
+      "requestBytes": 117237,
+      "responseBytes": 99119
+    },
+    "213835:copy-source-worker:reader-copy": {
+      "requestBytes": 73702,
+      "responseBytes": 123764
+    },
+    "213943:copy-source-worker:reader-copy": {
+      "requestBytes": 107346,
+      "responseBytes": 96971
+    },
+    "213960:copy-source-worker:reader-copy": {
+      "requestBytes": 71754,
+      "responseBytes": 82754
+    },
+    "214017:copy-source-worker:reader-copy": {
+      "requestBytes": 71588,
+      "responseBytes": 82576
+    },
+    "214038:copy-source-worker:reader-copy": {
+      "requestBytes": 71582,
+      "responseBytes": 82566
+    },
+    "214101:copy-source-worker:reader-copy": {
+      "requestBytes": 270168,
+      "responseBytes": 182202
+    },
+    "214122:copy-source-worker:reader-copy": {
+      "requestBytes": 156669,
+      "responseBytes": 119641
+    },
+    "214222:copy-source-worker:reader-copy": {
+      "requestBytes": 300748,
+      "responseBytes": 186089
+    },
+    "214270:copy-source-worker:reader-copy": {
+      "requestBytes": 77524,
+      "responseBytes": 84485
+    },
+    "214413:copy-source-worker:reader-copy": {
+      "requestBytes": 75364,
+      "responseBytes": 84231
+    },
+    "214434:copy-source-worker:reader-copy": {
+      "requestBytes": 71478,
+      "responseBytes": 82832
+    },
+    "214455:copy-source-worker:reader-copy": {
+      "requestBytes": 90061,
+      "responseBytes": 90775
+    },
+    "214476:copy-source-worker:reader-copy": {
+      "requestBytes": 88602,
+      "responseBytes": 88076
+    },
+    "214562:copy-source-worker:reader-copy": {
+      "requestBytes": 71543,
+      "responseBytes": 82955
+    },
+    "214583:copy-source-worker:reader-copy": {
+      "requestBytes": 71530,
+      "responseBytes": 82512
+    },
+    "214604:copy-source-worker:reader-copy": {
+      "requestBytes": 260942,
+      "responseBytes": 168718
+    },
+    "214625:copy-source-worker:reader-copy": {
+      "requestBytes": 71517,
+      "responseBytes": 82881
+    },
+    "215246:copy-source-worker:reader-copy": {
+      "requestBytes": 71616,
+      "responseBytes": 80714
+    },
+    "215449:copy-source-worker:reader-copy": {
+      "requestBytes": 71781,
+      "responseBytes": 82905
+    },
+    "216014:copy-source-worker:reader-copy": {
+      "requestBytes": 71547,
+      "responseBytes": 80651
+    },
+    "216165:copy-source-worker:reader-copy": {
+      "requestBytes": 88544,
+      "responseBytes": 88061
+    },
+    "217118:copy-source-worker:reader-copy": {
+      "requestBytes": 71517,
+      "responseBytes": 82471
+    },
+    "217288:copy-source-worker:reader-copy": {
+      "requestBytes": 591842,
+      "responseBytes": 337594
+    },
+    "217531:copy-source-worker:reader-copy": {
+      "requestBytes": 72028,
+      "responseBytes": 83689
+    },
+    "218261:copy-source-worker:reader-copy": {
+      "requestBytes": 77785,
+      "responseBytes": 85459
+    },
+    "218795:copy-source-worker:reader-copy": {
+      "requestBytes": 71491,
+      "responseBytes": 82475
+    },
+    "218870:copy-source-worker:reader-copy": {
+      "requestBytes": 74328,
+      "responseBytes": 100200
+    },
+    "219263:copy-source-worker:reader-copy": {
+      "requestBytes": 76692,
+      "responseBytes": 100375
+    },
+    "219519:copy-source-worker:reader-copy": {
+      "requestBytes": 113385,
+      "responseBytes": 112760
+    },
+    "219744:copy-source-worker:reader-copy": {
+      "requestBytes": 236582,
+      "responseBytes": 163597
+    },
+    "219974:copy-source-worker:reader-copy": {
+      "requestBytes": 71586,
+      "responseBytes": 80672
+    },
+    "220986:copy-source-worker:reader-copy": {
+      "requestBytes": 71478,
+      "responseBytes": 82412
+    },
+    "221022:copy-source-worker:reader-copy": {
+      "requestBytes": 99595,
+      "responseBytes": 94734
+    },
+    "221525:copy-source-worker:reader-copy": {
+      "requestBytes": 77720,
+      "responseBytes": 84620
+    },
+    "221643:copy-source-worker:reader-copy": {
+      "requestBytes": 71679,
+      "responseBytes": 80735
+    },
+    "222670:copy-source-worker:reader-copy": {
+      "requestBytes": 71697,
+      "responseBytes": 80749
+    },
+    "222687:copy-source-worker:reader-copy": {
+      "requestBytes": 88584,
+      "responseBytes": 90242
+    },
+    "223199:copy-source-worker:reader-copy": {
+      "requestBytes": 187568,
+      "responseBytes": 141553
+    },
+    "223242:copy-source-worker:reader-copy": {
+      "requestBytes": 71478,
+      "responseBytes": 82412
+    },
+    "224451:copy-source-worker:reader-copy": {
+      "requestBytes": 84274,
+      "responseBytes": 86682
+    },
+    "224568:copy-source-worker:reader-copy": {
+      "requestBytes": 71491,
+      "responseBytes": 82439
+    },
+    "225250:copy-source-worker:reader-copy": {
+      "requestBytes": 568067,
+      "responseBytes": 312162
+    },
+    "225302:copy-source-worker:reader-copy": {
+      "requestBytes": 110039,
+      "responseBytes": 97680
+    },
+    "225935:copy-source-worker:reader-copy": {
+      "requestBytes": 138092,
+      "responseBytes": 116928
+    },
+    "226936:copy-source-worker:reader-copy": {
+      "requestBytes": 71633,
+      "responseBytes": 80693
+    },
+    "226982:copy-source-worker:reader-copy": {
+      "requestBytes": 71504,
+      "responseBytes": 82832
+    },
+    "227415:copy-source-worker:reader-copy": {
+      "requestBytes": 307856,
+      "responseBytes": 198907
+    }
+  },
+  "all_database_bytes_known": false,
+  "unmetered_read": "Initial production baseline occurred before instrumentation; approximately 121 KB saved output is not wire-byte measurement.",
+  "copy_runs": [
+    {
+      "at": "2026-10-20T17:24:40.646Z",
+      "workItemId": "wi-0ead87d316a39ea54cf321e4",
+      "pids": [
+        155682
+      ],
+      "httpRequests": 55,
+      "elapsedMs": 67612,
+      "boxRows": 38,
+      "outcome": "FAILED",
+      "peakWorkerRssBytes": 243507200
+    },
+    {
+      "at": "2026-10-20T17:34:02.276Z",
+      "workItemId": "wi-b5fc1ba41d538860c40d7330",
+      "pids": [
+        157208
+      ],
+      "httpRequests": 57,
+      "elapsedMs": 67505,
+      "boxRows": 38,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 233373696
+    },
+    {
+      "at": "2026-10-20T17:58:53.472Z",
+      "workItemId": "wi-721d979d1156922f08f2c4ec",
+      "pids": [
+        158223
+      ],
+      "httpRequests": 50,
+      "elapsedMs": 73696,
+      "boxRows": 13,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 215797760
+    },
+    {
+      "at": "2026-10-20T18:02:58.437Z",
+      "workItemId": "wi-53a2c06eed0c083504536369",
+      "pids": [
+        158919
+      ],
+      "httpRequests": 55,
+      "elapsedMs": 73837,
+      "boxRows": 47,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 218251264
+    },
+    {
+      "at": "2026-10-20T17:08:24.473Z",
+      "workItemId": "wi-6548d0d2ad0ba34014f6c74e",
+      "pids": [
+        155259
+      ],
+      "httpRequests": 37,
+      "elapsedMs": 68729,
+      "boxRows": 101,
+      "outcome": "WORKED",
+      "peakWorkerRssBytes": 360022016
+    }
+  ],
+  "all_observed_civic_http_requests": 6009,
+  "actual_production_facts_added": 0,
+  "additional_rows_per_active_source_and_validation_hour": 819.7957447835294,
+  "metered_production_response_bytes": 3784257,
+  "metered_copy_response_bytes": 514362358,
+  "total_metered_database_response_bytes": 518146615,
+  "reader_production_transfer_usd_at_010_per_gb": 0.0003764015,
+  "all_metered_reader_labeled_transfer_usd_at_010_per_gb": 0.0107886323,
+  "production_copy_all_states": {
+    "source_pages_replayed": 1292,
+    "findings_reported": 5067,
+    "distinct_box_findings": 4570,
+    "findings_passed_check": 884,
+    "bodies_added": 95,
+    "bodies_updated": 1,
+    "meetings_added": 0,
+    "reader_bodies_added": 95,
+    "reader_meetings_added": 0,
+    "additional_native_fact_rows": 300,
+    "source_http_requests_this_replay": 0,
+    "provider_usd": 0,
+    "validation_worker_seconds": 1887.984,
+    "database_request_bytes": 6322917,
+    "database_response_bytes": 5530088,
+    "peak_worker_rss_bytes": 528723968
+  },
+  "production_copy_all_states_evidence": "production-copy-state.json",
+  "original_nationwide_yield_environment": "Isolated databases built from all real migrations; distinct from the actual Neon production-copy replay.",
+  "research_control": [
+    {
+      "action": "RESUME",
+      "requested_at": "2026-10-20T23:05:47.345Z"
+    },
+    {
+      "action": "RESUME_RUNNER",
+      "requested_at": "2026-10-01T22:41:01.226Z"
+    }
+  ],
+  "final_source_sha": "949315355985e6ac5e4f25f772ddc8db8814ed30"
+}

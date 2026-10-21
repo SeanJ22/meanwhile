@@ -1,0 +1,62 @@
+[
+  {
+    "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+    "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+    "retrievedAt": "2026-10-21T00:31:05.906Z",
+    "httpStatus": 200,
+    "rawHash": "1e350a5e2371ceed9baccd505f6dd2152bf84e9cae18749bffaa6288f507bffc",
+    "name": "id-magistrate-retention",
+    "file": "id-magistrate-retention.gz",
+    "textSnapshot": "id-magistrate-retention.txt",
+    "textHash": "ebda897154030e7a8ecb1b21f2800fb0487988415a687265513465740eedf37d",
+    "bytes": 94554
+  },
+  {
+    "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH6/SECT34-617/",
+    "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH6/SECT34-617/",
+    "retrievedAt": "2026-10-21T00:33:23.002Z",
+    "httpStatus": 200,
+    "rawHash": "7754280a7ba7fe8cccd42b7e3c5f7e285a5541dfec4b34e81a1c6e6f43e271e6",
+    "name": "id-county-election-law",
+    "file": "id-county-election-law.gz",
+    "textSnapshot": "id-county-election-law.txt",
+    "textHash": "5084c975474bd287b49bcac85dabc467f0330c332ac63a03736c4aecb2c908d0",
+    "bytes": 92287
+  },
+  {
+    "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title40/T40CH14/SECT40-1404A/",
+    "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title40/T40CH14/SECT40-1404A/",
+    "retrievedAt": "2026-10-21T00:31:57.524Z",
+    "httpStatus": 200,
+    "rawHash": "6901af39e17ca27f903aa0add2607bce25d80028675179bd0862746969276422",
+    "name": "id-highway-codified",
+    "file": "id-highway-codified.gz",
+    "textSnapshot": "id-highway-codified.txt",
+    "textHash": "93db03e08652550d4e77e8f6314886cc0d0bc48f13fa20bb67aef3abf445e16c",
+    "bytes": 94190
+  },
+  {
+    "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH8/SECT1-805/",
+    "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH8/SECT1-805/",
+    "retrievedAt": "2026-10-21T00:36:50.639Z",
+    "httpStatus": 200,
+    "rawHash": "4f740683c9b310c577c543622f047a26a34341d1fd37dd9588cc7410f68469e7",
+    "name": "id-fourth-district-scope",
+    "file": "id-fourth-district-scope.gz",
+    "textSnapshot": "id-fourth-district-scope.txt",
+    "textHash": "93fe48d2dcd74fa56fc8e09e536dbd05c5cc6e482f406a7acc9821996d96b377",
+    "bytes": 92210
+  },
+  {
+    "sourceUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtV/Sect11/",
+    "finalUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtV/Sect11/",
+    "retrievedAt": "2026-10-21T00:36:50.122Z",
+    "httpStatus": 200,
+    "rawHash": "64658afc6d7915c1a3c4bfacacb3679854870abaa015aa12313325e12ca980f1",
+    "name": "id-judicial-elections-constitution",
+    "file": "id-judicial-elections-constitution.gz",
+    "textSnapshot": "id-judicial-elections-constitution.txt",
+    "textHash": "ce3544e4453c9d489123299ea01225daa2d1a5bdc0834e7b8830118ed7988898",
+    "bytes": 90569
+  }
+]

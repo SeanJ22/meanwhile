@@ -1,0 +1,28 @@
+{
+  "url": "https://www.townofbearcreek.org/Elections/",
+  "finalUrl": "https://www.townofbearcreek.org/Elections/",
+  "publisher": "Town of Bear Creek / Waupaca County Clerk",
+  "file": "race-schedule.html.gz",
+  "textFile": "race-schedule.txt",
+  "retrievedAt": "2026-10-21T00:31:13.689385+00:00",
+  "rawHash": "33f37b9b54ed62fab0c00580ee658ed3b6f03ebb378b2cac71fd7ef133ff7e47",
+  "publishedAt": "2026-03-20",
+  "officialLinkingUrl": "https://public4.co.waupaca.wi.us/CountyDirectory",
+  "officialLinkingCapture": {
+    "url": "https://public4.co.waupaca.wi.us/CountyDirectory",
+    "finalUrl": "https://public4.co.waupaca.wi.us/CountyDirectory",
+    "file": "race-schedule-government-chain.html.gz",
+    "textFile": "race-schedule-government-chain.txt",
+    "retrievedAt": "2026-10-21T00:32:02.985902+00:00",
+    "rawHash": "5b0b5b448964562bf4245008c36ccea1b788a81c306d355f32cbafc5b0db3ebd"
+  },
+  "method": "Exact government-published Type A election notice. The notice expressly schedules eight Representatives in Congress, seventeen State Senators, ninety-nine Assembly representatives and five constitutional officers for November 3, 2026. The five constitutional offices normalize to four contests because the governor and lieutenant governor are printed as joint tickets in the preserved Kenosha sample. Incumbent names in this March notice are never imported as candidates. Waupaca County public-official directory establishes the official Town of Bear Creek website.",
+  "regularCoreRaceDenominator": 128,
+  "components": {
+    "house": 8,
+    "stateSenate": 17,
+    "stateAssembly": 99,
+    "normalizedStatewide": 4
+  },
+  "candidateDenominatorVerified": false
+}

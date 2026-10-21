@@ -1,4 +1,6 @@
-import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead } from "@/lib/ballot/reader-data";
+import {Suspense} from "react";
+import {preload as preloadResource} from "react-dom";
+import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -112,6 +114,7 @@ import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 import {
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
+  candidateProfilesReadState,
 } from "@/lib/civic-data/manual-read-models";
 import {
   settleBallotNavigationRead,
@@ -280,6 +283,7 @@ async function BallotBattlecard({
   context,
   authorityAvailability,
   readerSelection,
+  stanceTopics,
 }: {
   name: string;
   partyLine: React.ReactNode;
@@ -306,6 +310,7 @@ async function BallotBattlecard({
   authorityAvailability: BallotAuthorityAvailability;
 
   readerSelection: ReaderSelection | undefined;
+  stanceTopics: ReturnType<typeof readStanceTopics>;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
   const recordHolder = resolvedStanding?.holderFor.get(targetKey) ?? null;
@@ -324,7 +329,7 @@ async function BallotBattlecard({
   if (!positionsUnavailable) {
     try {
       positions = await withBallotReader(readerSelection, async () =>
-        positionsFor(state, targetKey, null, await readStanceTopics(), recordHolder?.id));
+        positionsFor(state, targetKey, null, await stanceTopics, recordHolder?.id));
     } catch {
       positionsUnavailable = true;
     }
@@ -460,6 +465,7 @@ export default readerRoute("/ballot", async function BallotPage({
 }) {
   const place = ballotPlaceFromParams(await searchParams);
   const { zip, centroid } = place;
+  const ballotRead = (async () => {
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 
   let set: BallotSet | null = null;
@@ -477,10 +483,10 @@ export default readerRoute("/ballot", async function BallotPage({
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
   void pointDivisionsRead.catch(() => undefined);
   const readerData = await readBallotReaderData(place);
+  const stanceTopics = readStanceTopics();
+  void stanceTopics.catch(()=>undefined);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
   if (centroid && knownState) {
-    startRead("candidate-profiles", () => settleCandidateProfilesRead(knownState));
-    startRead("candidate-publications", () => settleCandidateCorpusRead(knownState));
     startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
     startRead("federal-directory", settleFederalDirectoryRead);
     startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
@@ -536,8 +542,28 @@ export default readerRoute("/ballot", async function BallotPage({
     auxiliaryPreloads.set(family, startRead(family, read));
   if (centroid) preload("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
-    preload("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
-    preload("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
+    const candidateDetails = readerData ? primeBallotCandidateDetails(set,matched.contests) : Promise.resolve();
+    void candidateDetails.catch(() => {});
+    preload("candidate-profiles", async () => {
+      await candidateDetails;
+      const version = await settleCandidateProfilesRead(set!.election.state);
+      const read = candidateProfilesReadState(set!.election.state);
+      if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+        // Fetch the leading portraits while the independent money/office reads
+        // finish, instead of discovering them after the streamed cards lay out.
+        let portraits=0;
+        leadingPortraits: for (const contest of matched!.contests.filter(contest=>contest.type==="CANDIDACY")) {
+          const lineup = lineupForContest(set!.election.state,contest.id);
+          const keys = lineup ? lineup.nominees.map(n=>`${contest.id}|${n.name}`) : candidatesOf(set!,contest).map(c=>c.id);
+          for (const key of keys) {
+            const photo=read.value.cards.cards[key]?.photoUrl;
+            if(photo){preloadResource(photo,{as:"image"});if(++portraits===5)break leadingPortraits;}
+          }
+        }
+      }
+      return version;
+    });
+    preload("candidate-publications", async () => { await candidateDetails; return settleCandidateCorpusRead(set!.election.state); });
     preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
       preload("federal-directory", settleFederalDirectoryRead);
@@ -558,7 +584,7 @@ export default readerRoute("/ballot", async function BallotPage({
       preload(
         "state-money",
         async () => {
-          if (readerData) await primeBallotStateMoneyRead(state);
+          if (readerData) await primeBallotStateMoneyRead(state,set!,matched.contests.filter(contest=>!isFederalContest(contest)));
           return settleStateMoneyRead(state);
         },
       );
@@ -581,6 +607,46 @@ export default readerRoute("/ballot", async function BallotPage({
     return [contest.id, result] as const;
   })));
 
+  const measureContests = orderMeasures(
+    matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
+  );
+
+  const askSubjects: {
+    id: string;
+    name: string;
+    kind: "CONTEST" | "MEASURE" | "PERSON";
+  }[] = [
+    ...candidacyContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "CONTEST" as const,
+    })),
+    ...measureContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "MEASURE" as const,
+    })),
+
+    ...(set
+      ? candidacyContests.flatMap((c) =>
+          candidatesOf(set, c).map((k) => ({
+            id: k.id,
+            name: [k.givenName, k.familyName].filter(Boolean).join(" "),
+            kind: "PERSON" as const,
+          })),
+        )
+      : []),
+
+    ...candidacyContests.flatMap((c) =>
+      (lineupForContest(set!.election.state, c.id)?.nominees ?? []).map((n) => ({
+        id: `${c.id}|${n.name}`,
+        name: n.name,
+        kind: "PERSON" as const,
+      })),
+    ),
+  ].filter((v) => v.name.length > 0);
+
+  const contents = (async () => {
   const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
   const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
     .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
@@ -636,9 +702,7 @@ export default readerRoute("/ballot", async function BallotPage({
   const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
 
   const measureRecords = set ? measureRecordsForBallot(set) : [];
-  const measureContests = orderMeasures(
-    matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
-  );
+
 
   const measureFor = (contestId: string): Measure | null =>
     set?.measures.find((m) => m.contestId === contestId) ?? null;
@@ -652,40 +716,7 @@ export default readerRoute("/ballot", async function BallotPage({
     (c) => !isStatewideDivision(c.ocdId),
   );
 
-  const askSubjects: {
-    id: string;
-    name: string;
-    kind: "CONTEST" | "MEASURE" | "PERSON";
-  }[] = [
-    ...candidacyContests.map((c) => ({
-      id: c.id,
-      name: c.title,
-      kind: "CONTEST" as const,
-    })),
-    ...measureContests.map((c) => ({
-      id: c.id,
-      name: c.title,
-      kind: "MEASURE" as const,
-    })),
 
-    ...(set
-      ? candidacyContests.flatMap((c) =>
-          candidatesOf(set, c).map((k) => ({
-            id: k.id,
-            name: [k.givenName, k.familyName].filter(Boolean).join(" "),
-            kind: "PERSON" as const,
-          })),
-        )
-      : []),
-
-    ...candidacyContests.flatMap((c) =>
-      (lineupForContest(set!.election.state, c.id)?.nominees ?? []).map((n) => ({
-        id: `${c.id}|${n.name}`,
-        name: n.name,
-        kind: "PERSON" as const,
-      })),
-    ),
-  ].filter((v) => v.name.length > 0);
 
   const pickableContests =
     set && matched
@@ -733,37 +764,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
   return (
 
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
-      <BallotCapture zip={zip} />
-      <div className="ballot-page-chrome flex items-center justify-between gap-3">
-        <p className="t-body">
-          <Link
-            href="/"
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            ← Back to the map
-          </Link>
-        </p>
-        <ThemeToggle className="shrink-0" />
-      </div>
-      <div className="ballot-page-chrome mt-4">
-        <Logo variant="wordmark" size={30} />
-      </div>
-      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
-        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
-      </h1>
-
-      <div className="ballot-top-pills items-start">
-        <WhereToVote />
-        {zip && <>
-          <div className="flex flex-wrap items-center gap-3">
-            {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
-            <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          </div>
-          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">About this area</Link>
-          <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
-        </>}
-      </div>
+    <>
 
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
@@ -1085,7 +1086,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
-                              readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                           />
                         }
                       />
@@ -1185,7 +1186,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                   : null
                               }
                               authorityAvailability={authorityAvailability}
-                              readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                             />
                           }
                         />
@@ -1236,7 +1237,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             contestId={contest.id} resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
                         />
 
                       </li>;
@@ -1457,9 +1458,10 @@ export default readerRoute("/ballot", async function BallotPage({
         </>
       )}
 
-      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
+      <p data-ballot-complete className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
         <Link
           href="/"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           Back to the map
@@ -1467,11 +1469,64 @@ export default readerRoute("/ballot", async function BallotPage({
         <span className="text-muted">·</span>{" "}
         <Link
           href="/transparency"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           What this site collects
         </Link>
       </p>
+    </>
+  );
+  })();
+  void contents.catch(() => {});
+  return { contents, controls: (
+    <>
+      {zip && <>
+        <div className="flex flex-wrap items-center gap-3">
+          {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
+          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
+        </div>
+        <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
+        <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+      </>}
+    </>
+  ) };
+  })();
+  void ballotRead.catch(() => {});
+  const pills = ballotRead.then(result => result.controls);
+  const contents = ballotRead.then(result => result.contents);
+  void pills.catch(() => {});
+  void contents.catch(() => {});
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
+      <BallotCapture zip={zip} />
+      <div className="ballot-page-chrome flex items-center justify-between gap-3">
+        <p className="t-body">
+          <Link
+            href="/"
+            prefetch={false}
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            ← Back to the map
+          </Link>
+        </p>
+        <ThemeToggle className="shrink-0" />
+      </div>
+      <div className="ballot-page-chrome mt-4">
+        <Logo variant="wordmark" size={30} />
+      </div>
+      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
+        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
+      </h1>
+
+      <div className="ballot-top-pills items-start">
+        <WhereToVote />
+        <Suspense fallback={null}>{pills}</Suspense>
+      </div>
+
+      <Suspense fallback={<p role="status" className="my-6 text-paper-dim">Loading your ballot…</p>}>
+        {contents}
+      </Suspense>
     </main>
   );
 });

@@ -203,7 +203,7 @@ test("nothing is retried while the Neon circuit is latched", async () => {
 test("freshness-shadow retries its named state reference read after installing the Neon deadline", async () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const src = readFileSync(join(root, "scripts/freshness-shadow.mts"), "utf8");
-  const read = src.match(/const operationalReference = PLANNING_STATE === "system" \? null : await pending\.step\("startup:operational-reference", \(\) => retryStartupRead\(\s*\(\) => preloadOperationalReferenceState\(PLANNING_STATE\), \(\) => null, startupReadRetry,\s*\)\);/);
+  const read = src.match(/const operationalReference = PLANNING_STATE === "system" \? null : await pending\.step\("startup:operational-reference", \(\) => retryStartupRead\(\s*\(\) => preloadOperationalReferenceState\(PLANNING_STATE, plannerReads.query\), \(\) => null, startupReadRetry,\s*\)\);/);
   assert.ok(read, "the actual state preload must be inside the named pending step and bounded retry");
   const deadline = src.indexOf("installNeonRequestDeadline();");
   assert.ok(deadline >= 0 && deadline < read.index!, "install the deadline before the startup read");
@@ -214,7 +214,7 @@ test("freshness-shadow retries its named state reference read after installing t
     const calls: string[] = [];
     const reference = { state };
     const timeout = new DOMException("NEON_REQUEST_DEADLINE: body read timed out after 30000ms", "TimeoutError");
-    const context = createContext({ PLANNING_STATE: state, startupReadRetry: r.options, retryStartupRead,
+    const context = createContext({ PLANNING_STATE: state, plannerReads: { query: () => undefined }, startupReadRetry: r.options, retryStartupRead,
       pending: { step: async (name: string, run: () => Promise<unknown>) => { calls.push(name); return run(); } },
       preloadOperationalReferenceState: async (requested: string) => {
         calls.push(requested);

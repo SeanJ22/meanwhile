@@ -1,0 +1,7 @@
+{
+  "originalFile": "nyc-pollsite-public-client.js",
+  "rawSha256": "398c7d6e17f7a9349cbc536de5a1469d7282b3426faedb53a6158ab888a411d7",
+  "bytes": 46629,
+  "archived": false,
+  "reason": "Unused third-party web client code; ballot facts replay from the separately captured official API responses. Raw copy stays outside Git."
+}

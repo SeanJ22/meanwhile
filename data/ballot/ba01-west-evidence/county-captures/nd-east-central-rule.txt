@@ -1,0 +1,1034 @@
+
+  
+  
+  
+     
+     North Dakota Court System - Administrative Rule 6 - JUDICIAL DISTRICTS  
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-127209654-1');
+ 
+
+
+
+     (function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);  
+     window.isRTL = false; 
+	 
+  
+ 
+
+
+
+
+ 
+     
+         
+ 
+    
+
+
+
+ 
+    /*#layout-wrapper {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        position:relative;
+        overflow: hidden;
+    }*/
+
+    .mega-dropdown-menu{
+        width: 100vw !important;        
+    }
+
+    #layout-wrapper {
+        display: flex;
+        width: 100%;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        z-index: 999;
+        background: linear-gradient(to bottom, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 100%);        
+        color: #fff;
+        transition: all 0.3s;
+    }
+
+    /*#sidebar-wrapper {
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 100vh;
+        background: linear-gradient(to bottom, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 100%);
+        color: #fff;
+        transition: all 0.3s;
+    }*/
+        .zone-side-bar{
+            padding: 0 !important;
+        }
+
+        #sidebar-wrapper .container-fluid{
+            padding: 0 !important;
+        }
+
+        #sidebar-wrapper.active {
+            margin-right: -250px;
+        }           
+        
+        #sidebar-wrapper a.nav-link{
+            font-size: 20px !important;
+        }
+
+        #sidebar-wrapper ul li a.nav-link:hover, #sidebar-wrapper ul li.nav-item:hover {
+            background: #3979B7;                
+            border-radius: 0 !important;
+        }
+
+        #sidebar-wrapper ul li.nav-item{
+            padding: 0 !important;
+        }
+
+        #sidebar-wrapper ul li.nav-item a{
+            padding: .5em 1em !important;
+        }
+            
+
+        #sidebar-wrapper .dropdown-menu{
+            background: none !important;
+            border: 0 !important;               
+        }
+
+            #sidebar-wrapper .dropdown-menu .nav-link {
+                color: #fff !important;
+                text-decoration: none !important;
+                padding: .5em 2em !important;
+                width: 100%;
+            }
+
+            #sidebar-wrapper .dropdown-menu a.nav-link:hover {
+                background-color: #fff;
+                color: #3979B7 !important;
+                border-radius: 0;
+            }
+
+        #sidebar-wrapper .sidebar-header {
+            padding: 20px;
+            background: #3979B7;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.5em;
+        }
+
+        @media (max-width: 768px) {
+            .zone-side-bar {
+                margin-right: -250px;
+        }
+        #sidebar.active {
+            margin-right: 0;
+        }               
+    }
+
+    /*#content {
+        width: 100%;        
+        min-height: 100vh;
+        transition: all 0.3s;
+    }*/  
+
+    #content {
+        width: 100%;
+        min-height: 100vh;
+        transition: all 0.3s;
+        top: 0;
+        left: 0;
+    }
+        #content.active {
+            width: calc(100% - 250px);
+        }
+ 
+
+ 
+    $(document).ready(function () {       
+        $("#sidebar-wrapper").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        //$('#sidebarCollapse').on('click', function () {
+        //    $('#sidebar-wrapper').toggleClass('active');
+        //});
+
+        $('#sidebarCollapse').on('click', function () {
+            // open or close navbar
+            $('#sidebar-wrapper, #content').toggleClass('active');
+            // close dropdowns
+            $('.collapse.in').toggleClass('in');
+            // and also adjust aria-expanded attributes we use for the open/closed arrows
+            // in our CSS
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+
+        // Add the 'region' role to the main scrollable container for accessibility
+        $("#layout-wrapper").find(".mCSB_container").attr("role", "region");
+        $("#layout-wrapper").find(".mCSB_container").attr("aria-label", "This is a container for the quick links side bar.");
+
+        // You can add other roles as needed for the scroll tools or the outer box
+        $("#layout-wrapper").find(".mCSB_scrollTools").attr("aria-hidden", "true");
+
+        $("#layout-wrapper").find(".mCustomScrollbar").attr("role", "region");
+        $("#layout-wrapper").find(".mCustomScrollbar").attr("aria-label", "This is a container for the quick links side bar.");
+    });
+ 
+
+ 
+     
+         How Do I 
+     
+     
+    
+              Search Records & Pay Fines 
+ 
+              Self-Help 
+ 
+              Court Locations 
+ 
+              Supreme Court Opinions 
+ 
+              Jury Duty 
+ 
+              Lawyer Search 
+ 
+     
+ 
+ 
+     
+
+ 
+
+     
+             
+                 
+                     
+     
+         
+             
+             
+         
+     
+     
+         Search North Dakota Courts 
+         
+             
+             
+                 
+             
+         
+         Search Tips 
+        
+     
+ 
+
+                 
+             
+                     
+                 
+                     
+                         
+ 
+    
+
+ 
+
+ 
+
+     
+     
+         
+     
+
+     
+         
+        
+              Home 
+ 
+ Supreme Court 
+             
+                 
+                     
+                        
+             
+                 Supreme Court 
+                 
+                
+             Docket Search             
+
+             Opinions             
+
+             Watch/Listen to Court             
+
+             View Calendar             
+
+             Filing With the Supreme Court             
+
+             Notices             
+
+             C-Track Data Incident             
+
+             
+
+             
+                 Committees and Boards 
+                 
+                
+             Administrative Council             
+
+             Board of Law Examiners             
+
+             Disciplinary Board             
+
+             Joint Procedure             
+
+             Judicial Conduct Commission             
+
+             more...             
+
+             
+
+             
+                 Get Connected 
+                 
+                
+             Subscribe             
+
+             Taking the Courts to Schools             
+
+             
+
+             
+                 Publications 
+                 
+                
+             Current Justices             
+
+             Surrogate Judges             
+
+             History of the Supreme Court             
+
+             Appealing a Case             
+
+             About Us             
+
+             
+
+                     
+                                 
+             
+ 
+ District Courts 
+             
+                 
+                     
+                        
+             
+                 District Court 
+                 
+                
+             Case Search & Pay Fines             
+
+             Jury Service             
+
+             Court Locations             
+
+             District Court Information             
+
+             District Court Judges             
+
+             District Administration             
+
+             
+
+             
+                 Court Resources 
+                 
+                
+             E-Filing - resources             
+
+             E-File Portal             
+
+             Find an Attorney             
+
+             Court Fees             
+
+             Court Interpreters             
+
+             Access to Court Records             
+
+             
+
+             
+                 Court Resources (cont.) 
+                 
+                
+             Alternative Dispute Resolution Roster             
+
+             Parenting Coordinator Roster             
+
+             Parenting Inv/GAL Roster             
+
+             Interest Rate on Judgments             
+
+             Summons by Publication             
+
+             
+
+                     
+                                 
+             
+ 
+ Other Courts 
+             
+                 
+                     
+                        
+             
+                 Municipal Courts 
+                 
+                
+             Bismarck             
+
+             Fargo             
+
+             Grand Forks             
+
+             Minot             
+
+             Williston             
+
+             more...             
+
+             
+
+             
+                 Juvenile 
+                 
+                
+             Juvenile Court             
+
+             Contact Juvenile Court             
+
+             Juvenile Programs and Services             
+
+             Juvenile Treatment Court             
+
+             Contact Juvenile Treatment Court             
+
+             
+
+             
+                 Other Courts 
+                 
+                
+             Domestic Violence Court             
+
+             Treatment Courts             
+
+             Office of Administrative Hearings             
+
+             Federal Courts             
+
+             Tribal Courts             
+
+             Veterans Treatment Court             
+
+             Mental Health Court             
+
+             
+
+                     
+                                 
+             
+ 
+ Legal Resources 
+             
+                 
+                     
+                        
+             
+                 Court Rules 
+                 
+                
+             Administrative Rules             
+
+             Appellate Procedure             
+
+             Civil Procedure             
+
+             Criminal Procedure             
+
+             Rules of Court             
+
+             more...             
+
+             
+
+             
+                 Resources 
+                 
+                
+             Notices             
+
+             Legal Research             
+
+             Law Library             
+
+             North Dakota Administrative Code             
+
+             North Dakota Century Code             
+
+             North Dakota Constitution             
+
+             Federal Laws and Regulations             
+
+             U.S. Supreme Court Opinions             
+
+             
+
+             
+                 Legal Self Help Center 
+                 
+                
+             Answering a Summons and Complaint             
+
+             Divorce             
+
+             Establishing Custody & Visitation             
+
+             Probate an Estate             
+
+             Small Claims             
+
+             more...             
+
+             
+
+                     
+                                 
+             
+ 
+ Court Administration 
+             
+                 
+                     
+                        
+             
+                 Departments 
+                 
+                
+             State Court Administration             
+
+             Education             
+
+             Family Law Mediation Program             
+
+             Finance             
+
+             Human Resources             
+
+             Information Technology             
+
+             Juvenile Court             
+
+             Research and Planning             
+
+             
+
+             
+                 Publications 
+                 
+                
+             Departures from Mandatory Minimums             
+
+             Annual Report             
+
+             Annual Report - Juvenile             
+
+             State of the Judiciary             
+
+             
+
+             
+                 Online Resources 
+                 
+                
+             Governor             
+
+             Legislature             
+
+             State Bar Assoc. of N.D.             
+
+             Schedule of Meetings and Events             
+
+             
+
+             
+                 Administrative Policies 
+                 
+                
+             Personnel Policy Manual             
+
+             Chart - Salary Grade and Class Specification             
+
+             Pay Ranges (07-26)             
+
+             Supplement I             
+
+             more...             
+
+             
+
+                     
+                                 
+             
+ 
+ Lawyers 
+             
+                 
+                     
+                        
+             
+                 Lawyers 
+                 
+                
+             Attorney Search             
+
+             Board of Law Examiners             
+
+             E-Filing Portal             
+
+             Attorney Subscription Management             
+
+             Rural Attorney Recruitment Program             
+
+             Judicial Conduct Commission             
+
+             Disciplinary Board             
+
+             
+
+                     
+                                 
+             
+ 
+              Use of A.I. 
+ 
+                
+     
+ 
+ 
+                     
+                     
+                         
+ 
+         How Do I   
+ 
+                     
+                 
+             
+     
+
+    
+
+
+         
+             
+ 
+    
+ 
+             
+         
+             
+                         Home                         
+                         Legal Resources                         
+                         Rules                         
+                         North Dakota Supreme Court Administrative Rules                         
+             
+         
+     
+ 
+  
+         
+
+     
+         
+             
+                                     
+                         
+ 
+    
+
+
+
+     
+        $(document).ready(function () {
+            var prevIndex = $('#ddNavItems')[0].selectedIndex - 1;
+            var nextIndex = $('#ddNavItems')[0].selectedIndex + 1;
+
+            $('#btnPrev').on('click', function () {
+                var url = $('#ddNavItems option').eq(prevIndex).val();                                
+                window.open(url, '_self');
+            });
+
+            $('#btnNext').on('click', function () {
+                var url = $('#ddNavItems option').eq(nextIndex).val();                                
+                window.open(url, '_self');
+            });
+
+            $('#ddNavItems').change(function () {
+                var index = $('#ddNavItems')[0].selectedIndex;
+                var url = $('#ddNavItems option').eq(index).val();
+                window.open(url, '_self');
+            });
+        });
+     
+
+
+
+ 
+             
+             
+                 
+                     
+                    
+                         
+                             
+                                                 
+            
+            
+                             
+                                 
+                                             Administrative Rule 1 - RULE RELATING TO STATE COURT ADMINISTRATOR 
+                                             Administrative Rule 2 - RULE RELATING TO ELECTION AND DUTIES OF PRESIDING JUDGES 
+                                             Administrative Rule 3 - PROPOSED ADMINISTRATIVE RULE 3-1978 
+                                             Administrative Rule 4 - ASSIGNMENT OF PENDING CASES DURING TRANSITION TO NEW JUD 
+                                             Administrative Rule 5 - POWERS AND DUTIES OF THE CLERK OF THE SUPREME COURT 
+                                             Administrative Rule 6 - JUDICIAL DISTRICTS 
+                                             Administrative Rule 6.1 - ADMINISTRATIVE UNITS 
+                                             Administrative Rule 7 - DESIGNATION OF JUDGESHIPS AND CHAMBERS WITH ASSIGNMENTS 
+                                             Administrative Rule 7.1 - RULE REGARDING RESIDENT DISTRICT COURT JUDGESHIP CHAMB 
+                                             Administrative Rule 7.2 - NORTH DAKOTA RULE REGARDING DISPOSITION OF JUDGESHIP V 
+                                             Administrative Rule 63 - UNIFORM BAIL SCHEDULE 
+                                             Administrative Rule 8 - TEMPORARY JUDGES, APPOINTMENT 
+                                             Administrative Rule 9 - JURY SELECTION PROCEDURE 
+                                             Administrative Rule 10 - CHANGE OF JUDGE FOR TRIAL IN COUNTY COURT HAVING INCREA 
+                                             Administrative Rule 11 - AUTHORITY AND APPOINTMENT OF THE CHIEF JUSTICE 
+                                             Administrative Rule 12 - NORTH DAKOTA CASE MANAGEMENT TIME STANDARDS FOR DISTRIC 
+                                             Administrative Rule 13 - JUDICIAL REFEREES 
+                                             Administrative Rule 14 - JUDICIAL PLANNING COMMITTEE 
+                                             Administrative Rule 15 - TEMPORARY ASSIGNMENTS OF JUDGES 
+                                             Administrative Rule 16. APPEALS FROM MUNICIPAL COURTS [TRANSFERRED] 
+                                             Administrative Rule 17 - RULE RELATING TO DISTRICT JUDGE SELF-DISQUALIFICATION P 
+                                             Administrative Rule 18 - [REPEALED] 
+                                             Administrative Rule 19 - COURT RECORDS MANAGEMENT PROGRAM 
+                                             Administrative Rule 20 - MAGISTRATES—QUALIFICATIONS, AUTHORITY, EDUCATION AND PR 
+                                             Administrative Rule 21 - ELECTRONIC AND PHOTOGRAPHIC MEDIA COVERAGE OF COURT PRO 
+                                             Administrative Rule 22 - NORTH DAKOTA ADMINISTRATIVE COUNCIL 
+                                             Administrative Rule 23 - NORTH DAKOTA PATTERN JURY INSTRUCTION COMMISSION 
+                                             Administrative Rule 24 - ADMINISTRATION OF INTEREST ON LAWYER TRUST ACCOUNT PROG 
+                                             Administrative Rule 24.1 - GRANT CRITERIA AND GUIDELINES OF THE INTEREST ON LAWY 
+                                             Administrative Rule 24.2 - GRANT APPLICATION PROCEDURES OF THE INTEREST ON LAWYE 
+                                             Administrative Rule 25 - AUTHORIZATIONS TO ADMINISTER OATHS 
+                                             Administrative Rule 26 - COURT RECORDS MANAGEMENT 
+                                             Administrative Rule 27 - COURT OF APPEALS 
+                                             Administrative Rule 28 - QUALIFICATIONS FOR COURT-APPOINTED MEDIATORS [Repealed| 
+                                             Administrative Rule 29 - QUALIFICATIONS, EMPLOYMENT, COMPENSATION AND AUTHORITY  
+                                             Administrative Rule 30 - MINIMUM STANDARDS FOR MUNICIPAL COURTS IN NORTH DAKOTA 
+                                             Administrative Rule 30.1 - MANDATORY CONTINUING JUDICIAL EDUCATION FOR MUNICIPAL 
+                                             Administrative Rule 31 - FACSIMILE TRANSMISSION 
+                                             Administrative Rule 32 - NORTH DAKOTA JUDICIAL PERFORMANCE EVALUATION COMMISSION 
+                                             Administrative Rule 33 - PROCEDURE FOR ADOPTION OR AMENDMENT OF ADMINISTRATIVE P 
+                                             Administrative Rule 34 - ADVOCATES FOR ALLEGED VICTIMS IN CIVIL PROTECTION ORDER 
+                                             Administrative Rule 35 - JUVENILE POLICY BOARD 
+                                             Administrative Rule 36 - JUDICIAL BRANCH EDUCATION 
+                                             Administrative Rule 37 - COMMITTEE ON TRIBAL AND STATE COURT AFFAIRS 
+                                             Administrative Rule 38 - JOINT COMMITTEE ON ATTORNEY STANDARDS 
+                                             Administrative Rule 39 - RECORDING DISTRICT COURT TRIALS AND PROCEEDINGS, AND PR 
+                                             Administrative Rule 40 - ACCESS TO RECORDINGS OF PROCEEDINGS IN DISTRICT COURT 
+                                             Administrative Rule 41 - ACCESS TO COURT RECORDS 
+                                             Administrative Rule 41.1 - OPEN MEETINGS 
+                                             Administrative Rule 42 - TITLE AND CITATION 
+                                             Administrative Rule 43 - JOINT COMMITTEE ON ALTERNATIVE DISPUTE RESOLUTION 
+                                             Administrative Rule 44 - INFORMAL COMPLAINT PROCEDURE 
+                                             Administrative Rule 45 - RECORDS MANAGEMENT PROGRAM FOR SUPREME COURT RECORDS 
+                                             Administrative Rule 46 - DUTIES AND APPOINTMENT OF THE CLERK OF THE DISTRICT COU 
+                                             Administrative Rule 46.1 – DUTIES, QUALIFICATIONS, AND EDUCATION OF THE CLERK OF 
+                                             Administrative Rule 47 - RECORD SEARCHES 
+                                             Administrative Rule 48 - NORTH DAKOTA JUDICIAL IMPROVEMENT PROGRAM 
+                                             Administrative Rule 49 - JUDICIAL AND LAWYER ASSISTANCE PROGRAM 
+                                             Administrative Rule 50 - COURT INTERPRETER QUALIFICATIONS AND PROCEDURES 
+                                             Administrative Rule 51 - SENTENCING OFFENDERS — MORTALITY TABLE 
+                                             Administrative Rule 52 - RELIABLE ELECTRONIC MEANS PROCEEDINGS [TRANSFERRED] 
+                                             Administrative Rule 53 - [REPEALED] 
+                                             Administrative Rule 54 - Judicial Ethics Advisory Committee [REPEALED] 
+                                             Administrative Rule 55 - INCOME TAX RETURN SETOFF FOR UNPAID COURT-ORDERED FINES 
+                                             Administrative Rule 56 - JUVENILE DRUG COURT ADVISORY COMMITTEE [REPEALED] 
+                                             Administrative Rule 57 - JUDICIAL EMERGENCY 
+                                             Administrative Rule 58 - VEXATIOUS LITIGATION 
+                                             Administrative Rule 59 - GUARDIANS 
+                                             Administrative Rule 59.1. OFFICE OF GUARDIANSHIP AND CONSERVATORSHIP 
+                                             Administrative Rule 60 - Interdisciplinary Committee on Specialized Dockets 
+                                             Administrative Rule 61 - COLLECTION OF RACE DATA 
+                                             Administrative Rule 62 - RURAL ATTORNEY RECRUITMENT AND RETENTION PROGRAM 
+                                                
+                             
+                
+                         
+                             
+                         
+                     
+                 
+             
+
+     
+ 
+ 
+                     
+                                     
+                         
+
+ 
+    article.rule {
+        background-color: white !important;
+        padding: 12px;
+    }
+
+    h3 {
+        font-size: 1.17em;
+        font-weight: bold;
+    }
+
+    ol {
+        counter-reset: list;
+        margin: .5em;
+    }
+
+        ol li {
+            list-style: none;
+            position: relative;
+            margin-bottom: .5em;
+        }
+
+        ol.lower-alpha {
+            list-style-type: lower-alpha;
+        }
+
+        ol.upper-alpha {
+            list-style-type: upper-alpha;
+        }
+
+        ol.decimal {
+            list-style-type: decimal;
+        }
+
+        ol.lower-roman {
+            list-style-type: lower-roman;
+        }
+
+        ol.lower-alpha > li:before {
+            counter-increment: list;
+            content: "(" counter(list, lower-alpha) ") ";
+        }
+
+        ol.upper-alpha > li:before {
+            counter-increment: list;
+            content: "(" counter(list, upper-alpha) ") ";
+        }
+
+        ol.decimal > li:before {
+            counter-increment: list;
+            content: "(" counter(list, decimal) ") ";
+        }
+
+        ol.lower-roman > li:before {
+            counter-increment: list;
+            content: "(" counter(list, lower-roman) ") ";
+        }
+ 
+ 
+ 
+     
+         
+            
+
+ Administrative Rule 6 - JUDICIAL DISTRICTS 
+         
+         
+                 Effective Date: 8/11/2021 
+         
+     
+ 
+
+ Under the authority granted the supreme court in N.D. Const. art. VI, § 3, the North Dakota supreme court adopts the following rule: 
+ Section 1. On the effective date of the rule, the state of North Dakota is hereby divided into eight judicial districts composed of the following named counties respectively: 
+ (a)  Northwest Judicial District   consists of the counties of Divide, McKenzie and Williams. 
+ (b)  North Central Judicial District   consists of the counties of Burke, Mountrail and Ward. 
+ (c)  Northeast Judicial District   consists of the counties of Benson, Bottineau, Cavalier, McHenry, Pembina, Pierce, Ramsey, Renville, Rolette, Towner and Walsh. 
+ (d)  Northeast Central Judicial District   consists of the counties of Grand Forks and Nelson. 
+ (e)  East Central Judicial District   consists of the counties of Cass, Steele and Traill. 
+ (f)  Southeast Judicial District   consists of the counties of Barnes, Dickey, Eddy, Foster, Griggs, Kidder, LaMoure, Logan, McIntosh, Ransom, Richland, Sargent, Stutsman and Wells. 
+ (g)  South Central Judicial District   consists of the counties of Burleigh, Emmons, Grant, McLean, Mercer, Morton, Oliver, Sioux, and Sheridan. 
+ (h)  Southwest Judicial District   consists of the counties of Adams, Billings, Bowman, Dunn, Golden Valley, Hettinger, Slope and Stark. 
+ Section 2. It is the intent of the supreme court that the residents of the various counties within a judicial district receive judicial services in their own county without the need to travel to the chamber cities. The judges in the chamber cities will travel to the counties within their judicial district to provide required services under the schedule and direction of the presiding judge of the district. 
+ Section 3. This rule, as amended, is effective   January 1, 2014 . 
+
+ 
+
+
+ 
+    
+
+ 
+     
+         
+             
+                 
+                    Explanatory Note  
+                 
+             
+         
+         
+             
+                 SOURCE: N.D. Const., Art. VI,  §  3; N.D.C.C.  §  27-05-01, Adopted effective July 1, 1979. Amended effective July 1, 1993; September 1, 1999;  January 1, 2014 ; August 11, 2021 . 
+             
+         
+     
+ 
+
+ 
+     
+         
+             
+                 
+                    Version History  
+                 
+             
+         
+         
+             
+                 
+                     
+                         Effective Date 
+                         Obsolete Date 
+                         
+                     
+                         
+                             08/11/2021 
+                                 
+                              View 
+                         
+                         
+                             01/01/2014 
+                                 08/11/2021 
+                              View 
+                         
+                         
+                             09/01/1999 
+                                 01/01/2014 
+                              View 
+                         
+                         
+                             07/01/1993 
+                                 09/01/1999 
+                              View 
+                         
+                 
+             
+         
+     
+ 
+
+
+ 
+                     
+                             
+         
+     
+         
+         
+             
+                 
+                     
+                        
+                         
+                        
+                     
+                     
+                         
+                                 
+                                     
+ 
+     North Dakota Supreme Court 
+ 600 E Boulevard Ave Bismarck, ND 58505-0530 
+ 
+                                 
+                                                             
+                                     
+ 
+     District Courts 
+ Municipal Courts 
+ 
+                                 
+                                                             
+                                     
+ 
+     About Us 
+ Contact Us 
+ Jobs With Us 
+ 
+                                 
+                                                             
+                                     
+ 
+     Privacy Statement 
+ Security Policy 
+ Disclaimer 
+ 
+                                 
+                         
+                     
+                 
+                
+
+             
+         
+     
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+ 

@@ -1,0 +1,295 @@
+{
+  "doorId": "cochise:ballot-box-table",
+  "sites": [
+    {
+      "id": "voting-a5219848a399f73f3ce0cb52",
+      "name": "Cochise County Recorder",
+      "address": "1415 Melody Lane, Building B",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "title": "Voter Information | Cochise County, AZ",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+          "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+        }
+      ],
+      "hours": "24 hours\n7 days a week",
+      "town": "Bisbee",
+      "countyFips": "04003",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24 hours\n7 days a week",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Cochise County Recorder",
+            "url": "https://www.cochise.az.gov/509/Voter-Information",
+            "title": "Voter Information | Cochise County, AZ",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+            "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-288712c880cb236f991b27b8",
+      "name": "County Service Center",
+      "address": "126 W. 5th Street",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "title": "Voter Information | Cochise County, AZ",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+          "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+        }
+      ],
+      "hours": "Monday - Friday 8:00 am - 5:00 pm",
+      "town": "Benson",
+      "countyFips": "04003",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "Monday - Friday 8:00 am - 5:00 pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Cochise County Recorder",
+            "url": "https://www.cochise.az.gov/509/Voter-Information",
+            "title": "Voter Information | Cochise County, AZ",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+            "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3ac20032d596e664831d7b83",
+      "name": "County Service Center",
+      "address": "1012 N. G Avenue",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "title": "Voter Information | Cochise County, AZ",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+          "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+        }
+      ],
+      "hours": "Monday - Friday 8:00 am - 5:00 pm",
+      "town": "Douglas",
+      "countyFips": "04003",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "Monday - Friday 8:00 am - 5:00 pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Cochise County Recorder",
+            "url": "https://www.cochise.az.gov/509/Voter-Information",
+            "title": "Voter Information | Cochise County, AZ",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+            "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-67609624029a7eeb9cefd09f",
+      "name": "County Service Center",
+      "address": "4115 E Foothills Drive",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "title": "Voter Information | Cochise County, AZ",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+          "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+        }
+      ],
+      "hours": "24 hours\n7 days a week",
+      "town": "Sierra Vista",
+      "countyFips": "04003",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24 hours\n7 days a week",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Cochise County Recorder",
+            "url": "https://www.cochise.az.gov/509/Voter-Information",
+            "title": "Voter Information | Cochise County, AZ",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+            "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-769e34660b9be7ef3a7efd55",
+      "name": "County Service Center",
+      "address": "450 S. Haskell Avenue",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "title": "Voter Information | Cochise County, AZ",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+          "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+        }
+      ],
+      "hours": "Monday - Friday 8:00 am - 5:00 pm",
+      "town": "Willcox",
+      "countyFips": "04003",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "Monday - Friday 8:00 am - 5:00 pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Cochise County Recorder",
+            "url": "https://www.cochise.az.gov/509/Voter-Information",
+            "title": "Voter Information | Cochise County, AZ",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+            "documentUrl": "https://www.cochise.az.gov/509/Voter-Information"
+          }
+        }
+      ]
+    }
+  ],
+  "office": {
+    "name": "Cochise County Recorder",
+    "address": "1415 Melody Lane, Building B, Bisbee, AZ 85603",
+    "phone": "520-432-8350",
+    "url": "https://www.cochise.az.gov/509/Voter-Information"
+  },
+  "rules": [
+    {
+      "text": "Ballot drop boxes will remain open through November 2nd at 5:00 pm. On Election day, you may drop off your early ballot at any Vote Center or the Recorder's Office in Bisbee from 6:00 am to 7:00 pm.",
+      "source": {
+        "publisher": "Cochise County Recorder",
+        "url": "https://www.cochise.az.gov/509/Voter-Information",
+        "checkedAt": "2026-10-13"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "Cochise County Recorder",
+      "url": "https://www.cochise.az.gov/509/Voter-Information",
+      "title": "Voter Information | Cochise County, AZ",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.cochise.az.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.cochise.az.gov/292/Elections",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.cochise.az.gov/509/Voter-Information",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.cochise.az.gov/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "rawHash": "5b62a1edb7fa94b783cd675a6c9aebb3c155136845b36c14eb49d5e420646311",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-6dac89d02674-5b62a1edb7fa.bin"
+    },
+    {
+      "url": "https://www.cochise.az.gov/292/Elections",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "723aaa16361c39504e0da7493f129aa77f67cc9c406c98d7bbdb0ebb950ba3a2",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-29b49e44902a-04d6e8adcd16.html"
+    },
+    {
+      "url": "https://www.cochise.az.gov/509/Voter-Information",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-207951e62d4f-ae3bdf26f6f1.html"
+    }
+  ],
+  "fileTitle": "Voter Information | Cochise County, AZ",
+  "contacts": []
+}

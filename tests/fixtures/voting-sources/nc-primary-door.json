@@ -1,0 +1,44 @@
+{
+  "id": "nc-statewide-polling-primary-2026",
+  "publisher": "North Carolina State Board of Elections",
+  "url": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+  "shape": "file",
+  "covers": [
+    "ELECTION_DAY"
+  ],
+  "scope": {
+    "state": "NC",
+    "ocdId": "ocd-division/country:us/state:nc",
+    "name": "North Carolina"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+  "electionAssociationVerified": false,
+  "title": "March 3, 2026 polling places",
+  "fileUpdatedAt": "2026-03-01T10:25:04Z",
+  "matchingUnit": "PRECINCT",
+  "discoveredFrom": "https://www.ncsbe.gov/results-data/polling-place-data",
+  "extraction": {
+    "format": "csv",
+    "delimiter": "\t",
+    "kind": "ELECTION_DAY",
+    "columns": {
+      "id": "polling_place_id",
+      "name": "polling_place_name",
+      "address": [
+        "street_address",
+        "city",
+        "state",
+        "zip"
+      ],
+      "countyName": "county_name",
+      "precinct": "precinct_name",
+      "election": "election_dt"
+    }
+  },
+  "access": {
+    "status": "open",
+    "detail": "Native UTF-16LE tab-delimited CSV captured. Latest official archive link is March primary; find general-election replacement without suppressing the current official archive.",
+    "checkedAt": "2026-10-13"
+  }
+}

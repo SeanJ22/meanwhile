@@ -1,0 +1,1154 @@
+{
+  "checkedAt": "2026-10-20",
+  "scope": "Live HTTP-rendered contest cards before River ships BA-01; counts are observations, not official-sample completeness results. Oversight owns post-publication checks.",
+  "zips": [
+    {
+      "zip": "78701",
+      "httpStatus": 200,
+      "elapsedSeconds": 3.493,
+      "contests": [
+        {
+          "id": "tx-sos-2026-u-s-senator",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "U. S. SENATOR"
+        },
+        {
+          "id": "tx-sos-2026-governor",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "GOVERNOR"
+        },
+        {
+          "id": "tx-sos-2026-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "LIEUTENANT GOVERNOR"
+        },
+        {
+          "id": "tx-sos-2026-attorney-general",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "ATTORNEY GENERAL"
+        },
+        {
+          "id": "tx-sos-2026-comptroller-of-public-accounts",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "COMPTROLLER OF PUBLIC ACCOUNTS"
+        },
+        {
+          "id": "tx-sos-2026-commissioner-of-the-general-land-office",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "COMMISSIONER OF THE GENERAL LAND OFFICE"
+        },
+        {
+          "id": "tx-sos-2026-commissioner-of-agriculture",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "COMMISSIONER OF AGRICULTURE"
+        },
+        {
+          "id": "tx-sos-2026-railroad-commissioner",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "RAILROAD COMMISSIONER"
+        },
+        {
+          "id": "tx-sos-2026-chief-justice-supreme-court",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "CHIEF JUSTICE, SUPREME COURT"
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-2-unexpired-term",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUSTICE, SUPREME COURT, PLACE 2 (UNEXPIRED TERM)"
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-7",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUSTICE, SUPREME COURT, PLACE 7"
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-8",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUSTICE, SUPREME COURT, PLACE 8"
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-3",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 3"
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-4",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 4"
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-9",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 9"
+        },
+        {
+          "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "CHIEF JUSTICE, 15TH COURT OF APPEALS DISTRICT"
+        },
+        {
+          "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 2"
+        },
+        {
+          "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+          "ocdId": "ocd-division/country:us/state:tx",
+          "title": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 3"
+        },
+        {
+          "id": "tx-sos-2026-state-representative-district-49",
+          "ocdId": "ocd-division/country:us/state:tx/sldl:49",
+          "title": "STATE REPRESENTATIVE DISTRICT 49"
+        },
+        {
+          "id": "tx-sos-2026-state-representative-district-51",
+          "ocdId": "ocd-division/country:us/state:tx/sldl:51",
+          "title": "STATE REPRESENTATIVE DISTRICT 51"
+        }
+      ],
+      "notes": [
+        "We're working on getting the U.S. House district for ZIP 78701. U.S. House contests aren't shown until we have it."
+      ]
+    },
+    {
+      "zip": "94110",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.813,
+      "contests": [
+        {
+          "id": "ca-sos-2026-general-governor",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Governor"
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-1",
+          "ocdId": null,
+          "title": "Proposition 1: AUTHORIZES BONDS FOR HOUSING AFFORDABILITY PROGRAMS. LEGISLATIVE STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Lieutenant Governor"
+        },
+        {
+          "id": "ca-sos-2026-general-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "ca-sos-2026-general-controller",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Controller"
+        },
+        {
+          "id": "ca-sos-2026-general-treasurer",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Treasurer"
+        },
+        {
+          "id": "ca-sos-2026-general-attorney-general",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Attorney General"
+        },
+        {
+          "id": "ca-sos-2026-general-insurance-commissioner",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Insurance Commissioner"
+        },
+        {
+          "id": "ca-sos-2026-general-superintendent-of-public-instruction",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "title": "Superintendent of Public Instruction"
+        },
+        {
+          "id": "ca-sos-2026-general-state-assembly-member-district-17",
+          "ocdId": "ocd-division/country:us/state:ca/sldl:17",
+          "title": "State Assembly Member District 17"
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-2",
+          "ocdId": null,
+          "title": "Proposition 2: INCREASES STATE\u2019S RAINY DAY FUND. LEGISLATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-3",
+          "ocdId": null,
+          "title": "Proposition 3: PROVIDES PERMANENT FUNDING FOR SCHOOLS AND HEALTH CARE BY EXTENDING EXISTING TAX ON HIGH INCOMES. INITIATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-4",
+          "ocdId": null,
+          "title": "Proposition 4: REPEALS PROHIBITION AGAINST PUBLIC FUNDING OF ELECTION CAMPAIGNS. LEGISLATIVE STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-5",
+          "ocdId": null,
+          "title": "Proposition 5: CHANGES RECALL ELECTION PROCESS FOR STATEWIDE OFFICERS. LEGISLATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-37",
+          "ocdId": null,
+          "title": "Proposition 37: CREATES LOAN PROGRAM FOR MIDDLE-INCOME BUYERS OF QUALIFIED NEW HOMES. INITIATIVE STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-38",
+          "ocdId": null,
+          "title": "Proposition 38: AUTHORIZES BONDS FOR IMMUNOLOGY MEDICAL RESEARCH. INITIATIVE STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-39",
+          "ocdId": null,
+          "title": "Proposition 39: PROHIBITS CITIZENS FROM VOTING UNLESS THEY PRESENT GOVERNMENT-ISSUED IDENTIFICATION. INITIATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-40",
+          "ocdId": null,
+          "title": "Proposition 40: IMPOSES ONE-TIME TAX ON CERTAIN TAXPAYERS. INITIATIVE CONSTITUTIONAL AMENDMENT AND STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-41",
+          "ocdId": null,
+          "title": "Proposition 41: PROHIBITS NEW STATE TAXES THAT EXCLUDE REVENUES FROM STATE SPENDING LIMIT. REQUIRES AUDITS FOR NEW STATE SPECIAL TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-42",
+          "ocdId": null,
+          "title": "Proposition 42: PROHIBITS NEW STATE PERSONAL PROPERTY TAXES AND CERTAIN RETROACTIVE STATE TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-43",
+          "ocdId": null,
+          "title": "Proposition 43: LIMITS VOTERS\u2019 ABILITY TO RAISE REVENUES FOR LOCAL GOVERNMENT SERVICES. LEGISLATIVE CONSTITUTIONAL AMENDMENT."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-44",
+          "ocdId": null,
+          "title": "Proposition 44: REQUIRES COMMUNITY HEALTH CLINICS SPEND 90% OF REVENUE ON PROGRAM SERVICES. INITIATIVE STATUTE."
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-45",
+          "ocdId": null,
+          "title": "Proposition 45: MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE."
+        }
+      ],
+      "notes": [
+        "We're working on getting the U.S. House district for ZIP 94110. U.S. House contests aren't shown until we have it."
+      ]
+    },
+    {
+      "zip": "43215",
+      "httpStatus": 200,
+      "elapsedSeconds": 3.951,
+      "contests": [
+        {
+          "id": "oh-sos-2026-general-governor-and-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Governor and Lieutenant Governor"
+        },
+        {
+          "id": "oh-sos-2026-general-issue-3",
+          "ocdId": null,
+          "title": "Issue 3 \u2014 Proposed Constitutional Amendment TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE"
+        },
+        {
+          "id": "oh-sos-2026-general-attorney-general",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Attorney General"
+        },
+        {
+          "id": "oh-sos-2026-general-auditor-of-state",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Auditor of State"
+        },
+        {
+          "id": "oh-sos-2026-general-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "oh-sos-2026-general-treasurer-of-state",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Treasurer of State"
+        },
+        {
+          "id": "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Justice of the Supreme Court (Full term commencing 1/1/2027)"
+        },
+        {
+          "id": "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Justice of the Supreme Court (Full term commencing 1/2/2027)"
+        },
+        {
+          "id": "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "U.S. Senator (Unexpired term ending 1/3/2029)"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "53703",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.795,
+      "contests": [
+        {
+          "id": "wi-green-county-2026-general-governor",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "title": "Governor"
+        },
+        {
+          "id": "wi-green-county-2026-general-question-2",
+          "ocdId": null,
+          "title": "Freedom to gather in places of worship during an emergency"
+        },
+        {
+          "id": "wi-green-county-2026-general-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "title": "Lieutenant Governor"
+        },
+        {
+          "id": "wi-green-county-2026-general-attorney-general",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "title": "Attorney General"
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "wi-green-county-2026-general-state-treasurer",
+          "ocdId": "ocd-division/country:us/state:wi",
+          "title": "State Treasurer"
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-in-congress-district-2",
+          "ocdId": "ocd-division/country:us/state:wi/cd:2",
+          "title": "Representative in Congress District 2"
+        },
+        {
+          "id": "wi-green-county-2026-general-question-3",
+          "ocdId": null,
+          "title": "Governmental entity discrimination prohibited"
+        },
+        {
+          "id": "wi-green-county-2026-general-question-1",
+          "ocdId": null,
+          "title": "Partial veto"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "19103",
+      "httpStatus": 200,
+      "elapsedSeconds": 3.231,
+      "contests": [
+        {
+          "id": "pa-dos:pa-2026-general:governor-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:pa",
+          "title": "Governor and Lieutenant Governor \u2013 Statewide"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:cd-3",
+          "ocdId": "ocd-division/country:us/state:pa/cd:3",
+          "title": "Representative in Congress \u2013 3rd District"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-10",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:10",
+          "title": "Representative in the General Assembly \u2013 10th District"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-181",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:181",
+          "title": "Representative in the General Assembly \u2013 181st District"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-182",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:182",
+          "title": "Representative in the General Assembly \u2013 182nd District"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-195",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:195",
+          "title": "Representative in the General Assembly \u2013 195th District"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "85003",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.905,
+      "contests": [
+        {
+          "id": "ballot-az-pima:governor",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "Governor"
+        },
+        {
+          "id": "ballot-az-pima:prop-141",
+          "ocdId": null,
+          "title": "Proposition 141: Prohibit tax; monitoring; vehicle mileage"
+        },
+        {
+          "id": "ballot-az-pima:secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "ballot-az-pima:attorney-general",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "Attorney General"
+        },
+        {
+          "id": "ballot-az-pima:state-treasurer",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "State Treasurer"
+        },
+        {
+          "id": "ballot-az-pima:superintendent",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "Superintendent of Public Instruction"
+        },
+        {
+          "id": "ballot-az-pima:mine-inspector",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "State Mine Inspector"
+        },
+        {
+          "id": "ballot-az-pima:corporation-commissioner",
+          "ocdId": "ocd-division/country:us/state:az",
+          "title": "Corporation Commissioner"
+        },
+        {
+          "id": "az-2026-general-state-senate-5",
+          "ocdId": "ocd-division/country:us/state:az/sldu:5",
+          "title": "State Senator, District 5"
+        },
+        {
+          "id": "az-2026-general-state-house-5",
+          "ocdId": "ocd-division/country:us/state:az/sldl:5",
+          "title": "State Representative, District 5"
+        },
+        {
+          "id": "az-2026-general-state-senate-11",
+          "ocdId": "ocd-division/country:us/state:az/sldu:11",
+          "title": "State Senator, District 11"
+        },
+        {
+          "id": "az-2026-general-state-house-11",
+          "ocdId": "ocd-division/country:us/state:az/sldl:11",
+          "title": "State Representative, District 11"
+        },
+        {
+          "id": "az-2026-general-us-house-3",
+          "ocdId": "ocd-division/country:us/state:az/cd:3",
+          "title": "U.S. Representative, District 3"
+        },
+        {
+          "id": "ballot-az-pima:prop-142",
+          "ocdId": null,
+          "title": "Proposition 142: Preferential treatment; discrimination; prohibited acts"
+        },
+        {
+          "id": "ballot-az-pima:prop-143",
+          "ocdId": null,
+          "title": "Proposition 143: School districts; labor organizations; resources"
+        },
+        {
+          "id": "ballot-az-pima:prop-144",
+          "ocdId": null,
+          "title": "Proposition 144: Citizenship; identification; contributions; early voting"
+        },
+        {
+          "id": "ballot-az-pima:prop-145",
+          "ocdId": null,
+          "title": "Proposition 145: Military families; scholarship accounts"
+        },
+        {
+          "id": "ballot-az-pima:prop-212",
+          "ocdId": null,
+          "title": "Proposition 212: Protect Education Act"
+        },
+        {
+          "id": "ballot-az-pima:prop-316",
+          "ocdId": null,
+          "title": "Proposition 316: Food; municipal tax; exemption"
+        },
+        {
+          "id": "ballot-az-pima:prop-317",
+          "ocdId": null,
+          "title": "Proposition 317: Drug cartels; terrorist organizations"
+        },
+        {
+          "id": "ballot-az-pima:prop-318",
+          "ocdId": null,
+          "title": "Proposition 318: Interscholastic; intramural athletics; biological sex"
+        },
+        {
+          "id": "ballot-az-pima:prop-319",
+          "ocdId": null,
+          "title": "Proposition 319: Photo enforcement systems; voter approval"
+        },
+        {
+          "id": "ballot-az-pima:prop-320",
+          "ocdId": null,
+          "title": "Proposition 320: Instructional expenses; operational spending; enforcement"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "80202",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.618,
+      "contests": [
+        {
+          "id": "co-sos-2026-general-us-senate-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "US Senate"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-132",
+          "ocdId": null,
+          "title": "Proposition 132 \u2014 Penalties for Fentanyl Crimes"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-133",
+          "ocdId": null,
+          "title": "Proposition 133 \u2014 Penalties for Human Trafficking of a Minor"
+        },
+        {
+          "id": "co-sos-2026-general-us-house-of-representatives-1",
+          "ocdId": "ocd-division/country:us/state:co/cd:1",
+          "title": "US House of Representatives \u2014 District 1"
+        },
+        {
+          "id": "co-sos-2026-general-governor-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Governor"
+        },
+        {
+          "id": "co-sos-2026-general-lt-governor-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Lt. Governor"
+        },
+        {
+          "id": "co-sos-2026-general-secretary-of-state-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "co-sos-2026-general-state-treasurer-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "State Treasurer"
+        },
+        {
+          "id": "co-sos-2026-general-attorney-general-state",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Attorney General"
+        },
+        {
+          "id": "co-sos-2026-general-state-board-of-education-1",
+          "ocdId": "ocd-division/country:us/state:co/cd:1",
+          "title": "State Board of Education \u2014 District 1"
+        },
+        {
+          "id": "co-sos-2026-general-state-senate-31",
+          "ocdId": "ocd-division/country:us/state:co/sldu:31",
+          "title": "State Senate \u2014 District 31"
+        },
+        {
+          "id": "co-sos-2026-general-state-senate-34",
+          "ocdId": "ocd-division/country:us/state:co/sldu:34",
+          "title": "State Senate \u2014 District 34"
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-5",
+          "ocdId": "ocd-division/country:us/state:co/sldl:5",
+          "title": "State House of Representatives \u2014 District 5"
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-6",
+          "ocdId": "ocd-division/country:us/state:co/sldl:6",
+          "title": "State House of Representatives \u2014 District 6"
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-8",
+          "ocdId": "ocd-division/country:us/state:co/sldl:8",
+          "title": "State House of Representatives \u2014 District 8"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-134",
+          "ocdId": null,
+          "title": "Proposition 134 \u2014 Male and Female Participation in School Sports"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-135",
+          "ocdId": null,
+          "title": "Proposition 135 \u2014 Prohibit Certain Surgeries on Minors"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-136",
+          "ocdId": null,
+          "title": "Proposition 136 \u2014 Income Tax Rate Cap"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-137",
+          "ocdId": null,
+          "title": "Proposition 137 \u2014 Designate Sporting Goods Sales Tax Revenue for Conservation"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-81",
+          "ocdId": null,
+          "title": "Amendment 81 \u2014 Law Enforcement Reporting Requirements to Federal Authorities"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-82",
+          "ocdId": null,
+          "title": "Amendment 82 \u2014 Right to Natural Gas"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-83",
+          "ocdId": null,
+          "title": "Amendment 83 \u2014 Constitutional Right to Hunt and Fish"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-84",
+          "ocdId": null,
+          "title": "Amendment 84 \u2014 Mail Ballot Voter Identification"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-85",
+          "ocdId": null,
+          "title": "Amendment 85 \u2014 Plain Language Ballot Questions"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-86",
+          "ocdId": null,
+          "title": "Amendment 86 \u2014 Congressional Redistricting"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-87",
+          "ocdId": null,
+          "title": "Amendment 87 \u2014 Graduated Income Tax"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-nn",
+          "ocdId": null,
+          "title": "Proposition NN \u2014 State Public K-12 Education Funding"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "98101",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.451,
+      "contests": [
+        {
+          "id": "wa-sos-2026-general-ec4090bcfed791c3",
+          "ocdId": "ocd-division/country:us/state:wa/cd:7",
+          "title": "U.S. Representative, Congressional District 7"
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-il26-001",
+          "ocdId": null,
+          "title": "Initiative Measure No. IL26-001"
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-il26-638",
+          "ocdId": null,
+          "title": "Initiative Measure No. IL26-638"
+        },
+        {
+          "id": "wa-sos-2026-general-04a1a8c2b592d583",
+          "ocdId": "ocd-division/country:us/state:wa/sldu:34",
+          "title": "State Senator, Legislative District 34"
+        },
+        {
+          "id": "wa-sos-2026-general-1edc1b61aab06a80",
+          "ocdId": "ocd-division/country:us/state:wa/sldl:34",
+          "title": "State Representative Pos. 1, Legislative District 34"
+        },
+        {
+          "id": "wa-sos-2026-general-9fd7402f58428d44",
+          "ocdId": "ocd-division/country:us/state:wa/sldl:34",
+          "title": "State Representative Pos. 2, Legislative District 34"
+        },
+        {
+          "id": "wa-sos-2026-general-e66f4c83bab2de99",
+          "ocdId": "ocd-division/country:us/state:wa/sldu:43",
+          "title": "State Senator, Legislative District 43"
+        },
+        {
+          "id": "wa-sos-2026-general-e4b46d7bc3520efc",
+          "ocdId": "ocd-division/country:us/state:wa/sldl:43",
+          "title": "State Representative Pos. 1, Legislative District 43"
+        },
+        {
+          "id": "wa-sos-2026-general-a8673305b22833c5",
+          "ocdId": "ocd-division/country:us/state:wa/sldl:43",
+          "title": "State Representative Pos. 2, Legislative District 43"
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "title": "Supreme Court, Justice Position #01"
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "title": "Supreme Court, Justice Position #03"
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "title": "Supreme Court, Justice Position #04"
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "title": "Supreme Court, Justice Position #05"
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "title": "Supreme Court, Justice Position #07"
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-ip26-645",
+          "ocdId": null,
+          "title": "Initiative Measure No. IP26-645"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "10001",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.557,
+      "contests": [
+        {
+          "id": "ny-boe:2026-general:governor-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:ny",
+          "title": "Governor and Lt. Governor"
+        },
+        {
+          "id": "ny-boe:2026-general:comptroller",
+          "ocdId": "ocd-division/country:us/state:ny",
+          "title": "Comptroller"
+        },
+        {
+          "id": "ny-boe:2026-general:attorney-general",
+          "ocdId": "ocd-division/country:us/state:ny",
+          "title": "Attorney General"
+        },
+        {
+          "id": "ny-boe:2026-general:cd:12",
+          "ocdId": "ocd-division/country:us/state:ny/cd:12",
+          "title": "U.S. House District 12"
+        },
+        {
+          "id": "ny-boe:2026-general:sldu:28",
+          "ocdId": "ocd-division/country:us/state:ny/sldu:28",
+          "title": "State Senate District 28"
+        },
+        {
+          "id": "ny-boe:2026-general:sldu:47",
+          "ocdId": "ocd-division/country:us/state:ny/sldu:47",
+          "title": "State Senate District 47"
+        },
+        {
+          "id": "ny-boe:2026-general:sldl:75",
+          "ocdId": "ocd-division/country:us/state:ny/sldl:75",
+          "title": "State Assembly District 75"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "30303",
+      "httpStatus": 200,
+      "elapsedSeconds": 2.666,
+      "contests": [
+        {
+          "id": "ga-sos-2026-u-s-senate",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "U.S. Senate"
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-1",
+          "ocdId": null,
+          "title": "Constitutional Amendment 1: Increases the maximum qualifying acreage for assessment and taxation as bona fide conservation use property."
+        },
+        {
+          "id": "ga-sos-2026-governor",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Governor"
+        },
+        {
+          "id": "ga-sos-2026-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Lieutenant Governor"
+        },
+        {
+          "id": "ga-sos-2026-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "ga-sos-2026-attorney-general",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Attorney General"
+        },
+        {
+          "id": "ga-sos-2026-agriculture-commissioner",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Agriculture Commissioner"
+        },
+        {
+          "id": "ga-sos-2026-insurance-and-fire-safety-commissioner",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Insurance and Fire Safety Commissioner"
+        },
+        {
+          "id": "ga-sos-2026-state-school-superintendent",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "State School Superintendent"
+        },
+        {
+          "id": "ga-sos-2026-labor-commissioner",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Labor Commissioner"
+        },
+        {
+          "id": "ga-sos-2026-public-service-commissioner-district-3",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Public Service Commissioner, District 3"
+        },
+        {
+          "id": "ga-sos-2026-public-service-commissioner-district-5",
+          "ocdId": "ocd-division/country:us/state:ga",
+          "title": "Public Service Commissioner, District 5"
+        },
+        {
+          "id": "ga-sos-2026-u-s-house-of-representatives-district-5",
+          "ocdId": "ocd-division/country:us/state:ga/cd:5",
+          "title": "U.S. House of Representatives, District 5"
+        },
+        {
+          "id": "ga-sos-2026-state-senate-district-36",
+          "ocdId": "ocd-division/country:us/state:ga/sldu:36",
+          "title": "State Senate, District 36"
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-56",
+          "ocdId": "ocd-division/country:us/state:ga/sldl:56",
+          "title": "State House, District 56"
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-58",
+          "ocdId": "ocd-division/country:us/state:ga/sldl:58",
+          "title": "State House, District 58"
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-59",
+          "ocdId": "ocd-division/country:us/state:ga/sldl:59",
+          "title": "State House, District 59"
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-2",
+          "ocdId": null,
+          "title": "Constitutional Amendment 2: Provides for the nonpartisan election of all probate court judges."
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-3",
+          "ocdId": null,
+          "title": "Constitutional Amendment 3: Authorizes creation of Georgia Next Generation 9-1-1 Fund for 9-1-1 systems expansion, maintenance, and operation."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "33130",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.588,
+      "contests": [
+        {
+          "id": "fl-doe-2026-general-gov",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "Governor and Lieutenant Governor"
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-1",
+          "ocdId": null,
+          "title": "Amendment 1: BUDGET STABILIZATION FUND"
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-2",
+          "ocdId": null,
+          "title": "Amendment 2: EXEMPTION OF TANGIBLE PERSONAL PROPERTY ON AGRICULTURAL LAND FROM TAXATION"
+        },
+        {
+          "id": "fl-doe-2026-general-str-113",
+          "ocdId": "ocd-division/country:us/state:fl/sldl:113",
+          "title": "State Representative District 113"
+        },
+        {
+          "id": "fl-doe-2026-general-str-109",
+          "ocdId": "ocd-division/country:us/state:fl/sldl:109",
+          "title": "State Representative District 109"
+        },
+        {
+          "id": "fl-doe-2026-general-sts-36",
+          "ocdId": "ocd-division/country:us/state:fl/sldu:36",
+          "title": "State Senator District 36"
+        },
+        {
+          "id": "fl-doe-2026-general-agr",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "Commissioner of Agriculture"
+        },
+        {
+          "id": "fl-doe-2026-general-uss",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "United States Senator"
+        },
+        {
+          "id": "fl-doe-2026-general-cfo",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "Chief Financial Officer"
+        },
+        {
+          "id": "fl-doe-2026-general-atg",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "Attorney General"
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-3",
+          "ocdId": null,
+          "title": "Amendment 3: INCREASED HOMESTEAD EXEMPTION; LOWER CAP ON INCREASES IN NON-HOMESTEAD PROPERTY ASSESSMENTS"
+        }
+      ],
+      "notes": [
+        "We're working on getting the U.S. House district for ZIP 33130. U.S. House contests aren't shown until we have it."
+      ]
+    },
+    {
+      "zip": "07102",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.497,
+      "contests": [
+        {
+          "id": "ballot-nj-morris:us-senate",
+          "ocdId": "ocd-division/country:us/state:nj",
+          "title": "Member of the United States Senate"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "48226",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.753,
+      "contests": [
+        {
+          "id": "mi-sos-2026-general-governor-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Governor / Lt. Governor"
+        },
+        {
+          "id": "mi-sos-2026-general-proposal-2026-1",
+          "ocdId": null,
+          "title": "A proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution"
+        },
+        {
+          "id": "mi-sos-2026-general-proposal-2026-2",
+          "ocdId": null,
+          "title": "A proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications"
+        },
+        {
+          "id": "mi-sos-2026-general-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "mi-sos-2026-general-attorney-general",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Attorney General"
+        },
+        {
+          "id": "mi-sos-2026-general-us-senate",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "U.S. Senate"
+        },
+        {
+          "id": "mi-sos-2026-general-us-house-13",
+          "ocdId": "ocd-division/country:us/state:mi/cd:13",
+          "title": "13th District Representative in Congress"
+        },
+        {
+          "id": "mi-sos-2026-general-state-house-1",
+          "ocdId": "ocd-division/country:us/state:mi/sldl:1",
+          "title": "1st District Representative in State Legislature"
+        },
+        {
+          "id": "mi-sos-2026-general-state-house-9",
+          "ocdId": "ocd-division/country:us/state:mi/sldl:9",
+          "title": "9th District Representative in State Legislature"
+        },
+        {
+          "id": "mi-sos-2026-general-state-board-of-education",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Member of the State Board of Education"
+        },
+        {
+          "id": "mi-sos-2026-general-university-of-michigan-regent",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Regent of the University of Michigan"
+        },
+        {
+          "id": "mi-sos-2026-general-michigan-state-university-trustee",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Trustee of Michigan State University"
+        },
+        {
+          "id": "mi-sos-2026-general-wayne-state-university-governor",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Governor of Wayne State University"
+        },
+        {
+          "id": "mi-sos-2026-general-supreme-court-justice",
+          "ocdId": "ocd-division/country:us/state:mi",
+          "title": "Justice of Supreme Court"
+        }
+      ],
+      "notes": [
+        "We're working on getting the State Senate district for ZIP 48226. State Senate contests aren't shown until we have it."
+      ]
+    },
+    {
+      "zip": "46204",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.009,
+      "contests": [
+        {
+          "id": "in-ied-2026-secretary-of-state",
+          "ocdId": "ocd-division/country:us/state:in",
+          "title": "Secretary of State"
+        },
+        {
+          "id": "in-ied-2026-public-question-1",
+          "ocdId": null,
+          "title": "Public Question #1"
+        },
+        {
+          "id": "in-ied-2026-state-comptroller-auditor-of-state",
+          "ocdId": "ocd-division/country:us/state:in",
+          "title": "State Comptroller (Auditor of State)"
+        },
+        {
+          "id": "in-ied-2026-treasurer-of-state",
+          "ocdId": "ocd-division/country:us/state:in",
+          "title": "Treasurer of State"
+        },
+        {
+          "id": "in-ied-2026-united-states-representative-seventh-district",
+          "ocdId": "ocd-division/country:us/state:in/cd:7",
+          "title": "United States Representative, Seventh District"
+        },
+        {
+          "id": "in-ied-2026-state-senator-district-46",
+          "ocdId": "ocd-division/country:us/state:in/sldu:46",
+          "title": "State Senator, District 46"
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-096",
+          "ocdId": "ocd-division/country:us/state:in/sldl:96",
+          "title": "State Representative, District 096"
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-097",
+          "ocdId": "ocd-division/country:us/state:in/sldl:97",
+          "title": "State Representative, District 097"
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-099",
+          "ocdId": "ocd-division/country:us/state:in/sldl:99",
+          "title": "State Representative, District 099"
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-100",
+          "ocdId": "ocd-division/country:us/state:in/sldl:100",
+          "title": "State Representative, District 100"
+        },
+        {
+          "id": "in-ied-2026-public-question-2",
+          "ocdId": null,
+          "title": "Public Question #2"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "zip": "96813",
+      "httpStatus": 200,
+      "elapsedSeconds": 1.15,
+      "contests": [
+        {
+          "id": "hi-2026-general-u-s-representative-dist-i",
+          "ocdId": "ocd-division/country:us/state:hi/cd:1",
+          "title": "U.S. REPRESENTATIVE, DIST I"
+        },
+        {
+          "id": "hi-2026-general-question-1",
+          "ocdId": null,
+          "title": "QUESTION #1: Increasing the Timeframe for the Hawaii Senate to Consider and Act on Judicial Appointments."
+        },
+        {
+          "id": "hi-2026-general-question-2",
+          "ocdId": null,
+          "title": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits."
+        },
+        {
+          "id": "hi-2026-general-governor-and-lieutenant-governor",
+          "ocdId": "ocd-division/country:us/state:hi",
+          "title": "Governor and Lieutenant Governor"
+        },
+        {
+          "id": "hi-2026-general-state-senator-dist-13",
+          "ocdId": "ocd-division/country:us/state:hi/sldu:13",
+          "title": "STATE SENATOR, DIST 13"
+        },
+        {
+          "id": "hi-2026-general-state-representative-dist-26",
+          "ocdId": "ocd-division/country:us/state:hi/sldl:26",
+          "title": "STATE REPRESENTATIVE, DIST 26"
+        },
+        {
+          "id": "hi-2026-general-oha-maui-resident-trustee",
+          "ocdId": "ocd-division/country:us/state:hi",
+          "title": "OHA MAUI RESIDENT TRUSTEE"
+        },
+        {
+          "id": "hi-2026-general-oha-oahu-resident-trustee",
+          "ocdId": "ocd-division/country:us/state:hi",
+          "title": "OHA OAHU RESIDENT TRUSTEE"
+        },
+        {
+          "id": "hi-2026-general-oha-at-large-trustee",
+          "ocdId": "ocd-division/country:us/state:hi",
+          "title": "OHA AT-LARGE TRUSTEE"
+        }
+      ],
+      "notes": []
+    }
+  ]
+}

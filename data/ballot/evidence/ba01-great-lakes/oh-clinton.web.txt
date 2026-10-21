@@ -1,0 +1,430 @@
+(https://www.boe.ohio.gov/clinton/c/upload/FWAB_11November46Day.pdf)
+【turn124967view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 10; Source: open({"ref_id":"https://www.boe.ohio.gov/clinton/c/upload/FWAB_11November46Day.pdf","lineno":0}); Total lines: 428
+L0@P0: Page 1 of 10 Revised: 10/16/2026 9:31 AM
+L1@P0: ELECTION NOTICE FOR USE WITH THE
+L2@P0: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Clinton County Board of Elections
+L5@P0: 46-Day Notice
+L6@P0: (to be posted 46 days prior to date of election)
+L7@P0: November 3, 2026 General Election
+L8@P0: All Offices
+L9@P0: Name of Candidate (Party) Office, To Elect, Term Precincts
+L10@P0: Amy Acton and David Pepper (Dem)
+L11@P0: Don Kissick and James L. Mills (Lib)
+L12@P0: Vivek Ramaswamy and Robert A.
+L13@P0: McColley (Rep)
+L14@P0: Timothy Grady and Andrea Neutzling
+L15@P0: (Write-In)
+L16@P0: Heather Hill and Patrick Manley (Write-In)
+L17@P0: Renea Turner and Jalen Turner (Write-In)
+L18@P0: Ron Ula and Michael C. Lehnerd
+L19@P0: (Withdrawn)
+L20@P0: Governor and Lt. Governor
+L21@P0: 1 to be elected
+L22@P0: Full 4 Year Term Commencing
+L23@P0: 01/11/2027
+L24@P0: All Precincts
+L25@P0: John J. Kulewicz (Dem)
+L26@P0: Keith Faber (Rep)
+L27@P0: Attorney General
+L28@P0: 1 to be elected
+L29@P0: Full 4 Year Term Commencing
+L30@P0: 01/11/2027
+L31@P0: All Precincts
+L32@P0: Annette Blackwell (Dem)
+L33@P0: Frank LaRose (Rep)
+L34@P0: Auditor of State
+L35@P0: 1 to be elected
+L36@P0: Full 4 Year Term Commencing
+L37@P0: 01/11/2027
+L38@P0: All Precincts
+L39@P0: Allison Russo (Dem)
+L40@P0: Tom Pruss (Lib)
+L41@P0: Robert Sprague (Rep)
+L42@P0: Secretary of State
+L43@P0: 1 to be elected
+L44@P0: Full 4 Year Term Commencing
+L45@P0: 01/11/2027
+L46@P0-1: All PrecinctsPage 2 of 10 Revised: 10/16/2026 9:31 AM
+L47@P1: Seth Walsh (Dem)
+L48@P1: Jay Edwards (Rep)
+L49@P1: Treasurer of State
+L50@P1: 1 to be elected
+L51@P1: Full 4 Year Term Commencing
+L52@P1: 01/11/2027
+L53@P1: All Precincts
+L54@P1: Marilyn Zayas (Dem)
+L55@P1: Daniel R. Hawkins (Rep)
+L56@P1: Justice of the Supreme Court
+L57@P1: 1 to be elected
+L58@P1: Full 6 Year Term Commencing
+L59@P1: 01/01/2027
+L60@P1: All Precincts
+L61@P1: Jennifer Brunner (Dem)
+L62@P1: Colleen O'Donnell (Rep)
+L63@P1: Justice of the Supreme Court
+L64@P1: 1 to be elected
+L65@P1: Full 6 Year Term Commencing
+L66@P1: 01/02/2027
+L67@P1: All Precincts
+L68@P1: Greg Levy (Other-party)
+L69@P1: Sherrod Brown (Dem)
+L70@P1: William B. Redpath (Lib)
+L71@P1: Jon Husted (Rep)
+L72@P1: Stephen Faris (Write-In)
+L73@P1: Anthony Holliman (Write-In)
+L74@P1: Timothy Telymonde (Write-In)
+L75@P1: U.S. Senator
+L76@P1: 1 to be elected
+L77@P1: Unexpired Term Ending
+L78@P1: 01/03/2029
+L79@P1: All Precincts
+L80@P1: Greg Landsman (Dem)
+L81@P1: Nathan Weise (Lib)
+L82@P1: Eric Conroy (Rep)
+L83@P1: Representative to Congress
+L84@P1: (1
+L85@P1: st District)
+L86@P1: 1 to be elected
+L87@P1: Full 4 Year Term Commencing
+L88@P1: 01/03/2027
+L89@P1: All Precincts
+L90@P1: Krista Magaw (Dem)
+L91@P1: Levi Dean (Rep)
+L92@P1: State Representative (71st
+L93@P1: District
+L94@P1: 1 to be elected
+L95@P1: Full 2 Year Term Commencing
+L96@P1: 01/01/2027
+L97@P1: All Precincts
+L98@P1: Robert A. Hendrickson (Rep) Judge of the Court of
+L99@P1: Appeals (12th District)
+L100@P1: 1 to be elected
+L101@P1: Full 6-Year Term Commencing
+L102@P1: 02/09/2027
+L103@P1-2: All PrecinctsPage 3 of 10 Revised: 10/16/2026 9:31 AM
+L104@P2: Matthew Byrne (Rep) (Withdrawn – any
+L105@P2: votes for this candidate will not count)
+L106@P2: Willa Concannon (Write-In)
+L107@P2: Victor M. Haddad (Write-In) (Withdrawn)
+L108@P2: Curt Carl Hartman (Write-In) (Withdrawn)
+L109@P2: Judge of the Court of
+L110@P2: Appeals (12th District)
+L111@P2: 1 to be elected
+L112@P2: Full 6-Year Term Commencing
+L113@P2: 01/01/2027
+L114@P2: All Precincts
+L115@P2: Chad L. Carey Judge of the Court of
+L116@P2: Common Pleas
+L117@P2: (Probate/Juvenile Division)
+L118@P2: 1 to be elected
+L119@P2: Full 6 Year Term Commencing
+L120@P2: 02/09/2027
+L121@P2: All Precincts
+L122@P2: Mike McCarty (Rep) County Commissioner
+L123@P2: 1 to be elected
+L124@P2: Full 4 Year Term Commencing
+L125@P2: 01/01/2027
+L126@P2: All Precincts
+L127@P2: Terence G. Habermehl (Rep) County Auditor
+L128@P2: 1 to be elected
+L129@P2: Full 4 Year Term Commencing
+L130@P2: 03/09/2027
+L131@P2: All Precincts
+L132@P2-3: CONTINUED ON NEXT PAGEPage 4 of 10 Revised: 10/16/2026 9:31 AM
+L133@P3: All Issues
+L134@P3: Issues Precincts
+L135@P3: Issue 3
+L136@P3: Proposed Constitutional Amendment
+L137@P3: TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN
+L138@P3: ORDER TO VOTE
+L139@P3: Proposed by Joint Resolution of the
+L140@P3: General Assembly
+L141@P3: To enact Section 5 of Article V of the
+L142@P3: Constitution of the State of Ohio
+L143@P3: A majority yes vote is required for the adoption of Section 5.
+L144@P3: This proposed amendment would:
+L145@P3: • Require voters to present an approved form of government-issued photo
+L146@P3: identification in order to vote.
+L147@P3: • Allow state law to provide for an alternative method of verifying a voter’s
+L148@P3: identity for a voter who has a sincere religious objection to being
+L149@P3: photographed and, therefore, does not possess an approved form of
+L150@P3: government-issued photo identification.
+L151@P3: • Require that voters who do not vote in person provide an approved form of
+L152@P3: government-issued photo identification, unless the law authorizes those
+L153@P3: persons to vote by providing a signature and at least one other specified
+L154@P3: unique identifier.
+L155@P3: • Define approved forms of government-issued photo identification as an
+L156@P3: unexpired Ohio driver license or state identification card; a United States
+L157@P3: passport or passport card; or a United States military identification card,
+L158@P3: Ohio National Guard identification card, or United States Department of
+L159@P3: Veterans Affairs identification card.
+L160@P3: If approved, the amendment shall take effect immediately.
+L161@P3: A “YES” vote means approval of the amendment.
+L162@P3: A “NO” vote means disapproval of the amendment.
+L163@P3: All Precincts
+L164@P3: PROPOSED TAX LEVY (RENEWAL)
+L165@P3: Mental Health Recovery Board Serving Warren and Clinton
+L166@P3: Counties
+L167@P3: A majority affirmative vote is necessary for passage
+L168@P3: A renewal of a tax for the benefit of Mental Health Recovery Board Serving
+L169@P3: Warren and Clinton Counties for the purpose of current expenses, that the
+L170@P3: county auditor estimates will collect $7,677,198 annually, at a rate not
+L171@P3: exceeding 1 mill for each $1 of taxable value, which amounts to $16 for each
+L172@P3: $100,000 of the county auditor's market value, for 5 years, commencing in
+L173@P3: 2027, first due in calendar year 2028.
+L174@P3-4: All PrecinctsPage 5 of 10 Revised: 10/16/2026 9:31 AM
+L175@P4: PROPOSED TAX LEVY (RENEWAL)
+L176@P4: Clinton County (Health District)
+L177@P4: A majority affirmative vote is necessary for passage.
+L178@P4: A renewal of a tax for the benefit of Clinton County for the purpose of providing
+L179@P4: sufficient funds to carry out health programs, including but not limited to child
+L180@P4: and senior citizen services, control of communicable diseases, environmental
+L181@P4: health, health education, bioterrorism response, and aids education by the
+L182@P4: Clinton County Combined Health District that the county auditor estimates will
+L183@P4: collect $458,176 annually, at a rate not exceeding 0.5 mill for each $1 of
+L184@P4: taxable value, which amounts to $9 for each $100,000 of the county auditor's
+L185@P4: market value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L186@P4: All Precincts
+L187@P4: PROPOSED TAX LEVY (RENEWAL)
+L188@P4: Clinton County (Senior Services)
+L189@P4: A majority affirmative vote is necessary for passage.
+L190@P4: A renewal of a tax for the benefit of Clinton County for the purpose of providing
+L191@P4: and maintaining senior citizen services or facilities including home-delivered
+L192@P4: meals, durable medical equipment, minor emergency home repairs,
+L193@P4: homemaker, personal care, medical transportation, chores, respite for
+L194@P4: caregivers, adult day care, assessment, case management, and protective
+L195@P4: services that the county auditor estimates will collect $2,696,096 annually, at a
+L196@P4: rate not exceeding 2.35 mills for each $1 of taxable value, which amounts to
+L197@P4: $57 for each $100,000 of the county auditor's market value, for 5 years,
+L198@P4: commencing in 2027, first due in calendar year 2028.
+L199@P4: All Precincts
+L200@P4: REFERENDUM ON ORDINANCE NO. O-26-04
+L201@P4: (By Petition)
+L202@P4: City of Wilmington
+L203@P4: A majority affirmative vote is necessary for passage
+L204@P4: Ordinance O-26-04: Changing the zoning of real property located on SR 730
+L205@P4: (119.373 acres) in the City of Wilmington, Ohio. The ordinance changes the
+L206@P4: zoning of 119.373 acres from RR (Rural Residential) to LI (Light Industrial). It
+L207@P4: was adopted by city council on February 19, 2026.
+L208@P4: Shall Ordinance No. O-26-04 proposing to change the zoning of real property
+L209@P4: located on SR 730 (119.373 Acres) in the City of Wilmington, Ohio, be
+L210@P4: approved?
+L211@P4: A YES vote approves the ordinance. A NO vote rejects the ordinance.
+L212@P4: Wilmington 1-A/1
+L213@P4: Wilmington 1-B/1
+L214@P4: Wilmington 2-A/1
+L215@P4: Wilmington 2-B/1
+L216@P4: Wilmington 3-A/1
+L217@P4: Wilmington 3-B/1
+L218@P4: Wilmington 3-C/1
+L219@P4: Wilmington 4-A/1
+L220@P4: Wilmington 4-B/1
+L221@P4-5: Wilmington 4-C/1Page 6 of 10 Revised: 10/16/2026 9:31 AM
+L222@P5: REFERENDUM ON ORDINANCE NO. O-26-05
+L223@P5: (By Petition)
+L224@P5: City of Wilmington
+L225@P5: A majority affirmative vote is necessary for passage
+L226@P5: Ordinance O-26-05: Changing the zoning of real property located at 1957 SR
+L227@P5: 730 (65.29 acres) in the City of Wilmington, Ohio. The ordinance changes the
+L228@P5: zoning of 65.29 acres from RR (Rural Residential) to LI (Light Industrial). It was
+L229@P5: adopted by city council on February 19, 2026.
+L230@P5: Shall Ordinance No. O-26-05 proposing to change the zoning of real property
+L231@P5: located at 1957 SR 730 (65.29 acres) in the City of Wilmington, Ohio, be
+L232@P5: approved?
+L233@P5: A YES vote approves the ordinance. A NO vote rejects the ordinance.
+L234@P5: Wilmington 1-A/1
+L235@P5: Wilmington 1-B/1
+L236@P5: Wilmington 2-A/1
+L237@P5: Wilmington 2-B/1
+L238@P5: Wilmington 3-A/1
+L239@P5: Wilmington 3-B/1
+L240@P5: Wilmington 3-C/1
+L241@P5: Wilmington 4-A/1
+L242@P5: Wilmington 4-B/1
+L243@P5: Wilmington 4-C/1
+L244@P5: REFERENDUM ON ORDINANCE NO. O-26-06
+L245@P5: (By Petition)
+L246@P5: City of Wilmington
+L247@P5: A majority affirmative vote is necessary for passage
+L248@P5: Ordinance O-26-06: Changing the zoning of real property located on McGuinn
+L249@P5: Road (191.12 acres) in the City of Wilmington, Ohio. The ordinance changes
+L250@P5: the zoning of 191.12 acres from RR (Rural Residential) to LI (Light Industrial). It
+L251@P5: was adopted by city council on February 19, 2026.
+L252@P5: Shall ordinance No. O-26-06 proposing to change the zoning of 191.12 acres of
+L253@P5: real property on McGuinn Road in Wilmington, Ohio, be approved?
+L254@P5: A YES vote approves the ordinance. A NO vote rejects the ordinance.
+L255@P5: Wilmington 1-A/1
+L256@P5: Wilmington 1-B/1
+L257@P5: Wilmington 2-A/1
+L258@P5: Wilmington 2-B/1
+L259@P5: Wilmington 3-A/1
+L260@P5: Wilmington 3-B/1
+L261@P5: Wilmington 3-C/1
+L262@P5: Wilmington 4-A/1
+L263@P5: Wilmington 4-B/1
+L264@P5: Wilmington 4-C/1
+L265@P5: REFERENDUM ON ORDINANCE NO. O-26-07
+L266@P5: (By Petition)
+L267@P5: City of Wilmington
+L268@P5: A majority affirmative vote is necessary for passage
+L269@P5: Ordinance O-26-07: Changing the zoning of real property located on US 68
+L270@P5: South (170.11 acres) in the City of Wilmington, Ohio. The ordinance changes
+L271@P5: the zoning of 170.11 acres from RR (Rural Residential) to LI (Light Industrial). It
+L272@P5: was adopted by city council on February 19, 2026.
+L273@P5: Shall Ordinance No. O-26-07 proposing to change the zoning of 170.11 acres
+L274@P5: of real property on US 68 South in Wilmington, Ohio, be approved?
+L275@P5: A YES vote approves the ordinance. A NO vote rejects the ordinance.
+L276@P5: Wilmington 1-A/1
+L277@P5: Wilmington 1-B/1
+L278@P5: Wilmington 2-A/1
+L279@P5: Wilmington 2-B/1
+L280@P5: Wilmington 3-A/1
+L281@P5: Wilmington 3-B/1
+L282@P5: Wilmington 3-C/1
+L283@P5: Wilmington 4-A/1
+L284@P5: Wilmington 4-B/1
+L285@P5-6: Wilmington 4-C/1Page 7 of 10 Revised: 10/16/2026 9:31 AM
+L286@P6: PROPOSED TAX LEVY (ADDITIONAL)
+L287@P6: Village of Blanchester
+L288@P6: A majority affirmative vote is necessary for passage
+L289@P6: An additional tax for the benefit of Village of Blanchester for the purpose of
+L290@P6: maintaining and operating cemeteries that the county auditor estimates will
+L291@P6: collect $129,130 annually, at a rate not exceeding 1.25 mills for each $1 of
+L292@P6: taxable value, which amounts to $44 for each $100,000 of the county auditor's
+L293@P6: market value, for 4 years, commencing in 2026, first due in calendar year 2027.
+L294@P6: Blanchester A/1
+L295@P6: Blanchester B/1
+L296@P6: Blanchester C/1
+L297@P6: PROPOSED TAX LEVY (RENEWAL)
+L298@P6: Village of Midland
+L299@P6: A majority affirmative vote is necessary for passage.
+L300@P6: A renewal of a tax for the benefit of Village of Midland for the purpose of current
+L301@P6: expenses that the county auditor estimates will collect $9,088 annually, at a
+L302@P6: rate not exceeding 3 mills for each $1 of taxable value, which amounts to $61
+L303@P6: for each $100,000 of the county auditor's market value, for 5 years,
+L304@P6: commencing in 2027, first due in calendar year 2028.
+L305@P6: Jefferson/5
+L306@P6: PROPOSED TAX LEVY (RENEWAL)
+L307@P6: Village of Midland
+L308@P6: A majority affirmative vote is necessary for passage.
+L309@P6: A renewal of a tax for the benefit of Village of Midland for the purpose of
+L310@P6: providing and maintaining police protection, that the county auditor estimates
+L311@P6: will collect $5,120 annually, at a rate not exceeding 1 mill for each $1 of taxable
+L312@P6: value, which amounts to $35 for each $100,000 of the county auditor's market
+L313@P6: value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L314@P6: Jefferson/5
+L315@P6: PROPOSED MUNICIPAL INCOME TAX (RENEWAL)
+L316@P6: Village of Sabina
+L317@P6: A majority affirmative vote is necessary for passage
+L318@P6: Shall the Ordinance providing for the continuation of an existing 0.5 per
+L319@P6: cent levy on income for 5 years, beginning on July 1, 2027 and ending
+L320@P6: June 30, 2032, for purpose of providing revenue to maintain the Police
+L321@P6: Department for the Village of Sabina, Ohio, be passed?
+L322@P6: Sabina A/1, Sabina B/1
+L323@P6: PROPOSED INCOME TAX
+L324@P6: East Clinton Local School District
+L325@P6: A majority affirmative vote is necessary for passage
+L326@P6: Shall an annual income tax of 1.25 per cent on the earned income of
+L327@P6: individuals residing in the school district be imposed by East Clinton Local
+L328@P6: School District, for 5 years, beginning January 1, 2027, for the purpose of
+L329@P6: current expenses?
+L330@P6: Clark/2, New Vienna/1,
+L331@P6: Green/2, Sabina A/1,
+L332@P6: Sabina B/1, Richland/1,
+L333@P6: Union South A/2, Wayne/1,
+L334@P6-7: Wayne/2, Wilson/1Page 8 of 10 Revised: 10/16/2026 9:31 AM
+L335@P7: PROPOSED TAX LEVY (RENEWAL)
+L336@P7: Miami Trace Local School District
+L337@P7: A majority affirmative vote is necessary for passage.
+L338@P7: Shall a fixed-sum levy renewing an existing levy be imposed by the Miami
+L339@P7: Trace Local School District for the purpose of paying the current operating
+L340@P7: expenses of the district in the sum of $1,900,000 and a levy of taxes to be
+L341@P7: made outside of the ten-mill limitation estimated by the county auditor to
+L342@P7: average 2.2 mills for each $1 of taxable value, which amounts to $77 for each
+L343@P7: $100,000 of the county auditor's market value, for a period of 5 years,
+L344@P7: commencing in 2027, first due in calendar year 2028. The county auditor had
+L345@P7: certified that the amount by which the carry-over balance in the District's
+L346@P7: general operating budget from the preceding fiscal year exceeds the District's
+L347@P7: general fund expenditures made in the preceding fiscal year is $0, which is 0%
+L348@P7: of those expenditures.
+L349@P7: Wayne/3
+L350@P7: PROPOSED TAX LEVY (RENEWAL)
+L351@P7: Blanchester-Marion Township Joint Fire District
+L352@P7: A majority affirmative vote is necessary for passage
+L353@P7: A renewal of a tax for the benefit of Blanchester-Marion Township Joint Fire
+L354@P7: District for the purpose of providing fire protection, ambulance, paramedic, or
+L355@P7: other emergency medical services, that the county auditor estimates will collect
+L356@P7: $308,493 annually, at a rate not exceeding 3.55 mills for each $1 of taxable
+L357@P7: value, which amounts to $55 for each $100,000 of the county auditor's market
+L358@P7: value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L359@P7: Blanchester A/1
+L360@P7: Blanchester B/1
+L361@P7: Blanchester C/1
+L362@P7: Marion/1
+L363@P7: PROPOSED RESOLUTION
+L364@P7: GAS AGGREGATION
+L365@P7: Clinton County (Un-Incorporated Area)
+L366@P7: A majority affirmative vote is necessary for passage.
+L367@P7: Shall the Board of County Commissioners of Clinton County, Ohio, have the
+L368@P7: authority to aggregate the retail natural gas loads located in the unincorporated
+L369@P7: area of Clinton County, and for that purpose, enter into service agreements to
+L370@P7: facilitate the sale and purchase of competitive retail natural gas service, with
+L371@P7: automatic enrollment in the aggregation program unless an eligible customer
+L372@P7: affirmatively elects to opt out?
+L373@P7: Adams A/1-2, Adams B/1-2,
+L374@P7: Chester A/1-2,
+L375@P7: Chester B/1, Clark/1-3,
+L376@P7: Green/1-3, Jefferson/1-4,
+L377@P7: Liberty/1-2, Marion/1,
+L378@P7: Richland/1-2, Union North A/1,
+L379@P7: Union North B/1,
+L380@P7: Union South A/1-2,
+L381@P7: Union South B/1,
+L382@P7: Vernon A/1, Vernon B/1,
+L383@P7: Washington A/1,
+L384@P7: Washington B/1-2, Wayne/1-4
+L385@P7-8: Wilson/1-3Page 9 of 10 Revised: 10/16/2026 9:31 AM
+L386@P8: Local Liquor Option (Sunday Sales)
+L387@P8: For Particular Location (By Petition)
+L388@P8: 03 - Wilmington 2-A
+L389@P8: A majority affirmative vote is necessary for passage.
+L390@P8: Shall the sale of wine and mixed beverages be permitted for sale on Sunday by
+L391@P8: Wawa Midwest doing business as Wawa # 7218 an applicant for a D6 liquor
+L392@P8: permit authorizing off-premise sales who is engaged in the business of
+L393@P8: operating family-oriented, full-service convenience stores at 2094 Rombach
+L394@P8: Ave, Wilmington, OH 45177 in this precinct?
+L395@P8: 03 Wilmington 2A - All Splits
+L396@P8: Local Liquor Option For Particular Use at
+L397@P8: Business Location (By Petition)
+L398@P8: 16 - New Vienna Precinct
+L399@P8: A majority affirmative vote is necessary for passage.
+L400@P8: Shall the sale of beer, wine and mixed beverages, and spirituous liquor be
+L401@P8: permitted by Pizza Patts LLC an applicant for a D-5 liquor permit, who is
+L402@P8: engaged in the business of operating a restaurant and pizzeria at 155 W Main
+L403@P8: St, New Vienna, OH 45159 in this precinct?
+L404@P8: 16 New Vienna - All Splits
+L405@P8: Local Liquor Option For Particular Use at
+L406@P8: Business Location (By Petition) - Sunday Sales
+L407@P8: 16 - New Vienna Precinct
+L408@P8: A majority affirmative vote is necessary for passage.
+L409@P8: Shall the sale of beer, wine and mixed beverages, and spirituous liquor be
+L410@P8: permitted for sale on Sunday by Pizza Patts LLC an applicant for a D-6 liquor
+L411@P8: permit who is engaged in the business of operating a restaurant and pizzeria at
+L412@P8: 155 W Main St, New Vienna, OH 45159 in this precinct?
+L413@P8-9: 16 New Vienna - All SplitsPage 10 of 10 Revised: 10/16/2026 9:31 AM
+L414@P9: INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L415@P9: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L416@P9: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of downloading a blank, hard
+L417@P9: copy FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the website’s FWAB Wizard.
+L418@P9: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L419@P9: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the election and the
+L420@P9: updated election notice issued on the 46th day before the election as a guide to:
+L421@P9: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L422@P9: (2) write the name of your choice of candidate or choice for or against an issue.
+L423@P9: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at this
+L424@P9: address: Clinton County Board of Elections, 111 S. Nelson Ave., Suite 4, Wilmington, OH 45177.
+L425@P9: A complete listing of all county board of elections mailing addresses and contact information is available at
+L426@P9: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L427@P9: Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.

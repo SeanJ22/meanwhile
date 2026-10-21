@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wetzel%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wetzel%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.704212+00:00",
+  "rawHash": "01b4d8d52346b7bf5bb82c70e1bec276d293245d526b66bb5ed50ae5eba14165",
+  "httpStatus": 200,
+  "bytes": 812372,
+  "extractedTextHash": "324f3b90eed2688072fdfac8df046d30ef438db498cd2e94dda16e685b3b3ac6",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

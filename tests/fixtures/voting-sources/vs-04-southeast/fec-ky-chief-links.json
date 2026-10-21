@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://vrsws.sos.ky.gov/ovrweb",
+    "label": "Register to\nVote"
+  },
+  {
+    "url": "https://web.sos.ky.gov/countyclerk49/pollworker.aspx",
+    "label": "Poll Worker Registration"
+  },
+  {
+    "url": "https://secure.kentucky.gov/Corrections/VoterEligibility/search",
+    "label": "Restoration of Civil Rights"
+  },
+  {
+    "url": "https://web.sos.ky.gov/countyclerk49/elecportal.aspx",
+    "label": "County Clerks Election Portal"
+  },
+  {
+    "url": "https://web.sos.ky.gov/vetbutton",
+    "label": "Vote in Honor of a Veteran"
+  },
+  {
+    "url": "https://www.sos.ky.gov/elections/Pages/Voter-Registration-Records-Cleanup.aspx",
+    "label": "Voter Registration Records Cleanup"
+  },
+  {
+    "url": "https://www.sos.ky.gov/civic-initiatives/Pages/i-voted-sticker-contest.aspx",
+    "label": "\"I Voted\" Sticker Contest"
+  },
+  {
+    "url": "https://sos.ky.gov/Documents/2025%20Coloring%20Book%20With%20Finalists.pdf",
+    "label": "SOS Coloring Book"
+  },
+  {
+    "url": "https://sos.ky.gov/Documents/2026%20Kentucky%20Election%20Guide.pdf",
+    "label": "2026 Election Guide"
+  }
+]

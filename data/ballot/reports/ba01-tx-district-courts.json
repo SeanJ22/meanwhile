@@ -1,0 +1,2366 @@
+{
+  "officialDistrictJudgeContests": 269,
+  "writeInOnlyContests": 1,
+  "publishedContests": 269,
+  "printedCandidates": 327,
+  "certifiedWriteIns": 1,
+  "added": {
+    "contests": 0,
+    "candidacies": 0,
+    "memberships": 0
+  },
+  "sources": [
+    {
+      "url": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+      "retrievedAt": "2026-10-20T22:52:30.537Z",
+      "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+      "textFile": "2026-ballot-cert.txt",
+      "textHash": "8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde"
+    },
+    {
+      "url": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-21T00:17:59.902777+00:00",
+      "rawHash": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+      "file": "district-courts-october-2026.pdf.gz",
+      "textFile": "district-courts-october-2026.txt",
+      "textHash": "e05e28333db994adc85ee1e825e79f1b89bb28f347a2c238fcd945436835d3e2",
+      "extraction": "pdftotext -raw -f 2 -l 2; alphabetical county-to-district list on page 2; map/title on page 1"
+    },
+    {
+      "url": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+      "retrievedAt": "2026-10-20T23:31:05.471162+00:00",
+      "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+      "textFile": "2026-write-in-cert.txt",
+      "textHash": "e0a58363394806349fc76b334f56b772a6195ae55ce14b7b7a5ea5278b6b7eb2"
+    },
+    {
+      "url": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+      "finalUrl": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-21T00:26:08.577555+00:00",
+      "rawHash": "4d395eb3150b3167efaffeee0998b8e7667c127a908507da58ff9b13cceb9071",
+      "file": "hb16-enrolled.html.gz"
+    },
+    {
+      "url": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+      "finalUrl": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-21T00:24:49.314200+00:00",
+      "rawHash": "007725e2454e0f57b6ed4a5b1f51134d309b357ac129033318bf725cbaaaafb0",
+      "file": "hb16-history.html.gz"
+    }
+  ],
+  "sourceConflicts": [],
+  "resolvedSourceDifferences": [
+    {
+      "district": "274",
+      "certificationCounties": [
+        "COMAL",
+        "GUADALUPE",
+        "HAYS"
+      ],
+      "currentMapCounties": [
+        "COMAL",
+        "HAYS"
+      ],
+      "candidates": [
+        [
+          "GARY L. STEEL",
+          "REP"
+        ]
+      ],
+      "winningSource": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+      "quote": "The 274th Judicial District is composed of Comal and Hays counties.",
+      "reason": "Enacted HB16 section1.06 removed Guadalupe effective January1,2026; signed September17,2025. Current October court map agrees. The certification's obsolete Guadalupe listing is retained as the losing value."
+    }
+  ],
+  "districtAttorneyWriteIn": {
+    "contestId": "tx-ba01-2026-district-attorney-31-unexpired",
+    "certifiedWriteIns": 1,
+    "counties": [
+      "GRAY",
+      "HEMPHILL",
+      "LIPSCOMB",
+      "ROBERTS",
+      "WHEELER"
+    ],
+    "source": {
+      "url": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+      "finalUrl": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-21T00:24:54.434109+00:00",
+      "rawHash": "faad2a76a78d056ebf54a0cdb6d0c2d53ed67f27acd69519e0ad8dc7e0d36456",
+      "file": "da31-governor.html.gz"
+    }
+  },
+  "remaining": "Other appellate/district attorney races; other county and municipal sample races. All17 names in the saved statewide declared-write-in certification are now held.",
+  "contests": [
+    {
+      "district": "101",
+      "contestId": "tx-ba01-2026-district-judge-101",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "102",
+      "contestId": "tx-ba01-2026-district-judge-102",
+      "printedCandidates": 1,
+      "counties": [
+        "BOWIE",
+        "REDRIVER"
+      ]
+    },
+    {
+      "district": "103",
+      "contestId": "tx-ba01-2026-district-judge-103",
+      "printedCandidates": 1,
+      "counties": [
+        "CAMERON"
+      ]
+    },
+    {
+      "district": "105",
+      "contestId": "tx-ba01-2026-district-judge-105",
+      "printedCandidates": 1,
+      "counties": [
+        "KENEDY",
+        "KLEBERG",
+        "NUECES"
+      ]
+    },
+    {
+      "district": "106",
+      "contestId": "tx-ba01-2026-district-judge-106",
+      "printedCandidates": 1,
+      "counties": [
+        "DAWSON",
+        "GAINES",
+        "GARZA",
+        "LYNN"
+      ]
+    },
+    {
+      "district": "107",
+      "contestId": "tx-ba01-2026-district-judge-107",
+      "printedCandidates": 2,
+      "counties": [
+        "CAMERON"
+      ]
+    },
+    {
+      "district": "109",
+      "contestId": "tx-ba01-2026-district-judge-109",
+      "printedCandidates": 1,
+      "counties": [
+        "ANDREWS",
+        "CRANE",
+        "WINKLER"
+      ]
+    },
+    {
+      "district": "110",
+      "contestId": "tx-ba01-2026-district-judge-110",
+      "printedCandidates": 1,
+      "counties": [
+        "BRISCOE",
+        "DICKENS",
+        "FLOYD",
+        "MOTLEY"
+      ]
+    },
+    {
+      "district": "111",
+      "contestId": "tx-ba01-2026-district-judge-111",
+      "printedCandidates": 1,
+      "counties": [
+        "WEBB"
+      ]
+    },
+    {
+      "district": "112",
+      "contestId": "tx-ba01-2026-district-judge-112",
+      "printedCandidates": 1,
+      "counties": [
+        "CROCKETT",
+        "PECOS",
+        "REAGAN",
+        "SUTTON",
+        "UPTON"
+      ]
+    },
+    {
+      "district": "113",
+      "contestId": "tx-ba01-2026-district-judge-113",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "115",
+      "contestId": "tx-ba01-2026-district-judge-115",
+      "printedCandidates": 1,
+      "counties": [
+        "MARION",
+        "UPSHUR"
+      ]
+    },
+    {
+      "district": "116",
+      "contestId": "tx-ba01-2026-district-judge-116",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "117",
+      "contestId": "tx-ba01-2026-district-judge-117",
+      "printedCandidates": 1,
+      "counties": [
+        "NUECES"
+      ]
+    },
+    {
+      "district": "118",
+      "contestId": "tx-ba01-2026-district-judge-118",
+      "printedCandidates": 1,
+      "counties": [
+        "GLASSCOCK",
+        "HOWARD",
+        "MARTIN"
+      ]
+    },
+    {
+      "district": "120",
+      "contestId": "tx-ba01-2026-district-judge-120",
+      "printedCandidates": 2,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "122",
+      "contestId": "tx-ba01-2026-district-judge-122",
+      "printedCandidates": 1,
+      "counties": [
+        "GALVESTON"
+      ]
+    },
+    {
+      "district": "134",
+      "contestId": "tx-ba01-2026-district-judge-134",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "137",
+      "contestId": "tx-ba01-2026-district-judge-137",
+      "printedCandidates": 1,
+      "counties": [
+        "LUBBOCK"
+      ]
+    },
+    {
+      "district": "141",
+      "contestId": "tx-ba01-2026-district-judge-141",
+      "printedCandidates": 1,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "144",
+      "contestId": "tx-ba01-2026-district-judge-144",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "147",
+      "contestId": "tx-ba01-2026-district-judge-147",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "148",
+      "contestId": "tx-ba01-2026-district-judge-148",
+      "printedCandidates": 2,
+      "counties": [
+        "NUECES"
+      ]
+    },
+    {
+      "district": "149",
+      "contestId": "tx-ba01-2026-district-judge-149",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZORIA"
+      ]
+    },
+    {
+      "district": "150",
+      "contestId": "tx-ba01-2026-district-judge-150",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "154",
+      "contestId": "tx-ba01-2026-district-judge-154",
+      "printedCandidates": 1,
+      "counties": [
+        "LAMB"
+      ]
+    },
+    {
+      "district": "155",
+      "contestId": "tx-ba01-2026-district-judge-155",
+      "printedCandidates": 1,
+      "counties": [
+        "AUSTIN",
+        "FAYETTE"
+      ]
+    },
+    {
+      "district": "156",
+      "contestId": "tx-ba01-2026-district-judge-156",
+      "printedCandidates": 1,
+      "counties": [
+        "ARANSAS",
+        "BEE",
+        "LIVEOAK",
+        "MCMULLEN",
+        "SANPATRICIO"
+      ]
+    },
+    {
+      "district": "157",
+      "contestId": "tx-ba01-2026-district-judge-157",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "158",
+      "contestId": "tx-ba01-2026-district-judge-158",
+      "printedCandidates": 1,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "159",
+      "contestId": "tx-ba01-2026-district-judge-159",
+      "printedCandidates": 1,
+      "counties": [
+        "ANGELINA"
+      ]
+    },
+    {
+      "district": "160",
+      "contestId": "tx-ba01-2026-district-judge-160",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "168",
+      "contestId": "tx-ba01-2026-district-judge-168",
+      "printedCandidates": 2,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "169",
+      "contestId": "tx-ba01-2026-district-judge-169",
+      "printedCandidates": 1,
+      "counties": [
+        "BELL"
+      ]
+    },
+    {
+      "district": "170",
+      "contestId": "tx-ba01-2026-district-judge-170",
+      "printedCandidates": 1,
+      "counties": [
+        "MCLENNAN"
+      ]
+    },
+    {
+      "district": "171",
+      "contestId": "tx-ba01-2026-district-judge-171",
+      "printedCandidates": 1,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "172",
+      "contestId": "tx-ba01-2026-district-judge-172",
+      "printedCandidates": 1,
+      "counties": [
+        "JEFFERSON"
+      ]
+    },
+    {
+      "district": "173",
+      "contestId": "tx-ba01-2026-district-judge-173",
+      "printedCandidates": 1,
+      "counties": [
+        "HENDERSON"
+      ]
+    },
+    {
+      "district": "180",
+      "contestId": "tx-ba01-2026-district-judge-180",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "181",
+      "contestId": "tx-ba01-2026-district-judge-181",
+      "printedCandidates": 1,
+      "counties": [
+        "POTTER",
+        "RANDALL"
+      ]
+    },
+    {
+      "district": "182",
+      "contestId": "tx-ba01-2026-district-judge-182",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "183",
+      "contestId": "tx-ba01-2026-district-judge-183",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "184",
+      "contestId": "tx-ba01-2026-district-judge-184",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "185",
+      "contestId": "tx-ba01-2026-district-judge-185",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "186",
+      "contestId": "tx-ba01-2026-district-judge-186",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "187",
+      "contestId": "tx-ba01-2026-district-judge-187",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "188",
+      "contestId": "tx-ba01-2026-district-judge-188",
+      "printedCandidates": 1,
+      "counties": [
+        "GREGG"
+      ]
+    },
+    {
+      "district": "189",
+      "contestId": "tx-ba01-2026-district-judge-189",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "190",
+      "contestId": "tx-ba01-2026-district-judge-190",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "191",
+      "contestId": "tx-ba01-2026-district-judge-191",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "192",
+      "contestId": "tx-ba01-2026-district-judge-192",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "193",
+      "contestId": "tx-ba01-2026-district-judge-193",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "194",
+      "contestId": "tx-ba01-2026-district-judge-194",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "195",
+      "contestId": "tx-ba01-2026-district-judge-195",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "196",
+      "contestId": "tx-ba01-2026-district-judge-196",
+      "printedCandidates": 1,
+      "counties": [
+        "HUNT"
+      ]
+    },
+    {
+      "district": "197",
+      "contestId": "tx-ba01-2026-district-judge-197",
+      "printedCandidates": 1,
+      "counties": [
+        "CAMERON",
+        "WILLACY"
+      ]
+    },
+    {
+      "district": "198",
+      "contestId": "tx-ba01-2026-district-judge-198",
+      "printedCandidates": 1,
+      "counties": [
+        "BANDERA",
+        "KERR"
+      ]
+    },
+    {
+      "district": "1a",
+      "contestId": "tx-ba01-2026-district-judge-1a",
+      "printedCandidates": 1,
+      "counties": [
+        "JASPER",
+        "NEWTON",
+        "TYLER"
+      ]
+    },
+    {
+      "district": "201",
+      "contestId": "tx-ba01-2026-district-judge-201",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "203",
+      "contestId": "tx-ba01-2026-district-judge-203",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "204",
+      "contestId": "tx-ba01-2026-district-judge-204",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "205",
+      "contestId": "tx-ba01-2026-district-judge-205",
+      "printedCandidates": 1,
+      "counties": [
+        "CULBERSON",
+        "ELPASO",
+        "HUDSPETH"
+      ]
+    },
+    {
+      "district": "206",
+      "contestId": "tx-ba01-2026-district-judge-206",
+      "printedCandidates": 1,
+      "counties": [
+        "HIDALGO"
+      ]
+    },
+    {
+      "district": "207",
+      "contestId": "tx-ba01-2026-district-judge-207",
+      "printedCandidates": 1,
+      "counties": [
+        "CALDWELL",
+        "COMAL",
+        "HAYS"
+      ]
+    },
+    {
+      "district": "208",
+      "contestId": "tx-ba01-2026-district-judge-208",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "209",
+      "contestId": "tx-ba01-2026-district-judge-209",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "210",
+      "contestId": "tx-ba01-2026-district-judge-210",
+      "printedCandidates": 1,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "211",
+      "contestId": "tx-ba01-2026-district-judge-211",
+      "printedCandidates": 1,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "212",
+      "contestId": "tx-ba01-2026-district-judge-212",
+      "printedCandidates": 1,
+      "counties": [
+        "GALVESTON"
+      ]
+    },
+    {
+      "district": "213",
+      "contestId": "tx-ba01-2026-district-judge-213",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "217",
+      "contestId": "tx-ba01-2026-district-judge-217",
+      "printedCandidates": 1,
+      "counties": [
+        "ANGELINA"
+      ]
+    },
+    {
+      "district": "218",
+      "contestId": "tx-ba01-2026-district-judge-218",
+      "printedCandidates": 1,
+      "counties": [
+        "ATASCOSA",
+        "FRIO",
+        "KARNES",
+        "LASALLE",
+        "WILSON"
+      ]
+    },
+    {
+      "district": "219",
+      "contestId": "tx-ba01-2026-district-judge-219",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "220",
+      "contestId": "tx-ba01-2026-district-judge-220",
+      "printedCandidates": 1,
+      "counties": [
+        "BOSQUE",
+        "COMANCHE",
+        "HAMILTON"
+      ]
+    },
+    {
+      "district": "221",
+      "contestId": "tx-ba01-2026-district-judge-221",
+      "printedCandidates": 1,
+      "counties": [
+        "MONTGOMERY"
+      ]
+    },
+    {
+      "district": "222",
+      "contestId": "tx-ba01-2026-district-judge-222",
+      "printedCandidates": 1,
+      "counties": [
+        "DEAFSMITH",
+        "OLDHAM"
+      ]
+    },
+    {
+      "district": "223",
+      "contestId": "tx-ba01-2026-district-judge-223",
+      "printedCandidates": 1,
+      "counties": [
+        "GRAY"
+      ]
+    },
+    {
+      "district": "224",
+      "contestId": "tx-ba01-2026-district-judge-224",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "225",
+      "contestId": "tx-ba01-2026-district-judge-225",
+      "printedCandidates": 2,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "226",
+      "contestId": "tx-ba01-2026-district-judge-226",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "227",
+      "contestId": "tx-ba01-2026-district-judge-227",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "228",
+      "contestId": "tx-ba01-2026-district-judge-228",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "229",
+      "contestId": "tx-ba01-2026-district-judge-229",
+      "printedCandidates": 1,
+      "counties": [
+        "DUVAL",
+        "JIMHOGG",
+        "STARR"
+      ]
+    },
+    {
+      "district": "230",
+      "contestId": "tx-ba01-2026-district-judge-230",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "231",
+      "contestId": "tx-ba01-2026-district-judge-231",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "232",
+      "contestId": "tx-ba01-2026-district-judge-232",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "233",
+      "contestId": "tx-ba01-2026-district-judge-233",
+      "printedCandidates": 1,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "234",
+      "contestId": "tx-ba01-2026-district-judge-234",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "236",
+      "contestId": "tx-ba01-2026-district-judge-236",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "237",
+      "contestId": "tx-ba01-2026-district-judge-237",
+      "printedCandidates": 1,
+      "counties": [
+        "LUBBOCK"
+      ]
+    },
+    {
+      "district": "238",
+      "contestId": "tx-ba01-2026-district-judge-238",
+      "printedCandidates": 1,
+      "counties": [
+        "MIDLAND"
+      ]
+    },
+    {
+      "district": "239",
+      "contestId": "tx-ba01-2026-district-judge-239",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZORIA"
+      ]
+    },
+    {
+      "district": "240",
+      "contestId": "tx-ba01-2026-district-judge-240",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "241",
+      "contestId": "tx-ba01-2026-district-judge-241",
+      "printedCandidates": 1,
+      "counties": [
+        "SMITH"
+      ]
+    },
+    {
+      "district": "242",
+      "contestId": "tx-ba01-2026-district-judge-242",
+      "printedCandidates": 1,
+      "counties": [
+        "CASTRO",
+        "HALE",
+        "SWISHER"
+      ]
+    },
+    {
+      "district": "243",
+      "contestId": "tx-ba01-2026-district-judge-243",
+      "printedCandidates": 1,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "244",
+      "contestId": "tx-ba01-2026-district-judge-244",
+      "printedCandidates": 1,
+      "counties": [
+        "ECTOR"
+      ]
+    },
+    {
+      "district": "245",
+      "contestId": "tx-ba01-2026-district-judge-245",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "246",
+      "contestId": "tx-ba01-2026-district-judge-246",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "247",
+      "contestId": "tx-ba01-2026-district-judge-247",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "248",
+      "contestId": "tx-ba01-2026-district-judge-248",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "249",
+      "contestId": "tx-ba01-2026-district-judge-249",
+      "printedCandidates": 1,
+      "counties": [
+        "JOHNSON",
+        "SOMERVELL"
+      ]
+    },
+    {
+      "district": "250",
+      "contestId": "tx-ba01-2026-district-judge-250",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "251",
+      "contestId": "tx-ba01-2026-district-judge-251",
+      "printedCandidates": 1,
+      "counties": [
+        "POTTER",
+        "RANDALL"
+      ]
+    },
+    {
+      "district": "252",
+      "contestId": "tx-ba01-2026-district-judge-252",
+      "printedCandidates": 1,
+      "counties": [
+        "JEFFERSON"
+      ]
+    },
+    {
+      "district": "253",
+      "contestId": "tx-ba01-2026-district-judge-253",
+      "printedCandidates": 1,
+      "counties": [
+        "CHAMBERS",
+        "LIBERTY"
+      ]
+    },
+    {
+      "district": "254",
+      "contestId": "tx-ba01-2026-district-judge-254",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "255",
+      "contestId": "tx-ba01-2026-district-judge-255",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "256",
+      "contestId": "tx-ba01-2026-district-judge-256",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "257",
+      "contestId": "tx-ba01-2026-district-judge-257",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "258",
+      "contestId": "tx-ba01-2026-district-judge-258",
+      "printedCandidates": 1,
+      "counties": [
+        "POLK",
+        "SANJACINTO",
+        "TRINITY"
+      ]
+    },
+    {
+      "district": "259",
+      "contestId": "tx-ba01-2026-district-judge-259",
+      "printedCandidates": 1,
+      "counties": [
+        "JONES",
+        "SHACKELFORD"
+      ]
+    },
+    {
+      "district": "260",
+      "contestId": "tx-ba01-2026-district-judge-260",
+      "printedCandidates": 1,
+      "counties": [
+        "ORANGE"
+      ]
+    },
+    {
+      "district": "261",
+      "contestId": "tx-ba01-2026-district-judge-261",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "262",
+      "contestId": "tx-ba01-2026-district-judge-262",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "263",
+      "contestId": "tx-ba01-2026-district-judge-263",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "264",
+      "contestId": "tx-ba01-2026-district-judge-264",
+      "printedCandidates": 1,
+      "counties": [
+        "BELL"
+      ]
+    },
+    {
+      "district": "265",
+      "contestId": "tx-ba01-2026-district-judge-265",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "266",
+      "contestId": "tx-ba01-2026-district-judge-266",
+      "printedCandidates": 1,
+      "counties": [
+        "ERATH"
+      ]
+    },
+    {
+      "district": "267",
+      "contestId": "tx-ba01-2026-district-judge-267",
+      "printedCandidates": 1,
+      "counties": [
+        "CALHOUN",
+        "DEWITT",
+        "GOLIAD",
+        "JACKSON",
+        "REFUGIO",
+        "VICTORIA"
+      ]
+    },
+    {
+      "district": "268",
+      "contestId": "tx-ba01-2026-district-judge-268",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "269",
+      "contestId": "tx-ba01-2026-district-judge-269",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "270",
+      "contestId": "tx-ba01-2026-district-judge-270",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "271",
+      "contestId": "tx-ba01-2026-district-judge-271",
+      "printedCandidates": 1,
+      "counties": [
+        "JACK",
+        "WISE"
+      ]
+    },
+    {
+      "district": "273",
+      "contestId": "tx-ba01-2026-district-judge-273",
+      "printedCandidates": 1,
+      "counties": [
+        "SABINE",
+        "SANAUGUSTINE",
+        "SHELBY"
+      ]
+    },
+    {
+      "district": "274",
+      "contestId": "tx-ba01-2026-district-judge-274",
+      "printedCandidates": 1,
+      "counties": [
+        "COMAL",
+        "HAYS"
+      ]
+    },
+    {
+      "district": "275",
+      "contestId": "tx-ba01-2026-district-judge-275",
+      "printedCandidates": 1,
+      "counties": [
+        "HIDALGO"
+      ]
+    },
+    {
+      "district": "277",
+      "contestId": "tx-ba01-2026-district-judge-277",
+      "printedCandidates": 1,
+      "counties": [
+        "WILLIAMSON"
+      ]
+    },
+    {
+      "district": "278",
+      "contestId": "tx-ba01-2026-district-judge-278",
+      "printedCandidates": 1,
+      "counties": [
+        "LEON",
+        "MADISON",
+        "WALKER"
+      ]
+    },
+    {
+      "district": "279",
+      "contestId": "tx-ba01-2026-district-judge-279",
+      "printedCandidates": 1,
+      "counties": [
+        "JEFFERSON"
+      ]
+    },
+    {
+      "district": "280",
+      "contestId": "tx-ba01-2026-district-judge-280",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "281",
+      "contestId": "tx-ba01-2026-district-judge-281",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "282",
+      "contestId": "tx-ba01-2026-district-judge-282",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "283",
+      "contestId": "tx-ba01-2026-district-judge-283",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "284",
+      "contestId": "tx-ba01-2026-district-judge-284",
+      "printedCandidates": 1,
+      "counties": [
+        "MONTGOMERY"
+      ]
+    },
+    {
+      "district": "285",
+      "contestId": "tx-ba01-2026-district-judge-285",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "286",
+      "contestId": "tx-ba01-2026-district-judge-286",
+      "printedCandidates": 1,
+      "counties": [
+        "COCHRAN",
+        "HOCKLEY"
+      ]
+    },
+    {
+      "district": "287",
+      "contestId": "tx-ba01-2026-district-judge-287",
+      "printedCandidates": 1,
+      "counties": [
+        "BAILEY",
+        "PARMER"
+      ]
+    },
+    {
+      "district": "288",
+      "contestId": "tx-ba01-2026-district-judge-288",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "289",
+      "contestId": "tx-ba01-2026-district-judge-289",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "290",
+      "contestId": "tx-ba01-2026-district-judge-290",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "291",
+      "contestId": "tx-ba01-2026-district-judge-291",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "292",
+      "contestId": "tx-ba01-2026-district-judge-292",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "293",
+      "contestId": "tx-ba01-2026-district-judge-293",
+      "printedCandidates": 1,
+      "counties": [
+        "DIMMIT",
+        "MAVERICK",
+        "ZAVALA"
+      ]
+    },
+    {
+      "district": "294",
+      "contestId": "tx-ba01-2026-district-judge-294",
+      "printedCandidates": 1,
+      "counties": [
+        "VANZANDT"
+      ]
+    },
+    {
+      "district": "295",
+      "contestId": "tx-ba01-2026-district-judge-295",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "296",
+      "contestId": "tx-ba01-2026-district-judge-296",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "297",
+      "contestId": "tx-ba01-2026-district-judge-297",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "298",
+      "contestId": "tx-ba01-2026-district-judge-298",
+      "printedCandidates": 2,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "299",
+      "contestId": "tx-ba01-2026-district-judge-299",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "30",
+      "contestId": "tx-ba01-2026-district-judge-30",
+      "printedCandidates": 1,
+      "counties": [
+        "WICHITA"
+      ]
+    },
+    {
+      "district": "300",
+      "contestId": "tx-ba01-2026-district-judge-300",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZORIA"
+      ]
+    },
+    {
+      "district": "301",
+      "contestId": "tx-ba01-2026-district-judge-301",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "302",
+      "contestId": "tx-ba01-2026-district-judge-302",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "303",
+      "contestId": "tx-ba01-2026-district-judge-303",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "304",
+      "contestId": "tx-ba01-2026-district-judge-304",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "305",
+      "contestId": "tx-ba01-2026-district-judge-305",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "306",
+      "contestId": "tx-ba01-2026-district-judge-306",
+      "printedCandidates": 1,
+      "counties": [
+        "GALVESTON"
+      ]
+    },
+    {
+      "district": "307",
+      "contestId": "tx-ba01-2026-district-judge-307",
+      "printedCandidates": 1,
+      "counties": [
+        "GREGG"
+      ]
+    },
+    {
+      "district": "308",
+      "contestId": "tx-ba01-2026-district-judge-308",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "309",
+      "contestId": "tx-ba01-2026-district-judge-309",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "31",
+      "contestId": "tx-ba01-2026-district-judge-31",
+      "printedCandidates": 1,
+      "counties": [
+        "GRAY",
+        "HEMPHILL",
+        "LIPSCOMB",
+        "ROBERTS",
+        "WHEELER"
+      ]
+    },
+    {
+      "district": "310",
+      "contestId": "tx-ba01-2026-district-judge-310",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "311",
+      "contestId": "tx-ba01-2026-district-judge-311",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "312",
+      "contestId": "tx-ba01-2026-district-judge-312",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "313",
+      "contestId": "tx-ba01-2026-district-judge-313",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "314",
+      "contestId": "tx-ba01-2026-district-judge-314",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "315",
+      "contestId": "tx-ba01-2026-district-judge-315",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "316",
+      "contestId": "tx-ba01-2026-district-judge-316",
+      "printedCandidates": 1,
+      "counties": [
+        "HUTCHINSON"
+      ]
+    },
+    {
+      "district": "317",
+      "contestId": "tx-ba01-2026-district-judge-317",
+      "printedCandidates": 1,
+      "counties": [
+        "JEFFERSON"
+      ]
+    },
+    {
+      "district": "318",
+      "contestId": "tx-ba01-2026-district-judge-318",
+      "printedCandidates": 1,
+      "counties": [
+        "MIDLAND"
+      ]
+    },
+    {
+      "district": "319",
+      "contestId": "tx-ba01-2026-district-judge-319",
+      "printedCandidates": 1,
+      "counties": [
+        "NUECES"
+      ]
+    },
+    {
+      "district": "320",
+      "contestId": "tx-ba01-2026-district-judge-320",
+      "printedCandidates": 1,
+      "counties": [
+        "POTTER"
+      ]
+    },
+    {
+      "district": "321",
+      "contestId": "tx-ba01-2026-district-judge-321",
+      "printedCandidates": 1,
+      "counties": [
+        "SMITH"
+      ]
+    },
+    {
+      "district": "322",
+      "contestId": "tx-ba01-2026-district-judge-322",
+      "printedCandidates": 1,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "323",
+      "contestId": "tx-ba01-2026-district-judge-323",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "324",
+      "contestId": "tx-ba01-2026-district-judge-324",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "325",
+      "contestId": "tx-ba01-2026-district-judge-325",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "326",
+      "contestId": "tx-ba01-2026-district-judge-326",
+      "printedCandidates": 1,
+      "counties": [
+        "TAYLOR"
+      ]
+    },
+    {
+      "district": "327",
+      "contestId": "tx-ba01-2026-district-judge-327",
+      "printedCandidates": 1,
+      "counties": [
+        "ELPASO"
+      ]
+    },
+    {
+      "district": "328",
+      "contestId": "tx-ba01-2026-district-judge-328",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "329",
+      "contestId": "tx-ba01-2026-district-judge-329",
+      "printedCandidates": 1,
+      "counties": [
+        "WHARTON"
+      ]
+    },
+    {
+      "district": "330",
+      "contestId": "tx-ba01-2026-district-judge-330",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "331",
+      "contestId": "tx-ba01-2026-district-judge-331",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "355",
+      "contestId": "tx-ba01-2026-district-judge-355",
+      "printedCandidates": 1,
+      "counties": [
+        "HOOD"
+      ]
+    },
+    {
+      "district": "357",
+      "contestId": "tx-ba01-2026-district-judge-357",
+      "printedCandidates": 1,
+      "counties": [
+        "CAMERON"
+      ]
+    },
+    {
+      "district": "358",
+      "contestId": "tx-ba01-2026-district-judge-358",
+      "printedCandidates": 1,
+      "counties": [
+        "ECTOR"
+      ]
+    },
+    {
+      "district": "359",
+      "contestId": "tx-ba01-2026-district-judge-359",
+      "printedCandidates": 1,
+      "counties": [
+        "MONTGOMERY"
+      ]
+    },
+    {
+      "district": "36",
+      "contestId": "tx-ba01-2026-district-judge-36",
+      "printedCandidates": 1,
+      "counties": [
+        "ARANSAS",
+        "BEE",
+        "LIVEOAK",
+        "MCMULLEN",
+        "SANPATRICIO"
+      ]
+    },
+    {
+      "district": "361",
+      "contestId": "tx-ba01-2026-district-judge-361",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZOS"
+      ]
+    },
+    {
+      "district": "363",
+      "contestId": "tx-ba01-2026-district-judge-363",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "364",
+      "contestId": "tx-ba01-2026-district-judge-364",
+      "printedCandidates": 1,
+      "counties": [
+        "LUBBOCK"
+      ]
+    },
+    {
+      "district": "365",
+      "contestId": "tx-ba01-2026-district-judge-365",
+      "printedCandidates": 1,
+      "counties": [
+        "DIMMIT",
+        "MAVERICK",
+        "ZAVALA"
+      ]
+    },
+    {
+      "district": "366",
+      "contestId": "tx-ba01-2026-district-judge-366",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "367",
+      "contestId": "tx-ba01-2026-district-judge-367",
+      "printedCandidates": 1,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "368",
+      "contestId": "tx-ba01-2026-district-judge-368",
+      "printedCandidates": 1,
+      "counties": [
+        "WILLIAMSON"
+      ]
+    },
+    {
+      "district": "369",
+      "contestId": "tx-ba01-2026-district-judge-369",
+      "printedCandidates": 1,
+      "counties": [
+        "ANDERSON",
+        "CHEROKEE",
+        "LEON"
+      ]
+    },
+    {
+      "district": "370",
+      "contestId": "tx-ba01-2026-district-judge-370",
+      "printedCandidates": 1,
+      "counties": [
+        "HIDALGO"
+      ]
+    },
+    {
+      "district": "371",
+      "contestId": "tx-ba01-2026-district-judge-371",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "372",
+      "contestId": "tx-ba01-2026-district-judge-372",
+      "printedCandidates": 1,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "377",
+      "contestId": "tx-ba01-2026-district-judge-377",
+      "printedCandidates": 1,
+      "counties": [
+        "VICTORIA"
+      ]
+    },
+    {
+      "district": "385",
+      "contestId": "tx-ba01-2026-district-judge-385",
+      "printedCandidates": 1,
+      "counties": [
+        "MIDLAND"
+      ]
+    },
+    {
+      "district": "39",
+      "contestId": "tx-ba01-2026-district-judge-39",
+      "printedCandidates": 1,
+      "counties": [
+        "HASKELL",
+        "KENT",
+        "STONEWALL",
+        "THROCKMORTON"
+      ]
+    },
+    {
+      "district": "397",
+      "contestId": "tx-ba01-2026-district-judge-397",
+      "printedCandidates": 1,
+      "counties": [
+        "GRAYSON"
+      ]
+    },
+    {
+      "district": "40",
+      "contestId": "tx-ba01-2026-district-judge-40",
+      "printedCandidates": 1,
+      "counties": [
+        "ELLIS"
+      ]
+    },
+    {
+      "district": "403",
+      "contestId": "tx-ba01-2026-district-judge-403",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "412",
+      "contestId": "tx-ba01-2026-district-judge-412",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZORIA"
+      ]
+    },
+    {
+      "district": "414",
+      "contestId": "tx-ba01-2026-district-judge-414",
+      "printedCandidates": 1,
+      "counties": [
+        "MCLENNAN"
+      ]
+    },
+    {
+      "district": "417",
+      "contestId": "tx-ba01-2026-district-judge-417",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "419",
+      "contestId": "tx-ba01-2026-district-judge-419",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "424",
+      "contestId": "tx-ba01-2026-district-judge-424",
+      "printedCandidates": 1,
+      "counties": [
+        "BLANCO",
+        "BURNET",
+        "LLANO",
+        "SANSABA"
+      ]
+    },
+    {
+      "district": "428",
+      "contestId": "tx-ba01-2026-district-judge-428",
+      "printedCandidates": 2,
+      "counties": [
+        "HAYS"
+      ]
+    },
+    {
+      "district": "429",
+      "contestId": "tx-ba01-2026-district-judge-429",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "432",
+      "contestId": "tx-ba01-2026-district-judge-432",
+      "printedCandidates": 2,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "436",
+      "contestId": "tx-ba01-2026-district-judge-436",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "437",
+      "contestId": "tx-ba01-2026-district-judge-437",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "44",
+      "contestId": "tx-ba01-2026-district-judge-44",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "440",
+      "contestId": "tx-ba01-2026-district-judge-440",
+      "printedCandidates": 1,
+      "counties": [
+        "CORYELL"
+      ]
+    },
+    {
+      "district": "441",
+      "contestId": "tx-ba01-2026-district-judge-441",
+      "printedCandidates": 1,
+      "counties": [
+        "MIDLAND"
+      ]
+    },
+    {
+      "district": "45",
+      "contestId": "tx-ba01-2026-district-judge-45",
+      "printedCandidates": 1,
+      "counties": [
+        "BEXAR"
+      ]
+    },
+    {
+      "district": "451",
+      "contestId": "tx-ba01-2026-district-judge-451",
+      "printedCandidates": 1,
+      "counties": [
+        "KENDALL"
+      ]
+    },
+    {
+      "district": "452",
+      "contestId": "tx-ba01-2026-district-judge-452",
+      "printedCandidates": 1,
+      "counties": [
+        "EDWARDS",
+        "KIMBLE",
+        "MASON",
+        "MCCULLOCH",
+        "MENARD"
+      ]
+    },
+    {
+      "district": "455",
+      "contestId": "tx-ba01-2026-district-judge-455",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "456",
+      "contestId": "tx-ba01-2026-district-judge-456",
+      "printedCandidates": 1,
+      "counties": [
+        "GUADALUPE"
+      ]
+    },
+    {
+      "district": "458",
+      "contestId": "tx-ba01-2026-district-judge-458",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "459",
+      "contestId": "tx-ba01-2026-district-judge-459",
+      "printedCandidates": 1,
+      "counties": [
+        "TRAVIS"
+      ]
+    },
+    {
+      "district": "46",
+      "contestId": "tx-ba01-2026-district-judge-46",
+      "printedCandidates": 1,
+      "counties": [
+        "FOARD",
+        "HARDEMAN",
+        "WILBARGER"
+      ]
+    },
+    {
+      "district": "466",
+      "contestId": "tx-ba01-2026-district-judge-466",
+      "printedCandidates": 1,
+      "counties": [
+        "COMAL"
+      ]
+    },
+    {
+      "district": "467",
+      "contestId": "tx-ba01-2026-district-judge-467",
+      "printedCandidates": 1,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "47",
+      "contestId": "tx-ba01-2026-district-judge-47",
+      "printedCandidates": 1,
+      "counties": [
+        "ARMSTRONG",
+        "POTTER",
+        "RANDALL"
+      ]
+    },
+    {
+      "district": "471",
+      "contestId": "tx-ba01-2026-district-judge-471",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "477",
+      "contestId": "tx-ba01-2026-district-judge-477",
+      "printedCandidates": 1,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "478",
+      "contestId": "tx-ba01-2026-district-judge-478",
+      "printedCandidates": 1,
+      "counties": [
+        "BELL"
+      ]
+    },
+    {
+      "district": "480",
+      "contestId": "tx-ba01-2026-district-judge-480",
+      "printedCandidates": 1,
+      "counties": [
+        "WILLIAMSON"
+      ]
+    },
+    {
+      "district": "481",
+      "contestId": "tx-ba01-2026-district-judge-481",
+      "printedCandidates": 2,
+      "counties": [
+        "DENTON"
+      ]
+    },
+    {
+      "district": "482",
+      "contestId": "tx-ba01-2026-district-judge-482",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "484",
+      "contestId": "tx-ba01-2026-district-judge-484",
+      "printedCandidates": 1,
+      "counties": [
+        "CAMERON"
+      ]
+    },
+    {
+      "district": "485",
+      "contestId": "tx-ba01-2026-district-judge-485",
+      "printedCandidates": 1,
+      "counties": [
+        "TARRANT"
+      ]
+    },
+    {
+      "district": "486",
+      "contestId": "tx-ba01-2026-district-judge-486",
+      "printedCandidates": 1,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "49",
+      "contestId": "tx-ba01-2026-district-judge-49",
+      "printedCandidates": 1,
+      "counties": [
+        "WEBB",
+        "ZAPATA"
+      ]
+    },
+    {
+      "district": "494",
+      "contestId": "tx-ba01-2026-district-judge-494",
+      "printedCandidates": 1,
+      "counties": [
+        "COLLIN"
+      ]
+    },
+    {
+      "district": "495",
+      "contestId": "tx-ba01-2026-district-judge-495",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "496",
+      "contestId": "tx-ba01-2026-district-judge-496",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "497",
+      "contestId": "tx-ba01-2026-district-judge-497",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "498",
+      "contestId": "tx-ba01-2026-district-judge-498",
+      "printedCandidates": 1,
+      "counties": [
+        "KENDALL"
+      ]
+    },
+    {
+      "district": "501",
+      "contestId": "tx-ba01-2026-district-judge-501",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "502",
+      "contestId": "tx-ba01-2026-district-judge-502",
+      "printedCandidates": 2,
+      "counties": [
+        "FORTBEND"
+      ]
+    },
+    {
+      "district": "503",
+      "contestId": "tx-ba01-2026-district-judge-503",
+      "printedCandidates": 1,
+      "counties": [
+        "ROCKWALL"
+      ]
+    },
+    {
+      "district": "504",
+      "contestId": "tx-ba01-2026-district-judge-504",
+      "printedCandidates": 1,
+      "counties": [
+        "ELLIS"
+      ]
+    },
+    {
+      "district": "512",
+      "contestId": "tx-ba01-2026-district-judge-512",
+      "printedCandidates": 2,
+      "counties": [
+        "WILLIAMSON"
+      ]
+    },
+    {
+      "district": "54",
+      "contestId": "tx-ba01-2026-district-judge-54",
+      "printedCandidates": 1,
+      "counties": [
+        "MCLENNAN"
+      ]
+    },
+    {
+      "district": "55",
+      "contestId": "tx-ba01-2026-district-judge-55",
+      "printedCandidates": 2,
+      "counties": [
+        "HARRIS"
+      ]
+    },
+    {
+      "district": "58",
+      "contestId": "tx-ba01-2026-district-judge-58",
+      "printedCandidates": 1,
+      "counties": [
+        "JEFFERSON"
+      ]
+    },
+    {
+      "district": "62",
+      "contestId": "tx-ba01-2026-district-judge-62",
+      "printedCandidates": 1,
+      "counties": [
+        "DELTA",
+        "FRANKLIN",
+        "HOPKINS",
+        "LAMAR"
+      ]
+    },
+    {
+      "district": "64",
+      "contestId": "tx-ba01-2026-district-judge-64",
+      "printedCandidates": 1,
+      "counties": [
+        "CASTRO",
+        "HALE",
+        "SWISHER"
+      ]
+    },
+    {
+      "district": "66",
+      "contestId": "tx-ba01-2026-district-judge-66",
+      "printedCandidates": 1,
+      "counties": [
+        "HILL"
+      ]
+    },
+    {
+      "district": "68",
+      "contestId": "tx-ba01-2026-district-judge-68",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAS"
+      ]
+    },
+    {
+      "district": "69",
+      "contestId": "tx-ba01-2026-district-judge-69",
+      "printedCandidates": 1,
+      "counties": [
+        "DALLAM",
+        "HARTLEY",
+        "MOORE",
+        "SHERMAN"
+      ]
+    },
+    {
+      "district": "70",
+      "contestId": "tx-ba01-2026-district-judge-70",
+      "printedCandidates": 1,
+      "counties": [
+        "ECTOR"
+      ]
+    },
+    {
+      "district": "74",
+      "contestId": "tx-ba01-2026-district-judge-74",
+      "printedCandidates": 1,
+      "counties": [
+        "MCLENNAN"
+      ]
+    },
+    {
+      "district": "75",
+      "contestId": "tx-ba01-2026-district-judge-75",
+      "printedCandidates": 1,
+      "counties": [
+        "LIBERTY"
+      ]
+    },
+    {
+      "district": "81",
+      "contestId": "tx-ba01-2026-district-judge-81",
+      "printedCandidates": 1,
+      "counties": [
+        "ATASCOSA",
+        "FRIO",
+        "KARNES",
+        "LASALLE",
+        "WILSON"
+      ]
+    },
+    {
+      "district": "82",
+      "contestId": "tx-ba01-2026-district-judge-82",
+      "printedCandidates": 1,
+      "counties": [
+        "FALLS",
+        "ROBERTSON"
+      ]
+    },
+    {
+      "district": "83",
+      "contestId": "tx-ba01-2026-district-judge-83",
+      "printedCandidates": 1,
+      "counties": [
+        "PECOS",
+        "TERRELL",
+        "VALVERDE"
+      ]
+    },
+    {
+      "district": "85",
+      "contestId": "tx-ba01-2026-district-judge-85",
+      "printedCandidates": 1,
+      "counties": [
+        "BRAZOS"
+      ]
+    },
+    {
+      "district": "86",
+      "contestId": "tx-ba01-2026-district-judge-86",
+      "printedCandidates": 1,
+      "counties": [
+        "KAUFMAN"
+      ]
+    },
+    {
+      "district": "87",
+      "contestId": "tx-ba01-2026-district-judge-87",
+      "printedCandidates": 1,
+      "counties": [
+        "ANDERSON",
+        "FREESTONE",
+        "LEON",
+        "LIMESTONE"
+      ]
+    },
+    {
+      "district": "94",
+      "contestId": "tx-ba01-2026-district-judge-94",
+      "printedCandidates": 2,
+      "counties": [
+        "NUECES"
+      ]
+    },
+    {
+      "district": "276",
+      "contestId": "tx-ba01-2026-district-judge-276",
+      "printedCandidates": 0,
+      "certifiedWriteIns": 1,
+      "counties": [
+        "CAMP",
+        "MARION",
+        "MORRIS",
+        "TITUS"
+      ]
+    }
+  ]
+}

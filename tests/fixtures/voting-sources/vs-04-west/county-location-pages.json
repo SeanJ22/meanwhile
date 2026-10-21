@@ -1,0 +1,444 @@
+[
+  {
+    "url": "https://alamedacountyca.gov/rov_app/vcalist",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/vcalist",
+    "status": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "capturedAt": "2026-10-21T04:28:28.898Z",
+    "rawHash": "a92a3f4fdc4436bbcf42cac92f718ca41966d8c4cf44f9bde058fe053970e6cf",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-3fe1afc5c5b1.html",
+    "savedHash": "a92a3f4fdc4436bbcf42cac92f718ca41966d8c4cf44f9bde058fe053970e6cf",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://alamedacountyca.gov/rov_app/vcalist",
+        "label": "Vote Centers"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov",
+        "label": "Official Election Site of Alameda County"
+      },
+      {
+        "url": "https://www.facebook.com/acvote",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/ACVOTE",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/acvote",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCj5Xu4ud8uEgvVljSp2caDA",
+        "label": ""
+      },
+      {
+        "url": "https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9",
+        "label": ""
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/election-information/elections",
+        "label": "Election\nInformation"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/election-information/archived-elections",
+        "label": "Archived Elections"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/election-information/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/election-information/election-cost",
+        "label": "Election Cost"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/voting/register-to-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/vca",
+        "label": "Voter's Choice Act"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/voting/voting-rights",
+        "label": "Voting Rights"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/voting/uocava",
+        "label": "Military and Overseas\nVoters"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/voting/ways-of-voting",
+        "label": "Ways of Voting"
+      },
+      {
+        "url": "https://alamedacountyca.gov/rovapps/maps/ballotdropbox_map.htm",
+        "label": "24-Hour Drop\nBox Map"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/youthvoting",
+        "label": "Youth Voting"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/accessibility",
+        "label": "Information for Voters\nwith Disabilities"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/webpolicy",
+        "label": "Website Accessibility"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/language",
+        "label": "Language Assistance"
+      },
+      {
+        "url": "https://alamedacountyca.gov/rov_app/edata",
+        "label": "Data"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/resources/how-to-guidelines",
+        "label": "How-to\nGuidelines"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/resources/political-party-information",
+        "label": "Political Party Contact Information"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/resources/faqs",
+        "label": "Frequently Asked\nQuestions"
+      },
+      {
+        "url": "https://alamedacountyca.gov/alcoecommrov_app/search.do",
+        "label": "Store"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/resources/about-us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/community/laac",
+        "label": "Language Accessibility Advisory Committee"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/community/vaac",
+        "label": "Voting Accessibility Advisory Committee"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/community/events",
+        "label": "Events"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/community/partnerships",
+        "label": "Partnerships"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/community/become-an-election-worker",
+        "label": "Become an Election Worker"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/candidates/how-to-run",
+        "label": "How to Run"
+      },
+      {
+        "url": "http://www.netfile.com/agency/coa",
+        "label": "Campaign Finance"
+      },
+      {
+        "url": "https://alamedacountyca.gov/rov_app/electedofficials",
+        "label": "Elected Officials"
+      },
+      {
+        "url": "https://alamedacountyca.gov/rov_app/candidatelist",
+        "label": "Candidate List"
+      },
+      {
+        "url": "https://alamedacountyca.gov",
+        "label": "County of Alameda"
+      },
+      {
+        "url": "http://www.sos.ca.gov",
+        "label": "California Secretary of State"
+      },
+      {
+        "url": "http://votersedge.org/ca",
+        "label": "Voter's Edge"
+      },
+      {
+        "url": "https://sccvote.sccgov.org/coalition-bay-area-election-officials",
+        "label": "Coalition of Bay Area\nElection Officials"
+      }
+    ]
+  },
+  {
+    "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+    "finalUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+    "status": 200,
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "capturedAt": "2026-10-21T04:28:28.873Z",
+    "rawHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nv-9a4ec08bf0ec.xlsx",
+    "savedHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "finalUrl": "https://vote.utahcounty.gov/voting-locations",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:28:28.811Z",
+    "rawHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ut-353ad3a218d2.html",
+    "savedHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://drive.google.com/file/d/1JO2uWnnMZIFIeU0ebyKG-kr8j0keZVqx/view?usp=sharing",
+        "label": "Salem Proposition (opens in a new tab)"
+      },
+      {
+        "url": "https://www.utahcounty.gov",
+        "label": "UtahCounty.gov"
+      },
+      {
+        "url": "https://vote.utahcounty.gov",
+        "label": "Elections"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/results",
+        "label": "Results"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/contact",
+        "label": "Contact"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/voting-locations",
+        "label": "Voting Locations"
+      },
+      {
+        "url": "https://ballottrax.utah.gov/voter",
+        "label": "BallotTrax"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=64+S+100+E%2C+American+Fork%2C+UT+84003%2C+USA",
+        "label": "64 S 100 E, American Fork, UT 84003, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=1713+Erickson+Knoll+Ln%2C+Eagle+Mountain%2C+UT+84005%2C+USA",
+        "label": "1713 Erickson Knoll Ln, Eagle Mountain, UT 84005, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=151+S+University+Ave%2C+Room+2500%2C+Provo%2C+UT+84606",
+        "label": "151 S University Ave, Room 2500, Provo, UT 84606"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=5400+Civic+Center+Dr%2C+Highland%2C+UT+84003%2C+USA",
+        "label": "5400 Civic Center Dr, Highland, UT 84003, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=131+N+100+E%2C+Lehi%2C+UT+84043%2C+USA",
+        "label": "131 N 100 E, Lehi, UT 84043, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=25+N+Main+St%2C+Lindon%2C+UT+84042",
+        "label": "25 N Main St, Lindon, UT 84042"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=1550+Sandhill+Rd%2C+Orem%2C+UT+84058%2C+USA",
+        "label": "1550 Sandhill Rd, Orem, UT 84058, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=40.0431375%2C-111.7382699",
+        "label": "439 W Utah Ave, Payson, UT 84651, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=108+S+100+E%2C+Pleasant+Grove%2C+UT+84062%2C+USA",
+        "label": "108 S 100 E, Pleasant Grove, UT 84062, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=151+S+University+Ave%2C+Provo%2C+UT+84601%2C+USA",
+        "label": "151 S University Ave, Provo, UT 84601, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=4146+N+University+Ave%2C+Provo%2C+UT+84604%2C+USA",
+        "label": "4146 N University Ave, Provo, UT 84604, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=110+S+Center+St%2C+Santaquin%2C+UT+84655%2C+USA",
+        "label": "110 S Center St, Santaquin, UT 84655, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=612+Pony+Express+Parkway%2C+Saratoga+Springs%2C+UT+84045%2C+USA",
+        "label": "612 Pony Express Parkway, Saratoga Springs, UT 84045, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=980+S+Main+St%2C+Spanish+Fork%2C+UT+84660%2C+USA",
+        "label": "980 S Main St, Spanish Fork, UT 84660, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=110+S+Main+St%2C+Springville%2C+UT+84663%2C+USA",
+        "label": "110 S Main St, Springville, UT 84663, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=20+N+Main+St%2C+Alpine%2C+UT+84004%2C+USA",
+        "label": "20 N Main St, Alpine, UT 84004, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=50+E+Center+St%2C+Cedar+Fort%2C+UT+84013%2C+USA",
+        "label": "50 E Center St, Cedar Fort, UT 84013, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=3925+W+Cedar+Hills+Dr%2C+Pleasant+Grove%2C+UT+84062%2C+USA",
+        "label": "3925 W Cedar Hills Dr, Pleasant Grove, UT 84062, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=1650+Stagecoach+Run%2C+Eagle+Mountain%2C+UT+84005%2C+USA",
+        "label": "1650 Stagecoach Run, Eagle Mountain, UT 84005, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=80+Park+Dr%2C+Elk+Ridge%2C+UT+84651%2C+USA",
+        "label": "80 Park Dr, Elk Ridge, UT 84651, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=121+W+Main+St%2C+Fairfield%2C+UT+84013%2C+USA",
+        "label": "121 W Main St, Fairfield, UT 84013, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=74+W+800+S%2C+Genola%2C+UT+84655%2C+USA",
+        "label": "74 W 800 S, Genola, UT 84655, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=79+S+Center+St%2C+Goshen%2C+UT+84655%2C+USA",
+        "label": "79 S Center St, Goshen, UT 84655, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=128+N+100+E%2C+Lehi%2C+UT+84043%2C+USA",
+        "label": "128 N 100 E, Lehi, UT 84043, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=100+N+State+St%2C+Lindon%2C+UT+84042%2C+USA",
+        "label": "100 N State St, Lindon, UT 84042, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=125+W+400+N%2C+Mapleton%2C+UT+84664%2C+USA",
+        "label": "125 W 400 N, Mapleton, UT 84664, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=58+N+State+St%2C+Orem%2C+UT+84057%2C+USA",
+        "label": "58 N State St, Orem, UT 84057, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=93+N+400+E%2C+Orem%2C+UT+84097%2C+USA",
+        "label": "93 N 400 E, Orem, UT 84097, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=439+W+Utah+Ave%2C+Payson%2C+UT+84651%2C+USA",
+        "label": "439 W Utah Ave, Payson, UT 84651, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=40.3627962%2C-111.7391137",
+        "label": "70 S 100 E, Pleasant Grove, UT 84062, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=550+N+University+Ave%2C+Provo%2C+UT+84601%2C+USA",
+        "label": "550 N University Ave, Provo, UT 84601, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=59+S+Main+St%2C+Salem%2C+UT+84653%2C+USA",
+        "label": "59 S Main St, Salem, UT 84653, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=39.97521649999999%2C-111.7910435",
+        "label": "275 W Main St, Santaquin, UT 84655, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=319+S+Saratoga+Rd%2C+Saratoga+Springs%2C+UT+84045%2C+USA",
+        "label": "319 S Saratoga Rd, Saratoga Springs, UT 84045, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=80+S+Main+St%2C+Spanish+Fork%2C+UT+84660%2C+USA",
+        "label": "80 S Main St, Spanish Fork, UT 84660, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=40.1652309%2C-111.6115284",
+        "label": "110 S Main St, Springville, UT 84663, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=100+E+Center+St%2C+Provo%2C+UT+84606%2C+USA",
+        "label": "100 E Center St, Provo, UT 84606, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=800+W+University+Pkwy%2C+Orem%2C+UT+84058%2C+USA",
+        "label": "800 W University Pkwy, Orem, UT 84058, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=125+South+Main+Street%2C+Vineyard%2C+UT+84059%2C+USA",
+        "label": "125 South Main Street, Vineyard, UT 84059, USA"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=690+Woodland+Hills+Dr%2C+Woodland+Hills%2C+UT+84653%2C+USA",
+        "label": "690 Woodland Hills Dr, Woodland Hills, UT 84653, USA"
+      },
+      {
+        "url": "https://www.facebook.com/UtahCoElections",
+        "label": "Visit us on Facebook"
+      },
+      {
+        "url": "https://www.google.com/maps/search?api=1&query=100+East+Center+Street%2C+Suite+3100%2C+Provo%2C+UT+84606",
+        "label": "100 East Center Street, Suite 3100, Provo, UT 84606 on Google Maps"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/voter-information",
+        "label": "Information For Voters"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/list-of-candidates",
+        "label": "List of Candidates"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/candidate-information",
+        "label": "Information For Candidates"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/financial-disclosures",
+        "label": "Financial Disclosures"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/conflict-of-interest-forms",
+        "label": "Conflict Of Interest Forms"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/forms",
+        "label": "Forms"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/maps",
+        "label": "Maps"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/public-notices",
+        "label": "Notices"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/petitions",
+        "label": "Petitions"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/volunteer",
+        "label": "Volunteer"
+      },
+      {
+        "url": "https://www.utahcounty.gov/disclaimer.html",
+        "label": "Privacy Policy"
+      }
+    ]
+  }
+]

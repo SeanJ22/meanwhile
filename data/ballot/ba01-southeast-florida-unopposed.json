@@ -1,0 +1,298 @@
+{
+  "state": "FL",
+  "scope": "Certified federal, statewide and legislative roster. Counts 175 contests / 372 candidacies are certified-roster counts, not printed sample-ballot denominators.",
+  "unopposedCoreContests": 31,
+  "unopposedCoreCandidacies": 31,
+  "unopposedByOffice": {
+    "State House": 28,
+    "State Senate": 2,
+    "U.S. House": 1
+  },
+  "law": {
+    "url": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+    "quote": "Except for justices or judges seeking retention, the names of unopposed candidates shall not appear on the general election ballot."
+  },
+  "rosterUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+  "preservation": "Every existing contest, candidate and ID remains present. Explicit scope notes explain the unopposed records.",
+  "records": [
+    {
+      "contestId": "fl-doe-2026-general-str-104",
+      "candidateId": "fl-doe-2026-general-candidate-88683",
+      "title": "State Representative District 104",
+      "name": "Felicia Simone Robinson",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-105",
+      "candidateId": "fl-doe-2026-general-candidate-88778",
+      "title": "State Representative District 105",
+      "name": "Marie Woodson",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-107",
+      "candidateId": "fl-doe-2026-general-candidate-89034",
+      "title": "State Representative District 107",
+      "name": "Wallace Aristide",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-109",
+      "candidateId": "fl-doe-2026-general-candidate-89989",
+      "title": "State Representative District 109",
+      "name": "James Bush III",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-11",
+      "candidateId": "fl-doe-2026-general-candidate-88748",
+      "title": "State Representative District 11",
+      "name": "Sam Garrison",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-110",
+      "candidateId": "fl-doe-2026-general-candidate-88974",
+      "title": "State Representative District 110",
+      "name": "Tom Fabricio",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-111",
+      "candidateId": "fl-doe-2026-general-candidate-89023",
+      "title": "State Representative District 111",
+      "name": "David Borrero",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-112",
+      "candidateId": "fl-doe-2026-general-candidate-89014",
+      "title": "State Representative District 112",
+      "name": "Alex Rizo",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-114",
+      "candidateId": "fl-doe-2026-general-candidate-88878",
+      "title": "State Representative District 114",
+      "name": "Demi Busatta",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-120",
+      "candidateId": "fl-doe-2026-general-candidate-88753",
+      "title": "State Representative District 120",
+      "name": "James Vernon \"Jim\" Mooney Jr.",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-14",
+      "candidateId": "fl-doe-2026-general-candidate-89399",
+      "title": "State Representative District 14",
+      "name": "Kimberly Daniels",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-16",
+      "candidateId": "fl-doe-2026-general-candidate-88979",
+      "title": "State Representative District 16",
+      "name": "Kiyan Helen Michael",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-21",
+      "candidateId": "fl-doe-2026-general-candidate-89857",
+      "title": "State Representative District 21",
+      "name": "Jacquelyn Jackie Randall",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-24",
+      "candidateId": "fl-doe-2026-general-candidate-88941",
+      "title": "State Representative District 24",
+      "name": "Ryan Chamberlin",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-41",
+      "candidateId": "fl-doe-2026-general-candidate-91591",
+      "title": "State Representative District 41",
+      "name": "Bruce Antone",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-44",
+      "candidateId": "fl-doe-2026-general-candidate-88686",
+      "title": "State Representative District 44",
+      "name": "Rita Harris",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-47",
+      "candidateId": "fl-doe-2026-general-candidate-88882",
+      "title": "State Representative District 47",
+      "name": "Anthony Nieves",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-54",
+      "candidateId": "fl-doe-2026-general-candidate-88844",
+      "title": "State Representative District 54",
+      "name": "Randy Maggard",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-62",
+      "candidateId": "fl-doe-2026-general-candidate-89047",
+      "title": "State Representative District 62",
+      "name": "Kyandra Darling",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-63",
+      "candidateId": "fl-doe-2026-general-candidate-89633",
+      "title": "State Representative District 63",
+      "name": "Jacqueline Coffie-Leeks",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-7",
+      "candidateId": "fl-doe-2026-general-candidate-88914",
+      "title": "State Representative District 7",
+      "name": "Jason Shoaf",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-79",
+      "candidateId": "fl-doe-2026-general-candidate-88763",
+      "title": "State Representative District 79",
+      "name": "Mike Giallombardo",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-8",
+      "candidateId": "fl-doe-2026-general-candidate-88739",
+      "title": "State Representative District 8",
+      "name": "Gallop P. Franklin",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-95",
+      "candidateId": "fl-doe-2026-general-candidate-88578",
+      "title": "State Representative District 95",
+      "name": "Christine Hunschofsky",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-96",
+      "candidateId": "fl-doe-2026-general-candidate-88775",
+      "title": "State Representative District 96",
+      "name": "Dan Daley",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-97",
+      "candidateId": "fl-doe-2026-general-candidate-88783",
+      "title": "State Representative District 97",
+      "name": "Lisa Dunkley",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-98",
+      "candidateId": "fl-doe-2026-general-candidate-88843",
+      "title": "State Representative District 98",
+      "name": "Mitch Rosenwald",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-str-99",
+      "candidateId": "fl-doe-2026-general-candidate-88835",
+      "title": "State Representative District 99",
+      "name": "Daryl Nevroy Campbell",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-sts-16",
+      "candidateId": "fl-doe-2026-general-candidate-89305",
+      "title": "State Senator District 16",
+      "name": "Fentrice Driskell",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-sts-4",
+      "candidateId": "fl-doe-2026-general-candidate-83661",
+      "title": "State Senator District 4",
+      "name": "Clay Yarborough",
+      "partyLabel": "REP",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    },
+    {
+      "contestId": "fl-doe-2026-general-usr-10",
+      "candidateId": "fl-doe-2026-general-candidate-89909",
+      "title": "United States Representative District 10",
+      "name": "Maxwell Alejandro Frost",
+      "partyLabel": "DEM",
+      "sourceStatus": "Unopposed",
+      "printedOnGeneralBallot": false
+    }
+  ]
+}

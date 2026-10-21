@@ -1,0 +1,168 @@
+// locationlist.js (updated for jQuery 3.2.1)
+function PollingLocation(baseUrl, electionId, defaultSet) {
+    var self = this;
+    this.baseUrl = baseUrl;
+    this.electionId = electionId;
+    this.defaultSet = defaultSet;
+    this.pollingLocationListDiv = null;
+    this.electionEl = null;
+    this.locationType = null;
+    this.votingDays = null;
+
+    jQuery(function($) {
+        self.electionEl = $('#electionEl');
+        self.locationType = $('#locationType');
+        self.votingDays = $('#votingDays');
+        self.pollingLocationListDiv = $('#pollingLocationListDiv');
+
+        // Event bindings
+        self.electionEl.on('change', self.doChangeElection);
+        self.votingDays.on('change', self.doChangeElection);
+        // self.locationType.on('change', self.doChangeLocationType); // uncomment if needed
+
+        $('body').on('click', 'a.linkToLocation', self.doScrollToLocation);
+        $('body').on('click', 'a.linkToTop', self.doScrollToTop);
+
+        $(document).on({
+            ajaxSend: function() { self.doLoadingShow(); },
+            ajaxStart: function() { self.doLoadingShow(); },
+            ajaxStop: function() { self.doLoadingHide(); },
+            ajaxError: function() { self.doLoadingHide(); }
+        });
+
+        self.initElection();
+    });
+
+    this.doScrollToTop = function() { 
+        jQuery.mobile.silentScroll(0);
+        self.electionEl.focus();
+        return false;
+    };
+
+    this.doScrollToLocation = function() { 
+        jQuery.mobile.silentScroll($('#location-' + $(this).data('id')).offset().top - 100);
+        $('#linkToTop-' + $(this).data('id')).focus();
+        return false; 
+    };
+
+    this.doChangeElection = function() {
+        self.doChangeLocationType();
+    };
+
+    this.doChangeLocationType = function() {
+        var option = self.electionEl.find('option:selected');
+        var oldEl = option.data('pastelection');
+        var locationType = self.locationType.val();
+        var messageText = "";
+
+        if (locationType === 'P') {
+            messageText = 'This ' + (oldEl ? 'was' : 'is') + ' a Vote-by-Mail only election. No polling place locations ' + (oldEl ? 'were' : 'are') + ' needed.';
+        } else {
+            messageText = 'No Accessible voting locations for this election.';
+        }
+
+        if (option.data('votebymail')) {
+            $('#pollingLocationsDiv').empty();
+            $('#pollingListText').empty();
+            $('#pollingListUnavailableText').html(messageText).show();
+            self.focusSelectEl();
+        } else {
+            self.doAjax(
+                self.baseUrl + self.electionEl.val() + '?locationType=' + locationType + '&votingDays=' + self.votingDays.val(),
+                'GET',
+                {},
+                self.getElectionSuccess,
+                self.getElectionError
+            );
+        }
+    };
+
+    this.getElectionSuccess = function(res) {
+        $('#errorDiv').hide();
+        self.pollingLocationListDiv.html(res);
+        $('#pdfLocation').attr('href', '/rovrpt_app/cfsRptList.do?action=Print&reportType=PL&electionId=' + self.electionEl.val());
+
+        var option = self.electionEl.find('option:selected');
+        var oldEl = option.data('pastelection');
+        var locationType = self.locationType.val();
+        var messageText1 = "", messageText2 = "";
+
+        if (locationType === 'P') {
+            messageText1 = 'This ' + (oldEl ? 'was' : 'is') + ' a Vote-by-Mail only election. No polling place locations ' + (oldEl ? 'were' : 'are') + ' needed.';
+            messageText2 = t.vcaVBMNoPollingLocationsNeeded;
+        } else {
+            messageText1 = 'This ' + (oldEl ? 'was' : 'is') + ' a Vote-by-Mail only election. No accessible voting locations ' + (oldEl ? 'were' : 'are') + ' needed.';
+            messageText2 = t.vcaVBMNoAccessibleLocationsNeeded;
+        }
+
+        if (option.data('votebymail')) {
+            $('#pollingListUnavailableText').html(messageText1);
+        } else if (oldEl) {
+            $('#pollingListUnavailableText').html(messageText2);
+        }
+
+        self.focusSelectEl();
+    };
+
+    this.focusSelectEl = function() {
+        setTimeout(function() {
+            self.electionEl.focus();
+            self.electionEl.parent().addClass('ui-focus');
+        }, 0);
+    };
+
+    this.getElectionError = function(res) {
+        $('#errorDiv').show();
+        $('#popupError').popup('open', { positionTo: '#errorDiv' });
+    };
+
+    this.initElection = function() {
+        // Replace .exists() with length check
+        if (self.electionEl.length > 0) {
+            if (self.electionId === '') {
+                var el = self.electionEl.val(self.electionEl.find('option:first').val());
+                el.selectmenu(); 
+                el.selectmenu('refresh'); 
+                self.doChangeElection();
+            } else {
+                var el = self.electionEl.val(self.electionId);
+                el.selectmenu(); 
+                el.selectmenu('refresh'); 
+                if (self.defaultSet) self.doChangeElection();
+            }
+        }
+
+        if (self.locationType === 'VCA') {
+            $('vcaMesage').html('xx--->');
+        }
+    };
+
+    this.doAjax = function(url, type, data, callbackSuccess, callbackError) {
+        jQuery.ajax({
+            contentType: 'application/html',
+            cache: false,
+            type: type,
+            url: url,
+            data: data,
+            dataType: 'html',
+            success: callbackSuccess,
+            error: callbackError
+        });
+    };
+
+    this.doLoadingShow = function() { jQuery.mobile.loading('show'); };
+    this.doLoadingHide = function() { jQuery.mobile.loading('hide'); };
+}
+
+// Define .exists() for backward compatibility (optional now)
+jQuery.fn.exists = function() { return this.length !== 0; };
+
+// Utility function
+Object.size = function(obj) {
+    var size = 0;
+    for (var key in obj) { if (obj.hasOwnProperty(key)) size++; }
+    return size;
+};
+
+// jQuery Mobile initialization
+jQuery(document).on('mobileinit', function() { jQuery.mobile.ignoreContentEnabled = true; });

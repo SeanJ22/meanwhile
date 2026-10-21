@@ -154,3 +154,59 @@ test("JSON clients still receive a complete answer and a cancelled stream closes
   await streaming.body!.cancel();
   finish(empty);
 });
+
+const withoutPoints = () => {
+  const data = JSON.parse(fixture("mi-voterinfo"));
+  for (const field of ["pollingLocations", "earlyVoteSites", "dropOffLocations"]) for (const row of data[field] ?? []) { delete row.latitude; delete row.longitude; }
+  return JSON.stringify(data);
+};
+const googleFetch = (voterinfo: string) => (async (input: URL) => new Response(input.pathname.endsWith("elections") ? fixture("elections") : voterinfo)) as unknown as typeof fetch;
+const pinned = (answer: VotingSitesAnswer) => answer.jurisdictions.flatMap(j => j.sites).filter(site => site.lat !== null && site.lng !== null);
+const siteCount = (answer: VotingSitesAnswer) => answer.jurisdictions.flatMap(j => j.sites).length;
+
+test("the location Google sends becomes the pin, with no Census request", async () => {
+  let census = 0;
+  const data = JSON.parse(fixture("mi-voterinfo"));
+  for (const field of ["pollingLocations", "earlyVoteSites", "dropOffLocations"]) for (const row of data[field] ?? []) { row.latitude ??= 42.7; row.longitude ??= -84.5; }
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)),
+    censusFetchImpl: (async () => { census++; throw new Error("Census must not be asked"); }) as unknown as typeof fetch });
+  assert.equal(census, 0);
+  assert.ok(siteCount(answer) > 0);
+  assert.equal(pinned(answer).length, siteCount(answer));
+  assert.ok(pinned(answer).every(site => site.geocodeSource === "PUBLISHER"));
+});
+
+test("a site Google did not place is looked up by its own published address, never the reader's", async () => {
+  const sent: string[] = [];
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(withoutPoints()),
+    censusFetchImpl: (async (_url: URL, init: RequestInit) => {
+      const file = (init.body as FormData).get("addressFile") as Blob;
+      const rows = (await file.text()).split("\n");
+      sent.push(...rows);
+      return new Response(rows.map((row, i) => `"${i}","${row.slice(row.indexOf(",") + 1)}","Match","Exact","X","-84.55,42.73","1","L"`).join("\n"));
+    }) as unknown as typeof fetch });
+  assert.equal(sent.length, siteCount(answer), "one batch request covers every unplaced site");
+  assert.doesNotMatch(sent.join("\n"), /private reader street|private-test-key/);
+  assert.equal(pinned(answer).length, siteCount(answer));
+  assert.ok(pinned(answer).every(site => site.geocodeSource === "CENSUS" && site.lat === 42.73 && site.lng === -84.55));
+  assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
+});
+
+test("when Census cannot place a site it stays listed without a pin", async () => {
+  const down = { ...options, fetchImpl: googleFetch(withoutPoints()), censusFetchImpl: (async () => new Response("private reader street", { status: 503 })) as unknown as typeof fetch };
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, down);
+  assert.ok(siteCount(answer) > 0);
+  assert.equal(pinned(answer).length, 0);
+  assert.equal(answer.outsideCoverage, false);
+  const partial = await fillVotingSitesAnswer(empty, "private reader street", place, { ...down,
+    censusFetchImpl: (async () => new Response('"0","a","No_Match"\n"1","b","Match","Exact","c","-84.5,42.7","1","L"\n')) as unknown as typeof fetch });
+  assert.equal(pinned(partial).length, 1);
+});
+
+test("a Google location outside the United States is not pinned", async () => {
+  const data = JSON.parse(withoutPoints());
+  for (const row of data.pollingLocations ?? []) { row.latitude = 0; row.longitude = 0; }
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)),
+    censusFetchImpl: (async () => new Response("")) as unknown as typeof fetch });
+  assert.equal(pinned(answer).length, 0);
+});

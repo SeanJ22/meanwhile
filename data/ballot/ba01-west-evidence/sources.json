@@ -1,0 +1,133 @@
+[
+  {
+    "file": "co-general-candidates.html",
+    "sourceUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+    "rawHash": "aa4a36f29654ea925a207fbd566e7fca22571047184976a4d403fc9c12bb7cae",
+    "snapshotHash": "aa4a36f29654ea925a207fbd566e7fca22571047184976a4d403fc9c12bb7cae",
+    "retrievedAt": "2026-10-20T22:53:06.911820+00:00",
+    "httpStatus": 200,
+    "extraction": "unchanged HTML",
+    "capturedBytes": 71771
+  },
+  {
+    "file": "maricopa-candidates.txt",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "rawHash": "d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1",
+    "snapshotHash": "32af5f9dcb5088331d225f521e7ac915fed8c622ad14c3548a12a139bfcab461",
+    "retrievedAt": "2026-10-20T22:53:06.539560+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete downloaded PDF",
+    "capturedBytes": 301789
+  },
+  {
+    "file": "maricopa-proposition-413.txt",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+    "rawHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+    "snapshotHash": "2ef23c80ed9587e60763dcb391ff1c75d724702c17bed1efcf78475fdd823cf2",
+    "retrievedAt": "2026-10-20T22:54:15.702076+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete downloaded PDF",
+    "capturedBytes": 3211390
+  },
+  {
+    "file": "denver-sample-ballot.txt",
+    "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+    "rawHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+    "snapshotHash": "a57f18fb418b4c6705a3e6d3da8eddba85c16a833a631d90930c6547e21fa131",
+    "retrievedAt": "2026-10-20T23:03:13.867465+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -raw of complete downloaded PDF",
+    "capturedBytes": 2815721
+  },
+  {
+    "file": "az-pima-general-candidates.txt",
+    "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+    "rawHash": "ed48de5bbf563ce81b84701eeec100486f7efa1d7824e492f0f48332359fa397",
+    "snapshotHash": "e66051afa5e254fc0a07588054d3c00259c9e26eb93af0950288792df3e509bd",
+    "retrievedAt": "2026-10-20T23:17:15.543620+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete downloaded PDF",
+    "capturedBytes": 149881,
+    "linkingPage": "https://www.pima.gov/upcoming-elections-and-events"
+  },
+  {
+    "file": "az-general-guide.txt",
+    "sourceUrl": "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf",
+    "rawHash": "67bc4e66b68a5883f6f68a4fa165d807eb4bbf5a78a3640bd3eac9b08273b5fb",
+    "snapshotHash": "37bdef7d8e65b2ab485d77c325dd0c91ecc2e3ddb4f8085b0741dce7d6efa031",
+    "retrievedAt": "2026-10-20T23:08:35.118895+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete general guide",
+    "capturedBytes": 14878940
+  },
+  {
+    "file": "az-general-writeins.txt",
+    "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+    "rawHash": "e43c9543b49762c0c20e8dd8e87cbeb3218673a7393bbb0e284fd0281d63e7a5",
+    "snapshotHash": "0672dcddb62d19c8229d106c0d6bf4edffdeeb127e9496fd1f49d8336f002af6",
+    "retrievedAt": "2026-10-20T23:19:36.079112+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete downloaded PDF",
+    "capturedBytes": 48830
+  },
+  {
+    "file": "az-scottsdale-sample.txt",
+    "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+    "rawHash": "68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a",
+    "snapshotHash": "3301fa5fe9a68064a973f648e8be6a43dea15604dd06265d896c0f993997605f",
+    "retrievedAt": "2026-10-20T23:19:36.209484+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -raw of complete downloaded PDF",
+    "capturedBytes": 439142
+  },
+  {
+    "file": "az-pinal-sample-cd5.txt",
+    "sourceUrl": "https://www.pinal.gov/DocumentCenter/View/32139/PINA_040G05_040G05_1_1_NON-DEC",
+    "rawHash": "1a4e360a8a08b3641e21fb56b8f35da0f7ffbfe89c517f0cd81b9f0250388874",
+    "snapshotHash": "c03725c11b17cb7ae72628ec36be3c532ac0df4b1cb00a3a622010b865b250e4",
+    "retrievedAt": "2026-10-20T23:26:44.407971+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -raw of complete downloaded PDF",
+    "capturedBytes": 160307
+  },
+  {
+    "file": "az-ccec-all-candidates.html",
+    "sourceUrl": "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined",
+    "rawHash": "09ecdd507181445bba11f0c07e8a02981bbc6fac5043c9c96379c7944540e333",
+    "snapshotHash": "09ecdd507181445bba11f0c07e8a02981bbc6fac5043c9c96379c7944540e333",
+    "retrievedAt": "2026-10-20T23:25:18.468908+00:00",
+    "httpStatus": 200,
+    "extraction": "unchanged HTML from public View All Candidates route",
+    "capturedBytes": 128629
+  },
+  {
+    "file": "az-ccec-candidate-disclaimer.html",
+    "sourceUrl": "https://www.azcleanelections.gov/arizona-elections/find-mycandidates",
+    "rawHash": "1b928b9d758de89c4406c296c828679c8a71809ed28839b634690a3f356f80aa",
+    "snapshotHash": "1b928b9d758de89c4406c296c828679c8a71809ed28839b634690a3f356f80aa",
+    "retrievedAt": "2026-10-20T23:21:58.182454+00:00",
+    "httpStatus": 200,
+    "extraction": "unchanged HTML; documents optional profile-submission limitation",
+    "capturedBytes": 20354
+  },
+  {
+    "file": "az-mcccd-boundary.html",
+    "sourceUrl": "https://www.maricopa.edu/about/governing-board",
+    "rawHash": "569d946fd611710ad6b217e1e868998fdab717e5b1dcb2aa4718e8fd3600e076",
+    "snapshotHash": "569d946fd611710ad6b217e1e868998fdab717e5b1dcb2aa4718e8fd3600e076",
+    "retrievedAt": "2026-10-20T23:27:56.770376+00:00",
+    "httpStatus": 200,
+    "extraction": "unchanged HTML; two at-large positions represent entire county",
+    "capturedBytes": 108394
+  },
+  {
+    "file": "az-maricopa-writeins.txt",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20%26%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+    "rawHash": "4b8e6fd47e6020c0d6d6a842be78f57fed07d05b595b4f3c02301b832440099d",
+    "snapshotHash": "d653cdc8bf4dc24a7cc35b248ee30a7fbaf5c747c43a47d2a0be2002a465ba62",
+    "retrievedAt": "2026-10-20T22:54:15.227973+00:00",
+    "httpStatus": 200,
+    "extraction": "pdftotext -layout of complete downloaded PDF",
+    "capturedBytes": 150930
+  }
+]

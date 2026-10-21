@@ -5,7 +5,7 @@ import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { translationHash, translationScope } from "./records.ts";
+import { translationHash, translationScope, translationSourceNames } from "./records.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
 
@@ -105,9 +105,11 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
   const deferred: { readonly subjectId: string; readonly reason: string }[] = [];
   const pages = input.captures.filter(captureIntact);
   for (const ballot of input.ballots) {
-    for (const measure of ballot.measureRecords ?? []) {
-      const contest = ballot.contests.find(row => row.id === measure.contestId && row.type === "MEASURE");
-      if (!contest || !divisions.has(contest.ocdId)) continue;
+    for (const contest of ballot.contests.filter(row => row.type === "MEASURE")) {
+      if (!divisions.has(contest.ocdId)) continue;
+      const measure = ballot.measureRecords?.find(row => row.contestId === contest.id) ?? null;
+      const official = ballot.measures?.find(row => row.contestId === contest.id);
+      const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
       const scope = translationScope(contest.ocdId);
       const key = JSON.stringify([scope, contest.id]);
       if (seen.has(key)) continue;
@@ -117,18 +119,21 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       if (duplicates.some(record => JSON.stringify(record) !== JSON.stringify(measure))) {
         deferred.push({ subjectId: contest.id, reason: "Held measure records disagree." }); continue;
       }
-      if (measure.parts.some(part => !part.number)) {
-        deferred.push({ subjectId: contest.id, reason: "Legacy reaction parts need their source-backed migration before rewriting." }); continue;
-      }
-      const candidates = pages.filter(capture => capture.evidence.canonicalUrl === measure.sourceUrl &&
-        capture.evidence.text.includes(contest.title) && ((capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
+      const sourceUrls = new Set([measure?.sourceUrl, official?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
+      const designation = official?.officialNumber;
+      const namedDesignation = designation && /[a-z]/i.test(designation) && /\d/.test(designation) ? designation : null;
+      const candidates = pages.filter(capture => sourceUrls.has(capture.evidence.canonicalUrl) &&
+        ([contest.title, official?.questionText, analysis?.text, namedDesignation].some(value => translationSourceNames(capture.evidence.text, value)) ||
+          measure && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash) &&
+        (!measure || (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
           Date.parse(capture.evidence.retrievedAt) >= Date.parse(measure.writtenAt)))
         .sort((a, b) => Date.parse(b.evidence.retrievedAt) - Date.parse(a.evidence.retrievedAt));
       const primary = candidates[0];
       if (!primary) { deferred.push({ subjectId: contest.id, reason: "No complete current source capture is held." }); continue; }
       const sourceHash = (primary.evidence.sourceDocument?.contentHash ?? primary.evidence.contentHash).replace(/^sha256-/, "");
       const sourceTextHash = translationHash(primary.evidence.text);
-      const sameTime = candidates.filter(capture => Date.parse(capture.evidence.retrievedAt) === Date.parse(primary.evidence.retrievedAt));
+      const sameTime = candidates.filter(capture => capture.evidence.canonicalUrl === primary.evidence.canonicalUrl &&
+        Date.parse(capture.evidence.retrievedAt) === Date.parse(primary.evidence.retrievedAt));
       if (sameTime.some(capture => translationHash(capture.evidence.text) !== sourceTextHash ||
           (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") !== sourceHash)) {
         deferred.push({ subjectId: contest.id, reason: "Current source captures disagree." }); continue;
@@ -156,7 +161,10 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       const result = await runMeasureTranslation({ ...input, primary, captures: pages,
         batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
-          state: jurisdictionFromOcdId(contest.ocdId)!.usps, prior: measure } });
+          state: jurisdictionFromOcdId(contest.ocdId)!.usps,
+          sourceQuote: [contest.title, official?.questionText, analysis?.text, namedDesignation]
+            .find(value => translationSourceNames(primary.evidence.text, value)) ?? primary.evidence.text,
+          prior: measure ? { ...measure, parts: measure.parts.filter(part => part.number) } : null } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
         versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
       outcomes.push(finished);

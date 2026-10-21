@@ -1,0 +1,91 @@
+{
+  "doorId": "ut-utah-county-vote_center-2",
+  "sites": [
+    {
+      "id": "voting-6f634d726f8791ad23e51287",
+      "name": "Eagle Mountain Overland Barn",
+      "address": "1713 Erickson Knoll Ln, Eagle Mountain, UT 84005, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am-8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am-8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Utah County Elections",
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "title": "Voting & Drop Box Locations - Utah County Elections",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "contentType": "text/plain",
+      "rawHash": "e5fe408d53086c05486685984be0b5043d3a8fa8907b5e1a59f7007c515d391b",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-9266f4dab6c4-e5fe408d5308.bin"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-353ad3a218d2-f778d970c382.html"
+    }
+  ],
+  "fileTitle": "Voting & Drop Box Locations - Utah County Elections",
+  "contacts": []
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:16:23.284841+00:00",
+  "rawHash": "08c8ba0d734680489bf406c6dd1dae387f207e868db7f746c2985c75ddf6b1a5",
+  "bytes": 799117,
+  "convertedTextHash": "25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885",
+  "extraction": "pdftotext -raw; exact official certified ballot source text; original PDF identified by rawHash"
+}

@@ -16,7 +16,13 @@ function validLocation(value: unknown, zip: string): value is ZctaCentroid {
       && typeof point.postal.place === "string" && typeof point.postal.county === "string");
 }
 
-/** Typed and restored ZIPs use the server's resident national shelf. */
+/** The arriving HTML can finish this exact lookup before the reader hydrates. */
+export function readyReaderZip(zip: string): ZctaCentroid | undefined {
+  const early = typeof window === "undefined" ? undefined : window.__readerStart;
+  return early?.zip === zip && early.expires > Date.now() && validLocation(early.value, zip) ? early.value : undefined;
+}
+
+/** Typed and restored ZIPs read one regional projection of the same held lookup. */
 export function resolveReaderZip(input: string): Promise<ZipResolution> {
   if (!isWellFormedZip(input)) return Promise.resolve({ ok: false, reason: "malformed" });
   const zip = input.trim();
@@ -31,18 +37,13 @@ export function resolveReaderZip(input: string): Promise<ZipResolution> {
       if (validLocation(location, zip)) return { ok:true,centroid:location };
       throw new Error("Invalid ZIP location response");
     }
-    const response = await fetch(`/api/location/zip?zip=${zip}`, { headers: { accept: "application/json" } });
+    const response = await fetch(`/geo/reader-zips/${zip.slice(0, 2)}.json`, { headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(`ZIP lookup failed: ${response.status}`);
-    const payload = await response.json() as { resolution?: ZipResolution; location?: unknown };
-    const resolution = payload.resolution;
-    if (resolution?.ok === false && resolution.reason === "uncovered") return resolution;
-    if (resolution?.ok === true && validLocation(resolution.centroid, zip)) return resolution;
-    // A browser and its function can straddle a deploy; the former route sent
-    // the same sourced place under location without the additive resolution.
-    if (resolution === undefined && Object.hasOwn(payload, "location")) {
-      if (payload.location === null) return { ok: false, reason: "uncovered" };
-      if (validLocation(payload.location, zip)) return { ok: true, centroid: payload.location };
-    }
+    const payload = await response.json() as { locations?: Record<string, unknown> };
+    if (!payload.locations || typeof payload.locations !== "object") throw new Error("Invalid ZIP location response");
+    const point = payload.locations[zip];
+    if (point === undefined || point === null) return { ok: false, reason: "uncovered" };
+    if (validLocation(point, zip)) return { ok: true, centroid: point };
     throw new Error("Invalid ZIP location response");
   })().then(result => {
     if (locations.get(zip)?.promise === promise) {

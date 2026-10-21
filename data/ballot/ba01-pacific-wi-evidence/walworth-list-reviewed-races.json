@@ -1,0 +1,152 @@
+[
+  [
+    "Representative in Congress District 1",
+    "ocd-division/country:us/state:wi/cd:1",
+    [
+      [
+        "Bryan Steil",
+        "Republican"
+      ],
+      [
+        "Mitchell Berman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative in Congress District 5",
+    "ocd-division/country:us/state:wi/cd:5",
+    [
+      [
+        "Scott Fitzgerald",
+        "Republican"
+      ],
+      [
+        "Andrew Beck",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 11",
+    "ocd-division/country:us/state:wi/sldu:11",
+    [
+      [
+        "Ellen Schutt",
+        "Republican"
+      ],
+      [
+        "Adam Duda",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 15",
+    "ocd-division/country:us/state:wi/sldu:15",
+    [
+      [
+        "Scott Fleming",
+        "Republican"
+      ],
+      [
+        "Mark Spreitzer",
+        "Democratic"
+      ],
+      [
+        "Christopher Dean",
+        "Serving People Not Parties"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 31",
+    "ocd-division/country:us/state:wi/sldl:31",
+    [
+      [
+        "Tyler August",
+        "Republican"
+      ],
+      [
+        "John Perryman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 32",
+    "ocd-division/country:us/state:wi/sldl:32",
+    [
+      [
+        "Amanda Nedweski",
+        "Republican"
+      ],
+      [
+        "Greg Miller",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 33",
+    "ocd-division/country:us/state:wi/sldl:33",
+    [
+      [
+        "Steve Wicklund",
+        "Republican"
+      ],
+      [
+        "Maria Elena Bisabarros",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 43",
+    "ocd-division/country:us/state:wi/sldl:43",
+    [
+      [
+        "Paul McGraw",
+        "Republican"
+      ],
+      [
+        "Brienne Brown",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 84",
+    "ocd-division/country:us/state:wi/sldl:84",
+    [
+      [
+        "Chuck Wichgers",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Walworth County Sheriff",
+    "ocd-division/country:us/state:wi/county:walworth",
+    [
+      [
+        "Tom Hausner",
+        "Republican"
+      ],
+      [
+        "Csaba Keller",
+        "Constitution"
+      ]
+    ]
+  ],
+  [
+    "Walworth County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:walworth",
+    [
+      [
+        "Michele Jacobs",
+        "Republican"
+      ]
+    ]
+  ]
+]

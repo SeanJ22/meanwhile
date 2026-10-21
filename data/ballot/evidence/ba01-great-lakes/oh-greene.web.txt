@@ -1,0 +1,26 @@
+Source: https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf
+Extracted using pdftotext -layout from saved oh-greene.pdf.gz
+L0:                                                     REVISED 06/30/2026                         GREENE COUNTY CERTIFIED CANDIDATES                              NOVEMBER 3, 2026 GENERAL ELECTION
+L1:                            The information provided in this document by the Greene County Board of Elections is believed to be accurate, but not guaranteed. The Greene County Board of Elections disclaims
+L2:                                                                                                 liability for any errors or omissions.
+L3:           Candidate Name          Office Type                                             Division        Address                                                               Email                                   Phone          Party Affiliation
+L4: DICK GOULD                        COUNTY COMMISSIONER, COMMENCES 01/01/2027                               2368 FEDERAL RD, XENIA, OH 45385                                      DAYTONCPA@GMAIL.COM                     937-602-2525   REPUBLICAN
+L5: 
+L6: AMANDA L. JENKINS                 COUNTY TREASURER, UTE 09/02/2029                                        PO BOX 99, ALPHA, OH 45301                                            AMANDAMACJENKINS@GMAIL.COM              937-361-4267   REPUBLICAN
+L7: 
+L8: KRAIG A. HAGLER                   COUNTY AUDITOR                                                          968 STEVENSON RD, XENIA, OH 45385                                     KAHAGLERGOP@GMAIL.COM                   937-313-3540   REPUBLICAN
+L9: 
+L10: MICHAEL A. BUCKWALTER             COMMON PLEAS JUDGE, COMMENCES 01/02/2027                GENERAL         104 S. MONROE SIDING RD, XENIA, OH 45385                              MBUCKWALTERLAW@AOL.COM                  937-572-8054   REPUBLICAN
+L11: WAYNE WAITE                       COMMON PLEAS JUDGE,COMMENCES 02/09/2027                 PROBATE         911 UNION RD, XENIA, OH 45385                                         WWAITE@HELPINOHIO.COM                   937-477-4214   REPUBLICAN
+L12:                                                                                           DOMESTIC
+L13: CYNTHIA MARTIN                    COMMON PLEAS JUDGE, COMMENCES 01/01/2027                RELATIONS       2342 WAYNESVILLE RD, BELLBROOK, OH 45305                              CGMRTN@MSN.COM                          937-313-1735   REPUBLICAN
+L14: 
+L15: KIM MCCARTHY                      STATE REP 70TH DISTRICT                                                 2525 STEWART RD, XENIA, OH 45385                                                                                             DEMOCRAT
+L16: BRIAN LAMPTON                     STATE REP 70TH DISTRICT                                                 960 N FAIRFIELD RD, BEAVERCREEK, OH 45434                             BRIANLAMPTON65@GMAIL.COM                937-477-8182   REPUBLICAN
+L17: 
+L18: LEVI DEAN                         STATE REP 71ST DISTRICT                                                 2101 PUEBLO DR, XENIA, OH 45385                                       LEVIDEAN59@GMAIL.COM                    937-668-1593   REPUBLICAN
+L19: KRISTA MAGAW                      STATE REP 71ST DISTRICT                                                 993 S. HIGH ST, YELLOW SPRINGS, OH 45387                              KRISTAMAGAW@GMAIL.COM                   937-767-0257   DEMOCRAT
+L20: 
+L21:                                      The information provided in this document by the Greene County Board of Elections is believed to be accurate, but not guaranteed. The Greene County Board of Elections disclaims
+L22:                                                                                                          liability for any errors or omissions.
+L23: 

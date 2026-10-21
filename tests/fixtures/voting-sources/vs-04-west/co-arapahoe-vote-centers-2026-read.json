@@ -1,0 +1,1759 @@
+{
+  "doorId": "co-arapahoe-vote-centers-2026",
+  "sites": [
+    {
+      "id": "voting-099fa2351fc3d41fa2f7a0c8",
+      "name": "Arapahoe Community College",
+      "address": "5900 S Santa Fe Dr,\nLittleton, CO 80120",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7ee24e07c6f112468f6ecd7d",
+      "name": "Arapahoe County CentrePoint Plaza",
+      "address": "14980 E Alameda Dr,\nAurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b2f63a563c98306996bdd08d",
+      "name": "Arapahoe County Fairgrounds",
+      "address": "25690 E Quincy Ave,\nAurora, CO 800116",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-de785ae4dc83effbc2a4d914",
+      "name": "Arapahoe County Lima Plaza",
+      "address": "6954 S Lima St,\nCentennial, CO 80112",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8933a275ab3ebba3f7d3043c",
+      "name": "Aurora Center for Active Adults",
+      "address": "30 Del Mar Cir,\nAurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-95c6e037a6fa0f46c77e0218",
+      "name": "Aurora Public Schools - Educational Service Center 4",
+      "address": "1085 Peoria St,\nAurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9db20ab39cf76008d2fb2d5e",
+      "name": "Aurora Public Schools - Educational Service Center 5 / CSU Global",
+      "address": "585 Salida Way,\nAurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3b2986ce35073eb236104277",
+      "name": "Aurora Public Schools - Professional Learning and Conference Center",
+      "address": "15771 E 1st Ave,\nAurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4c8bef018faf981a0d35af2e",
+      "name": "Aurora Southeast Recreation Center",
+      "address": "25400 E Alexander Dr,\nAurora, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-89b60c0480f917bd0a4a1529",
+      "name": "Bemis Public Library",
+      "address": "6014 S Datura St,\nLittleton, CO 80120",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-043f0022bf57d90b31cdd808",
+      "name": "Central Recreation Center",
+      "address": "18150 E Vassar Pl,\nAurora, CO 80013",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bab4edbb7b731dc8b196d976",
+      "name": "City of Aurora Municipal Center",
+      "address": "15151 E Alameda Pkwy,\nAurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7ffd904c4fc9affb7393ef0e",
+      "name": "City of Glendale Municipal Building",
+      "address": "950 S Birch St,\nGlendale, CO 80246",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0af36ea31d9aac9ef601c56",
+      "name": "City of Sheridan Municipal Building",
+      "address": "4101 S Federal Blvd,\nSheridan, CO 80110",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a29b91a5de944c3a3d4fe848",
+      "name": "Community College of Aurora - CentreTech Campus",
+      "address": "16000 E CentreTech Pkwy,\nAurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f8cd318ffa3c18d228d2236e",
+      "name": "Cook Park Recreation Center",
+      "address": "7100 Cherry Creek S Dr,\nDenver, CO 80224",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 6pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 6pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 6pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 6pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e2df0eae4cc6c2b16002373f",
+      "name": "Englewood Civic Center",
+      "address": "1000 Englewood Pkwy,\nEnglewood, CO  80110",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d88f6416fb0c5dd9485a5d3",
+      "name": "Greenwood Village City Hall",
+      "address": "6060 S Quebec St,\nGreenwood Village, CO 80111",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0b3f00bb0c96fb2b68d47aa9",
+      "name": "Heather Gardens Clubhouse",
+      "address": "2888 S Heather Gardens Way,\nAurora, CO 80014",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-516350c5ef0458429f53eab9",
+      "name": "Kelver Library",
+      "address": "585 S Main St,\nByers, CO 80103",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6175b35e2c7149196c573c55",
+      "name": "Martin Luther King, Jr. Library",
+      "address": "9898 E Colfax Ave,\nAurora, CO 80010",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-beca620dfb4d0011a8ab921b",
+      "name": "Mission Viejo Library",
+      "address": "15324 E Hampden Cir,\nAurora, CO  80013",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b6e0f7520f2b2b65bb1c51ff",
+      "name": "Murphy Creek Golf Course",
+      "address": "1700 S Old Tom Morris Rd,\nAurora, CO 80018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e26d1481e86333ce3eaa66ee",
+      "name": "Parkside Village Retirement Resort",
+      "address": "14501 E Crestline Dr,\nAurora, CO 80015",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0c860f2d45045e6f35d4b07",
+      "name": "Smoky Hill Library",
+      "address": "5430 S Biscay Cir,\nCentennial, CO 80015",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-871afad41cd02ccef432aef1",
+      "name": "South Metro Fire Rescue Headquarters",
+      "address": "9195 E Mineral Ave,\nCentennial, CO 80112",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-110e9c72d838922a2aa96f6f",
+      "name": "Southglenn Library",
+      "address": "6972 S Vine St,\nCentennial, CO 80122",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7f92017e5b6475f97f95199b",
+      "name": "Space & Cafe at Arapahoe Libraries",
+      "address": "12855 E Adam Aircraft Cir,\nEnglewood, CO 80112",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-515dcca8e59d3234912ca4ff",
+      "name": "Tallyn's Reach Library",
+      "address": "23911 E Arapahoe Rd,\nAurora, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "October 19 - 23 from 8am - 5pm\nOctober 26 - 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f57348179e2626860bc50823",
+      "name": "The Avenue Church",
+      "address": "13231 E Mississippi Ave,\nAurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d11454aeae88684f65cb0cd",
+      "name": "Tivoli Student Union - Auraria Campus",
+      "address": "900 Auraria Pkwy,\nDenver, CO 80204",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Monday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0b13ed6888fee30ae67829ef",
+      "name": "Traditions Clubhouse",
+      "address": "25300 E 4th Ave,\nAurora, CO 80018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-29bfa75121bd75d9410aae2d",
+      "name": "Trails Recreation Center",
+      "address": "16799 E Lake Ave,\nCentennial, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-397585339f1312690d467fdf",
+      "name": "Vista PEAK Preparatory School",
+      "address": "24500 E 6th Ave,\nAurora, CO 80018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "title": "Voter Service & Polling Centers",
+          "checkedAt": "2026-10-21T04:43:13.589Z",
+          "official": true,
+          "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        }
+      ],
+      "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+      "countyFips": "08005",
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "Friday, October 30 from 8am - 5pm\nSaturday, October 31 from 8am - 5pm\nMonday, November 2 from 8am - 5pm\nTuesday, November 3 from 7am - 7pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+            "title": "Voter Service & Polling Centers",
+            "checkedAt": "2026-10-21T04:43:13.589Z",
+            "official": true,
+            "documentHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Arapahoe County Clerk and Recorder",
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+      "title": "Voter Service & Polling Centers",
+      "checkedAt": "2026-10-21T04:43:13.589Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.arapahoeco.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 302"
+    },
+    {
+      "url": "https://www.arapahoeco.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php: robots.txt could not be retrieved with this client: Error: robots.txt redirects to another host. A transport failure is not a reading of the host's rules; recorded as unread — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+      "path": "tests/fixtures/voting-sources/vs-04-west/co-de56f9c63a86-e28b83c46e48.html"
+    }
+  ],
+  "fileTitle": "Voter Service & Polling Centers",
+  "contacts": [
+    {
+      "scope": {
+        "state": "CO",
+        "ocdId": "ocd-division/country:us/state:co/county:arapahoe",
+        "name": "Arapahoe County",
+        "countyFips": "08005"
+      },
+      "office": {
+        "name": "Arapahoe County Clerk and Recorder",
+        "phone": "(303) 795-4511",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      },
+      "source": {
+        "publisher": "Arapahoe County Clerk and Recorder",
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+        "title": "Voter Service & Polling Centers",
+        "checkedAt": "2026-10-21T04:43:13.589Z",
+        "official": true
+      }
+    }
+  ]
+}

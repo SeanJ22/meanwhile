@@ -1,0 +1,60 @@
+[
+  [
+    "Representative in Congress District 5",
+    "ocd-division/country:us/state:wi/cd:5",
+    [
+      [
+        "Scott Fitzgerald",
+        "Republican"
+      ],
+      [
+        "Andrew Beck",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 33",
+    "ocd-division/country:us/state:wi/sldu:33",
+    [
+      [
+        "Chris Kapenga",
+        "Republican"
+      ],
+      [
+        "Mike Van Someren",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 99",
+    "ocd-division/country:us/state:wi/sldl:99",
+    [
+      [
+        "Barbara Dittrich",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Waukesha County Sheriff",
+    "ocd-division/country:us/state:wi/county:waukesha",
+    [
+      [
+        "Nick Ollinger",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Waukesha County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:waukesha",
+    [
+      [
+        "Monica Paz",
+        "Republican"
+      ]
+    ]
+  ]
+]

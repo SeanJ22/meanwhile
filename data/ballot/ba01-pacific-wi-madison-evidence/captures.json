@@ -1,0 +1,133 @@
+[
+  {
+    "url": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+    "finalUrl": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+    "file": "dane-general-certified-list.pdf.gz",
+    "retrievedAt": "2026-10-21T01:00:23.454553Z",
+    "httpStatus": 200,
+    "rawHash": "a39583994935c70f89f53a69be5b6593d9ffc43bad2245ad3e191a2f2de1dbb7",
+    "publisher": "Dane County Clerk"
+  },
+  {
+    "url": "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=210+Martin+Luther+King+Jr+Blvd+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "finalUrl": "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=210+Martin+Luther+King+Jr+Blvd+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "file": "madison-civic-address-geocode.json.gz",
+    "retrievedAt": "2026-10-21T01:00:24.699536Z",
+    "httpStatus": 200,
+    "rawHash": "9f66ba095450ffee240a2526aa3cdc19a80e95007af694e2a523e8b08f17cd8f",
+    "publisher": "City of Madison GIS"
+  },
+  {
+    "url": "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.3823933439%2C43.072423155106&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+    "finalUrl": "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.3823933439%2C43.072423155106&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+    "file": "madison-civic-address-ward.json.gz",
+    "retrievedAt": "2026-10-21T01:00:26.196952Z",
+    "httpStatus": 200,
+    "rawHash": "fd1dbe9791d27d11854cc133e9aed882bc4444c8e892d3e0b1bff67315974777",
+    "publisher": "City of Madison GIS"
+  },
+  {
+    "url": "https://www.blmgrove.com/election-info",
+    "finalUrl": "https://www.blmgrove.com/election-info/",
+    "file": "bloominggrove-parent.html.gz",
+    "retrievedAt": "2026-10-21T01:11:55.364525Z",
+    "httpStatus": 200,
+    "rawHash": "456c9e8a2a808c7dc916d5e2aea7db23db0e1ea37e44687935739fc856015181",
+    "rawBytes": 29832,
+    "publisher": "Town of Blooming Grove",
+    "responseHeaders": {
+      "date": "Wed, 21 Oct 2026 01:11:55 GMT",
+      "content-type": "text/html",
+      "server": "envoy",
+      "last-modified": "Tue, 20 Oct 2026 18:40:06 GMT",
+      "server-timing": "cfEdge;dur=15,cfOrigin;dur=105",
+      "x-powered-by": "PleskLin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=5ZisRCmMQX4mSGNQZYYcZ0iU3NJabm2YgZxxgT9y8D5ielJiv8LPZRTdWM2DPlYrQ9DC9irHxEko8qJ3n2cXEGvo03Br9z44YrtfH8rRXi%2FR708ynaIWVnmkCeAa4xXQF1Dj\"}]}",
+      "cf-cache-status": "DYNAMIC",
+      "vary": "accept-encoding",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "cf-ray": "a4dc641a3b8bedd6-MXP",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "x-envoy-upstream-service-time": "153",
+      "connection": "close",
+      "transfer-encoding": "chunked"
+    }
+  },
+  {
+    "url": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+    "finalUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+    "file": "dane-style005.pdf.gz",
+    "retrievedAt": "2026-10-21T01:11:56.918111Z",
+    "httpStatus": 200,
+    "rawHash": "68cf77146d7b373f86dcfd2a00d9ddf2de049ec7acfd4e59486e74fe55f9322f",
+    "rawBytes": 308558,
+    "publisher": "Town of Blooming Grove / Dane County Clerk",
+    "responseHeaders": {
+      "content-type": "application/pdf",
+      "x-guploader-uploadid": "AP6rU80jKs18NN3RQwHzpip4bJWWWBMLKR0rW7h447ngMIjVHOdQorWY57akhojO9npAgp2kWo0JokQ",
+      "date": "Wed, 21 Oct 2026 01:11:56 GMT",
+      "cache-control": "public,max-age=86400",
+      "expires": "Thu, 22 Oct 2026 01:11:56 GMT",
+      "last-modified": "Thu, 10 Sep 2026 15:33:24 GMT",
+      "etag": "\"7703ab5c4112e8f5322ede1b4685ab11\"",
+      "x-goog-generation": "1789054404364738",
+      "x-goog-metageneration": "1",
+      "x-goog-stored-content-encoding": "identity",
+      "x-goog-stored-content-length": "308558",
+      "x-goog-hash": "md5=dwOrXEES6PUyLt4bRoWrEQ==",
+      "x-goog-storage-class": "STANDARD",
+      "accept-ranges": "bytes",
+      "content-length": "308558",
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "Content-Type",
+      "server": "envoy",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "x-envoy-upstream-service-time": "1552",
+      "connection": "close"
+    }
+  },
+  {
+    "url": "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=201+W+Mifflin+St+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "finalUrl": "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=201+W+Mifflin+St+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "file": "madison-library-geocode.json.gz",
+    "retrievedAt": "2026-10-21T01:11:55.746201Z",
+    "httpStatus": 200,
+    "rawHash": "0f1bcbb057f9ed7f6831318ab799127ef1291c83a7dff57a253946c13adc8ec4",
+    "rawBytes": 1409,
+    "publisher": "City of Madison GIS",
+    "responseHeaders": {
+      "cache-control": "must-revalidate,max-age=0,public",
+      "content-length": "1409",
+      "content-type": "application/json; charset=UTF-8",
+      "etag": "\"c802ab02\"",
+      "vary": "Origin",
+      "server": "envoy",
+      "x-content-type-options": "nosniff",
+      "date": "Wed, 21 Oct 2026 01:11:55 GMT",
+      "x-envoy-upstream-service-time": "933",
+      "connection": "close"
+    }
+  },
+  {
+    "url": "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.387519798072%2C43.073588323556&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+    "finalUrl": "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.387519798072%2C43.073588323556&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+    "file": "madison-library-ward.json.gz",
+    "retrievedAt": "2026-10-21T01:11:55.344533Z",
+    "httpStatus": 200,
+    "rawHash": "5f79b24be04829c54bdb06d2a292b08c32801e867ab2a224ee399546361ee725",
+    "rawBytes": 1812,
+    "publisher": "City of Madison GIS",
+    "responseHeaders": {
+      "cache-control": "must-revalidate,max-age=0,public",
+      "content-length": "1812",
+      "content-type": "application/json; charset=UTF-8",
+      "etag": "\"4a04f83e\"",
+      "vary": "Origin",
+      "server": "envoy",
+      "x-content-type-options": "nosniff",
+      "date": "Wed, 21 Oct 2026 01:11:55 GMT",
+      "x-envoy-upstream-service-time": "544",
+      "connection": "close"
+    }
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "county": "kings",
+    "address": "209 Joralemon Street",
+    "zip": "11201",
+    "sourceFile": "nyc-kings-3.json",
+    "pollsiteFile": "nyc-kings-2.json",
+    "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng"
+  },
+  {
+    "county": "queens",
+    "address": "90-27 Sutphin Boulevard",
+    "zip": "11435",
+    "sourceFile": "nyc-queens-3.json",
+    "pollsiteFile": "nyc-queens-2.json",
+    "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng"
+  },
+  {
+    "county": "bronx",
+    "address": "1932 Arthur Avenue",
+    "zip": "10457",
+    "sourceFile": "nyc-bronx-3.json",
+    "pollsiteFile": "nyc-bronx-2.json",
+    "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng"
+  },
+  {
+    "county": "richmond",
+    "address": "1 Edgewater Street",
+    "zip": "10305",
+    "sourceFile": "nyc-richmond-3.json",
+    "pollsiteFile": "nyc-richmond-2.json",
+    "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng"
+  }
+]

@@ -1,0 +1,1038 @@
+{
+  "doorId": "mn-renville-polling",
+  "sites": [
+    {
+      "id": "voting-8c52745fc495b6b21cf2e877",
+      "name": "Beaver Falls Town Hall",
+      "address": "31461 County Road 2, Morton, MN, 56270",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Morton",
+      "locationNotes": "Beaver Falls Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-34ca1b9d90c851d234bb2334",
+      "name": "Birch Cooley Town Hall",
+      "address": "68485 375th St, Franklin, MN, 55333",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Franklin",
+      "locationNotes": "Birch Cooley Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c8aac2d47939323a8ae3d0ac",
+      "name": "Boon Lake Township Hall",
+      "address": "85974 County Road 20, Stewart, MN, 55385",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Stewart",
+      "locationNotes": "Boon Lake Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-121de6f7cc6d2c811da3a1e9",
+      "name": "Brookfield Town Hall",
+      "address": "50018 850th Ave, Hector, MN, 55342",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Hector",
+      "locationNotes": "Brookfield Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-75d8a806efd3a0e21f775251",
+      "name": "Crooks Town Hall",
+      "address": "87027 County Road 21, Renville, MN, 56284",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Renville",
+      "locationNotes": "Crooks Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a7863f422f29f78c46e97243",
+      "name": "Ericson Town Hall",
+      "address": "87013 County Road 12, Sacred Heart, MN, 56285",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Sacred Heart",
+      "locationNotes": "Ericson Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d9f74a9ddb55fc898342df9a",
+      "name": "Flora Town Hall",
+      "address": "26506 County Road 4, Renville, MN, 56284",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Renville",
+      "locationNotes": "Flora Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-469f16281e848697c6127838",
+      "name": "Hawk Creek Lutheran Church",
+      "address": "84082 130th St, Sacred Heart, MN, 56285",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Sacred Heart",
+      "locationNotes": "Hawk Creek Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4f852a981a761db122417a73",
+      "name": "Henryville Town Hall",
+      "address": "73540 300th St, Redwood Falls, MN, 56283",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Redwood Falls",
+      "locationNotes": "Henryville Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c4022e2939d80260ef2a263a",
+      "name": "Kingman Town Hall",
+      "address": "35480 County Road 11, Olivia, MN, 56277",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Olivia",
+      "locationNotes": "Kingman Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-524c9a7dd25e4c8eef439ac1",
+      "name": "Melville Town Hall",
+      "address": "42154 820th Ave, Bird Island, MN, 55310",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Bird Island",
+      "locationNotes": "Melville Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9069acd8a441cd901a2a8f6b",
+      "name": "Palmyra Town Hall",
+      "address": "75080 County Road 3, Hector, MN, 55342",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Hector",
+      "locationNotes": "Palmyra Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7245c4e5438e0f4216c6f810",
+      "name": "Sacred Heart Town Hall",
+      "address": "20556 County Road 17, Sacred Heart, MN, 56284",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Sacred Heart",
+      "locationNotes": "Sacred Heart Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d85f697dbea303eff27d43de",
+      "name": "Wang Town Hall",
+      "address": "86730 150th St, Sacred Heart, MN, 56285",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Sacred Heart",
+      "locationNotes": "Wang Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a6afe58861bae72626ce6381",
+      "name": "Farifax City Auditorium",
+      "address": "300 Park St S, Fairfax, MN, 55332",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Fairfax",
+      "locationNotes": "Bandon Twp Residents, Cairo Twp Residents, Camp Twp Residents, Wellington Twp Residents, City of Fairfax Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d8df0d59895199d6a745bb4b",
+      "name": "Hector Community Center",
+      "address": "130 Main St S, Hector, MN, 55342",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Hector",
+      "locationNotes": "Martinsburg Twp Residents, City of Hector Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-47e52f39f4c77d906feea9f6",
+      "name": "Buffalo Lake Community Center",
+      "address": "203 Main St N, Buffalo Lake, MN, 55314",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Buffalo Lake",
+      "locationNotes": "Preston Lake Twp Residents, City of Buffalo Lake Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0348c6e57bf777ad4ba82f21",
+      "name": "Danube City Office Building",
+      "address": "400 Main St, Danube, MN, 56230",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Danube",
+      "locationNotes": "Troy Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cbfc9092c4787f1a2c279d06",
+      "name": "Bird Island Community Center",
+      "address": "660 Birch Ave, Bird Island, MN, 55310",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Bird Island",
+      "locationNotes": "Bird Island Twp Residents, City of Bird Island Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5487382ffed94f67d58c5a67",
+      "name": "Renville Community Center",
+      "address": "221 Main St N, Renville, MN, 56284",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Renville",
+      "locationNotes": "City of Renville Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-15226179bbbf7efaf501c6c7",
+      "name": "Franklin Community Center",
+      "address": "221 2nd Ave E, Franklin, MN, 55333",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Franklin",
+      "locationNotes": "City of Franklin Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-101fcd6dcc0a351d8e3077fd",
+      "name": "Morton City Hall",
+      "address": "220 2nd St W, Morton, MN, 56270",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Morton",
+      "locationNotes": "City of Morton Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1676fe5a3af0aed2c47e5000",
+      "name": "Sacred Heart Community Center",
+      "address": "309 1st Ave, Sacred Heart, MN, 56285",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Sacred Heart",
+      "locationNotes": "City of Sacred Heart Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4ef646d2b2e7fbbae721ed5b",
+      "name": "BOLD High School",
+      "address": "701 9th St S, Olivia, MN, 56277",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Olivia",
+      "locationNotes": "City of Olivia Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4cda86682ba6f3a38611d1a4",
+      "name": "Osceola Town Hall",
+      "address": "85910 430th St, Bird Island, MN, 55310",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Renville County GIS",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "checkedAt": "2026-10-21T04:32:36.950Z",
+          "official": true,
+          "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+          "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+        }
+      ],
+      "town": "Bird Island",
+      "locationNotes": "Osceola Twp Residents",
+      "countyFips": "27129",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Renville County GIS",
+            "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+            "checkedAt": "2026-10-21T04:32:36.950Z",
+            "official": true,
+            "documentHash": "02eddd4e161f4b8ef2e4bff9b916e810bccbaddbecc5b6739805ec54553d9291",
+            "documentUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Renville County GIS",
+      "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+      "checkedAt": "2026-10-21T04:32:36.950Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://gis.renvillecountymn.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://gis.renvillecountymn.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/Elections/FeatureServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C48%2C50%2C52%2C57&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "contacts": []
+}

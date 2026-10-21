@@ -1,0 +1,4 @@
+id,name,sameAs,sameAsNote,validThrough,census_geoid,census_geoid_12,census_geoid_14,openstates_district,placeholder_id,sch_dist_stateid,state_id,validFrom
+ocd-division/country:us/state:ar/circuit_court:16,AR State Circuit Court - 16th District,,,,,,,,,,,
+ocd-division/country:us/state:ar/circuit_court:2,AR State Circuit Court - 2nd District,,,,,,,,,,,
+ocd-division/country:us/state:ar/circuit_court:4,AR State Circuit Court - 4th District,,,,,,,,,,,

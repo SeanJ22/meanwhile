@@ -1,0 +1,79 @@
+{
+  "sourceAcquisition": true,
+  "productionPublication": false,
+  "productionCopyReceipt": "tests/fixtures/voting-sources/vs-04-copy-proof.json",
+  "configuredSources": 146,
+  "siteTotal": 9936,
+  "states": [
+    {
+      "state": "AL",
+      "sites": 78,
+      "counties": 1,
+      "sourceCount": 1,
+      "remaining": "Mobile County only. Other counties, November-specific assignments, published hours and boundaries remain acquisition work."
+    },
+    {
+      "state": "FL",
+      "sites": 463,
+      "counties": 67,
+      "sourceCount": 133,
+      "remaining": "All 67 county early-location PDFs acquired. Additional stand-alone ballot-intake sections and daily schedule extraction remain open; election-day polling lists remain county work."
+    },
+    {
+      "state": "GA",
+      "sites": 132,
+      "counties": 1,
+      "sourceCount": 1,
+      "remaining": "Cobb County only. Other counties, early-voting schedule extraction and precinct boundaries remain open."
+    },
+    {
+      "state": "KY",
+      "sites": 1690,
+      "counties": 120,
+      "sourceCount": 4,
+      "remaining": "All 120 county labels acquired across the current four-sheet workbook. The excused in-person sheet omits Larue County. Full dated periods and boundaries remain open."
+    },
+    {
+      "state": "MS",
+      "sites": 46,
+      "counties": 1,
+      "sourceCount": 1,
+      "remaining": "DeSoto County only. Current county-linked map is revised March 7, 2025; November 2026 applicability, hours, boundaries and other counties remain open."
+    },
+    {
+      "state": "NC",
+      "sites": 2806,
+      "counties": 100,
+      "sourceCount": 2,
+      "remaining": "All 100 counties have statewide November polling and early files. Polling boundaries and any services absent from those official files remain open."
+    },
+    {
+      "state": "SC",
+      "sites": 1956,
+      "counties": 46,
+      "sourceCount": 1,
+      "remaining": "All 46 counties have permanent polling-directory records. Publisher omits temporary election-specific changes; November-specific assignments and early-voting lists remain open."
+    },
+    {
+      "state": "TN",
+      "sites": 15,
+      "counties": 1,
+      "sourceCount": 1,
+      "remaining": "Davidson County early-voting list only. Other counties, daily schedules, election-day polling lists and boundaries remain open."
+    },
+    {
+      "state": "VA",
+      "sites": 2651,
+      "counties": 133,
+      "sourceCount": 1,
+      "remaining": "All 133 county-equivalent labels matched to held official FIPS using typed county/city names. Early sites, published hours and precinct boundaries remain open."
+    },
+    {
+      "state": "WV",
+      "sites": 99,
+      "counties": 55,
+      "sourceCount": 1,
+      "remaining": "All 55 counties have early-voting locations and individual date periods. Election-day precinct lists and boundaries remain open."
+    }
+  ]
+}

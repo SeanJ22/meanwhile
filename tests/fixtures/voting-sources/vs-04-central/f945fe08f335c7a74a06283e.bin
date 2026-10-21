@@ -1,0 +1,47 @@
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: imagesift.com
+Disallow: /
+
+User-agent: imagesiftbot.com
+Disallow: /
+
+User-agent: semrushbot
+Disallow: /
+
+User-agent: snapchatads
+Disallow: /
+
+User-agent: petalbot
+Disallow: /
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: mj12bot
+Disallow: /
+
+User-agent: bitdiscovery
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: uptimerobot
+Disallow: /
+
+User-agent: seekportbot
+Disallow: /
+
+User-agent: Baidu
+Disallow: /
+
+User-agent: sogou
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: exabot
+Disallow: /

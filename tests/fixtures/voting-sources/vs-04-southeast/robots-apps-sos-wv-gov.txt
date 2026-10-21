@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /adlaw/executivejournal/senateconfirmation/
+Disallow: /business/service-of-process/Packaged
+Disallow: /business/service-of-process/Packaged/
+Disallow: /email/
+Disallow: /Templates/
+Disallow: /universalaccess/
+Disallow: /business/corporations/readpdf.aspx
+Disallow: /business/charities/readpdf.aspx

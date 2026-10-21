@@ -526,7 +526,7 @@ interface ExecutableDependencyClosure {
   readonly problems: readonly string[];
 }
 
-const EXECUTABLE_CLOSURE_NODE_LIMIT = 512;
+const EXECUTABLE_CLOSURE_NODE_LIMIT = 1024;
 
 function repositoryLocalExecutableReferences(
   files: Readonly<Record<string, string>>,

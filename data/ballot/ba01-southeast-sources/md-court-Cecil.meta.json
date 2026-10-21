@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Cecil.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Cecil.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:36.287394+00:00",
+  "rawHash": "406431e3a734794542db0b111902e5512b0f981310d96c69fb70a7ce34e1c15f",
+  "bytes": 571659,
+  "convertedTextHash": "ed14d260454fb1e52d0348fd71bb542182a024b2fa359b9a23982c5eb68c1f3f",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

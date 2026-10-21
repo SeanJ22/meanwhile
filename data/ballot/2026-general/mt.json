@@ -2688,6 +2688,234 @@
             "doorId": "fec-mt-chief",
             "quote": "I-194, if passed, limits the powers of artificial persons to those powers necessary or convenient as\nprovided by law. These powers must exclude contributing anything of value to candidate elections,\nsupporting or opposing political parties, or supporting or opposing state or local ballot issues.\nArtificial persons include non-profits, trusts, partnerships, corporations, trade associations, or\nunincorporated associations and includes all such entities doing business in Montana. Any\nviolation of I-194 is punished by forfeiting all privileges to do business in Montana. Those\nprivileges may be, but are not automatically, restored upon disgorgement and certification of\ncompliance with I-194. I-194 does not apply to the distribution of news, commentary, or editorial\ncontent. I-194 also does not apply to the state of Montana, political subdivisions, individuals,\npolitical committees, or public corporations.\n\n[] YES on Initiative I-194\n[] NO on Initiative I-194"
           }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-1-dept-3",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 1, DEPT 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 1 | DISTRICT COURT JUDGE DISTRICT 1, DEPT 3 | REGULAR | 6 | DANIEL GUZYNSKI | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-4-dept-5",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 4, DEPT 5 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 4 | DISTRICT COURT JUDGE DISTRICT 4, DEPT 5 | REGULAR | 6 | *SHANE A VANNATTA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-7-dept-2",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 7, DEPT 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | *SCOTT W HERRING | NON\nFILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | BRETT IRIGOIN | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-8-dept-4",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 8, DEPT 4 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 8 | DISTRICT COURT JUDGE DISTRICT 8, DEPT 4 | REGULAR | 6 | *JOHN W PARKER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-4",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:13",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 13, DEPT 4 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 4 | REGULAR | 6 | *BRETT LINNEWEBER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-5",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:13",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 13, DEPT 5 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 5 | REGULAR | 6 | *ROD SOUZA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-9",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:13",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 13, DEPT 9 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 9 | REGULAR | 6 | *SETH CUNNINGHAM | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-10",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:13",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 13, DEPT 10 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 10 | REGULAR | 6 | *ED ZINK | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-18-dept-2",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:18",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 18, DEPT 2 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 18 | DISTRICT COURT JUDGE DISTRICT 18, DEPT 2 | REGULAR | 6 | *RIENNE H MCELYEA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-20-dept-1",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:20",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 20, DEPT 1 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 1 | REGULAR | 6 | *MOLLY OWEN | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-20-dept-2-unexpired",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:20",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 20, DEPT 2 UNEXPIRED — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 2 UNEXPIRED | UNEXPIRED | 6 | *JOHN A MERCER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-21-dept-2",
+          "electionId": "mt-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mt/judicial_district:21",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE DISTRICT 21, DEPT 2 — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 21 | DISTRICT COURT JUDGE DISTRICT 21, DEPT 2 | REGULAR | 6 | *JENNIFER LINT | NON"
+          }
         }
       ],
       "candidacies": [
@@ -7298,6 +7526,227 @@
             "doorId": "fec-mt-chief",
             "quote": "FILED | House | HOUSE DISTRICT 100 | STATE REPRESENTATIVE DISTRICT 100 | REGULAR | 2 | JC WINDMUELLER | LIB"
           }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-1-dept-3-daniel-guzynski",
+          "contestId": "mt-general-2026-district-court-judge-district-1-dept-3",
+          "familyName": "DANIEL GUZYNSKI",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 1 | DISTRICT COURT JUDGE DISTRICT 1, DEPT 3 | REGULAR | 6 | DANIEL GUZYNSKI | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-4-dept-5-shane-a-vannatta",
+          "contestId": "mt-general-2026-district-court-judge-district-4-dept-5",
+          "familyName": "SHANE A VANNATTA",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 4 | DISTRICT COURT JUDGE DISTRICT 4, DEPT 5 | REGULAR | 6 | *SHANE A VANNATTA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-7-dept-2-scott-w-herring",
+          "contestId": "mt-general-2026-district-court-judge-district-7-dept-2",
+          "familyName": "SCOTT W HERRING",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | *SCOTT W HERRING | NON\nFILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | BRETT IRIGOIN | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-7-dept-2-brett-irigoin",
+          "contestId": "mt-general-2026-district-court-judge-district-7-dept-2",
+          "familyName": "BRETT IRIGOIN",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | *SCOTT W HERRING | NON\nFILED | JUDICIAL DISTRICT 7 | DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 | REGULAR | 6 | BRETT IRIGOIN | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-8-dept-4-john-w-parker",
+          "contestId": "mt-general-2026-district-court-judge-district-8-dept-4",
+          "familyName": "JOHN W PARKER",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 8 | DISTRICT COURT JUDGE DISTRICT 8, DEPT 4 | REGULAR | 6 | *JOHN W PARKER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-4-brett-linneweber",
+          "contestId": "mt-general-2026-district-court-judge-district-13-dept-4",
+          "familyName": "BRETT LINNEWEBER",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 4 | REGULAR | 6 | *BRETT LINNEWEBER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-5-rod-souza",
+          "contestId": "mt-general-2026-district-court-judge-district-13-dept-5",
+          "familyName": "ROD SOUZA",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 5 | REGULAR | 6 | *ROD SOUZA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-9-seth-cunningham",
+          "contestId": "mt-general-2026-district-court-judge-district-13-dept-9",
+          "familyName": "SETH CUNNINGHAM",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 9 | REGULAR | 6 | *SETH CUNNINGHAM | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-13-dept-10-ed-zink",
+          "contestId": "mt-general-2026-district-court-judge-district-13-dept-10",
+          "familyName": "ED ZINK",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 10 | REGULAR | 6 | *ED ZINK | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-18-dept-2-rienne-h-mcelyea",
+          "contestId": "mt-general-2026-district-court-judge-district-18-dept-2",
+          "familyName": "RIENNE H MCELYEA",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 18 | DISTRICT COURT JUDGE DISTRICT 18, DEPT 2 | REGULAR | 6 | *RIENNE H MCELYEA | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-20-dept-1-molly-owen",
+          "contestId": "mt-general-2026-district-court-judge-district-20-dept-1",
+          "familyName": "MOLLY OWEN",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 1 | REGULAR | 6 | *MOLLY OWEN | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-20-dept-2-unexpired-john-a-mercer",
+          "contestId": "mt-general-2026-district-court-judge-district-20-dept-2-unexpired",
+          "familyName": "JOHN A MERCER",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 2 UNEXPIRED | UNEXPIRED | 6 | *JOHN A MERCER | NON"
+          }
+        },
+        {
+          "id": "mt-general-2026-district-court-judge-district-21-dept-2-jennifer-lint",
+          "contestId": "mt-general-2026-district-court-judge-district-21-dept-2",
+          "familyName": "JENNIFER LINT",
+          "givenName": "",
+          "partyLabel": "NON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+            "sourceOrg": "Montana Secretary of State",
+            "collectedAt": "2026-10-20T23:12:34.615184+00:00",
+            "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
+            "quote": "FILED | JUDICIAL DISTRICT 21 | DISTRICT COURT JUDGE DISTRICT 21, DEPT 2 | REGULAR | 6 | *JENNIFER LINT | NON"
+          }
         }
       ],
       "measures": [
@@ -7347,13 +7796,195 @@
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "ba01-mt-broadwater-in-ocd-division-country-us-state-mt-judicial-district-1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:broadwater",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(1) 1st district: Lewis and Clark and Broadwater Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-missoula-in-ocd-division-country-us-state-mt-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:missoula",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(4) 4th district: Missoula and Mineral Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-mineral-in-ocd-division-country-us-state-mt-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:mineral",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(4) 4th district: Missoula and Mineral Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-dawson-in-ocd-division-country-us-state-mt-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:dawson",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(7) 7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-mccone-in-ocd-division-country-us-state-mt-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:mccone",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(7) 7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-richland-in-ocd-division-country-us-state-mt-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:richland",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(7) 7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-prairie-in-ocd-division-country-us-state-mt-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:prairie",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(7) 7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-wibaux-in-ocd-division-country-us-state-mt-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:wibaux",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(7) 7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-cascade-in-ocd-division-country-us-state-mt-judicial-district-8",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:cascade",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:8",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(8) 8th district: Cascade County;"
+          }
+        },
+        {
+          "id": "ba01-mt-yellowstone-in-ocd-division-country-us-state-mt-judicial-district-13",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:yellowstone",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:13",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(13) 13th district: Yellowstone County;"
+          }
+        },
+        {
+          "id": "ba01-mt-gallatin-in-ocd-division-country-us-state-mt-judicial-district-18",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:gallatin",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:18",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(18) 18th district: Gallatin County;"
+          }
+        },
+        {
+          "id": "ba01-mt-lake-in-ocd-division-country-us-state-mt-judicial-district-20",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:lake",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:20",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(20) 20th district: Lake and Sanders Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-sanders-in-ocd-division-country-us-state-mt-judicial-district-20",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:sanders",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:20",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(20) 20th district: Lake and Sanders Counties;"
+          }
+        },
+        {
+          "id": "ba01-mt-ravalli-in-ocd-division-country-us-state-mt-judicial-district-21",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:ravalli",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:21",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(21) 21st district: Ravalli County;"
+          }
+        },
+        {
+          "id": "ba01-mt-lewis_and_clark-in-ocd-division-country-us-state-mt-judicial-district-1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:lewis_and_clark",
+          "districtOcdId": "ocd-division/country:us/state:mt/judicial_district:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+            "sourceOrg": "Montana Legislative Services Division",
+            "collectedAt": "2026-10-21T00:11:23.669626+00:00",
+            "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
+            "quote": "(1) 1st district: Lewis and Clark and Broadwater Counties;"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:09:46.571Z",
-    "reviewedBy": "BL-14 scripted source conversion",
+    "reviewedAt": "2026-10-21T00:18:52.278241+00:00",
+    "reviewedBy": "Codex BA-01 official court/county source replay",
     "sources": [
       {
         "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -7424,6 +8055,50 @@
         "publisher": "Montana Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Saved official source confirming election certification or the three qualified statewide measures and their verbatim ballot language/full text."
+      },
+      {
+        "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+        "finalUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+        "rawHash": "d491215c215b9fe74a9fcc2eedf8b9cc507b495bbaada079446d80a9c7b8cc8d",
+        "retrievedAt": "2026-10-20T23:12:34.615184+00:00",
+        "httpStatus": 200,
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current general public CSV: every FILED judicial candidate,12races/13names. Retention applies only to unopposed marked incumbents per official legend and ConstitutionVII8(3).",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+        "finalUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+        "rawHash": "c7a32296c5a15ff4b6e752d584347c295aec53e50038223efa712f97aa0a09b4",
+        "retrievedAt": "2026-10-21T00:14:05.502Z",
+        "httpStatus": 200,
+        "publisher": "Montana Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Candidate portal explicitly defines '* = Incumbent'.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+        "finalUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+        "rawHash": "ffe40f019edfba28d160afdf6e305a10de5af9e3a7d3b8691fed5dca817c99ea",
+        "retrievedAt": "2026-10-21T00:11:23.669626+00:00",
+        "httpStatus": 200,
+        "publisher": "Montana Legislative Services Division",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "MCA3-5-101 explicitly lists every county within each judicial district; county memberships are directional.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0070/part_0010/section_0080/0000-0070-0010-0080.html",
+        "finalUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0070/part_0010/section_0080/0000-0070-0010-0080.html",
+        "rawHash": "36226b8c26f6447f4a611549176456aa45d78ff4ceab27fe1da8937617727af4",
+        "retrievedAt": "2026-10-21T00:11:23.461730+00:00",
+        "httpStatus": 200,
+        "publisher": "Montana Legislative Services Division",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "ConstitutionVII8(3) explicitly places unopposed incumbents on approval/rejection ballot.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

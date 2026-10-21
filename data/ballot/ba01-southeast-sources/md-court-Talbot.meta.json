@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Talbot.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Talbot.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:36.222724+00:00",
+  "rawHash": "02e968b2cf1cd0b31de26081775d2785b84d9259c30c147762c19031ac32dee9",
+  "bytes": 374508,
+  "convertedTextHash": "25d35d8f92a66d428828a6b9e5ba9152aed476158e4f28f01a0d52c1b3947061",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

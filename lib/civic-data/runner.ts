@@ -124,7 +124,8 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
   };
 }
 
-const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract);
+import { MEASURE_TRANSLATION_ROUTINE_TASKS } from "../translate/routine-contract.ts";
+const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract).concat(MEASURE_TRANSLATION_ROUTINE_TASKS);
 /** Every standing task, the meeting doors' partitions included; replaced in place whenever this process installs the doors. */
 export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = routineSourceTasks();
 onMeetingPartitionsRefreshed(() => {

@@ -1,0 +1,10 @@
+{
+  "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:33:07.663618+00:00",
+  "rawHash": "f1297a1d2dbe1f1b691a9ebeb0cff3808228a466d95b3d13336a4e55a9f53388",
+  "bytes": 21964847,
+  "sourceExtraction": "Header and three exact Arkansas circuit-court rows from the captured master CSV; rawHash describes the full original.",
+  "sourceTextSha256": "69b312c8007c829eecbeb2f1601171d42a26310a2bf8b5c0daa6e76130ab8910"
+}

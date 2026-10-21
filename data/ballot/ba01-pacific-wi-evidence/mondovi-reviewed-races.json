@@ -1,0 +1,68 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 29",
+    "ocd-division/country:us/state:wi/sldl:29",
+    [
+      [
+        "Treig Pronschinske",
+        "Republican"
+      ],
+      [
+        "Chris Danou",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Buffalo County Sheriff",
+    "ocd-division/country:us/state:wi/county:buffalo",
+    [
+      [
+        "Jake Laehn",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Buffalo County Coroner",
+    "ocd-division/country:us/state:wi/county:buffalo",
+    [
+      [
+        "Cindy Giese",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Buffalo County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:buffalo",
+    [
+      [
+        "Julie Vollmer",
+        "Republican"
+      ]
+    ]
+  ]
+]

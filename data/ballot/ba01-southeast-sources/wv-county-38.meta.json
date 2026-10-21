@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Preston%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Preston%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.148047+00:00",
+  "rawHash": "4663512ccc3b3fa63fcd772148bb84cee3bd41942da4a7a75c7341e0f003506e",
+  "httpStatus": 200,
+  "bytes": 895246,
+  "extractedTextHash": "86e41abe0d4a37b8f015dce0e5a9b177b8cdb7e378e5d2b1d88943999028afaf",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

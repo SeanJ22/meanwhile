@@ -1,0 +1,232 @@
+FAX (https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf)
+【turn994948view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 6; Source: open({"ref_id":"https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf","lineno":0}); Total lines: 441
+L0@P0: November 3, 2026, General Election
+L1@P0: 46 Day Notice – Clark County, OH
+L2@P0: * = Write-in Candidate
+L3@P0: A description of the offices to be found on the ballot for the November 3, 2026 General Election and a listing
+L4@P0: of any questions or issues that will be on the ballot may be found below.
+L5@P0: If you have any questions or need further information than what is provided here, please email us at
+L6@P0: elections@clark.boe.ohio.gov or call our office at 937-521-2120.
+L7@P0: Offices and Candidates on the November 3, 2026 General Election Ballot
+L8@P0: Candidate Name Party Office Number to
+L9@P0: Elect Precincts
+L10@P0: Amy Acton/David Pepper Democratic
+L11@P0: Governor/Lieutenant Governor 1 All Clark County
+L12@P0: Don Kissick/James L. Mills Libertarian
+L13@P0: Vivek Ramaswamy/Robert A.
+L14@P0: McColley Republican
+L15@P0: Timothy Grady/Andrea
+L16@P0: Neutzling*
+L17@P0: Heather Hill/Patrick Manley*
+L18@P0: Renea Turner/Jalen Turner*
+L19@P0: Ron Ula/Michael C. Lehnerd
+L20@P0: Keith Faber Republican
+L21@P0: Attorney General 1 All Clark County
+L22@P0: John J. Kulewicz Democratic
+L23@P0: Annette Blackwell Democratic
+L24@P0: Auditor of State 1 All Clark County
+L25@P0: Frank LaRose Republican
+L26@P0: Tom Pruss Libertarian
+L27@P0: Allison Russo Democratic Secretary of State 1 All Clark County
+L28@P0: Robert Sprague Republican
+L29@P0: Jay Edwards Republican
+L30@P0: Treasurer of State 1 All Clark County
+L31@P0: Seth Walsh Democratic
+L32@P0: Daniel R. Hawkins Republican
+L33@P0: Justice of the Supreme Court -
+L34@P0: 01/01/2027 1 All Clark County
+L35@P0: Marilyn Zayas Democratic
+L36@P0: Jennifer Brunner Democratic
+L37@P0: Justice of the Supreme Court -
+L38@P0: 01/02/2027 1 All Clark County
+L39@P0: Colleen O'Donnell Republican
+L40@P0: Sherrod Brown Democratic
+L41@P0: United States Senator
+L42@P0: (unexpired term ending
+L43@P0: 01/03/2029)
+L44@P0: 1 All Clark County
+L45@P0: Jon Husted Republican
+L46@P0: Greg Levy
+L47@P0: Otherparty
+L48@P0: candidate
+L49@P0: William B. Redpath Libertarian
+L50@P0: Stephen Faris*
+L51@P0: Anthony Holliman*
+L52@P0: Timothy Telymonde*
+L53@P0: Joshua D. Kolasinski Democratic
+L54@P0: United States Representative
+L55@P0: 4th District 1
+L56@P0: City 1 thru 27,
+L57@P0: CARL 1 thru 5,
+L58@P0: BETH 1, split 2,
+L59@P0: BETH 2, split 2,
+L60@P0: BETH 3, split 2
+L61@P0: BETH 4 split 1 & 2,
+L62@P0: BETH 5, BETH 6,
+L63@P0: GERM 1 thru 5, MR
+L64@P0: 4, split 1, MR - 6,
+L65@P0: MFLD 1 thru 9, Pike
+L66@P0: 1 & 2, PLES 1 & 2, T
+L67@P0: - 1 thru T - 8
+L68@P0: Jim Jordan Republican
+L69@P0: Tracy L. Tackett
+L70@P0-1: Ron Ula/Michael C. Lehnerd have withdrawn, votes for these candidates will not countNovember 3, 2026, General Election
+L71@P1: 46 Day Notice – Clark County, OH
+L72@P1: * = Write-in Candidate
+L73@P1: Brennan Barrington Libertarian
+L74@P1: United States Representative
+L75@P1: 15th District 1
+L76@P1: BETH 1, split 1,
+L77@P1: BETH 2, split 1,
+L78@P1: BETH 3, split 1,
+L79@P1: BETH 4, split 3,
+L80@P1: GREE 1 & 2, HARM
+L81@P1: 1 & 2, CHAS, CHAS
+L82@P1: TWP, MR - 1 thru
+L83@P1: 3, MR - 4, split 2,
+L84@P1: MR - 5
+L85@P1: Mike Carey Republican
+L86@P1: Don Leonard Democratic
+L87@P1: Gary Josephson*
+L88@P1: Samuel Ronan*
+L89@P1: Levi Dean Republican
+L90@P1: State Representative- 71st 1
+L91@P1: GREE 1 & 2, HARM
+L92@P1: 1 & 2, CHAS 1,
+L93@P1: CHAS TWP, MR - 1
+L94@P1: Krista Magaw Democratic thru 6, ENON 1 & 2
+L95@P1: Darrell E. Jackson Democratic
+L96@P1: State Representative- 74th 1
+L97@P1: CITY 1 thru 27,
+L98@P1: CARL 1 thru 5,
+L99@P1: BETH 1 thru 6,
+L100@P1: GERM 1 thru 5,
+L101@P1: MFLD 1 thru 9,
+L102@P1: PIKE 1 & 2, PLES 1
+L103@P1: & 2, T - 1 thru 8
+L104@P1: Bernard Willis Republican
+L105@P1: Chris Epley Republican 2nd District Court of Appeals 1 All Clark County
+L106@P1: Richard P. Carey Republican Judge of the Court of Common
+L107@P1: Pleas - Probate Div 1 All Clark County
+L108@P1: Sasha Rittenhouse Republican
+L109@P1: County Commissioner 1 All Clark County
+L110@P1: Bradley Soles Democratic
+L111@P1: Seth Evans County Commissioner
+L112@P1: (unexpired term ending
+L113@P1: 01/01/2029)
+L114@P1: 1 All Clark County
+L115@P1: Greg R. Kaffenbarger Republican
+L116@P1: Hillary Hamilton Republican County Auditor 1 All Clark County
+L117@P1: Bonnie Sakaitis Republican County Recorder (unexpired
+L118@P1: term ending 12/31/2028) 1 All Clark County
+L119@P1: Aamir Khan Democratic
+L120@P1: Coroner (unexpired term ending
+L121@P1: 12/31/2028) 1 All Clark County
+L122@P1: Joel Macy Republican
+L123@P1: Questions or Issues on November 3, 2026 General Election Ballot
+L124@P1: State Issue 3
+L125@P1: Proposed Constitutional Amendment
+L126@P1: TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE
+L127@P1: Proposed by Joint Resolution of the General Assembly
+L128@P1: To enact Section 5 of Article V of the Constitution of the State of Ohio
+L129@P1: A majority yes vote is required for the adoption of Section 5.
+L130@P1: This proposed amendment would:
+L131@P1: • Require voters to present an approved form of government-issued photo identification in order to vote.
+L132@P1: • Allow state law to provide for an alternative method of verifying a voter’s identity for a voter who has a sincere religious objection to being
+L133@P1: photographed and, therefore, does not possess an approved form of government-issued photo identification.
+L134@P1: • Require that voters who do not vote in person provide an approved form of government-issued photo identification, unless the law authorizes
+L135@P1: those persons to vote by providing a signature and at least one other specified unique identifier.
+L136@P1: • Define approved forms of government-issued photo identification as an unexpired Ohio driver license or state identification card; a United
+L137@P1: States passport or passport card; or a United States military identification card, Ohio National Guard identification card, or United States
+L138@P1: Department of Veterans Affairs identification card.
+L139@P1: If approved, the amendment shall take effect immediately.
+L140@P1: A “YES” vote means approval of the amendment.
+L141@P1: A “NO” vote means disapproval of the amendment.
+L142@P1: Harmony Township (including the Village of South Vienna)
+L143@P1: Renewal - Property
+L144@P1: A renewal of a tax for the benefit of Harmony Township (including the Village of South Vienna) for the purpose of providing ambulance
+L145@P1: service and emergency medical services that the county auditor estimates will collect $69,816 annually, at a rate not exceeding 1 mill for each
+L146@P1: $1 of taxable value, which amounts to $35 for each $100,000 of the county auditor's appraised value, for 5 years, commencing in 2027, first
+L147@P1: due in calendar year 2028.
+L148@P1: Precincts affected:
+L149@P1: Harm 1 & Harm 2
+L150@P1: Harmony Township (including the Village of South Vienna)
+L151@P1: Renewal - Property
+L152@P1: A renewal of a tax for the benefit of Harmony Township (including the Village of South Vienna) for the purpose of providing ambulance
+L153@P1: service and emergency medical services that the county auditor estimates will collect $73,201 annually, at a rate not exceeding 1 mill for each
+L154@P1: $1 of taxable value, which amounts to $35 for each $100,000 of the county auditor's appraised value, for 5 years, commencing in 2027, first
+L155@P1: due in calendar year 2028.
+L156@P1: Precincts affected:
+L157@P1: Harm 1 & Harm 2
+L158@P1: Young's Jersey Dairy
+L159@P1: Local Option
+L160@P1: Shall the sale of wine and mixed beverages and spirituous liquor be permitted for sale on Sunday by Youngs Jersey Dairy, Inc., dba Young's
+L161@P1: Jersey Dairy, an applicant for a D-6 liquor permit who is engaged in the business of operating a restaurant/entertainment venue at 6880
+L162@P1: Springfield Xenia Road, Yellow Springs (Mad River Township), OH 45387 in this precinct?
+L163@P1: Precincts affected:
+L164@P1-2: MR-5November 3, 2026, General Election
+L165@P2: 46 Day Notice – Clark County, OH
+L166@P2: * = Write-in Candidate
+L167@P2: Green Township (including the Village of Clifton)
+L168@P2: Additional Property
+L169@P2: An additional tax for the benefit of Green Township (including the Village of Clifton) for the purpose of providing ambulance service,
+L170@P2: emergency medical service, or both that the county auditor estimates will collect $204,302 annually, at a rate not exceeding 1.5 mills for each
+L171@P2: $1 of taxable value, which amounts to $53 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2026, first due
+L172@P2: in calendar year 2027.
+L173@P2: Precincts affected:
+L174@P2: Green 1 & 2
+L175@P2: Clark - Shawnee Local School District
+L176@P2: Additional - Income
+L177@P2: Shall an annual income tax of 0.5% on the earned income of individuals residing in the school district be imposed by Clark Shawnee Local
+L178@P2: School District, for 5 years, beginning January 1, 2027, for the purpose of current expenses?
+L179@P2: Precincts affected:
+L180@P2: CITY 1, split 2 & 3; CITY 2, split 2; CITY 3, split 2; CITY 7, split 2; CITY 12, split 2; CITY 15, split 2; CITY 26, split 2; city 27;
+L181@P2: BETH 6, split 3; T-1; T-2, split 1; T-3; T-4 split 1; T-5; T-6, split 1; T-7, split 1 & 3; and T-8.
+L182@P2: Springfield Fuel Center, Inc. dba Silver Swan Marathon
+L183@P2: Local Option -
+L184@P2: Shall the sale of wine and mixed beverages be permitted for sale on Sunday by Springfield Fuel Center, Inc., dba Silver Swan Marathon an
+L185@P2: applicant for a D-6 liquor permit, who is engaged in the business of operating a carryout/grocery store at 3880 E. National Road, Springfield
+L186@P2: (Springfield Township), OH 45504 in this precinct?
+L187@P2: Precincts affected:
+L188@P2: T-8
+L189@P2: Village of South Charleston
+L190@P2: Renewal - Income
+L191@P2: Shall the Ordinance providing for the continuation of an existing 0.25% levy on income for 9 years, commencing January 1, 2027, for for the
+L192@P2: care, supervision and control of public highways, streets, avenues, alleys, sidewalks, public grounds, bridges, aqueducts and viaducts within
+L193@P2: the Village of South Charleston be passed?
+L194@P2: Precincts affected:
+L195@P2: CHAS 1
+L196@P2: City of New Carlisle
+L197@P2: Additional - Income
+L198@P2: Shall the Ordinance providing for a 0.5% levy on income for the purpose of providing funds for fire and emergency medical services be
+L199@P2: passed?
+L200@P2: Precincts affected:
+L201@P2: CARL 1, thru 5
+L202@P2: Village of Donnelsville
+L203@P2: Renewal - Property
+L204@P2: A renewal of a tax for the benefit of the Village Of Donnelsville for the purpose of current operating expenses that the county auditor
+L205@P2: estimates will collect $28,661 annually, at a rate not exceeding 7 mills for each $1 of taxable value, which amounts to $245 for each $100,000
+L206@P2: of the county auditor's market value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L207@P2: Precincts affected:
+L208@P2: Beth 5 split 2 only
+L209@P2: Springfield Township
+L210@P2: Additional - Property
+L211@P2: An additional tax for the benefit of Springfield Township for the purpose of providing police protection, providing and maintaining motor
+L212@P2: vehicles, communications, and other equipment, buildings. sites for such buildings used directly in the operation of a police department, or the
+L213@P2: payment of salaries of permanent police personnel, including the payment of the police employer's contribution required under section 742.33
+L214@P2: of the revised code, or the payments of the costs incurred by townships as a result of contracts made with other political subdivision in order to
+L215@P2: obtain police protection that the county auditor estimates will collect $245,685 annually, at a rate not exceeding 0.5 mill for each $1 of taxable
+L216@P2: value, which amounts to $18 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2026, first due in calendar
+L217@P2: year 2027.
+L218@P2: Precincts affected:
+L219@P2: CITY 1, split 2, CITY 26, split 2 & 3, T-1 thru T-8
+L220@P2: Southeastern Local School District
+L221@P2: Additional - Income
+L222@P2: Shall an annual income tax of 0.50% on the school district income of individuals be imposed by Southeastern Local School District for 5
+L223@P2: years, beginning January 1, 2027, for the purpose of current expenses?
+L224@P2: Precincts affected:
+L225@P2: GREE 2, split 1, HARM 1, split 2, HARM 2, split 3, CHAS and CHAS TWP
+L226@P2: Bethel Township (Unincorporated area)
+L227@P2: Renewal - Property
+L228@P2: A renewal of a tax for the benefit of Bethel Township (unincorporated area) for the purpose of providing and maintaining motor vehicles,
+L229@P2: communications and other equipment, buildings, and sites for such buildings used directly in the operation of a police department, for the

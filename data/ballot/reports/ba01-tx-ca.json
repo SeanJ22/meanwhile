@@ -1,0 +1,32 @@
+[
+  {
+    "state": "TX",
+    "contests": 231,
+    "candidacies": 468,
+    "sources": [
+      {
+        "url": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "retrievedAt": "2026-10-20T22:52:30.537Z",
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "textFile": "2026-ballot-cert.txt",
+        "textHash": "8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde"
+      }
+    ],
+    "scope": "Every printed core office/candidate in the regular final certification; the two separately certified legislative special elections are additional. All17 names in the saved August28 declared-write-in certification are now held across core, county and regional offices; later updates remain standing work."
+  },
+  {
+    "state": "CA",
+    "contests": 164,
+    "candidacies": 324,
+    "sources": [
+      {
+        "url": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+        "retrievedAt": "2026-10-20T22:52:58.157Z",
+        "rawHash": "0e514ae7b14378b1837bcea99c07e6a05ce35baa9db4c3d3a2297704dc7e6017",
+        "textFile": "cert-list-candidates.txt",
+        "textHash": "4dc423642623028602bfe9ecc52480265dd2c8dbad9c654b33ffd2772f5f486e"
+      }
+    ],
+    "scope": "Every printed federal, statewide, Board of Equalization and legislative candidate in the final certification; later qualified write-ins and regional courts remain separate work."
+  }
+]

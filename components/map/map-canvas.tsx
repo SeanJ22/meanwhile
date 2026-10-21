@@ -16,7 +16,7 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
-import { Protocol } from "pmtiles";
+import { boundaryProtocol } from "@/lib/map/boundary-protocol";
 import { startMap } from "@/lib/map/start-map";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
@@ -28,6 +28,8 @@ type ProjectPoint = (point: [number, number]) => { x: number; y: number };
 import {
   CONUS_BOUNDS,
   FALLBACK_STYLE,
+  basemapStyle,
+  prefetchRasterOverview,
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
@@ -102,6 +104,15 @@ import { OfficePinsLayer, isOfficePress } from "./office-pins-layer";
 import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
+
+let workersPrepared = false;
+/** Download and initialize the map's existing worker pool while the ZIP reads run. */
+export function prepareMapWorkers(): void {
+  if (workersPrepared) return;
+  setWorkerUrl("/maplibre-gl-worker.mjs");
+  prewarm();
+  workersPrepared = true;
+}
 
 interface MapCanvasProps {
   officeSites?: readonly OfficeSite[];
@@ -329,12 +340,8 @@ export function MapCanvas({
 
     // MapLibre 6 resolves its worker URL dynamically, which no bundler emits;
     // scripts/build-map-worker.mjs bundles a copy here. Must precede the first map.
-    setWorkerUrl("/maplibre-gl-worker.mjs");
-    addProtocol("pmtiles", new Protocol().tile);
-
-    // Keeps the shared worker pool alive across Strict Mode's remount. Must
-    // follow setWorkerUrl and precede the first map.
-    prewarm();
+    prepareMapWorkers();
+    addProtocol("pmtiles", boundaryProtocol);
 
     // No key: fall through to the plain ground colour and say so, never another provider.
     const basemap = resolveBasemap(documentTheme());
@@ -347,8 +354,6 @@ export function MapCanvas({
     const container = containerRef.current;
     const map = startMap(() => new MapLibreMap({
       container,
-      // Districts start without any dependency on the basemap provider.
-      style: withDistricts(FALLBACK_STYLE, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)),
       ...(camera
         ? { center: [camera.lng, camera.lat] as [number, number], zoom: initialZoomForZip(camera.zip) }
         : remembered
@@ -362,13 +367,32 @@ export function MapCanvas({
       attributionControl: false,
       pitchWithRotate: false,
       dragRotate: false,
+      // Labels appear in their first complete frame, including the automatic ZIP fit.
+      fadeDuration: 0,
     }));
     if (!map) {
+      document.documentElement.dataset.raster = "unknown";
       const frame = window.requestAnimationFrame(() => {
         setGraphicsUnavailable(true);
         setPresentationReady(true);
       });
       return () => window.cancelAnimationFrame(frame);
+    }
+
+    const raster = detectRaster(map.getCanvas());
+    document.documentElement.dataset.raster = raster.kind;
+    // A software renderer paints on the CPU. Retain every feature and label
+    // while avoiding four canvas pixels per CSS pixel on a 2x display.
+    if (raster.kind === "software" && map.getPixelRatio() > 1) map.setPixelRatio(1);
+
+    // Start CPU graphics with its final style, rather than compile a fallback
+    // frame and then discard it. The district source remains independent.
+    const initialStyle = basemap && raster.kind === "software" ? basemapStyle(basemap, true) : FALLBACK_STYLE;
+    if (typeof initialStyle !== "string") map.setStyle(withDistricts(initialStyle, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
+    const overview = new AbortController();
+    if (basemap && raster.kind === "software" && camera) {
+      void prefetchRasterOverview(basemap, camera, initialZoomForZip(camera.zip),
+        AbortSignal.any([overview.signal, AbortSignal.timeout(3000)])).catch(() => {});
     }
 
     holdMapPresentation(map);
@@ -419,7 +443,7 @@ export function MapCanvas({
     map.on("styledata", ensureDistricts);
     map.once("style.load", () => {
       ensureDistricts();
-      if (basemap) map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+      if (basemap && raster.kind !== "software") map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
     });
 
     /* Click to select a district: one hit selects, several open a picker, none keeps the selection. */
@@ -447,7 +471,7 @@ export function MapCanvas({
     };
     window.addEventListener("keydown", onKeyDown);
 
-    const degradeInMotion = detectRaster().kind === "software";
+    const degradeInMotion = raster.kind === "software";
     const enterMotionDegrade = () => {
       if (!degradeInMotion) return;
       holdMapPresentation(map);
@@ -474,8 +498,8 @@ export function MapCanvas({
 
     let userMoved = false;
     let settleTimer: number | undefined;
-    const onMoveStart = (event: { originalEvent?: unknown }) => {
-      enterMotionDegrade();
+    const onMoveStart = (event: { originalEvent?: unknown; instant?: boolean }) => {
+      if (!event.instant) enterMotionDegrade();
       if (event.originalEvent) {
         userMoved = true;
         // The reader has taken the camera until an explicit action hands it back.
@@ -604,6 +628,7 @@ export function MapCanvas({
       };
 
     return () => {
+      overview.abort();
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
       map.off("sourcedata", onBoundaryData);
@@ -771,10 +796,10 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.setPadding(
-      insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 },
-      { duration: 0 },
-    );
+    const padding = insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 };
+    const current = map.getPadding();
+    if ((["top","bottom","left","right"] as const).every(side=>(current[side]??0)===padding[side])) return;
+    map.setPadding(padding, { instant: true });
   }, [leftInset, insets]);
 
   const cameraMapRef = useRef<MapLibreMap | null>(null);
@@ -794,7 +819,7 @@ export function MapCanvas({
     };
 
     if (cameraMapRef.current !== map || prefersReducedMotion()) {
-      map.jumpTo(options);
+      map.jumpTo(options, { instant: true });
     } else {
       map.flyTo({ ...options, duration: 350, essential: true, curve: 1.5 });
     }
@@ -866,7 +891,7 @@ export function MapCanvas({
     if (appliedStyleRef.current === basemap.styleUrl) return;
     appliedStyleRef.current = basemap.styleUrl;
 
-    map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+    map.setStyle(basemapStyle(basemap, detectRaster(map.getCanvas()).kind === "software"), { transformStyle: preserveDistrictStyle });
   }, [theme]);
 
   // National boundaries depend on the chosen kinds, never an active state.
@@ -897,7 +922,7 @@ export function MapCanvas({
         padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 900,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -930,7 +955,7 @@ export function MapCanvas({
         padding: 24,
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 600,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -964,7 +989,7 @@ export function MapCanvas({
       zoom: focus.zoom ?? 13,
     };
 
-    if (prefersReducedMotion()) map.jumpTo(options);
+    if (prefersReducedMotion()) map.jumpTo(options, { instant: true });
     else map.flyTo({ ...options, duration: 900, essential: true });
   }, [focus]);
 
@@ -997,6 +1022,9 @@ export function MapCanvas({
     [venues, visibleVenueKeys],
   );
 
+  const framedMapRef = useRef<MapLibreMap | null>(null);
+  const framedBoundsRef = useRef("");
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !camera || framed.length === 0) return;
@@ -1007,9 +1035,7 @@ export function MapCanvas({
     /* Once the reader pans or zooms, no automatic reframe until an explicit action clears the flag. */
     if (userMovedRef.current) return;
 
-    // Let the fly-to land before overriding where it went.
-    const timer = window.setTimeout(() => {
-      // Re-checked inside the timer: the pan usually lands during the delay.
+    const frameVenues = () => {
       if (userMovedRef.current) return;
       if (!frameAllVenues) {
         const anyVisible = framed.some((venue) =>
@@ -1022,14 +1048,33 @@ export function MapCanvas({
       bounds.extend([camera.lng, camera.lat]);
       for (const venue of framed) bounds.extend([venue.lng, venue.lat]);
 
+      const signature = `${camera.zip}:${bounds.toArray().flat().join(",")}`;
+      if (framedMapRef.current === map && framedBoundsRef.current === signature) return;
+      framedMapRef.current = map;
+      framedBoundsRef.current = signature;
+
+      // Arrival already positioned the ZIP. Keep that view when every venue
+      // fits inside its unobstructed area instead of loading a second tile set.
+      const padding = map.getPadding(), canvas = map.getCanvas();
+      const inside = (lng: number, lat: number) => {
+        const point = map.project([lng, lat]);
+        return point.x >= (padding.left ?? 0) + 24 && point.x <= canvas.clientWidth - (padding.right ?? 0) - 24
+          && point.y >= (padding.top ?? 0) + 24 && point.y <= canvas.clientHeight - (padding.bottom ?? 0) - 24;
+      };
+      if (inside(camera.lng, camera.lat) && framed.every(venue => inside(venue.lng, venue.lat))) return;
+
       map.fitBounds(bounds, {
         padding: { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
-        duration: prefersReducedMotion() ? 0 : 1400,
-      });
-    }, 2800);
+        duration: 0,
+      }, { instant: true });
+    };
 
-    return () => window.clearTimeout(timer);
+    // Initial ZIP arrival is a jump. Later choices wait for the actual flight,
+    // rather than leaving a fixed delay after an already usable camera.
+    if (map.isMoving()) map.once("moveend", frameVenues);
+    else frameVenues();
+    return () => { map.off("moveend", frameVenues); };
   }, [framed, camera, frameAllVenues, allowAutoFrame]);
 
   // The inner div is the MapLibre container; maplibre-gl.css's `position: relative`

@@ -1,0 +1,2949 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-V67BCVC3C7';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {"DepartmentHeaderId":4871,"DepartmentHeaderName":"Clerk & Recorder"};
+		window.pageSectionTracker = {"PageSectionTrackerId":4871,"PageSectionTrackerName":"Clerk & Recorder"};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= true;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<meta name="google-site-verification" content="Fv_TcQVlf83ymrqsSgGsEzyWjLseCeiAa93p3eDcIeU" />
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-53BWNW7');</script>
+<!-- End Google Tag Manager -->
+
+	<meta name="category0" content="Clerk &amp; Recorder" />
+<meta name="category1" content="Sitemap" />
+<meta name="category2" content="Services" />
+<meta name="category3" content="Elections" />
+<meta name="category4" content="Election Information" />
+<meta name="category5" content="Upcoming Election" />
+<meta name="category6" content="Find a Voting Location" />
+
+	
+	<meta name="theme-color" content="rgb(186, 86, 36)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Find a Voting Location | Jefferson County, CO</title>
+
+		<meta name="description" content="Find out where you can vote in Jefferson County, in-person or at any of our 24-hour drop boxes">
+		<meta name="keywords" content="voter center,polling center,dropbox,drop box,drop boxes,voting location,find my voting location">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+<link href="/-880373222.css" rel="stylesheet" type="text/css" />	<link href="/828027460.css" rel="stylesheet" type="text/css" />	<link href="/-1534821332.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/636175734.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide hideContent" >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc4a61ef01-7f4b-463c-b15d-d78c950fb4b6" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="__SOURCE_CREDENTIAL_REDACTED__" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="9" />
+    <input type="hidden" id="hdnContentCollectionID" value="793f145b-22bb-4874-839f-4d257118554c" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="128" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="3907" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-507" style="			display: block; text-align: center;
+" class="bannerObject" href="/4947" target="_self"><img alt="Jefferson County Colorado Elections Home Page" class="bannerObject" height="294" src="/ImageRepository/Document?documentID=51509" width="1202" /></a>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="4947" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem5044" class="topMenuItem" role="none" data-pageid="5044" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5044" id = "mainNavVoters" class="navMainItem mainNavItem mainNavItem1 " href="/5044/Voters" target = "_self" >   Voters  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem3901" class="topMenuItem" role="none" data-pageid="3901" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu3901" id = "mainNavElectionInformation" class="navMainItem mainNavItem mainNavItem2 " href="/3901/Election-Information" target = "_self" >   Election Information  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem5028" class="topMenuItem" role="none" data-pageid="5028" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5028" id = "mainNavCandidatesJurisdictions" class="navMainItem mainNavItem mainNavItem3 " href="/5028/Candidates-Jurisdictions" target = "_self" >   Candidates &amp; Jurisdictions  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem4687" class="topMenuItem" role="none" data-pageid="4687" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu4687" id = "mainNavGetInvolved" class="navMainItem mainNavItem mainNavItem4 " href="/4687/Get-Involved" target = "_self" >   Get Involved  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem5052" class="topMenuItem" role="none" data-pageid="5052" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu5052" id = "mainNavAboutUs" class="navMainItem mainNavItem mainNavItem5 " href="/358/About-Us" target = "_self" >   About Us  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem3896" class="topMenuItem" role="none" data-pageid="3896" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu3896" id = "mainNavContactUs" class="navMainItem mainNavItem mainNavItem6 " href="/3896/Contact-Us" target = "_self" >   Contact Us  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=4947&moduleID=&themeID=128&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = false;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5044" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5044 hidden" data-orientation="horizontal">	<div id="cce0bac51d-2c64-4b76-baea-f536ea0d99bc" data-containerid="e0bac51d-2c64-4b76-baea-f536ea0d99bc" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu3901" class="contentTop mainNavMegaMenu megaMenuContainer pageID_3901 hidden" data-orientation="horizontal">	<div id="cc52076ec7-2c64-4fd6-af9b-63e01ee9a687" data-containerid="52076ec7-2c64-4fd6-af9b-63e01ee9a687" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5028" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5028 hidden" data-orientation="horizontal">	<div id="ccf8a3a5c7-c6be-4c56-b121-1e66ccce6a01" data-containerid="f8a3a5c7-c6be-4c56-b121-1e66ccce6a01" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu4687" class="contentTop mainNavMegaMenu megaMenuContainer pageID_4687 hidden" data-orientation="horizontal">	<div id="cc57d88d90-a57a-4347-bdae-a83828baa9cd" data-containerid="57d88d90-a57a-4347-bdae-a83828baa9cd" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu5052" class="contentTop mainNavMegaMenu megaMenuContainer pageID_5052 hidden" data-orientation="horizontal">	<div id="cca684ccca-c6a5-4974-82ca-1adf53843c8b" data-containerid="a684ccca-c6a5-4974-82ca-1adf53843c8b" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu3896" class="contentTop mainNavMegaMenu megaMenuContainer pageID_3896 hidden" data-orientation="horizontal">	<div id="cc04f51bf1-0154-4955-9d6b-a456b0d77405" data-containerid="04f51bf1-0154-4955-9d6b-a456b0d77405" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav></div>
+</header><!-- County Home --><div data-cpRole="structuralContainer" id="homeContainerTS" class="fixedLeftTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="homeTS">	<div id="cc9851e082-1daf-41b3-bbb9-c57670730474" data-containerid="9851e082-1daf-41b3-bbb9-c57670730474" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="985aef2d-bcac-466f-8259-4fc5d45a64dc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idb9be25dd-d40b-4b27-8dba-4f47ef9e716e" style="" data-widgetcontainerid="b9be25dd-d40b-4b27-8dba-4f47ef9e716e">	
+<div data-widget-id="fe25a491-2520-4749-aa7b-6b26d30384ec" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetfe25a491-2520-4749-aa7b-6b26d30384ec" class="widget widgetGraphicLinks skin136 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid1 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<ul class="semanticList">
+					<!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/" target="_self" class="fancyButton fancyButton2354 " >
+		<span>
+			<span><span class="text">County Home</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2354.fancyButton:link,.fancyButton2354.fancyButton:visited, .fancyButton2354div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=51527');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 40px;
+}
+.fancyButton2354.fancyButton:hover,.fancyButton2354.fancyButton:focus,.fancyButton2354.fancyButton:active,.fancyButton2354.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.fancyButton2354.fancyButton:link > span,.fancyButton2354.fancyButton:visited > span, .fancyButton2354div.fancyButton > span{
+}
+.fancyButton2354.fancyButton:hover > span,.fancyButton2354.fancyButton:focus > span,.fancyButton2354.fancyButton:active > span,.fancyButton2354.fancyButton.hover > span{
+}
+.fancyButton2354.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: .9em;
+	font-family: "Aleo";
+	padding-top: 3em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-top: 3em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+line-height: 1.1;}
+.fancyButton2354.fancyButton:hover .text,.fancyButton2354.fancyButton:focus .text,.fancyButton2354.fancyButton:active .text,.fancyButton2354.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+				-->
+				</ul>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="bannerContentTS">
+<div data-cpRole="contentContainer" id="searchTS">	<div id="cca30fb351-da4d-413b-95bc-32126aeebf01" data-containerid="a30fb351-da4d-413b-95bc-32126aeebf01" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="99f69729-f4ab-4c42-9419-3bf44ca6d9bc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idc8536ee2-ea6c-4438-ab95-61875a7d7d73" style="" data-widgetcontainerid="c8536ee2-ea6c-4438-ab95-61875a7d7d73">	
+<div data-widget-id="9f50ea1f-0433-431f-bb71-9ed89590a89a" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var buttonSelector = ".widgetSearchButton" + '9f50ea1f-0433-431f-bb71-9ed89590a89a';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin136 widgetOptionSet94" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox9f50ea1f-0433-431f-bb71-9ed89590a89a" cp5ph="true" id="searchField9f50ea1f-0433-431f-bb71-9ed89590a89a" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search our site..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton9f50ea1f-0433-431f-bb71-9ed89590a89a" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=51520" data-image="/ImageRepository/Document?documentID=51519" src="/ImageRepository/Document?documentID=51519" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField9f50ea1f-0433-431f-bb71-9ed89590a89a">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #163A64;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #163A64;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #163A64;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #163A64;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		color: #163A64;
+		font-family: Open Sans;
+height: 60px;
+border: none;
+background: #fff;
+border-radius: 10px;
+box-shadow: 0 3px 10px #02304733;
+padding: 0 80px 0 20px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButton9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		width: 45px;
+margin: 7px;
+	}
+	.widgetSearch .widgetSearch-onlyDept9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept9f50ea1f-0433-431f-bb71-9ed89590a89a
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField9f50ea1f-0433-431f-bb71-9ed89590a89a").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div>
+</div></div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON506" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":506,"ThemeID":128,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":1575,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=52889","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":1541,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=51513","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":1542,"BannerOptionID":506,"FileName":"/ImageRepository/Document?documentID=51512","Height":700,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""}],"BannerVideos":[],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/"},
+								'/App_Themes/2024 - Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap2"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc3a7be7f3-f415-43cd-965a-6276fee4de4c" data-containerid="3a7be7f3-f415-43cd-965a-6276fee4de4c" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="5015" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem3907" data-pageid="3907">
+		<div class="accordionNavItem">
+			<a href="/3907/Find-a-Voting-Location" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Find a Voting Location</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem4652" data-pageid="4652">
+		<div class="accordionNavItem">
+			<a href="/4652/On-the-Ballot" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">On the Ballot</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem578" data-pageid="578">
+		<div class="accordionNavItem">
+			<a href="/578/Voter-Turnout-Election-Results" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Voter Turnout &amp; Election Results</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Voter Turnout &amp; Election Results Submenu" aria-expanded="false" aria-controls="submenu-lvl1-578"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-578" style="display: none;" data-parent="578">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem4734" data-pageid="4734">
+			<div class="accordionNavItem">
+				<a href="/4734/Election-Night-Beyond" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Election Night &amp; Beyond</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = true;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccf9205a4f-f357-41ff-8f3d-132dc00a638b" data-containerid="f9205a4f-f357-41ff-8f3d-132dc00a638b" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/4871/Clerk-Recorder">Clerk & Recorder</a></li><li><a class="breadCrumb" href="/687/Sitemap">Sitemap</a></li><li><a class="breadCrumb" href="/359/Services">Services</a></li><li><a class="breadCrumb" href="/4947/Elections">Elections</a></li><li><a class="breadCrumb" href="/3901/Election-Information">Election Information</a></li><li><a class="breadCrumb" href="/5015/Upcoming-Election">Upcoming Election</a></li><li id="currentBCPage" data-pageid="3907"><a href class="breadCrumb" aria-current="page">Find a Voting Location</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="3907" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="5015" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="65932" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Find a Voting Location" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Find a Voting Location		</h1>
+	
+		<div id="cc4a61ef01-7f4b-463c-b15d-d78c950fb4b6" data-containerid="4a61ef01-7f4b-463c-b15d-d78c950fb4b6" class="pageContent cpGrid cpGrid24"  >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="80b6bc2f-e2d4-4b64-ba57-120d1b9fa5ea">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id910d7923-94f5-45e9-a0c6-1b2850b48259" style="" data-widgetcontainerid="910d7923-94f5-45e9-a0c6-1b2850b48259">	
+<div class="widget editor pageStyles narrow" id="divEditore471b27a-cbbb-4776-af26-ce4607c1cf0b" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><strong>Election Day is November 3, 2026!</strong> Make a plan to vote, and vote early if you can. Returning your ballot before Election Day speeds up results reporting, saves taxpayer dollars, and reduces calls and emails from campaigns!&nbsp;</p><p>In Jeffco, we will operate 35 in-person voting centers and 40 ballot drop boxes (38 that are available 24-hours a day and two that are available during business hours).</p><p><a aria-label="Download a list of voting locations" href="/DocumentCenter/View/58898/2026-General-VSPC-and-Drop-Box-Combined-Location-Sheet-PDF" target="_blank" style="height: 40px; width: fit-content;display: flex;justify-content: center;align-items: center; background-color: #ba5624; color: #fff;font-weight: 700; letter-spacing: .2em; padding: 5px 16px; text-transform: uppercase; text-decoration: none; box-shadow: 3px 3px 4px rgba(0,0,0,.2); border-radius: 3px;" rel="noopener">Download a list of voting locations</a></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'e471b27a-cbbb-4776-af26-ce4607c1cf0b'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="564e9146-5b43-4e58-b9ab-03e29cbc95e5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id730601c6-dcf0-4915-97ad-d60c0d092ea7" style="" data-widgetcontainerid="730601c6-dcf0-4915-97ad-d60c0d092ea7">	
+
+	<div id="divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63" class="widget widgetTabbed wide skin231" data-widgetid="5a7c4db8-7567-42d7-a139-a2b839620b63">
+		<ol class="tabbedWidget cpTabs  " role="tablist" aria-hidden=".ToString().ToLowerInvariant()" style=" ">
+			<!--
+					--><li class="active" role="presentation">	<a href="#tab5a7c4db8-7567-42d7-a139-a2b839620b63_0" class="tabButton" id="tabBtn5a7c4db8-7567-42d7-a139-a2b839620b63_0" role="tab" aria-controls="tab5a7c4db8-7567-42d7-a139-a2b839620b63_0" aria-selected="true" tabindex="0"><span class="tabName editable" data-sequence="0" data-tabname="Vote Centers" contenteditable="false">Vote Centers</span></a>
+</li><!--
+					--><li class="" role="presentation">	<a href="#tab5a7c4db8-7567-42d7-a139-a2b839620b63_1" class="tabButton" id="tabBtn5a7c4db8-7567-42d7-a139-a2b839620b63_1" role="tab" aria-controls="tab5a7c4db8-7567-42d7-a139-a2b839620b63_1" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="1" data-tabname="Drop Boxes" contenteditable="false">Drop Boxes</span></a>
+</li><!--
+					-->
+		</ol>
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs " role="tablist" aria-hidden="True.ToString().ToLowerInvariant()" style='display: none;'>
+						<li class="active" role="presentation">	<a href="#tab5a7c4db8-7567-42d7-a139-a2b839620b63_0" class="tabButton" id="tabBtnNarrow5a7c4db8-7567-42d7-a139-a2b839620b63_0" role="tab" aria-controls="tab5a7c4db8-7567-42d7-a139-a2b839620b63_0" aria-selected="true" tabindex="0"><span class="tabName editable" data-sequence="0" data-tabname="Vote Centers" contenteditable="false">Vote Centers</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel showing" style="" id="tab5a7c4db8-7567-42d7-a139-a2b839620b63_0" role="tabpanel" aria-labelledby="tabBtn5a7c4db8-7567-42d7-a139-a2b839620b63_0" tabindex="-1">
+
+<div class="widget editor pageStyles narrow" id="divEditor2330aac4-6538-4c0b-b20c-c022049ac5d3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Voter Service and Polling Centers (VSPC)</h2><p>At any VSPC, you can vote, drop off your ballot, register to vote or update your voter record, request a replacement ballot, see a Spanish-language ballot, and use accessible voting equipment.</p><ul><li>Stage 1 vote centers open October 19</li><li>Stage 2 vote centers open October 30</li><li>Stage 3 vote centers open November 2</li></ul><h3 class="subhead2"><strong>In-person voting hours</strong></h3><ul><li>October 19 to November 2: Monday through Friday, 8 a.m. to 5 p.m.</li><li>October 31: Saturday, 8 a.m. to 5 p.m.</li><li>November 3: Tuesday, 7 a.m. to 7 p.m.</li><li>Closed Sundays</li></ul><h2 class="subhead1">VSPC Locations</h2><h3 class="subhead2">Stage 1: Open October 19 to November 3</h3><ul><li><strong>Arvada:&nbsp;</strong>Standley Lake Library, 8485 Kipling St&nbsp;</li><li><strong>Evergreen:&nbsp;</strong>Evergreen Library, 5000 County Hwy 73&nbsp;</li><li><strong>Golden:&nbsp;</strong>Jeffco Elections - Laramie Building, 3500 Illinois St</li><li><strong>Lakewood:&nbsp;</strong>Belmar Library, 555 S Allison Pkwy</li><li><strong>Littleton:&nbsp;</strong>Columbine Library, 7706 W Bowles Ave</li><li><strong>Littleton:&nbsp;</strong>Jeffco South Service Center, 11139 Bradford Rd&nbsp;</li></ul><h3 class="subhead2">Stage 2: Open October 30 to November 3</h3><ul><li><strong>Arvada:</strong> Apex Center - Main entrance, 13150 W 72nd Ave&nbsp;</li><li><strong>Arvada:&nbsp;</strong>Apex Community Rec Center, 6842 Wadsworth Blvd</li><li><strong>Arvada:</strong> Arvada City Hall - Plaza, 8101 Ralston Rd</li><li><strong>Arvada:&nbsp;</strong>King of Glory Lutheran Church, 10001 W 58th Ave</li><li><strong>Arvada:&nbsp;</strong>Leyden Rock Community Center, 17685 W 83rd Dr</li><li><strong>Conifer:</strong> Our Lady of the Pines, 9444 Eagle Cliff Rd&nbsp;</li><li><strong>Edgewater:&nbsp;</strong>Edgewater Civic Center, 1800 Harlan St</li><li data-pasted="true"><strong>Golden:&nbsp;</strong>Golden City Hall, 911 10th St</li><li><strong style="background-color: transparent;">Golden:&nbsp;</strong><span style="font-style: normal; font-weight: 400; font-family: Arial; background-color: transparent; font-size: 14px;">Jeffco Fairgrounds, 15200 W 6th Ave</span></li><li><strong>Lakewood:&nbsp;</strong>Green Mountain Rec Center, 13198 W Green Mountain Dr</li><li><strong>Lakewood:&nbsp;</strong>Jeffco Public Health - Lakewood, 645 Parfet St</li><li><strong data-pasted="true">Lakewood:&nbsp;</strong>Lakewood Link Rec Center, 1295 S Reed St</li><li><strong>Lakewood:&nbsp;</strong>Red Rocks Community College Environmental Tech Bldg, 13302 Fox Run</li><li><strong>Lakewood:&nbsp;</strong>West Metro Fire &nbsp;Rescue Training Center, 3535 S Kipling St</li><li><strong>Westminster:&nbsp;</strong>West View Rec Center, 10747 W 108th Ave</li><li><strong>Wheat Ridge:&nbsp;</strong>Wheat Ridge Rec Center, 4005 Kipling St</li></ul><h3 class="subhead2">Stage 3: Open November 2 and November 3</h3><ul><li><strong>Evergreen:&nbsp;</strong>Buchanan Park Rec Center, 32003 Ellingwood Trl&nbsp;</li><li data-pasted="true"><strong>Golden:&nbsp;</strong>Colorado School of Mines Mines Park Community Center #2, 2001 Infinity Cir</li><li><strong style="background-color: transparent;">Lakewood:&nbsp;</strong><span style="font-style: normal; font-weight: 400; font-family: Arial; background-color: transparent; font-size: 14px;">Bear Valley Church, 10001 W Jewell Ave</span></li><li><strong>Lakewood:&nbsp;</strong>Lakewood Elks Lodge #1777, 1455 Newland St</li><li><strong>Lakewood:&nbsp;</strong>Lakewood Library, 10200 W 20th Ave</li><li><strong>Littleton:&nbsp;</strong>Calvary Chapel South Denver, 9052 W Ken Caryl Ave</li><li><strong>Littleton:&nbsp;</strong>Lilley Gulch Rec Center, 6147 S Holland Way</li><li><strong>Littleton:&nbsp;</strong>Ridge Rec Center - South entrance, 6613 S Ward St</li><li><strong>Morrison:&nbsp;</strong>Red Rocks Baptist Church, 14711 W Morrison Rd&nbsp;</li><li><strong>Westminster:&nbsp;</strong>Westminster City Hall, 4800 W 92nd Ave</li><li><strong>Westminster:&nbsp;</strong>Westminster City Park &nbsp;Rec Center, 10455 Sheridan Blvd</li><li><strong>Westminster:&nbsp;</strong>Westminster Sports Center, 6051 W 95th Ave</li><li><strong>Wheat Ridge:&nbsp;</strong>Wheat Ridge City Hall, 7500 W 29th Ave</li></ul><div class="map-container"><iframe src="https://www.google.com/maps/d/embed?mid=1d7R5C2YZ1hu6-JOuzb1gu_q4O0EAZQw&ehbc=2E312F&noprof=1" width="100%" height="400" style="border:0;" title="Interactive map of Jefferson County ballot drop box locations" aria-describedby="map-description"><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span></iframe><p id="map-description">This interactive map displays Jefferson County vote center locations. A full text list of vote center addresses is available above the map.</p></div><h2 class="subhead1">VSPC Wait Times</h2><p><iframe src="https://vspc.jeffco.us/WaitTimes.aspx" width="100%" height="400" frameborder="0"></iframe> Wait times not showing? <a href="https://vspc.jeffco.us/WaitTimes.aspx" target="_blank" rel="noopener">Open them in a new window</a>.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '2330aac4-6538-4c0b-b20c-c022049ac5d3'));
+	});
+</script>
+</div>
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs " role="tablist" aria-hidden="True.ToString().ToLowerInvariant()" style='display: none;'>
+						<li class="" role="presentation">	<a href="#tab5a7c4db8-7567-42d7-a139-a2b839620b63_1" class="tabButton" id="tabBtnNarrow5a7c4db8-7567-42d7-a139-a2b839620b63_1" role="tab" aria-controls="tab5a7c4db8-7567-42d7-a139-a2b839620b63_1" aria-selected="false" tabindex="-1"><span class="tabName editable" data-sequence="1" data-tabname="Drop Boxes" contenteditable="false">Drop Boxes</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab5a7c4db8-7567-42d7-a139-a2b839620b63_1" role="tabpanel" aria-labelledby="tabBtn5a7c4db8-7567-42d7-a139-a2b839620b63_1" tabindex="-1">
+
+<div class="widget editor pageStyles narrow" id="divEditorc396975e-e117-4e54-a24a-4dcee3ba8c29" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h2 class="subhead1">Ballot Drop Boxes</h2><p>You can drop your ballot off at any vote center or at a drop box near you. All our drop boxes are monitored by video and emptied regularly by bipartisan teams. You do not need postage to use a drop box. All drop boxes open October 5 and will stay open 24/7 until 7:00 p.m. on Election Day, November 3.&nbsp;</p><p>All drop boxes are walk‑up boxes unless noted otherwise.</p><h3 class="subhead2">Drop box locations by city&nbsp;</h3><p><strong>Arvada &nbsp;</strong></p><ul><li>Apex Center - Ice Arena: 13150 W 72nd Ave &nbsp;</li><li>Arvada City Hall: 8001 Ralston Rd <strong>(drive-up box)</strong></li><li>Arvada City Hall - Plaza: 8101 Ralston Rd &nbsp;</li><li>Arvada Motor Vehicle: 6510 Wadsworth Blvd #320 &nbsp;</li><li>Jeffco Public Health - Arvada: 5150 Allison St &nbsp;</li><li>Standley Lake Library: 8485 Kipling St&nbsp;</li><li>West Woods Station: 6644 Kendrick Dr&nbsp;</li><li>Whisper Creek Station: 14360 W 89th Dr <strong>(drive-up box)</strong></li></ul><p><strong>Conifer&nbsp;</strong></p><ul><li>Conifer Marketplace <em>(Right of Liks Ice Cream)</em>: 10875 US Hwy 285 &nbsp;</li></ul><p><strong>Edgewater&nbsp;</strong></p><ul><li>Edgewater Civic Center: 1800 Harlan St <strong>(drive-up box)</strong></li></ul><p><strong>Evergreen&nbsp;</strong></p><ul><li>Buchanan Park Rec Center: 32003 Ellingwood Trl <strong>(drive-up box)</strong></li><li>Evergreen Library: 5000 County Hwy 73 &nbsp;</li></ul><p><strong>Golden&nbsp;</strong></p><ul><li>Colorado School of Mines: 1400 Illinois St &nbsp;</li><li>Golden City Hall: 911 10th St &nbsp;</li><li>Jeffco Courts &amp; Admin <em>(Northeast side)</em>: 100 Jefferson County Pkwy <strong data-pasted="true">(drive-up box)</strong></li><li>Jeffco Elections <em>(Laramie Building)</em>: 3500 Illinois St <strong><strong data-pasted="true">(drive-up box)</strong></strong></li></ul><p><strong>Lakewood&nbsp;</strong></p><ul><li>Belmar Library: 555 S Allison Pkwy &nbsp;</li><li>Carmody Rec Center: 2200 S Kipling St &nbsp;</li><li>Colorado Christian University <em>(by Leprino Hall off of Cedar Dr)</em>: 8787 W Alameda Ave <strong data-pasted="true">(drive-up box)</strong></li><li>Foothills Fieldhouse: 3606 S Independence St &nbsp;</li><li>Green Mountain Rec Center: 13198 W Green Mountain Dr &nbsp;</li><li>Jeffco Public Health - Lakewood: 645 Parfet St &nbsp;</li><li>Lakewood Civic Center: 480 S Allison Pkwy &nbsp;</li><li>Lakewood Library: 10200 W 20th Ave &nbsp;</li><li>Lakewood Link Rec Center: 1295 S Reed St</li><li>Ray Ross Park: 680 S Harlan St &nbsp;</li><li>Red Rocks Community College<em>&nbsp;(Environmental Tech Building)</em>: 13302 Fox Run <strong data-pasted="true">(drive-up box)</strong></li></ul><p><strong>Littleton&nbsp;</strong></p><ul><li>Clement Park <em>(traffic circle south of Columbine Library)</em>: 7306 W Bowles Ave <strong data-pasted="true">(drive-up box)</strong></li><li>Columbine Library: 7706 W Bowles Ave &nbsp;</li><li>Jeffco South Service Center: 11139 Bradford Rd &nbsp;</li><li>Lilley Gulch Rec Center: 6147 S Holland Way&nbsp;</li><li>Ridge Rec Center <em>(South entrance)</em>: 6613 S Ward St&nbsp;</li></ul><p><strong>Westminster&nbsp;</strong></p><ul><li>Westminster City Park Rec Center: 10455 Sheridan Blvd <strong data-pasted="true">(drive-up box)</strong></li><li>Westminster Sports Center: 6051 W 95th Ave &nbsp;</li><li>West View Rec Center: 10747 W 108th Ave&nbsp;</li></ul><p><strong>Wheat Ridge &nbsp;</strong></p><ul><li>Anderson Park <em>(North of the pool)</em>: 9110 W 44th Ave <strong data-pasted="true">(drive-up box)</strong></li><li>Prospect Park: 11440 W 44th Ave <strong data-pasted="true">(drive-up box)</strong></li><li>Wheat Ridge City Hall: 7500 W 29th Ave <strong data-pasted="true">(drive-up box)</strong></li></ul><div class="map-container"><iframe src="https://www.google.com/maps/d/embed?mid=1rg_s0K2MzvFIZ9bUi7KqGQplcePlXTo&ehbc=2E312F&noprof=1" width="100%" height="400" style="border:0;" title="Interactive map of Jefferson County ballot drop box locations" aria-describedby="map-description"><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span><span class="fr-mk" style="display: none;">&nbsp;</span></iframe><p id="map-description">This interactive map displays Jefferson County ballot drop box locations. A full text list of drop box addresses is available above the map.</p></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'c396975e-e117-4e54-a24a-4dcee3ba8c29'));
+	});
+</script>
+</div>
+
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+		
+		$.when(window.Pages.rwdReady).done(function () {
+			var tabbedWidgetID = 'divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63';
+			var mediaQuerySize = 25;
+			if (mediaQuerySize > 0) {
+				var mediaElementQuery = '#' + tabbedWidgetID + ':media(this-min-width:' + mediaQuerySize + 'em)';
+				var $tabbedWidget = $('#' + tabbedWidgetID);
+				
+                // Update child widget classes based on parent state
+                var updateChildWidgetClasses = function (isParentWide) {
+                    var liveEditEnabled = getCookieValue("enableLiveEdit") === "true";
+                    if (liveEditEnabled)
+                        return;
+
+                    var $childWidgets = $tabbedWidget.find('.widget').not('[data-elementqueryclasses]');
+
+                    if (isParentWide) {
+                        $childWidgets.addClass('wide').removeClass('narrow');
+                        $tabbedWidget.find('[data-event-list-row="true"]').addClass('wide').removeClass('narrow');
+                    } else {
+                        $childWidgets.addClass('narrow').removeClass('wide');
+                        $tabbedWidget.find('[data-event-list-row="true"]').addClass('narrow').removeClass('wide');
+                    }
+                };
+				
+				window.cpMedia.unregister(mediaElementQuery).register(mediaElementQuery, {
+					deferSetup: false,
+					setup: function () {
+						var liveEditEnabled = $.cookie("enableLiveEdit") === "true";
+						if (!liveEditEnabled) {
+							$tabbedWidget.addClass('narrow').removeClass('wide');
+							cpMedia.diag('$(element).addClass("narrow"), mediaQuery: ' + mediaElementQuery);
+							$tabbedWidget.find('.tabbedWidget.cpTabs').hide().attr('aria-hidden', 'true');
+							$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').show().attr('aria-hidden', 'false');
+							$tabbedWidget.data("tabHeightSet", false);
+							
+							// Update child widget classes - parent is narrow
+							updateChildWidgetClasses(false);
+						}
+					},
+					match: function () {
+						$tabbedWidget.addClass('wide').removeClass('narrow');
+						cpMedia.diag('$(element).removeClass("narrow"), mediaQuery: ' + mediaElementQuery);
+						$tabbedWidget.find('.tabbedWidget.cpTabs').show().attr('aria-hidden', 'false');
+						$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').hide().attr('aria-hidden', 'true');
+
+						if($tabbedWidget.data("tabHeightSet") == false)
+						{
+							$tabbedWidget.data("tabHeightSet", true);
+
+							var tabbedWidgetID = 'divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63';
+							setTabbedWidgetsTabHeight(tabbedWidgetID);
+						}
+						$('.cpTabPanels').unbind('click');
+						
+						// Update child widget classes - parent is wide
+						updateChildWidgetClasses(true);
+					},
+					unmatch: function () {
+						var liveEditEnabled = $.cookie("enableLiveEdit") === "true";
+						if (!liveEditEnabled) {
+							$tabbedWidget.addClass('narrow').removeClass('wide');
+							cpMedia.diag('$(element).addClass("narrow"), mediaQuery: ' + mediaElementQuery);
+							$tabbedWidget.find('.tabbedWidget.cpTabs').hide().attr('aria-hidden', 'true');
+							$tabbedWidget.find('.tabbedWidgetNarrow.cpTabs').show().attr('aria-hidden', 'false');
+							
+							// Update child widget classes - parent is narrow
+							updateChildWidgetClasses(false);
+						}
+						$('.cpTabPanels').click(function() {
+							this.scrollIntoView();
+						});
+					}
+				});                
+            }
+        });
+		
+		//Used for when page is initially loaded
+		if($('#divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63').hasClass('narrow'))
+		{
+			$('.cpTabPanels').click(function() {
+				this.scrollIntoView();
+			});
+		}
+		
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbed5a7c4db8-7567-42d7-a139-a2b839620b63 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="c9b2a2e5-a459-42d1-b8bb-28dfe541a4e3">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ida2704922-60f1-451f-94be-8d94ce42c850" style="" data-widgetcontainerid="a2704922-60f1-451f-94be-8d94ce42c850">	
+ 
+	<div data-widget-id='af8fe17b-45c1-4857-8761-8bcd2a1e629d' data-moduleName="customHtml" id='widgetCustomHtmlaf8fe17b-45c1-4857-8761-8bcd2a1e629d' class="widget widgetCustomHtml skin231 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBodyaf8fe17b-45c1-4857-8761-8bcd2a1e629d">
+		<div id="customHtmlaf8fe17b-45c1-4857-8761-8bcd2a1e629d"><div><script type="text/javascript" charset="utf-8"> 
+
+  (function (g, e, n, es, ys) { 
+
+    g['_genesysJs'] = e; 
+
+    g[e] = g[e] || function () { 
+
+      (g[e].q = g[e].q || []).push(arguments) 
+
+    }; 
+
+    g[e].t = 1 * new Date(); 
+
+    g[e].c = es; 
+
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys); 
+
+  })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', { 
+
+    environment: 'prod-usw2', 
+
+    deploymentId: '95e622fa-c53a-4b67-af71-43d186fc7211' 
+
+  }); 
+
+</script> </div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccacfef851-8196-46c1-8565-f0467c21b487" data-containerid="acfef851-8196-46c1-8565-f0467c21b487" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="e7dc39e0-2d47-49fa-8d99-e1bc226de6f7">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id1d3b4bde-a38c-4d24-b78a-0b5105b7f8e8" style="" data-widgetcontainerid="1d3b4bde-a38c-4d24-b78a-0b5105b7f8e8">	
+
+
+
+
+
+
+
+
+<div data-widget-id="bc8df277-75c6-4b0d-b83e-d0f02bd679c3" data-moduleWidgetType="cityDirectory" data-widget-controller-path="/CityDirectory/Widget">
+	<div id="cityDirectoryWidgetbc8df277-75c6-4b0d-b83e-d0f02bd679c3" class="widget widgetStaffDirectory skin207 narrow" >
+			<div class="widgetHeader">
+					<h3><a style="" href= /m/directory>Contact Us</a></h3>
+							</div>
+						<ol class="semanticList">
+		<li class="widgetItem h-card">
+
+
+
+
+
+
+
+									
+				<div class="field p-note">
+
+					<div><span class="subhead2">Email</span></div><div><span><a class="Hyperlink" href="https://www.jeffco.us/formcenter/Clerk-Recorder-9/Clerk-and-Recorders-Office-Administratio-151" target="_blank">Contact Jefferson County Elections</a><br></span></div><div><span><br></span></div><div><span class="subhead2">Phone</span></div><div><span>303-271-8111</span></div><div><br></div><div><span class="subhead2">Office Address</span></div><div><span>3500 Illinois Street, Suite 1100</span></div><div><span>Golden, CO 80401<br></span></div><div><span><br></span></div><div><span><span class="subhead2">Office Hours</span> <br></span></div><div><span>Monday - Thursday, 7:30 a.m. to 5 p.m.</span></div><h3 class="subhead2" id="isPasted">Notifications</h3><div>Interested in getting Jefferson County election updates? <a class="Hyperlink" href="http://eepurl.com/gS-ouH" target="_blank">Sign up here</a>!</div>
+				</div>
+				<br />
+
+
+		</li>
+									</ol>
+	</div>
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="gbsTS">	<div id="ccee85a4dd-bc9d-4062-baf2-8543cc4530d5" data-containerid="ee85a4dd-bc9d-4062-baf2-8543cc4530d5" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="1">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="17c65420-c998-4f24-86ed-e7dc99bf6d00">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last idfb2ff39b-4c4a-4224-a2e3-476c90ba32d6" style="" data-widgetcontainerid="fb2ff39b-4c4a-4224-a2e3-476c90ba32d6">	
+<div data-widget-id="98bdfc85-bc6a-436c-b7e0-9a5c25ecc722" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget98bdfc85-bc6a-436c-b7e0-9a5c25ecc722" class="widget widgetGraphicLinks skin140 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/3907/Find-a-Voting-Site " target="_self" class="fancyButton fancyButton2362 " >
+		<span>
+			<span><span class="text">Voting Sites</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2362.fancyButton:link,.fancyButton2362.fancyButton:visited, .fancyButton2362div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2362.fancyButton:hover,.fancyButton2362.fancyButton:focus,.fancyButton2362.fancyButton:active,.fancyButton2362.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2362.fancyButton:link > span,.fancyButton2362.fancyButton:visited > span, .fancyButton2362div.fancyButton > span{
+}
+.fancyButton2362.fancyButton:hover > span,.fancyButton2362.fancyButton:focus > span,.fancyButton2362.fancyButton:active > span,.fancyButton2362.fancyButton.hover > span{
+}
+.fancyButton2362.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51537');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2362.fancyButton:hover .text,.fancyButton2362.fancyButton:focus .text,.fancyButton2362.fancyButton:active .text,.fancyButton2362.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/578/Election-Results " target="_self" class="fancyButton fancyButton2363 " >
+		<span>
+			<span><span class="text">Turnout &amp; Results</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2363.fancyButton:link,.fancyButton2363.fancyButton:visited, .fancyButton2363div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2363.fancyButton:hover,.fancyButton2363.fancyButton:focus,.fancyButton2363.fancyButton:active,.fancyButton2363.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2363.fancyButton:link > span,.fancyButton2363.fancyButton:visited > span, .fancyButton2363div.fancyButton > span{
+}
+.fancyButton2363.fancyButton:hover > span,.fancyButton2363.fancyButton:focus > span,.fancyButton2363.fancyButton:active > span,.fancyButton2363.fancyButton.hover > span{
+}
+.fancyButton2363.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51534');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2363.fancyButton:hover .text,.fancyButton2363.fancyButton:focus .text,.fancyButton2363.fancyButton:active .text,.fancyButton2363.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/608/Be-an-Election-Worker " target="_self" class="fancyButton fancyButton2364 " >
+		<span>
+			<span><span class="text">Election Workers</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2364.fancyButton:link,.fancyButton2364.fancyButton:visited, .fancyButton2364div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2364.fancyButton:hover,.fancyButton2364.fancyButton:focus,.fancyButton2364.fancyButton:active,.fancyButton2364.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2364.fancyButton:link > span,.fancyButton2364.fancyButton:visited > span, .fancyButton2364div.fancyButton > span{
+}
+.fancyButton2364.fancyButton:hover > span,.fancyButton2364.fancyButton:focus > span,.fancyButton2364.fancyButton:active > span,.fancyButton2364.fancyButton.hover > span{
+}
+.fancyButton2364.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51529');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2364.fancyButton:hover .text,.fancyButton2364.fancyButton:focus .text,.fancyButton2364.fancyButton:active .text,.fancyButton2364.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="1553e3e6-a63a-4bcc-b54f-0b99f89b0043">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id0d21745b-4d59-41b2-a436-209fc02ef54c" style="" data-widgetcontainerid="0d21745b-4d59-41b2-a436-209fc02ef54c">	
+<div data-widget-id="f0c46c83-d261-46d6-8b2f-43f640a27cf3" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetf0c46c83-d261-46d6-8b2f-43f640a27cf3" class="widget widgetGraphicLinks skin140 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/5010/Register-to-Vote" target="_self" class="fancyButton fancyButton2366 " >
+		<span>
+			<span><span class="text">Voter Registration</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2366.fancyButton:link,.fancyButton2366.fancyButton:visited, .fancyButton2366div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2366.fancyButton:hover,.fancyButton2366.fancyButton:focus,.fancyButton2366.fancyButton:active,.fancyButton2366.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2366.fancyButton:link > span,.fancyButton2366.fancyButton:visited > span, .fancyButton2366div.fancyButton > span{
+}
+.fancyButton2366.fancyButton:hover > span,.fancyButton2366.fancyButton:focus > span,.fancyButton2366.fancyButton:active > span,.fancyButton2366.fancyButton.hover > span{
+}
+.fancyButton2366.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51536');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2366.fancyButton:hover .text,.fancyButton2366.fancyButton:focus .text,.fancyButton2366.fancyButton:active .text,.fancyButton2366.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/4112/Election-Security " target="_self" class="fancyButton fancyButton2365 " >
+		<span>
+			<span><span class="text">Election Security</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2365.fancyButton:link,.fancyButton2365.fancyButton:visited, .fancyButton2365div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2365.fancyButton:hover,.fancyButton2365.fancyButton:focus,.fancyButton2365.fancyButton:active,.fancyButton2365.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2365.fancyButton:link > span,.fancyButton2365.fancyButton:visited > span, .fancyButton2365div.fancyButton > span{
+}
+.fancyButton2365.fancyButton:hover > span,.fancyButton2365.fancyButton:focus > span,.fancyButton2365.fancyButton:active > span,.fancyButton2365.fancyButton.hover > span{
+}
+.fancyButton2365.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51528');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2365.fancyButton:hover .text,.fancyButton2365.fancyButton:focus .text,.fancyButton2365.fancyButton:active .text,.fancyButton2365.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/5015/Upcoming-Election" target="_self" class="fancyButton fancyButton2368 " >
+		<span>
+			<span><span class="text">Upcoming Election</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2368.fancyButton:link,.fancyButton2368.fancyButton:visited, .fancyButton2368div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46980');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;
+-webkit-transition: .4s ease-in-out;
+-moz-transition: .4s ease-in-out;
+-o-transition: .4s ease-in-out;
+transition: .4s ease-in-out;}
+.fancyButton2368.fancyButton:hover,.fancyButton2368.fancyButton:focus,.fancyButton2368.fancyButton:active,.fancyButton2368.fancyButton.hover{
+	background-image: url('/ImageRepository/Document?documentID=46972');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 120px;}
+.fancyButton2368.fancyButton:link > span,.fancyButton2368.fancyButton:visited > span, .fancyButton2368div.fancyButton > span{
+}
+.fancyButton2368.fancyButton:hover > span,.fancyButton2368.fancyButton:focus > span,.fancyButton2368.fancyButton:active > span,.fancyButton2368.fancyButton.hover > span{
+}
+.fancyButton2368.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	padding-top: 130px;
+	font-weight: 500;
+	text-decoration: underline;
+	padding-top: 130px;
+	background-image: url('/ImageRepository/Document?documentID=51535');
+	background-repeat: no-repeat;
+	background-position: center top;
+background-size: 110px;
+-webkit-transition: .3s ease-in-out;
+-moz-transition: .3s ease-in-out;
+-o-transition: .3s ease-in-out;
+transition: .3s ease-in-out;
+}
+.fancyButton2368.fancyButton:hover .text,.fancyButton2368.fancyButton:focus .text,.fancyButton2368.fancyButton:active .text,.fancyButton2368.fancyButton.hover .text{
+	font-family: Open Sans;
+	font-weight: 600;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 25px ;
+background-size: 70px;
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="footerTS">	<div id="cccf69b8b6-1392-4133-8fd6-ea55895803fc" data-containerid="cf69b8b6-1392-4133-8fd6-ea55895803fc" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="45">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col5 first" style="" data-widgetcontainerid="3b8db7d2-3b98-4524-813f-9dd6d18ec34e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id2ad5c76f-3aae-487e-93b1-45ae0a4a90f4" style="" data-widgetcontainerid="2ad5c76f-3aae-487e-93b1-45ae0a4a90f4">	
+    <div data-widget-id="bfe1891b-6742-4316-82dd-4c78f2d3e983" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvbfe1891b-6742-4316-82dd-4c78f2d3e983" class="widget widgetInfoAdvanced skin138 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerbfe1891b-6742-4316-82dd-4c78f2d3e983">
+			<header class="widgetHeader" id="headerbfe1891b-6742-4316-82dd-4c78f2d3e983">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">3500 Illinois Street,&nbsp;<br>Suite 1100 Golden, CO 80401&nbsp;<br><a href="https://www.jeffco.us/formcenter/Clerk-Recorder-9/Clerk-and-Recorders-Office-Administratio-151">Email us </a><br>Call us:&nbsp;<a href="tel:303-271-8111">303-271-8111 </a><br>Hours&nbsp;<br>During Elections: Monday - Friday, 8 a.m. - 5 p.m.&nbsp;<br>Election Day: Tuesday, 7 a.m. - 7 p.m.&nbsp;<br>All other times: Monday - Thursday, 7:30 a.m. - 5 p.m.&nbsp;</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvbfe1891b-6742-4316-82dd-4c78f2d3e983 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="f7c73bac-6c69-4993-bc60-4f3dd1a4552f">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last id8542830f-2434-4e58-a91f-c327ce401789" style="" data-widgetcontainerid="8542830f-2434-4e58-a91f-c327ce401789">	
+
+<div class="widget widgetSpacer" id="bef9885c-55c2-4ebc-9272-83915247d86e"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="44c3d4cc-7733-45a9-9e3a-b0598b6f4a4b">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col3 first last idd5170601-e00b-4cfa-97b0-eaad90bdc98f" style="" data-widgetcontainerid="d5170601-e00b-4cfa-97b0-eaad90bdc98f">	
+<div data-widget-id="aada49f6-cdc7-4e44-82cc-8d9250a3f769" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetaada49f6-cdc7-4e44-82cc-8d9250a3f769" class="widget widgetGraphicLinks skin138 widgetOptionSet24 wide" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+			<h3 id="GraphicLinkHeaderText" class="" >Social Media</h3>
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid1 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+					<ul class="semanticList">
+						<!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.facebook.com/Jeffcoclerk/" target="_self" class="fancyButton fancyButton2383 " >
+		<span>
+			<span><span class="text">Facebook</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2383.fancyButton:link,.fancyButton2383.fancyButton:visited, .fancyButton2383div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46991');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2383.fancyButton:hover,.fancyButton2383.fancyButton:focus,.fancyButton2383.fancyButton:active,.fancyButton2383.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2383.fancyButton:link > span,.fancyButton2383.fancyButton:visited > span, .fancyButton2383div.fancyButton > span{
+}
+.fancyButton2383.fancyButton:hover > span,.fancyButton2383.fancyButton:focus > span,.fancyButton2383.fancyButton:active > span,.fancyButton2383.fancyButton.hover > span{
+}
+.fancyButton2383.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2383.fancyButton:hover .text,.fancyButton2383.fancyButton:focus .text,.fancyButton2383.fancyButton:active .text,.fancyButton2383.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.instagram.com/jeffcoclerk/" target="_self" class="fancyButton fancyButton2385 " >
+		<span>
+			<span><span class="text">Instagram</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2385.fancyButton:link,.fancyButton2385.fancyButton:visited, .fancyButton2385div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46992');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2385.fancyButton:hover,.fancyButton2385.fancyButton:focus,.fancyButton2385.fancyButton:active,.fancyButton2385.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2385.fancyButton:link > span,.fancyButton2385.fancyButton:visited > span, .fancyButton2385div.fancyButton > span{
+}
+.fancyButton2385.fancyButton:hover > span,.fancyButton2385.fancyButton:focus > span,.fancyButton2385.fancyButton:active > span,.fancyButton2385.fancyButton.hover > span{
+}
+.fancyButton2385.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2385.fancyButton:hover .text,.fancyButton2385.fancyButton:focus .text,.fancyButton2385.fancyButton:active .text,.fancyButton2385.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.youtube.com/user/JeffCoClerk" target="_self" class="fancyButton fancyButton2386 " >
+		<span>
+			<span><span class="text">YouTube</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2386.fancyButton:link,.fancyButton2386.fancyButton:visited, .fancyButton2386div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=46994');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2386.fancyButton:hover,.fancyButton2386.fancyButton:focus,.fancyButton2386.fancyButton:active,.fancyButton2386.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2386.fancyButton:link > span,.fancyButton2386.fancyButton:visited > span, .fancyButton2386div.fancyButton > span{
+}
+.fancyButton2386.fancyButton:hover > span,.fancyButton2386.fancyButton:focus > span,.fancyButton2386.fancyButton:active > span,.fancyButton2386.fancyButton.hover > span{
+}
+.fancyButton2386.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2386.fancyButton:hover .text,.fancyButton2386.fancyButton:focus .text,.fancyButton2386.fancyButton:active .text,.fancyButton2386.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://bsky.app/profile/jeffcoclerk.bsky.social" target="_self" class="fancyButton fancyButton2387 " >
+		<span>
+			<span><span class="text">Bluesky</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton2387.fancyButton:link,.fancyButton2387.fancyButton:visited, .fancyButton2387div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=51549');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2387.fancyButton:hover,.fancyButton2387.fancyButton:focus,.fancyButton2387.fancyButton:active,.fancyButton2387.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.fancyButton2387.fancyButton:link > span,.fancyButton2387.fancyButton:visited > span, .fancyButton2387div.fancyButton > span{
+}
+.fancyButton2387.fancyButton:hover > span,.fancyButton2387.fancyButton:focus > span,.fancyButton2387.fancyButton:active > span,.fancyButton2387.fancyButton.hover > span{
+}
+.fancyButton2387.fancyButton .text{
+	color: rgb(255, 255, 255);
+	font-family: "Open Sans";
+	text-align: left;
+	padding-left: 2em;
+	font-style: normal;
+	text-decoration: underline;
+	padding-left: 2em;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+.fancyButton2387.fancyButton:hover .text,.fancyButton2387.fancyButton:focus .text,.fancyButton2387.fancyButton:active .text,.fancyButton2387.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+
+}
+</style>
+
+ </li><!--
+					-->
+					</ul>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col3 first last id9a1f8718-6ae6-4fbf-8b22-908455cb616c" style="" data-widgetcontainerid="9a1f8718-6ae6-4fbf-8b22-908455cb616c">	
+ 
+	<div data-widget-id='5f2ef6fe-83b4-42f3-bece-e301f90ba152' data-moduleName="customHtml" id='widgetCustomHtml5f2ef6fe-83b4-42f3-bece-e301f90ba152' class="widget widgetCustomHtml skin136 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody5f2ef6fe-83b4-42f3-bece-e301f90ba152">
+		<div id="customHtml5f2ef6fe-83b4-42f3-bece-e301f90ba152"><div><script type="text/javascript" charset="utf-8">
+ (function (g, e, n, es, ys) {
+   g['_genesysJs'] = e;
+   g[e] = g[e] || function () {
+     (g[e].q = g[e].q || []).push(arguments)
+   };
+   g[e].t = 1 * new Date();
+   g[e].c = es;
+   ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+ })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+   environment: 'prod-usw2',
+   deploymentId: '95e622fa-c53a-4b67-af71-43d186fc7211'
+ });
+</script></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="8d542c35-2e8c-4c07-a08a-9cd58e9f59db">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col3 first last id54935875-31da-4a25-9bd3-ff352893e3eb" style="" data-widgetcontainerid="54935875-31da-4a25-9bd3-ff352893e3eb">	
+
+<div class="widget widgetSpacer" id="39feb4e7-e87f-4d40-a91c-1f7ed1d5b299"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4" style="" data-widgetcontainerid="e7f162f6-b436-433b-b021-878d2ac204be">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last ida546a976-eefb-4347-9270-95f882e21c6e" style="" data-widgetcontainerid="a546a976-eefb-4347-9270-95f882e21c6e">	
+	<div data-widget-id="922d6305-cc1e-4036-b828-580e0bd56680" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink922d6305-cc1e-4036-b828-580e0bd56680" class="widget widgetQuickLinks skin138 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader922d6305-cc1e-4036-b828-580e0bd56680">
+			<header class="widgetHeader" id="quickLinksHeader922d6305-cc1e-4036-b828-580e0bd56680">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=649" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3907/Find-a-Voting-Site" target="_self" aria-label="Voting Sites - 2024 Elections - Helpful Links" rel="">Voting Sites</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/578" target="_self" aria-label="Election Results - 2024 Elections - Helpful Links" rel="">Election Results</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4686/Voter-Information" target="_self" aria-label="Voter Information - 2024 Elections - Helpful Links" rel="">Voter Information</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4112" target="_self" aria-label="Election Security - 2024 Elections - Helpful Links" rel="">Election Security</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/4652" target="_self" aria-label="On the Ballot - 2024 Elections - Helpful Links" rel="">On the Ballot</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/608" target="_self" aria-label="Election Workers - 2024 Elections - Helpful Links" rel="">Election Workers</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col3" style="" data-widgetcontainerid="b77334e5-8c89-4f94-bb9d-ead2cb3f50a6">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col3 first last idb82233c5-10f5-446c-a877-827fa2b1b94c" style="" data-widgetcontainerid="b82233c5-10f5-446c-a877-827fa2b1b94c">	
+
+<div class="widget widgetSpacer" id="072a9e8a-e96a-47f9-8028-e13266f0d63d"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="b51ecb3f-a06b-41d5-b934-c31d7c572960">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col4 first last id5261ab7f-b65d-4420-80c0-0c50d8179886" style="" data-widgetcontainerid="5261ab7f-b65d-4420-80c0-0c50d8179886">	
+	<div data-widget-id="4736b984-a52c-4bb0-adfd-8c2a3919669d" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink4736b984-a52c-4bb0-adfd-8c2a3919669d" class="widget widgetQuickLinks skin138 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader4736b984-a52c-4bb0-adfd-8c2a3919669d">
+			<header class="widgetHeader" id="quickLinksHeader4736b984-a52c-4bb0-adfd-8c2a3919669d">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=14" >County Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Sitemap - Using This Site" rel="">Sitemap</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/5175/Contact-Us" target="_self" aria-label="Contact Us - Using This Site" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3558/Accessibility" target="_self" aria-label="Accessibility - Using This Site" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/3557/Non-Discrimination" target="_self" aria-label="Non-Discrimination Notice - Using This Site" rel="">Non-Discrimination Notice</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/749/Website-Photography" target="_self" aria-label="Website Photography - Using This Site" rel="">Website Photography</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/2845/Privacy-and-Site-Disclaimer" target="_self" aria-label="Privacy &amp; Site Disclaimer - Using This Site" rel="">Privacy & Site Disclaimer</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://jeffersoncountyco.qscend.com/311/request/add/29bea368333e479791ea6e75d1feed02" target="_blank" aria-label="Report a website issue - Using This Site opens in new window" rel="noopener">Report a website issue</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col4 first last id2f31c008-94e8-417e-9b35-3ece802f0f3c" style="" data-widgetcontainerid="2f31c008-94e8-417e-9b35-3ece802f0f3c">	
+ 
+	<div data-widget-id='a0afa43e-4b28-496f-8341-70adc07dd966' data-moduleName="customHtml" id='widgetCustomHtmla0afa43e-4b28-496f-8341-70adc07dd966' class="widget widgetCustomHtml skin136 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBodya0afa43e-4b28-496f-8341-70adc07dd966">
+		<div id="customHtmla0afa43e-4b28-496f-8341-70adc07dd966"><div><!----------Google Translate (Mobile Friendly)--------->
+
+<style>
+  #google-translate-container a {
+color: #fff !important;
+  }
+
+  #google-translate-container {
+text-align: center;
+margin: 1em auto;
+  }
+
+@media (min-width: 1200px) {
+  #google-translate-container {
+text-align: left;
+margin: 1em auto;
+  }
+}
+  
+  .goog-te-combo, .goog-te-banner *, .goog-te-ftab *, .goog-te-menu *, .goog-te-menu2 *, .goog-te-balloon * {
+    font-family: arial;
+    font-size: 10pt;
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    text-indent: 16px;
+    background-color: #fff;
+    color: #000 !important;
+  }
+  
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    margin: 2px 0 !important;
+    border-radius: 5px !important;
+    }
+  
+  .goog-te-combo{
+    border: 1px solid !important;
+    border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;
+    border-radius: 50px !important;
+    height:31px !important;
+    padding: 0 1px 0 .25rem !important;
+                width: 156px;
+  }
+
+  #launcher-wrapper {
+    bottom: 50px !important;
+  }
+
+</style>
+
+<div id="google-translate-container">
+  <div id="google_translate_element">
+  </div>
+</div>
+
+<script>
+
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+    // begin accessibility compliance
+    $('img.goog-te-gadget-icon').attr('alt','Google Translate');
+    $('div#goog-gt-tt div.logo img').attr('alt','translate');
+    $('div#goog-gt-tt .original-text').css('text-align','left');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+    $('.goog-te-combo').attr('aria-label','google translate languages');
+    $('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+  });
+
+</script>
+
+<!--------------End Google Translate----------------->
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc9f7acdb4-1bd3-4fcd-9867-85ea8e6f9b4c" data-containerid="9f7acdb4-1bd3-4fcd-9867-85ea8e6f9b4c" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d6f921ef-2561-4604-9d70-fec9c17b6ca0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id51ae4f45-3d33-4ac1-8522-816ae21751f9" style="" data-widgetcontainerid="51ae4f45-3d33-4ac1-8522-816ae21751f9">	
+ 
+	<div data-widget-id='5236c3ac-b123-4f8c-9e8f-1b81109dde4a' data-moduleName="customHtml" id='widgetCustomHtml5236c3ac-b123-4f8c-9e8f-1b81109dde4a' class="widget widgetCustomHtml skin138 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody5236c3ac-b123-4f8c-9e8f-1b81109dde4a">
+		<div id="customHtml5236c3ac-b123-4f8c-9e8f-1b81109dde4a"><div><!-- CP BAR -->
+  <style>
+    /* CP icon */
+    .cpBylineIconTS {
+        color: #fff;
+    }
+    /* CP Text */
+    .cpBylineTextTS,
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        color: #fff!important;
+    }
+
+    .cpBylineTextTS a:link,
+    .cpBylineTextTS a:visited,
+    .cpBylineTextTS a:hover,
+    .cpBylineTextTS a:focus,
+    .cpBylineTextTS a:active {
+        text-decoration: underline !important;
+    }
+
+    .cpBylineTS {
+        text-align: center;
+    }
+    .cpBylineIconTS {
+        fill: currentColor;
+        width: 39px;
+        height: 26px;
+        display: inline;
+        vertical-align: middle;
+    }
+  </style>
+    
+  <div class="widgetItem cpBylineTS">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+      <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+      <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+    </svg>
+    <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+  </div></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/2110643746.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '3907',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/1482631785.js" type="text/javascript"></script>
+    <script type="text/javascript">
+  window.loop11_key = "a85d6ca13fabc743028745606d30daf86c1a34bb";
+</script>
+<script src="//cdn.loop11.com/my/loop11.js" type="text/javascript" async="async"></script>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+(function() {
+var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
+sz.src = '//siteimproveanalytics.com/js/siteanalyze_1306761.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+})();
+/*]]>*/
+</script>
+
+<!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    var val = elem.css(attr);
+    if (val === undefined) return undefined;
+    var num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  var bgColorRegexTS = new RegExp("rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)");
+  function isTransparentTS(elem) {
+    var bg = elem.css('background-color');
+    if (typeof bg !== "string") return false;
+    if (bg === "transparent") return true;
+    if (!bg.startsWith('rgba(')) return false;
+    var matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    var alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  function iterateRightpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-rightpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-rightpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  var anchor = $("#divToolbars");
+  var bodyContainerTS = $("#bodyContainerTS");
+
+  // Outer banner padding (push banner down)
+  var outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  var innerSizingTS = $("#bannerSizingTS");
+
+  var forceUnfixClassTS = "forceUnfixTS";
+
+  var fixedTopTS = $(".fixedTopTS");
+  var fixedBottomTS = $(".fixedBottomTS");
+  var fixedLeftTS = $(".fixedLeftTS");
+  var fixedRightTS = $(".fixedRightTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    var attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    var editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      var topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          var anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        var leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          } else {
+            $(containerTS).css('padding-left', '');
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+
+    // Fixed right script
+    (function () {
+      if (!fixedRightTS || fixedRightTS.length === 0) return;
+
+      if (editing) {
+        fixedRightTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedRightTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedRightTS.css('position') === 'fixed') {
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedRightTS.css('top', anchorHeight);
+        var rightBoundingTS = fixedRightTS[0].getBoundingClientRect();
+        iterateRightpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.right >= rightBoundingTS.left) {
+            $(containerTS).css('padding-right', rightBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedRightTS.css('top', '');
+        iterateRightpads(function (containerTS) {
+          $(containerTS).css('padding-right', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    var topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      var anchorBounding = anchor[0].getBoundingClientRect();
+      var attachBounding = topAttachTS[0].getBoundingClientRect();
+      var scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    }, 350);
+
+    $(window).scroll(function () {
+      try {
+        scrollAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        try {
+          resizeAdjustmentTS();
+        } catch (e) {
+          console.error(e);
+        }
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+
+
+<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/f6163dd5aa413762d38553666/7b787d9099bd92d4a2491e66d.js");</script>
+
+<script src="https://cdn-residentagent.civicplus.com/loader.js"></script>
+<script>
+    window.ResidentAgentWidget.load({
+        agentId: 'a14c3861-0d41-454e-838f-6201f4916b80',
+        apiUrl: 'https://residentagent-api-production.azurewebsites.net'
+    });
+</script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Aleo:500,600,700,800,900,italic,regular|Bitter:700,italic|Coming+Soon:regular|Cormorant+Garamond:600|Montserrat:500,600,700,regular|Open+Sans:500,600,700,800,italic,regular|Quicksand:700,regular|Rubik:500,700,regular|Source+Sans+Pro:regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

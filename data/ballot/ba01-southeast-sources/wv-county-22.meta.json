@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Logan%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Logan%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:35.898266+00:00",
+  "rawHash": "95a262e9ed1b94245a511c4829f472f2d6deca1d3d21600a5168fe129a7373e7",
+  "httpStatus": 200,
+  "bytes": 977945,
+  "extractedTextHash": "67ac2b821457876fad042b01213770d0eeeb081a4e001eed271f7b6e5881dcdc",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

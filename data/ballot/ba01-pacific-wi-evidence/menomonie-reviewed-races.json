@@ -1,0 +1,72 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 31",
+    "ocd-division/country:us/state:wi/sldu:31",
+    [
+      [
+        "Michele Magadance Skinner",
+        "Republican"
+      ],
+      [
+        "Jeff Smith",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 92",
+    "ocd-division/country:us/state:wi/sldl:92",
+    [
+      [
+        "Clint Moses",
+        "Republican"
+      ],
+      [
+        "Jeremiah Fredrickson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Dunn County Sheriff",
+    "ocd-division/country:us/state:wi/county:dunn",
+    [
+      [
+        "Kevin Bygd",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Dunn County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:dunn",
+    [
+      [
+        "Katie M. Schalley",
+        "Republican"
+      ]
+    ]
+  ]
+]

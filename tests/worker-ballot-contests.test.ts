@@ -23,9 +23,10 @@ import { workerReaderClassMatches } from "../lib/civic-data/worker-reader-contra
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
+import { authorityForManualReceipt } from "../lib/civic-data/source-authority.ts";
 
-function mergeBallotFixture(input: ManualProjectionPackage, prior: ManualProjectionPrior | null): ManualProjectionPackage {
-  const merge = new BallotContestMerge(input, prior);
+function mergeBallotFixture(input: ManualProjectionPackage, prior: ManualProjectionPrior | null, checkAuthority = false): ManualProjectionPackage {
+  const merge = new BallotContestMerge(input, prior, { checkAuthority });
   for (const [key, ballot] of Object.entries((input.payload as GenericBallotProjection).ballots)) {
     for (const row of ballot.contests) merge.add(key, "contests", row);
     for (const row of ballot.heldContests ?? []) merge.add(key, "heldContests", row);
@@ -308,6 +309,61 @@ test("supplement rows without their own timestamp follow the exact container's c
   assert.equal(lineup.contests[0].nominees[0].name, "Newer Nominee");
 });
 
+test("identical source bytes retain each cited observation through partial updates and repeated publication", () => {
+  const original = workerBallotContestsPackage(fixture()).package;
+  const ballot = Object.values((original.payload as GenericBallotProjection).ballots)[0];
+  const firstAt = "2026-10-05T00:00:00.000Z", unusedAt = "2026-10-06T00:00:00.000Z", contactAt = "2026-10-07T00:00:00.000Z";
+  const update: ManualProjectionPackage = { ...structuredClone(original), sourceThrough: firstAt,
+    sourceReceipt: { ...original.sourceReceipt, reviewedAt: firstAt,
+      sources: original.sourceReceipt.sources.map(row => ({ ...row, retrievedAt: firstAt })) } };
+  const incoming = Object.values((update.payload as GenericBallotProjection).ballots)[0];
+  incoming.contests = incoming.contests.slice(0, 1);
+  incoming.candidacies = incoming.candidacies.filter(row => row.contestId === incoming.contests[0].id);
+  for (const row of [...incoming.contests, ...incoming.candidacies]) row.provenance.collectedAt = firstAt;
+  const prior = (value: ManualProjectionPackage) => ({ versionId: "prior", payload: value.payload, sourceReceipt: value.sourceReceipt });
+  const first = mergeBallotFixture(update, prior(original), true);
+  const times = (value: ManualProjectionPackage) => new Set(value.sourceReceipt.sources.map(row => row.retrievedAt));
+  assert.deepEqual(times(first), new Set([now, firstAt]));
+  assert.equal(new Set(first.sourceReceipt.sources.map(row => row.rawHash)).size, 1, "both observations have identical bytes");
+  const candidate = manualProjectionCandidate(first);
+  const authority = (receipt: typeof first.sourceReceipt) => authorityForManualReceipt(candidate.sourceId, candidate.recordClass,
+    receipt, candidate.retrieval.finalUrl);
+  const valid = authority(first.sourceReceipt);
+  assert.equal(valid.ok, true, JSON.stringify(valid));
+  const repeated = authority({ ...first.sourceReceipt, sources: [...first.sourceReceipt.sources, first.sourceReceipt.sources[0]] });
+  assert.equal(repeated.ok, false, "an exact duplicate observation is still rejected");
+  const repeat = mergeBallotFixture(first, prior(first), true);
+  assert.deepEqual(times(repeat), times(first));
+  assert.equal(Object.values((repeat.payload as GenericBallotProjection).ballots)[0].contests.length, ballot.contests.length,
+    "republication retains both complete contests and their exact authority receipts");
+  const partial = { ...incoming, contests: [], candidacies: [], contacts: [{ candidacyId: incoming.candidacies[0].id,
+    email: "candidate@example.gov", sourceUrl: ballot.contests[0].provenance.sourceUrl!, sourceOrg: "Official election authority", collectedAt: contactAt }] };
+  const next = mergeBallotFixture({ ...update, sourceThrough: contactAt, payload: { kind: "ballot-contests", ballots: { [ballotElectionKey(partial)]: partial } },
+    sourceReceipt: { ...update.sourceReceipt, reviewedAt: contactAt, sources: [unusedAt, contactAt].flatMap(retrievedAt =>
+      update.sourceReceipt.sources.map(row => ({ ...row, retrievedAt }))) } }, prior(repeat), true);
+  assert.deepEqual(times(next), new Set([now, firstAt, contactAt]), "uncited observations are pruned even when their bytes match");
+  const final = mergeBallotFixture(next, prior(next), true);
+  assert.equal(Object.values((final.payload as GenericBallotProjection).ballots)[0].contests.length, ballot.contests.length);
+  assert.deepEqual(manualProjectionCandidate(final).semantics.violations, []);
+});
+
+test("a newer capture's publisher label cannot change the authority of unchanged facts citing an older capture", () => {
+  const original = workerBallotContestsPackage(fixture()).package;
+  const incoming = structuredClone(original.payload) as GenericBallotProjection;
+  const ballot = Object.values(incoming.ballots)[0];
+  const later = "2026-10-05T00:00:00.000Z";
+  ballot.contacts = [{ candidacyId: ballot.candidacies[0].id, email: "candidate@example.gov",
+    sourceUrl: ballot.contests[0].provenance.sourceUrl!, sourceOrg: "Official authority updated label", collectedAt: later }];
+  const merged = mergeBallotFixture({ ...original, sourceThrough: later, payload: incoming,
+    sourceReceipt: { ...original.sourceReceipt, reviewedAt: later, sources: [...original.sourceReceipt.sources,
+      ...original.sourceReceipt.sources.map(row => ({ ...row, retrievedAt: later, publisher: "Official authority updated label" }))] } },
+    { versionId: "prior", payload: original.payload, sourceReceipt: original.sourceReceipt }, true);
+  const result = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
+  assert.deepEqual(result.contests, Object.values((original.payload as GenericBallotProjection).ballots)[0].contests);
+  assert.equal(result.contacts?.[0].collectedAt, later);
+  assert.deepEqual(new Set(merged.sourceReceipt.sources.map(row => row.retrievedAt)), new Set([now, later]));
+});
+
 test("successive captures retain only receipt versions cited by current core or supplemental facts", () => {
   const original = workerBallotContestsPackage(fixture()).package;
   const firstBallot = Object.values((original.payload as GenericBallotProjection).ballots)[0];
@@ -485,3 +541,28 @@ test("successive captures retain only receipt versions cited by current core or 
     assert.equal((await processRegisteredManualCandidate(store, "ballot-contests:NJ", unsafe, "2026-10-13T15:00:00.000Z")).promoted, null);
   });
 }
+
+test("a partial new contest cannot rewrite an unchanged contest's exact source observation authority", () => {
+  const original = workerBallotContestsPackage(fixture()).package;
+  const payload = structuredClone(original.payload) as GenericBallotProjection;
+  const ballot = Object.values(payload.ballots)[0];
+  const template = ballot.contests[0], oldId = template.id;
+  ballot.contests = [{ ...template, id: oldId + "-new", title: template.title + " new office" }];
+  ballot.candidacies = ballot.candidacies.filter(row => row.contestId === oldId)
+    .map(row => ({ ...row, id: row.id + "-new", contestId: oldId + "-new" }));
+  const prior = { versionId: "prior", payload: original.payload, sourceReceipt: original.sourceReceipt };
+  const otherClass = original.sourceReceipt.sources[0].sourceClass === "OFFICIAL_PUBLISHER" ? "ELECTION_AUTHORITY" : "OFFICIAL_PUBLISHER";
+  for (const change of [{ publisher: "Renamed publisher for the same exact observation" }, { sourceClass: otherClass }] as const) {
+    const input = { ...original, payload, sourceReceipt: { ...original.sourceReceipt,
+      sources: original.sourceReceipt.sources.map(row => ({ ...row, ...change })) } };
+    assert.throws(() => mergeBallotFixture(input, prior, true), /BALLOT_SOURCE_OBSERVATION_AUTHORITY_CONFLICT/);
+  }
+  const result = mergeBallotFixture({ ...original, payload }, prior, true);
+  assert.ok(Object.values((result.payload as GenericBallotProjection).ballots)[0].contests.some(row => row.id === oldId + "-new"));
+  assert.deepEqual(result.sourceReceipt.sources, original.sourceReceipt.sources);
+  const unused = { ...original.sourceReceipt.sources[0], requestedUrl: "https://elections.example.gov/unused", finalUrl: "https://elections.example.gov/unused" };
+  const clean = mergeBallotFixture({ ...original, payload, sourceReceipt: { ...original.sourceReceipt,
+    sources: [...original.sourceReceipt.sources, { ...unused, publisher: "Unused alias" }] } },
+    { ...prior, sourceReceipt: { ...original.sourceReceipt, sources: [...original.sourceReceipt.sources, unused] } }, true);
+  assert.deepEqual(clean.sourceReceipt.sources, original.sourceReceipt.sources, "uncited source metadata cannot block independently verified facts");
+});

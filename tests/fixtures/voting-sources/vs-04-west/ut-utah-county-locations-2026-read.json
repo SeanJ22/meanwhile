@@ -1,0 +1,1897 @@
+{
+  "doorId": "ut-utah-county-locations-2026",
+  "sites": [
+    {
+      "id": "voting-7a8dc618bc9228252e7e67b8",
+      "name": "American Fork Library",
+      "address": "64 S 100 E, American Fork, UT 84003, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "On the library loop in the back of the building",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        },
+        {
+          "kind": "VOTE_CENTER",
+          "days": "On the library loop in the back of the building",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-6f634d726f8791ad23e51287",
+      "name": "Eagle Mountain Overland Barn",
+      "address": "1713 Erickson Knoll Ln, Eagle Mountain, UT 84005, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am-8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am-8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d75737879debebd8a9187ff1",
+      "name": "Early Voting - Utah County Health and Justice Building",
+      "address": "151 S University Ave, Room 2500, Provo, UT 84606",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "8AM - 5PM October 26th-30th, November 2nd",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "8AM - 5PM October 26th-30th, November 2nd",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1c9341b2dceb05d268bfc81a",
+      "name": "Highland City Office",
+      "address": "5400 Civic Center Dr, Highland, UT 84003, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "At the city offices, north side of the building, next to the utility drop box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        },
+        {
+          "kind": "VOTE_CENTER",
+          "days": "At the city offices, north side of the building, next to the utility drop box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-313c278c4993a3b19cd59d9d",
+      "name": "Lehi Civic Center",
+      "address": "131 N 100 E, Lehi, UT 84043, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bd70b26c8ef7bfd2a9af9039",
+      "name": "Lindon Community Center",
+      "address": "25 N Main St, Lindon, UT 84042",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8ed2211945aceb4386820da8",
+      "name": "Orem Centerpoint Church",
+      "address": "1550 Sandhill Rd, Orem, UT 84058, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d04b4a0522fc539e46f96794",
+      "name": "Payson City Office",
+      "address": "439 W Utah Ave, Payson, UT 84651, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Next to the utility fee drop off area",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        },
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Next to the utility fee drop off area",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-cc5619bfeaac9de99f30b03d",
+      "name": "Pleasant Grove Public Safety Building",
+      "address": "108 S 100 E, Pleasant Grove, UT 84062, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-495bec778749af82a61b9c93",
+      "name": "Provo Health and Justice Building",
+      "address": "151 S University Ave, Provo, UT 84601, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6dbb97047713ab92e83e4013",
+      "name": "Provo Legacy Village",
+      "address": "4146 N University Ave, Provo, UT 84604, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0536184d8163c5c6ea5c3656",
+      "name": "Santaquin City Offices",
+      "address": "110 S Center St, Santaquin, UT 84655, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2371a46bda4c49e777214c77",
+      "name": "Saratoga Springs LDS Church",
+      "address": "612 Pony Express Parkway, Saratoga Springs, UT 84045, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5dd20daab774bbb9dd7cdd9f",
+      "name": "Spanish Fork Recreational Center",
+      "address": "980 S Main St, Spanish Fork, UT 84660, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Only open on Election Day",
+      "hours": "Election Day 7am - 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-74ae0aa768e3e9285f99997e",
+      "name": "Springville Civic Center",
+      "address": "110 S Main St, Springville, UT 84663, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "South side next to the utility payment drop box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "(Multi-Purpose Room) Only open on Election Day",
+          "hours": "Election Day 7am - 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        },
+        {
+          "kind": "VOTE_CENTER",
+          "days": "South side next to the utility payment drop box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-756555b14853858227866d2d",
+      "name": "Alpine City Office",
+      "address": "20 N Main St, Alpine, UT 84004, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f9a85a75b8593541268f7534",
+      "name": "Cedar Fort City Hall",
+      "address": "50 E Center St, Cedar Fort, UT 84013, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-063cdd491711e5bd6b81eee1",
+      "name": "Cedar Hills City Building",
+      "address": "3925 W Cedar Hills Dr, Pleasant Grove, UT 84062, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Located next to the mail and utility box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Located next to the mail and utility box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c08aca3a0e44629a08e957b9",
+      "name": "Eagle Mountain City Office",
+      "address": "1650 Stagecoach Run, Eagle Mountain, UT 84005, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "At the city office on the north end of the building",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "At the city office on the north end of the building",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9521e2ef4c683060d55014ef",
+      "name": "Elk Ridge City Office",
+      "address": "80 Park Dr, Elk Ridge, UT 84651, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7c1c4a04b0ce0be74891c08f",
+      "name": "Fairfield Government Building",
+      "address": "121 W Main St, Fairfield, UT 84013, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Behind the building",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Behind the building",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-99cf8dfcaa7df27070ab9aed",
+      "name": "Genola City Office",
+      "address": "74 W 800 S, Genola, UT 84655, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-193a04650db07b803b88ca4d",
+      "name": "Goshen Senior Citizen Center",
+      "address": "79 S Center St, Goshen, UT 84655, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-715ee04d7fa1d8d159410cb8",
+      "name": "Lehi City Public Safety Building",
+      "address": "128 N 100 E, Lehi, UT 84043, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "On the south side of the Police Station",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "On the south side of the Police Station",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dd0da737f39b85efa3c00525",
+      "name": "Lindon City Office",
+      "address": "100 N State St, Lindon, UT 84042, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "At the city office next to the utility drop box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "At the city office next to the utility drop box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-93c022787dd8820f0cd04868",
+      "name": "Mapleton City Office",
+      "address": "125 W 400 N, Mapleton, UT 84664, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Northeast corner of the parking lot by the utility drop box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Northeast corner of the parking lot by the utility drop box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5bb7568fda65e6966add4577",
+      "name": "Orem City Library",
+      "address": "58 N State St, Orem, UT 84057, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Library loop on 100 North - North side next to book and utility boxes.",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Library loop on 100 North - North side next to book and utility boxes.",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-94894afb7bfae07412f97a76",
+      "name": "Orem Senior Friendship Center",
+      "address": "93 N 400 E, Orem, UT 84097, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "By the 100 N parking lot exit",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "By the 100 N parking lot exit",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5be1652243ff15ec3f09b814",
+      "name": "Pleasant Grove City Office",
+      "address": "70 S 100 E, Pleasant Grove, UT 84062, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "At the City Office next to the utility fee drop box",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "At the City Office next to the utility fee drop box",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-831bc224f56a9fc663045de1",
+      "name": "Provo City Library",
+      "address": "550 N University Ave, Provo, UT 84601, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "On the north end next to the book return",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "On the north end next to the book return",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aeed331721e32ff62b71b920",
+      "name": "Salem City Library",
+      "address": "59 S Main St, Salem, UT 84653, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Next to the book drop box on the sidewalk",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Next to the book drop box on the sidewalk",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8b6a8e84d6969c1fd96e7273",
+      "name": "Santaquin Public Safety Office",
+      "address": "275 W Main St, Santaquin, UT 84655, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Next to the front door (walk-up only)",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Next to the front door (walk-up only)",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8886babd119a6c222176b73f",
+      "name": "Saratoga Springs City Office",
+      "address": "319 S Saratoga Rd, Saratoga Springs, UT 84045, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-59b5d2e6afbf42424434245c",
+      "name": "Spanish Fork Library",
+      "address": "80 S Main St, Spanish Fork, UT 84660, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a8c6876b57a0dfa67bb25082",
+      "name": "Utah County Administration Building Walk-up",
+      "address": "100 E Center St, Provo, UT 84606, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "South side of the building, next to USPS mailbox. (walk-up only)",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "South parking lot drive through",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        },
+        {
+          "kind": "VOTE_CENTER",
+          "days": "South side of the building, next to USPS mailbox. (walk-up only)",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-6dd427654f290ec5697d54b9",
+      "name": "Utah Valley University",
+      "address": "800 W University Pkwy, Orem, UT 84058, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Located North of the Liberal Arts Building",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Located North of the Liberal Arts Building",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1d6aa6d681b9467c79429704",
+      "name": "Vineyard City Office",
+      "address": "125 South Main Street, Vineyard, UT 84059, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "days": "Located in the parking lot of the city office building",
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Located in the parking lot of the city office building",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ec7add1f53d5391e1469557f",
+      "name": "Woodland Hills City Office",
+      "address": "690 Woodland Hills Dr, Woodland Hills, UT 84653, USA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:29:04.769Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "24/7 Access October 12th - November 3rd at 8pm",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "24/7 Access October 12th - November 3rd at 8pm",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:29:04.769Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Utah County Elections",
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "title": "Voting & Drop Box Locations - Utah County Elections",
+      "checkedAt": "2026-10-21T04:29:04.769Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "contentType": "text/plain",
+      "rawHash": "e5fe408d53086c05486685984be0b5043d3a8fa8907b5e1a59f7007c515d391b",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-9266f4dab6c4.bin"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-353ad3a218d2.html"
+    }
+  ],
+  "fileTitle": "Voting & Drop Box Locations - Utah County Elections",
+  "contacts": []
+}

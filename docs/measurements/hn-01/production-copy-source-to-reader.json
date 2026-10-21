@@ -1,0 +1,213 @@
+{
+  "at": "2026-10-20T18:05:01.683Z",
+  "copyOnly": true,
+  "productionWrites": 0,
+  "adminSettingsWrites": 0,
+  "state": "NM",
+  "workItemId": "wi-53a2c06eed0c083504536369",
+  "boxRows": 47,
+  "report": {
+    "looked": 47,
+    "published": 11,
+    "publishedByRoute": {
+      "schedules": 1,
+      "meeting routes": 7,
+      "body links": 3
+    },
+    "handed": 0,
+    "refused": 0,
+    "seats": {
+      "pulled": 0,
+      "flagged": 0
+    },
+    "waitingByClass": {
+      "governments": 35,
+      "agendas and documents": 1
+    },
+    "failuresByReason": {},
+    "byPlace": {
+      "nm:city:city-of-alamogordo": {
+        "published": 11,
+        "refused": 0,
+        "waiting": 36
+      }
+    }
+  },
+  "native": [
+    {
+      "id": "nm:city:city-of-alamogordo#body:airport-advisory-board",
+      "kind": "body",
+      "name": "Airport Advisory Board",
+      "field": "meeting_cadence",
+      "value": "The first Thursday of every month. The Public is invited to each of these meetings.",
+      "url": "https://ci.alamogordo.nm.us/358/Airport-Advisory-Board"
+    },
+    {
+      "id": "nm:city:city-of-alamogordo#body:airport-advisory-board",
+      "kind": "body",
+      "name": "Airport Advisory Board",
+      "field": "name",
+      "value": "Airport Advisory Board",
+      "url": "https://ci.alamogordo.nm.us/358/Airport-Advisory-Board"
+    },
+    {
+      "id": "nm:city:city-of-alamogordo#body:airport-zoning-board",
+      "kind": "body",
+      "name": "Airport Zoning Board",
+      "field": "name",
+      "value": "Airport Zoning Board",
+      "url": "https://ci.alamogordo.nm.us/359/Airport-Zoning-Board"
+    },
+    {
+      "id": "nm:city:city-of-alamogordo#governing",
+      "kind": "body",
+      "name": "ALAMOGORDO COMMISSION",
+      "field": "agenda_url",
+      "value": "https://ci.alamogordo.nm.us/Calendar.aspx?EID=4898",
+      "url": "https://ci.alamogordo.nm.us/"
+    },
+    {
+      "id": "nm:city:city-of-alamogordo#governing",
+      "kind": "body",
+      "name": "ALAMOGORDO COMMISSION",
+      "field": "name",
+      "value": "ALAMOGORDO COMMISSION",
+      "url": "https://ci.alamogordo.nm.us/"
+    }
+  ],
+  "reader": {
+    "bodies": [
+      {
+        "id": "nm:city:city-of-alamogordo#body:airport-advisory-board",
+        "fields": {
+          "meetingCadence": "The first Thursday of every month. The Public is invited to each of these meetings.",
+          "meetingCadenceSource": {
+            "sourceUrl": "https://ci.alamogordo.nm.us/358/Airport-Advisory-Board",
+            "collectedAt": "2026-10-20T18:05:01.683Z"
+          },
+          "name": "Airport Advisory Board",
+          "bodyOrigin": "SOURCED",
+          "provenance": {
+            "sourceUrl": "https://ci.alamogordo.nm.us/358/Airport-Advisory-Board",
+            "sourceOrg": "ci.alamogordo.nm.us",
+            "collectedAt": "2026-10-20T18:05:01.683Z",
+            "verifiedAt": "2026-10-20T18:05:01.683Z"
+          },
+          "ocdId": "ocd-division/country:us/state:nm/place:alamogordo"
+        }
+      },
+      {
+        "id": "nm:city:city-of-alamogordo#body:airport-zoning-board",
+        "fields": {
+          "name": "Airport Zoning Board",
+          "bodyOrigin": "SOURCED",
+          "provenance": {
+            "sourceUrl": "https://ci.alamogordo.nm.us/359/Airport-Zoning-Board",
+            "sourceOrg": "ci.alamogordo.nm.us",
+            "collectedAt": "2026-10-20T18:05:01.683Z",
+            "verifiedAt": "2026-10-20T18:05:01.683Z"
+          },
+          "ocdId": "ocd-division/country:us/state:nm/place:alamogordo"
+        }
+      },
+      {
+        "id": "nm:city:city-of-alamogordo#governing",
+        "fields": {
+          "agendaSourceRef": "https://ci.alamogordo.nm.us/Calendar.aspx?EID=4898",
+          "name": "ALAMOGORDO COMMISSION",
+          "bodyOrigin": "SOURCED",
+          "provenance": {
+            "sourceUrl": "https://ci.alamogordo.nm.us/",
+            "sourceOrg": "ci.alamogordo.nm.us",
+            "collectedAt": "2026-10-20T18:05:01.683Z",
+            "verifiedAt": "2026-10-20T18:05:01.683Z"
+          },
+          "ocdId": "ocd-division/country:us/state:nm/place:alamogordo"
+        }
+      }
+    ]
+  },
+  "webRequests": 0,
+  "elapsedMs": 2068,
+  "public_meetings_route": {
+    "at": "2026-10-20T18:06:00.118Z",
+    "productionCopyOnly": true,
+    "productionWrites": 0,
+    "status": 200,
+    "elapsedMs": 331,
+    "targetBodies": [
+      {
+        "bodyId": "nm:city:city-of-alamogordo#body:airport-advisory-board",
+        "ocdId": "ocd-division/country:us/state:nm/place:alamogordo",
+        "name": "Airport Advisory Board",
+        "divisionLabel": "Alamogordo city",
+        "divisionType": "place",
+        "lsad": null,
+        "schoolDependency": "UNCLASSIFIED",
+        "bodyClass": "UNCLASSIFIED",
+        "coverageStatus": "NOT_ATTEMPTED",
+        "homepageUrl": null,
+        "agendaSourceRef": null,
+        "meetingCadence": {
+          "text": "The first Thursday of every month. The Public is invited to each of these meetings.",
+          "sourceUrl": "https://ci.alamogordo.nm.us/358/Airport-Advisory-Board"
+        },
+        "lookedAt": false,
+        "tier": "local",
+        "readerRoster": {
+          "members": [],
+          "gaps": [],
+          "officePhone": null
+        },
+        "publicationAttempts": {},
+        "couldGovern": true
+      },
+      {
+        "bodyId": "nm:city:city-of-alamogordo#body:airport-zoning-board",
+        "ocdId": "ocd-division/country:us/state:nm/place:alamogordo",
+        "name": "Airport Zoning Board",
+        "divisionLabel": "Alamogordo city",
+        "divisionType": "place",
+        "lsad": null,
+        "schoolDependency": "UNCLASSIFIED",
+        "bodyClass": "UNCLASSIFIED",
+        "coverageStatus": "NOT_ATTEMPTED",
+        "homepageUrl": null,
+        "agendaSourceRef": null,
+        "meetingCadence": null,
+        "lookedAt": false,
+        "tier": "local",
+        "readerRoster": {
+          "members": [],
+          "gaps": [],
+          "officePhone": null
+        },
+        "publicationAttempts": {},
+        "couldGovern": true
+      },
+      {
+        "bodyId": "nm:city:city-of-alamogordo#governing",
+        "ocdId": "ocd-division/country:us/state:nm/place:alamogordo",
+        "name": "ALAMOGORDO COMMISSION",
+        "divisionLabel": "Alamogordo city",
+        "divisionType": "place",
+        "lsad": null,
+        "schoolDependency": "UNCLASSIFIED",
+        "bodyClass": "UNCLASSIFIED",
+        "coverageStatus": "NOT_ATTEMPTED",
+        "homepageUrl": null,
+        "agendaSourceRef": "https://ci.alamogordo.nm.us/Calendar.aspx?EID=4898",
+        "meetingCadence": null,
+        "lookedAt": false,
+        "tier": "local",
+        "readerRoster": {
+          "members": [],
+          "gaps": [],
+          "officePhone": null
+        },
+        "publicationAttempts": {},
+        "couldGovern": true
+      }
+    ]
+  }
+}

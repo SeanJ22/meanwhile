@@ -1,0 +1,134 @@
+[
+  {
+    "url": "https://sos.tn.gov/govotetn",
+    "label": "Skip to main content"
+  },
+  {
+    "url": "https://honorvote.govotetn.gov",
+    "label": "Submit Your Honor Vote"
+  },
+  {
+    "url": "https://govote.tnsos.gov",
+    "label": "View Polling Locations and Hours"
+  },
+  {
+    "url": "https://govotetn.gov",
+    "label": "Early Voting Turnout"
+  },
+  {
+    "url": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day5Turnout_0.pdf",
+    "label": "PDF"
+  },
+  {
+    "url": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day5Turnout_0.xlsx",
+    "label": "XLSX"
+  },
+  {
+    "url": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/20261103Day5Comparison.pdf",
+    "label": "PDF"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/pages/early-voting-statistics",
+    "label": "Map"
+  },
+  {
+    "url": "https://tnmap.tn.gov/voterlookup",
+    "label": "Voter Registration Information Lookup"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/guides/how-to-register-to-vote",
+    "label": "Voter Registration"
+  },
+  {
+    "url": "https://pollworkers.govotetn.com",
+    "label": "Become a Poll Worker"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/voter-id-requirements",
+    "label": "types of ID are acceptable here"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/services/your-vote-matters-program",
+    "label": "Your Vote Matters"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/guides/guide-to-absentee-voting",
+    "label": "Absentee By-Mail Ballot Information"
+  },
+  {
+    "url": "https://tnsos.org/elections/election_commissions.php",
+    "label": "county election commission"
+  },
+  {
+    "url": "https://vrdt.govotetn.com",
+    "label": "Voter Registration Drive Training"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/services/voter-registration-promotional-graphics",
+    "label": "Voting Promotional Materials"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/how-can-i-download-the-govotetn-app",
+    "label": "How can I download the GoVoteTN app?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/am-i-registered-to-vote",
+    "label": "Am I registered to vote?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/how-do-i-contact-my-county-election-commission",
+    "label": "How do I contact my county election commission?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/how-do-i-obtain-a-duplicate-voter-registration-card",
+    "label": "How do I obtain a duplicate voter registration card?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/what-id-is-required-when-voting",
+    "label": "What ID is required when voting?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/how-do-i-become-a-poll-worker",
+    "label": "How do I become a poll worker?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/433",
+    "label": "What will I need to register to vote online?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/435",
+    "label": "Can I vote online?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/437",
+    "label": "How do I sign the online voter registration application?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/438",
+    "label": "Is the deadline for online voter registration the same as the deadline for registering by other means?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/440",
+    "label": "I moved from a different state. Am I allowed to register to vote in Tennessee?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/442",
+    "label": "Can I complete the online voter registration application on an iPad, tablet or smartphone?"
+  },
+  {
+    "url": "https://sos.tn.gov/node/444",
+    "label": "Will online voter registration update my name or address with the Department of Safety and Homeland Security?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/faqs/when-can-i-vote",
+    "label": "When can I vote?"
+  },
+  {
+    "url": "https://sos.tn.gov/elections/services/download-the-govotetn-app",
+    "label": "Download the GoVoteTN App"
+  },
+  {
+    "url": "https://ovr.govote.tn.gov",
+    "label": "Register to Vote (Online Application)"
+  }
+]

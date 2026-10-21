@@ -1,0 +1,1467 @@
+{
+  "AS": [
+    {
+      "office": "Delegate to the United States Congress",
+      "ocdId": "ocd-division/country:us/territory:as",
+      "candidates": [
+        {
+          "name": "Aumua Amata",
+          "partyLabel": null
+        },
+        {
+          "name": "Fualaau Rosie Tago Lancaster",
+          "partyLabel": null
+        },
+        {
+          "name": "Meleagi Suitonu Chapman",
+          "partyLabel": null
+        },
+        {
+          "name": "Samana Semo Veavea",
+          "partyLabel": null
+        },
+        {
+          "name": "Sandra King Young",
+          "partyLabel": null
+        },
+        {
+          "name": "Tuifagaloa Dr. Afu Lefaoseu",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 1 – Manu’a",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:1",
+      "candidates": [
+        {
+          "name": "Fetui F. Fetu Jr.",
+          "partyLabel": null
+        },
+        {
+          "name": "Mana’oimalo Fa’aaliga Matagi",
+          "partyLabel": null
+        },
+        {
+          "name": "Paepaetele Mapu Jamias",
+          "partyLabel": null
+        },
+        {
+          "name": "Satia Aokuso Satia",
+          "partyLabel": null
+        },
+        {
+          "name": "Vala Porotesano Liusamoa",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 2 – Manu’a",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:2",
+      "candidates": [
+        {
+          "name": "Niuatoa Loleni Faiai",
+          "partyLabel": null
+        },
+        {
+          "name": "Tiaoali’i Fauagiga T. Sai",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 3 – Vaifanua",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:3",
+      "candidates": [
+        {
+          "name": "Shaun O. Va’a",
+          "partyLabel": null
+        },
+        {
+          "name": "Tiapula Dr. Toafa Vaiaga’e",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 4 – Saole",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:4",
+      "candidates": [
+        {
+          "name": "Dr. Va’asa Simanu",
+          "partyLabel": null
+        },
+        {
+          "name": "Titiali’i Kitara Vaiau",
+          "partyLabel": null
+        },
+        {
+          "name": "Vitolio Ioane Lotu",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 5 – Sua #1",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:5",
+      "candidates": [
+        {
+          "name": "Luaitaua Gene Pan",
+          "partyLabel": null
+        },
+        {
+          "name": "Lynn Nu’uuli Pulou-Alaimalo",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 6 – Sua #2",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:6",
+      "candidates": [
+        {
+          "name": "Avaolagi Ta’atiatia I.Mata’utia Sua",
+          "partyLabel": null
+        },
+        {
+          "name": "Matagaono Vaimaga Maiava",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 7 – Maoputasi #1",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:7",
+      "candidates": [
+        {
+          "name": "Vailoata Eteuati Amituanai",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 8 – Maoputasi #2",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:8",
+      "candidates": [
+        {
+          "name": "Malaeoletalu Melesio Gurr",
+          "partyLabel": null
+        },
+        {
+          "name": "Leiviifiloa Mariota K. Tuiasosopo",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 9 – Maoputasi #3",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:9",
+      "candidates": [
+        {
+          "name": "Trude Gasetotolemasina Ledoux-Sunia",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 10 – Maoputasi #4",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:10",
+      "candidates": [
+        {
+          "name": "Saena Omar Shalhout",
+          "partyLabel": null
+        },
+        {
+          "name": "Talali Perry T. Loloaso Wightman-Uia",
+          "partyLabel": null
+        },
+        {
+          "name": "Tapai Alailepule Ben Vaivao",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 11 – Maoputasi #5",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:11",
+      "candidates": [
+        {
+          "name": "Faimealelei Anthony Fu’e Allen",
+          "partyLabel": null
+        },
+        {
+          "name": "Muaiavaona Fofoga Pila",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 12 – Ituau",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:12",
+      "candidates": [
+        {
+          "name": "Manumaua Wayne Wilson",
+          "partyLabel": null
+        },
+        {
+          "name": "Sauasetoa Tautoloitua Soliai Ho Ching",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 13 – Fofo",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:13",
+      "candidates": [
+        {
+          "name": "Fiu J. Saelua",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 14 – Alataua",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:14",
+      "candidates": [
+        {
+          "name": "Mona Uli",
+          "partyLabel": null
+        },
+        {
+          "name": "Savali Talavou Ale",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 15 – Tualauta",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:15",
+      "candidates": [
+        {
+          "name": "Alex Sene Jr.",
+          "partyLabel": null
+        },
+        {
+          "name": "Ben Vaomu Solomona Sauvao",
+          "partyLabel": null
+        },
+        {
+          "name": "Fagaima Larry Sanitoa",
+          "partyLabel": null
+        },
+        {
+          "name": "Sefulu Mika Kelemete",
+          "partyLabel": null
+        },
+        {
+          "name": "Tapusalaia “Tap” Moemalemalo Maneafaiga",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 16 – Tualatai",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:16",
+      "candidates": [
+        {
+          "name": "Manavaalofa Tutuila Manase",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "House of Representatives, District 17 – Aitulagi/Leasina",
+      "ocdId": "ocd-division/country:us/territory:as/sldl:17",
+      "candidates": [
+        {
+          "name": "Ape Mike Asifoa",
+          "partyLabel": null
+        },
+        {
+          "name": "Fuasali’i I. Iose",
+          "partyLabel": null
+        }
+      ]
+    }
+  ],
+  "MP": [
+    {
+      "office": "Governor & Lieutenant Governor",
+      "area": "Each ticket runs and is elected as a single unit.",
+      "candidates": [
+        {
+          "name": "Blas Jonathan \"BJ\" Tenorio Attao",
+          "runningMate": "Edmund Joseph Sablan Villagomez",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Ralph Anthony Deleon Guerrero Torres",
+          "runningMate": "Benjamin Jr Mendiola Jones",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Lawrence Fejeran Camacho",
+          "runningMate": "Edith E Deleon Guerrero",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Delegate to the U.S. House of Representatives",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Galvin Sablan Deleon Guerrero",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Kimberlyn Kay King-Hinds",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Justice",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Alexandro Cruz Castro",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": true
+    },
+    {
+      "office": "Attorney General",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Joaquin Deleon Guerrero Torres",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Jonathan Robert Glass",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Michael Norita Evangelista",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "1st Senatorial District",
+      "area": "Rota",
+      "candidates": [
+        {
+          "name": "Robert Jr Harrison Myers",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Tito Songao Hocog II",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Donald Manalang Manglona",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "candidates": [
+        {
+          "name": "Francisco Quichuchu Cruz",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Jude Untalan Hofschneider",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "3rd Senatorial District",
+      "area": "Saipan",
+      "candidates": [
+        {
+          "name": "Celina Roberto Babauta",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Corina Lorraine Magofna",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Vicente Castro Camacho",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Marco Taisakan Peter",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Vinnie Vinson Flores Sablan",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Crispin Manglona Sablan",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Edwin Raymond Borja Quitugua",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 1",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Janet Ulloa Maratita",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Raymond Ulloa Palacios",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Joseph Arriola Flores",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Diego Vincent Fejeran Camacho",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "John Deleon Guerrero Demapan Jr.",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Roy Christopher Aldan Ada",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Cecilia Remedio Taitano Fitial",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Patrick Matagolai Cepeda",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Benusto Piteg",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Alfredo Javier Cabael",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Roman Cepeda Benavente",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Vincent Raymond Seman Aldan",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Ricardo Castro Cruz Jr.",
+          "partyLabel": "Democrat"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 2",
+      "area": null,
+      "candidates": [
+        {
+          "name": "John Paul Palacios Sablan",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Daniel Jr Iwashita Aquino",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Keith Cabrera Ada",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 3",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Ralph Naraja Yumul",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Marissa Renee Flores",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Steve Kap Soo Jang",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Elias Jerome Malite Rangamar",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Del Ariel Benson",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Edward C Arriola Jr.",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Quaid Taima Ogumoro Ngirchongor",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Andrew Lujan Orsini",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Yvette Reyes Sablan",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Carlos Ebert Santos",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Gabriel Boki Babauta",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Denita Kaipat Yangetmai",
+          "partyLabel": "Democrat"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 4",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Joel Castro Camacho",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "James Kennedy Weilbacher DLG Benjamin",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Malcolm Jason Omar",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 5",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Ted Anthony Deleon Guerrero",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Angelo Atalig Camacho",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Peter Francis Reyes Muna",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Leila Haveia Fleming Clark Staffler",
+          "partyLabel": "Democrat"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 6",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Joseph Romaldo Evangelista Santos",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "District 7",
+      "area": null,
+      "candidates": [
+        {
+          "name": "Julie Marie Atalig Ogo",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Mayor — 1st Senatorial District",
+      "area": "Rota",
+      "candidates": [
+        {
+          "name": "Aubry Manglona Hocog",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Mayor — 2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "candidates": [
+        {
+          "name": "Antonio San Nicolas Borja",
+          "partyLabel": "Republican"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Mayor — 3rd Senatorial District",
+      "area": "Saipan",
+      "candidates": [
+        {
+          "name": "Ramon \"RB\" Jose Blas Camacho",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Joseph Muna Mendiola",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Mayor — 3rd Senatorial District",
+      "area": "Northern Islands",
+      "candidates": [
+        {
+          "name": "Keli Aiken Tenorio",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Valentino Nicky Taisacan Jr.",
+          "partyLabel": "Independent"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Municipal Council — 1st Senatorial District",
+      "area": "Rota",
+      "candidates": [
+        {
+          "name": "Sandra Mesngon Masga",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Tillie Castro Taimanao",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Jonovan Hocog Lizama",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Municipal Council — 2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "candidates": [
+        {
+          "name": "Chad Ellie Palacios",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Wally Flores Villagomez",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Ana Marie Cruz San Nicolas",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Municipal Council — 3rd Senatorial District",
+      "area": "Saipan",
+      "candidates": [
+        {
+          "name": "Anthony Tenorio Benavente",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Antonia Manibusan Tudela",
+          "partyLabel": "Non-Partisan"
+        },
+        {
+          "name": "Marian Deleon Guerrero Tudela",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": false
+    },
+    {
+      "office": "Board of Education — 3rd Senatorial District",
+      "area": "Saipan",
+      "candidates": [
+        {
+          "name": "Daniel Ogo Quitugua",
+          "partyLabel": "Non-Partisan"
+        }
+      ],
+      "retention": false
+    }
+  ],
+  "GU": [
+    {
+      "office": "Governor & Lieutenant Governor of Guam",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "ADA, Vicente A.",
+          "runningMate": "CALVO, Edward John",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "TERLAJE, Therese Maria",
+          "runningMate": "PEREZ, Sabina Eileen",
+          "partyLabel": "DEMOCRAT"
+        }
+      ]
+    },
+    {
+      "office": "Non-Voting Delegate to the U.S. House of Representatives",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "MOYLAN, James Craig",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "LIMTIACO, Alicia Anne Garrido",
+          "partyLabel": "DEMOCRAT"
+        }
+      ]
+    },
+    {
+      "office": "Guam Legislature",
+      "voteFor": 15,
+      "candidates": [
+        {
+          "name": "DUENAS, Christopher M.",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "SAVARES, Jonathan James",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "TAITAGUE, Telo Teresa",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "BORJA, Louisa Jean",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "CALVO, Gregorio Salas",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "GUMATAOTAO, Eulogio S.",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "BORJA, Vincent Anthony Velasco",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "CALVO, Shelly Vargas",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "NGUYEN, Hoa Van",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "CASTRO, William Mendiola",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "LUJAN, Jesse Michael A.",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "MATANANE, Sabrina Salas",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "MORTERA, Matteo Thomas",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "SGAMBELLURI, Raffaele M.",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "ARRIOLA, Joseph B.D.",
+          "partyLabel": "REPUBLICAN"
+        },
+        {
+          "name": "QUINATA, Donna Rita Muna",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "BORDALLO, Fred E. Jr.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "NELSON, Telena Monique Cruz",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "TAITAGUE, Joaquin Manuel Paulino",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "PARKINSON, William Mark Alkonga",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "CRUZ, Joaquin Alan",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "PEREZ, Kallen Marie E.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "TAIJERON, Anthony W.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "QUINATA, Roy Anthony Benavente",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "SABLAN, Angel Anthony R.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "SHELTON, Amanda L.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "SANTOS, Angela Therese A.M.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "BARNETT, Darrel Christopher",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "NEDEDOG, Sarah Mattie T.",
+          "partyLabel": "DEMOCRAT"
+        },
+        {
+          "name": "RIDGELL, Clynton E.",
+          "partyLabel": "DEMOCRAT"
+        }
+      ]
+    },
+    {
+      "office": "Attorney General of Guam",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "TYDINGCO, Phillip James",
+          "partyLabel": null
+        },
+        {
+          "name": "PAULUHN, Jordan Lawrence Evangelista",
+          "partyLabel": null
+        },
+        {
+          "name": "FISHER, Thomas Joseph",
+          "partyLabel": null
+        },
+        {
+          "name": "SANTOS, Peter John",
+          "partyLabel": null
+        },
+        {
+          "name": "MOYLAN, Douglas B.",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "Consolidated Commission on Utilities",
+      "voteFor": 3,
+      "candidates": [
+        {
+          "name": "LIMTIACO, Michael Troy",
+          "partyLabel": null
+        },
+        {
+          "name": "SANCHEZ, Simon A.",
+          "partyLabel": null
+        },
+        {
+          "name": "PEREZ, Kenneth Robert",
+          "partyLabel": null
+        },
+        {
+          "name": "SANTOS, Francis Edward Borja",
+          "partyLabel": null
+        },
+        {
+          "name": "ADONAY, Roy Salvador Agudon",
+          "partyLabel": null
+        }
+      ]
+    },
+    {
+      "office": "Guam Education Board",
+      "voteFor": null,
+      "candidates": [
+        {
+          "name": "TAITANO II, John R.",
+          "partyLabel": null
+        },
+        {
+          "name": "AYUYU, Ronald Anthony",
+          "partyLabel": null
+        },
+        {
+          "name": "AGUON, Isaiah John",
+          "partyLabel": null
+        },
+        {
+          "name": "MC NINCH, Ronald Lewis Jr.",
+          "partyLabel": null
+        }
+      ]
+    }
+  ],
+  "VI": [
+    {
+      "number": 1,
+      "name": "Shelley A. H. Moorhead",
+      "partyLabel": "Independent",
+      "office": "Delegate to Congress",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 2,
+      "name": "Stacey E. Plaskett/Milton E. Potter",
+      "partyLabel": "Democrat",
+      "office": "Governor/Lt. Governor",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 3,
+      "name": "Gustav James/Randolph Bennett",
+      "partyLabel": "Independent",
+      "office": "Governor/Lt. Governor",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 4,
+      "name": "Oakland Benta/Merwin Potter",
+      "partyLabel": "Independent",
+      "office": "Governor/Lt. Governor",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 5,
+      "name": "Warren Mosler/Colin Robertson",
+      "partyLabel": "Independent",
+      "office": "Governor/Lt. Governor",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 6,
+      "name": "Mutasem Moe Mustafa",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 7,
+      "name": "Elizabeth HansenWatley",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 8,
+      "name": "Alvin Milligan",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 9,
+      "name": "Franklin Johnson",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 10,
+      "name": "Clifford A Joseph",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 11,
+      "name": "Diane Prosper",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 12,
+      "name": "Tyler Courtland Fay",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 13,
+      "name": "Luz \"Lucy\" Browne",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 14,
+      "name": "Bianca Francis",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 15,
+      "name": "Hubert L. Frederick",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 16,
+      "name": "Samuel Carrion",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 17,
+      "name": "Kurt A. Vialet",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 18,
+      "name": "Jose \"Besse\" Gonzalez",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 19,
+      "name": "Julian S. Veira",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 20,
+      "name": "Nemmy Williams-Jackson",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 21,
+      "name": "Kenneth Kenny Gittens",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 22,
+      "name": "Troy D. Mason",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 23,
+      "name": "Jay Watson",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 24,
+      "name": "Norman Bapo Jn Baptiste",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 25,
+      "name": "Troy C. Williams Sr.",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 26,
+      "name": "Lisa J. Charles",
+      "partyLabel": "Democrat",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 27,
+      "name": "Raymond T. James, Esq.",
+      "partyLabel": "Republican",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 28,
+      "name": "Gage Edmunds",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 29,
+      "name": "Nellie Rivera O'Reilly",
+      "partyLabel": "Independent",
+      "office": "Legislature of the VI",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 30,
+      "name": "Winona A. Hendricks",
+      "partyLabel": "Democrat",
+      "office": "Board of Education",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 31,
+      "name": "Vincent HA GordonJr PhD",
+      "partyLabel": "Independent",
+      "office": "Board of Education",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 32,
+      "name": "Lucy M. Jackson PhD",
+      "partyLabel": "Independent",
+      "office": "Board of Education",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 33,
+      "name": "Terrence T. Joseph",
+      "partyLabel": "Democrat",
+      "office": "Board of Education",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 34,
+      "name": "Mary \"Peggy\" Moorhead",
+      "partyLabel": "Independent",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 35,
+      "name": "Shamari I. Haynes",
+      "partyLabel": "Democrat",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 36,
+      "name": "Juliet L. Liburd",
+      "partyLabel": "Independent",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 37,
+      "name": "Franz A. Christian Jr.",
+      "partyLabel": "Republican",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 38,
+      "name": "Kareem T. Francis",
+      "partyLabel": "Independent",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Croix"
+    },
+    {
+      "number": 1,
+      "name": "Janelle K. Sarauw",
+      "partyLabel": "Democrat",
+      "office": "Delegate to Congress",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 2,
+      "name": "Adlah \"Foncie\" Donastorg/Positive Nelson",
+      "partyLabel": "Independent",
+      "office": "Governor/Lt. Governor",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 3,
+      "name": "Angel Bolques, Jr.",
+      "partyLabel": "Democrat",
+      "office": "Legislature (At Large)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 4,
+      "name": "Hadiya Sewer",
+      "partyLabel": "Independent",
+      "office": "Legislature (At Large)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 5,
+      "name": "David Sierra",
+      "partyLabel": "ICM",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 6,
+      "name": "Dwayne M. DeGraff",
+      "partyLabel": "Independent",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 7,
+      "name": "Carla Joseph",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 8,
+      "name": "Derrick A. Callwood",
+      "partyLabel": "Republican",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 9,
+      "name": "Avery L. Lewis",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 10,
+      "name": "Shenelle Fina Francis",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 11,
+      "name": "Ray \"PuPa\" Fonseca",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 12,
+      "name": "Alma Francis Heyliger",
+      "partyLabel": "Independent",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 13,
+      "name": "Paula A. Duke",
+      "partyLabel": "Independent",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 14,
+      "name": "Eric Tillett",
+      "partyLabel": "Republican",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 15,
+      "name": "Collister M. Fahie",
+      "partyLabel": "Republican",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 16,
+      "name": "Marvin A. Blyden",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 17,
+      "name": "Joel S. Browne Connors",
+      "partyLabel": "Democrat",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 18,
+      "name": "Sennai Habtes",
+      "partyLabel": "Independent",
+      "office": "Senator(Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 19,
+      "name": "Imani Daniel",
+      "partyLabel": "Independent",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 20,
+      "name": "Dr. Krishna Kilaru M.D.",
+      "partyLabel": "Independent",
+      "office": "Senator (Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 21,
+      "name": "Gregory P. Smith",
+      "partyLabel": "Independent",
+      "office": "Senator(Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 22,
+      "name": "Rudel A. Hodge , Jr.",
+      "partyLabel": "Democrat",
+      "office": "Senator(Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 23,
+      "name": "Eugene D.J. Farrell",
+      "partyLabel": "Independent",
+      "office": "Senator(Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 24,
+      "name": "Vernon Araujo",
+      "partyLabel": "Independent",
+      "office": "Senator(Legislature)",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 25,
+      "name": "Bruce C. Flamon",
+      "partyLabel": "Independent",
+      "office": "Board of Education",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 26,
+      "name": "Judy M. Gomez",
+      "partyLabel": "Democrat",
+      "office": "Board of Education",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 27,
+      "name": "Arah C. Lockhart",
+      "partyLabel": "Democrat",
+      "office": "Board of Education",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 28,
+      "name": "Barbara A. Petersen",
+      "partyLabel": "Democrat",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 29,
+      "name": "Raven Phillips",
+      "partyLabel": "Independent",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 30,
+      "name": "Preston R. Evans",
+      "partyLabel": "Democrat",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 31,
+      "name": "Kevin A. Rodriquez",
+      "partyLabel": "Democrat",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Thomas/St. John"
+    },
+    {
+      "number": 32,
+      "name": "Harriet A. Mercer",
+      "partyLabel": "Republican",
+      "office": "Board of Elections",
+      "filingDistrict": "St. Thomas/St. John"
+    }
+  ]
+}

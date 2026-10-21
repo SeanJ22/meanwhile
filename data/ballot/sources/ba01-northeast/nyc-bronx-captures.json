@@ -1,0 +1,30 @@
+[
+  {
+    "name": "bronx-0.json",
+    "url": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543206423",
+    "retrievedAt": "2026-10-21T00:40:06.588Z",
+    "httpStatus": 200,
+    "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4"
+  },
+  {
+    "name": "bronx-1.json",
+    "url": "https://electionstreet.com/api/nyc/addresses?streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&callback=jQuery351004322857486671483_1792543206277&_=1792543206278",
+    "retrievedAt": "2026-10-21T00:40:06.950Z",
+    "httpStatus": 200,
+    "rawHash": "b51b284a17926cffa8554a9f307d6d15d4027247867a00c9ed137faac68bb644"
+  },
+  {
+    "name": "bronx-2.json",
+    "url": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.84568434856727&longitude=-73.89329351020154&county=Bronx&streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&districtkey=004/79",
+    "retrievedAt": "2026-10-21T00:40:07.120Z",
+    "httpStatus": 200,
+    "rawHash": "45c07d844e6c0a9a64a6c93d83ac4815f877926ba0893d0fe6ff8c4c8fa96ef3"
+  },
+  {
+    "name": "bronx-3.json",
+    "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+    "retrievedAt": "2026-10-21T00:40:07.327Z",
+    "httpStatus": 200,
+    "rawHash": "ad52ba38d5d41d5f92bc814637124429bef758bbd233add0b98fd71db2dd97ee"
+  }
+]

@@ -1,0 +1,100 @@
+{
+  "sourceUrl": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/01-01.html",
+  "captureMethod": "search_service_web_run open",
+  "capturedAt": "2026-10-21 00:29:22 UTC",
+  "httpStatus": null,
+  "rawToolResult": {
+    "content": [
+      {
+        "type": "text",
+        "text": "2026 Sample Ballots General Election - Department of Elections - State of Delaware (https://elections.delaware.gov/elections/general/sampleballots/GE2026/01-01.html)\n【turn182885view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({\"ref_id\":\"https://elections.delaware.gov/elections/general/sampleballots/GE2026/01-01.html\",\"lineno\":null}); Total lines: 133\nL0: The Department of Elections website will be undergoing scheduled maintenance on Tuesday July 21,2026. Visitors may experience intermittent issues with website functionality during this brief maintenance period.\nL1: \nL2: An official State of Delaware site.\nL3: \nL4: Here's how you know\nL5: \nL6: ## Official websites end in .gov\nL7: \nL8: A .gov website belongs to an official government organization in the United States.\nL9: ## Secure .gov websites use https://\nL10: \nL11: The https:// at the beginning of the delaware.gov address means you are safely connected to the government website. Any information that you provide is securely transmitted.\nL12: \nL13: Search this site\nL14: \nL15: [Input: Search…] Search\nL16:   * 【0†About】\nL17:     * 【1†About Elections】\nL18:     * 【2†Calendars】\nL19:     * 【3†Commissioner's Letter】\nL20:     * 【4†FAQs】\nL21:   * 【0†Services】\nL22:     * 【5†Absentee Statement】\nL23:     * 【6†Absentee Voting】\nL24:     * 【7†Campaign Finance†cfrs.elections.delaware.gov】\nL25:     * 【8†Candidates】\nL26:     * 【9†FOIA】\nL27:     * 【10†Uniformed & Overseas】\nL28:     * 【11†Voter Registration】\nL29:   * 【0†Information】\nL30:     * 【12†Ballot Qualified Candidates】\nL31:     * 【2†Calendars】\nL32:     * 【13†Education & Outreach】\nL33:     * 【14†Elections】\nL34:     * 【15†Forms & Publications】\nL35:     * 【16†Maps】\nL36:     * 【17†Voter Registration Data】\nL37:     * 【18†Voting Machines】\nL38:     * 【19†Working at the Polls】\nL39: Menu\nL40: \nL41: Search this site\nL42: \nL43: [Input: Search…] Search\nL44:   * 【0†About】\nL45:     * 【1†About Elections】\nL46:     * 【2†Calendars】\nL47:     * 【3†Commissioner's Letter】\nL48:     * 【4†FAQs】\nL49:   * 【0†Services】\nL50:     * 【5†Absentee Statement】\nL51:     * 【6†Absentee Voting】\nL52:     * 【7†Campaign Finance†cfrs.elections.delaware.gov】\nL53:     * 【8†Candidates】\nL54:     * 【9†FOIA】\nL55:     * 【10†Uniformed & Overseas】\nL56:     * 【11†Voter Registration】\nL57:   * 【0†Information】\nL58:     * 【12†Ballot Qualified Candidates】\nL59:     * 【2†Calendars】\nL60:     * 【13†Education & Outreach】\nL61:     * 【14†Elections】\nL62:     * 【15†Forms & Publications】\nL63:     * 【16†Maps】\nL64:     * 【17†Voter Registration Data】\nL65:     * 【18†Voting Machines】\nL66:     * 【19†Working at the Polls】\nL67: # Sample Ballot\nL68: \nL69: ## Screen Image\nL70: \nL71: 【20†Image: sample ballot screen】\nL72: \nL73: ## Screen Description\nL74: \nL75: ### Title Bar:\nL76: \nL77:   * Official State, County, and District Ballot\nL78:   * State of Delaware\nL79:   * November 3, 2026 General Election\nL80:   * Election District 01-01\nL81: \nL82: ### Watermark:\nL83: \nL84: \"Sample Ballot\" written diagonally across the screen\nL85: ### Contents:\nL86: Race  | Instruction  | Democratic Party  | Republican Party  | Write-in\nL87: --- | --- | --- | --- | ---\nL88: U.S. Senator  | Vote for 1  | CHRIS COONS  | MICHAEL \"DR.MIKE\" KATZ  | Write-in\nL89: Race  | Instruction  | Democratic Party  | Republican Party  | Write-in\nL90: --- | --- | --- | --- | ---\nL91: Representative In Congress  | Vote for 1  | SARAH MCBRIDE  | JOSEPH \"DR.JOE\" ARMINIO  | Write-in\nL92: Race  | Instruction  | Democratic Party  | Republican Party  | Write-in\nL93: --- | --- | --- | --- | ---\nL94: Attorney General  | Vote for 1  | KATHY JENNINGS  | DAVID C. \"DAVE\" GRAHAM  | Write-in\nL95: Race  | Instruction  | Democratic Party  | Republican Party  | Independent Party of Delaware  | Write-in\nL96: --- | --- | --- | --- | --- | ---\nL97: Auditor of Accounts  | Vote for 1  | LYDIA YORK  | APRIL CALLAWAY  | AUSTIN CASSIDY  | Write-in\nL98: Race  | Instruction  | Democratic Party  | Republican Party  | Write-in\nL99: --- | --- | --- | --- | ---\nL100: State Treasurer  | Vote for 1  | TED LAUZEN  | MICHAEL RAMONE  | Write-in\nL101: Race  | Instruction  | Democratic Party  | Republican Party  | Independent Party of Delaware  | Write-in\nL102: --- | --- | --- | --- | --- | ---\nL103: State Senator District 1  | Vote for 1  | DAN CRUCE  | HILDI BACHTLE  | STEVEN WASHINGTON  | Write-in\nL104: Race  | Instruction  | Democratic Party  | Republican Party  | Write-in\nL105: --- | --- | --- | --- | ---\nL106: State Representative District 1  | Vote for 1  | NNAMDI O. CHUKWUOCHA  | LISA MCINNIS  | Write-in\nL107: Race  | Instruction  | Democratic Party  | Write-in\nL108: --- | --- | --- | ---\nL109: New Castle County Recorder of Deeds  | Vote for 1  | DAVID TACKETT  | Write-in\nL110: Race  | Instruction  | Democratic Party  | Write-in\nL111: --- | --- | --- | ---\nL112: New Castle County Register of Wills  | Vote for 1  | CIRO POPPITI  | Write-in\nL113: Race  | Instruction  | Democratic Party  | Write-in\nL114: --- | --- | --- | ---\nL115: New Castle County Sheriff  | Vote for 1  | SCOTT PHILLIPS  | Write-in\nL116: Race  | Instruction  | Democratic Party  | Write-in\nL117: --- | --- | --- | ---\nL118: New Castle County Council District 4  | Vote for 1  | JASON HOOVER  | Write-in\nL119: ## How can we help?\nL120: \nL121: 【21†Contact Page】\nL122: \nL123: ## Quick Links\nL124: \nL125:   * 【9†Freedom of Information Act】\nL126: \nL127: ## Stay Connected\nL128: \nL129:   *   *   *   *   * 【0†Help】\nL130:   * 【0†Privacy】\nL131:   * 【0†Cookies】\nL132:   * 【0†Accessibility】\n"
+      }
+    ],
+    "isError": false
+  },
+  "comparison": {
+    "officialContests": 11,
+    "matchedContests": 11,
+    "officialPrintedCandidates": 20,
+    "matchedPrintedCandidates": 20,
+    "races": [
+      {
+        "title": "U.S. Senator",
+        "contestId": "de-2026-general-u-s-senator",
+        "officialPrintedCandidates": 2,
+        "matchedPrintedCandidates": 2,
+        "missing": []
+      },
+      {
+        "title": "Representative In Congress",
+        "contestId": "de-2026-general-representative-in-congress",
+        "officialPrintedCandidates": 2,
+        "matchedPrintedCandidates": 2,
+        "missing": []
+      },
+      {
+        "title": "Attorney General",
+        "contestId": "de-2026-general-attorney-general",
+        "officialPrintedCandidates": 2,
+        "matchedPrintedCandidates": 2,
+        "missing": []
+      },
+      {
+        "title": "Auditor of Accounts",
+        "contestId": "de-2026-general-auditor-of-accounts",
+        "officialPrintedCandidates": 3,
+        "matchedPrintedCandidates": 3,
+        "missing": []
+      },
+      {
+        "title": "State Treasurer",
+        "contestId": "de-2026-general-state-treasurer",
+        "officialPrintedCandidates": 2,
+        "matchedPrintedCandidates": 2,
+        "missing": []
+      },
+      {
+        "title": "State Senator District 1",
+        "contestId": "de-2026-general-state-senator-district-1",
+        "officialPrintedCandidates": 3,
+        "matchedPrintedCandidates": 3,
+        "missing": []
+      },
+      {
+        "title": "State Representative District 1",
+        "contestId": "de-2026-general-state-representative-district-1",
+        "officialPrintedCandidates": 2,
+        "matchedPrintedCandidates": 2,
+        "missing": []
+      },
+      {
+        "title": "New Castle County Recorder of Deeds",
+        "contestId": "de-local-2026-c0bf3dfcb67f0614d391",
+        "officialPrintedCandidates": 1,
+        "matchedPrintedCandidates": 1,
+        "missing": []
+      },
+      {
+        "title": "New Castle County Register of Wills",
+        "contestId": "de-local-2026-0b966db2f9c8e524fe72",
+        "officialPrintedCandidates": 1,
+        "matchedPrintedCandidates": 1,
+        "missing": []
+      },
+      {
+        "title": "New Castle County Sheriff",
+        "contestId": "de-local-2026-fa0f8e785739f1da426d",
+        "officialPrintedCandidates": 1,
+        "matchedPrintedCandidates": 1,
+        "missing": []
+      },
+      {
+        "title": "New Castle County Council District 4",
+        "contestId": "de-county-districts-2026-92e449a0ccd3cd1c3fca",
+        "officialPrintedCandidates": 1,
+        "matchedPrintedCandidates": 1,
+        "missing": []
+      }
+    ]
+  }
+}

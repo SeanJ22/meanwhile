@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 
-test("Show more reveals added meetings inside closed groups across ZIPs and grouping modes", async () => {
+test("Show more reveals added meetings inside closed groups across ZIPs and grouping modes", async t => {
   // Synthetic meetings stay on this local server; providers, frame, rows and controls are production code.
   const output = await build({
     stdin: {
@@ -69,9 +69,15 @@ test("Show more reveals added meetings inside closed groups across ZIPs and grou
         const start = Date.now();
         await page.locator(".al-more").click();
         await page.waitForFunction(initial => [...document.querySelectorAll(".al-row [data-meeting-id]")].some(row => !initial.includes(row.getAttribute("data-meeting-id")!)), [...initialIds], { timeout: 3000 });
-        assert.ok(Date.now() - start < 3000, `${zip}/${group}: expansion is usable within three seconds`);
+        const expansionMs = Date.now() - start;
+        assert.ok(expansionMs < 3000, `${zip}/${group}: expansion is usable within three seconds`);
+        t.diagnostic(`${zip}/${group}: expansion usable in ${expansionMs} ms`);
         const addedIds = (await rowIds()).filter(id => !initialIds.has(id));
         assert.equal(addedIds.length, zip === "85701" ? 43 : 200, `${zip}/${group}: all newly added meetings are visible`);
+        const visibleCount = (await rowIds()).length;
+        const gaps = await page.locator("[data-card-gap]").innerText();
+        assert.match(gaps, new RegExp(`agendas for ${visibleCount} meetings\\b`), `${zip}/${group}: every visible meeting's agenda gap reaches the footer`);
+        assert.match(gaps, new RegExp(`meeting places for ${visibleCount} meetings\\b`), `${zip}/${group}: every visible meeting's place gap reaches the footer`);
         // Every opened group still collapses and reopens, including with the keyboard.
         for (const head of await heads.all()) {
           const rows = head.locator("..").locator(".al-row");

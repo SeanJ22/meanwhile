@@ -1,0 +1,1076 @@
+{
+  "doorId": "ks-johnson-general-advance-2026",
+  "sites": [
+    {
+      "id": "voting-4a54b4d7889159f4dbed57dc",
+      "name": "Arts and Heritage Center",
+      "address": "8788 Metcalf Ave., Overland Park, KS 66212",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-88be9abe816781f589066870",
+      "name": "Hilltop Conference Center Blue Valley",
+      "address": "7700 W. 143rd St., Overland Park, KS 66223",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a667f04e7f4a205577edf6b0",
+      "name": "Johnson County Election Office",
+      "address": "2101 E. Kansas City Rd., Olathe, KS 66061",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING",
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        },
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-db3b20518564dccbcb790a1d",
+      "name": "Johnson County Northeast Offices",
+      "address": "6000 Lamar Ave., Mission, KS 66202",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING",
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        },
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-ff6a20eddcf7a56b45ff3cca",
+      "name": "Monticello Library",
+      "address": "22435 W. 66th St., Shawnee, KS 66226",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING",
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        },
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-74f5cd864b0754da0a3717f3",
+      "name": "New Century Fieldhouse",
+      "address": "551 New Century Pkwy, Gardner, KS 66031",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-90c45d824b04e2feb1386266",
+      "name": "Olathe Indian Creek Library",
+      "address": "16100 W. 135th St., Olathe, KS 66062",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1ae48d50f72c76f4ae9b51af",
+      "name": "Overland Park Arboretum Longhouse",
+      "address": "9209 W. 179th St., Overland Park, KS 66013",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-573b551abe710f49fc57a5c6",
+      "name": "Lenexa City Center Library",
+      "address": "8778 Penrose Ln., Lenexa, KS 66219",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING",
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        },
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-b43b8863b6c1ec69179ecfe9",
+      "name": "Shawnee Library",
+      "address": "13811 Johnson Dr., Shawnee, KS 66216",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING",
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        },
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-d1e4fa5186a72e2b7cadb027",
+      "name": "De Soto Community Center",
+      "address": "32905 W. 84th St., De Soto, KS 66018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d49d47ff2554e8a92ccbda63",
+      "name": "Spring Hill Civic Center",
+      "address": "401 N. Madison St., Spring Hill, KS 66083",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e052498fe2035322b22af3f4",
+      "name": "Blue Valley Library",
+      "address": "9000 W 151st St., Overland Park, KS 66221",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b675ea3522ae6e2447cf135c",
+      "name": "Cedar Roe Library",
+      "address": "5120 Cedar St., Roeland Park, KS 66205",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bfc8416f4ad944a2408a9382",
+      "name": "Central Resource Library",
+      "address": "9875 W. 87th St., Overland Park, KS 66212",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-31fa6b8da87ea9734dfae3c8",
+      "name": "Corinth Library",
+      "address": "8100 Mission Rd., Prairie Village, KS 66208",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fac12def016db08fbe5c23e9",
+      "name": "De Soto Library",
+      "address": "33145 W. 83rd St., De Soto, KS 66018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ff574c3a853bc7989261be5c",
+      "name": "Edgerton Library",
+      "address": "319 E. Nelson, Edgerton, KS 66021",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-27687c136aeca4c47851d6e4",
+      "name": "Gardner Library",
+      "address": "137 E. Shawnee St., Gardner, KS 66030",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6c59fb263edf2f3488e20027",
+      "name": "Leawood Library",
+      "address": "4700 Town Center Dr., Leawood, KS 66211",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d3424ceda9a338fe660d6b55",
+      "name": "Merriam Plaza Library",
+      "address": "6120 Slater St., Merriam, KS 66202",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-44111077e272d188e7e39ba8",
+      "name": "Oak Park Library",
+      "address": "9500 Bluejacket St., Overland Park, KS 66214",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3e3146b28a9fc496395756df",
+      "name": "Spring Hill Library",
+      "address": "109 S. Webster St., Spring Hill, KS 66083",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "2026 November General",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Johnson County Election Office",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "title": "Advance Voting | Johnson County Election Office",
+          "checkedAt": "2026-10-21T04:42:07.340Z",
+          "official": true,
+          "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+          "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+        }
+      ],
+      "countyFips": "20091",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Johnson County Election Office",
+            "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+            "title": "Advance Voting | Johnson County Election Office",
+            "checkedAt": "2026-10-21T04:42:07.340Z",
+            "official": true,
+            "documentHash": "c15d6001b4fd94a56bbf9c528ca51bd58736dfbb38035fcfafa4a5c9677c61e4",
+            "documentUrl": "https://www.jocoelection.org/voting-election-info/advance-voting"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Johnson County Election Office",
+      "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+      "title": "Advance Voting | Johnson County Election Office",
+      "checkedAt": "2026-10-21T04:42:07.340Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.jocoelection.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "fileTitle": "Advance Voting | Johnson County Election Office",
+  "contacts": []
+}

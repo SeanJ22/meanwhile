@@ -6,7 +6,7 @@ import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
-import { stateMemberDirectories } from "../lib/reader/member-directories.ts";
+import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
@@ -112,4 +112,24 @@ test("state directories use exact curated fallback offices and retain native off
   assert.equal(stateMemberDirectories(roster([native]), [curated])[0].directory.districtOffices[0].address, "1 Held St");
   const duplicate = { ...holder, id: "another-member" };
   assert.deepEqual(stateMemberDirectories(roster([holder, duplicate]), [curated]), [], "a shared native alias cannot select either person's office");
+});
+
+test("a ZIP carries only its people's offices and held empty directories without another lookup", () => {
+  const known = {...person("fl-legislature:member", "State Reader", []),officeTitle:"State Representative",nativeIds:{reader:["plural:fl:member"]}};
+  const empty = person("fl-legislature:empty", "No recorded office", []);
+  const elsewhere = person("fl-legislature:elsewhere", "Elsewhere", []);
+  const senator = person("congress:Z000001", "Senator", ["Z000001"]);
+  const other = person("congress:Z000002", "Other senator", ["Z000002"]);
+  const office = {address:"1 Main St",city:"Tallahassee",state:"FL",zip:"32399",phone:"850-555-0101",lat:30,lng:-84};
+  const curated: MemberOfficeRecord = {id:"office:fl-legislature:member",kind:"MEMBER_OFFICE",officeholderId:known.id,officeKind:"CAPITOL",
+    office,sourceUrl:"https://www.myfloridahouse.gov/member",sourceOrg:"Florida House",official:true,collectedAt:AT};
+  const federal = {...packageFor([senator,other],[]).federal!,directory:{source:{sha:"held",sourceOrg:"Held directory",collectedAt:AT},
+    byMember:{Z000001:{districtOffices:[office],committees:[]},Z000002:{districtOffices:[],committees:[]}},committees:{}}} as unknown as FederalDirectoryReadModel;
+  const result=zipMemberDirectories(roster([known,empty,elsewhere]),[curated],federal,[known,empty,senator]);
+  assert.equal(result.length,3);
+  assert.deepEqual(result.find(row=>row.ids.includes(known.id))?.directory.districtOffices,[office]);
+  assert.deepEqual(result.find(row=>row.ids.includes(empty.id))?.directory.districtOffices,[]);
+  assert.deepEqual(result.find(row=>row.ids.includes(senator.id))?.directory.districtOffices,[office]);
+  assert.ok(result.every(row=>!row.ids.includes(elsewhere.id)&&!row.ids.includes(other.id)));
+  assert.equal(result.find(row=>row.ids.includes(known.id))?.directory.officeDetails?.[0].sourceUrl,curated.sourceUrl);
 });

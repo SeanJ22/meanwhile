@@ -1,0 +1,290 @@
+[
+  {
+    "url": "https://www.scvotes.gov",
+    "label": "Menu"
+  },
+  {
+    "url": "https://scvotes.gov/news",
+    "label": "News"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec",
+    "label": "About the SEC"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/accountability-reports",
+    "label": "Accountability Reports"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/public-notices",
+    "label": "Public Notices"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/meeting-minutes",
+    "label": "Meeting Minutes"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/procurement-and-awards",
+    "label": "Procurement and Awards"
+  },
+  {
+    "url": "https://scvotes.gov",
+    "label": "Every Vote Matters. Every Vote Counts."
+  },
+  {
+    "url": "https://scvotes.gov/voters",
+    "label": "Voters"
+  },
+  {
+    "url": "https://scvotes.gov/voters/register-to-vote",
+    "label": "Register to Vote"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=VoterInformation",
+    "label": "Check\nMy Registration"
+  },
+  {
+    "url": "https://scvotes.gov/voters/update-your-voter-registration-information",
+    "label": "Update Your Voter Registration Information"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=Sampleballot",
+    "label": "Get\nMy Sample Ballot"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=PollingPlace",
+    "label": "Find\nMy Polling Place"
+  },
+  {
+    "url": "https://scvotes.gov/voters/students",
+    "label": "Students"
+  },
+  {
+    "url": "https://scvotes.gov/voters/early-voting",
+    "label": "Early Voting - 2026 Statewide General Election"
+  },
+  {
+    "url": "https://scvotes.gov/voters/absentee-voting",
+    "label": "Absentee Voting"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=AbsenteeInfo",
+    "label": "Check Your Absentee Ballot"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=ProvisionalBallotInfo",
+    "label": "Check Your Provisional Ballot"
+  },
+  {
+    "url": "https://scvotes.gov/voters/military-overseas-citizens",
+    "label": "Military & Overseas Citizens"
+  },
+  {
+    "url": "https://scvotes.gov/voters/voters-with-disabilities",
+    "label": "Voters with Disabilities"
+  },
+  {
+    "url": "https://scvotes.gov/voters/how-to-vote",
+    "label": "How to Vote"
+  },
+  {
+    "url": "https://scvotes.gov/voters/2026prep",
+    "label": "Prep for the 2026 Statewide General Election"
+  },
+  {
+    "url": "https://scvotes.gov/voters/voter-faq",
+    "label": "General FAQs"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics",
+    "label": "Elections & Statistics"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/election-results",
+    "label": "Election Results"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/upcoming-elections",
+    "label": "Upcoming Elections"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/municipal-elections",
+    "label": "Rules for Municipal Elections"
+  },
+  {
+    "url": "https://scvotes.gov/category/special-election-results",
+    "label": "Special Elections"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/general-election-calendars",
+    "label": "General Election Calendars"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/electoral-college-in-south-carolina",
+    "label": "Electoral College"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/election-audits",
+    "label": "Election Audits"
+  },
+  {
+    "url": "https://scvotes.gov/elections-statistics/voter-participation",
+    "label": "Click Here"
+  },
+  {
+    "url": "https://scvotes.gov/poll-managers",
+    "label": "Poll Manager Information"
+  },
+  {
+    "url": "https://scvotes.gov/apply-to-be-a-poll-manager",
+    "label": "Apply to be a Poll Manager"
+  },
+  {
+    "url": "https://scvotes.gov/poll-managers/online-poll-manager-training",
+    "label": "Online Training"
+  },
+  {
+    "url": "https://scvotes.gov/poll-managers/south-carolina-poll-managers-handbook",
+    "label": "Handbook & Resources"
+  },
+  {
+    "url": "https://scvotes.gov/candidates",
+    "label": "Candidate Information"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Candidate/SelectElection",
+    "label": "Candidate Tracking System"
+  },
+  {
+    "url": "https://scvotes.gov/candidates/campaign-finance-ethics",
+    "label": "Campaign Finance & Ethics"
+  },
+  {
+    "url": "https://scvotes.gov/candidates/certified-political-parties-of-south-carolina",
+    "label": "Political Parties"
+  },
+  {
+    "url": "https://scvotes.gov/resources",
+    "label": "Resources"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Statistics/PrecinctAndPollingLocations",
+    "label": "Precincts and Polling Places"
+  },
+  {
+    "url": "https://rfa.sc.gov",
+    "label": "Precinct & District Maps"
+  },
+  {
+    "url": "https://scvotes.gov/resources/election-law-changes",
+    "label": "Election Law Changes"
+  },
+  {
+    "url": "https://scvotes.gov/resources/municipal-election-commission-resources",
+    "label": "Municipal Election Commission Resources"
+  },
+  {
+    "url": "https://scvotes.gov/resources/sale-of-voter-registration-lists",
+    "label": "List Sales"
+  },
+  {
+    "url": "https://scvotes.gov/resources/hava-help-america-vote-act-of-2002",
+    "label": "Help America Vote Act"
+  },
+  {
+    "url": "https://scvotes.gov/resources/vulnerability-disclosure-program",
+    "label": "Vulnerability Disclosure Program"
+  },
+  {
+    "url": "https://scvotes.gov/resources/voter-education-materials",
+    "label": "Voter Education Materials"
+  },
+  {
+    "url": "https://scvotes.gov/wp-content/uploads/2024/01/scec_11854_19_Security-Booklet_Jan2024_WEB_01.pdf",
+    "label": "Election Integrity in South Carolina"
+  },
+  {
+    "url": "https://scvotes.gov/contact",
+    "label": "Contact"
+  },
+  {
+    "url": "https://scvotes.gov/contact/county-voter-registration-election-offices",
+    "label": "Find Yours"
+  },
+  {
+    "url": "https://scvotes.gov/contact/report-fraud",
+    "label": "Report Fraud"
+  },
+  {
+    "url": "https://scvotes.gov/contact/submit-a-comment-or-complaint",
+    "label": "Submit a Comment or Complaint"
+  },
+  {
+    "url": "https://scvotes.gov/contact/foia-request",
+    "label": "FOIA Requests"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/annual-reports",
+    "label": "Annual Reports"
+  },
+  {
+    "url": "https://scvotes.gov/about-the-sec/sec-website-privacy-statement",
+    "label": "SEC Website Privacy Statement"
+  },
+  {
+    "url": "https://www.enr-scvotes.org/SC/127227",
+    "label": "Click Here"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=VoteHistory",
+    "label": "View\nMy Voting History"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login",
+    "label": "MyscVOTES Login"
+  },
+  {
+    "url": "https://scvotes.gov/make-your-plan-to-vote-early-for-the-november-3-statewide-general-election",
+    "label": "Read Release"
+  },
+  {
+    "url": "https://scvotes.gov/how-to-vote-absentee-in-south-carolinas-november-3-general-election",
+    "label": "Read Release"
+  },
+  {
+    "url": "https://scvotes.gov/get-registered-for-statewide-general-election-before-october-4-deadline",
+    "label": "Read Release"
+  },
+  {
+    "url": "https://www.instagram.com/sc_votes",
+    "label": "Instagram"
+  },
+  {
+    "url": "https://twitter.com/scvotes",
+    "label": "Twitter"
+  },
+  {
+    "url": "https://www.facebook.com/scvotes",
+    "label": "Facebook"
+  },
+  {
+    "url": "https://scvotes.gov/poll-managers/apply-to-be-a-poll-manager",
+    "label": "Be a Poll Manager"
+  },
+  {
+    "url": "https://scvotes.gov/calendar?ical=1",
+    "label": "SC Votes - South Carolina Election Commission &raquo; iCal Feed"
+  },
+  {
+    "url": "https://scvotes.gov/wp-json/wp/v2/pages/21",
+    "label": "JSON"
+  },
+  {
+    "url": "https://scvotes.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fscvotes.gov%2F",
+    "label": "oEmbed (XML)"
+  },
+  {
+    "url": "https://scvotes.gov/wp-json/tribe/events/v1",
+    "label": ""
+  }
+]

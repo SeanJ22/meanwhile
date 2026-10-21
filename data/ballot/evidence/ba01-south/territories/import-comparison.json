@@ -1,0 +1,26 @@
+[
+  {
+    "state": "AS",
+    "contests": 18,
+    "candidateChoices": 44,
+    "runningMates": 0,
+    "people": 44,
+    "memberships": 0
+  },
+  {
+    "state": "MP",
+    "contests": 21,
+    "candidateChoices": 72,
+    "runningMates": 3,
+    "people": 75,
+    "memberships": 13
+  },
+  {
+    "state": "VI",
+    "contests": 10,
+    "candidateChoices": 70,
+    "runningMates": 5,
+    "people": 75,
+    "memberships": 4
+  }
+]

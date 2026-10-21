@@ -1668,6 +1668,633 @@
             "doorId": "fec-or-chief",
             "quote": "State Representative, 60th District    Vote for one"
           }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-2",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 4th District, Position 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 4th District, Position 2"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-14",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 4th District, Position 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 4th District, Position 14"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:deschutes",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 11th District, Position 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 11th District, Position 3"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-2nd-district-position-14",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:lane",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 2nd District, Position 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 2nd District, Position 14"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-6",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 4th District, Position 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 4th District, Position 6"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-5th-district-position-5",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:clackamas",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 5th District, Position 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 5th District, Position 5"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-20th-district-position-1",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:washington",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court, 20th District, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Judge of the Circuit Court, 20th District, Position 1"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-curry-county",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:curry",
+          "divisionVintage": "2026",
+          "title": "District Attorney, Curry County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "District Attorney, Curry County"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-jefferson-county",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:jefferson",
+          "divisionVintage": "2026",
+          "title": "District Attorney, Jefferson County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "District Attorney, Jefferson County"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-lake-county",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:lake",
+          "divisionVintage": "2026",
+          "title": "District Attorney, Lake County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "District Attorney, Lake County"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:lake_oswego",
+          "divisionVintage": "2026",
+          "title": "City of Lake Oswego, Councilor",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Lake Oswego, Councilor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-mayor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:fairview",
+          "divisionVintage": "2026",
+          "title": "City of Fairview, Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Fairview, Mayor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-4",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:fairview",
+          "divisionVintage": "2026",
+          "title": "City of Fairview, Councilor, Position 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Fairview, Councilor, Position 4"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-5",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:fairview",
+          "divisionVintage": "2026",
+          "title": "City of Fairview, Councilor, Position 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Fairview, Councilor, Position 5"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-6",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:fairview",
+          "divisionVintage": "2026",
+          "title": "City of Fairview, Councilor, Position 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Fairview, Councilor, Position 6"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-mayor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:gresham",
+          "divisionVintage": "2026",
+          "title": "City of Gresham, Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Gresham, Mayor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-2",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:gresham",
+          "divisionVintage": "2026",
+          "title": "City of Gresham, Councilor, Position 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Gresham, Councilor, Position 2"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-4",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:gresham",
+          "divisionVintage": "2026",
+          "title": "City of Gresham, Councilor, Position 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Gresham, Councilor, Position 4"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-6",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:gresham",
+          "divisionVintage": "2026",
+          "title": "City of Gresham, Councilor, Position 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Gresham, Councilor, Position 6"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:maywood_park",
+          "divisionVintage": "2026",
+          "title": "City of Maywood Park, Councilor",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Maywood Park, Councilor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+          "divisionVintage": "2026",
+          "title": "City of Troutdale, Councilor",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Troutdale, Councilor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-wood-village-councilor-position-1",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:wood_village",
+          "divisionVintage": "2026",
+          "title": "City of Wood Village, Councilor, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Wood Village, Councilor, Position 1"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-wood-village-councilor-position-4",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:wood_village",
+          "divisionVintage": "2026",
+          "title": "City of Wood Village, Councilor, Position 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "City of Wood Village, Councilor, Position 4"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-chair",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Multnomah County, Commissioner Chair",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Multnomah County, Commissioner Chair"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-auditor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Multnomah County, Auditor",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Multnomah County, Auditor"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-sheriff",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah",
+          "divisionVintage": "2026",
+          "title": "Multnomah County, Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Multnomah County, Sheriff"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Multnomah County Commissioner, District 2",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Multnomah County Commissioner, District 2"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-auditor",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:portland",
+          "divisionVintage": "2026",
+          "title": "City of Portland, Auditor",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "City of Portland, Auditor"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:3",
+          "divisionVintage": "2026",
+          "title": "City of Portland, Councilor, District 3",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "City of Portland, Councilor, District 3"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+          "divisionVintage": "2026",
+          "title": "City of Portland, Councilor, District 4",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "City of Portland, Councilor, District 4"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:portland",
+          "divisionVintage": "2026",
+          "title": "City of Portland, Measure 26-267 — Amends Charter: Portland residents decide 2% of city's annual discretionary budget.",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-267\nAmends Charter: Portland residents decide 2% of city's annual discretionary budget.\nShould Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+          "divisionVintage": "2026",
+          "title": "City of Troutdale, Measure 26-265 — Five-year Local Option Levy for Police, Fire & 911 Operations.",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-265\nFive-year Local Option Levy for Police, Fire & 911 Operations.\nShall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent."
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+          "electionId": "or-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+          "divisionVintage": "2026",
+          "title": "City of Troutdale, Measure 26-266 — ADVISORY VOTE: Should Troutdale Create a Municipal Police Department?",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-266\nADVISORY VOTE: Should Troutdale Create a Municipal Police Department?\nADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?"
+          }
         }
       ],
       "candidacies": [
@@ -4676,9 +5303,1667 @@
             "doorId": "fec-or-chief",
             "quote": "Mark Owens    Republican"
           }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-2:87a6f38505fdcad1",
+          "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-2",
+          "familyName": "Diane S Sykes",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Diane S Sykes"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-2:62f1e10c28a5a95d",
+          "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-2",
+          "familyName": "Laura Maurer Rowan",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Laura Maurer Rowan"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-14:29af33f1cb177eab",
+          "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-14",
+          "familyName": "Elizabeth Savage",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Elizabeth Savage"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-14:fb24bbb53c952728",
+          "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-14",
+          "familyName": "Joseph Hagedorn",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Joseph Hagedorn"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-11th-district-position-3:7a5107ce63e95d7f",
+          "contestId": "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+          "familyName": "Thaddeus Betz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Thaddeus Betz"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-11th-district-position-3:b1a6cb664d635538",
+          "contestId": "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+          "familyName": "Sonia Huntsman",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Sonia Huntsman"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-11th-district-position-3:fcc99c5efd0360d1",
+          "contestId": "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+          "familyName": "Raun Atkinson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Raun Atkinson"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-11th-district-position-3:3958aaa9a3bd381c",
+          "contestId": "ba01-or-judge-of-the-circuit-court-11th-district-position-3",
+          "familyName": "Keith A Leitz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Keith A Leitz"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-2nd-district-position-14:b343a3060f1f4659",
+          "contestId": "ba01-or-judge-of-the-circuit-court-2nd-district-position-14",
+          "familyName": "Nathan J Lichvarcik",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Nathan J Lichvarcik"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-4th-district-position-6:bb57240d2c17c271",
+          "contestId": "ba01-or-judge-of-the-circuit-court-4th-district-position-6",
+          "familyName": "Sonia A Montalbano",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Sonia A Montalbano"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-5th-district-position-5:824ba4653840e049",
+          "contestId": "ba01-or-judge-of-the-circuit-court-5th-district-position-5",
+          "familyName": "Kara A Brooks",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Kara A Brooks"
+          }
+        },
+        {
+          "id": "ba01-or-judge-of-the-circuit-court-20th-district-position-1:72af723e2c9610e7",
+          "contestId": "ba01-or-judge-of-the-circuit-court-20th-district-position-1",
+          "familyName": "Zohra Tourville",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Zohra Tourville"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-curry-county:a9a4ac7eac310ec7",
+          "contestId": "ba01-or-district-attorney-curry-county",
+          "familyName": "Kevin Kelley",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Kevin Kelley"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-jefferson-county:dd0f8099ec3170db",
+          "contestId": "ba01-or-district-attorney-jefferson-county",
+          "familyName": "Eric J Nisley",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Eric J Nisley"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-lake-county:19a95f385d7d9b7c",
+          "contestId": "ba01-or-district-attorney-lake-county",
+          "familyName": "Lane W Simpson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Lane W Simpson"
+          }
+        },
+        {
+          "id": "ba01-or-district-attorney-lake-county:8678b14fbef348f5",
+          "contestId": "ba01-or-district-attorney-lake-county",
+          "familyName": "Rami Amaro",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+            "sourceOrg": "Oregon Secretary of State, Elections Division",
+            "collectedAt": "2026-10-20T22:52:40.414418Z",
+            "verifiedAt": "2026-10-20T22:52:40.414418Z",
+            "quote": "Rami Amaro"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:657d256e461bafb0",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Bryan Guiney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Bryan Guiney"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:bdb6687f4e61f536",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Patrick Walsh",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Patrick Walsh"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:adf8e9dd4a61b7d3",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Suzanne Miles",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Suzanne Miles"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:3cd457ce6ab2d3d0",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Peren Tiemann",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Peren Tiemann"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:d5c43053de947edb",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Neil Tunmore",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Neil Tunmore"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-lake-oswego-councilor:ef56f41402e52c79",
+          "contestId": "ba01-or-city-of-lake-oswego-councilor",
+          "familyName": "Heather Ramsey",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Heather Ramsey"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-mayor:6136ca3773bb6130",
+          "contestId": "ba01-or-city-of-fairview-mayor",
+          "familyName": "Keith A Kudrna",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Keith A Kudrna"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-4:fe8addac4d8fae99",
+          "contestId": "ba01-or-city-of-fairview-councilor-position-4",
+          "familyName": "Jenni Weber",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Jenni Weber"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-5:c4511e4169649215",
+          "contestId": "ba01-or-city-of-fairview-councilor-position-5",
+          "familyName": "Ted Tosterud",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Ted Tosterud"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-6:6489ecfab454cac2",
+          "contestId": "ba01-or-city-of-fairview-councilor-position-6",
+          "familyName": "Adam Bird",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Adam Bird"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-fairview-councilor-position-6:ccf09a3dd5f72f3d",
+          "contestId": "ba01-or-city-of-fairview-councilor-position-6",
+          "familyName": "Steven Haschke",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Steven Haschke"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-mayor:3ef0c8b638537142",
+          "contestId": "ba01-or-city-of-gresham-mayor",
+          "familyName": "Travis Stovall",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Travis Stovall"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-mayor:31dfca997c7d607d",
+          "contestId": "ba01-or-city-of-gresham-mayor",
+          "familyName": "Sue Piazza",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Sue Piazza"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-2:bc14c7f53c3979c3",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-2",
+          "familyName": "Heather Coleman-Cox",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Heather Coleman-Cox"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-2:cf1910b11a3a1035",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-2",
+          "familyName": "Will DelPlato",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Will DelPlato"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-4:51531c7a331e72eb",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-4",
+          "familyName": "Gregory Schroeder",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Gregory Schroeder"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-4:b24767ecece997bb",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-4",
+          "familyName": "Krestina Aziz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Krestina Aziz"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-4:5d749f1af8d572d5",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-4",
+          "familyName": "Joshua Al-jaouni",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Joshua Al-jaouni"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-4:32ee93641651dd70",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-4",
+          "familyName": "Teo Ramirez",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Teo Ramirez"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-6:4c4235804743188d",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-6",
+          "familyName": "Janine Gladfelter",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Janine Gladfelter"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-gresham-councilor-position-6:fcbc353c701abe34",
+          "contestId": "ba01-or-city-of-gresham-councilor-position-6",
+          "familyName": "Dan Miller",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Dan Miller"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor:0e6dc60ff5b340a0",
+          "contestId": "ba01-or-city-of-maywood-park-councilor",
+          "familyName": "Kevin Bussema",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Kevin Bussema"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor:023589488b4607a8",
+          "contestId": "ba01-or-city-of-maywood-park-councilor",
+          "familyName": "Katy Collins",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Katy Collins"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor:9d1e23e379d2f531",
+          "contestId": "ba01-or-city-of-maywood-park-councilor",
+          "familyName": "Winn Holly",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Winn Holly"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor:28eed29aa2c66287",
+          "contestId": "ba01-or-city-of-maywood-park-councilor",
+          "familyName": "Jim Akers",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Jim Akers"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-maywood-park-councilor:348584e6162ba196",
+          "contestId": "ba01-or-city-of-maywood-park-councilor",
+          "familyName": "Kelly Ripley Feller",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Kelly Ripley Feller"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor:1b361b94d7dd9642",
+          "contestId": "ba01-or-city-of-troutdale-councilor",
+          "familyName": "Sandy Glantz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Sandy Glantz"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor:d8c1a2935ef1021b",
+          "contestId": "ba01-or-city-of-troutdale-councilor",
+          "familyName": "Sheri Winters",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Sheri Winters"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor:a9ed4d5e43b0a13f",
+          "contestId": "ba01-or-city-of-troutdale-councilor",
+          "familyName": "Geoffrey Wunn",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Geoffrey Wunn"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor:244e56e092d52c13",
+          "contestId": "ba01-or-city-of-troutdale-councilor",
+          "familyName": "Zach Andrews",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Zach Andrews"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-councilor:e83a1d846a46ee88",
+          "contestId": "ba01-or-city-of-troutdale-councilor",
+          "familyName": "Randy Lauer",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Randy Lauer"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-wood-village-councilor-position-1:27d47ceedefd5493",
+          "contestId": "ba01-or-city-of-wood-village-councilor-position-1",
+          "familyName": "Charlene Gothard",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Charlene Gothard"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-wood-village-councilor-position-4:c8d5af8c4253e913",
+          "contestId": "ba01-or-city-of-wood-village-councilor-position-4",
+          "familyName": "Christine Bierman",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Christine Bierman"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-chair:9c7cbbb9c5ed6c8c",
+          "contestId": "ba01-or-multnomah-county-commissioner-chair",
+          "familyName": "Shannon Singleton",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Shannon Singleton"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-chair:05cef13ef11c10a1",
+          "contestId": "ba01-or-multnomah-county-commissioner-chair",
+          "familyName": "Julia Brim-Edwards",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Julia Brim-Edwards"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-chair:44df98abf3239a17",
+          "contestId": "ba01-or-multnomah-county-commissioner-chair",
+          "familyName": "Sharon Meieran",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Sharon Meieran"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-auditor:9644888deff98e62",
+          "contestId": "ba01-or-multnomah-county-auditor",
+          "familyName": "Nicole Pexton",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Nicole Pexton"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-sheriff:e3afbf932e241eb4",
+          "contestId": "ba01-or-multnomah-county-sheriff",
+          "familyName": "Nicole Morrisey O'Donnell",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Nicole Morrisey O'Donnell"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:a6c1bb3a5024dcb8",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Bruce Broussard",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Bruce Broussard"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:cfc6c6c22df72351",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Herman Greene",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Herman Greene"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:c2b4a701253cb2c5",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Bri Williams",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Bri Williams"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:2d25f2a183ed2dde",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Serena Cruz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Serena Cruz"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:4bd8d7ababd929fb",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Nathan Ong Norris",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Nathan Ong Norris"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:d81e7c7da49c1234",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Nabil Zaghloul",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Nabil Zaghloul"
+          }
+        },
+        {
+          "id": "ba01-or-multnomah-county-commissioner-district-2:ed65f54880a22531",
+          "contestId": "ba01-or-multnomah-county-commissioner-district-2",
+          "familyName": "Tony Robertson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Tony Robertson"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-auditor:d9f6003ae4cd0063",
+          "contestId": "ba01-or-city-of-portland-auditor",
+          "familyName": "Simone Rede",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Simone Rede"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:7b49e865cc9b3d9c",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "John Sweeney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "John Sweeney"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:4dea7584b2b905d8",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Tom Sollitt",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Tom Sollitt"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:278dbbb6f01c3778",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Larry Kelly",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Larry Kelly"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:618615ce4372b4e9",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Tiffany Koyama Lane",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Tiffany Koyama Lane"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:d498dec93cffac53",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Ali Beaudoin",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Ali Beaudoin"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:019f0f9216d779f3",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Heart Free Pham",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Heart Free Pham"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:4e1c36faf10c9458",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Terry Parker",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Terry Parker"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:0a3b5bfe4225d30d",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Martin Ward",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Martin Ward"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:e06dc0648778ae12",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Joel Corcoran",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Joel Corcoran"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:3f98f5971a9e58c7",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Darren McCormick",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Darren McCormick"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:08d94017adc0ed0a",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Angelita Morillo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Angelita Morillo"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:de9caa30607a8e36",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Steve Novick",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Steve Novick"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:7ce998abce0708b4",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Patrick Hilton",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Patrick Hilton"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:53768f9ec6b2a2ef",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Matthias Hallett",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Matthias Hallett"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:fd98a18046bf7d0f",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Kellie Torres",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Kellie Torres"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:93689a132675f0af",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Kimberly Tucker",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Kimberly Tucker"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:8287ef13bdd484fb",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Cristal Otero",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Cristal Otero"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:97301a71888d670e",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Guy Frankenstein",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Guy Frankenstein"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:aab8145a6451181e",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Keir Legree",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Keir Legree"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:6f28119fc3b8098f",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Esther Leon",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Esther Leon"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-3:8e9db846c8d27b50",
+          "contestId": "ba01-or-city-of-portland-councilor-district-3",
+          "familyName": "Kenneth (Kent) R Landgraver III",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Kenneth (Kent) R Landgraver III"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:a7133a9294c03dea",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Matt Schulte",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Matt Schulte"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:52b67bad9f403cba",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Jeremy Beausoleil Smith",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Jeremy Beausoleil Smith"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:ac2a37779e685d7b",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "John J Goldsmith",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "John J Goldsmith"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:5e2d343049eccdd9",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Mitch Green",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Mitch Green"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:1be132ca0c505fce",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Olivia Clark",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Olivia Clark"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:aa90a1c2c90e1eea",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Jayne Cronlund",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Jayne Cronlund"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:e639e67156e807fa",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "John McDonald",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "John McDonald"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:014bbf6a4bbd2aa4",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Eric Zimmerman",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Eric Zimmerman"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:8512e3f34e11f18b",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Jamey Evenstar",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Jamey Evenstar"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:1b038bd244604dec",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Timothy (TJ) Anderson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Timothy (TJ) Anderson"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:1c4315f28fed1341",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Eli Arnold",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Eli Arnold"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-portland-councilor-district-4:eb27449e86e72e25",
+          "contestId": "ba01-or-city-of-portland-councilor-district-4",
+          "familyName": "Josh Leake",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.298283Z",
+            "verifiedAt": "2026-10-20T22:54:21.298283Z",
+            "quote": "Josh Leake"
+          }
         }
       ],
-      "measures": [],
+      "measures": [
+        {
+          "id": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget:question",
+          "contestId": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+          "officialNumber": "26-267",
+          "questionText": "Should Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-267\nAmends Charter: Portland residents decide 2% of city's annual discretionary budget.\nShould Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?"
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations:question",
+          "contestId": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+          "officialNumber": "26-265",
+          "questionText": "Shall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-265\nFive-year Local Option Levy for Police, Fire & 911 Operations.\nShall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent."
+          }
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department:question",
+          "contestId": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+          "officialNumber": "26-266",
+          "questionText": "ADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "sourceOrg": "Multnomah County Elections",
+            "collectedAt": "2026-10-20T22:54:21.282897Z",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "quote": "Measure No: 26-266\nADVISORY VOTE: Should Troutdale Create a Municipal Police Department?\nADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?"
+          }
+        }
+      ],
       "absences": [
         {
           "ocdId": "ocd-division/country:us/state:or",
@@ -4699,8 +6984,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:38.971Z",
-    "reviewedBy": "Codex BL-15",
+    "reviewedAt": "2026-10-20T22:59:33.652036Z",
+    "reviewedBy": "ba01-pacific-source-replay",
     "sources": [
       {
         "requestedUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
@@ -4741,6 +7026,86 @@
         "publisher": "Oregon Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Oregon election office publication identifies the current general election or links its official ballot directive."
+      },
+      {
+        "requestedUrl": "https://www.courts.oregon.gov/courts/multnomah/Pages/default.aspx",
+        "finalUrl": "https://www.courts.oregon.gov/courts/multnomah/Pages/default.aspx",
+        "publisher": "Oregon Judicial Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T22:59:33.289575Z",
+        "httpStatus": 200,
+        "rawHash": "5880d3eae9e8f8c980b29e90bb8f0c9d4f5d9455875392d5df137b33627e6fb1",
+        "reviewedEvidence": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+      },
+      {
+        "requestedUrl": "https://www.courts.oregon.gov/courts/deschutes/Pages/default.aspx",
+        "finalUrl": "https://www.courts.oregon.gov/courts/deschutes/Pages/default.aspx",
+        "publisher": "Oregon Judicial Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T22:59:33.391666Z",
+        "httpStatus": 200,
+        "rawHash": "816ccb074811b7d25eccac84eb9cfc19688bce30650ab9efc0aa43a10537acce",
+        "reviewedEvidence": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+      },
+      {
+        "requestedUrl": "https://www.courts.oregon.gov/courts/lane/Pages/default.aspx",
+        "finalUrl": "https://www.courts.oregon.gov/courts/lane/Pages/default.aspx",
+        "publisher": "Oregon Judicial Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T22:59:33.395534Z",
+        "httpStatus": 200,
+        "rawHash": "3938b1a4353fe6ccc055d256acbc657ed6ce96ba358a8f34d95a77960d7be446",
+        "reviewedEvidence": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+      },
+      {
+        "requestedUrl": "https://www.courts.oregon.gov/courts/clackamas/Pages/default.aspx",
+        "finalUrl": "https://www.courts.oregon.gov/courts/clackamas/Pages/default.aspx",
+        "publisher": "Oregon Judicial Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T22:59:33.399233Z",
+        "httpStatus": 200,
+        "rawHash": "aab95e852429ca38b21766a910a014537b31e4286d4679d5071948009f585a9b",
+        "reviewedEvidence": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+      },
+      {
+        "requestedUrl": "https://www.courts.oregon.gov/courts/washington/Pages/default.aspx",
+        "finalUrl": "https://www.courts.oregon.gov/courts/washington/Pages/default.aspx",
+        "publisher": "Oregon Judicial Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T22:59:33.652036Z",
+        "httpStatus": 200,
+        "rawHash": "d0098f952e58016ef0d77962c1f7894ecb38d2a82e6b8e8c612c5056f32e88b9",
+        "reviewedEvidence": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+      },
+      {
+        "requestedUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "finalUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "publisher": "Multnomah County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:54:21.282897Z",
+        "httpStatus": 200,
+        "rawHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+        "reviewedEvidence": "Official general-election ballot content; printed count 63 contests and 116 candidates. Ranked-choice county and Portland contests are in a separate RCV ballot document."
+      },
+      {
+        "requestedUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+        "finalUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+        "publisher": "Multnomah County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:54:21.298283Z",
+        "httpStatus": 200,
+        "rawHash": "c1be7b04d586051f2600be7b8ee8c17ee93d4d6a491ecc8f416c36e613af19f0",
+        "reviewedEvidence": "Official ranked-choice ballot content records seven local contests and 46 names, including countywide chair, auditor and sheriff, County District 2, Portland auditor and Council Districts 3 and 4."
+      },
+      {
+        "requestedUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "finalUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "publisher": "Oregon Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:40.414418Z",
+        "httpStatus": 200,
+        "rawHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
+        "reviewedEvidence": "Official Directive 2026-09 supplies all 83 federal/statewide/legislative contests and their 167 candidates plus seven circuit-court contests and three district-attorney contests."
       }
     ]
   }

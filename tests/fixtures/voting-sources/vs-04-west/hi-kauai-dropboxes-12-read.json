@@ -1,0 +1,494 @@
+{
+  "doorId": "hi-kauai-dropboxes-12",
+  "sites": [
+    {
+      "id": "voting-8313b5eae15c70ff616a4843",
+      "name": "Elections Division",
+      "address": "4386 Rice Street\n\r\nLihue, HI 96766",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-071d5667fcfce681bb24d448",
+      "name": "Hanalei Neighborhood Center",
+      "address": "5-5358 Kuhio Highway\n\r\nHanalei, HI 96714",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-299e77fd0018c6f36f5202b4",
+      "name": "Hanapepe Public Library",
+      "address": "4490 Kona Road\n\r\nHanapepe, HI 96716",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a6f3d4da1ea8afbb0e40bbfc",
+      "name": "Kalaheo Neighborhood Center",
+      "address": "4480 Papalina Road\n\r\nKalaheo, HI 96741",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-703821ab32f25ae0a75d759e",
+      "name": "Kapaa Public Library",
+      "address": "4-1464 Kuhio Highway\n\r\nKapaa, HI 96746",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7dba422b807760585b23ade6",
+      "name": "Kilauea Neighborhood Center",
+      "address": "4260 Keneke Street\n\r\nKilauea, HI 96754",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3b5ad5d17729ae790e60f3b5",
+      "name": "Koloa Neighborhood Center",
+      "address": "3461 B Weliweli Road\n\r\nKoloa, HI 96756",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0105c01680378b07063b57b",
+      "name": "Princeville Public Library",
+      "address": "4343 Emmalani Drive\n\r\nPrinceville, HI 96722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8164694e7db5ab9aaa6c8cfe",
+      "name": "Waimea Neighborhood Center",
+      "address": "4556 Makeke Rd\n\r\nWaimea, HI 96796",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7d179e73f0430eb8ccbc5ec4",
+      "name": "Waipouli Town Center",
+      "address": "(near Guardian Self Storage)\n\r\n4-771 Kuhi Highway\n\r\nKapaa, HI 96746",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+      "countyFips": "15007",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Hawaii Office of Elections",
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://elections.hawaii.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://elections.hawaii.gov/robots.txt",
+      "contentType": "text/plain; charset=UTF-8",
+      "rawHash": "d111886a23f5014ea0ab55dd54fa97d20b07b56b30dbac59c562e73472c35bff",
+      "path": "tests/fixtures/voting-sources/vs-04-west/hi-9698bb4f69fd.bin"
+    },
+    {
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+      "path": "tests/fixtures/voting-sources/vs-04-west/hi-800acdcc4baf.html"
+    }
+  ],
+  "fileTitle": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+  "contacts": []
+}

@@ -1,0 +1,215 @@
+
+ 
+ 
+ 
+
+ 
+(function(){
+window.otm=!!window.otm;try{(function(){(function(){var _={decrypt:function(_){try{return JSON.parse(function(_){_=_.split("l");var J="";for(var L=0;L<_.length;++L)J+=String.fromCharCode(_[L]);return J}(_))}catch(L){}}};return _={configuration:_.decrypt("123l34l97l99l116l105l118l101l34l58l34l110l111l34l44l34l100l101l98l117l103l103l105l110l103l34l58l34l110l111l34l44l34l109l111l100l117l108l101l49l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l50l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l51l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l52l34l58l34l101l110l97l98l108l101l100l34l125")}})();
+var I_=84;try{var J_,o_,O_=I(236)?1:0;for(var S_=(I(588),0);S_<o_;++S_)O_+=I(689)?1:3;J_=O_;window._S===J_&&(window._S=++J_)}catch(_i){window._S=J_}var ji=!0;function l(_){var J=arguments.length,L=[],Z=1;while(Z<J)L[Z-1]=arguments[Z++]-_;return String.fromCharCode.apply(String,L)}
+function Ji(_){var J=80;!_||document[l(J,198,185,195,185,178,185,188,185,196,201,163,196,177,196,181)]&&document[l(J,198,185,195,185,178,185,188,185,196,201,163,196,177,196,181)]!==O(J,198,185,195,185,178,188,181)||(ji=!1);return ji}function O(_){var J=arguments.length,L=[];for(var Z=1;Z<J;++Z)L.push(arguments[Z]-_);return String.fromCharCode.apply(String,L)}function Oi(){}Ji(window[Oi[O(I_,194,181,193,185)]]===Oi);Ji(typeof ie9rgb4!==z(1242178186115,I_));
+Ji(RegExp("\x3c")[z(1372121,I_)](function(){return"\x3c"})&!RegExp(O(I_,204,135,184))[z(1372121,I_)](function(){return"'x3'+'d';"}));
+var Zi=window[l(I_,181,200,200,181,183,188,153,202,185,194,200)]||RegExp(O(I_,193,195,182,189,208,181,194,184,198,195,189,184),l(I_,189))[l(I_,200,185,199,200)](window["\x6e\x61vi\x67a\x74\x6f\x72"]["\x75\x73e\x72A\x67\x65\x6et"]),si=+new Date+(I(330)?6E5:600405),_I,iI,jI,JI=window[O(I_,199,185,200,168,189,193,185,195,201,200)],LI=Zi?I(76)?3E4:30807:I(70)?6E3:7562;
+document[l(I_,181,184,184,153,202,185,194,200,160,189,199,200,185,194,185,198)]&&document[O(I_,181,184,184,153,202,185,194,200,160,189,199,200,185,194,185,198)](l(I_,202,189,199,189,182,189,192,189,200,205,183,188,181,194,187,185),function(_){var J=81;document[O(J,199,186,196,186,179,186,189,186,197,202,164,197,178,197,182)]&&(document[O(J,199,186,196,186,179,186,189,186,197,202,164,197,178,197,182)]===O(J,185,186,181,181,182,191)&&_[O(J,186,196,165,195,198,196,197,182,181)]?jI=!0:document[l(J,199,
+186,196,186,179,186,189,186,197,202,164,197,178,197,182)]===z(68616527585,J)&&(_I=+new Date,jI=!1,OI()))});function OI(){if(!document[O(65,178,182,166,179,186,148,166,173,166,164,181,176,179)])return!0;var _=+new Date;if(_>si&&(I(198)?6E5:768436)>_-_I)return Ji(!1);var J=Ji(iI&&!jI&&_I+LI<_);_I=_;iI||(iI=!0,JI(function(){iI=!1},I(855)?0:1));return J}OI();var zI=[I(718)?16206457:17795081,I(980)?2147483647:27611931586,I(737)?1927910221:1558153217];
+function SI(_){var J=24;_=typeof _===z(1743045652,J)?_:_[O(J,140,135,107,140,138,129,134,127)](I(991)?22:36);var L=window[_];if(!L||!L[l(J,140,135,107,140,138,129,134,127)])return;var Z=""+L;window[_]=function(_,J){iI=!1;return L(_,J)};window[_][O(J,140,135,107,140,138,129,134,127)]=function(){return Z}}for(var _j=(I(127),0);_j<zI[z(1294399121,I_)];++_j)SI(zI[_j]);Ji(!1!==window[z(32086,I_)]);window.Is=window.Is||{};window.Is.oJ="08468aedd219400091f1641e64fea6d44db6cec27d849cf887f228d3e90624212db4cb445622f984c2e138fc2a22a3f09a0afce5ab65a3524a22962c9bc9023173750a17e359ddc2";
+function ij(_){var J=+new Date,L;!document[l(10,123,127,111,124,131,93,111,118,111,109,126,121,124,75,118,118)]||J>si&&(I(236)?6E5:552758)>J-_I?L=Ji(!1):(L=Ji(iI&&!jI&&_I+LI<J),_I=J,iI||(iI=!0,JI(function(){iI=!1},I(582)?1:0)));return!(arguments[_]^L)}function z(_,J){_+=J;return _.toString(36)}function I(_){return 603>_}(function jj(J){J&&"number"!==typeof J||("number"!==typeof J&&(J=1E3),J=Math.max(J,1),setInterval(function(){jj(J-10)},J))})(!0);})();}catch(x){}finally{ie9rgb4=void(0);};function ie9rgb4(a,b){return a>>b>>0};
+
+})();
+
+ 
+ 
+
+ 
+
+     
+     
+     
+     
+  3-5-101. Judicial districts defined, MCA
+ 
+     
+     
+     
+     
+     
+     
+ 
+ 
+
+ 
+     
+         
+         
+             
+                 Toggle navigation 
+                 
+                 
+                 
+             
+             
+                 
+             
+         
+
+         
+         
+             
+                 MCA Contents 
+                 
+                     Search 
+                 
+                 Help 
+             
+            
+ 
+   
+       Part Contents 
+   
+  
+  
+     
+       Next Section  
+     
+  
+ 
+
+         
+     
+ 
+
+
+     
+  
+     MCA Contents 
+  
+     TITLE 3 
+  
+     CHAPTER 5 
+  
+     Part 1 
+  
+     3-5-101 Judicial districts defined 
+  
+ 
+
+
+ 
+    
+   Montana Code Annotated 2025 
+   
+     
+      TITLE 3. JUDICIARY, COURTS
+     
+     
+      CHAPTER 5. DISTRICT COURTS
+     
+     
+      Part 1. Definition of Districts and Assignment of Judges
+     
+     
+      Judicial Districts Defined
+     
+   
+
+   
+         
+             
+                 3-5-101 . Judicial districts defined.  In this state, there are 22 judicial districts, distributed as follows:
+             
+             
+                (1)	1st district: Lewis and Clark and Broadwater Counties;
+             
+             
+                (2)	2nd district: Silver Bow County;
+             
+             
+                (3)	3rd district: Deer Lodge, Granite, and Powell Counties;
+             
+             
+                (4)	4th district: Missoula and Mineral Counties;
+             
+             
+                (5)	5th district: Beaverhead, Jefferson, and Madison Counties;
+             
+             
+                (6)	6th district: Park and Sweet Grass Counties;
+             
+             
+                (7)	7th district: Dawson, McCone, Richland, Prairie, and Wibaux Counties;
+             
+             
+                (8)	8th district: Cascade County;
+             
+             
+                (9)	9th district: Teton, Pondera, Toole, and Glacier Counties;
+             
+             
+                (10)	10th district: Fergus, Judith Basin, and Petroleum Counties;
+             
+             
+                (11)	11th district: Flathead County;
+             
+             
+                (12)	12th district: Liberty, Hill, and Chouteau Counties;
+             
+             
+                (13)	13th district: Yellowstone County;
+             
+             
+                (14)	14th district: Meagher, Wheatland, Golden Valley, and Musselshell Counties;
+             
+             
+                (15)	15th district: Roosevelt, Daniels, and Sheridan Counties;
+             
+             
+                (16)	16th district: Custer, Carter, Fallon, Powder River, Garfield, Treasure, and Rosebud Counties;
+             
+             
+                (17)	17th district: Phillips, Blaine, and Valley Counties;
+             
+             
+                (18)	18th district: Gallatin County;
+             
+             
+                (19)	19th district: Lincoln County;
+             
+             
+                (20)	20th district: Lake and Sanders Counties;
+             
+             
+                (21)	21st district: Ravalli County;
+             
+             
+                (22)	22nd district: Stillwater, Carbon, and Big Horn Counties.
+             
+         
+     
+         
+             
+                 History:  En. Sec. 6256, Rev. C. 1907; re-en. Sec. 8812, R.C.M. 1921; amd. Sec. 1, Ch. 91, L. 1929; re-en. Sec. 8812, R.C.M. 1935; amd. Sec. 1, Ch. 23, L. 1973; amd. Sec. 1, Ch. 517, L. 1977; R.C.M. 1947, 93-301; amd. Sec. 1, Ch. 293, L. 1983; amd. Sec. 1, Ch. 642, L. 1991; amd. Sec. 1, Ch. 454, L. 1999.
+             
+         
+     
+
+ 
+
+ 
+     
+         
+             
+                 
+                     
+                     Disclaimer:  The Internet version of the
+                    Montana Code Annotated is provided as a research tool to users of the Code. In case of
+                    inconsistencies resulting from omissions or other errors, the printed version will prevail.
+                 
+             
+         
+        
+     
+ 
+
+ 
+ 
+ 

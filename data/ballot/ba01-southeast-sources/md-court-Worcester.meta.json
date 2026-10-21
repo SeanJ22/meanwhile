@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Worcester.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Worcester.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:36.207170+00:00",
+  "rawHash": "dad1ffd0e826e030363ed09b46f9a0cd4998679b1c3e407d4b9185d6cda2c298",
+  "bytes": 334372,
+  "convertedTextHash": "766c56b19be50a14c5770b37b9614ca815a9d62d7e4f516770a79374347cc99d",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

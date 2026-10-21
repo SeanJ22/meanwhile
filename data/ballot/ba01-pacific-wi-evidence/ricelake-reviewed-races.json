@@ -1,0 +1,64 @@
+[
+  [
+    "Representative in Congress District 7",
+    "ocd-division/country:us/state:wi/cd:7",
+    [
+      [
+        "Michael Alfonso",
+        "Republican"
+      ],
+      [
+        "Fred Clark",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 23",
+    "ocd-division/country:us/state:wi/sldu:23",
+    [
+      [
+        "Romaine Robert Quinn",
+        "Republican"
+      ],
+      [
+        "Jeff Foster",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 67",
+    "ocd-division/country:us/state:wi/sldl:67",
+    [
+      [
+        "David Armstrong",
+        "Republican"
+      ],
+      [
+        "Indiana Thompson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Barron County Sheriff",
+    "ocd-division/country:us/state:wi/county:barron",
+    [
+      [
+        "Jodi Kummet",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Barron County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:barron",
+    [
+      [
+        "Ann Barnes",
+        "Republican"
+      ]
+    ]
+  ]
+]

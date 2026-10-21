@@ -1,0 +1,114 @@
+[
+  {
+    "url": "https://www.elections.virginia.gov/registration/election-voter-faq",
+    "label": "Election and Voter FAQ"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/voterid",
+    "label": "Do I need an ID to vote?"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/voter-forms",
+    "label": "Voter Forms"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/designated-state-agencies",
+    "label": "State-designated Voter Registration"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/same-day-voter-registration",
+    "label": "Same Day Voter Registration"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/felony-convictions-and-voter-eligibility",
+    "label": "Felony Convictions and Voter Eligibility"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup",
+    "label": "Polling Place and Ballot Information Lookup"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/in-person-voting",
+    "label": "Voting on Election Day"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/early-absentee",
+    "label": "Absentee and Early Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/accessible-voting",
+    "label": "Accessible Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/early-voting-office-locations",
+    "label": "Early Voting Office Locations"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/voter-ed",
+    "label": "Voter Education & Outreach"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/voter-rights",
+    "label": "Voter Rights"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/ranked-choice-voting",
+    "label": "Ranked Choice Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/resultsreports/maintenance-reports",
+    "label": "Voter Registration List Maintenance"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/officer-of-elections",
+    "label": "Officer of Elections/Poll Worker"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-August-Democratic-Primary-Polling-Locations.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-August-Republican-Primary-Polling-Locations.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/April-21-2026-Polling-Places.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2025-November-General-Election-Day-Polling-Locations-20251022.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2025-June-Democratic-Primary-Election-Day-Polling-Locations-(5-28-25).xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2025-June-Republican-Primary-Election-Day-Polling-Locations-(5-28-25).xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2024-November-General-Election-Day-Polling-Locations-(10-9-24).xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2024-June-Democratic-Primary-Polling-Places.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/2024-June-Republican-Primary-Polling-Places.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/DemocraticPresPrimary24.xlsx",
+    "label": "Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/media/registration-statistics/RepublicanPresPrimary24.xlsx",
+    "label": "Polling Places"
+  }
+]

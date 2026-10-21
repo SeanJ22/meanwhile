@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Putnam%20261103%20General%20-14inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Putnam%20261103%20General%20-14inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.150187+00:00",
+  "rawHash": "9b43c049fd31434414fa475849d19e33aebe5da36cb68a565a8f6ef4008a0011",
+  "httpStatus": 200,
+  "bytes": 1155071,
+  "extractedTextHash": "f425837f1e8ba9923ac5933f7ae61460595fac0351777bd07766b7d2f5f9709e",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

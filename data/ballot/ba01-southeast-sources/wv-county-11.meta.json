@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Grant%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Grant%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.714971+00:00",
+  "rawHash": "9a3c48b6c6547673ec0318352a5cac6753c93ff3dd918b8dced17bbe4dd0b889",
+  "httpStatus": 200,
+  "bytes": 734577,
+  "extractedTextHash": "0e9514c48b2e4c068f00b02059f487d969079670523e184d0504218c3cdaf74b",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

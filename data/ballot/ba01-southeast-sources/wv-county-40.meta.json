@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Raleigh%20261103%20General%20-14inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Raleigh%20261103%20General%20-14inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.217884+00:00",
+  "rawHash": "8a16c2e742380e3f192aa3d469909ea703c25e703b6d5324c5e63e0523a137fc",
+  "httpStatus": 200,
+  "bytes": 1166369,
+  "extractedTextHash": "2b7a5af937afc2a923191ca4390cd6d63bf065514af8201f413cc67dcb6c1aeb",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

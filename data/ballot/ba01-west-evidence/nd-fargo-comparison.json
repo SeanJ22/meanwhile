@@ -1,0 +1,292 @@
+{
+  "electionDate": "2026-11-03",
+  "zip": "58102",
+  "publicAddress": "Fargo City Hall, 225 4th St N, Fargo ND 58102",
+  "precinct": "09440101 (#44-01 Fargo)",
+  "source": {
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+    "retrievedAt": "2026-10-21T00:03:42.620430+00:00",
+    "rawHash": "5d762c00af1b62e0e3b4c788f8563571f47bf0ba2270c0efeb7214e7e339f342",
+    "httpStatus": 200,
+    "sourceGovLink": "https://vip.sos.nd.gov/WhereToVoteDetail.aspx?ID=&part=09440101&ptlPKID=&ptlhPKID=&tab=SampleBallot",
+    "publicAddress": "Fargo City Hall, 225 4th St N, Fargo ND 58102",
+    "precinctId": "09440101"
+  },
+  "countedAt": "2026-10-21T00:56:30.595561+00:00",
+  "counts": {
+    "officialContests": 26,
+    "officialPrintedChoices": 35,
+    "matchedContests": 26,
+    "missingContests": 0,
+    "missingPrintedChoices": 0,
+    "matchedPrintedChoices": 35,
+    "officialMeasures": 3,
+    "matchedMeasures": 3
+  },
+  "races": [
+    {
+      "sourcePage": 1,
+      "title": "Representative in Congress",
+      "sourceNames": [
+        "Helene Neville",
+        "Charles Tuttle",
+        "Trygve Hammer",
+        "Julie Fedorchak"
+      ],
+      "repoContestId": "nd-sos-2026-general:representative-in-congress",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Secretary of State",
+      "sourceNames": [
+        "Michael Howe",
+        "Ryan Braunberger"
+      ],
+      "repoContestId": "nd-sos-2026-general:secretary-of-state",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Attorney General",
+      "sourceNames": [
+        "Drew Wrigley",
+        "Tim Lamb"
+      ],
+      "repoContestId": "nd-sos-2026-general:attorney-general",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Agriculture Commissioner",
+      "sourceNames": [
+        "Vern Thompson",
+        "Doug Goehring"
+      ],
+      "repoContestId": "nd-sos-2026-general:agriculture-commissioner",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Public Service Commissioner",
+      "sourceNames": [
+        "John M Pederson",
+        "Sheri Haugen-Hoffart"
+      ],
+      "repoContestId": "nd-sos-2026-general:public-service-commissioner",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Public Service Commissioner Unexpired 2-Year Term",
+      "sourceNames": [
+        "Scot Kelsh",
+        "Jill Kringstad"
+      ],
+      "repoContestId": "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Tax Commissioner",
+      "sourceNames": [
+        "Brian Kroshus",
+        "Mark Nelson"
+      ],
+      "repoContestId": "nd-sos-2026-general:tax-commissioner",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Superintendent of Public Instruction Unexpired 2-Year Term",
+      "sourceNames": [
+        "Tracy Layne Foss",
+        "Levi Bachmeier"
+      ],
+      "repoContestId": "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Justice of the Supreme Court",
+      "sourceNames": [
+        "Ariston E Johnson",
+        "Jerod Tufte"
+      ],
+      "repoContestId": "nd-sos-2026-general:justice-of-the-supreme-court",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 1,
+      "title": "Justice of the Supreme Court Unexpired 8-Year Term",
+      "sourceNames": [
+        "Douglas A Bahr"
+      ],
+      "repoContestId": "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 1 — East Central Judicial District",
+      "sourceNames": [
+        "Susan L Bailey"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-1",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 5 — East Central Judicial District",
+      "sourceNames": [
+        "Reid Brady"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-5",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 7 — East Central Judicial District",
+      "sourceNames": [
+        "Wade Webb"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-7",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 9 — East Central Judicial District",
+      "sourceNames": [
+        "Stephannie Stiel"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-9",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 10 — East Central Judicial District — Unexpired 4-Year Term",
+      "sourceNames": [
+        "Stephanie R Hayden"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-10",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Judge of the District Court No. 11 — East Central Judicial District — Unexpired 4-Year Term",
+      "sourceNames": [
+        "Cherie L Clark"
+      ],
+      "repoContestId": "nd-east-central-general-2026-judge-11",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "County Commissioner Cass District 2",
+      "sourceNames": [
+        "Tony Grindberg"
+      ],
+      "repoContestId": "nd-cass-general-2026-commissioner-2",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "County Commissioner Cass District 4",
+      "sourceNames": [
+        "Jim Prochniak"
+      ],
+      "repoContestId": "nd-cass-general-2026-commissioner-4",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "County State’s Attorney",
+      "sourceNames": [
+        "Kim Hegvik"
+      ],
+      "repoContestId": "nd-cass-general-2026-county-state-s-attorney",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "County Sheriff",
+      "sourceNames": [
+        "Jesse Jahner"
+      ],
+      "repoContestId": "nd-cass-general-2026-county-sheriff",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Supervisor, Soil Conservation District",
+      "sourceNames": [
+        "Tyler Zimmerman"
+      ],
+      "repoContestId": "nd-cass-general-2026-soil-conservation-supervisor",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "Director, Garrison Diversion Conservancy",
+      "sourceNames": [
+        "Jeff LeDoux"
+      ],
+      "repoContestId": "nd-cass-general-2026-director-garrison-diversion-conservancy",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 2,
+      "title": "County Official Newspaper",
+      "sourceNames": [
+        "The Cass County Reporter",
+        "The Forum of Fargo-Moorhead"
+      ],
+      "repoContestId": "nd-cass-general-2026-county-official-newspaper",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 3,
+      "title": "Constitutional Measure No. 1",
+      "sourceNames": [],
+      "repoContestId": "nd-sos-2026-general:measure-1",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 3,
+      "title": "Initiated Constitutional Measure No. 2",
+      "sourceNames": [],
+      "repoContestId": "nd-sos-2026-general:measure-2",
+      "status": "MATCH_SAVED_DATA_AND_READER"
+    },
+    {
+      "sourcePage": 3,
+      "title": "Fargo School District #1 School District Measure No. 1",
+      "sourceNames": [],
+      "repoContestId": "nd-fargo-school-district-1-general-2026-measure-1",
+      "status": "MATCH_SAVED_DATA_AND_READER",
+      "scopeOcdId": "ocd-division/country:us/state:nd/school_district:fargo_public_school_district_1"
+    }
+  ],
+  "limits": [
+    "Current saved data and actual reader division projection match26/26sample contests,35/35printed choices,and3/3measures for this one public address. Live site and all other addresses in ZIP58102 are not checked.",
+    "Cass commissioner2/4 rows in the original official general candidate HTML explicitly classify each race as CountyCommissionerAtLargeByDistrict; sample prints both seats and their vote-for-one instructions.",
+    "County judicial membership is sourced to current NorthDakotaSupremeCourt Rule6(e),Garrison election bycounty toNDCC61-24-03,soil boundary toUSDA district map,school identity toofficialCensus address geography.",
+    "Blank write-in lines are not candidates. The two OfficialNewspaper choices are actual printed ballot choices, preserved without invented person fields."
+  ],
+  "baselineCounts": {
+    "officialContests": 26,
+    "officialPrintedChoices": 35,
+    "matchedContests": 12,
+    "missingContests": 14,
+    "missingPrintedChoices": 14
+  },
+  "readerCheck": {
+    "kind": "ballotForDivisions against current saved data, not live site",
+    "contests": 24,
+    "printedChoices": 33,
+    "measures": 3,
+    "test": "tests/ba01-west-court-county.test.ts",
+    "censusSource": "county-captures/nd-fargo-cityhall-census.txt",
+    "scope": "One public address in ZIP58102; ZIP alone is not an address-level electorate"
+  }
+}

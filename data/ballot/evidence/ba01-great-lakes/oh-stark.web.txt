@@ -1,0 +1,193 @@
+ (https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf)
+【turn305803view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 6; Source: click({"ref_id":"turn670462view0","id":13}); Total lines: 191
+L0@P0: Candidates List
+L1@P0: Stark County
+L2@P0: Board of Elections
+L3@P0: General Election Tuesday, November 3, 2026
+L4@P0: Statewide Offices
+L5@P0: Governor/Lt. Governor
+L6@P0: Democratic
+L7@P0: Amy Acton and David
+L8@P0: Pepper
+L9@P0: Nominated
+L10@P0: Libertarian
+L11@P0: Don Kissick and James L.
+L12@P0: Mills
+L13@P0: Nominated
+L14@P0: Republican
+L15@P0: Vivek Ramaswamy and
+L16@P0: Robert A. McColley
+L17@P0: Nominated
+L18@P0: Write In
+L19@P0: Timothy Grady and Andrea
+L20@P0: Neutzling
+L21@P0: Write In
+L22@P0: Heather Hill and Patrick
+L23@P0: Manley
+L24@P0: Write In
+L25@P0: Renea Turner and Jalen
+L26@P0: Turner
+L27@P0: Write In
+L28@P0: Ron Ula and Michael C.
+L29@P0: Lehnerd
+L30@P0: Withdrawn
+L31@P0: Attorney General
+L32@P0: Democratic
+L33@P0: Nominated John J. Kulewicz
+L34@P0: Republican
+L35@P0: Nominated Keith Faber
+L36@P0: Auditor of State
+L37@P0: Democratic
+L38@P0: Nominated Annette Blackwell
+L39@P0: Republican
+L40@P0: Nominated Frank LaRose
+L41@P0-1: 10/15/2026 4:40:15 PM Page 1 of 6Secretary of State
+L42@P1: Democratic
+L43@P1: Nominated Allison Russo
+L44@P1: Libertarian
+L45@P1: Nominated Tom Pruss
+L46@P1: Republican
+L47@P1: Nominated Robert Sprague
+L48@P1: Treasurer of State
+L49@P1: Democratic
+L50@P1: Nominated Seth Walsh
+L51@P1: Republican
+L52@P1: Nominated Jay Edwards
+L53@P1: Justice of the Supreme Court 1-1-2027
+L54@P1: Democratic
+L55@P1: Nominated Marilyn Zayas
+L56@P1: Republican
+L57@P1: Nominated Daniel R. Hawkins
+L58@P1: Justice of the Supreme Court 1-2-2027
+L59@P1: Democratic
+L60@P1: Nominated Jennifer Brunner
+L61@P1: Republican
+L62@P1: Nominated Colleen O'Donnell
+L63@P1-2: 10/15/2026 4:40:15 PM Page 2 of 6Federal Offices
+L64@P2: United States Senator - unexpired term 1-3-2029
+L65@P2: Democratic
+L66@P2: Nominated Sherrod Brown
+L67@P2: Libertarian
+L68@P2: Nominated William B. Redpath
+L69@P2: Other-party
+L70@P2: Filed Greg Levy
+L71@P2: Republican
+L72@P2: Nominated Jon Husted
+L73@P2: Write In
+L74@P2: Write In Stephen Faris
+L75@P2: Write In Anthony Holliman
+L76@P2: Write In Timothy Telymonde
+L77@P2: Representative to Congress - 6th District
+L78@P2: Democratic
+L79@P2: Nominated Elizabeth Kirtley 929 Ray Ave. NE
+L80@P2: New Philadelphi OH 44663-
+L81@P2: (330) 407-4606
+L82@P2: Republican
+L83@P2: Nominated Michael A. Rulli 402 Lisbon Rd.
+L84@P2: Salem OH 44460-
+L85@P2: (330) 314-3078
+L86@P2: Representative to Congress - 13th District
+L87@P2: Democratic
+L88@P2: Nominated Emilia Sykes 109 N. Howard St.
+L89@P2: Akron OH 44308-
+L90@P2: Non-Party
+L91@P2: Filed Sandeep Dixit
+L92@P2: Republican
+L93@P2: Nominated Carey Coleman
+L94@P2-3: 10/15/2026 4:40:15 PM Page 3 of 6Court of Appeals 5th District
+L95@P3: Judge of the Court of Appeals (5th District), 2-9-27
+L96@P3: Republican
+L97@P3: Nominated Matthew George 1044 Woodlawn Ave.
+L98@P3: Newark OH 43055-
+L99@P3: (614) 406-5078
+L100@P3: State Senate Districts
+L101@P3: State Senator - 29th District
+L102@P3: Democratic
+L103@P3: Nominated Thomas West 625 12th St. NW
+L104@P3: Canton OH 44703-
+L105@P3: (330) 268-1789
+L106@P3: Republican
+L107@P3: Nominated Jane Timken 6559 Hills and Dales Rd. NW
+L108@P3: Canton OH 44708-
+L109@P3: (330) 280-1115
+L110@P3: State Senator - 31st District
+L111@P3: Democratic
+L112@P3: Nominated Laura Sirot
+L113@P3: Republican
+L114@P3: Nominated Al Landis
+L115@P3: State House Districts
+L116@P3: State Representative - 48th District
+L117@P3: Democratic
+L118@P3: Nominated Nick Morris 4258 Oakgrove St. NE
+L119@P3: Louisville OH 44641-
+L120@P3: (330) 806-5065
+L121@P3: Republican
+L122@P3: Nominated Christina M. Hagan 10418 Beeson St NE
+L123@P3: Alliance OH 44601-
+L124@P3: (330) 257-1988
+L125@P3: State Representative - 49th District
+L126@P3: Democratic
+L127@P3: Nominated Krista L. Allison 2852 Blue Ash Ave. NW
+L128@P3: Canton OH 44708-
+L129@P3: (614) 288-9303
+L130@P3: Republican
+L131@P3: Nominated Jim Thomas 5566 Foxboro Ave. NW
+L132@P3: Canton OH 44718-
+L133@P3: (330) 361-9066
+L134@P3-4: 10/15/2026 4:40:15 PM Page 4 of 6State Representative - 50th District
+L135@P4: Democratic
+L136@P4: Nominated Rylan Zachary Finzer 433 Austin Ave. NW
+L137@P4: Massillon OH 44646-
+L138@P4: (330) 575-1500
+L139@P4: Republican
+L140@P4: Nominated Matthew Kishman 705 E. Lincoln Way
+L141@P4: Minerva OH 44657-
+L142@P4: (330) 205-6544
+L143@P4: State Representative - 51st District
+L144@P4: Democratic
+L145@P4: Nominated Amanda Fontana
+L146@P4: Republican
+L147@P4: Nominated Jodi Salvo
+L148@P4: Stark County Offices
+L149@P4: County Commissioner
+L150@P4: Democratic
+L151@P4: Nominated Tony M. Townsend 1270 13th St. SE
+L152@P4: Massillon OH 44646-
+L153@P4: (330) 933-1194
+L154@P4: Republican
+L155@P4: Nominated Alan Harold 3625 Darlington Ave. NW
+L156@P4: Canton OH 44708-
+L157@P4: (330) 388-0603
+L158@P4: County Auditor
+L159@P4: Democratic
+L160@P4: Nominated Chalice E. Brown 120 W. Vine St.
+L161@P4: Alliance OH 44601-
+L162@P4: (330) 809-8461
+L163@P4: Republican
+L164@P4: Nominated Angela Kinsey 4215 Surrey Dr. SE
+L165@P4: Minerva OH 44657-
+L166@P4: (330) 495-9598
+L167@P4: Judge of the Court of Common Pleas, General Div. 1-1-27
+L168@P4: Republican
+L169@P4: Nominated Kristin G. Farmer 954 Dogwood Trl.
+L170@P4: Alliance OH 44601-
+L171@P4: (330) 801-8162
+L172@P4: Judge of the Court of Common Pleas, General Div. 1-4-27
+L173@P4: Democratic
+L174@P4: Nominated Frank G. Forchione 4601 Logan Ave. NW
+L175@P4: Canton OH 44709-
+L176@P4: (330) 451-7715
+L177@P4-5: 10/15/2026 4:40:15 PM Page 5 of 6Judge of the Court of Common Pleas, General Div. 2-9-27
+L178@P5: Democratic
+L179@P5: Nominated Kristen S. Moore 5762 Lakemere Cir. NW
+L180@P5: Canton OH 44718-
+L181@P5: (330) 806-5239
+L182@P5: Republican
+L183@P5: Nominated Jennifer L. Dave 2707 Tulip St. NE
+L184@P5: Canton OH 44705-
+L185@P5: Judge of the Court of Common Pleas, Probate Div.
+L186@P5: Republican
+L187@P5: Nominated Curt Werren 1593 Alexandria Pkwy. SE
+L188@P5: North Canton OH 44709-
+L189@P5: (330) 495-8443
+L190@P5: 10/15/2026 4:40:15 PM Page 6 of 6

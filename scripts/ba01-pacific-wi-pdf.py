@@ -21,6 +21,9 @@ def extract(path: pathlib.Path) -> str:
             font = ref.get_object()
             if font.get("/Encoding") != "/Identity-H" or "/ToUnicode" in font:
                 continue
+            # Ballot checkboxes may use Webdings; leave symbol glyphs untouched.
+            if "Webdings" in font["/BaseFont"]:
+                continue
             assert "Arial" in font["/BaseFont"], font["/BaseFont"]
             assert font["/DescendantFonts"][0].get_object().get("/CIDToGIDMap") == "/Identity"
             if id(font) in fixed:

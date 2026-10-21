@@ -1,0 +1,1661 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "VI:vi-2026-11-03-general": {
+      "election": {
+        "id": "vi-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "VI"
+      },
+      "contests": [
+        {
+          "id": "vi-ba01-2026-delegate",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi",
+          "divisionVintage": "2026",
+          "title": "Delegate to the U.S. House of Representatives",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Delegate to the U.S. House of Representatives\nJanelle K. Sarauw — Democrat\nShelley A. H. Moorhead — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi",
+          "divisionVintage": "2026",
+          "title": "Governor & Lieutenant Governor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Governor & Lieutenant Governor\nAdlah \"Foncie\" Donastorg / Positive Nelson — Independent\nWarren Mosler / Colin Robertson — Independent\nStacey E. Plaskett / Milton E. Potter — Democrat\nOakland Benta / Merwin Potter — Independent\nGustav James / Randolph Bennett — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-at-large",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi",
+          "divisionVintage": "2026",
+          "title": "Legislature of the Virgin Islands, At Large",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Legislature of the Virgin Islands, At Large\nAngel Bolques Jr. — Democrat\nHadiya Sewer — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/sldu:st_croix",
+          "divisionVintage": "2026",
+          "title": "Legislature of the Virgin Islands — St. Croix",
+          "type": "CANDIDACY",
+          "voteFor": 7,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Legislature of the Virgin Islands — St. Croix\nNemmy Williams-Jackson — Democrat\nClifford A. Joseph — Democrat\nBianca Francis — Independent\nElizabeth HansenWatley — Independent\nTyler Courtland Fay — Independent\nLuz \"Lucy\" Browne — Independent\nJose \"Besse\" Gonzalez — Democrat\nTroy C. Williams Sr. — Independent\nKenneth Kenny Gittens — Democrat\nJulian S. Viera — Independent\nMustasem Moe Mustafa — Independent\nKurt Vialet — Democrat\nNellie Rivera O'Reilly — Independent\nSamuel Carrion — Independent\nAlvin Milligan — Independent\nTroy D. Mason — Independent\nDiane Prosper — Independent\nRaymond T. James Esq — Republican\nNorman Bapo JnBaptiste — Independent\nHubert L. Frederick — Democrat\nGage Edmunds — Independent\nLisa J. Charles — Democrat\nFranklin D. Johnson — Independent\nJay Watson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_croix",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/board_of_education:st_croix",
+          "divisionVintage": "2026",
+          "title": "Board of Education — St. Croix",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Board of Education — St. Croix\nVincent HA GordonJr PhD — Independent\nLucy M. Jackson PhD — Independent\nWinona A. Hendricks — Democrat\nTerrence T. Joseph — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/board_of_elections:st_croix",
+          "divisionVintage": "2026",
+          "title": "Board of Elections — St Croix",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Board of Elections — St Croix\nJuliet L. Liburd — Independent\nFranz A. Christian, Jr. — Republican\nKareem T. Francis — Independent\nMary \"Peggy\" Moorhead — Independent\nShamari I. Haynes — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "divisionVintage": "2026",
+          "title": "Legislature of the Virgin Islands — St. Thomas/St. John",
+          "type": "CANDIDACY",
+          "voteFor": 7,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Legislature of the Virgin Islands — St. Thomas/St. John\nGregory P. Smith — Independent\nDwayne M. DeGraff — Independent\nDr. Krishna Kilaru MD — Independent\nEric Tillett — Republican\nAvery L. Lewis — Democrat\nVernon Araujo — Independent\nJoel S. Browne Connors — Democrat\nRay \"PuPa\" Fonseca — Democrat\nSennai Habtes — Independent\nRudel A. Hodge, Jr. — Democrat\nImani Daniel — Independent\nShenelle Fina Francis — Democrat\nAlma Francis Heyliger — Independent\nDerrick A. Callwood — Republican\nPaula A. Duke — Independent\nEugene D. Farrell — Independent\nCarla Joseph — Democrat\nCollister M. Fahie — Republican\nDavid Sierra — ICM\nMarvin A. Blyden — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_thomas-st_john",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/board_of_education:st_thomas-st_john",
+          "divisionVintage": "2026",
+          "title": "Board of Education — St. Thomas/St. John",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Board of Education — St. Thomas/St. John\nArah C. Lockhart — Democrat\nBruce C. Flamon — Independent\nJudy M. Gomez — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_john",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/board_of_elections:st_thomas-st_john",
+          "divisionVintage": "2026",
+          "title": "Board of Elections — St John",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Board of Elections — St John\nPreston R. Evans — Democrat\nRaven Phillips — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_thomas",
+          "electionId": "vi-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:vi/board_of_elections:st_thomas-st_john",
+          "divisionVintage": "2026",
+          "title": "Board of Elections — St Thomas",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Board of Elections — St Thomas\nBarbara A. Petersen — Democrat\nKevin A. Rodriquez — Democrat\nHarriet A. Mercer — Republican"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "vi-ba01-2026-delegate-janelle-k-sarauw",
+          "contestId": "vi-ba01-2026-delegate",
+          "familyName": "Janelle K. Sarauw",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Janelle K. Sarauw — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-delegate-shelley-a-h-moorhead",
+          "contestId": "vi-ba01-2026-delegate",
+          "familyName": "Shelley A. H. Moorhead",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Shelley A. H. Moorhead — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-adlah-foncie-donastorg",
+          "contestId": "vi-ba01-2026-governor",
+          "familyName": "Adlah \"Foncie\" Donastorg",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Adlah \"Foncie\" Donastorg / Positive Nelson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-warren-mosler",
+          "contestId": "vi-ba01-2026-governor",
+          "familyName": "Warren Mosler",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Warren Mosler / Colin Robertson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-stacey-e-plaskett",
+          "contestId": "vi-ba01-2026-governor",
+          "familyName": "Stacey E. Plaskett",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Stacey E. Plaskett / Milton E. Potter — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-oakland-benta",
+          "contestId": "vi-ba01-2026-governor",
+          "familyName": "Oakland Benta",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Oakland Benta / Merwin Potter — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-gustav-james",
+          "contestId": "vi-ba01-2026-governor",
+          "familyName": "Gustav James",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Gustav James / Randolph Bennett — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-at-large-angel-bolques-jr",
+          "contestId": "vi-ba01-2026-senate-at-large",
+          "familyName": "Angel Bolques Jr.",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Angel Bolques Jr. — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-at-large-hadiya-sewer",
+          "contestId": "vi-ba01-2026-senate-at-large",
+          "familyName": "Hadiya Sewer",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Hadiya Sewer — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-nemmy-williams-jackson",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Nemmy Williams-Jackson",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Nemmy Williams-Jackson — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-clifford-a-joseph",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Clifford A. Joseph",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Clifford A. Joseph — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-bianca-francis",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Bianca Francis",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Bianca Francis — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-elizabeth-hansenwatley",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Elizabeth HansenWatley",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Elizabeth HansenWatley — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-tyler-courtland-fay",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Tyler Courtland Fay",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Tyler Courtland Fay — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-luz-lucy-browne",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Luz \"Lucy\" Browne",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Luz \"Lucy\" Browne — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-jose-besse-gonzalez",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Jose \"Besse\" Gonzalez",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Jose \"Besse\" Gonzalez — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-troy-c-williams-sr",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Troy C. Williams Sr.",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Troy C. Williams Sr. — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-kenneth-kenny-gittens",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Kenneth Kenny Gittens",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Kenneth Kenny Gittens — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-julian-s-viera",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Julian S. Viera",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Julian S. Viera — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-mustasem-moe-mustafa",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Mustasem Moe Mustafa",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Mustasem Moe Mustafa — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-kurt-vialet",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Kurt Vialet",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Kurt Vialet — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-nellie-rivera-o-reilly",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Nellie Rivera O'Reilly",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Nellie Rivera O'Reilly — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-samuel-carrion",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Samuel Carrion",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Samuel Carrion — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-alvin-milligan",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Alvin Milligan",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Alvin Milligan — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-troy-d-mason",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Troy D. Mason",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Troy D. Mason — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-diane-prosper",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Diane Prosper",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Diane Prosper — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-raymond-t-james-esq",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Raymond T. James Esq",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Raymond T. James Esq — Republican"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-norman-bapo-jnbaptiste",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Norman Bapo JnBaptiste",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Norman Bapo JnBaptiste — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-hubert-l-frederick",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Hubert L. Frederick",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Hubert L. Frederick — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-gage-edmunds",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Gage Edmunds",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Gage Edmunds — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-lisa-j-charles",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Lisa J. Charles",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Lisa J. Charles — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-franklin-d-johnson",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Franklin D. Johnson",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Franklin D. Johnson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_croix-jay-watson",
+          "contestId": "vi-ba01-2026-senate-st_croix",
+          "familyName": "Jay Watson",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Jay Watson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_croix-vincent-ha-gordonjr-phd",
+          "contestId": "vi-ba01-2026-board-of-education-st_croix",
+          "familyName": "Vincent HA GordonJr PhD",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Vincent HA GordonJr PhD — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_croix-lucy-m-jackson-phd",
+          "contestId": "vi-ba01-2026-board-of-education-st_croix",
+          "familyName": "Lucy M. Jackson PhD",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Lucy M. Jackson PhD — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_croix-winona-a-hendricks",
+          "contestId": "vi-ba01-2026-board-of-education-st_croix",
+          "familyName": "Winona A. Hendricks",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Winona A. Hendricks — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_croix-terrence-t-joseph",
+          "contestId": "vi-ba01-2026-board-of-education-st_croix",
+          "familyName": "Terrence T. Joseph",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Terrence T. Joseph — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix-juliet-l-liburd",
+          "contestId": "vi-ba01-2026-board-of-elections-st_croix",
+          "familyName": "Juliet L. Liburd",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Juliet L. Liburd — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix-franz-a-christian-jr",
+          "contestId": "vi-ba01-2026-board-of-elections-st_croix",
+          "familyName": "Franz A. Christian, Jr.",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Franz A. Christian, Jr. — Republican"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix-kareem-t-francis",
+          "contestId": "vi-ba01-2026-board-of-elections-st_croix",
+          "familyName": "Kareem T. Francis",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Kareem T. Francis — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix-mary-peggy-moorhead",
+          "contestId": "vi-ba01-2026-board-of-elections-st_croix",
+          "familyName": "Mary \"Peggy\" Moorhead",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Mary \"Peggy\" Moorhead — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_croix-shamari-i-haynes",
+          "contestId": "vi-ba01-2026-board-of-elections-st_croix",
+          "familyName": "Shamari I. Haynes",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Shamari I. Haynes — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-gregory-p-smith",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Gregory P. Smith",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Gregory P. Smith — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-dwayne-m-degraff",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Dwayne M. DeGraff",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Dwayne M. DeGraff — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-dr-krishna-kilaru-md",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Dr. Krishna Kilaru MD",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Dr. Krishna Kilaru MD — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-eric-tillett",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Eric Tillett",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Eric Tillett — Republican"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-avery-l-lewis",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Avery L. Lewis",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Avery L. Lewis — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-vernon-araujo",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Vernon Araujo",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Vernon Araujo — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-joel-s-browne-connors",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Joel S. Browne Connors",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Joel S. Browne Connors — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-ray-pupa-fonseca",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Ray \"PuPa\" Fonseca",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Ray \"PuPa\" Fonseca — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-sennai-habtes",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Sennai Habtes",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Sennai Habtes — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-rudel-a-hodge-jr",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Rudel A. Hodge, Jr.",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Rudel A. Hodge, Jr. — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-imani-daniel",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Imani Daniel",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Imani Daniel — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-shenelle-fina-francis",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Shenelle Fina Francis",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Shenelle Fina Francis — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-alma-francis-heyliger",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Alma Francis Heyliger",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Alma Francis Heyliger — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-derrick-a-callwood",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Derrick A. Callwood",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Derrick A. Callwood — Republican"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-paula-a-duke",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Paula A. Duke",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Paula A. Duke — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-eugene-d-farrell",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Eugene D. Farrell",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Eugene D. Farrell — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-carla-joseph",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Carla Joseph",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Carla Joseph — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-collister-m-fahie",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Collister M. Fahie",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Collister M. Fahie — Republican"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-david-sierra",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "David Sierra",
+          "givenName": "",
+          "partyLabel": "ICM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "David Sierra — ICM"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-senate-st_thomas-st_john-marvin-a-blyden",
+          "contestId": "vi-ba01-2026-senate-st_thomas-st_john",
+          "familyName": "Marvin A. Blyden",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Marvin A. Blyden — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_thomas-st_john-arah-c-lockhart",
+          "contestId": "vi-ba01-2026-board-of-education-st_thomas-st_john",
+          "familyName": "Arah C. Lockhart",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Arah C. Lockhart — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_thomas-st_john-bruce-c-flamon",
+          "contestId": "vi-ba01-2026-board-of-education-st_thomas-st_john",
+          "familyName": "Bruce C. Flamon",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Bruce C. Flamon — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-education-st_thomas-st_john-judy-m-gomez",
+          "contestId": "vi-ba01-2026-board-of-education-st_thomas-st_john",
+          "familyName": "Judy M. Gomez",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Judy M. Gomez — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_john-preston-r-evans",
+          "contestId": "vi-ba01-2026-board-of-elections-st_john",
+          "familyName": "Preston R. Evans",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Preston R. Evans — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_john-raven-phillips",
+          "contestId": "vi-ba01-2026-board-of-elections-st_john",
+          "familyName": "Raven Phillips",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Raven Phillips — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_thomas-barbara-a-petersen",
+          "contestId": "vi-ba01-2026-board-of-elections-st_thomas",
+          "familyName": "Barbara A. Petersen",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Barbara A. Petersen — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_thomas-kevin-a-rodriquez",
+          "contestId": "vi-ba01-2026-board-of-elections-st_thomas",
+          "familyName": "Kevin A. Rodriquez",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Kevin A. Rodriquez — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-board-of-elections-st_thomas-harriet-a-mercer",
+          "contestId": "vi-ba01-2026-board-of-elections-st_thomas",
+          "familyName": "Harriet A. Mercer",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "Harriet A. Mercer — Republican"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "Both official district sample ballots and all 70 certified candidate choices were compared. The St. Croix sample has 6 contests and 42 choices; St. Thomas/St. John has 7 contests and 37 choices. Every governor running mate is preserved as an explicit joint ticket. No ballot question appears on either captured two-page sample."
+      ],
+      "districtMemberships": [
+        {
+          "id": "vi-ba01-sldu-st-croix-to-board-of-education-st-croix",
+          "memberOcdId": "ocd-division/country:us/territory:vi/sldu:st_croix",
+          "districtOcdId": "ocd-division/country:us/territory:vi/board_of_education:st_croix",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "The official St. Croix district sample prints the district Legislature and board of education races on the same ballot. "
+          }
+        },
+        {
+          "id": "vi-ba01-sldu-st-croix-to-board-of-elections-st-croix",
+          "memberOcdId": "ocd-division/country:us/territory:vi/sldu:st_croix",
+          "districtOcdId": "ocd-division/country:us/territory:vi/board_of_elections:st_croix",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/about/board-elections/",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:51:43.941410+00:00",
+            "verifiedAt": "2026-10-21T00:51:43.941410+00:00",
+            "quote": "The Board consists of fourteen members; seven from each district, who are elected by the electors of each election district beginning with the 2018 general election. The official St. Croix district sample prints the district Legislature and board of elections races on the same ballot. "
+          }
+        },
+        {
+          "id": "vi-ba01-sldu-st-thomas-st-john-to-board-of-education-st-thomas-st-john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "districtOcdId": "ocd-division/country:us/territory:vi/board_of_education:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.872404+00:00",
+            "quote": "The official St. Thomas/St. John district sample prints the district Legislature and board of education races on the same ballot. "
+          }
+        },
+        {
+          "id": "vi-ba01-sldu-st-thomas-st-john-to-board-of-elections-st-thomas-st-john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "districtOcdId": "ocd-division/country:us/territory:vi/board_of_elections:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/about/board-elections/",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:51:43.941410+00:00",
+            "verifiedAt": "2026-10-21T00:51:43.941410+00:00",
+            "quote": "The Board consists of fourteen members; seven from each district, who are elected by the electors of each election district beginning with the 2018 general election. The official St. Thomas/St. John district sample prints the district Legislature and board of elections races on the same ballot. Both STJ and STT seat groups are printed together on the combined district ballot."
+          }
+        }
+      ],
+      "candidateTickets": [
+        {
+          "id": "vi-ba01-2026-governor-adlah-foncie-donastorg-ticket",
+          "leadCandidacyId": "vi-ba01-2026-governor-adlah-foncie-donastorg",
+          "runningMate": {
+            "id": "vi-ba01-2026-governor-positive-nelson",
+            "contestId": "vi-ba01-2026-governor",
+            "familyName": "Positive Nelson",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+              "sourceOrg": "Election System of the Virgin Islands",
+              "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+              "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+              "quote": "Adlah \"Foncie\" Donastorg / Positive Nelson — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Adlah \"Foncie\" Donastorg / Positive Nelson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-warren-mosler-ticket",
+          "leadCandidacyId": "vi-ba01-2026-governor-warren-mosler",
+          "runningMate": {
+            "id": "vi-ba01-2026-governor-colin-robertson",
+            "contestId": "vi-ba01-2026-governor",
+            "familyName": "Colin Robertson",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+              "sourceOrg": "Election System of the Virgin Islands",
+              "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+              "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+              "quote": "Warren Mosler / Colin Robertson — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Warren Mosler / Colin Robertson — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-stacey-e-plaskett-ticket",
+          "leadCandidacyId": "vi-ba01-2026-governor-stacey-e-plaskett",
+          "runningMate": {
+            "id": "vi-ba01-2026-governor-milton-e-potter",
+            "contestId": "vi-ba01-2026-governor",
+            "familyName": "Milton E. Potter",
+            "givenName": "",
+            "partyLabel": "Democrat",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+              "sourceOrg": "Election System of the Virgin Islands",
+              "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+              "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+              "quote": "Stacey E. Plaskett / Milton E. Potter — Democrat"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Stacey E. Plaskett / Milton E. Potter — Democrat"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-oakland-benta-ticket",
+          "leadCandidacyId": "vi-ba01-2026-governor-oakland-benta",
+          "runningMate": {
+            "id": "vi-ba01-2026-governor-merwin-potter",
+            "contestId": "vi-ba01-2026-governor",
+            "familyName": "Merwin Potter",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+              "sourceOrg": "Election System of the Virgin Islands",
+              "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+              "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+              "quote": "Oakland Benta / Merwin Potter — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Oakland Benta / Merwin Potter — Independent"
+          }
+        },
+        {
+          "id": "vi-ba01-2026-governor-gustav-james-ticket",
+          "leadCandidacyId": "vi-ba01-2026-governor-gustav-james",
+          "runningMate": {
+            "id": "vi-ba01-2026-governor-randolph-bennett",
+            "contestId": "vi-ba01-2026-governor",
+            "familyName": "Randolph Bennett",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+              "sourceOrg": "Election System of the Virgin Islands",
+              "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+              "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+              "quote": "Gustav James / Randolph Bennett — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-21T00:35:04.964501+00:00",
+            "quote": "Gustav James / Randolph Bennett — Independent"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-21T00:51:43.941410+00:00",
+    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "sources": [
+      {
+        "requestedUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-Election-Public-Offices-Aspirant-Listing-STX-OFFICIAL-August-2026.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-Election-Public-Offices-Aspirant-Listing-STX-OFFICIAL-August-2026.pdf",
+        "retrievedAt": "2026-10-21T00:35:04.778727+00:00",
+        "httpStatus": 200,
+        "rawHash": "5842605654886ea86aea1eab815805c3f79a44dc31d8603a7ea61d2b0c1d3fe9",
+        "publisher": "Election System of the Virgin Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "scripts/ba01-south-territories.py replays every candidate and exact electorate from the saved current official source; source-specific parsers compare every certified person and party against the dated specimen."
+      },
+      {
+        "requestedUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-Listing-of-Candidates-St.Thomas-St.-John-District-Official-.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-Listing-of-Candidates-St.Thomas-St.-John-District-Official-.pdf",
+        "retrievedAt": "2026-10-21T00:35:04.890027+00:00",
+        "httpStatus": 200,
+        "rawHash": "60dea977e787d975c290acd5578278f7e9bbf2aee9d10bdc9d96c53328221000",
+        "publisher": "Election System of the Virgin Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "scripts/ba01-south-territories.py replays every candidate and exact electorate from the saved current official source; source-specific parsers compare every certified person and party against the dated specimen."
+      },
+      {
+        "requestedUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+        "retrievedAt": "2026-10-21T00:35:04.964501+00:00",
+        "httpStatus": 200,
+        "rawHash": "dd922269b08e31d5e249a57dd3fd801f38801cca45761fc493e72d7743ae7e73",
+        "publisher": "Election System of the Virgin Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "scripts/ba01-south-territories.py replays every candidate and exact electorate from the saved current official source; source-specific parsers compare every certified person and party against the dated specimen."
+      },
+      {
+        "requestedUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+        "retrievedAt": "2026-10-21T00:35:04.872404+00:00",
+        "httpStatus": 200,
+        "rawHash": "9040205e56e7506ee501e284b9514735ecd79eac3f8491179838c7d94b62fb81",
+        "publisher": "Election System of the Virgin Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "scripts/ba01-south-territories.py replays every candidate and exact electorate from the saved current official source; source-specific parsers compare every certified person and party against the dated specimen."
+      },
+      {
+        "requestedUrl": "https://vivote.gov/about/board-elections/",
+        "finalUrl": "https://vivote.gov/about/board-elections/",
+        "retrievedAt": "2026-10-21T00:51:43.941410+00:00",
+        "httpStatus": 200,
+        "rawHash": "7b75b1952741d3ffb993e287528c13aa7e2530c03a869c93880c62a5dbfe4f27",
+        "publisher": "Election System of the Virgin Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "The Board consists of fourteen members; seven from each district, who are elected by the electors of each election district beginning with the 2018 general election. Both St. John and St. Thomas seat groups are also printed on the one current official combined-district sample. They are not island-only electorates."
+      }
+    ]
+  }
+}

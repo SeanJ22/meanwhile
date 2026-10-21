@@ -1,6 +1,6 @@
 {
   "status": "MATCHES_SOURCES_CHECKED_WITH_CERTIFICATION_LIMIT",
-  "checkedAt": "2026-10-20T23:31:01.714211+00:00",
+  "checkedAt": "2026-10-20T23:51:10.132167+00:00",
   "officialContestCount": 77,
   "officialCandidacyCount": 218,
   "scope": "30 Senate + 30 House + 9 federal House + 7 executive + 1 statewide Supreme Court retention; four lieutenant-governor ticket mates verified separately against the Pima general list",
@@ -1244,7 +1244,7 @@
     },
     {
       "contestId": "az-2026-general-supreme-court-john-lopez-iv",
-      "title": "Justice of the Arizona Supreme Court",
+      "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
       "officialCandidates": [
         "JOHN LOPEZ IV"
       ],

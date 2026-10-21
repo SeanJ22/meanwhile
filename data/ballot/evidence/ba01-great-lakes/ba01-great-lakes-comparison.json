@@ -1,23 +1,32 @@
 {
-  "capturedAt": "2026-10-20T23:33:15.745420+00:00",
-  "comparisonReplay": "python scripts/ba01-great-lakes.py",
+  "capturedAt": "2026-10-21T01:04:52.496730+00:00",
+  "comparisonReplay": [
+    "python scripts/ba01-great-lakes.py",
+    "python scripts/ba01-great-lakes-mn-local.py",
+    "python scripts/ba01-great-lakes-il-local.py",
+    "python scripts/ba01-great-lakes-oh-local.py",
+    "python scripts/ba01-great-lakes-oh-measures.py",
+    "python scripts/ba01-great-lakes-mn-cities.py",
+    "python scripts/ba01-great-lakes-mn-schools.py",
+    "python scripts/ba01-great-lakes-mi-judicial.py"
+  ],
   "focusedTests": {
-    "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/ballot-state-file.test.ts tests/ballot-source-isolation.test.ts",
-    "passed": 16,
+    "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/ba01-great-lakes-ballots.test.ts",
+    "passed": 7,
     "failed": 0
   },
   "officialCoreReplays": [
     {
       "state": "OH",
       "officialSource": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
-      "sourceScope": "Franklin County candidate list, October 16; statewide district coverage remains incomplete",
+      "sourceScope": "Franklin County candidate list, October 16; this source covers county-overlapping districts. Other saved official county lists and samples complete all Ohio federal/statewide/legislative districts.",
       "before": [
-        131,
-        273
+        223,
+        433
       ],
       "after": [
-        131,
-        273
+        223,
+        433
       ],
       "verifiedAdditions": [
         {
@@ -298,6 +307,46 @@
           "candidateRows": 5
         },
         {
+          "source": "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+          "districtContests": 5,
+          "candidateRows": 10
+        },
+        {
+          "source": "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+          "districtContests": 2,
+          "candidateRows": 5
+        },
+        {
+          "source": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+          "districtContests": 1,
+          "candidateRows": 3
+        },
+        {
+          "source": "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+          "districtContests": 1,
+          "candidateRows": 3
+        },
+        {
           "source": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
           "districtContests": 5,
           "candidateRows": 11
@@ -309,25 +358,70 @@
         }
       ],
       "before": [
-        131,
-        273
+        223,
+        433
       ],
       "after": [
-        133,
-        278
+        223,
+        433
       ]
+    },
+    {
+      "state": "OH",
+      "officialSampleCore": [
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "districtContests": 1,
+          "candidateRows": 3
+        },
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+          "districtContests": 2,
+          "candidateRows": 5
+        },
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+          "districtContests": 1,
+          "candidateRows": 2
+        },
+        {
+          "source": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+          "districtContests": 1,
+          "candidateRows": 3
+        }
+      ],
+      "contests": 223,
+      "candidacies": 433
+    },
+    {
+      "state": "OH",
+      "explicitWithdrawals": 1,
+      "candidacyId": "oh-sos-2026-general-governor-and-lieutenant-governor-c36be62900f6",
+      "firstObserved": "2026-10-20",
+      "officialWithdrawalDate": "2026-10-15",
+      "source": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450"
     },
     {
       "state": "WI",
       "officialSource": "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
-      "sourceScope": "Dane County; remaining statewide districts still owed",
+      "sourceScope": "Dane County sample comparison only; statewide Wisconsin comparison belongs to Pacific.",
       "before": [
-        83,
-        152
+        194,
+        320
       ],
       "after": [
-        83,
-        152
+        194,
+        320
       ],
       "verifiedAdditions": [
         {
@@ -398,14 +492,15 @@
     },
     {
       "state": "MI",
-      "officialCandidateContests": 170,
-      "repositoryCandidateContests": 170,
-      "officialCandidateRows": 455,
-      "repositoryCandidateRows": 455,
+      "officialCoreContests": 170,
+      "officialCandidateContests": 338,
+      "repositoryCandidateContests": 338,
+      "officialCandidateRows": 707,
+      "repositoryCandidateRows": 707,
       "missingCoreContests": [],
       "missingCoreCandidates": [],
       "source": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
-      "remaining": "166 district and local judicial contests in the same state report are outside the acquired core coverage; county/city sample-ballot comparison still owed."
+      "remaining": "County/city/school contests and local measures, remaining district-court boundary memberships and full sample-ballot/live comparison still owed."
     },
     {
       "state": "IN",
@@ -440,13 +535,24 @@
       "missingCoreCandidates": [],
       "source": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
       "remaining": "District/local judicial contests and county/city sample-ballot comparisons remain owed."
+    },
+    {
+      "state": "MN",
+      "officialCandidateContests": 221,
+      "repositoryCandidateContests": 221,
+      "officialCandidateRows": 427,
+      "repositoryCandidateRows": 427,
+      "missingCoreContests": [],
+      "missingCoreCandidates": [],
+      "source": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+      "remaining": "Core comparison is scoped to federal/statewide/legislative rows. Separate ba01-great-lakes-mn-local.py verifies all114 district-judge races and selected county/school offices; remaining local and live/per-ZIP work stays open."
     }
   ],
   "states": [
     {
       "state": "OH",
-      "repositoryContests": 133,
-      "repositoryCandidacies": 278,
+      "repositoryContests": 215,
+      "repositoryCandidacies": 429,
       "repositoryMeasures": 3,
       "officialSources": [
         "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
@@ -487,7 +593,26 @@
         "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
         "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
         "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
-        "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf"
+        "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+        "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+        "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+        "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+        "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+        "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+        "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+        "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+        "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+        "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f3040163-09d3-4b35-a603-4ba4c3d8bbce/",
+        "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+        "https://codes.ohio.gov/ohio-revised-code/section-2501.01"
       ],
       "districtCoverage": {
         "cd": {
@@ -496,45 +621,27 @@
           "missing": []
         },
         "sldu": {
-          "held": 15,
+          "held": 17,
           "electionDistricts": 17,
-          "missing": [
-            11,
-            29
-          ]
+          "missing": []
         },
         "sldl": {
-          "held": 81,
+          "held": 99,
           "electionDistricts": 99,
-          "missing": [
-            41,
-            42,
-            43,
-            44,
-            48,
-            49,
-            50,
-            51,
-            55,
-            56,
-            60,
-            62,
-            72,
-            75,
-            77,
-            79,
-            80,
-            88
-          ]
+          "missing": []
         }
       },
-      "remaining": "18 lower-house districts and Senate 11/29 remain unacquired; county/city/school/special-district and address-specific sample-ballot reconciliation remain open. Franklin countywide contests and Columbus Issues 8/9 added; 43215 full sample-ballot acceptance not yet established.",
-      "repositoryRemovals": 1
+      "remaining": "Core federal/statewide/legislative districts remain complete. Verified county/sample additions now cover selectedCuyahoga,Hamilton,Summit,Montgomery local races. CuyahogaCouncil3/7 andNewLebanoncity sample checks, other local races/measures and43215 fullpaper/live reconciliation remain open.",
+      "repositoryRemovals": 1,
+      "activeCandidacies": 428,
+      "coreCandidateContests": 139,
+      "coreCandidateRowsRetained": 311,
+      "coreCandidateRowsActive": 310
     },
     {
       "state": "IL",
-      "repositoryContests": 163,
-      "repositoryCandidacies": 255,
+      "repositoryContests": 170,
+      "repositoryCandidacies": 263,
       "repositoryMeasures": 0,
       "officialSources": [
         "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
@@ -602,7 +709,12 @@
         "https://cms2.revize.com/revize/knoxcounty/Specimen%20Ballot%20-%20GE2026.pdf?t=202609241135070",
         "https://files-accl.zohoexternal.com/public/workdrive-external/download/7xc3r013726b9e9794986beae531fa69c0ec6?x-cli-msg=null",
         "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_county20_st17.txt",
-        "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026ReferendaList.pdf"
+        "https://dekalbcountyclerkil.gov/wp-content/uploads/2026/09/11032026ReferendaList.pdf",
+        "https://npin.cdc.gov/organization/brown-county-health-department",
+        "https://www.browncoil.org/officials/county-clerk-recorder/elections/",
+        "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/where-do-i-vote-view-a-sample-ballot",
+        "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1"
       ],
       "missingLowerDistricts": [
         2,
@@ -618,14 +730,13 @@
         86,
         97,
         98,
-        99,
         103,
         104
       ],
       "missingSenateDistricts": [
         27
       ],
-      "remaining": "State Board general candidate pages and several counties returned 403. Indexed official records identify leads, but no blocked response is represented as HTTP200 or certified complete. County and per-ZIP reconciliation remain open."
+      "remaining": "House99 added from official-linked Brown county sample, plus Brown/Sangamon countywide offices. Remaining listed legislative gaps, court/regional/county/local races and per-ZIP/live reconciliation remain open; root owns Illinois acquisition."
     },
     {
       "state": "MI",
@@ -665,15 +776,48 @@
     },
     {
       "state": "MN",
-      "repositoryContests": 222,
-      "repositoryCandidacies": 427,
+      "repositoryContests": 373,
+      "repositoryCandidacies": 596,
       "repositoryMeasures": 1,
       "officialSources": [
         "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651",
         "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
-        "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/"
+        "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=325264",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=330942",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2001",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=967",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D1ADB14D-BEEE-4185-A519-108D53E16C84.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1913",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=13697",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=211766",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A01847A9-0649-4CCD-A5F6-3467037D44AA.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245405",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=224269",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228485",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2283",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/19D5601A-3419-424C-A133-63CB8BE94182.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=56676",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/672D8799-A9CB-4956-A1E2-800E58C53470.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=799",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AB3AC7CF-8748-4D48-862D-4E53D5271302.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1466",
+        "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf",
+        "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2257",
+        "https://www.revisor.mn.gov/statutes/cite/2.722",
+        "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?geometry=%7B%22x%22%3A-93.262318051568%2C%22y%22%3A44.975370123052%7D&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&inSR=4326&outFields=%2A&returnGeometry=false&f=json",
+        "https://vote.minneapolismn.gov/candidates/filing-for-office/offices-on-the-ballot/"
       ],
-      "remaining": "Held core appears full by district inventory (8CD,67Senate,134House) but final general-election roster comparison is not complete. Fresh public ASP.NET search works and includes primary losers; general media export redirects to Error.aspx?NoMatchesFound. Local/sample-ballot reconciliation remains open."
+      "remaining": "All221 core contests/427 candidates exactly match final general export. All114 district-judge races/117 candidates added from official samples and official general export, plus countywide offices in15counties. 55415 precinct1510 has41source races; all41match catalog with explicitly supplied commissionerDistrict3, while ordinary state/county/city/federal/legislative projection currently returns40. Commissioner boundary mapping, other local races/measures and live verification remain open."
     },
     {
       "state": "IA",
@@ -685,8 +829,7 @@
         "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
         "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
         "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
-        "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
-        "https://sos.iowa.gov/general-election"
+        "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf"
       ],
       "remaining": "Source/repository core equality is replayed above; local/judicial-district/per-ZIP sample-ballot reconciliation remains open."
     },
@@ -717,5 +860,773 @@
       "officialWithdrawalDate": "2026-10-15",
       "source": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450"
     }
-  ]
+  ],
+  "recoveryReplay": "python scripts/ba01-great-lakes-fetch.py (see script docstring)",
+  "localReplays": [
+    {
+      "state": "MN",
+      "before": [
+        222,
+        427
+      ],
+      "after": [
+        373,
+        596
+      ],
+      "judicialContests": 114,
+      "judicialCandidates": 117,
+      "countyToJudicialDistrictMemberships": 87,
+      "countywideSources": [
+        {
+          "county": "Dakota",
+          "zipSample": "55124",
+          "precinct": "1010",
+          "sampleContests": 35,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 4,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf"
+        },
+        {
+          "county": "Scott",
+          "zipSample": "55379",
+          "precinct": "0045",
+          "sampleContests": 35,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf"
+        },
+        {
+          "county": "Sherburne",
+          "zipSample": "55330",
+          "precinct": "0130",
+          "sampleContests": 47,
+          "verifiedCountywideContests": 4,
+          "verifiedCountywideCandidates": 6,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf"
+        },
+        {
+          "county": "Washington",
+          "zipSample": "55082",
+          "precinct": "0325",
+          "sampleContests": 42,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf"
+        },
+        {
+          "county": "Wright",
+          "zipSample": "55313",
+          "precinct": "0040",
+          "sampleContests": 42,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D1ADB14D-BEEE-4185-A519-108D53E16C84.pdf"
+        },
+        {
+          "county": "Carver",
+          "zipSample": "55318",
+          "precinct": "0042",
+          "sampleContests": 36,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf"
+        },
+        {
+          "county": "Anoka",
+          "zipSample": "55303",
+          "precinct": "2605",
+          "sampleContests": 41,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 2,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf"
+        },
+        {
+          "county": "Ramsey",
+          "zipSample": "55102",
+          "precinct": "0750",
+          "sampleContests": 30,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 2,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A01847A9-0649-4CCD-A5F6-3467037D44AA.pdf"
+        },
+        {
+          "county": "Olmsted",
+          "zipSample": "55901",
+          "precinct": "0210",
+          "sampleContests": 30,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf"
+        },
+        {
+          "county": "Hennepin",
+          "zipSample": "55415",
+          "precinct": "1510",
+          "sampleContests": 41,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 4,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf"
+        },
+        {
+          "county": "Blue Earth",
+          "zipSample": "56001",
+          "precinct": "0170",
+          "sampleContests": 30,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 2,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf"
+        },
+        {
+          "county": "St. Louis",
+          "zipSample": "55802",
+          "precinct": "0230",
+          "sampleContests": 30,
+          "verifiedCountywideContests": 3,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/19D5601A-3419-424C-A133-63CB8BE94182.pdf"
+        },
+        {
+          "county": "Stearns",
+          "zipSample": "56301",
+          "precinct": "0335",
+          "sampleContests": 40,
+          "verifiedCountywideContests": 3,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/672D8799-A9CB-4956-A1E2-800E58C53470.pdf"
+        },
+        {
+          "county": "Kandiyohi",
+          "zipSample": "56201",
+          "precinct": "0170",
+          "sampleContests": 27,
+          "verifiedCountywideContests": 2,
+          "verifiedCountywideCandidates": 2,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AB3AC7CF-8748-4D48-862D-4E53D5271302.pdf"
+        },
+        {
+          "county": "Beltrami",
+          "zipSample": "56601",
+          "precinct": "0020",
+          "sampleContests": 35,
+          "verifiedCountywideContests": 3,
+          "verifiedCountywideCandidates": 3,
+          "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf"
+        }
+      ],
+      "minneapolisAdditional": {
+        "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf",
+        "precinct": "1510",
+        "sourceContests": 41,
+        "schoolAtLargeContests": 1,
+        "schoolAtLargeCandidates": 4,
+        "commissionerDistrictContests": 1,
+        "commissionerDistrictCandidates": 2,
+        "remainingReaderMapping": "County commissioner District 3 is correctly district-scoped. ZIP/address projection does not yet resolve its district, so this replay does not claim reader/live sample completeness."
+      },
+      "remaining": "County commissioner, park, soil/water and school district elections and local measures remain open. These samples establish the added countywide/judicial contests, not whole-county or every-ZIP completeness."
+    },
+    {
+      "state": "IL",
+      "before": [
+        163,
+        255
+      ],
+      "after": [
+        170,
+        263
+      ],
+      "verifiedContests": 7,
+      "verifiedCandidates": 8,
+      "contestIds": [
+        "il-ba01-for-representative-in-the-general-assembly-ninety-ninth-representative-district-sldl-99",
+        "il-ba01-brown-county-for-county-clerk-and-recorder-county-brown",
+        "il-ba01-brown-county-for-county-treasurer-county-brown",
+        "il-ba01-brown-county-for-county-sheriff-county-brown",
+        "il-ba01-sangamon-county-for-county-clerk-county-sangamon",
+        "il-ba01-sangamon-county-for-county-treasurer-county-sangamon",
+        "il-ba01-sangamon-county-for-county-sheriff-county-sangamon"
+      ],
+      "sources": [
+        "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1"
+      ],
+      "remaining": "Source/catalog verification only. These countywide races and House99 do not establish complete county, ZIP or live reader ballots."
+    },
+    {
+      "state": "OH",
+      "before": [
+        153,
+        324
+      ],
+      "after": [
+        215,
+        429
+      ],
+      "verifiedLocalContests": 62,
+      "verifiedLocalCandidates": 105,
+      "countyToAppealsMemberships": 88,
+      "contests": [
+        {
+          "county": "cuyahoga",
+          "office": "For County Executive",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-county-executive"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 1)",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 5)",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 9)",
+          "term": "",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 11)",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Appeals (8th District)",
+          "term": "Full Term Commencing 2/9/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Appeals (8th District)",
+          "term": "Full Term Commencing 2/10/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Appeals (8th District)",
+          "term": "Full Term Commencing 2/11/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Appeals (8th District)",
+          "term": "Full Term Commencing 2/12/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Appeals (8th District)",
+          "term": "Unexpired Term Ending 12/31/28",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-28"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/1/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/2/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/3/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/4/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/5/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/6/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/7/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 1/10/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (General Division)",
+          "term": "Full Term Commencing 2/9/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (Domestic Relations Division)",
+          "term": "Full Term Commencing 1/8/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (Domestic Relations Division)",
+          "term": "Full Term Commencing 1/9/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (Probate Division)",
+          "term": "Full Term Commencing 1/1/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027"
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Judge of the Court of Common Pleas (Probate Division)",
+          "term": "Full Term Commencing 2/9/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Appeals 1st District",
+          "term": "2/9/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "1/1/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "1/2/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "1/4/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "2/9/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "2/10/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "2/11/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "2/12/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "2/13/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, Drug Court Divison",
+          "term": "1/3/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, Probate Division",
+          "term": "2/9/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, Juvenile Division",
+          "term": "2/14/2027",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, Domestic Relations",
+          "term": "7/1/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "UTE 1/3/29",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29"
+        },
+        {
+          "county": "hamilton",
+          "office": "Judge, Court of Common Pleas, General Division",
+          "term": "UTE 1/14/29",
+          "candidates": 2,
+          "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29"
+        },
+        {
+          "county": "hamilton",
+          "office": "County Commissioner",
+          "term": "1/1/2027",
+          "candidates": 3,
+          "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027"
+        },
+        {
+          "county": "hamilton",
+          "office": "County Auditor",
+          "term": "3/8/2027",
+          "candidates": 1,
+          "contestId": "oh-ba01-hamilton-county-county-auditor-3-8-2027"
+        },
+        {
+          "county": "summit",
+          "office": "SUMMIT COUNTY COUNCIL-AT-LARGE",
+          "term": "Term commencing 01/01/27",
+          "candidates": 6,
+          "contestId": "oh-ba01-summit-county-summit-county-council-at-large-term-commencing-01-01-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 01/02/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-02-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 01/03/27",
+          "candidates": 1,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-03-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 01/05/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-05-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 01/06/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-06-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 02/09/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-02-09-27"
+        },
+        {
+          "county": "summit",
+          "office": "COMMON PLEAS COURT JUDGE",
+          "term": "Term commencing 05/01/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-05-01-27"
+        },
+        {
+          "county": "summit",
+          "office": "JUVENILE COURT JUDGE",
+          "term": "Term commencing 01/01/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-juvenile-court-judge-term-commencing-01-01-27"
+        },
+        {
+          "county": "summit",
+          "office": "DOMESTIC RELATIONS JUDGE",
+          "term": "Term commencing 01/04/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-domestic-relations-judge-term-commencing-01-04-27"
+        },
+        {
+          "county": "summit",
+          "office": "PROBATE COURT JUDGE",
+          "term": "Term commencing 02/09/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-summit-county-probate-court-judge-term-commencing-02-09-27"
+        },
+        {
+          "county": "summit",
+          "office": "9TH DISTRICT COURT OF APPEALS JUDGE",
+          "term": "Term commencing 02/09/27",
+          "candidates": 2,
+          "contestId": "oh-ba01-ohio-court-of-appeals-9th-district-court-of-appeals-judge-term-commencing-02-09-27"
+        },
+        {
+          "county": "summit",
+          "office": "9TH DISTRICT COURT OF APPEALS JUDGE",
+          "term": "Unexpired term ending 02/09/29",
+          "candidates": 2,
+          "contestId": "oh-ba01-ohio-court-of-appeals-9th-district-court-of-appeals-judge-unexpired-term-ending-02-09-29"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Appeals- 2nd Dist (1) Term Begins 2/9/2027",
+          "term": "",
+          "candidates": 1,
+          "contestId": "oh-ba01-ohio-court-of-appeals-judge-of-the-court-of-appeals-2nd-dist-1-term-begins-2-9-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas (1) Term Begins 1/1/2027",
+          "term": "",
+          "candidates": 1,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-1-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas (1) Term Begins 1/2/2027",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-2-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas (1) Term Begins 1/3/2027",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-3-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas (1) Term Begins 7/1/2027",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-7-1-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas (1) Term Begins 7/2/2027",
+          "term": "",
+          "candidates": 1,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-7-2-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas- Probate Division (1) Term Begins 2/9/2027",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-probate-division-1-term-begins-2-9-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "Judge of the Court of Common Pleas- Juvenile Division (1) UTE 12/31/2028",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-juvenile-division-1-ute-12-31-2028"
+        },
+        {
+          "county": "montgomery",
+          "office": "County Commissioner (1) Term Begins 1/1/2027",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-county-commissioner-1-term-begins-1-1-2027"
+        },
+        {
+          "county": "montgomery",
+          "office": "County Auditor (1)",
+          "term": "",
+          "candidates": 2,
+          "contestId": "oh-ba01-montgomery-county-county-auditor-1"
+        }
+      ],
+      "explicitExcludedFilings": [
+        {
+          "county": "cuyahoga",
+          "name": "Tariq K. Shabazz",
+          "reason": "Removed by Board action",
+          "sourceRow": "Tariq K. Shabazz                       Nonpartisan | No Partidista           5/4/2026          Removed by Board action |"
+        },
+        {
+          "county": "cuyahoga",
+          "name": "Tariq K. Shabazz",
+          "reason": "Removed by Board action",
+          "sourceRow": "Tariq K. Shabazz                       Nonpartisan | No Partidista          8/24/2026          Removed by Board action |"
+        }
+      ],
+      "remainingSampleNameChecks": [
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 3)",
+          "term": "",
+          "candidates": [
+            {
+              "name": "Martin J. Sweeney",
+              "party": "Democratic",
+              "writeIn": false
+            }
+          ],
+          "scope": "county:cuyahoga/council_district:3",
+          "voteFor": 1,
+          "unconfirmedPrintedNames": [
+            "Martin J. Sweeney"
+          ]
+        },
+        {
+          "county": "cuyahoga",
+          "office": "For Member of County Council (District 7)",
+          "term": "",
+          "candidates": [
+            {
+              "name": "Yvonne M. Conwell",
+              "party": "Democratic",
+              "writeIn": false
+            }
+          ],
+          "scope": "county:cuyahoga/council_district:7",
+          "voteFor": 1,
+          "unconfirmedPrintedNames": [
+            "Yvonne M. Conwell"
+          ]
+        },
+        {
+          "county": "montgomery",
+          "office": "New Lebanon Council (1) UTE 12/31/2029",
+          "term": "",
+          "candidates": [
+            {
+              "name": "Nicole Adkins",
+              "party": null,
+              "writeIn": false
+            },
+            {
+              "name": "Rob Dennis",
+              "party": null,
+              "writeIn": false
+            }
+          ],
+          "scope": "place:new_lebanon",
+          "voteFor": 1,
+          "unconfirmedPrintedNames": [
+            "Nicole Adkins",
+            "Rob Dennis"
+          ]
+        }
+      ],
+      "liveVerified": false
+    }
+  ],
+  "perZipSourceComparisons": [
+    {
+      "state": "MN",
+      "zip": "55415",
+      "precinct": "1510",
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf",
+      "officialRaceCount": 41,
+      "catalogMatchedRaceCount": 41,
+      "projectionWithKnownCommissionerDistrict": 41,
+      "projectionWithCurrentCommonDivisions": 40,
+      "missingReaderMapping": "Hennepin County Commissioner District3",
+      "liveVerified": false
+    },
+    {
+      "state": "OH",
+      "zip": "43215",
+      "officialRaceCount": null,
+      "liveVerified": false,
+      "remaining": "Official full sample not yet recovered. Public address lookup explicitly requires CAPTCHA; public FWAB, candidate/issue notices and precinct GIS are separate acquisition paths."
+    }
+  ],
+  "preservationCheck": {
+    "mn": "All222prior contests,427candidacies,1measure preserved exactly by ID and object equality.",
+    "il": "All163prior contests,255candidacies preserved exactly by ID and object equality.",
+    "oh": "All153priorcontests,324candidacies,3measures and existing withdrawal remain exact; source replay checks every prior object byID."
+  },
+  "latestFocusedTests": {
+    "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/ba01-great-lakes-ballots.test.ts",
+    "passed": 4,
+    "failed": 0,
+    "previousUnchangedSourceIsolationTests": "12passed in prior15test run; not repeated after data-only Ohio addition."
+  },
+  "pendingBatchSnapshot": {
+    "oh": {
+      "contests": 223,
+      "candidacies": 433,
+      "measures": 8,
+      "districtMemberships": 88
+    },
+    "mn": {
+      "contests": 392,
+      "candidacies": 683,
+      "measures": 1,
+      "districtMemberships": 88
+    },
+    "mi": {
+      "contests": 340,
+      "candidacies": 707,
+      "measures": 2,
+      "districtMemberships": 169
+    }
+  }
 }

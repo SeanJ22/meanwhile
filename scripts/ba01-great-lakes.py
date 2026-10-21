@@ -4,6 +4,7 @@ Run with --write to append verified Ohio additions (--write-wi replays earlier D
 prints source/repository comparisons. Web captures retain the extractor's line
 numbers; their receipt hashes identify those captured text bytes, not PDF bytes.
 """
+import csv
 import argparse
 import gzip
 import hashlib
@@ -29,7 +30,7 @@ def load_state(state):
 
 
 def web_text(name):
-    return " ".join(re.findall(r"^L\d+(?:@P[\d-]+)?: (.*)$", (EVIDENCE / name).read_text(), re.M))
+    return re.sub(r"\s+", " ", " ".join(re.findall(r"^L\d+(?:@P[\d-]+)?: (.*)$", (EVIDENCE / name).read_text(), re.M)))
 
 
 def slug(value):
@@ -156,8 +157,34 @@ def ohio(write):
                 "provenance":contest["provenance"]})
     if write:
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
-    return {"state": "OH", "officialSource": OH_URL, "sourceScope": "Franklin County candidate list, October 16; statewide district coverage remains incomplete",
+    return {"state": "OH", "officialSource": OH_URL, "sourceScope": "Franklin County candidate list, October 16; this source covers county-overlapping districts. Other saved official county lists and samples complete all Ohio federal/statewide/legislative districts.",
             "before": before, "after": [len(ballot["contests"]), len(ballot["candidacies"])], "verifiedAdditions": verified}
+
+
+def ohio_sample_core(write):
+    path,data,ballot=load_state('oh')
+    specs=[
+        ('warren-fifty-fifth-house',[("State Representative",55,[("Paul Michael Kurtz","Democratic"),("Philip L. Pirdy","Libertarian"),("C. Michelle Teska","Republican")])]),
+        ('warren-fifty-sixth-house',[("State Representative",56,[("Laalitya Acharya","Democratic"),("Adam Mathews","Republican")])]),
+        ('delaware-60th-house-district',[("State Representative",60,[("Shelby Kimball","Democratic"),("Brian Lorenz","Republican")])]),
+        ('lucas-house-district-41',[("State Senator",11,[("James Nowak","Republican"),("Kenneth W. Sharp","Libertarian"),("Paula Hicks-Hudson","Democratic")]),("State Representative",41,[("Ian Chamberlin","Republican"),("Erika White","Democratic")])]),
+        ('lucas-house-district-42',[("State Representative",42,[("Robert McMahon","Republican"),("Elgin Rogers Jr.","Democratic")])]),
+        ('lucas-house-district-43',[("State Representative",43,[("Michele Grim","Democratic"),("Zach Hall","Libertarian"),("David Karmol","Republican")])]),
+    ]
+    counts=[]
+    for stem,groups in specs:
+        source_name='oh-sample-'+stem+'.right.txt';meta=json.loads((EVIDENCE/('oh-sample-'+stem+'.retrieval.json')).read_text());text=web_text(source_name)
+        assert 'november 3, 2026' in web_text('oh-sample-'+stem+'.full.txt').lower()
+        for kind,number,rows in groups:
+            heading=re.search('For '+kind+r' \('+str(number)+r'(?:st|nd|rd|th) District\)',text)
+            assert heading,(stem,kind,number)
+            section=text[heading.end():].split('For ',1)[0]
+            for name,party in rows:assert f'{name} {party}' in section,(stem,name,party)
+            division='sldu' if kind=='State Senator' else 'sldl';title=f'{kind}, District {number}'
+            add(data,ballot,'oh',title,f'ocd-division/country:us/state:oh/{division}:{number}',[(name,party,f'{name} {party}') for name,party in rows],meta['url'],meta['publisher'],heading.group(),source_name)
+        counts.append({'source':meta['url'],'districtContests':len(groups),'candidateRows':sum(len(g[2]) for g in groups)})
+    if write:path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+    return {'state':'OH','officialSampleCore':counts,'contests':len(ballot['contests']),'candidacies':len(ballot['candidacies'])}
 
 
 def ohio_withdrawal(write):
@@ -222,7 +249,7 @@ def wisconsin(write):
         verified.append({"office":title,"candidates":len(rows)})
     if write:
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
-    return {"state":"WI", "officialSource":WI_URL, "sourceScope":"Dane County; remaining statewide districts still owed",
+    return {"state":"WI", "officialSource":WI_URL, "sourceScope":"Dane County sample comparison only; statewide Wisconsin comparison belongs to Pacific.",
             "before":before,"after":[len(ballot["contests"]),len(ballot["candidacies"])],"verifiedAdditions":verified}
 
 
@@ -377,12 +404,33 @@ def ohio_district_lists(write):
         ('State Representative',86,[('KENT HALLORAN','Democratic'),('BEN WEBER','Republican')])]),
         ('oh-muskingum.web.txt','https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf','Muskingum County Board of Elections',[
         ('State Senator',31,[('Laura Sirot','Democratic'),('Al Landis','Republican')]),
-        ('State Representative',97,[('Kris Geis',None),('Tim Godwin','Libertarian'),('Adam P. Holmes','Republican')])])]
+        ('State Representative',97,[('Kris Geis',None),('Tim Godwin','Libertarian'),('Adam P. Holmes','Republican')])]),
+        ('oh-stark.web.txt','https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf','Stark County Board of Elections',[
+        ('State Senator',29,[('Thomas West','Democratic'),('Jane Timken','Republican')]),
+        ('State Representative',48,[('Nick Morris','Democratic'),('Christina M. Hagan','Republican')]),
+        ('State Representative',49,[('Krista L. Allison','Democratic'),('Jim Thomas','Republican')]),
+        ('State Representative',50,[('Rylan Zachary Finzer','Democratic'),('Matthew Kishman','Republican')]),
+        ('State Representative',51,[('Amanda Fontana','Democratic'),('Jodi Salvo','Republican')])]),
+        ('oh-wood.web.txt','https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List','Wood County Board of Elections',[
+        ('State Representative',44,[('David J. Fournier','Democratic'),('Edward L. Schimmel','Republican'),('Lyndsey A. Stough','Independent')]),
+        ('State Representative',75,[('Richard J. Rettig','Democratic'),('Haraz N. Ghanbari','Republican')])]),
+        ('oh-wayne.web.txt','https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf','Wayne County Board of Elections',[
+        ('State Representative',77,[('Brooke Dillon','Democratic'),('Meredith Craig','Republican')])]),
+        ('oh-columbiana.web.txt','https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf','Columbiana County Board of Elections',[
+        ('State Representative',79,[('Monica Robb Blasdel','Republican'),('Bob Guy','Democratic')])]),
+        ('oh-darke.web.txt','https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf','Darke County Board of Elections',[
+        ('State Representative',80,[('Katie Koehler Wagner','Democratic'),('Johnathan Newman','Republican')])]),
+        ('oh-seneca.web.txt','https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf','Seneca County Board of Elections',[
+        ('State Representative',88,[('Gary Click','Republican'),('Aaron W. Jones','Democratic')])]),
+        ('oh-clermont.web.txt','https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530','Clermont County Board of Elections',[
+        ('State Representative',62,[('Ron Grethel','Libertarian'),('Jean Schmidt','Republican'),('Ian Schwartz','Democratic')])]),
+        ('oh-portage.web.txt','https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf','Portage County Board of Elections',[
+        ('State Representative',72,[('Jeff Clapper','Democratic'),('Michael Fricke','Libertarian'),('Heidi Workman','Republican')])])]
     for source_name,url,publisher,groups in specs:
         text=web_text(source_name)
         for kind,number,rows in groups:
             # Office and every full name are replayed from this retained official capture.
-            assert re.search(str(number)+r'(?:st|nd|rd|th)? (?:Dist|OHIO REPRESENTATIVE|STATE HOUSE)|District '+str(number)+r'|(?:Congress|Rep) '+str(number)+r'(?:st|nd|rd|th)|State Representative- '+str(number),text,re.I),number
+            assert re.search(str(number)+r'(?:st|nd|rd|th)? (?:Dist|OHIO REPRESENTATIVE|STATE HOUSE|House District)|District '+str(number)+r'|(?:Congress|Rep) '+str(number)+r'(?:st|nd|rd|th)|State Representative- '+str(number),text,re.I),number
             for name,party in rows:
                 assert name in text,(source_name,name)
                 if source_name=='oh-erie.web.txt':
@@ -403,7 +451,7 @@ def ohio_district_lists(write):
                     assert re.search(re.escape(name)+r' (?:Congress|House of Rep) '+str(number)+r'(?:st|nd|rd|th) '+party[:3],text),(name,party)
                 elif source_name=='oh-clark.web.txt' and party:
                     assert f'{name} {party}' in text,(name,party)
-                elif source_name in ['oh-brown.web.txt','oh-shelby.web.txt','oh-paulding.web.txt','oh-knox.web.txt','oh-richland.web.txt','oh-ross.web.txt','oh-washington.web.txt','oh-belmont.web.txt','oh-muskingum.web.txt']:
+                elif source_name in ['oh-brown.web.txt','oh-shelby.web.txt','oh-paulding.web.txt','oh-knox.web.txt','oh-richland.web.txt','oh-ross.web.txt','oh-washington.web.txt','oh-belmont.web.txt','oh-muskingum.web.txt','oh-wayne.web.txt','oh-darke.web.txt']:
                     assert (not party) or f'{name} ({party[:3]})' in text,(name,party)
                 elif source_name=='oh-wyandot.web.txt' and party:
                     assert f'{name} State Representative 87th District {party}' in text,(name,party)
@@ -413,6 +461,18 @@ def ohio_district_lists(write):
                     assert f'{name} {party}' in text,(name,party)
                 elif source_name=='oh-mahoning.web.txt':
                     assert re.search(re.escape(name)+r' State (?:Senate/|Representative/)'+str(number)+r'(?:st|nd|rd|th) District '+party,text),(name,party)
+                elif source_name=='oh-clermont.web.txt':
+                    assert f'{name} {party}' in text,(name,party)
+                elif source_name=='oh-portage.web.txt':
+                    assert re.search(re.escape(name)+r'.{0,90}'+party,text),(name,party)
+                elif source_name=='oh-stark.web.txt':
+                    assert f'{party} Nominated {name}' in text,(name,party)
+                elif source_name=='oh-wood.web.txt':
+                    assert f'{party} {name}' in text,(name,party)
+                elif source_name=='oh-columbiana.web.txt':
+                    assert re.search(re.escape(name)+r' State Representative '+str(number)+r'th District '+party[:3],text,re.I),(name,party)
+                elif source_name=='oh-seneca.web.txt':
+                    assert f'{name} For State Representative ({number}th District) {party[0]}' in text,(name,party)
                 elif source_name=='oh-allen.web.txt':
                     assert f'{name} ({party[:3]})' in text,(name,party)
                 elif source_name=='oh-hancock.web.txt':
@@ -478,14 +538,15 @@ def core_comparisons():
     verified = 0
     for contest in ballot['contests']:
         if contest['type'] != 'CANDIDACY': continue
-        section = next(s for s in sections if s['title'].startswith(contest['title']+' '))
+        section = next(s for s in sections if s['title']==contest['title'] or s['title'].startswith(contest['title']+' '))
         held = {(c['familyName'],c['partyLabel']) for c in ballot['candidacies'] if c['contestId']==contest['id']}
         assert held == set(section['rows']), contest['title']
         verified += len(held)
-    results = [{"state":"MI", "officialCandidateContests":170,"repositoryCandidateContests":170,
-        "officialCandidateRows":verified,"repositoryCandidateRows":455,"missingCoreContests":[],
+    mi_contests=[c for c in ballot['contests'] if c['type']=='CANDIDACY']
+    results = [{"state":"MI", "officialCoreContests":170,"officialCandidateContests":len(sections),"repositoryCandidateContests":len(mi_contests),
+        "officialCandidateRows":sum(len(s['rows']) for s in sections),"repositoryCandidateRows":verified,"missingCoreContests":[],
         "missingCoreCandidates":[],"source":next(s['finalUrl'] for s in load_state('mi')[1]['sourceReceipt']['sources'] if 'entellitrak' in s['finalUrl']),
-        "remaining":"166 district and local judicial contests in the same state report are outside the acquired core coverage; county/city sample-ballot comparison still owed."}]
+        "remaining":"County/city/school contests and local measures, remaining district-court boundary memberships and full sample-ballot/live comparison still owed."}]
     workbook = openpyxl.load_workbook(io.BytesIO(gzip.decompress((EVIDENCE/'in-0.xlsx.gz').read_bytes())),read_only=True,data_only=True)
     offices = defaultdict(list)
     for row in workbook.active.iter_rows(values_only=True):
@@ -564,9 +625,23 @@ def core_comparisons():
         'officialCandidateRows':366,'repositoryCandidateRows':366,'missingCoreContests':[],'missingCoreCandidates':[],
         'source':data['sourceReceipt']['sources'][0]['finalUrl'],
         'remaining':'District/local judicial contests and county/city sample-ballot comparisons remain owed.'})
+    # General export is distinct from the all-filings search, which retains primary losers.
+    groups=defaultdict(set)
+    for row in csv.reader(io.StringIO(gzip.decompress((EVIDENCE/'mn-general-export.txt.gz').read_bytes()).decode('utf-8-sig')),delimiter=';'):
+        if len(row)>6:groups[row[3]].add((row[1],row[6]))
+    _,data,ballot=load_state('mn');count=0;contests=0
+    for contest in ballot['contests']:
+        if contest['type']!='CANDIDACY' or not (contest['ocdId']=='ocd-division/country:us/state:mn' or any(part in contest['ocdId'] for part in ['/cd:','/sldu:','/sldl:'])):continue
+        held={((c['givenName']+' '+c['familyName']).strip(),c['partyLabel']) for c in ballot['candidacies'] if c['contestId']==contest['id']}
+        assert held==groups[contest['title']],(contest['title'],held,groups[contest['title']])
+        count+=len(held);contests+=1
+    assert contests==221 and count==427
+    results.append({'state':'MN','officialCandidateContests':221,'repositoryCandidateContests':221,'officialCandidateRows':427,'repositoryCandidateRows':427,
+        'missingCoreContests':[],'missingCoreCandidates':[],'source':'https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false',
+        'remaining':'Core comparison is scoped to federal/statewide/legislative rows. Separate ba01-great-lakes-mn-local.py verifies all114 district-judge races and selected county/school offices; remaining local and live/per-ZIP work stays open.'})
     return results
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser();parser.add_argument("--write",action="store_true");parser.add_argument("--write-wi",action="store_true");args=parser.parse_args()
-    print(json.dumps([ohio(args.write),ohio_district_lists(args.write),ohio_withdrawal(args.write),wisconsin(args.write_wi),*core_comparisons()],indent=2))
+    print(json.dumps([ohio(args.write),ohio_district_lists(args.write),ohio_sample_core(args.write),ohio_withdrawal(args.write),wisconsin(args.write_wi),*core_comparisons()],indent=2))

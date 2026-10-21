@@ -1,0 +1,8 @@
+{
+  "url": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+  "status": 200,
+  "bytes": 354914,
+  "publisher": "Delaware County Board of Elections",
+  "publicSelection": "POST ballotlist.aspx cmbelectionlist=20261103G, cmbDistrictCat=3, then select exact state-house district and Find Ballots. Fetch first returned sample link.",
+  "extraction": "pdftotext -f1 -l1 -x400 -y0 -W212 -H1008 -layout; remove isolated Sample watermark fragments only"
+}

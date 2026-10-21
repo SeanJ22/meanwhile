@@ -1448,6 +1448,120 @@
             "doorId": "fec-nv-chief",
             "quote": "Condensation (Ballot Question)\n\n\n\nShould the Nevada Constitution be amended to require\nvoters to either present photo identification to verify\ntheir identity when voting in-person or to provide certain\npersonal information to verify their identity when voting\nby mail ballot?"
           }
+        },
+        {
+          "id": "nv-clark-general-2026-district-attorney",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "District Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "District Attorney\nWolfson                 Steve            DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Assessor\nJoe                     Judy             REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Clerk\nGoya                    Lynn Marie       DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Recorder",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Recorder\nBorella                 Steven T.        LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Treasurer\nDiaz               J. \"Ken\"               DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "Public Administrator",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "Public Administrator\nItkin-Goodman      Stephanie              DEM"
+          }
         }
       ],
       "candidacies": [
@@ -3916,6 +4030,261 @@
             "doorId": "fec-nv-chief",
             "quote": "Reed, Peter                   Peter Reed                 Nonpartisan                   Board of Regent, District 10                                                  Washoe County   3/6/2026"
           }
+        },
+        {
+          "id": "nv-clark-general-2026-district-attorney-steve-wolfson",
+          "contestId": "nv-clark-general-2026-district-attorney",
+          "familyName": "Steve Wolfson",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "District Attorney\nWolfson                 Steve            DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-judy-joe",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Judy Joe",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Assessor\nJoe                     Judy             REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-lynette-warren",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Lynette Warren",
+          "givenName": "",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Assessor\nWarren                  Lynette          LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-tamicka-n-washington",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Tamicka N. Washington",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Assessor\nWashington              Tamicka N.       DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-lynn-marie-goya",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "Lynn Marie Goya",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Clerk\nGoya                    Lynn Marie       DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-howell-shaw",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "Howell Shaw",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Clerk\nShaw                    Howell           REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-george-stamper",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "George Stamper",
+          "givenName": "",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Clerk\nStamper                 George           LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-steven-t-borella",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Steven T. Borella",
+          "givenName": "",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Recorder\nBorella                 Steven T.        LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-tanya-flanagan",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Tanya Flanagan",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Recorder\nFlanagan                Tanya            DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-bill-young",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Bill Young",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Recorder\nYoung                   Bill             REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-j-ken-diaz",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "J. \"Ken\" Diaz",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Treasurer\nDiaz               J. \"Ken\"               DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-tim-j-tj-ferreira",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "Tim J. \"TJ\" Ferreira",
+          "givenName": "",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Treasurer\nFerreira           Tim J. \"TJ\"            LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-mitchell-t-tracy",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "Mitchell T. Tracy",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "County Treasurer\nTracy              Mitchell T.            REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator-stephanie-itkin-goodman",
+          "contestId": "nv-clark-general-2026-public-administrator",
+          "familyName": "Stephanie Itkin-Goodman",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "Public Administrator\nItkin-Goodman      Stephanie              DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator-michael-murphy",
+          "contestId": "nv-clark-general-2026-public-administrator",
+          "familyName": "Michael Murphy",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+            "sourceOrg": "Clark County Election Department",
+            "collectedAt": "2026-10-20T23:34:28.500536+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.500536+00:00",
+            "quote": "Public Administrator\nMurphy             Michael                REP"
+          }
         }
       ],
       "measures": [
@@ -3955,8 +4324,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:10:00.005103+00:00",
-    "reviewedBy": "Codex BL-14",
+    "reviewedAt": "2026-10-20T23:34:28.500536+00:00",
+    "reviewedBy": "Codex BA-01 official county source replay",
     "sources": [
       {
         "requestedUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
@@ -3987,6 +4356,17 @@
         "publisher": "Washoe County Registrar of Voters",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Washoe County Registrar of Voters 2026 General Election Contests workbook, linked as the full general-election contest list. Script read XLSX shared strings and cells to recover the current name-on-ballot and party for Veronica Cortes; the certified master file prints that candidate without a delimiter. Both statewide question strings independently matched the official Secretary of State booklet."
+      },
+      {
+        "requestedUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+        "finalUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+        "httpStatus": 200,
+        "rawHash": "f9e256f97332833676ec2362fb0e80aaf16497dc568f067e616b86df52e353e6",
+        "retrievedAt": "2026-10-20T23:34:28.500536+00:00",
+        "publisher": "Clark County Election Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official complete November3,2026 general contest/candidate table, pages4-5, COUNTY PARTISAN section. Six countywide offices and15 named candidates replayed against exact name/party rows; commissioner districts excluded.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

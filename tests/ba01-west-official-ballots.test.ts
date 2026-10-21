@@ -85,6 +85,7 @@ test("Pima's official general list supplies the statewide Supreme Court contest 
   const ballot = state("az"), contest = ballot.contests.find(c => c.id === "az-2026-general-supreme-court-john-lopez-iv");
   assert.ok(contest);
   assert.equal(contest.ocdId, "ocd-division/country:us/state:az");
+  assert.match(contest.title, /John Lopez IV — Retention$/);
   const candidate = ballot.candidacies.find(c => c.contestId === contest.id);
   assert.ok(candidate);
   assert.equal(candidate.familyName, nominee.familyName);

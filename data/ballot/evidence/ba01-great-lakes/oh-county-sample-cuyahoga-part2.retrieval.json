@@ -1,0 +1,10 @@
+{
+  "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+  "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:30:58.537123+00:00",
+  "rawHash": "e6ec5f040c29634ea2490247f660eff986ac4235caf073a9ec8199d92a07191d",
+  "contentType": "application/pdf",
+  "county": "cuyahoga",
+  "officialParentUrl": "https://www.boe.cuyahogacounty.gov/elections/GetElectionById/269/"
+}

@@ -46,6 +46,16 @@ export function addArizonaStatewideCourt() {
   const candidacyId = `${contestId}-john-lopez-iv`;
   if (!ballot.candidacies.some(row => row.id === candidacyId)) ballot.candidacies.push({ id: candidacyId, contestId,
     familyName: row.familyName, givenName: row.givenName, partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance });
+  const sampleSource = sources.find((row: { file: string }) => row.file === "az-scottsdale-sample.txt");
+  const sample = readFileSync(resolve(directory, sampleSource.file), "utf8");
+  if (createHash("sha256").update(sample).digest("hex") !== sampleSource.snapshotHash ||
+      !sample.includes("Shall the following Justice of the Supreme Court be\nretained in office?") ||
+      !sample.includes("Retain:\nLOPEZ IV, JOHN\nYES\nNO")) throw new Error("Missing official Supreme Court retention wording");
+  const supreme = ballot.contests.find(contest => contest.id === contestId)!;
+  supreme.title = "Justice of the Arizona Supreme Court — John Lopez IV — Retention";
+  supreme.provenance = { sourceUrl: sampleSource.sourceUrl, sourceOrg: "City of Scottsdale — official Maricopa County sample ballot",
+    collectedAt: sampleSource.retrievedAt, verifiedAt: sampleSource.retrievedAt,
+    quote: "Shall the following Justice of the Supreme Court be retained in office?\nRetain:\nLOPEZ IV, JOHN\nYES\nNO" };
   const words = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
   const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   ballot.candidateTickets ??= [];
@@ -82,10 +92,12 @@ export function addArizonaStatewideCourt() {
     retrievedAt: source.retrievedAt, publisher: "Pima County Elections Department", sourceClass: "ELECTION_AUTHORITY",
     reviewedEvidence: `Official Pima County November 3 general candidate list linked by ${source.linkingPage}. Full text saved in az-pima-general-candidates.txt; source names John Lopez IV for the statewide Supreme Court and explicitly prints all four governor/lieutenant-governor pairs.`,
     reviewOutcome: "SUPPORTED" };
-  const priorSource = state.sourceReceipt.sources.find((row: { rawHash: string }) => row.rawHash === source.rawHash);
+  const priorSource = state.sourceReceipt.sources.find((row: { rawHash: string; retrievedAt: string; requestedUrl: string; finalUrl: string }) =>
+    row.rawHash === source.rawHash && row.retrievedAt === source.retrievedAt && [row.requestedUrl, row.finalUrl].includes(source.sourceUrl));
   if (priorSource) Object.assign(priorSource, checkedSource);
   else state.sourceReceipt.sources.push(checkedSource);
-  state.sourceReceipt.reviewedAt = source.retrievedAt;
+  state.sourceReceipt.reviewedAt = new Date(Math.max(Date.now(), ...state.sourceReceipt.sources.map((row: { retrievedAt: string }) =>
+    Date.parse(row.retrievedAt)).filter(Number.isFinite))).toISOString();
   state.sourceReceipt.reviewedBy = "Codex BA-01 official-source replay";
   writeFileSync(file, JSON.stringify(state, null, 2) + "\n");
   return { contestId, candidacyId };

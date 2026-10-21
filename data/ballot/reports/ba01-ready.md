@@ -1,78 +1,133 @@
-# BA-01 verified expansion batch
+# BA-01 prepared national expansion
 
-This batch prepares corrected input for the normal daily `ballot-contests:<ST>`
-assembler. River ships this branch; the runner publishes on its next daily pass.
-No production credential is required by this lane. This report does not mark the
-national coverage objective or live ZIP acceptance complete.
+Corrected inputs use the existing daily `ballot-contests:<ST>` assembler. River
+ships the branch; the runner publishes on its next daily pass; oversight checks
+live ballot pages. No production write credential goes to this lane. The first
+READY is `7e54e6ac5cdaae7dbcf718f8a3f5c59714641bfb`. This expansion cannot yet be
+marked READY because the ordinary publication path rejects distinct real source
+captures of identical bytes. Its exact one-line dependency is prepared in
+[`ba01-source-authority.patch`](ba01-source-authority.patch), outside Sean's
+explicit file ownership list. `lib/civic-data/source-authority.ts` is untouched.
+National source coverage and the requested live acceptance remain incomplete.
 
-## Reader changes
+## Verified reader data prepared
 
-- Added 3,037 contests, 4,779 candidacy records and 140 measures. Raw holdings are
-  now 9,073 contests, 16,449 candidacies and 282 measures across 50 states and DC.
-  These are inventory counts, not completeness denominators.
-- Texas now includes its two separately certified legislative special elections,
-  eight Austin propositions, Travis countywide sample offices, and 1,222 printed
-  countywide contests / 1,346 candidates across all 254 counties. Existing Travis
-  identities are reused. Dallas's certified criminal district attorney write-in
-  is also included. Precinct offices, other local measures and later county
-  write-in lists remain open.
-- Arizona, Colorado and Wisconsin explicitly preserve the official governor /
-  lieutenant governor pairs. The reader shows each verified pair as one choice;
-  original records and IDs remain in the saved projection. Different stated
-  parties remain visible.
-- Ohio's explicit October 15 Ron Ula / Michael C. Lehnerd withdrawal becomes a
-  filing-change notice instead of a current choice. The earlier filing stays
-  available with its original ID and provenance.
-- A newer official election authority can supersede an older authority's list
-  for the same contest, election and division. This lets New Jersey's statewide
-  certification replace its older county certification without losing unrelated
-  county data.
+Current holdings are recorded by [`ba01-inventory.json`](ba01-inventory.json).
+They contain 11,608 contests,
+19,860 candidacy records and 488 measures across all 50 states, DC and three
+territories: +5,572 / +8,190 / +346 above the starting river, and
++2,535 / +3,411 / +206 beyond the first READY. These are raw inventory counts,
+not official denominators, distinct people or live delivery counts.
 
-## Verification
+Ohio's 139 core contests and 310 active choices match acquired official lists and
+samples, including all 15 congressional, 17 Senate and 99 House races. Its 311th
+raw core record remains as a sourced withdrawn filing. Michigan now matches all
+338 candidate-bearing contests and 707 eligible names in the acquired final SOS
+list, including 168 judicial races. Minnesota's 221 core contests / 427 choices
+and 114 district-judge races / 117 names are checked separately. Kansas accounts
+for every one of 247 races / 362 names in its official statewide table. Arkansas
+accounts for all 129 regular core races plus both legislative specials.
 
-The focused assembler, worker, source, geography and ticket checks passed
-(69 Node subtests), as did 11 Northeast source replay tests and TypeScript with
-the repository's generated `.next` files excluded. The final withdrawal check
-and production-schema rerun are recorded in the commit validation.
+Texas adds all 269 certified district-judge contests / 328 names, including the
+sole declared write-in in District 276, plus the declared-write-in-only District
+Attorney 31 special. Exact current court jurisdictions and enacted HB16 resolve
+the obsolete Guadalupe entry for District 274: that court now serves Comal and
+Hays. All 17 names in the statewide declared write-in certificate are accounted
+for. The earlier county import holds all 1,222 countywide offices / 1,346 names
+printed for all 254 counties in the final certification. Regional appeals,
+prosecutor, precinct, municipal and special-district scope work remains open.
 
-The database integration applies all 46 journaled production migrations to an
-isolated PostgreSQL-compatible PGlite copy, seeds each state's prior `river`
-ballot, runs the actual assembler and Postgres store, and reads the promoted
-typed projection back. All 51 state/DC publications passed and every previous
-contest, candidacy and measure ID was retained. Ticket mates also survive typed
-readback and the normal reader projection. This is a copy built from the real
-schema and prior checked-in ballots, not a claim to have copied production rows.
+California's 58 official county-to-appellate-district memberships let San
+Francisco county readers reach all eleven held First District retention races.
+Los Angeles adds 34 certified county/city races / 54 candidates and 54 complete
+county/city questions. Its other district races and 14 school/college measure
+electorates remain open. Earlier San Francisco additions include all five
+countywide candidate offices and eleven local/regional questions.
 
-Raw official captures, hashes, source timestamps and replay scripts are included.
-Per-state comparison results and remaining acquisition work are in:
+Further verified county batches include statewide county/judicial lists in
+Idaho, North Dakota and New Mexico; selected Montana and Utah judicial races;
+Maine's 88 local races / 108 names; New York Supreme Court and selected NYC local
+races; Maryland's circuit candidates and all 48 county/city questions; selected
+Ohio and Minnesota municipal/school offices; and Florida, Georgia, Mississippi
+and other regional additions. Miami-Dade's 55 local questions are held; its
+candidate and special-district coverage remains partial. Florida's 31 certified
+unopposed core contests are legally omitted from printed ballots; the report
+keeps certified-roster counts separate from actual sample counts.
 
-- `data/ballot/reports/ba01-inventory.json`
-- `data/ballot/reports/ba01-tx-ca.json` and `ba01-tx-counties.json`
-- `data/ballot/reports/ba01-northeast.json`
-- `data/ballot/evidence/ba01-great-lakes/ba01-great-lakes-comparison.json`
-- `data/ballot/evidence/ba01-south/report.md`
-- `data/ballot/ba01-southeast-comparison.json`
-- `data/ballot/ba01-pacific-evidence/README.md`
-- `data/ballot/ba01-pacific-wi-evidence/comparison.json`
-- `data/ballot/ba01-west-evidence/state-comparison.json`
+American Samoa has its first verified input, 18 contests / 44 choices. The
+Northern Mariana Islands hold 21 of 22 certified/sample races, 72 choices and
+three explicit governor mates; Northern Islands mayor's exact electorate remains
+open. The U.S. Virgin Islands hold all ten source contests / 70 choices and five
+explicit mates. Guam's sample is acquired but the government publisher backlink
+is not established. Puerto Rico's next regular general election is 2028; no
+November3 contest is invented.
 
-## Open work
+Every new candidate receives the same extraction effort and fields within its
+contest, including literal independent/minor-party labels and filed websites
+where supplied. No candidate is supplied for a blank write-in line. Six empty
+North Dakota offices and Richland County's coroner remain explicit held gaps.
 
-Core race gaps remain: Ohio 20 legislative districts, Wisconsin 70 legislative
-districts, Pennsylvania 93 regular districts, Arkansas 57 regular districts and
-Illinois 17 districts. New Hampshire's full official denominator is unmeasured;
-municipal sample recovery is active. Alaska's core certification and Minnesota's
-final general-election roster still need complete replay. Arizona's comparison
-records its three congressional certification/sample limitations. Other reports
-state source scope, write-in and local coverage limitations explicitly.
+## Publication repairs and verification
 
-The lanes continue those comparisons and county/city sample acquisition in
-parallel. Territories still have no local input file. They are named gaps.
+The merge retains every still-cited observation, including identical bytes
+captured at separate actual times, and prunes uncited observations. Authority
+lookup is bound to the exact capture, with a unique-publisher fallback for legacy
+measure provenance. A newly verified official list can fill a held contest. A
+changed published electorate requires an explicit, newer official correction;
+the Newbury Council2 correction includes that proof. Receipt replay preserves
+an existing observation's publisher; a partial update cannot rewrite the authority
+of a still-cited exact observation. Uncited observations are pruned independently.
+Malformed optional membership metadata cannot crash an otherwise usable ballot.
 
-Oversight owns the live race-by-race acceptance after River and the daily runner.
-`ba-01-live-baseline.json` records the 15 requested ZIP checks before this batch;
-none is claimed complete. Austin and San Francisco already hold the missing House
-contests in their data. Their live pages omit them because the reader has not
-established the congressional district. Miami also reports that district gap,
-and Detroit reports a state Senate district gap. Those resolver dependencies
-remain outside this lane's owned files and must be addressed for live acceptance.
+The source-authority duplicate key currently omits retrieval time. The prepared
+patch adds that time; exact duplicate observations remain rejected. All expanded
+publication checks use an isolated loader for exactly that patch. They are
+preview validation, not a passing ordinary build. The ordinary focused regression
+still reproduces `MANUAL_SOURCE_PROOF_DUPLICATED`; that dependency must be applied
+by its owner, or Sean must explicitly extend this lane's scope, before READY.
+
+The isolated Postgres-compatible copy applies all 46 real journaled migrations.
+They are byte-identical to fetched River `190700561a5a5c590e03cd8e22989ec18caac1a9`.
+It seeds the prior checked-in ballots from the first READY, runs the actual
+assembler and Postgres store, and reads the typed promoted projection back.
+Checks require every incoming complete contest, candidate and measure to publish,
+every previous ballot ID to remain, and memberships and ticket mates to reach the
+reader. New territory inputs also exercise their first publication. All151 Node subtests pass in that exact preview, including all54 jurisdiction
+publications; all54 Python source-replay tests and TypeScript also pass. The
+ordinary source-identity regression remains a failure. Exact commands and limits
+are recorded in [`ba01-validation.json`](ba01-validation.json).
+
+The copy contains no production rows. Automatic approval review rejected the
+production snapshot read because it would transmit a configured database
+credential, citing Sean's no-lane-credentials instruction. No production write
+was attempted, and the rejected credential path was not retried.
+
+## Remaining source and live work
+
+[`ba01-national-comparison.md`](ba01-national-comparison.md) reports measured
+scope for every state and DC. Major regular core gaps remain in Pennsylvania,
+New Hampshire, Wisconsin and Illinois; Alaska's full core denominator is
+unmeasured, and Arizona's CD3/4/8 certification limitations remain explicit.
+Nebraska's entire saved source has 411 contest tuples / 521 choices: the old
+64-NRD estimate was incorrect; 174 NRD races / 199 choices and 195 other
+regional/local races / 230 choices remain for precise electorate mapping.
+All regional/local gaps remain standing acquisition work.
+
+[`ba01-zip-acceptance.json`](ba01-zip-acceptance.json) records all 15 requested
+ZIP checks as open. NYC10001's particular official address style matches all
+16 source races / 32 distinct choices / five questions in the prepared catalog;
+this does not establish every address in that split ZIP. Madison53703 Central
+Library, Ward52/style005, matches all11 printed races /14 choices through the
+prepared reader; CityHallWard51 remains unverified against a printed sample. Fargo58102's particular
+City Hall style matches all 26 races / 35 choices / three measures through the
+reader selector. Minnesota55415's example has all 41 source races in the catalog,
+but only40 reach the reader without explicit commissioner District3 resolution.
+Regional reports distinguish other complete source sections from unfinished
+address/style mapping.
+
+No post-publication live acceptance is claimed. Austin, San Francisco and Miami
+lack resolved congressional districts in the saved live baseline; Detroit lacks
+a resolved state Senate district. Those resolver changes are outside the owned
+files and remain necessary for the live reader result. Oversight owns the final
+race-by-race checks after River and the runner. The first READY is pushed; this
+new expansion is prepared with its narrow dependency, not merged or deployed.

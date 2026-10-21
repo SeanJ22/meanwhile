@@ -1,0 +1,104 @@
+{
+  "state": "MN",
+  "before": [
+    381,
+    613
+  ],
+  "after": [
+    392,
+    683
+  ],
+  "verifiedSchoolContests": 11,
+  "verifiedSchoolCandidates": 70,
+  "contests": [
+    {
+      "schoolDistrictNumber": 720,
+      "schoolDistrictName": "Shakopee Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:shakopee_public_school_district",
+      "office": "School Board Member (ISD #720) (Elect 4)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf"
+    },
+    {
+      "schoolDistrictNumber": 728,
+      "schoolDistrictName": "Elk River School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district",
+      "office": "School Board Member At Large (ISD #728) (Elect 2)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf"
+    },
+    {
+      "schoolDistrictNumber": 834,
+      "schoolDistrictName": "Stillwater Area Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:stillwater_area_public_school_district",
+      "office": "School Board Member At Large (ISD #834) (Elect 4)",
+      "candidates": 9,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf"
+    },
+    {
+      "schoolDistrictNumber": 877,
+      "schoolDistrictName": "Buffalo-Hanover-Montrose Public Schools",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:buffalo_hanover_montrose_public_schools",
+      "office": "School Board Member (ISD #877) (Elect 3)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D1ADB14D-BEEE-4185-A519-108D53E16C84.pdf"
+    },
+    {
+      "schoolDistrictNumber": 112,
+      "schoolDistrictName": "Eastern Carver County Public Schools",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:eastern_carver_county_public_schools",
+      "office": "School Board Member (ISD #112) (Elect 4)",
+      "candidates": 9,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf"
+    },
+    {
+      "schoolDistrictNumber": 625,
+      "schoolDistrictName": "St. Paul Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:st_paul_public_school_district",
+      "office": "School Board Member At Large (ISD #625) (Elect 3)",
+      "candidates": 7,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A01847A9-0649-4CCD-A5F6-3467037D44AA.pdf"
+    },
+    {
+      "schoolDistrictNumber": 535,
+      "schoolDistrictName": "Rochester Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:rochester_public_school_district",
+      "office": "School Board Member (ISD #535) (Elect 4)",
+      "candidates": 10,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf"
+    },
+    {
+      "schoolDistrictNumber": 77,
+      "schoolDistrictName": "Mankato Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:mankato_public_school_district",
+      "office": "School Board Member (ISD #77) (Elect 3)",
+      "candidates": 4,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf"
+    },
+    {
+      "schoolDistrictNumber": 742,
+      "schoolDistrictName": "St. Cloud Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:st_cloud_public_school_district",
+      "office": "School Board Member At Large (ISD #742) (Elect 3)",
+      "candidates": 6,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/672D8799-A9CB-4956-A1E2-800E58C53470.pdf"
+    },
+    {
+      "schoolDistrictNumber": 347,
+      "schoolDistrictName": "Willmar Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:willmar_public_school_district",
+      "office": "School Board Member (ISD #347) (Elect 3)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AB3AC7CF-8748-4D48-862D-4E53D5271302.pdf"
+    },
+    {
+      "schoolDistrictNumber": 31,
+      "schoolDistrictName": "Bemidji Public School District",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:bemidji_public_school_district",
+      "office": "School Board Member At Large (ISD #31) (Elect 3)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf"
+    }
+  ],
+  "remaining": "School-subdistrict seats, soil/water districts and remaining local measures remain open. Source/catalog verification is not live acceptance."
+}

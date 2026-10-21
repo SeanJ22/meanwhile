@@ -11,7 +11,8 @@
     "retrievedAt": "2026-10-20T23:31:05.471162+00:00",
     "coreCandidacies": 14,
     "countyCandidacies": 1,
-    "unmappedRegionalJudicialCandidacies": 2
+    "regionalJudicialCandidacies": 2,
+    "unmappedRegionalJudicialCandidacies": 0
   },
   "remaining": "Precinct offices, judicial districts, municipal offices, local questions and later write-in certifications remain open.",
   "counties": {

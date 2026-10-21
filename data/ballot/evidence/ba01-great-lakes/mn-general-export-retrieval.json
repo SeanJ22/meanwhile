@@ -1,0 +1,11 @@
+{
+  "requestedUrl": "https://candidates.sos.mn.gov/CandidateFilingSearch.aspx",
+  "method": "POST",
+  "eventTarget": "ctl00$ContentPlaceHolder1$lbGenStateMediaFile",
+  "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+  "httpStatus": 200,
+  "bytes": 208449,
+  "rawHash": "f389ab388a30a975393df947478e8f508cde5ad4bb2c978203e42936d9fcba21",
+  "source": "Minnesota Secretary of State public Candidates in the General Election - Federal, State, and County Offices text export",
+  "methodFinding": "urllib closed connections on each request and the export redirected to NoMatchesFound; httpx.Client preserved the public session through GET, POST and redirect and obtained the final general roster. No challenge solver, credential or private endpoint was used."
+}

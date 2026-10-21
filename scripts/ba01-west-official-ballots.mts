@@ -78,8 +78,13 @@ export function applyWestOfficialAdditions() {
   const save = (state: string, input: StateInput) => writeFileSync(resolve(root, `data/ballot/2026-general/${state}.json`), JSON.stringify(input, null, 2) + "\n");
   const addReceipt = (input: StateInput, source: Source, publisher: string) => {
     const row = receipt(source, publisher);
-    if (!input.sourceReceipt.sources.some(s => (s as { rawHash?: string }).rawHash === row.rawHash)) input.sourceReceipt.sources.push(row);
-    input.sourceReceipt.reviewedAt = source.retrievedAt;
+    if (!input.sourceReceipt.sources.some(s => {
+      const held = s as { rawHash: string; retrievedAt: string; requestedUrl: string; finalUrl: string };
+      return held.rawHash === row.rawHash && held.retrievedAt === row.retrievedAt &&
+        [held.requestedUrl, held.finalUrl].includes(row.requestedUrl);
+    })) input.sourceReceipt.sources.push(row);
+    input.sourceReceipt.reviewedAt = new Date(Math.max(Date.now(), ...input.sourceReceipt.sources.map(s =>
+      Date.parse((s as { retrievedAt: string }).retrievedAt)).filter(Number.isFinite))).toISOString();
     input.sourceReceipt.reviewedBy = "Codex BA-01 official-source replay";
   };
   const result = { co: { contests: 0, candidacies: 0, measures: 0 }, az: { contests: 0, candidacies: 0, measures: 0 } };

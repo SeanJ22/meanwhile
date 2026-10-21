@@ -1,0 +1,11 @@
+{
+  "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+  "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:22:36.985689+00:00",
+  "rawHash": "470de0ffe873e2459b65fc5a502e31e688eec33ffeb86af911fca898341acf71",
+  "selectionUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/ballotlist.aspx",
+  "sourceElection": "20261103G",
+  "county": "montgomery",
+  "sampleCountInPublicList": 468
+}

@@ -1,0 +1,23 @@
+{
+  "state": "AK",
+  "sourceUrl": "https://ltgov.alaska.gov/newsroom/2026/09/lieutenant-governor-dahlstrom-will-certify-nominations-of-treg-taylor-and-jose-tagle/",
+  "sourceType": "state election executive certification decision",
+  "certificationMatches": [
+    {
+      "contestId": "ak-doe-2026-general-governor-lieutenant-governor",
+      "heldCandidacyId": "ak-doe-2026-general-governor-lieutenant-governor-taylor-treg-english-candi",
+      "certifiedLeadName": "Treg Taylor",
+      "partyVerifiedByThisSource": false,
+      "runningMateVerifiedByThisSource": false
+    },
+    {
+      "contestId": "ak-doe-2026-general-house-district-22",
+      "heldCandidacyId": "ak-doe-2026-general-house-district-22-tagle-jose-roel-a",
+      "certifiedLeadName": "Jose Tagle",
+      "partyVerifiedByThisSource": false,
+      "runningMateVerifiedByThisSource": false
+    }
+  ],
+  "fullCertifiedStatewideComparisonComplete": false,
+  "ballotRowsChanged": 0
+}

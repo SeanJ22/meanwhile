@@ -1,0 +1,11 @@
+{
+  "url": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+  "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+  "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+  "bytes": 18950671,
+  "validPdf": true,
+  "convertedTextHash": "35a87d1746a70d2b310a8e7a4e42cb46d3e874b9e935ae418c0781a005d95bae",
+  "extraction": "pdftotext -raw; exact official330precinct-ballot styles, original PDF identified by rawHash"
+}

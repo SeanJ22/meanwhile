@@ -1,0 +1,82 @@
+[
+  [
+    "Representative in Congress District 7",
+    "ocd-division/country:us/state:wi/cd:7",
+    [
+      [
+        "Michael Alfonso",
+        "Republican"
+      ],
+      [
+        "Fred Clark",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 23",
+    "ocd-division/country:us/state:wi/sldu:23",
+    [
+      [
+        "Romaine Robert Quinn",
+        "Republican"
+      ],
+      [
+        "Jeff Foster",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 69",
+    "ocd-division/country:us/state:wi/sldl:69",
+    [
+      [
+        "Karen Hurd",
+        "Republican"
+      ],
+      [
+        "Roger Halls",
+        "Democratic"
+      ],
+      [
+        "Josh Kelley",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Clark County Sheriff",
+    "ocd-division/country:us/state:wi/county:clark",
+    [
+      [
+        "Kerry L. Kirn",
+        "Republican"
+      ],
+      [
+        "Gene R. Roehl",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Clark County Coroner",
+    "ocd-division/country:us/state:wi/county:clark",
+    [
+      [
+        "Clarissa M. Rochester",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Clark County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:clark",
+    [
+      [
+        "Heather Bravener",
+        "Democratic"
+      ]
+    ]
+  ]
+]

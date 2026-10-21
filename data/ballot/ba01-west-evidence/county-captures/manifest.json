@@ -80,7 +80,9 @@
     "bytes": 711844,
     "file": "ut-saltlake-bt1.gz",
     "textSnapshot": "ut-saltlake-bt1.txt",
-    "textHash": "0b9b295ec85fa63dae7aa0471eaad871ea6c2e7fa35225fafebd8cf41d2e6360"
+    "textHash": "0b9b295ec85fa63dae7aa0471eaad871ea6c2e7fa35225fafebd8cf41d2e6360",
+    "rawTextSnapshot": "ut-saltlake-bt1-raw.txt",
+    "rawTextHash": "14b0715b18cde225690b47c57777921fef16f6bb5cf56040f86d01d43806006a"
   },
   {
     "name": "ut-saltlake-types",
@@ -123,5 +125,192 @@
     "file": "az-phoenix-pamphlet.gz",
     "textSnapshot": "az-phoenix-pamphlet.txt",
     "textHash": "4865fe963f99044a4e681213b35e166a69c53042bd235cab067724322d90b13d"
+  },
+  {
+    "name": "wy-laramie-county",
+    "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+    "retrievedAt": "2026-10-20T23:38:47.138279+00:00",
+    "httpStatus": 200,
+    "rawHash": "037175edc4db633eced1b0abbe959d569fc7f0a48082386a77f954d7fff63bb4",
+    "bytes": 154305,
+    "isPDF": true,
+    "file": "wy-laramie-county.gz",
+    "textSnapshot": "wy-laramie-county.txt",
+    "textHash": "aecd164a61c41d655562dcc1962b9844f25df314f0ff1c11807de3588e64a9f6"
+  },
+  {
+    "name": "wy-laramie-municipal",
+    "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-municipal-offices-candidates-general.pdf",
+    "retrievedAt": "2026-10-20T23:38:46.977842+00:00",
+    "httpStatus": 200,
+    "rawHash": "bde16bb30d9e36b144e3391eed1c99498e8d59a413d89e809a12b0f939cde979",
+    "bytes": 127372,
+    "isPDF": true,
+    "file": "wy-laramie-municipal.gz",
+    "textSnapshot": "wy-laramie-municipal.txt",
+    "textHash": "b2ab50ed613d7600316175e9276f441bbfff0f5759f01c49626e27d8246c0f30"
+  },
+  {
+    "name": "wy-laramie-districts",
+    "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/school-conservation-and-fire-district-candidates-general.pdf",
+    "retrievedAt": "2026-10-20T23:38:46.807039+00:00",
+    "httpStatus": 200,
+    "rawHash": "d7cec731a1bef0618c4881c4e6483522a3c2004a0d5258c92e2d01819879334f",
+    "bytes": 167447,
+    "isPDF": true,
+    "file": "wy-laramie-districts.gz",
+    "textSnapshot": "wy-laramie-districts.txt",
+    "textHash": "a31dcbe3b6c91a6855483e409c42e1a47d9b09ab0a8355cbfbcdd7c96c4db94a"
+  },
+  {
+    "name": "co-elpaso-sample",
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+    "retrievedAt": "2026-10-20T23:38:46.797378+00:00",
+    "httpStatus": 200,
+    "rawHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+    "bytes": 230233,
+    "isPDF": true,
+    "file": "co-elpaso-sample.gz",
+    "textSnapshot": "co-elpaso-sample.txt",
+    "textHash": "c672aa61ad6cf7657fc46345cf26f26b4b0c2f4bb2e6650fb44394c5f249f66f",
+    "rawTextSnapshot": "co-elpaso-sample-raw.txt",
+    "rawTextHash": "848c85cdd9a9566282cd07c178548f5793e2039961aabc8fe3cde0cd491e1c24",
+    "extractionMethod": "pdftotext -raw; custom embedded font maps ASCII to codepoint minus29. Recovered text replayed by ba01-west-elpaso.py. Candidate and retention names and county1A text visually checked against rendered official PDF.",
+    "visualCorrections": [
+      "David 'Muka' Traenkle nickname apostrophes",
+      "0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) parentheses"
+    ]
+  },
+  {
+    "name": "co-official-counties",
+    "sourceUrl": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+    "retrievedAt": "2026-10-20T23:46:26.072048+00:00",
+    "httpStatus": 200,
+    "rawHash": "44c8de1393e2e6105a0596366e074d1c79111c712fefa97f18fb3aa2a7ee65de",
+    "bytes": 46812,
+    "file": "co-official-counties.html.gz"
+  },
+  {
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+    "retrievedAt": "2026-10-21T00:03:42.620430+00:00",
+    "rawHash": "5d762c00af1b62e0e3b4c788f8563571f47bf0ba2270c0efeb7214e7e339f342",
+    "httpStatus": 200,
+    "sourceGovLink": "https://vip.sos.nd.gov/WhereToVoteDetail.aspx?ID=&part=09440101&ptlPKID=&ptlhPKID=&tab=SampleBallot",
+    "publicAddress": "Fargo City Hall, 225 4th St N, Fargo ND 58102",
+    "precinctId": "09440101",
+    "name": "nd-fargo-cityhall-sample",
+    "file": "nd-fargo-cityhall-sample.gz",
+    "bytes": 101652,
+    "textSnapshot": "nd-fargo-cityhall-sample.txt",
+    "textHash": "17117bed57685ef4a42774bc407deae93c4901dd7cf901d25092c60fa93ecacf",
+    "extraction": "pdftotext -raw; preserves each ballot column as a sequential block"
+  },
+  {
+    "sourceUrl": "https://www.ndcourts.gov/legal-resources/rules/ndsupctadminr/6",
+    "finalUrl": "https://www.ndcourts.gov/legal-resources/rules/ndsupctadminr/6",
+    "retrievedAt": "2026-10-21T00:04:53.304846+00:00",
+    "rawHash": "ffa26db7a3b6823e8bc8fb2fdae2e73674f6f99b82dde1b1dd0c1fa131b1d862",
+    "httpStatus": 200,
+    "name": "nd-east-central-rule",
+    "file": "nd-east-central-rule.gz",
+    "bytes": 58267,
+    "textSnapshot": "nd-east-central-rule.txt",
+    "textHash": "cc93868820f03ff5bb6cf11288646bd2f7597ff07356c71707568e790a3b6858"
+  },
+  {
+    "sourceUrl": "https://ndlegis.gov/prod/cencode/t61c24.pdf",
+    "finalUrl": "https://ndlegis.gov/prod/cencode/t61c24.pdf",
+    "retrievedAt": "2026-10-21T00:04:52.583859+00:00",
+    "rawHash": "11ba6c6848c09756e1afff3b642b616f5014fda20e0afe6baea6d5d8e1a4a2e5",
+    "httpStatus": 200,
+    "name": "nd-garrison-code",
+    "file": "nd-garrison-code.gz",
+    "bytes": 141385,
+    "textSnapshot": "nd-garrison-code.txt",
+    "textHash": "a01c45f84f9ce6ead3e5e187a3a6a14ad216d73cf8aabb81344673080be41acf"
+  },
+  {
+    "sourceUrl": "https://efotg.sc.egov.usda.gov/references/public/ND/ND_Districts_color.pdf",
+    "finalUrl": "https://efotg.sc.egov.usda.gov/references/public/ND/ND_Districts_color.pdf",
+    "httpStatus": 200,
+    "rawHash": "e46f190994acc85822c617fccd66664266bde4fdbdec03001d20ebdd804edff9",
+    "retrievedAt": "2026-10-21T00:10:57.333458+00:00",
+    "name": "nd-soil-district-map",
+    "file": "nd-soil-district-map.gz",
+    "bytes": 147110,
+    "textSnapshot": "nd-soil-district-map.txt",
+    "textHash": "c2776472429a96da51a7d6254de01d5e43b7bf0695615a9b2e8b87c1d45a1f8f"
+  },
+  {
+    "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+    "finalUrl": "https://mca.legmt.gov/bills/mca/title_0030/chapter_0050/part_0010/section_0010/0030-0050-0010-0010.html",
+    "retrievedAt": "2026-10-21T00:11:23.669626+00:00",
+    "httpStatus": 200,
+    "rawHash": "ffe40f019edfba28d160afdf6e305a10de5af9e3a7d3b8691fed5dca817c99ea",
+    "name": "mt-judicial-districts-code",
+    "file": "mt-judicial-districts-code.gz",
+    "bytes": 12362,
+    "textSnapshot": "mt-judicial-districts-code.txt",
+    "textHash": "41b0e60b3cbf78c7c23ff0e291476760827223d96634fdfe6f72dd95e64358d7"
+  },
+  {
+    "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0070/part_0010/section_0080/0000-0070-0010-0080.html",
+    "finalUrl": "https://mca.legmt.gov/bills/mca/title_0000/article_0070/part_0010/section_0080/0000-0070-0010-0080.html",
+    "retrievedAt": "2026-10-21T00:11:23.461730+00:00",
+    "httpStatus": 200,
+    "rawHash": "36226b8c26f6447f4a611549176456aa45d78ff4ceab27fe1da8937617727af4",
+    "name": "mt-judicial-retention-constitution",
+    "file": "mt-judicial-retention-constitution.gz",
+    "bytes": 11094,
+    "textSnapshot": "mt-judicial-retention-constitution.txt",
+    "textHash": "54afc2c48e4797b654bf8e3293cecba2956f48abdf058110205957f0bd59565f"
+  },
+  {
+    "sourceUrl": "https://nmcourts.gov/courts-by-district/",
+    "finalUrl": "https://nmcourts.gov/courts-by-district/",
+    "retrievedAt": "2026-10-21T00:12:45.086Z",
+    "httpStatus": 200,
+    "rawHash": "4dbfd9e3773bae1eddeb3ee2c11e99cce0ef308e0c9fffaace800bbb8db71fd5",
+    "name": "nm-courts-districts",
+    "file": "nm-courts-districts.gz",
+    "bytes": 81278,
+    "textSnapshot": "nm-courts-districts.txt",
+    "textHash": "21887f304eae9cf7b47a728b32dbd1d998620dc14a9acc1218d76f92e3f78130"
+  },
+  {
+    "sourceUrl": "https://selfrepresentation.nmcourts.gov/self-representation/self-representation-by-court-district/",
+    "finalUrl": "https://selfrepresentation.nmcourts.gov/self-representation/self-representation-by-court-district/",
+    "retrievedAt": "2026-10-21T00:12:46.662Z",
+    "httpStatus": 200,
+    "rawHash": "a8b89a654ac2f62daaab7ecf6a5cba900d84f6c09bc7c0486f092969ed55d674",
+    "name": "nm-metro-scope",
+    "file": "nm-metro-scope.gz",
+    "bytes": 79225,
+    "textSnapshot": "nm-metro-scope.txt",
+    "textHash": "46cc467f157e38c1f8130c9142766554017b7fad7750200cab9a034b0a2be60e"
+  },
+  {
+    "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+    "finalUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+    "retrievedAt": "2026-10-21T00:14:05.502Z",
+    "httpStatus": 200,
+    "rawHash": "c7a32296c5a15ff4b6e752d584347c295aec53e50038223efa712f97aa0a09b4",
+    "name": "mt-roster-page",
+    "file": "mt-roster-page.gz",
+    "bytes": 170237,
+    "textSnapshot": "mt-roster-page.txt",
+    "textHash": "d255a744b75842660f3fdac6ddf4bb7261d5f34b789f104eabbb0f89a11b6ed7"
+  },
+  {
+    "sourceUrl": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=225+4th+St+N%2C+Fargo+ND+58102&benchmark=Public_AR_Current&vintage=Current_Current&layers=all&format=json",
+    "retrievedAt": "2026-10-21T00:07:36.629963+00:00",
+    "rawHash": "86563cfb7cd733ce9ccf92a8fae9a55c2dd2a230f8c555eb60e2df03ae2b2ab4",
+    "httpStatus": 200,
+    "name": "nd-fargo-cityhall-census",
+    "file": "nd-fargo-cityhall-census.gz",
+    "bytes": 7713,
+    "textSnapshot": "nd-fargo-cityhall-census.txt",
+    "textHash": "86563cfb7cd733ce9ccf92a8fae9a55c2dd2a230f8c555eb60e2df03ae2b2ab4"
   }
 ]

@@ -1,0 +1,145 @@
+{
+  "electionDate": "2026-11-03",
+  "ballotStyle": "005",
+  "pageCount": 2,
+  "reviewMethod": "Visual review of both original scanned pages: all front candidate names, printed party labels, joint tickets and complete referendum questions; reverse municipal/ward list and absence of additional questions. OCR is retained as a supplementary reading aid; watermark-obscured OCR is not treated as authoritative.",
+  "printedMadisonWards": [
+    16,
+    17,
+    18,
+    19,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    36,
+    37,
+    38,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    52,
+    53,
+    55,
+    128
+  ],
+  "candidateContests": [
+    {
+      "title": "Governor / Lieutenant Governor",
+      "choices": [
+        [
+          "Tom Tiffany / David Varnam",
+          "Republican"
+        ],
+        [
+          "David Crowley / Sarah Godlewski",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Attorney General",
+      "choices": [
+        [
+          "Eric Toney",
+          "Republican"
+        ],
+        [
+          "Josh Kaul",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Secretary of State",
+      "choices": [
+        [
+          "Jay Schroeder",
+          "Republican"
+        ],
+        [
+          "JoCasta Zamarripa",
+          "Democratic"
+        ],
+        [
+          "Pete Karas",
+          "Wisconsin Green"
+        ]
+      ]
+    },
+    {
+      "title": "State Treasurer",
+      "choices": [
+        [
+          "John S. Leiber",
+          "Republican"
+        ],
+        [
+          "Yee Leng Xiong",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Representative in Congress District 2",
+      "choices": [
+        [
+          "Mark Pocan",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Representative to the Assembly District 76",
+      "choices": [
+        [
+          "Nina Chat",
+          "Republican"
+        ],
+        [
+          "Dina Nina Martinez-Rutherford",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Dane County Sheriff",
+      "choices": [
+        [
+          "Kalvin D. Barrett",
+          "Democratic"
+        ]
+      ]
+    },
+    {
+      "title": "Dane County Clerk of Circuit Court",
+      "choices": [
+        [
+          "Jeff Okazaki",
+          "Democratic"
+        ]
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "officialNumber": "QUESTION 1",
+      "questionText": "Partial veto. Shall section 10 (1) (c) of article V of the constitution be amended to prohibit the governor, in exercising his or her partial veto authority, from creating or increasing or authorizing the creation or increase of any tax or fee?"
+    },
+    {
+      "officialNumber": "QUESTION 2",
+      "questionText": "Freedom to gather in places of worship during an emergency. Shall section 18 of article I of the constitution, which deals with religious liberty, be amended to prohibit the state or a political subdivision of the state from ordering the closure of, or forbidding gatherings in, places of worship in response to a state of emergency, including a public health emergency?"
+    },
+    {
+      "officialNumber": "QUESTION 3",
+      "questionText": "Governmental entity discrimination prohibited. Shall section 27 of article I of the constitution be created to prohibit governmental entities in the state from discriminating against, or granting preferential treatment to, any individual or group on the basis of race, sex, color, ethnicity, or national origin in public employment, public education, public contracting, or public administration?"
+    }
+  ]
+}

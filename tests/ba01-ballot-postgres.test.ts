@@ -15,6 +15,7 @@ import type { GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
 import { ballotCandidateDisplayName } from "../lib/ballot/name-case.ts";
 import type { BallotWithTickets } from "../lib/ballot/tickets.ts";
+import type { BallotWithDistrictMemberships } from "../lib/ballot/district-memberships.ts";
 
 // Exercise the normal assembler and Postgres store against the actual production
 // schema, including its history triggers. No production connection is used.
@@ -58,35 +59,64 @@ test("BA-01 publishes every state through all real migrations and preserves the 
       WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", WTP_SANCTIONED_WRITE: "routine-civic-data-promotion" });
     const priorDirectory = join(directory, "prior");
     await mkdir(priorDirectory);
-    const files = (await readdir("data/ballot/2026-general")).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
+    const requestedStates = process.env.BA01_STATES?.split(",").map(state => state.trim().toLowerCase());
+    const files = (await readdir("data/ballot/2026-general")).filter(file => /^[a-z]{2}\.json$/.test(file) &&
+      (!requestedStates || requestedStates.includes(file.slice(0, 2)))).sort();
+    assert.ok(files.length, "at least one requested state input must exist");
+    if (requestedStates) console.log(`Focused state selection: ${requestedStates.join(", ")}`);
     const base = process.env.BA01_BASE_SHA ?? "7dbad3bb5f2ebdee6ab41f9e094237aa00eecb83";
     for (const file of files) {
       const state = file.slice(0, 2).toUpperCase() as BallotState;
-      const baseline = execFileSync("git", ["show", `${base}:data/ballot/2026-general/${file}`], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
-      await writeFile(join(priorDirectory, file), baseline);
+      const path = `data/ballot/2026-general/${file}`;
+      const existed = Boolean(execFileSync("git", ["ls-tree", "--name-only", base, "--", path], { encoding: "utf8" }).trim());
       const store = new PostgresRoutineDataStore({ purge: async () => ({ purged: true }) });
       Object.assign(store, { writeAuthority: assertRuntimeAuthority({ capabilities: ["MANUAL_CONTRACT"], contract: `ballot-contests:${state}` }) });
-      const prior = await runBallotPublication({ state, directory: priorDirectory, store });
-      assert.equal(prior.report.status, "PUBLISHED", `${state} baseline: ${prior.report.reason}`);
+      if (existed) {
+        const baseline = execFileSync("git", ["show", `${base}:${path}`], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+        await writeFile(join(priorDirectory, file), baseline);
+        const prior = await runBallotPublication({ state, directory: priorDirectory, store });
+        assert.equal(prior.report.status, "PUBLISHED", `${state} baseline: ${prior.report.reason}`);
+      }
       const before = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true });
-      assert.equal(before.kind, "PROMOTED");
+      if (existed) assert.equal(before.kind, "PROMOTED");
       const result = await runBallotPublication({ state, store });
       assert.equal(result.report.status, "PUBLISHED", `${state}: ${result.report.reason}`);
       const after = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true });
       assert.equal(after.kind, "PROMOTED", state);
-      if (before.kind !== "PROMOTED" || after.kind !== "PROMOTED") continue;
+      if (after.kind !== "PROMOTED") continue;
+      const incoming = JSON.parse(await readFile(`data/ballot/2026-general/${file}`, "utf8")) as GenericBallotProjection;
+      for (const [key, ballot] of Object.entries(incoming.ballots)) {
+        const current = after.value.ballots[key];
+        assert.ok(current, `${state} publishes the incoming election`);
+        const complete = new Set(ballot.contests.filter(row => row.type === "MEASURE" || row.candidateListComplete === true).map(row => row.id));
+        for (const field of ["contests", "candidacies", "measures"] as const) {
+          const ids = new Set(current[field].map(row => row.id));
+          for (const row of ballot[field]) if (complete.has(field === "contests" ? row.id : (row as { contestId: string }).contestId))
+            assert.ok(ids.has(row.id), `${state} publishes verified incoming ${field} ${row.id}`);
+        }
+      }
       for (const ballot of Object.values(after.value.ballots)) {
+        for (const membership of (ballot as BallotWithDistrictMemberships).districtMemberships ?? []) {
+          const expected = ballot.contests.filter(row => row.ocdId === membership.districtOcdId);
+          if (!expected.length) continue;
+          const reader = ballotForDivisions(ballot, [membership.memberOcdId]);
+          for (const contest of expected) assert.ok(reader.contests.some(row => row.id === contest.id),
+            `${state} official whole-division membership reaches ${contest.id} through typed readback`);
+        }
         const tickets = (ballot as BallotWithTickets).candidateTickets ?? [];
         if (!tickets.length) continue;
-        const reader = ballotForDivisions(ballot, [`ocd-division/country:us/state:${state.toLowerCase()}`]);
         for (const ticket of tickets) {
+          const originalLead = ballot.candidacies.find(row => row.id === ticket.leadCandidacyId);
+          const contest = ballot.contests.find(row => row.id === originalLead?.contestId);
+          assert.ok(contest, `${state} retains ticket contest`);
+          const reader = ballotForDivisions(ballot, [contest.ocdId]);
           const lead = reader.candidacies.find(row => row.id === ticket.leadCandidacyId);
           assert.ok(lead, `${state} retains ticket lead through typed readback`);
           assert.ok(ballotCandidateDisplayName(lead).includes(ballotCandidateDisplayName(ticket.runningMate)),
             `${state} reader includes the certified running mate`);
         }
       }
-      for (const [key, ballot] of Object.entries(before.value.ballots)) {
+      for (const [key, ballot] of Object.entries(before.kind === "PROMOTED" ? before.value.ballots : {})) {
         const current = after.value.ballots[key];
         assert.ok(current, `${state} retains election ${key}`);
         for (const field of ["contests", "candidacies", "measures"] as const) {
@@ -94,7 +124,7 @@ test("BA-01 publishes every state through all real migrations and preserves the 
           for (const row of ballot[field]) assert.ok(ids.has(row.id), `${state} retains ${field} ${row.id}`);
         }
       }
-      console.log(`${state}: prior published; updated published; typed readback matches; previous ballot IDs retained`);
+      console.log(`${state}: ${existed ? "prior published; updated published; previous ballot IDs retained" : "first ballot published"}; typed readback matches`);
     }
   } finally {
     neonConfig.fetchFunction = originalFetch;

@@ -1,0 +1,1932 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "MP:mp-2026-11-03-general": {
+      "election": {
+        "id": "mp-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "MP"
+      },
+      "contests": [
+        {
+          "id": "mp-ba01-2026-governor",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp",
+          "divisionVintage": "2026",
+          "title": "Governor & Lieutenant Governor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Governor & Lieutenant Governor\nBlas Jonathan \"BJ\" Tenorio Attao / Edmund Joseph Sablan Villagomez — Independent\nRalph Anthony Deleon Guerrero Torres / Benjamin Jr Mendiola Jones — Republican\nLawrence Fejeran Camacho / Edith E Deleon Guerrero — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-delegate",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp",
+          "divisionVintage": "2026",
+          "title": "Delegate to the U.S. House of Representatives",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Delegate to the U.S. House of Representatives\nGalvin Sablan Deleon Guerrero — Independent\nKimberlyn Kay King-Hinds — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-justice-alexandro-cruz-castro-retention",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp",
+          "divisionVintage": "2026",
+          "title": "Justice Alexandro Cruz Castro, Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Justice Alexandro Cruz Castro, Retention\nAlexandro Cruz Castro — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-attorney-general",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp",
+          "divisionVintage": "2026",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Attorney General\nJoaquin Deleon Guerrero Torres — Non-Partisan\nJonathan Robert Glass — Non-Partisan\nMichael Norita Evangelista — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-1",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:1",
+          "divisionVintage": "2026",
+          "title": "1st Senatorial District — Rota",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "1st Senatorial District — Rota\nRobert Jr Harrison Myers — Independent\nTito Songao Hocog II — Republican\nDonald Manalang Manglona — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-2",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:2",
+          "divisionVintage": "2026",
+          "title": "2nd Senatorial District — Tinian & Aguiguan",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "2nd Senatorial District — Tinian & Aguiguan\nFrancisco Quichuchu Cruz — Republican\nJude Untalan Hofschneider — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "divisionVintage": "2026",
+          "title": "3rd Senatorial District — Saipan",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "3rd Senatorial District — Saipan\nCelina Roberto Babauta — Democrat\nCorina Lorraine Magofna — Independent\nVicente Castro Camacho — Independent\nMarco Taisakan Peter — Republican\nVinnie Vinson Flores Sablan — Republican\nCrispin Manglona Sablan — Independent\nEdwin Raymond Borja Quitugua — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:1",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 6,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 1\nJanet Ulloa Maratita — Independent\nRaymond Ulloa Palacios — Independent\nJoseph Arriola Flores — Independent\nDiego Vincent Fejeran Camacho — Independent\nJohn Deleon Guerrero Demapan Jr. — Republican\nRoy Christopher Aldan Ada — Republican\nCecilia Remedio Taitano Fitial — Republican\nPatrick Matagolai Cepeda — Republican\nBenusto Piteg — Republican\nAlfredo Javier Cabael — Republican\nRoman Cepeda Benavente — Independent\nVincent Raymond Seman Aldan — Independent\nRicardo Castro Cruz Jr. — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-2",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:2",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 2",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 2\nJohn Paul Palacios Sablan — Independent\nDaniel Jr Iwashita Aquino — Independent\nKeith Cabrera Ada — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:3",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 3",
+          "type": "CANDIDACY",
+          "voteFor": 6,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 3\nRalph Naraja Yumul — Independent\nMarissa Renee Flores — Independent\nSteve Kap Soo Jang — Independent\nElias Jerome Malite Rangamar — Independent\nDel Ariel Benson — Republican\nEdward C Arriola Jr. — Republican\nQuaid Taima Ogumoro Ngirchongor — Republican\nAndrew Lujan Orsini — Republican\nYvette Reyes Sablan — Republican\nCarlos Ebert Santos — Independent\nGabriel Boki Babauta — Democrat\nDenita Kaipat Yangetmai — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-4",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:4",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 4",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 4\nJoel Castro Camacho — Independent\nJames Kennedy Weilbacher DLG Benjamin — Republican\nMalcolm Jason Omar — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-5",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:5",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 5\nTed Anthony Deleon Guerrero — Republican\nAngelo Atalig Camacho — Independent\nPeter Francis Reyes Muna — Democrat\nLeila Haveia Fleming Clark Staffler — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-6",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:6",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 6\nJoseph Romaldo Evangelista Santos — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-7",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldl:7",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "House of Representatives, District 7\nJulie Marie Atalig Ogo — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-rota",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/municipality:rota",
+          "divisionVintage": "2026",
+          "title": "Mayor — 1st Senatorial District — Rota",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Mayor — 1st Senatorial District — Rota\nAubry Manglona Hocog — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-tinian-aguiguan",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/municipality:tinian",
+          "divisionVintage": "2026",
+          "title": "Mayor — 2nd Senatorial District — Tinian & Aguiguan",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Mayor — 2nd Senatorial District — Tinian & Aguiguan\nAntonio San Nicolas Borja — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-saipan",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/county:saipan",
+          "divisionVintage": "2026",
+          "title": "Mayor — 3rd Senatorial District — Saipan",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Mayor — 3rd Senatorial District — Saipan\nRamon \"RB\" Jose Blas Camacho — Independent\nJoseph Muna Mendiola — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-1",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:1",
+          "divisionVintage": "2026",
+          "title": "Municipal Council — 1st Senatorial District — Rota",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Municipal Council — 1st Senatorial District — Rota\nSandra Mesngon Masga — Non-Partisan\nTillie Castro Taimanao — Non-Partisan\nJonovan Hocog Lizama — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-2",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:2",
+          "divisionVintage": "2026",
+          "title": "Municipal Council — 2nd Senatorial District — Tinian & Aguiguan",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Municipal Council — 2nd Senatorial District — Tinian & Aguiguan\nChad Ellie Palacios — Non-Partisan\nWally Flores Villagomez — Non-Partisan\nAna Marie Cruz San Nicolas — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-3",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "divisionVintage": "2026",
+          "title": "Municipal Council — 3rd Senatorial District — Saipan",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Municipal Council — 3rd Senatorial District — Saipan\nAnthony Tenorio Benavente — Non-Partisan\nAntonia Manibusan Tudela — Non-Partisan\nMarian Deleon Guerrero Tudela — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-board-of-education-3",
+          "electionId": "mp-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "divisionVintage": "2026",
+          "title": "Board of Education — 3rd Senatorial District — Saipan",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Board of Education — 3rd Senatorial District — Saipan\nDaniel Ogo Quitugua — Non-Partisan"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "mp-ba01-2026-governor-blas-jonathan-bj-tenorio-attao",
+          "contestId": "mp-ba01-2026-governor",
+          "familyName": "Blas Jonathan \"BJ\" Tenorio Attao",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Blas Jonathan \"BJ\" Tenorio Attao / Edmund Joseph Sablan Villagomez — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-governor-ralph-anthony-deleon-guerrero-torres",
+          "contestId": "mp-ba01-2026-governor",
+          "familyName": "Ralph Anthony Deleon Guerrero Torres",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ralph Anthony Deleon Guerrero Torres / Benjamin Jr Mendiola Jones — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-governor-lawrence-fejeran-camacho",
+          "contestId": "mp-ba01-2026-governor",
+          "familyName": "Lawrence Fejeran Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Lawrence Fejeran Camacho / Edith E Deleon Guerrero — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-delegate-galvin-sablan-deleon-guerrero",
+          "contestId": "mp-ba01-2026-delegate",
+          "familyName": "Galvin Sablan Deleon Guerrero",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Galvin Sablan Deleon Guerrero — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-delegate-kimberlyn-kay-king-hinds",
+          "contestId": "mp-ba01-2026-delegate",
+          "familyName": "Kimberlyn Kay King-Hinds",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Kimberlyn Kay King-Hinds — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-justice-alexandro-cruz-castro-retention-alexandro-cruz-castro",
+          "contestId": "mp-ba01-2026-justice-alexandro-cruz-castro-retention",
+          "familyName": "Alexandro Cruz Castro",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Alexandro Cruz Castro — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-attorney-general-joaquin-deleon-guerrero-torres",
+          "contestId": "mp-ba01-2026-attorney-general",
+          "familyName": "Joaquin Deleon Guerrero Torres",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Joaquin Deleon Guerrero Torres — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-attorney-general-jonathan-robert-glass",
+          "contestId": "mp-ba01-2026-attorney-general",
+          "familyName": "Jonathan Robert Glass",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Jonathan Robert Glass — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-attorney-general-michael-norita-evangelista",
+          "contestId": "mp-ba01-2026-attorney-general",
+          "familyName": "Michael Norita Evangelista",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Michael Norita Evangelista — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-1-robert-jr-harrison-myers",
+          "contestId": "mp-ba01-2026-senate-1",
+          "familyName": "Robert Jr Harrison Myers",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Robert Jr Harrison Myers — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-1-tito-songao-hocog-ii",
+          "contestId": "mp-ba01-2026-senate-1",
+          "familyName": "Tito Songao Hocog II",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Tito Songao Hocog II — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-1-donald-manalang-manglona",
+          "contestId": "mp-ba01-2026-senate-1",
+          "familyName": "Donald Manalang Manglona",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Donald Manalang Manglona — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-2-francisco-quichuchu-cruz",
+          "contestId": "mp-ba01-2026-senate-2",
+          "familyName": "Francisco Quichuchu Cruz",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Francisco Quichuchu Cruz — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-2-jude-untalan-hofschneider",
+          "contestId": "mp-ba01-2026-senate-2",
+          "familyName": "Jude Untalan Hofschneider",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Jude Untalan Hofschneider — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-celina-roberto-babauta",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Celina Roberto Babauta",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Celina Roberto Babauta — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-corina-lorraine-magofna",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Corina Lorraine Magofna",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Corina Lorraine Magofna — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-vicente-castro-camacho",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Vicente Castro Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Vicente Castro Camacho — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-marco-taisakan-peter",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Marco Taisakan Peter",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Marco Taisakan Peter — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-vinnie-vinson-flores-sablan",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Vinnie Vinson Flores Sablan",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Vinnie Vinson Flores Sablan — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-crispin-manglona-sablan",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Crispin Manglona Sablan",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Crispin Manglona Sablan — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-senate-3-edwin-raymond-borja-quitugua",
+          "contestId": "mp-ba01-2026-senate-3",
+          "familyName": "Edwin Raymond Borja Quitugua",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Edwin Raymond Borja Quitugua — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-janet-ulloa-maratita",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Janet Ulloa Maratita",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Janet Ulloa Maratita — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-raymond-ulloa-palacios",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Raymond Ulloa Palacios",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Raymond Ulloa Palacios — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-joseph-arriola-flores",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Joseph Arriola Flores",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Joseph Arriola Flores — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-diego-vincent-fejeran-camacho",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Diego Vincent Fejeran Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Diego Vincent Fejeran Camacho — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-john-deleon-guerrero-demapan-jr",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "John Deleon Guerrero Demapan Jr.",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "John Deleon Guerrero Demapan Jr. — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-roy-christopher-aldan-ada",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Roy Christopher Aldan Ada",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Roy Christopher Aldan Ada — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-cecilia-remedio-taitano-fitial",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Cecilia Remedio Taitano Fitial",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Cecilia Remedio Taitano Fitial — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-patrick-matagolai-cepeda",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Patrick Matagolai Cepeda",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Patrick Matagolai Cepeda — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-benusto-piteg",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Benusto Piteg",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Benusto Piteg — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-alfredo-javier-cabael",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Alfredo Javier Cabael",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Alfredo Javier Cabael — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-roman-cepeda-benavente",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Roman Cepeda Benavente",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Roman Cepeda Benavente — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-vincent-raymond-seman-aldan",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Vincent Raymond Seman Aldan",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Vincent Raymond Seman Aldan — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-1-ricardo-castro-cruz-jr",
+          "contestId": "mp-ba01-2026-house-1",
+          "familyName": "Ricardo Castro Cruz Jr.",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ricardo Castro Cruz Jr. — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-2-john-paul-palacios-sablan",
+          "contestId": "mp-ba01-2026-house-2",
+          "familyName": "John Paul Palacios Sablan",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "John Paul Palacios Sablan — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-2-daniel-jr-iwashita-aquino",
+          "contestId": "mp-ba01-2026-house-2",
+          "familyName": "Daniel Jr Iwashita Aquino",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Daniel Jr Iwashita Aquino — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-2-keith-cabrera-ada",
+          "contestId": "mp-ba01-2026-house-2",
+          "familyName": "Keith Cabrera Ada",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Keith Cabrera Ada — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-ralph-naraja-yumul",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Ralph Naraja Yumul",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ralph Naraja Yumul — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-marissa-renee-flores",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Marissa Renee Flores",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Marissa Renee Flores — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-steve-kap-soo-jang",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Steve Kap Soo Jang",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Steve Kap Soo Jang — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-elias-jerome-malite-rangamar",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Elias Jerome Malite Rangamar",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Elias Jerome Malite Rangamar — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-del-ariel-benson",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Del Ariel Benson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Del Ariel Benson — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-edward-c-arriola-jr",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Edward C Arriola Jr.",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Edward C Arriola Jr. — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-quaid-taima-ogumoro-ngirchongor",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Quaid Taima Ogumoro Ngirchongor",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Quaid Taima Ogumoro Ngirchongor — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-andrew-lujan-orsini",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Andrew Lujan Orsini",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Andrew Lujan Orsini — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-yvette-reyes-sablan",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Yvette Reyes Sablan",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Yvette Reyes Sablan — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-carlos-ebert-santos",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Carlos Ebert Santos",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Carlos Ebert Santos — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-gabriel-boki-babauta",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Gabriel Boki Babauta",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Gabriel Boki Babauta — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-3-denita-kaipat-yangetmai",
+          "contestId": "mp-ba01-2026-house-3",
+          "familyName": "Denita Kaipat Yangetmai",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Denita Kaipat Yangetmai — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-4-joel-castro-camacho",
+          "contestId": "mp-ba01-2026-house-4",
+          "familyName": "Joel Castro Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Joel Castro Camacho — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-4-james-kennedy-weilbacher-dlg-benjamin",
+          "contestId": "mp-ba01-2026-house-4",
+          "familyName": "James Kennedy Weilbacher DLG Benjamin",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "James Kennedy Weilbacher DLG Benjamin — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-4-malcolm-jason-omar",
+          "contestId": "mp-ba01-2026-house-4",
+          "familyName": "Malcolm Jason Omar",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Malcolm Jason Omar — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-5-ted-anthony-deleon-guerrero",
+          "contestId": "mp-ba01-2026-house-5",
+          "familyName": "Ted Anthony Deleon Guerrero",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ted Anthony Deleon Guerrero — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-5-angelo-atalig-camacho",
+          "contestId": "mp-ba01-2026-house-5",
+          "familyName": "Angelo Atalig Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Angelo Atalig Camacho — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-5-peter-francis-reyes-muna",
+          "contestId": "mp-ba01-2026-house-5",
+          "familyName": "Peter Francis Reyes Muna",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Peter Francis Reyes Muna — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-5-leila-haveia-fleming-clark-staffler",
+          "contestId": "mp-ba01-2026-house-5",
+          "familyName": "Leila Haveia Fleming Clark Staffler",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Leila Haveia Fleming Clark Staffler — Democrat"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-6-joseph-romaldo-evangelista-santos",
+          "contestId": "mp-ba01-2026-house-6",
+          "familyName": "Joseph Romaldo Evangelista Santos",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Joseph Romaldo Evangelista Santos — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-house-7-julie-marie-atalig-ogo",
+          "contestId": "mp-ba01-2026-house-7",
+          "familyName": "Julie Marie Atalig Ogo",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Julie Marie Atalig Ogo — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-rota-aubry-manglona-hocog",
+          "contestId": "mp-ba01-2026-mayor-rota",
+          "familyName": "Aubry Manglona Hocog",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Aubry Manglona Hocog — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-tinian-aguiguan-antonio-san-nicolas-borja",
+          "contestId": "mp-ba01-2026-mayor-tinian-aguiguan",
+          "familyName": "Antonio San Nicolas Borja",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Antonio San Nicolas Borja — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-saipan-ramon-rb-jose-blas-camacho",
+          "contestId": "mp-ba01-2026-mayor-saipan",
+          "familyName": "Ramon \"RB\" Jose Blas Camacho",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ramon \"RB\" Jose Blas Camacho — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-mayor-saipan-joseph-muna-mendiola",
+          "contestId": "mp-ba01-2026-mayor-saipan",
+          "familyName": "Joseph Muna Mendiola",
+          "givenName": "",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Joseph Muna Mendiola — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-1-sandra-mesngon-masga",
+          "contestId": "mp-ba01-2026-municipal-council-1",
+          "familyName": "Sandra Mesngon Masga",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Sandra Mesngon Masga — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-1-tillie-castro-taimanao",
+          "contestId": "mp-ba01-2026-municipal-council-1",
+          "familyName": "Tillie Castro Taimanao",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Tillie Castro Taimanao — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-1-jonovan-hocog-lizama",
+          "contestId": "mp-ba01-2026-municipal-council-1",
+          "familyName": "Jonovan Hocog Lizama",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Jonovan Hocog Lizama — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-2-chad-ellie-palacios",
+          "contestId": "mp-ba01-2026-municipal-council-2",
+          "familyName": "Chad Ellie Palacios",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Chad Ellie Palacios — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-2-wally-flores-villagomez",
+          "contestId": "mp-ba01-2026-municipal-council-2",
+          "familyName": "Wally Flores Villagomez",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Wally Flores Villagomez — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-2-ana-marie-cruz-san-nicolas",
+          "contestId": "mp-ba01-2026-municipal-council-2",
+          "familyName": "Ana Marie Cruz San Nicolas",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ana Marie Cruz San Nicolas — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-3-anthony-tenorio-benavente",
+          "contestId": "mp-ba01-2026-municipal-council-3",
+          "familyName": "Anthony Tenorio Benavente",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Anthony Tenorio Benavente — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-3-antonia-manibusan-tudela",
+          "contestId": "mp-ba01-2026-municipal-council-3",
+          "familyName": "Antonia Manibusan Tudela",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Antonia Manibusan Tudela — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-municipal-council-3-marian-deleon-guerrero-tudela",
+          "contestId": "mp-ba01-2026-municipal-council-3",
+          "familyName": "Marian Deleon Guerrero Tudela",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Marian Deleon Guerrero Tudela — Non-Partisan"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-board-of-education-3-daniel-ogo-quitugua",
+          "contestId": "mp-ba01-2026-board-of-education-3",
+          "familyName": "Daniel Ogo Quitugua",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Daniel Ogo Quitugua — Non-Partisan"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "The certified list and all 13 specimen fronts were compared for every candidate. Northern Islands mayor has two verified candidates on Precinct 4D; we are working on its exact electoral division. All other 21 contests are held, including explicit governor tickets and justice retention."
+      ],
+      "districtMemberships": [
+        {
+          "id": "mp-ba01-sldl-1-to-sldu-3",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:1",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 1 (precincts 1A, 1B, 1C) prints the 3 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-2-to-sldu-3",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:2",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 2 (precincts 2) prints the 3 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-3-to-sldu-3",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:3",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 3 (precincts 3A, 3B) prints the 3 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-4-to-sldu-3",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:4",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 4 (precincts 4A, 4B, 4C, 4D) prints the 3 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-5-to-sldu-3",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:5",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:3",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 5 (precincts 5) prints the 3 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-6-to-sldu-2",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:6",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:2",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 6 (precincts 6) prints the 2 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-7-to-sldu-1",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:7",
+          "districtOcdId": "ocd-division/country:us/territory:mp/sldu:1",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 7 (precincts 7) prints the 1 Senatorial District roster. All 13 current specimen fronts were checked."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-1-to-county-saipan",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:1",
+          "districtOcdId": "ocd-division/country:us/territory:mp/county:saipan",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 1 (precincts 1A, 1B, 1C) prints the mayor of Saipan. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-2-to-county-saipan",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:2",
+          "districtOcdId": "ocd-division/country:us/territory:mp/county:saipan",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 2 (precincts 2) prints the mayor of Saipan. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-3-to-county-saipan",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:3",
+          "districtOcdId": "ocd-division/country:us/territory:mp/county:saipan",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 3 (precincts 3A, 3B) prints the mayor of Saipan. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-5-to-county-saipan",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:5",
+          "districtOcdId": "ocd-division/country:us/territory:mp/county:saipan",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 5 (precincts 5) prints the mayor of Saipan. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-6-to-municipality-tinian",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:6",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:tinian",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 6 (precincts 6) prints the mayor of Tinian & Aguiguan. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        },
+        {
+          "id": "mp-ba01-sldl-7-to-municipality-rota",
+          "memberOcdId": "ocd-division/country:us/territory:mp/sldl:7",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:rota",
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+            "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+            "quote": "Every official specimen front for House District 7 (precincts 7) prints the mayor of Rota. House District 4 is split and is not mapped as a whole to either mayor electorate."
+          }
+        }
+      ],
+      "candidateTickets": [
+        {
+          "id": "mp-ba01-2026-governor-blas-jonathan-bj-tenorio-attao-ticket",
+          "leadCandidacyId": "mp-ba01-2026-governor-blas-jonathan-bj-tenorio-attao",
+          "runningMate": {
+            "id": "mp-ba01-2026-governor-edmund-joseph-sablan-villagomez",
+            "contestId": "mp-ba01-2026-governor",
+            "familyName": "Edmund Joseph Sablan Villagomez",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+              "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+              "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+              "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+              "quote": "Blas Jonathan \"BJ\" Tenorio Attao / Edmund Joseph Sablan Villagomez — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Blas Jonathan \"BJ\" Tenorio Attao / Edmund Joseph Sablan Villagomez — Independent"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-governor-ralph-anthony-deleon-guerrero-torres-ticket",
+          "leadCandidacyId": "mp-ba01-2026-governor-ralph-anthony-deleon-guerrero-torres",
+          "runningMate": {
+            "id": "mp-ba01-2026-governor-benjamin-jr-mendiola-jones",
+            "contestId": "mp-ba01-2026-governor",
+            "familyName": "Benjamin Jr Mendiola Jones",
+            "givenName": "",
+            "partyLabel": "Republican",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+              "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+              "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+              "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+              "quote": "Ralph Anthony Deleon Guerrero Torres / Benjamin Jr Mendiola Jones — Republican"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Ralph Anthony Deleon Guerrero Torres / Benjamin Jr Mendiola Jones — Republican"
+          }
+        },
+        {
+          "id": "mp-ba01-2026-governor-lawrence-fejeran-camacho-ticket",
+          "leadCandidacyId": "mp-ba01-2026-governor-lawrence-fejeran-camacho",
+          "runningMate": {
+            "id": "mp-ba01-2026-governor-edith-e-deleon-guerrero",
+            "contestId": "mp-ba01-2026-governor",
+            "familyName": "Edith E Deleon Guerrero",
+            "givenName": "",
+            "partyLabel": "Independent",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+              "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+              "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+              "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+              "quote": "Lawrence Fejeran Camacho / Edith E Deleon Guerrero — Independent"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+            "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+            "collectedAt": "2026-10-21T00:34:18.585441+00:00",
+            "verifiedAt": "2026-10-21T00:34:18.585441+00:00",
+            "quote": "Lawrence Fejeran Camacho / Edith E Deleon Guerrero — Independent"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-21T00:55:46.218855+00:00",
+    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "sources": [
+      {
+        "requestedUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+        "finalUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+        "retrievedAt": "2026-10-21T00:34:18.585441+00:00",
+        "httpStatus": 200,
+        "rawHash": "57b159cfe04da4409ff76931f4d868985fcead02284315171bbc778c357b248e",
+        "publisher": "Commonwealth Election Commission of the Northern Mariana Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "scripts/ba01-south-territories.py replays every candidate and exact electorate from the saved current official source; source-specific parsers compare every certified person and party against the dated specimen."
+      },
+      {
+        "requestedUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+        "finalUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+        "retrievedAt": "2026-10-21T00:35:09.562328+00:00",
+        "httpStatus": 200,
+        "rawHash": "354056ab131c3ee5d034eed9fe6539de66baa1c9f3776a8f896e83e464744960",
+        "publisher": "Commonwealth Election Commission of the Northern Mariana Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Every certified candidate is compared to an exact row in all 13 official November 3, 2026 specimen fronts by scripts/ba01-south-mp-samples.py. All 77 people, every printed party label, 22 unique rosters and every printed vote limit agree. Governor tickets are paired explicitly by both certification and printed specimen. Precinct 4D has Northern Islands mayor and shares the third-district council and education races; no widening of its separate mayor electorate."
+      },
+      {
+        "requestedUrl": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+        "finalUrl": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",
+        "retrievedAt": "2026-10-21T00:55:46.218855+00:00",
+        "httpStatus": 200,
+        "rawHash": "0a30a76fb056f4708d6edaff96b3be6b026f4cc7f36f65b2cf1bed6a5bd0d22c",
+        "publisher": "Federal Election Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current FEC Combined Federal/State Disclosure and Election Directory expressly identifies the Commonwealth Election Commission and its URL https://www.votecnmi.gov.mp. This source establishes the .gov.mp publisher; candidate facts come from its current captured certified list and specimen."
+      }
+    ]
+  }
+}

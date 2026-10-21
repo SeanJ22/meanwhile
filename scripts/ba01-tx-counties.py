@@ -87,8 +87,12 @@ def write_ins(data, ballot):
             httpStatus=200, rawHash=metadata['rawHash'], retrievedAt=metadata['retrievedAt'],
             sourceClass='ELECTION_AUTHORITY', publisher='Texas Secretary of State', reviewOutcome='SUPPORTED',
             reviewedEvidence='All14 core certified write-ins match prior held candidates; Dallas criminal district attorney Eric Reed added. The2regional judicial write-ins remain owed until their exact district scope is held.'))
+    regional = [name for name in ('Michael P. Kopech', 'Leslie Timmons') if any(
+        (row['givenName'] + ' ' + row['familyName']).strip() == name and
+        row['provenance']['sourceUrl'] == metadata['url'] for row in ballot['candidacies'])]
     return dict(source=metadata['url'], retrievedAt=metadata['retrievedAt'], coreCandidacies=core_count,
-                countyCandidacies=1, unmappedRegionalJudicialCandidacies=2)
+                countyCandidacies=1, regionalJudicialCandidacies=len(regional),
+                unmappedRegionalJudicialCandidacies=2-len(regional))
 
 
 def main():

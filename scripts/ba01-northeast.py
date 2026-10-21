@@ -4,6 +4,7 @@ Requires Poppler's pdftotext. Source bytes are retained beside the state files;
 only ballot names, parties and question text enter the reader data.
 """
 import argparse
+import concurrent.futures
 import datetime
 import hashlib
 import json
@@ -11,6 +12,7 @@ import pathlib
 import re
 import subprocess
 import tempfile
+import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -70,15 +72,55 @@ def receipt(path, url, publisher, at, evidence):
             "reviewedEvidence": evidence}
 
 
-def add_receipt(data, source, at):
+def add_receipt(data, source, at, *, captured=False):
     sources = data["sourceReceipt"]["sources"]
+    same_bytes = [prior for prior in sources if prior["requestedUrl"] == source["requestedUrl"] and prior["rawHash"] == source["rawHash"]]
+    # Replaying saved bytes is verification, not a new network retrieval.
+    # Only capture code may introduce a new retrieval timestamp for held bytes.
+    if not captured:
+        if not same_bytes:
+            raise ValueError(f"No actual capture receipt for saved bytes: {source['requestedUrl']}")
+        source = {**source, "retrievedAt": max(same_bytes, key=lambda r: datetime.datetime.fromisoformat(r["retrievedAt"].replace("Z", "+00:00")))["retrievedAt"]}
     existing = next((i for i, prior in enumerate(sources)
-                     if prior["requestedUrl"] == source["requestedUrl"] and prior["rawHash"] == source["rawHash"]), None)
+                     if prior["requestedUrl"] == source["requestedUrl"] and prior["rawHash"] == source["rawHash"] and prior["retrievedAt"] == source["retrievedAt"]), None)
     if existing is None:
         sources.append(source)
     else:
         sources[existing] = source
     data["sourceReceipt"].update(reviewedAt=at, reviewedBy="BA-01 official ballot PDF replay")
+
+
+def capture_time(data, url, path):
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    matches = [r for r in data["sourceReceipt"]["sources"]
+               if url in (r.get("requestedUrl"), r.get("finalUrl"))
+               and r.get("rawHash") == digest and r.get("httpStatus") == 200]
+    if not matches:
+        raise ValueError(f"No actual successful capture for saved source: {url}")
+    return max(matches, key=lambda r: datetime.datetime.fromisoformat(r["retrievedAt"].replace("Z", "+00:00")))["retrievedAt"]
+
+
+def capture_http_sources(data, sources):
+    """Capture real response bytes and retain every cited receipt version."""
+    def fetch(item):
+        filename, url, publisher = item
+        request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "*/*"})
+        with urllib.request.urlopen(request, timeout=60) as response:
+            body, final_url, status = response.read(), response.geturl(), response.status
+            captured_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        if status != 200:
+            raise ValueError((url, status))
+        target = SOURCES / filename
+        target.write_bytes(body)
+        source = receipt(target, url, publisher, captured_at,
+            "Actual successful HTTP response bytes captured at this retrieval-completion time; source facts replayed by the BA-01 Northeast scripts.")
+        source.update(finalUrl=final_url, httpStatus=status)
+        return source
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(fetch, sources))
+    for source in results:
+        add_receipt(data, source, source["retrievedAt"], captured=True)
+    return results
 
 
 def update_nj(at):
@@ -88,6 +130,7 @@ def update_nj(at):
     old = (len(ballot["contests"]), len(ballot["candidacies"]))
     for filename, senate in [(HOUSE, False), (SENATE, True)]:
         source_path = SOURCES / filename
+        captured_at = capture_time(data, NJ_BASE + filename, source_path)
         rows = nj_rows(source_path, senate)
         source = receipt(source_path, NJ_BASE + filename, "New Jersey Division of Elections", at,
                          f"Official November 3, 2026 list: {len(rows)} printed candidates. "
@@ -97,7 +140,7 @@ def update_nj(at):
             division = "ocd-division/country:us/state:nj" + ("" if senate else f"/cd:{row['district']}")
             contest = next((c for c in ballot["contests"] if c["ocdId"] == division and c["type"] == "CANDIDACY"), None)
             provenance = {"sourceUrl": source["finalUrl"], "sourceOrg": source["publisher"],
-                          "collectedAt": at, "verifiedAt": at,
+                          "collectedAt": captured_at, "verifiedAt": at,
                           "quote": f"{'US Senate' if senate else 'House of Representatives, District ' + str(row['district'])} | {row['name']} | {row['party']}"}
             if contest is None:
                 contest = {"id": f"nj-doe-2026-us-house-{row['district']}", "electionId": ballot["election"]["id"],
@@ -126,6 +169,7 @@ def update_philadelphia(at):
     data = json.loads(path.read_text())
     ballot = next(iter(data["ballots"].values()))
     document = SOURCES / "2026G_Ballot_Questions.pdf"
+    captured_at = capture_time(data, PHILA, document)
     pages = pdf_text(document).split("\f")
     questions = []
     for page in pages:
@@ -135,7 +179,7 @@ def update_philadelphia(at):
     for number, question, statement in questions:
         contest_id = f"pa-philadelphia-2026-charter-question-{number}"
         provenance = {"sourceUrl": PHILA, "sourceOrg": "Philadelphia City Commissioners",
-                      "collectedAt": at, "verifiedAt": at, "quote": question}
+                      "collectedAt": captured_at, "verifiedAt": at, "quote": question}
         if not any(c["id"] == contest_id for c in ballot["contests"]):
             ballot["contests"].append({"id": contest_id, "electionId": ballot["election"]["id"],
                 "ocdId": "ocd-division/country:us/state:pa/county:philadelphia", "divisionVintage": "2026",
@@ -166,32 +210,37 @@ def update_ma(at):
     path = ROOT / "data/ballot/2026-general/ma.json"
     data = json.loads(path.read_text())
     ballot = next(iter(data["ballots"].values()))
-    source_path = SOURCES / "ma-2026-state-election-candidates.rendered.txt"
+    source_path = SOURCES / "ma-2026-councillor-capture.rendered.txt"
     url = "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm"
     rows = ma_sections()["Councillor"]
+    captured_at = capture_time(data, url, source_path)
+    fresh_text = source_path.read_text()
     ordinals = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
     before = (len(ballot["contests"]), len(ballot["candidacies"]))
     for district, line in rows:
         number = ordinals.index(district.split()[0]) + 1
         name = re.split(r",\s+\d", line)[0]
         party = next(p for p in ["Democratic", "Republican"] if line.endswith(p))
+        if not any(name in candidate_line and party in candidate_line for candidate_line in fresh_text.splitlines()):
+            raise ValueError(f"Councillor name and party absent from fresh source: {name}")
         contest_id = f"ma-2026-11-03:councillor-{number}"
         provenance = {"sourceUrl": url, "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
-                      "collectedAt": at, "verifiedAt": at, "quote": f"Councillor | {district} | {name} | {party}"}
+                      "collectedAt": captured_at, "verifiedAt": at, "quote": f"Councillor | {district} | {name} | {party}"}
         if not any(c["id"] == contest_id for c in ballot["contests"]):
             ballot["contests"].append({"id": contest_id, "electionId": ballot["election"]["id"],
                 "ocdId": f"ocd-division/country:us/state:ma/governors_council:{number}", "divisionVintage": "2022",
                 "title": f"Councillor – {district}", "type": "CANDIDACY", "voteFor": 1, "termYears": 2,
                 "scopeNote": None, "candidateListComplete": True, "provenance": provenance})
-        next(c for c in ballot["contests"] if c["id"] == contest_id)["ocdId"] = f"ocd-division/country:us/state:ma/governors_council:{number}"
+        next(c for c in ballot["contests"] if c["id"] == contest_id).update(ocdId=f"ocd-division/country:us/state:ma/governors_council:{number}", provenance=provenance)
         if not any(c["contestId"] == contest_id and words(c["givenName"] + " " + c["familyName"]) == words(name) for c in ballot["candidacies"]):
             ballot["candidacies"].append({"id": contest_id + ":" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-"),
                 "contestId": contest_id, "givenName": "", "familyName": name, "partyLabel": party,
                 "slogan": None, "incumbent": None, "websiteUrl": None, "provenance": provenance})
+        next(c for c in ballot["candidacies"] if c["contestId"] == contest_id and words(c["givenName"] + " " + c["familyName"]) == words(name))["provenance"] = provenance
     add_receipt(data, receipt(source_path, url, "Massachusetts Secretary of the Commonwealth, Elections Division", at,
         "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. "
-        "Hash describes the saved rendered text. Replayed all 223 federal, statewide, legislative and Councillor office/district groups and 304 candidate names. "
-        "The 8 missing Councillor districts and all 11 printed candidates are added. Addresses stay in source evidence only."), at)
+        "Hash describes this saved rendered reader window, which contains the full Councillor section. "
+        "All 8 Councillor districts and all 11 printed candidate names and party labels replayed against this capture. Addresses stay in source evidence only."), at)
     return path, data, {"state": "MA", "before": before,
                         "after": (len(ballot["contests"]), len(ballot["candidacies"]))}
 
@@ -219,6 +268,7 @@ def update_vt(at):
     ballot = next(iter(data["ballots"].values()))
     source_path = SOURCES / "2026_general_election_qualified_candidates.xlsx"
     url = "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx"
+    captured_at = capture_time(data, url, source_path)
     county_offices = {"PROBATE JUDGE", "ASSISTANT JUDGE", "STATE'S ATTORNEY", "SHERIFF", "HIGH BAILIFF"}
     selected = [row for row in vt_rows() if row["district"] == "CHITTENDEN" and row["office"] in county_offices or
                 (row["office"] == "JUSTICE OF THE PEACE" and row["district"] == "BURLINGTON" and row["vote"] == "FIFTEEN")]
@@ -229,7 +279,7 @@ def update_vt(at):
         county = row["district"] == "CHITTENDEN"
         contest_id = f"vt-2026-{row['district'].lower()}-{slug}"
         provenance = {"sourceUrl": url, "sourceOrg": "Vermont Secretary of State",
-                      "collectedAt": at, "verifiedAt": at,
+                      "collectedAt": captured_at, "verifiedAt": at,
                       "quote": " | ".join(str(row[key]) for key in ["office", "district", "name", "party", "term", "vote"])}
         if not any(c["id"] == contest_id for c in ballot["contests"]):
             ballot["contests"].append({"id": contest_id, "electionId": ballot["election"]["id"],
@@ -237,10 +287,12 @@ def update_vt(at):
                 "divisionVintage": "2026", "title": f"{row['office']} — {row['district']}", "type": "CANDIDACY",
                 "voteFor": numbers[row["vote"]], "termYears": row["term"], "scopeNote": None,
                 "candidateListComplete": True, "provenance": provenance})
+        next(c for c in ballot["contests"] if c["id"] == contest_id)["provenance"] = provenance
         if not any(c["contestId"] == contest_id and words(c["givenName"] + " " + c["familyName"]) == words(row["name"]) for c in ballot["candidacies"]):
             ballot["candidacies"].append({"id": contest_id + ":" + re.sub(r"[^a-z0-9]+", "-", row["name"].lower()).strip("-"),
                 "contestId": contest_id, "givenName": "", "familyName": row["name"], "partyLabel": row["party"],
                 "slogan": None, "incumbent": None, "websiteUrl": None, "provenance": provenance})
+        next(c for c in ballot["candidacies"] if c["contestId"] == contest_id and words(c["givenName"] + " " + c["familyName"]) == words(row["name"]))["provenance"] = provenance
     add_receipt(data, receipt(source_path, url, "Vermont Secretary of State", at,
         "Official workbook lists all 132 federal, statewide and legislative contests and 319 printed candidacies already held. "
         "Added all 9 candidates in 5 Chittenden County offices and all 41 Burlington justice-of-the-peace candidates, corroborated against the city's official Chittenden-13 sample ballot."), at)
@@ -301,6 +353,8 @@ def update_ny(at):
     groups = ny_groups()
     mismatches = []
     for contest in ballot["contests"]:
+        if not contest["id"].startswith("ny-boe:2026-general:") or contest["type"] != "CANDIDACY":
+            continue
         quote = contest["provenance"]["quote"]
         office = re.search(r"Office: (.*)", quote)[1]
         district = re.search(r"District: (.*)", quote)[1]

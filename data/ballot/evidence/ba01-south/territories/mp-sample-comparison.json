@@ -1,0 +1,1344 @@
+{
+  "certifiedCandidateUnits": 74,
+  "certifiedPeople": 77,
+  "uniqueContests": 22,
+  "sampleNamesMatched": 77,
+  "samplePrecincts": [
+    {
+      "precinct": "1A",
+      "pdfPage": 1,
+      "contests": 9,
+      "choices": 35,
+      "people": 38,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 1",
+          "area": null,
+          "people": 13,
+          "choices": 13,
+          "voteFor": 6
+        }
+      ]
+    },
+    {
+      "precinct": "1B",
+      "pdfPage": 2,
+      "contests": 9,
+      "choices": 35,
+      "people": 38,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 1",
+          "area": null,
+          "people": 13,
+          "choices": 13,
+          "voteFor": 6
+        }
+      ]
+    },
+    {
+      "precinct": "1C",
+      "pdfPage": 3,
+      "contests": 9,
+      "choices": 35,
+      "people": 38,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 1",
+          "area": null,
+          "people": 13,
+          "choices": 13,
+          "voteFor": 6
+        }
+      ]
+    },
+    {
+      "precinct": "2",
+      "pdfPage": 4,
+      "contests": 9,
+      "choices": 25,
+      "people": 28,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 2",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "3A",
+      "pdfPage": 5,
+      "contests": 9,
+      "choices": 34,
+      "people": 37,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 3",
+          "area": null,
+          "people": 12,
+          "choices": 12,
+          "voteFor": 6
+        }
+      ]
+    },
+    {
+      "precinct": "3B",
+      "pdfPage": 6,
+      "contests": 9,
+      "choices": 34,
+      "people": 37,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 3",
+          "area": null,
+          "people": 12,
+          "choices": 12,
+          "voteFor": 6
+        }
+      ]
+    },
+    {
+      "precinct": "4A",
+      "pdfPage": 7,
+      "contests": 9,
+      "choices": 25,
+      "people": 28,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 4",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "4B",
+      "pdfPage": 8,
+      "contests": 9,
+      "choices": 25,
+      "people": 28,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 4",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "4C",
+      "pdfPage": 9,
+      "contests": 9,
+      "choices": 25,
+      "people": 28,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 4",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "4D",
+      "pdfPage": 10,
+      "contests": 9,
+      "choices": 25,
+      "people": 28,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Northern Islands",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 4",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "5",
+      "pdfPage": 11,
+      "contests": 9,
+      "choices": 26,
+      "people": 29,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "3rd Senatorial District",
+          "area": "Saipan",
+          "people": 7,
+          "choices": 7,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Board of Education — 3rd Senatorial District",
+          "area": "Saipan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 5",
+          "area": null,
+          "people": 4,
+          "choices": 4,
+          "voteFor": 2
+        }
+      ]
+    },
+    {
+      "precinct": "6",
+      "pdfPage": 12,
+      "contests": 8,
+      "choices": 16,
+      "people": 19,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "2nd Senatorial District",
+          "area": "Tinian & Aguiguan",
+          "people": 2,
+          "choices": 2,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 2nd Senatorial District",
+          "area": "Tinian & Aguiguan",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 2nd Senatorial District",
+          "area": "Tinian & Aguiguan",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 6",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        }
+      ]
+    },
+    {
+      "precinct": "7",
+      "pdfPage": 13,
+      "contests": 8,
+      "choices": 17,
+      "people": 20,
+      "races": [
+        {
+          "office": "Governor & Lieutenant Governor",
+          "area": "Each ticket runs and is elected as a single unit.",
+          "people": 6,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Attorney General",
+          "area": null,
+          "people": 3,
+          "choices": 3,
+          "voteFor": 1
+        },
+        {
+          "office": "Delegate to the U.S. House of Representatives",
+          "area": null,
+          "people": 2,
+          "choices": 2,
+          "voteFor": 1
+        },
+        {
+          "office": "1st Senatorial District",
+          "area": "Rota",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 2
+        },
+        {
+          "office": "Mayor — 1st Senatorial District",
+          "area": "Rota",
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        },
+        {
+          "office": "Municipal Council — 1st Senatorial District",
+          "area": "Rota",
+          "people": 3,
+          "choices": 3,
+          "voteFor": 3
+        },
+        {
+          "office": "Justice",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": null
+        },
+        {
+          "office": "District 7",
+          "area": null,
+          "people": 1,
+          "choices": 1,
+          "voteFor": 1
+        }
+      ]
+    }
+  ],
+  "officeScopes": [
+    {
+      "office": "Governor & Lieutenant Governor",
+      "area": "Each ticket runs and is elected as a single unit.",
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5",
+        "6",
+        "7"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "ATTAO, Blas Jonathan \"BJ\" Tenorio",
+        "VILLAGOMEZ, Edmund Joseph Sablan",
+        "TORRES, Ralph Anthony Deleon Guerrero",
+        "JONES, Benjamin Jr. Mendiola",
+        "CAMACHO, Lawrence Fejeran",
+        "DELEON GUERRERO, Edith E."
+      ],
+      "certifiedPeople": 6
+    },
+    {
+      "office": "Attorney General",
+      "area": null,
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5",
+        "6",
+        "7"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "EVANGELISTA, Michael Norita",
+        "TORRES, Joaquin Deleon Guerrero",
+        "GLASS, Jonathan Robert"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "Delegate to the U.S. House of Representatives",
+      "area": null,
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5",
+        "6",
+        "7"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "KING-HINDS, Kimberlyn Kay",
+        "DELEON GUERRERO, Galvin Sablan"
+      ],
+      "certifiedPeople": 2
+    },
+    {
+      "office": "3rd Senatorial District",
+      "area": "Saipan",
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "QUITUGUA, Edwin Raymond Borja",
+        "SABLAN, Crispin Manglona",
+        "CAMACHO, Vicente Castro",
+        "BABAUTA, Celina Roberto",
+        "PETER, Marco Taisakan",
+        "SABLAN, Vinnie Vinson Flores",
+        "MAGOFNA, Corina Lorraine"
+      ],
+      "certifiedPeople": 7
+    },
+    {
+      "office": "Mayor — 3rd Senatorial District",
+      "area": "Saipan",
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "5"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "MENDIOLA, Joseph Muna",
+        "CAMACHO, Ramon \"RB\" Jose Blas"
+      ],
+      "certifiedPeople": 2
+    },
+    {
+      "office": "Municipal Council — 3rd Senatorial District",
+      "area": "Saipan",
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5"
+      ],
+      "voteFor": 3,
+      "samplePeople": [
+        "TUDELA, Antonia Manibusan",
+        "TUDELA, Marian Deleon Guerrero",
+        "BENAVENTE, Anthony Tenorio"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "Board of Education — 3rd Senatorial District",
+      "area": "Saipan",
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "QUITUGUA, Daniel Ogo"
+      ],
+      "certifiedPeople": 1
+    },
+    {
+      "office": "Justice",
+      "area": null,
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C",
+        "2",
+        "3A",
+        "3B",
+        "4A",
+        "4B",
+        "4C",
+        "4D",
+        "5",
+        "6",
+        "7"
+      ],
+      "voteFor": null,
+      "samplePeople": [
+        "Alexandro Cruz Castro"
+      ],
+      "certifiedPeople": 1
+    },
+    {
+      "office": "District 1",
+      "area": null,
+      "samplePrecincts": [
+        "1A",
+        "1B",
+        "1C"
+      ],
+      "voteFor": 6,
+      "samplePeople": [
+        "ADA, Roy Christopher Aldan",
+        "CRUZ, Ricardo Jr. Castro",
+        "MARATITA, Janet Ulloa",
+        "PALACIOS, Raymond Ulloa",
+        "BENAVENTE, Roman Cepeda",
+        "FLORES, Joseph Arriola",
+        "CABAEL, Alfredo Javier",
+        "PITEG, Benusto",
+        "CAMACHO, Diego Vincent Fejeran",
+        "CEPEDA, Patrick Matagolai",
+        "DEMAPAN, John Jr. Deleon Guerrero",
+        "ALDAN, Vincent Raymond Seman",
+        "FITIAL, Cecilia Remedio Taitano"
+      ],
+      "certifiedPeople": 13
+    },
+    {
+      "office": "District 2",
+      "area": null,
+      "samplePrecincts": [
+        "2"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "SABLAN, John Paul Palacios",
+        "AQUINO, Daniel Jr. Iwashita",
+        "ADA, Keith Cabrera"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "District 3",
+      "area": null,
+      "samplePrecincts": [
+        "3A",
+        "3B"
+      ],
+      "voteFor": 6,
+      "samplePeople": [
+        "JANG, Steve Kap Soo",
+        "RANGAMAR, Elias Jerome Malite",
+        "ARRIOLA, Edward Jr. C.",
+        "BABAUTA, Gabriel Boki",
+        "NGIRCHONGOR, Quaid Taima Ogumoro",
+        "YANGETMAI, Denita Kaipat",
+        "YUMUL, Ralph Naraja",
+        "FLORES, Marissa Renee",
+        "SABLAN, Yvette Reyes",
+        "ORSINI, Andrew Lujan",
+        "SANTOS, Carlos Ebert",
+        "BENSON, Del Ariel"
+      ],
+      "certifiedPeople": 12
+    },
+    {
+      "office": "District 4",
+      "area": null,
+      "samplePrecincts": [
+        "4A",
+        "4B",
+        "4C",
+        "4D"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "BENJAMIN, James Kennedy Weilbacher Dlg.",
+        "OMAR, Malcolm Jason",
+        "CAMACHO, Joel Castro"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "Mayor — 3rd Senatorial District",
+      "area": "Northern Islands",
+      "samplePrecincts": [
+        "4D"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "TENORIO, Keli Aiken",
+        "TAISACAN, Valentino Jr. Nicky"
+      ],
+      "certifiedPeople": 2
+    },
+    {
+      "office": "District 5",
+      "area": null,
+      "samplePrecincts": [
+        "5"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "DELEON GUERRERO, Ted Anthony",
+        "MUNA, Peter Francis Reyes",
+        "STAFFLER, Leila Haveia Fleming Clark",
+        "CAMACHO, Angelo Atalig"
+      ],
+      "certifiedPeople": 4
+    },
+    {
+      "office": "2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "samplePrecincts": [
+        "6"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "HOFSCHNEIDER, Jude Untalan",
+        "CRUZ, Francisco Quichuchu"
+      ],
+      "certifiedPeople": 2
+    },
+    {
+      "office": "Mayor — 2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "samplePrecincts": [
+        "6"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "BORJA, Antonio San Nicolas"
+      ],
+      "certifiedPeople": 1
+    },
+    {
+      "office": "Municipal Council — 2nd Senatorial District",
+      "area": "Tinian & Aguiguan",
+      "samplePrecincts": [
+        "6"
+      ],
+      "voteFor": 3,
+      "samplePeople": [
+        "PALACIOS, Chad Ellie",
+        "SAN NICOLAS, Ana Marie Cruz",
+        "VILLAGOMEZ, Wally Flores"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "District 6",
+      "area": null,
+      "samplePrecincts": [
+        "6"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "SANTOS, Joseph Romaldo Evangelista"
+      ],
+      "certifiedPeople": 1
+    },
+    {
+      "office": "1st Senatorial District",
+      "area": "Rota",
+      "samplePrecincts": [
+        "7"
+      ],
+      "voteFor": 2,
+      "samplePeople": [
+        "HOCOG, Tito II Songao",
+        "MYERS, Robert Jr. Harrison",
+        "MANGLONA, Donald Manalang"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "Mayor — 1st Senatorial District",
+      "area": "Rota",
+      "samplePrecincts": [
+        "7"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "HOCOG, Aubry Manglona"
+      ],
+      "certifiedPeople": 1
+    },
+    {
+      "office": "Municipal Council — 1st Senatorial District",
+      "area": "Rota",
+      "samplePrecincts": [
+        "7"
+      ],
+      "voteFor": 3,
+      "samplePeople": [
+        "LIZAMA, Jonovan Hocog",
+        "TAIMANAO, Tillie Castro",
+        "MASGA, Sandra Mesngon"
+      ],
+      "certifiedPeople": 3
+    },
+    {
+      "office": "District 7",
+      "area": null,
+      "samplePrecincts": [
+        "7"
+      ],
+      "voteFor": 1,
+      "samplePeople": [
+        "OGO, Julie Marie Atalig"
+      ],
+      "certifiedPeople": 1
+    }
+  ]
+}

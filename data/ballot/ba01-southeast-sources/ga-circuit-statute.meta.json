@@ -1,0 +1,10 @@
+{
+  "url": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+  "finalUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:02:17.947475+00:00",
+  "rawHash": "d86fd6e4449f7a6256b61c6e74daab8df843da6114118de244bbfad4d7df0971",
+  "bytes": 579619,
+  "convertedTextHash": "8cfb2f77e2a102b3c87339881aea787cf3557cc8a27111ed82d8b88cd9856f52",
+  "extraction": "pdftotext -layout; exact statutory source text; original PDF identified by rawHash"
+}

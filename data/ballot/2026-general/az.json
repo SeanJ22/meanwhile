@@ -3751,18 +3751,18 @@
           "electionId": "az-2026-11-03",
           "ocdId": "ocd-division/country:us/state:az",
           "divisionVintage": "2026",
-          "title": "Justice of the Arizona Supreme Court",
+          "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
           "candidateListComplete": true,
           "scopeNote": null,
           "provenance": {
-            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
-            "sourceOrg": "Pima County Elections Department",
-            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
-            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
-            "quote": "Justice of the Arizona Supreme Court\nNONPARTISAN   LOPEZ IV, JOHN"
+            "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+            "sourceOrg": "City of Scottsdale — official Maricopa County sample ballot",
+            "collectedAt": "2026-10-20T23:19:36.209484+00:00",
+            "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
+            "quote": "Shall the following Justice of the Supreme Court be retained in office?\nRetain:\nLOPEZ IV, JOHN\nYES\nNO"
           }
         },
         {
@@ -3935,6 +3935,348 @@
             "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
             "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT\nBOARD MEMBER AT-LARGE\n(VOTE FOR NOT MORE THAN 1 )\nCROW, JOHN DAVID\nSCHWIEBERT, JUDY\nWrite-In Candidate\n"
           }
+        },
+        {
+          "id": "az-pima-general-2026-clerk-of-the-superior-court",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Clerk of the Superior Court",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Clerk of the Superior Court\nVote for not more than 1\nDEM GIACOMINO, JAMES W."
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-brearcliffe-sean-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division II — BREARCLIFFE, SEAN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN BREARCLIFFE, SEAN"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-kelly-michael-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division II — KELLY, MICHAEL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN KELLY, MICHAEL"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-sklar-jeffrey-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division II — SKLAR, JEFFREY — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN SKLAR, JEFFREY"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-2-goodwin-j-alan-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 2 — GOODWIN, J. ALAN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   GOODWIN, J. ALAN - DIVISION 2"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-4-bostwick-janet-calkins-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 4 — BOSTWICK, JANET CALKINS — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BOSTWICK, JANET CALKINS - DIVISION 4"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-6-liwski-danelle-bennett-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 6 — LIWSKI, DANELLE BENNETT — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   LIWSKI, DANELLE BENNETT - DIVISION 6"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-15-bensley-sandra-m-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 15 — BENSLEY, SANDRA M. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BENSLEY, SANDRA M. - DIVISION 15"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-17-woods-catherine-m-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 17 — WOODS, CATHERINE M. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   WOODS, CATHERINE M. - DIVISION 17"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-19-quigley-kathleen-a-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 19 — QUIGLEY, KATHLEEN A. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   QUIGLEY, KATHLEEN A. - DIVISION 19"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-20-san-angelo-laurie-b-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 20 — SAN ANGELO, LAURIE B. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   SAN ANGELO, LAURIE B. - DIVISION 20"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-21-kuhn-cynthia-t-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 21 — KUHN, CYNTHIA T. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   KUHN, CYNTHIA T. - DIVISION 21"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-22-bergin-jeffrey-t-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 22 — BERGIN, JEFFREY T. — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BERGIN, JEFFREY T. - DIVISION 22"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-25-burnett-randi-retention",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "divisionVintage": "2026",
+          "title": "Pima County Superior Court, Division 25 — BURNETT, RANDI — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BURNETT, RANDI - DIVISION 25"
+          }
+        },
+        {
+          "id": "az-scottsdale-general-2026-councilmember",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/place:scottsdale",
+          "divisionVintage": "2026",
+          "title": "City of Scottsdale — Councilmember",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+            "sourceOrg": "City of Scottsdale — official Maricopa County sample ballot",
+            "collectedAt": "2026-10-20T23:19:36.209484+00:00",
+            "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
+            "quote": "CITY OF SCOTTSDALE\nCOUNCILMEMBER\n(VOTE FOR NOT MORE THAN 2 )\nGRAHAM, BARRY\nUGENTI-RITA, MICHELLE\nZUBIA, RAOUL\nWrite-In Candidate\nWrite-In Candidate"
+          }
+        },
+        {
+          "id": "az-peoria-general-2026-mayor",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/place:peoria",
+          "divisionVintage": "2026",
+          "title": "City of Peoria — Mayor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Peoria City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "quote": "MAYOR – AT LARGE\n(VOTE FOR NOT MORE THAN 1)\n\n                                                                     FINN, MICHAEL\n                                                                       MILLER, ART\n                                                                WRITE-IN CANDIDATE"
+          }
+        },
+        {
+          "id": "az-peoria-general-2026-proposition-417",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/place:peoria",
+          "divisionVintage": "2026",
+          "title": "City of Peoria — Proposition 417",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Peoria City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "quote": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.\nA \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company."
+          }
+        },
+        {
+          "id": "az-tempe-general-2026-proposition-424",
+          "electionId": "az-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:az/place:tempe",
+          "divisionVintage": "2026",
+          "title": "City of Tempe — Proposition 424",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Tempe City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.797512+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.797512+00:00",
+            "quote": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).\nA “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027."
+          }
         }
       ],
       "election": {
@@ -4004,6 +4346,34 @@
             "collectedAt": "2026-10-20T22:54:15.702076+00:00",
             "verifiedAt": "2026-10-20T22:54:15.702076+00:00",
             "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs."
+          }
+        },
+        {
+          "id": "az-peoria-general-2026-proposition-417#question",
+          "contestId": "az-peoria-general-2026-proposition-417",
+          "officialNumber": "417",
+          "questionText": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Peoria City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "quote": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.\nA \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company."
+          }
+        },
+        {
+          "id": "az-tempe-general-2026-proposition-424#question",
+          "contestId": "az-tempe-general-2026-proposition-424",
+          "officialNumber": "424",
+          "questionText": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Tempe City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.797512+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.797512+00:00",
+            "quote": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).\nA “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027."
           }
         }
       ],
@@ -14410,6 +14780,329 @@
             "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
             "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT\nBOARD MEMBER AT-LARGE\n(VOTE FOR NOT MORE THAN 1 )\nCROW, JOHN DAVID\nSCHWIEBERT, JUDY\nWrite-In Candidate\n"
           }
+        },
+        {
+          "id": "az-pima-general-2026-clerk-of-the-superior-court-giacomino-james-w",
+          "contestId": "az-pima-general-2026-clerk-of-the-superior-court",
+          "familyName": "GIACOMINO, JAMES W.",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Clerk of the Superior Court\nVote for not more than 1\nDEM GIACOMINO, JAMES W."
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-brearcliffe-sean-retention-brearcliffe-sean",
+          "contestId": "az-pima-general-2026-court-of-appeals-division-ii-brearcliffe-sean-retention",
+          "familyName": "BREARCLIFFE, SEAN",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN BREARCLIFFE, SEAN"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-kelly-michael-retention-kelly-michael",
+          "contestId": "az-pima-general-2026-court-of-appeals-division-ii-kelly-michael-retention",
+          "familyName": "KELLY, MICHAEL",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN KELLY, MICHAEL"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-court-of-appeals-division-ii-sklar-jeffrey-retention-sklar-jeffrey",
+          "contestId": "az-pima-general-2026-court-of-appeals-division-ii-sklar-jeffrey-retention",
+          "familyName": "SKLAR, JEFFREY",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Court of Appeals Division II\nNONPARTISAN SKLAR, JEFFREY"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-2-goodwin-j-alan-retention-goodwin-j-alan",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-2-goodwin-j-alan-retention",
+          "familyName": "GOODWIN, J. ALAN",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   GOODWIN, J. ALAN - DIVISION 2"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-4-bostwick-janet-calkins-retention-bostwick-janet-calkins",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-4-bostwick-janet-calkins-retention",
+          "familyName": "BOSTWICK, JANET CALKINS",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BOSTWICK, JANET CALKINS - DIVISION 4"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-6-liwski-danelle-bennett-retention-liwski-danelle-bennett",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-6-liwski-danelle-bennett-retention",
+          "familyName": "LIWSKI, DANELLE BENNETT",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   LIWSKI, DANELLE BENNETT - DIVISION 6"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-15-bensley-sandra-m-retention-bensley-sandra-m",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-15-bensley-sandra-m-retention",
+          "familyName": "BENSLEY, SANDRA M.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BENSLEY, SANDRA M. - DIVISION 15"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-17-woods-catherine-m-retention-woods-catherine-m",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-17-woods-catherine-m-retention",
+          "familyName": "WOODS, CATHERINE M.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   WOODS, CATHERINE M. - DIVISION 17"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-19-quigley-kathleen-a-retention-quigley-kathleen-a",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-19-quigley-kathleen-a-retention",
+          "familyName": "QUIGLEY, KATHLEEN A.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   QUIGLEY, KATHLEEN A. - DIVISION 19"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-20-san-angelo-laurie-b-retention-san-angelo-laurie-b",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-20-san-angelo-laurie-b-retention",
+          "familyName": "SAN ANGELO, LAURIE B.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   SAN ANGELO, LAURIE B. - DIVISION 20"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-21-kuhn-cynthia-t-retention-kuhn-cynthia-t",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-21-kuhn-cynthia-t-retention",
+          "familyName": "KUHN, CYNTHIA T.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   KUHN, CYNTHIA T. - DIVISION 21"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-22-bergin-jeffrey-t-retention-bergin-jeffrey-t",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-22-bergin-jeffrey-t-retention",
+          "familyName": "BERGIN, JEFFREY T.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BERGIN, JEFFREY T. - DIVISION 22"
+          }
+        },
+        {
+          "id": "az-pima-general-2026-pima-county-superior-court-division-25-burnett-randi-retention-burnett-randi",
+          "contestId": "az-pima-general-2026-pima-county-superior-court-division-25-burnett-randi-retention",
+          "familyName": "BURNETT, RANDI",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "sourceOrg": "Pima County Elections Department",
+            "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+            "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+            "quote": "Judge of the Superior Court\nNONPARTISAN   BURNETT, RANDI - DIVISION 25"
+          }
+        },
+        {
+          "id": "az-scottsdale-general-2026-councilmember-graham-barry",
+          "contestId": "az-scottsdale-general-2026-councilmember",
+          "familyName": "GRAHAM, BARRY",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+            "sourceOrg": "City of Scottsdale — official Maricopa County sample ballot",
+            "collectedAt": "2026-10-20T23:19:36.209484+00:00",
+            "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
+            "quote": "CITY OF SCOTTSDALE\nCOUNCILMEMBER\n(VOTE FOR NOT MORE THAN 2 )\nGRAHAM, BARRY\nUGENTI-RITA, MICHELLE\nZUBIA, RAOUL\nWrite-In Candidate\nWrite-In Candidate"
+          }
+        },
+        {
+          "id": "az-scottsdale-general-2026-councilmember-ugenti-rita-michelle",
+          "contestId": "az-scottsdale-general-2026-councilmember",
+          "familyName": "UGENTI-RITA, MICHELLE",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+            "sourceOrg": "City of Scottsdale — official Maricopa County sample ballot",
+            "collectedAt": "2026-10-20T23:19:36.209484+00:00",
+            "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
+            "quote": "CITY OF SCOTTSDALE\nCOUNCILMEMBER\n(VOTE FOR NOT MORE THAN 2 )\nGRAHAM, BARRY\nUGENTI-RITA, MICHELLE\nZUBIA, RAOUL\nWrite-In Candidate\nWrite-In Candidate"
+          }
+        },
+        {
+          "id": "az-scottsdale-general-2026-councilmember-zubia-raoul",
+          "contestId": "az-scottsdale-general-2026-councilmember",
+          "familyName": "ZUBIA, RAOUL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+            "sourceOrg": "City of Scottsdale — official Maricopa County sample ballot",
+            "collectedAt": "2026-10-20T23:19:36.209484+00:00",
+            "verifiedAt": "2026-10-20T23:19:36.209484+00:00",
+            "quote": "CITY OF SCOTTSDALE\nCOUNCILMEMBER\n(VOTE FOR NOT MORE THAN 2 )\nGRAHAM, BARRY\nUGENTI-RITA, MICHELLE\nZUBIA, RAOUL\nWrite-In Candidate\nWrite-In Candidate"
+          }
+        },
+        {
+          "id": "az-peoria-general-2026-mayor-finn-michael",
+          "contestId": "az-peoria-general-2026-mayor",
+          "familyName": "FINN, MICHAEL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Peoria City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "quote": "MAYOR – AT LARGE\n(VOTE FOR NOT MORE THAN 1)\n\n                                                                     FINN, MICHAEL\n                                                                       MILLER, ART\n                                                                WRITE-IN CANDIDATE"
+          }
+        },
+        {
+          "id": "az-peoria-general-2026-mayor-miller-art",
+          "contestId": "az-peoria-general-2026-mayor",
+          "familyName": "MILLER, ART",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "sourceOrg": "City of Peoria City Clerk",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "quote": "MAYOR – AT LARGE\n(VOTE FOR NOT MORE THAN 1)\n\n                                                                     FINN, MICHAEL\n                                                                       MILLER, ART\n                                                                WRITE-IN CANDIDATE"
+          }
         }
       ],
       "scopedCoverageNotes": [
@@ -15007,6 +15700,28 @@
           "sourceHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
           "sourceHashKind": "CAPTURE_BYTES",
           "writtenAt": "2026-10-20T22:54:15.702076+00:00"
+        },
+        {
+          "contestId": "az-peoria-general-2026-proposition-417",
+          "whatItDoes": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.",
+          "yesMeans": "A \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.",
+          "noMeans": "A \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company.",
+          "parts": [],
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "sourceHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-21T00:09:35.705603+00:00"
+        },
+        {
+          "contestId": "az-tempe-general-2026-proposition-424",
+          "whatItDoes": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).",
+          "yesMeans": "A “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
+          "noMeans": "A “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "sourceHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-21T00:09:35.797512+00:00"
         }
       ],
       "generalLineup": {
@@ -20640,7 +21355,7 @@
         "retrievedAt": "2026-10-20T23:17:15.543620+00:00",
         "publisher": "Pima County Elections Department",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official Pima County November 3 general candidate list linked by https://www.pima.gov/upcoming-elections-and-events. Full text saved in az-pima-general-candidates.txt; source names John Lopez IV for the statewide Supreme Court and explicitly prints all four governor/lieutenant-governor pairs.",
+        "reviewedEvidence": "Complete September9 general candidate list: clerk and all3AppealsDivisionII/10PimaSuperiorCourt judicial choices; Pima electorate remains county-specific.",
         "reviewOutcome": "SUPPORTED"
       },
       {
@@ -20675,10 +21390,65 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The public community-college governing-board page explicitly states two at-large positions represent the entire county. The official Maricopa County candidate list and Scottsdale general sample explicitly identify the district and its at-large race.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "rawHash": "43b0f8ccbf82eb15ab4b1aba3c97f20628bc117547fbb22cbd1b55f2bed8ff00",
+        "retrievedAt": "2026-10-21T00:27:33.832Z",
+        "httpStatus": 200,
+        "publisher": "Pima County Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete general qualified write-in list has no clerk, superior or appeals write-ins.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://jpr.azcourts.gov/Portals/2/148/documents/2026RetentionJudges.pdf?ver=Hq4BMJYzOkcxBoacAo8Uwg%3D%3D",
+        "finalUrl": "https://jpr.azcourts.gov/Portals/2/148/documents/2026RetentionJudges.pdf?ver=Hq4BMJYzOkcxBoacAo8Uwg%3D%3D",
+        "rawHash": "066d4a90c0fe25f90e080ec7a1c5098717fc6f39824f5b708fd1afa04ba2f650",
+        "retrievedAt": "2026-10-21T00:24:37.270Z",
+        "httpStatus": 200,
+        "publisher": "Arizona Judicial Branch",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official2026RetentionJudges list independently identifies all10PimaSuperiorCourt judges as retention choices.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.azleg.gov/ars/12/00120-02.htm",
+        "finalUrl": "https://www.azleg.gov/ars/12/00120-02.htm",
+        "rawHash": "80d66ffe23f6da01d7a5079341882b076cee4d896a6e6e09fff844f806f42e90",
+        "retrievedAt": "2026-10-21T00:24:37.237Z",
+        "httpStatus": 200,
+        "publisher": "Arizona Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "ARS12-120.02 explicitly separates Pima from the otherDivisionII county electorates and Maricopa from otherDivisionI counties; county sample assignments are not widened.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "rawHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+        "retrievedAt": "2026-10-21T00:09:35.705603+00:00",
+        "httpStatus": 200,
+        "publisher": "City of Peoria City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November3 general publicity pamphlet/ballot text: both at-large mayor candidates and complete Proposition417 question/YES/NO meanings. District council candidates excluded.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "rawHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+        "retrievedAt": "2026-10-21T00:09:35.797512+00:00",
+        "httpStatus": 200,
+        "publisher": "City of Tempe City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November3 special election publicity pamphlet FULLTEXT sample ballot page7: complete Proposition424 official/descriptive text and both vote meanings. Advocacy arguments excluded.",
+        "reviewOutcome": "SUPPORTED"
       }
     ],
-    "reviewedAt": "2026-10-20T23:29:16.283Z",
-    "reviewedBy": "Codex BA-01 official-source replay",
+    "reviewedAt": "2026-10-21T00:54:53.331296+00:00",
+    "reviewedBy": "Codex BA-01 official Arizona local ballot replay",
     "contractVersion": 1
   }
 }

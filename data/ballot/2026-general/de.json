@@ -1262,6 +1262,215 @@
             "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
             "quote": "Sussex County Sheriff"
           }
+        },
+        {
+          "id": "de-county-districts-2026-8e5e60086cd37168c7df",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:2",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Kent County Levy Court District 2",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 2"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-75276c3e4ffc203a0841",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Kent County Levy Court District 4",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 4"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-cf9844aa61e811f43642",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Kent County Levy Court District 6",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 6"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-d439b63f092ae2c6a179",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:1",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 1",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 1"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-13af45e12b54c519e6b6",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 2",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 2"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-19487c5880ec0ec3085b",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:3",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 3",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 3"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-92e449a0ccd3cd1c3fca",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 4",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 4"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-d86aac87802fd9150a45",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:5",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 5",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 5"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-45e400107862e455b649",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "New Castle County Council District 6",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 6"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-ab74ecca342cbb91c8ef",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Sussex County Council District 4",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 4"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-6c7ff9a7bb0a97fa310d",
+          "electionId": "de-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Sussex County Council District 5",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 5"
+          }
         }
       ],
       "candidacies": [
@@ -3202,6 +3411,278 @@
             "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
             "quote": "Sussex County Sheriff | Robert T. Lee | Republican"
           }
+        },
+        {
+          "id": "de-county-districts-2026-8e5e60086cd37168c7df:0a2a5bc14935ef38",
+          "contestId": "de-county-districts-2026-8e5e60086cd37168c7df",
+          "givenName": "",
+          "familyName": "Jeff Hall",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 2 | Jeff Hall | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-75276c3e4ffc203a0841:7bfe8f226f5ee2f8",
+          "contestId": "de-county-districts-2026-75276c3e4ffc203a0841",
+          "givenName": "",
+          "familyName": "Robert \"Bobby\" Scott",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 4 | Robert \"Bobby\" Scott | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-cf9844aa61e811f43642:b063cf8e09918942",
+          "contestId": "de-county-districts-2026-cf9844aa61e811f43642",
+          "givenName": "",
+          "familyName": "Paul Hertz",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Kent County Levy Court District 6 | Paul Hertz | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-d439b63f092ae2c6a179:38506f7e9a0ba1dd",
+          "contestId": "de-county-districts-2026-d439b63f092ae2c6a179",
+          "givenName": "",
+          "familyName": "Brandon Toole",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 1 | Brandon Toole | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-13af45e12b54c519e6b6:387026dd92fbca37",
+          "contestId": "de-county-districts-2026-13af45e12b54c519e6b6",
+          "givenName": "",
+          "familyName": "Dee Durham",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 2 | Dee Durham | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-13af45e12b54c519e6b6:1f8e2f52932441c7",
+          "contestId": "de-county-districts-2026-13af45e12b54c519e6b6",
+          "givenName": "",
+          "familyName": "Jamie Collins",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 2 | Jamie Collins | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-19487c5880ec0ec3085b:190cdfab2271b6f2",
+          "contestId": "de-county-districts-2026-19487c5880ec0ec3085b",
+          "givenName": "",
+          "familyName": "Kira Alejandro",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 3 | Kira Alejandro | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-19487c5880ec0ec3085b:0fad6d3f2460e8de",
+          "contestId": "de-county-districts-2026-19487c5880ec0ec3085b",
+          "givenName": "",
+          "familyName": "Melissa S. Brayman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 3 | Melissa S. Brayman | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-92e449a0ccd3cd1c3fca:200c40a6a0e08063",
+          "contestId": "de-county-districts-2026-92e449a0ccd3cd1c3fca",
+          "givenName": "",
+          "familyName": "Jason Hoover",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 4 | Jason Hoover | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-d86aac87802fd9150a45:04c12635b5a49a4a",
+          "contestId": "de-county-districts-2026-d86aac87802fd9150a45",
+          "givenName": "",
+          "familyName": "Valerie George",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 5 | Valerie George | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-45e400107862e455b649:429a5b49d1720ba2",
+          "contestId": "de-county-districts-2026-45e400107862e455b649",
+          "givenName": "",
+          "familyName": "David Carter",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 6 | David Carter | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-45e400107862e455b649:11a0fe4f5324a6cf",
+          "contestId": "de-county-districts-2026-45e400107862e455b649",
+          "givenName": "",
+          "familyName": "Alison T. Gibbs",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "New Castle County Council District 6 | Alison T. Gibbs | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-ab74ecca342cbb91c8ef:25fa141df5bca2b0",
+          "contestId": "de-county-districts-2026-ab74ecca342cbb91c8ef",
+          "givenName": "",
+          "familyName": "Justine Cuccia",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 4 | Justine Cuccia | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-ab74ecca342cbb91c8ef:b7d6e227def522f0",
+          "contestId": "de-county-districts-2026-ab74ecca342cbb91c8ef",
+          "givenName": "",
+          "familyName": "Douglas B. Hudson",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 4 | Douglas B. Hudson | Republican | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-6c7ff9a7bb0a97fa310d:d941e2afb739a5fd",
+          "contestId": "de-county-districts-2026-6c7ff9a7bb0a97fa310d",
+          "givenName": "",
+          "familyName": "Jill Hicks",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 5 | Jill Hicks | Democratic | Qualified"
+          }
+        },
+        {
+          "id": "de-county-districts-2026-6c7ff9a7bb0a97fa310d:c2c6d09b71b02826",
+          "contestId": "de-county-districts-2026-6c7ff9a7bb0a97fa310d",
+          "givenName": "",
+          "familyName": "John L. Rieley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+            "sourceOrg": "Delaware Department of Elections",
+            "collectedAt": "2026-10-20T22:52:22.311841+00:00",
+            "verifiedAt": "2026-10-20T22:52:22.311841+00:00",
+            "quote": "Sussex County Council District 5 | John L. Rieley | Republican | Qualified"
+          }
         }
       ],
       "measures": [],
@@ -3215,8 +3696,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "BA-01 official county office list replay",
-    "reviewedAt": "2026-10-20T22:52:22.311841+00:00",
+    "reviewedBy": "BA-01 all Delaware county electoral district roster replay",
+    "reviewedAt": "2026-10-21T00:28:54.979014+00:00",
     "sources": [
       {
         "requestedUrl": "https://elections.delaware.gov/",
@@ -3282,6 +3763,86 @@
         "publisher": "Delaware Department of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Exact qualified or active names and printed parties replayed from the current official all-office list. County-wide offices match the source county and existing registered county division. Local electoral districts remain separate coverage work."
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:22.311841+00:00",
+        "httpStatus": 200,
+        "rawHash": "6cf7af3dc3dfbf88435bb3e88e55884340ca88cb245c593ec8d95ce0015fbf07",
+        "reviewedEvidence": "All eleven qualified county council or levy-court district races and sixteen candidates replayed from the official general-election list; withdrawn rows excluded. Equal fields for every candidate. Vote limit not stated in this list and remains null."
+      },
+      {
+        "requestedUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+        "finalUrl": "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+        "publisher": "Delaware Department of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:22.316058+00:00",
+        "httpStatus": 200,
+        "rawHash": "59406aaa5de1ddb437b49b7f6b821476a6c98add6b546237b287339729e240ca",
+        "reviewedEvidence": "Complete official qualified write-in list checked for all eleven county district offices; none listed."
+      },
+      {
+        "requestedUrl": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "New Castle County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:28:54.979014+00:00",
+        "httpStatus": 200,
+        "rawHash": "18e70c9ff5759e17b395349f1d483682d5f3c0e967756074e8a4e6efaf786d31",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Kent County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:28:42.727569+00:00",
+        "httpStatus": 200,
+        "rawHash": "c9c08c4c806c62388b5ee8381103c33c671e35d8c17d9faf20890d20553aa69b",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Sussex County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:26:54.394111+00:00",
+        "httpStatus": 200,
+        "rawHash": "0e2d7ff1d2d328c8d89c895f68a5f6691c1d21b0188bcd4e25ca5bd0fdd89833",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.newcastlede.gov/226/County-Council",
+        "finalUrl": "https://www.newcastlede.gov/226/County-Council",
+        "publisher": "New Castle County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:25:12.372080+00:00",
+        "httpStatus": 200,
+        "rawHash": "2e91e92223918ce13bf0eb90f77b56f7a2877e68a856da86a7ba04b7771381cb",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/0bc1d3c56c854e369dbe84f60eb74814/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/0bc1d3c56c854e369dbe84f60eb74814/data?f=pjson",
+        "publisher": "New Castle County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:27:48.392598+00:00",
+        "httpStatus": 200,
+        "rawHash": "8b8c505f1e55f3854737581912ff70c16bad9c910d0b3eed8740c0b743e69d99",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/4a8507aab74b4d61ab627088cb4fa38d/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/4a8507aab74b4d61ab627088cb4fa38d/data?f=pjson",
+        "publisher": "New Castle County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:28:25.084707+00:00",
+        "httpStatus": 200,
+        "rawHash": "175d18d47e70e993b23f5390af08c5a5098b2714465651f08e7770043a09be51",
+        "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
       }
     ]
   }

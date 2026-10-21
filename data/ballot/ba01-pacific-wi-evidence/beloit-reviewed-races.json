@@ -1,0 +1,68 @@
+[
+  [
+    "Representative in Congress District 1",
+    "ocd-division/country:us/state:wi/cd:1",
+    [
+      [
+        "Bryan Steil",
+        "Republican"
+      ],
+      [
+        "Mitchell Berman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 15",
+    "ocd-division/country:us/state:wi/sldu:15",
+    [
+      [
+        "Scott Fleming",
+        "Republican"
+      ],
+      [
+        "Mark Spreitzer",
+        "Democratic"
+      ],
+      [
+        "Christopher Dean",
+        "Serving People Not Parties"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 45",
+    "ocd-division/country:us/state:wi/sldl:45",
+    [
+      [
+        "Jocelyn Jordan",
+        "Republican"
+      ],
+      [
+        "Clinton Anderson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Rock County Sheriff",
+    "ocd-division/country:us/state:wi/county:rock",
+    [
+      [
+        "Curtis Fell",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Rock County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:rock",
+    [
+      [
+        "Amanda Nelson",
+        "Democratic"
+      ]
+    ]
+  ]
+]

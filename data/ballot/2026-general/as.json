@@ -1,0 +1,1132 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "AS:as-2026-11-03-general": {
+      "election": {
+        "id": "as-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AS"
+      },
+      "contests": [
+        {
+          "id": "as-ba01-2026-delegate",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as",
+          "divisionVintage": "2026",
+          "title": "Delegate to the United States Congress",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Delegate to the United States Congress\nAumua Amata\nFualaau Rosie Tago Lancaster\nMeleagi Suitonu Chapman\nSamana Semo Veavea\nSandra King Young\nTuifagaloa Dr. Afu Lefaoseu"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:1",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 1 – Manu’a",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 1 – Manu’a\nFetui F. Fetu Jr.\nMana’oimalo Fa’aaliga Matagi\nPaepaetele Mapu Jamias\nSatia Aokuso Satia\nVala Porotesano Liusamoa"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-2",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:2",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 2 – Manu’a",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 2 – Manu’a\nNiuatoa Loleni Faiai\nTiaoali’i Fauagiga T. Sai"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-3",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:3",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 3 – Vaifanua",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 3 – Vaifanua\nShaun O. Va’a\nTiapula Dr. Toafa Vaiaga’e"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-4",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:4",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 4 – Saole",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 4 – Saole\nDr. Va’asa Simanu\nTitiali’i Kitara Vaiau\nVitolio Ioane Lotu"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-5",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:5",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 5 – Sua #1",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 5 – Sua #1\nLuaitaua Gene Pan\nLynn Nu’uuli Pulou-Alaimalo"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-6",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:6",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 6 – Sua #2",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 6 – Sua #2\nAvaolagi Ta’atiatia I.Mata’utia Sua\nMatagaono Vaimaga Maiava"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-7",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:7",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 7 – Maoputasi #1",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 7 – Maoputasi #1\nVailoata Eteuati Amituanai"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-8",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:8",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 8 – Maoputasi #2",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 8 – Maoputasi #2\nMalaeoletalu Melesio Gurr\nLeiviifiloa Mariota K. Tuiasosopo"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-9",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:9",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 9 – Maoputasi #3",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 9 – Maoputasi #3\nTrude Gasetotolemasina Ledoux-Sunia"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-10",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:10",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 10 – Maoputasi #4",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 10 – Maoputasi #4\nSaena Omar Shalhout\nTalali Perry T. Loloaso Wightman-Uia\nTapai Alailepule Ben Vaivao"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-11",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:11",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 11 – Maoputasi #5",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 11 – Maoputasi #5\nFaimealelei Anthony Fu’e Allen\nMuaiavaona Fofoga Pila"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-12",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:12",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 12 – Ituau",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 12 – Ituau\nManumaua Wayne Wilson\nSauasetoa Tautoloitua Soliai Ho Ching"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-13",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:13",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 13 – Fofo",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 13 – Fofo\nFiu J. Saelua"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-14",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:14",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 14 – Alataua",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 14 – Alataua\nMona Uli\nSavali Talavou Ale"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:15",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 15 – Tualauta",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 15 – Tualauta\nAlex Sene Jr.\nBen Vaomu Solomona Sauvao\nFagaima Larry Sanitoa\nSefulu Mika Kelemete\nTapusalaia “Tap” Moemalemalo Maneafaiga"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-16",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:16",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 16 – Tualatai",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 16 – Tualatai\nManavaalofa Tutuila Manase"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-17",
+          "electionId": "as-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:as/sldl:17",
+          "divisionVintage": "2026",
+          "title": "House of Representatives, District 17 – Aitulagi/Leasina",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "House of Representatives, District 17 – Aitulagi/Leasina\nApe Mike Asifoa\nFuasali’i I. Iose"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "as-ba01-2026-delegate-aumua-amata",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Aumua Amata",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Aumua Amata"
+          }
+        },
+        {
+          "id": "as-ba01-2026-delegate-fualaau-rosie-tago-lancaster",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Fualaau Rosie Tago Lancaster",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Fualaau Rosie Tago Lancaster"
+          }
+        },
+        {
+          "id": "as-ba01-2026-delegate-meleagi-suitonu-chapman",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Meleagi Suitonu Chapman",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Meleagi Suitonu Chapman"
+          }
+        },
+        {
+          "id": "as-ba01-2026-delegate-samana-semo-veavea",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Samana Semo Veavea",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Samana Semo Veavea"
+          }
+        },
+        {
+          "id": "as-ba01-2026-delegate-sandra-king-young",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Sandra King Young",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Sandra King Young"
+          }
+        },
+        {
+          "id": "as-ba01-2026-delegate-tuifagaloa-dr-afu-lefaoseu",
+          "contestId": "as-ba01-2026-delegate",
+          "familyName": "Tuifagaloa Dr. Afu Lefaoseu",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Tuifagaloa Dr. Afu Lefaoseu"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1-fetui-f-fetu-jr",
+          "contestId": "as-ba01-2026-house-1",
+          "familyName": "Fetui F. Fetu Jr.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Fetui F. Fetu Jr."
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1-manaoimalo-faaaliga-matagi",
+          "contestId": "as-ba01-2026-house-1",
+          "familyName": "Mana’oimalo Fa’aaliga Matagi",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Mana’oimalo Fa’aaliga Matagi"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1-paepaetele-mapu-jamias",
+          "contestId": "as-ba01-2026-house-1",
+          "familyName": "Paepaetele Mapu Jamias",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Paepaetele Mapu Jamias"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1-satia-aokuso-satia",
+          "contestId": "as-ba01-2026-house-1",
+          "familyName": "Satia Aokuso Satia",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Satia Aokuso Satia"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-1-vala-porotesano-liusamoa",
+          "contestId": "as-ba01-2026-house-1",
+          "familyName": "Vala Porotesano Liusamoa",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Vala Porotesano Liusamoa"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-2-niuatoa-loleni-faiai",
+          "contestId": "as-ba01-2026-house-2",
+          "familyName": "Niuatoa Loleni Faiai",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Niuatoa Loleni Faiai"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-2-tiaoalii-fauagiga-t-sai",
+          "contestId": "as-ba01-2026-house-2",
+          "familyName": "Tiaoali’i Fauagiga T. Sai",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Tiaoali’i Fauagiga T. Sai"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-3-shaun-o-vaa",
+          "contestId": "as-ba01-2026-house-3",
+          "familyName": "Shaun O. Va’a",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Shaun O. Va’a"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-3-tiapula-dr-toafa-vaiagae",
+          "contestId": "as-ba01-2026-house-3",
+          "familyName": "Tiapula Dr. Toafa Vaiaga’e",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Tiapula Dr. Toafa Vaiaga’e"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-4-dr-vaasa-simanu",
+          "contestId": "as-ba01-2026-house-4",
+          "familyName": "Dr. Va’asa Simanu",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Dr. Va’asa Simanu"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-4-titialii-kitara-vaiau",
+          "contestId": "as-ba01-2026-house-4",
+          "familyName": "Titiali’i Kitara Vaiau",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Titiali’i Kitara Vaiau"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-4-vitolio-ioane-lotu",
+          "contestId": "as-ba01-2026-house-4",
+          "familyName": "Vitolio Ioane Lotu",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Vitolio Ioane Lotu"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-5-luaitaua-gene-pan",
+          "contestId": "as-ba01-2026-house-5",
+          "familyName": "Luaitaua Gene Pan",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Luaitaua Gene Pan"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-5-lynn-nuuuli-pulou-alaimalo",
+          "contestId": "as-ba01-2026-house-5",
+          "familyName": "Lynn Nu’uuli Pulou-Alaimalo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Lynn Nu’uuli Pulou-Alaimalo"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-6-avaolagi-taatiatia-i-matautia-sua",
+          "contestId": "as-ba01-2026-house-6",
+          "familyName": "Avaolagi Ta’atiatia I.Mata’utia Sua",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Avaolagi Ta’atiatia I.Mata’utia Sua"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-6-matagaono-vaimaga-maiava",
+          "contestId": "as-ba01-2026-house-6",
+          "familyName": "Matagaono Vaimaga Maiava",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Matagaono Vaimaga Maiava"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-7-vailoata-eteuati-amituanai",
+          "contestId": "as-ba01-2026-house-7",
+          "familyName": "Vailoata Eteuati Amituanai",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Vailoata Eteuati Amituanai"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-8-malaeoletalu-melesio-gurr",
+          "contestId": "as-ba01-2026-house-8",
+          "familyName": "Malaeoletalu Melesio Gurr",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Malaeoletalu Melesio Gurr"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-8-leiviifiloa-mariota-k-tuiasosopo",
+          "contestId": "as-ba01-2026-house-8",
+          "familyName": "Leiviifiloa Mariota K. Tuiasosopo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Leiviifiloa Mariota K. Tuiasosopo"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-9-trude-gasetotolemasina-ledoux-sunia",
+          "contestId": "as-ba01-2026-house-9",
+          "familyName": "Trude Gasetotolemasina Ledoux-Sunia",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Trude Gasetotolemasina Ledoux-Sunia"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-10-saena-omar-shalhout",
+          "contestId": "as-ba01-2026-house-10",
+          "familyName": "Saena Omar Shalhout",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Saena Omar Shalhout"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-10-talali-perry-t-loloaso-wightman-uia",
+          "contestId": "as-ba01-2026-house-10",
+          "familyName": "Talali Perry T. Loloaso Wightman-Uia",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Talali Perry T. Loloaso Wightman-Uia"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-10-tapai-alailepule-ben-vaivao",
+          "contestId": "as-ba01-2026-house-10",
+          "familyName": "Tapai Alailepule Ben Vaivao",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Tapai Alailepule Ben Vaivao"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-11-faimealelei-anthony-fue-allen",
+          "contestId": "as-ba01-2026-house-11",
+          "familyName": "Faimealelei Anthony Fu’e Allen",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Faimealelei Anthony Fu’e Allen"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-11-muaiavaona-fofoga-pila",
+          "contestId": "as-ba01-2026-house-11",
+          "familyName": "Muaiavaona Fofoga Pila",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Muaiavaona Fofoga Pila"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-12-manumaua-wayne-wilson",
+          "contestId": "as-ba01-2026-house-12",
+          "familyName": "Manumaua Wayne Wilson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Manumaua Wayne Wilson"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-12-sauasetoa-tautoloitua-soliai-ho-ching",
+          "contestId": "as-ba01-2026-house-12",
+          "familyName": "Sauasetoa Tautoloitua Soliai Ho Ching",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Sauasetoa Tautoloitua Soliai Ho Ching"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-13-fiu-j-saelua",
+          "contestId": "as-ba01-2026-house-13",
+          "familyName": "Fiu J. Saelua",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Fiu J. Saelua"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-14-mona-uli",
+          "contestId": "as-ba01-2026-house-14",
+          "familyName": "Mona Uli",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Mona Uli"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-14-savali-talavou-ale",
+          "contestId": "as-ba01-2026-house-14",
+          "familyName": "Savali Talavou Ale",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Savali Talavou Ale"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15-alex-sene-jr",
+          "contestId": "as-ba01-2026-house-15",
+          "familyName": "Alex Sene Jr.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Alex Sene Jr."
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15-ben-vaomu-solomona-sauvao",
+          "contestId": "as-ba01-2026-house-15",
+          "familyName": "Ben Vaomu Solomona Sauvao",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Ben Vaomu Solomona Sauvao"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15-fagaima-larry-sanitoa",
+          "contestId": "as-ba01-2026-house-15",
+          "familyName": "Fagaima Larry Sanitoa",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Fagaima Larry Sanitoa"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15-sefulu-mika-kelemete",
+          "contestId": "as-ba01-2026-house-15",
+          "familyName": "Sefulu Mika Kelemete",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Sefulu Mika Kelemete"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-15-tapusalaia-tap-moemalemalo-maneafaiga",
+          "contestId": "as-ba01-2026-house-15",
+          "familyName": "Tapusalaia “Tap” Moemalemalo Maneafaiga",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Tapusalaia “Tap” Moemalemalo Maneafaiga"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-16-manavaalofa-tutuila-manase",
+          "contestId": "as-ba01-2026-house-16",
+          "familyName": "Manavaalofa Tutuila Manase",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Manavaalofa Tutuila Manase"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-17-ape-mike-asifoa",
+          "contestId": "as-ba01-2026-house-17",
+          "familyName": "Ape Mike Asifoa",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Ape Mike Asifoa"
+          }
+        },
+        {
+          "id": "as-ba01-2026-house-17-fuasalii-i-iose",
+          "contestId": "as-ba01-2026-house-17",
+          "familyName": "Fuasali’i I. Iose",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+            "sourceOrg": "American Samoa Election Office",
+            "collectedAt": "2026-10-21T00:34:11.037319+00:00",
+            "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
+            "quote": "Fuasali’i I. Iose"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "The Election Office certified list verifies the delegate and all 17 numbered House contests. We are working on official sample ballots, ballot questions and voting instructions."
+      ],
+      "districtMemberships": [],
+      "candidateTickets": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-21T00:34:11.037319+00:00",
+    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "sources": [
+      {
+        "requestedUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "finalUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "retrievedAt": "2026-10-21T00:34:11.037319+00:00",
+        "httpStatus": 200,
+        "rawHash": "c9e5326bbd18e30100f0f44aeff8c347aded8c8d22b0cc93fd7c518eaeb5b342",
+        "publisher": "American Samoa Election Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "The Commissioner of Elections expressly certifies every listed candidate for the Midterm Election scheduled November 3, 2026. The saved HTML parser checks six congressional delegate names, all 17 numbered House districts and all 38 House names. No party labels or vote limits are printed; those fields remain null uniformly."
+      }
+    ]
+  }
+}

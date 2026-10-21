@@ -1,0 +1,394 @@
+https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-warren-fifty-sixth-house.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:           e
+L1:                       This sample ballot was produced by the Warren County, Ohio web site.
+L2: 
+L3: 
+L4: 
+L5: 
+L6:       p l                                  OFFICIAL GENERAL ELECTION BALLOT
+L7:                                                  WARREN COUNTY, OHIO
+L8:                                                     NOVEMBER 3, 2026
+L9:                                                                                                              LEBANON CITY A 013
+L10:                                                                                                                        Split 01
+L11: 
+L12: 
+L13: 
+L14: 
+L15:  a m
+L16:   Instructions to Voter
+L17: 
+L18: 
+L19: 
+L20: 
+L21: S mpl       e
+L22:        To vote, darken the oval ( ) to the
+L23:        left of your choice.
+L24:        Note the permitted number of
+L25:        choices directly below each office
+L26:        title.
+L27:        Do not mark the ballot for more
+L28:        choices than allowed. If you do, that
+L29:        contest or question will not be
+L30:        counted.
+L31:                                                 For Auditor of State
+L32:                                                 (Vote for not more than 1)
+L33: 
+L34:                                                         Annette Blackwell
+L35:                                                         Democratic
+L36: 
+L37:                                                         Frank LaRose
+L38:                                                         Republican
+L39: 
+L40: 
+L41:                                                 For Secretary of State
+L42:                                                 (Vote for not more than 1)
+L43:                                                                                        For U.S. Senator
+L44:                                                                                        (Unexpired term ending 1-3-2029)
+L45:                                                                                        (Vote for not more than 1)
+L46: 
+L47:                                                                                                Sherrod Brown
+L48:                                                                                                Democratic
+L49: 
+L50:                                                                                                Jon Husted
+L51:                                                                                                Republican
+L52: 
+L53:                                                                                                Greg Levy
+L54: 
+L55: 
+L56: 
+L57: 
+L58:    a
+L59:        To vote for a write-in candidate:                                                       Other-party candidate
+L60: 
+L61: 
+L62: 
+L63: 
+L64:               e
+L65:        darken the oval ( ) to the left of the           Robert Sprague
+L66:                                                         Republican
+L67: 
+L68: 
+L69: 
+L70: 
+L71:  S mpl
+L72:        blank line and write in the                                                             William B. Redpath
+L73:        candidate's name.                                                                       Libertarian
+L74:        Only votes cast for candidates who               Tom Pruss
+L75:                                                         Libertarian
+L76:        filed as write-in candidates can be
+L77:        counted.
+L78:        Do not write in a candidate's name if            Allison Russo
+L79:                                                                                                Write-in
+L80:                                                         Democratic
+L81:        their name is already printed on the
+L82:        ballot for that same contest.                                                   For Representative to Congress
+L83:        If you make a mistake or want to                                                (1st District)
+L84:                                                 For Treasurer of State
+L85: 
+L86: 
+L87: 
+L88: 
+L89:      a
+L90:        change your vote, return your ballot                                            (Vote for not more than 1)
+L91: 
+L92: 
+L93: 
+L94: 
+L95:                 e
+L96:                                                 (Vote for not more than 1)
+L97:        to an election official and get a new
+L98:        ballot.                                                                                 Nathan Weise
+L99: 
+L100: 
+L101: 
+L102: 
+L103:   S mpl
+L104:                                                                                                Libertarian
+L105:        You may ask for a new ballot up to               Jay Edwards
+L106:        two times.                                       Republican
+L107:                                                                                                Eric Conroy
+L108:                                                                                                Republican
+L109:   For Governor and                                      Seth Walsh
+L110:   Lieutenant Governor                                   Democratic
+L111:   (To vote for Governor and Lieutenant                                                         Greg Landsman
+L112:   Governor, darken the oval at the left of                                                     Democratic
+L113:   the joint candidates of your choice)
+L114:                                                 For Justice of the
+L115:           Vivek Ramaswamy and                   Supreme Court
+L116: 
+L117: 
+L118: 
+L119: 
+L120:        a
+L121:           Robert A. McColley                                                           For State Senator
+L122: 
+L123: 
+L124: 
+L125: 
+L126:                   e
+L127:                                                 (Full term commencing 1-1-2027)
+L128:           Republican                                                                   (7th District)
+L129:                                                 (Vote for not more than 1)
+L130: 
+L131: 
+L132: 
+L133: 
+L134:     S mpl
+L135:                                                                                        (Vote for not more than 1)
+L136: 
+L137:           Amy Acton and                                 Daniel R. Hawkins                      Cara Jacob
+L138:           David Pepper                                  Republican                             Democratic
+L139:           Democratic
+L140:                                                         Marilyn Zayas                          Zac Haines
+L141:                                                         Democratic                             Republican
+L142:           Don Kissick and
+L143:           James L. Mills
+L144:           Libertarian
+L145:                                                 For Justice of the                     For State Representative
+L146: 
+L147: 
+L148: 
+L149: 
+L150:          a
+L151:                                                 Supreme Court                          (56th District)
+L152: 
+L153: 
+L154: 
+L155: 
+L156:                     e
+L157:                                                 (Full term commencing 1-2-2027)        (Vote for not more than 1)
+L158: 
+L159: 
+L160: 
+L161: 
+L162:       S mpl
+L163:                                                 (Vote for not more than 1)
+L164:                                                                                                Laalitya Acharya
+L165:                                                                                                Democratic
+L166:                                                         Jennifer Brunner
+L167:           Write-in
+L168:                                                         Democratic
+L169:                                                                                                Adam Mathews
+L170:   For Attorney General                                                                         Republican
+L171:   (Vote for not more than 1)                            Colleen O'Donnell
+L172:                                                         Republican
+L173:                                                                                        For Judge of the
+L174:           Keith Faber                                                                  Court of Appeals
+L175: 
+L176: 
+L177: 
+L178: 
+L179:            a
+L180:           Republican
+L181:                                                                                        (12th District)
+L182:                                                                                        (Full term commencing 1-1-2027)
+L183:           John J. Kulewicz                                                             (Vote for not more than 1)
+L184: 
+L185: 
+L186: 
+L187: 
+L188:         S
+L189:           Democratic
+L190: 
+L191:                                                                                                Matthew Byrne
+L192:                                                                                                Republican
+L193: 
+L194: 
+L195: 
+L196:                                                                                                Write-in
+L197: 
+L198:               Review Both Sides
+L199:                      Page 1 of 2
+L200: 
+L201: 
+L202: 
+L203:                                LEBANON CITY A 013 [LEBANON CITY A 01] <STA> (CS 22) - EC:1889769
+L204: 
+L205:           e
+L206:                     This sample ballot was produced by the Warren County, Ohio web site.
+L207: 
+L208: 
+L209: 
+L210: 
+L211:       p l
+L212:   For Judge of the
+L213:   Court of Appeals
+L214:   (12th District)
+L215:                                                 ISSUE 3- Proposed Constitutional
+L216:                                                 Amendment
+L217:                                                 TO REQUIRE VOTERS TO
+L218:                                                 PRESENT PHOTO
+L219:                                                                                            ISSUE 6- PROPOSED TAX LEVY
+L220:                                                                                            (RENEWAL)
+L221:                                                                                            Mental Health Recovery Board Serving
+L222:                                                                                            Warren and Clinton Counties
+L223: 
+L224: 
+L225: 
+L226: 
+L227:    m
+L228:   (Full term commencing 2-9-2027)               IDENTIFICATION IN ORDER TO
+L229:   (Vote for not more than 1)                    VOTE                                       A majority affirmative vote is necessary
+L230:                                                                                            for passage.
+L231: 
+L232: 
+L233: 
+L234: 
+L235:  a
+L236:           Robert A. Hendrickson                 Proposed by Joint Resolution of the
+L237: 
+L238: 
+L239: 
+L240: 
+L241:             e
+L242:           Republican                            General Assembly                       A renewal of a tax for the benefit of
+L243:                                                                                        Mental Health Recovery Board Serving
+L244: 
+L245: 
+L246: 
+L247: 
+L248: S mpl
+L249:                                                 To enact Section 5 of Article V of     Warren and Clinton Counties for the
+L250:                                                 the Constitution of the State of       purpose of current expenses, that the
+L251:   For Judge of the Court of                     Ohio                                   county auditor estimates will collect
+L252:   Common Pleas                                                                         $7,677,198 annually, at a rate not
+L253:   (General Division)                            A majority yes vote is required for    exceeding 1 mill for each $1 of taxable
+L254:                                                 the adoption of Section 5.             value, which amounts to $16 for each
+L255:   (Full term commencing 2-8-2027)                                                      $100,000 of the county auditor's market
+L256:   (Vote for not more than 1)                    This proposed amendment would:         value, for 5 years, commencing in 2027,
+L257:                                                                                        first due in calendar year 2028.
+L258:                                                 • Require voters to present an
+L259:           Gary A. Loxley                        approved form of government-issued             FOR THE TAX LEVY
+L260: 
+L261: 
+L262: 
+L263: 
+L264:    a
+L265:                                                 photo identification in order to vote.
+L266: 
+L267: 
+L268: 
+L269: 
+L270:               e
+L271:                                                                                                   AGAINST THE TAX LEVY
+L272:   For Judge of the Court of                     • Allow state law to provide for an
+L273: 
+L274: 
+L275: 
+L276: 
+L277:  S mpl
+L278:   Common Pleas                                  alternative method of verifying a          ISSUE 7- PROPOSED TAX LEVY
+L279:   (Probate & Juvenile)                          voter’s identity for a voter who has a     (RENEWAL)
+L280:   (Full term commencing 2-1-2027)               sincere religious objection to being       Warren County
+L281:                                                 photographed and, therefore, does
+L282:   (Vote for not more than 1)                    not possess an approved form of            A majority affirmative vote is necessary
+L283:                                                 government-issued photo                    for passage.
+L284:                                                 identification.
+L285:           Joseph W. Kirby                                                                  A renewal of a tax for the benefit of
+L286:                                                 • Require that voters who do not vote      Warren County for the purpose of
+L287:                                                 in person provide an approved form         providing or maintaining senior citizens
+L288:   For County Commissioner                       of government-issued photo
+L289: 
+L290: 
+L291: 
+L292: 
+L293:      a
+L294:                                                                                            services, that the county auditor
+L295:   (Full term commencing 1-1-2027)               identification, unless the law
+L296: 
+L297: 
+L298: 
+L299: 
+L300:                 e
+L301:                                                                                            estimates will collect $9,016,446 annually,
+L302:   (Vote for not more than 1)                    authorizes those persons to vote by        at a rate not exceeding 1.21 mills for each
+L303: 
+L304: 
+L305: 
+L306: 
+L307:   S mpl
+L308:                                                 providing a signature and at least one     $1 of taxable value, which amounts to $22
+L309:           Ian Logan                             other specified unique identifier.         for each $100,000 of the county auditor's
+L310:           Democratic                                                                       market value, for 5 years, commencing in
+L311:                                                 • Define approved forms of                 2026, first due in calendar year 2027.
+L312:                                                 government-issued photo
+L313:           Katherine Bowles                      identification as an unexpired Ohio               FOR THE TAX LEVY
+L314:           Libertarian                           driver license or state identification
+L315:                                                 card; a United States passport or                 AGAINST THE TAX LEVY
+L316:                                                 passport card; or a United States
+L317:           Tom Grossmann                         military identification card, Ohio
+L318:           Republican                            National Guard identification card, or
+L319:                                                 United States Department of Veterans
+L320: 
+L321: 
+L322: 
+L323: 
+L324:        a
+L325:                                                 Affairs identification card.
+L326: 
+L327: 
+L328: 
+L329: 
+L330:                   e
+L331:   For County Auditor
+L332: 
+L333: 
+L334: 
+L335: 
+L336:     S mpl
+L337:                                                 If approved, the amendment shall
+L338:   (Vote for not more than 1)                    take effect immediately.
+L339:                                                 A "YES" vote means approval of the
+L340:           Matt Nolan                            amendment.
+L341:           Republican
+L342:                                                 A "NO" vote means disapproval of the
+L343:                                                 amendment.
+L344:                                                 SHALL THE AMENDMENT BE
+L345:                                                 APPROVED?
+L346: 
+L347: 
+L348: 
+L349: 
+L350:          a
+L351:       S mpl         e
+L352:                                                        YES
+L353:                                                        NO
+L354: 
+L355:                                                 ISSUE 5- PROPOSED INCOME TAX
+L356:                                                 Lebanon City School District
+L357: 
+L358:                                                 A majority affirmative vote is
+L359:                                                 necessary for passage.
+L360: 
+L361:                                                 Shall an annual income tax of 1 per
+L362:                                                 cent on the earned income of
+L363: 
+L364: 
+L365: 
+L366: 
+L367:            a
+L368:                                                 individuals residing in the school
+L369:                                                 district be imposed by Lebanon City
+L370:                                                 School District, for 10 years, beginning
+L371:                                                 January 1, 2027, for the purpose of
+L372: 
+L373: 
+L374: 
+L375: 
+L376:         S
+L377:                                                 current expenses?
+L378: 
+L379:                                                        FOR THE TAX
+L380:                                                        AGAINST THE TAX
+L381: 
+L382: 
+L383: 
+L384: 
+L385:               Review Both Sides
+L386:                   Page 2 of 2
+L387: 
+L388: 
+L389: 
+L390:                                LEBANON CITY A 013 [LEBANON CITY A 01] <STA> (CS 22) - EC:1889769
+L391: 

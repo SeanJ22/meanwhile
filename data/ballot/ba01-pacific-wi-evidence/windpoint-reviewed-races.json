@@ -1,0 +1,68 @@
+[
+  [
+    "Representative in Congress District 1",
+    "ocd-division/country:us/state:wi/cd:1",
+    [
+      [
+        "Bryan Steil",
+        "Republican"
+      ],
+      [
+        "Mitchell Berman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 21",
+    "ocd-division/country:us/state:wi/sldu:21",
+    [
+      [
+        "Jim Croft",
+        "Republican"
+      ],
+      [
+        "Trevor Jung",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 62",
+    "ocd-division/country:us/state:wi/sldl:62",
+    [
+      [
+        "Mike Bellagio",
+        "Republican"
+      ],
+      [
+        "Angelina M. Cruz",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Racine County Sheriff",
+    "ocd-division/country:us/state:wi/county:racine",
+    [
+      [
+        "Cary A. Madrigal",
+        "Republican"
+      ],
+      [
+        "Donald E. Vandervest",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Racine County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:racine",
+    [
+      [
+        "Amy Vanderhoef",
+        "Republican"
+      ]
+    ]
+  ]
+]

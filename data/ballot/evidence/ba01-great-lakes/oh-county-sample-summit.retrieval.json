@@ -1,0 +1,11 @@
+{
+  "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+  "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:22:36.814477+00:00",
+  "rawHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+  "selectionUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/ballotlist.aspx",
+  "sourceElection": "20261103G",
+  "county": "summit",
+  "sampleCountInPublicList": 479
+}

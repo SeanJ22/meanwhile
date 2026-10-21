@@ -13,6 +13,24 @@ import zipfile
 SPEC = importlib.util.spec_from_file_location("ba01_northeast", pathlib.Path(__file__).with_name("ba01-northeast.py"))
 COMMON = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(COMMON)
+NH_SPEC = importlib.util.spec_from_file_location("ba01_northeast_nh", pathlib.Path(__file__).with_name("ba01-northeast-nh.py"))
+NH = importlib.util.module_from_spec(NH_SPEC)
+NH_SPEC.loader.exec_module(NH)
+NY_SPEC = importlib.util.spec_from_file_location("ba01_northeast_ny", pathlib.Path(__file__).with_name("ba01-northeast-ny.py"))
+NY = importlib.util.module_from_spec(NY_SPEC)
+NY_SPEC.loader.exec_module(NY)
+NYC_SPEC = importlib.util.spec_from_file_location("ba01_northeast_nyc", pathlib.Path(__file__).with_name("ba01-northeast-nyc.py"))
+NYC = importlib.util.module_from_spec(NYC_SPEC)
+NYC_SPEC.loader.exec_module(NYC)
+CONCORD_SPEC = importlib.util.spec_from_file_location("ba01_northeast_nh_concord", pathlib.Path(__file__).with_name("ba01-northeast-nh-concord.py"))
+CONCORD = importlib.util.module_from_spec(CONCORD_SPEC)
+CONCORD_SPEC.loader.exec_module(CONCORD)
+LEBANON_SPEC = importlib.util.spec_from_file_location("ba01_northeast_nh_lebanon", pathlib.Path(__file__).with_name("ba01-northeast-nh-lebanon.py"))
+LEBANON = importlib.util.module_from_spec(LEBANON_SPEC)
+LEBANON_SPEC.loader.exec_module(LEBANON)
+ME_SPEC = importlib.util.spec_from_file_location("ba01_northeast_me_local", pathlib.Path(__file__).with_name("ba01-northeast-me-local.py"))
+ME = importlib.util.module_from_spec(ME_SPEC)
+ME_SPEC.loader.exec_module(ME)
 
 
 def state_ballot(state):
@@ -132,7 +150,7 @@ def maine():
             groups[contest_id].add((COMMON.words(name), values["D"]))
     regular_count = sum(map(len, groups.values()))
     writeins = []
-    for line in COMMON.pdf_text(COMMON.SOURCES / "me-2026-declared-writeins.pdf").splitlines():
+    for line in COMMON.pdf_text(COMMON.SOURCES / "me-writeins-2026-10-15.pdf").splitlines():
         cells = re.split(r"\s{2,}", line.strip())
         if cells[0] not in {"US", "CG", "GOV", "SR"}:
             continue
@@ -154,11 +172,15 @@ def maine():
             differences.append({"contestId": contest_id, "missing": sorted(expected-held), "extra": sorted(held-expected)})
     return {"officialCandidateContests": len(groups), "officialCandidacies": sum(map(len, groups.values())),
             "officialNonWriteInCandidacies": regular_count, "officialStateWriteInCandidacies": len(writeins),
-            "differences": differences, "unimportedRegularLocalCandidatesByOfficeCode": dict(local),
+            "differences": differences, "importedRegularLocalCandidatesByOfficeCode": dict(local),
+            "verifiedLocalCandidateContests": 88, "verifiedLocalCandidacies": 108,
+            "countyOfficeCycleContests": 86, "namedCountyContests": 85,
+            "supersedingOfficialValues": json.loads((COMMON.ROOT / "data/ballot/reports/ba01-northeast-me-local.json").read_text())["supersedingOfficialValues"],
             "sources": ["https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
-                        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf",
+                        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+                        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Special%20Cty%20Elect%20Candidate%20List%20-%20posting%2072226.xlsx",
                         "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Post%20Primary%20Withdrawals%20%26%20Replacement%20Candidates%20-%20Updated%209.22.26_0.pdf"],
-            "remaining": "All 190 federal/statewide/legislative races and 362 names+party labels match the official workbook plus 10 declared write-ins. County offices, special county elections, local measures and exact address samples remain open. The official www1.maine.gov host resolves the main-host 403."}
+            "remaining": "All190 federal/statewide/legislative races and362 names+party labels match the official workbook plus10 current declared write-ins. Another88 local races/108 names from regular, special and current write-in lists are imported. Washington County Treasurer has no named candidate in those sources and still needs sample confirmation; municipal contests, local measures, partial/registry address matching and live delivery remain open. The official www1.maine.gov host resolves the main-host403."}
 
 
 def pennsylvania():
@@ -181,31 +203,57 @@ def pennsylvania():
             "remaining": f"Acquire all {len(expected-held)} missing regular districts and compare the entire final general-election candidate list; largest missing counties remain active acquisition work."}
 
 
+def new_hampshire():
+    ballot = state_ballot("NH")
+    state_contests = [c for c in ballot["contests"] if c["type"] == "CANDIDACY" and not c["title"].startswith(("Merrimack County", "Hillsborough County", "Grafton County", "Concord School District"))]
+    return {"expectedRegularFederalStateCandidateContests": 236, "expectedHouseDistrictsByCounty": NH.official_house_district_counts(),
+            "expectedOtherRegularContests": {"stateSenate": 24, "executiveCouncil": 5, "usHouse": 2, "governor": 1, "usSenate": 1},
+            "heldRegularFederalStateCandidateContests": len(state_contests), "missingRegularFederalStateCandidateContests": 236-len(state_contests),
+            "officialStatewideCertifiedCandidateCount": None, "verifiedNewSampleCandidateContests": 58, "verifiedNewSampleCandidacies": 138,
+            "districtMemberships": len(ballot.get("districtMemberships", [])),
+            "concordGeneralSamples": [CONCORD.general_sample_comparison(ballot, ward) for ward in range(1, 11)],
+            "lebanonGeneralSamples": [LEBANON.sample_comparison(ballot,ward) for ward in [1,2,3]],
+            "measureRecordExplanation": "28 measure records represent the statewide constitutional question, Goffstown's school property-tax question,12 mutually exclusive Manchester ward-wording variants,10 Concord ward-wording variants,3 Lebanon ward-wording variants and the Concord School District Dewey-property sale. Each city reader should match only their own ward variant.",
+            "sources": [NH.STATUTE, NH.URLS["nh-goffstown-sample"], "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballots"],
+            "basis": "RSA662 defines all 203 House, 24 Senate, five Council and two congressional districts. November samples confirm Governor and U.S. Senate as well. This measures regular contest slots; the final statewide certified roster is still inaccessible.",
+            "remaining": f"The full September17 statewide candidate PDF returns403; {236-len(state_contests)} regular state/federal races remain missing. Concord, Manchester, Goffstown and Lebanon samples supply imported names. Floterial and Council/commissioner matching uses whole-division memberships. Portsmouth remains acquired but unimported; Concord school-zone address matching remains open where wards1/2 have partial school-district boundaries. Other county/city/school coverage remains incomplete."}
+
+
 def report():
     states = {state: {"held": inventory(state)} for state in ["PA", "NY", "NJ", "CT", "RI", "MA", "VT", "NH", "ME"]}
     states["RI"].update(rhode_island())
     states["CT"].update(connecticut())
     states["PA"].update(pennsylvania())
     states["ME"].update(maine())
+    states["NH"].update(new_hampshire())
     ny = COMMON.update_ny(datetime.datetime.now(datetime.timezone.utc).isoformat())[2]
     states["NY"].update(ny)
-    states["NY"].update(officialCandidateContests=ny["officialContests"], officialCandidacies=ny["officialCandidates"])
-    states["NY"]["remaining"] = "Eleven judicial-district contests and 52 distinct court candidacies in the certification remain to be imported with their geography; county and city ballot contents need sample comparison."
-    states["NJ"].update(officialFederalContests=13, officialFederalCandidacies=39,
-        remaining="All federal candidate sets checked. County/city/school coverage outside Morris County remains incomplete; statewide legislative absence needs an explicit final-office check.")
+    courts = NY.update(datetime.datetime.now(datetime.timezone.utc).isoformat())[2]
+    states["NY"].update(courts, officialCandidateContests=ny["officialContests"] + courts["judicialContests"],
+                       officialCandidacies=ny["officialCandidates"] + courts["judicialCandidacies"])
+    states["NY"]["verifiedLocalCandidateContests"] = 10
+    states["NY"]["verifiedLocalCandidacies"] = 21
+    states["NY"]["boroughSamples"] = NYC.borough_comparisons(state_ballot("NY"))
+    states["NY"]["remaining"] = "All federal, statewide, legislative and Supreme Court certification candidate sets are imported. Five NYC official address styles for10001,11201,11435,10457 and10305 match race by race, including10 added local races/21 names and5 charter questions. NYC311's count6 is unsupported by the current ballots. Local-district address matching and live sample parity remain open; other county/city contents need comparison."
+    states["NJ"].update(json.loads((COMMON.ROOT / "data/ballot/reports/ba01-northeast-nj-offices.json").read_text()))
     states["MA"].update(officialCandidateContests=223, officialCandidacies=304,
-        remaining="District/county offices, local measures and exact address sample-ballot parity remain open. Governor's Council address-to-district matching must be connected.")
+        districtMemberships=len(state_ballot("MA").get("districtMemberships", [])), councilWholeMunicipalities=348, councilWholeWards=28,
+        remaining="District/county offices, local measures and exact address sample-ballot parity remain open. Council memberships cover 348 whole municipalities and 28 complete wards; split Boston/Cambridge wards and Braintree precinct matching remain open.")
     states["VT"].update(officialFederalStatewideLegislativeContests=132, officialFederalStatewideLegislativeCandidacies=319,
         verifiedLocalContests=6, verifiedLocalCandidacies=50,
         remaining="Chittenden County's five offices and Burlington justice-of-the-peace list match the city's sample ballot. The other 65 county office groups /94 candidates and remaining municipal lists remain open.")
-    states["NH"].update(officialStatewideCount=None, remaining="Current official statewide September 17 candidate PDF and election page returned403 through HTTP and web routes. Held general-election sample ballots cover limited Merrimack County areas. Full state Legislature and House District1 remain incomplete; do not count400 House seats as400 contests.")
     return {"step": "BA-01", "checkedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "scope": "Official-source comparison of assigned northeast states. Counts are measurements, never publication gates. Live ZIP parity is not yet established.",
             "states": states,
             "sampleBallots": [{"place": "Philadelphia split3-xx-182", "candidateContests": 3, "candidacies": 6, "measures": 2,
                                "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf", "zip": "19103", "zipMappingVerified": False, "liveVerified": False},
                               {"place": "Burlington Chittenden13", "candidateContests": 15, "candidacies": 81, "measures": 2,
-                               "url": "https://www.burlingtonvt.gov/DocumentCenter/View/12823/Chi-13-Sample?bidId=", "zip": "05401", "zipMappingVerified": False, "liveVerified": False}]}
+                               "url": "https://www.burlingtonvt.gov/DocumentCenter/View/12823/Chi-13-Sample?bidId=", "zip": "05401", "zipMappingVerified": False, "liveVerified": False},
+                              {"place": "Goffstown", "candidateContests": 13, "candidacies": 35, "measures": 2,
+                               "url": NH.URLS["nh-goffstown-sample"], "zip": "03045", "zipMappingVerified": False, "liveVerified": False},
+                              {"place": "Manchester Ward1", "candidateContests": 13, "candidacies": 34, "measures": 2,
+                               "url": NH.URLS["nh-manchester-ward-1"], "zip": None, "zipMappingVerified": False, "liveVerified": False},
+                              NYC.sample_comparison(state_ballot("NY"))] + NYC.borough_comparisons(state_ballot("NY"))}
 
 
 if __name__ == "__main__":

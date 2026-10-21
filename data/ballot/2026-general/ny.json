@@ -4606,6 +4606,500 @@
             "verifiedAt": "2026-10-14T05:04:06.312586Z",
             "quote": "Office: Member of Assembly\nDistrict: 150\nVote For: 1"
           }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:1",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 6,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 1 | Counties: New York | Vote For: 6"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 2",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 2 | Counties: Kings | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-3",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 3",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 4",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-5",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 8",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 9",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 10",
+          "type": "CANDIDACY",
+          "voteFor": 8,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 10 | Counties: Nassau & Suffolk | Vote For: 8"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 11",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 11 | Counties: Queens | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-12",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:12",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 12",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 12 | Counties: Bronx | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-13",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:13",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 13 | Counties: Richmond | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-1",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "divisionVintage": "2026",
+          "title": "New York City Proposal 1: Speed Up Process for Granting a Revocable Consent to Use Public Spaces",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. “Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-2",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "divisionVintage": "2026",
+          "title": "New York City Proposal 2: Reduce City Contractor Paperwork: Require Regular Meetings of Procurement Policy Board",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. “Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-3",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "divisionVintage": "2026",
+          "title": "New York City Proposal 3: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-4",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "divisionVintage": "2026",
+          "title": "New York City Proposal 4: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. “Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-5",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "divisionVintage": "2026",
+          "title": "New York City Proposal 5: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. “Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-surrogate",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+          "divisionVintage": "2026",
+          "title": "Surrogate New York",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Surrogate New York"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County New York",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County New York"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-council-3",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Member of the City Council 3rd Council District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Member of the City Council 3rd Council District"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-municipal-court-3",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 3rd Municipal Court District - New York",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 3rd Municipal Court District - New York"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County Kings",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:00.977Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Kings"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County Queens",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-municipal-court-4",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 4th Municipal Court District - Queens",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 4th Municipal Court District - Queens"
+          }
+        },
+        {
+          "id": "ny-2026-bronx-county-surrogate",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:bronx",
+          "divisionVintage": "2026",
+          "title": "Surrogate Bronx",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:07.327Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Surrogate Bronx"
+          }
+        },
+        {
+          "id": "ny-2026-bronx-county-municipal-court-2",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 2nd Municipal Court District - Bronx",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:07.327Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 2nd Municipal Court District - Bronx"
+          }
+        },
+        {
+          "id": "ny-2026-richmond-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:richmond",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County Richmond",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:11.688Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Richmond"
+          }
         }
       ],
       "candidacies": [
@@ -12122,9 +12616,1457 @@
             "verifiedAt": "2026-10-14T05:04:06.312586Z",
             "quote": "Republican\nAndrew M.\nMolitor\n\nConservative\nAndrew M.\nMolitor"
           }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:saliann-scarpulla",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Saliann Scarpulla",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Saliann Scarpulla | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:kathleen-waterman-marshall",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Kathleen Waterman-Marshall",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Kathleen Waterman-Marshall | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:shlomo-s-hagler",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Shlomo S. Hagler",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Shlomo S. Hagler | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:manuel-j-mendez",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Manuel J. Mendez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Manuel J. Mendez | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:hasa-a-kingo",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Hasa A. Kingo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Hasa A. Kingo | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:christopher-chin",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Christopher Chin",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Christopher Chin | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:amy-s-taylor",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Amy S. Taylor",
+          "partyLabel": "Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Amy S. Taylor | Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:joshua-e-goldfein",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Joshua E. Goldfein",
+          "partyLabel": "Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Joshua E. Goldfein | Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:sienna-m-fontaine",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Sienna M. Fontaine",
+          "partyLabel": "Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Sienna M. Fontaine | Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:bob-cohen",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Bob Cohen",
+          "partyLabel": "Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Bob Cohen | Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:jeffrey-w-rizzo",
+          "contestId": "ny-2026-general:supreme-court-1",
+          "givenName": "",
+          "familyName": "Jeffrey W. Rizzo",
+          "partyLabel": "Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 1 | Jeffrey W. Rizzo | Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:betsey-jean-jacques",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Betsey Jean Jacques",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 2 | Betsey Jean Jacques | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:hemalee-j-patel",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Hemalee J. Patel",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 2 | Hemalee J. Patel | Democratic / Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:sherveal-mimes",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Sherveal Mimes",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 2 | Sherveal Mimes | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:lola-waterman",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Lola Waterman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 2 | Lola Waterman | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:william-d-spain-jr",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "William D. Spain Jr",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 2 | William D. Spain Jr | Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-3:amy-e-joyce",
+          "contestId": "ny-2026-general:supreme-court-3",
+          "givenName": "",
+          "familyName": "Amy E. Joyce",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 3 | Amy E. Joyce | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-3:jennifer-g-sober",
+          "contestId": "ny-2026-general:supreme-court-3",
+          "givenName": "",
+          "familyName": "Jennifer G. Sober",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 3 | Jennifer G. Sober | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:bradley-m-wanner",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "Bradley M. Wanner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | Bradley M. Wanner | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:christine-m-clark",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "Christine M. Clark",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | Christine M. Clark | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:tom-buchanan",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "Tom Buchanan",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | Tom Buchanan | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:john-t-ellis",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "John T. Ellis",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | John T. Ellis | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:kate-hogan",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "Kate Hogan",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | Kate Hogan | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-4:keith-s-massey-jr",
+          "contestId": "ny-2026-general:supreme-court-4",
+          "givenName": "",
+          "familyName": "Keith S. Massey Jr",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 4 | Keith S. Massey Jr | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-5:joseph-zavaglia",
+          "contestId": "ny-2026-general:supreme-court-5",
+          "givenName": "",
+          "familyName": "Joseph Zavaglia",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 5 | Joseph Zavaglia | Democratic / Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-5:michael-j-manfredi",
+          "contestId": "ny-2026-general:supreme-court-5",
+          "givenName": "",
+          "familyName": "Michael J. Manfredi",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 5 | Michael J. Manfredi | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:craig-r-bucki",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Craig R. Bucki",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Craig R. Bucki | Democratic / Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:anne-e-joynt",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Anne E. Joynt",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Anne E. Joynt | Democratic / Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:michael-l-amodeo",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Michael L. Amodeo",
+          "partyLabel": "Democratic / Republican / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Michael L. Amodeo | Democratic / Republican / Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:robert-n-richardson",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Robert N. Richardson",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Robert N. Richardson | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:deanne-m-tripi",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Deanne M. Tripi",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Deanne M. Tripi | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:jonathan-s-hickey",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Jonathan S. Hickey",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Jonathan S. Hickey | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-8:robert-r-vario",
+          "contestId": "ny-2026-general:supreme-court-8",
+          "givenName": "",
+          "familyName": "Robert R. Vario",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 8 | Robert R. Vario | Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9:maria-g-rosa",
+          "contestId": "ny-2026-general:supreme-court-9",
+          "givenName": "",
+          "familyName": "Maria G. Rosa",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 9 | Maria G. Rosa | Democratic / Working Families"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9:george-e-fufidio",
+          "contestId": "ny-2026-general:supreme-court-9",
+          "givenName": "",
+          "familyName": "George E. Fufidio",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 9 | George E. Fufidio | Democratic / Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9:alden-h-wolfe",
+          "contestId": "ny-2026-general:supreme-court-9",
+          "givenName": "",
+          "familyName": "Alden H. Wolfe",
+          "partyLabel": "Democratic / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 9 | Alden H. Wolfe | Democratic / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9:richard-s-fava-pastilha",
+          "contestId": "ny-2026-general:supreme-court-9",
+          "givenName": "",
+          "familyName": "Richard S. Fava Pastilha",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 9 | Richard S. Fava Pastilha | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-9:john-ciampoli",
+          "contestId": "ny-2026-general:supreme-court-9",
+          "givenName": "",
+          "familyName": "John Ciampoli",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 9 | John Ciampoli | Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:richard-ambro",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Richard Ambro",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Richard Ambro | Democratic / Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:leonard-d-steinman",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Leonard D. Steinman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Leonard D. Steinman | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-e-porter",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary E. Porter",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Mary E. Porter | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:joy-m-watson",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Joy M. Watson",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Joy M. Watson | Democratic / Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:stephen-l-ukeiley",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Stephen L. Ukeiley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Stephen L. Ukeiley | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:eric-sachs",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Eric Sachs",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Eric Sachs | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:william-d-wexler",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "William D. Wexler",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | William D. Wexler | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-kelly",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | John Kelly | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:kelly-a-reape",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Kelly A. Reape",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Kelly A. Reape | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:karen-m-wilutis",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Karen M. Wilutis",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Karen M. Wilutis | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-iliou",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Iliou",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | John Iliou | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:james-a-mcdonaugh",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "James A. McDonaugh",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | James A. McDonaugh | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-kate-mullen",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary Kate Mullen",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Mary Kate Mullen | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:anthony-r-portesy",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Anthony R. Portesy",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 10 | Anthony R. Portesy | Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:edwin-i-novillo",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Edwin I. Novillo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 11 | Edwin I. Novillo | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:oma-d-phillips",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Oma D. Phillips",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 11 | Oma D. Phillips | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gail-a-adams",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Gail A. Adams",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 11 | Gail A. Adams | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:david-a-bellon",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "David A. Bellon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 11 | David A. Bellon | Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gary-muraca",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Gary Muraca",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 11 | Gary Muraca | Republican"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-12:alvin-m-yearwood",
+          "contestId": "ny-2026-general:supreme-court-12",
+          "givenName": "",
+          "familyName": "Alvin M. Yearwood",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 12 | Alvin M. Yearwood | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-13:kelvin-richards",
+          "contestId": "ny-2026-general:supreme-court-13",
+          "givenName": "",
+          "familyName": "Kelvin Richards",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 13 | Kelvin Richards | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-13:michael-j-pinto",
+          "contestId": "ny-2026-general:supreme-court-13",
+          "givenName": "",
+          "familyName": "Michael J. Pinto",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Supreme Court Justice | District: 13 | Michael J. Pinto | Republican"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-surrogate:rita-mella",
+          "contestId": "ny-2026-new-york-county-surrogate",
+          "givenName": "",
+          "familyName": "Rita Mella",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Surrogate New York | Rita Mella | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court:josh-e-hanshaft",
+          "contestId": "ny-2026-new-york-county-civil-court",
+          "givenName": "",
+          "familyName": "Josh E. Hanshaft",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County New York | Josh E. Hanshaft | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court:emily-morales-minerva",
+          "contestId": "ny-2026-new-york-county-civil-court",
+          "givenName": "",
+          "familyName": "Emily Morales-Minerva",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County New York | Emily Morales-Minerva | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court:vlad-frants",
+          "contestId": "ny-2026-new-york-county-civil-court",
+          "givenName": "",
+          "familyName": "Vlad Frants",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County New York | Vlad Frants | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-council-3:carl-wilson",
+          "contestId": "ny-2026-new-york-city-council-3",
+          "givenName": "",
+          "familyName": "Carl Wilson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Member of the City Council 3rd Council District | Carl Wilson | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-council-3:haris-bhatti",
+          "contestId": "ny-2026-new-york-city-council-3",
+          "givenName": "",
+          "familyName": "Haris Bhatti",
+          "partyLabel": "Haris Bhatti",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Member of the City Council 3rd Council District | Haris Bhatti | Haris Bhatti"
+          }
+        },
+        {
+          "id": "ny-2026-new-york-county-municipal-court-3:steven-benathen",
+          "contestId": "ny-2026-new-york-county-municipal-court-3",
+          "givenName": "",
+          "familyName": "Steven Benathen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 3rd Municipal Court District - New York | Steven Benathen | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:linda-lo-cascio",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Linda Lo Cascio",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:00.977Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Kings | Linda Lo Cascio | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:celeste-felix",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Celeste Felix",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:00.977Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Kings | Celeste Felix | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:christine-g-ortiz",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Christine G. Ortiz",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:00.977Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Kings | Christine G. Ortiz | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:danielle-a-noel",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Danielle A. Noel",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:00.977Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Kings | Danielle A. Noel | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:edmond-wong",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Edmond Wong",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens | Edmond Wong | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:thomas-d-barra",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Thomas D. Barra",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens | Thomas D. Barra | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:julie-m-milner",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Julie M. Milner",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens | Julie M. Milner | Democratic / Republican"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:jasmine-i-valle-bueno",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Jasmine I. Valle-Bueno",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens | Jasmine I. Valle-Bueno | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:michael-mossa",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Michael Mossa",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Queens | Michael Mossa | Republican / Conservative"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-municipal-court-4:edward-irizarry",
+          "contestId": "ny-2026-queens-county-municipal-court-4",
+          "givenName": "",
+          "familyName": "Edward Irizarry",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:04.573Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 4th Municipal Court District - Queens | Edward Irizarry | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-bronx-county-surrogate:nelida-malave-gonzalez",
+          "contestId": "ny-2026-bronx-county-surrogate",
+          "givenName": "",
+          "familyName": "Nelida Malave Gonzalez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:07.327Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Surrogate Bronx | Nelida Malave Gonzalez | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-bronx-county-municipal-court-2:sara-a-collins-sedey",
+          "contestId": "ny-2026-bronx-county-municipal-court-2",
+          "givenName": "",
+          "familyName": "Sara A. Collins-Sedey",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:07.327Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - District 2nd Municipal Court District - Bronx | Sara A. Collins-Sedey | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-richmond-county-civil-court:tashanna-golden",
+          "contestId": "ny-2026-richmond-county-civil-court",
+          "givenName": "",
+          "familyName": "Tashanna Golden",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:11.688Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Richmond | Tashanna Golden | Democratic"
+          }
+        },
+        {
+          "id": "ny-2026-richmond-county-civil-court:glenn-a-yost",
+          "contestId": "ny-2026-richmond-county-civil-court",
+          "givenName": "",
+          "familyName": "Glenn A. Yost",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:40:11.688Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Judge of the Civil Court - County Richmond | Glenn A. Yost | Republican"
+          }
         }
       ],
-      "measures": [],
+      "measures": [
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-1#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "officialNumber": "1",
+          "questionText": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input.",
+          "officialStatement": "“Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.",
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. “Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-2#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "officialNumber": "2",
+          "questionText": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report.",
+          "officialStatement": "“Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.",
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. “Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-3#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "officialNumber": "3",
+          "questionText": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce.",
+          "officialStatement": "\"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.",
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-4#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "officialNumber": "4",
+          "questionText": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials.",
+          "officialStatement": "“Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged.",
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. “Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged."
+          }
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-5#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "officialNumber": "5",
+          "questionText": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions.",
+          "officialStatement": "“Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target.",
+          "provenance": {
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-10-21T00:24:02.517Z",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "quote": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. “Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target."
+          }
+        }
+      ],
       "absences": [
         {
           "ocdId": "ocd-division/country:us/state:ny",
@@ -12142,12 +14084,542 @@
         "Governor and Lieutenant Governor are elected together on one ticket; Vote For: 1.",
         "The official certification includes Supreme Court Justice contests in judicial districts 1–5 and 8–13. Those judicial district contests are outside the statewide, congressional and state legislative scope of this file; there is no statewide court contest in the certified offices list.",
         "The statewide measure list contains no records. Broome County Board of Elections marks its Statewide Ballot Proposal (General Election Notice) section NO FILING, and the state certification index lists no 2026 statewide proposal certification. County and city proposals are outside this statewide-measure scope."
+      ],
+      "districtMemberships": [
+        {
+          "id": "ny-2026-court-membership:new_york->1",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:new_york",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:1",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 1 | Counties: New York | Vote For: 6"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:kings->2",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:kings",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:2",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 2 | Counties: Kings | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:albany->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:albany",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:columbia->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:columbia",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:greene->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:greene",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:rensselaer->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:rensselaer",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:schoharie->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:schoharie",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:sullivan->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:sullivan",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:ulster->3",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:ulster",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:3",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 3 | Counties: Albany, Columbia, Greene, Rensselaer, Schoharie, Sullivan & Ulster | Vote For: 2"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:clinton->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:clinton",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:essex->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:essex",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:franklin->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:franklin",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:fulton->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:fulton",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:hamilton->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:hamilton",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:montgomery->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:st_lawrence->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:st_lawrence",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:saratoga->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:saratoga",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:schenectady->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:schenectady",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:warren->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:warren",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:washington->4",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:washington",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:4",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 4 | Counties: Clinton, Essex, Franklin, Fulton, Hamilton, Montgomery, Saint Lawrence, Saratoga, Schenectady, Warren & Washington | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:herkimer->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:herkimer",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:jefferson->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:jefferson",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:lewis->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:lewis",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:oneida->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:oneida",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:onondaga->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:onondaga",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:oswego->5",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:oswego",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:5",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 5 | Counties: Herkimer, Jefferson, Lewis, Oneida, Onondaga & Oswego | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:allegany->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:allegany",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:cattaraugus->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:cattaraugus",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:chautauqua->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:chautauqua",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:erie->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:erie",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:genesee->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:genesee",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:niagara->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:niagara",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:orleans->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:orleans",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:wyoming->8",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:wyoming",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:8",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 8 | Counties: Allegany, Cattaraugus, Chautauqua, Erie, Genesee, Niagara, Orleans & Wyoming | Vote For: 4"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:dutchess->9",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:dutchess",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:orange->9",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:orange",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:putnam->9",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:putnam",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:rockland->9",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:rockland",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:westchester->9",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:westchester",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 9 | Counties: Dutchess, Orange, Putnam, Rockland & Westchester | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:nassau->10",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:nassau",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 10 | Counties: Nassau & Suffolk | Vote For: 8"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:suffolk->10",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 10 | Counties: Nassau & Suffolk | Vote For: 8"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:queens->11",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:queens",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:11",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 11 | Counties: Queens | Vote For: 3"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:bronx->12",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:bronx",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:12",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 12 | Counties: Bronx | Vote For: 1"
+          }
+        },
+        {
+          "id": "ny-2026-court-membership:richmond->13",
+          "memberOcdId": "ocd-division/country:us/state:ny/county:richmond",
+          "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:13",
+          "provenance": {
+            "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+            "sourceOrg": "New York State Board of Elections",
+            "collectedAt": "2026-10-21T00:18:38.478633+00:00",
+            "verifiedAt": "2026-10-21T00:21:36.362546+00:00",
+            "quote": "Office: Supreme Court Justice | District: 13 | Counties: Richmond | Vote For: 1"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:03:42.451261+00:00",
+    "reviewedAt": "2026-10-21T00:56:16.692164+00:00",
     "reviewedBy": "BA-01 official ballot PDF replay",
     "sources": [
       {
@@ -12199,6 +14671,316 @@
         "publisher": "Broome County Government",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Government page linking to the Broome County Board of Elections website."
+      },
+      {
+        "requestedUrl": "https://elections.ny.gov/certification-november-3-2026-general-election",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "httpStatus": 200,
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "retrievedAt": "2026-10-14T05:04:06.312586Z",
+        "publisher": "New York State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Amended certification dated October 7, 2026, extracted by pdftotext bounding boxes. All 26 congressional, 63 state Senate, 150 Assembly and statewide executive office tables and their printed candidate party lines are accounted for; duplicate fusion lines are consolidated per identical source-listed name. Judicial district tables are outside this statewide/congressional/legislative scope."
+      },
+      {
+        "requestedUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "publisher": "New York State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:18:38.478633+00:00",
+        "httpStatus": 200,
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "reviewedEvidence": "All11 certified Supreme Court district contests and60 distinct candidates/95 printed party lines replayed across all continuation pages. Identical printed names within each contest retain all fusion party lines. Official Counties cells provide only whole-county memberships."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:54.531798+00:00",
+        "httpStatus": 200,
+        "rawHash": "e5b5511f5a32e87c7f6e076273af65103c4eddfc37873b346f51957eb8afeac1",
+        "reviewedEvidence": "Exact current official voter-guide section labelled 'What you will see on the ballot', including both Yes/No explanations. NYC311 .gov links to NYC Votes' guide; that saved government page establishes the government-published domain. The current guide and Charter Commission appendix both enumerate five proposals; NYC311's contrary count of six remains unresolved and creates no invented sixth question."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:54.990559+00:00",
+        "httpStatus": 200,
+        "rawHash": "2460c8a3ea888dedbe937d82383b32a7cd710ea8af182b3d3edd174ab4340dce",
+        "reviewedEvidence": "Exact current official voter-guide section labelled 'What you will see on the ballot', including both Yes/No explanations. NYC311 .gov links to NYC Votes' guide; that saved government page establishes the government-published domain. The current guide and Charter Commission appendix both enumerate five proposals; NYC311's contrary count of six remains unresolved and creates no invented sixth question."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:55.275266+00:00",
+        "httpStatus": 200,
+        "rawHash": "a374714d6a92e4f3a0f7d65a335ba97287cfb1fb53b3857b739ebff86ef3ac08",
+        "reviewedEvidence": "Exact current official voter-guide section labelled 'What you will see on the ballot', including both Yes/No explanations. NYC311 .gov links to NYC Votes' guide; that saved government page establishes the government-published domain. The current guide and Charter Commission appendix both enumerate five proposals; NYC311's contrary count of six remains unresolved and creates no invented sixth question."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:54.261266+00:00",
+        "httpStatus": 200,
+        "rawHash": "752fe12423f0e2d96cff026a3552dcde220f0ca27727b75cbe63d1918eb3b414",
+        "reviewedEvidence": "Exact current official voter-guide section labelled 'What you will see on the ballot', including both Yes/No explanations. NYC311 .gov links to NYC Votes' guide; that saved government page establishes the government-published domain. The current guide and Charter Commission appendix both enumerate five proposals; NYC311's contrary count of six remains unresolved and creates no invented sixth question."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:55.560216+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c66b7f54989ed63e9b3312e1ef9845be1787026000ec56a687ab58acbc6b594",
+        "reviewedEvidence": "Exact current official voter-guide section labelled 'What you will see on the ballot', including both Yes/No explanations. NYC311 .gov links to NYC Votes' guide; that saved government page establishes the government-published domain. The current guide and Charter Commission appendix both enumerate five proposals; NYC311's contrary count of six remains unresolved and creates no invented sixth question."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/",
+        "publisher": "New York City Campaign Finance Board",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:04.159175+00:00",
+        "httpStatus": 200,
+        "rawHash": "a728dc037c6e0234f21f3835b82091f96508f8ee0553bb955b51457fec1686bf",
+        "reviewedEvidence": "Actual official response bytes retained with retrieval-completion timestamp. NYC311 .gov links the official NYC Votes guide; guide enumerates5 proposals, while NYC311 count6 is an unresolved contradiction."
+      },
+      {
+        "requestedUrl": "https://portal.311.nyc.gov/article/?kanumber=KA-03114",
+        "finalUrl": "https://portal.311.nyc.gov/article/?kanumber=KA-03114",
+        "publisher": "New York City 311",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:05.010544+00:00",
+        "httpStatus": 200,
+        "rawHash": "673c5ac99abf57e67acf6faf5bf3cbc9fc07429e592dbdcc8ee5155ac73553ae",
+        "reviewedEvidence": "Actual official response bytes retained with retrieval-completion timestamp. NYC311 .gov links the official NYC Votes guide; guide enumerates5 proposals, while NYC311 count6 is an unresolved contradiction."
+      },
+      {
+        "requestedUrl": "https://www.nyc.gov/assets/charter/downloads/pdf/2026/appendix_a_poposed_ballot_questions_20260723.pdf",
+        "finalUrl": "https://www.nyc.gov/assets/charter/downloads/pdf/2026/appendix_a_poposed_ballot_questions_20260723.pdf",
+        "publisher": "New York City Charter Revision Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:19:04.590363+00:00",
+        "httpStatus": 200,
+        "rawHash": "aaa4837996532d0ea42afc0d8fbba1b1e0d375918d60b1a443dd987cbc92e199",
+        "reviewedEvidence": "Actual official response bytes retained with retrieval-completion timestamp. NYC311 .gov links the official NYC Votes guide; guide enumerates5 proposals, while NYC311 count6 is an unresolved contradiction."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792542241132",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792542241132",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:24:01.303Z",
+        "httpStatus": 200,
+        "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4",
+        "reviewedEvidence": "Actual successful public frontend HTTP response from the normal unmodified official pollsite lookup. Rendered source and linked sample PDF retained."
+      },
+      {
+        "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=315&streetname=West%2029th%20Street&postalcode=10001&callback=jQuery35107468451987339133_1792542240985&_=1792542240986",
+        "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=315&streetname=West%2029th%20Street&postalcode=10001&callback=jQuery35107468451987339133_1792542240985&_=1792542240986",
+        "publisher": "NYC Board of Elections official electionstreet geocoder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:24:02.171Z",
+        "httpStatus": 200,
+        "rawHash": "17d9b1e913cf1d1a9f08d23a41393c72d45fb54ecb793423ed49706b1ae6e604",
+        "reviewedEvidence": "Actual successful public frontend HTTP response from the normal unmodified official pollsite lookup. Rendered source and linked sample PDF retained."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.749358025204096&longitude=-73.99645584016561&county=New%20York&streetnumber=315&streetname=West%2029%20Street&postalcode=10001&districtkey=037/75",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.749358025204096&longitude=-73.99645584016561&county=New%20York&streetnumber=315&streetname=West%2029%20Street&postalcode=10001&districtkey=037/75",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:24:02.331Z",
+        "httpStatus": 200,
+        "rawHash": "965c58db5053dd2872d3ee21a0c04e1a0b6a044378817eb964b6563baca473bd",
+        "reviewedEvidence": "Actual successful public frontend HTTP response from the normal unmodified official pollsite lookup. Rendered source and linked sample PDF retained."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:24:02.517Z",
+        "httpStatus": 200,
+        "rawHash": "c703f3fa20cb0acbfb4fe52c328060908284ae9f88abbdaa24a0c7fcd47d386b",
+        "reviewedEvidence": "Normal public official pollsite UI retrieved16 contests for315 West29St,10001:11 candidate contests with32 distinct candidacies,5 charter questions. All printed candidate names and party lines compared race by race; blank write-in slots do not invent candidates. Full linked sample PDF retained. Only four missing local races/seven candidates are added; earlier verified state/court IDs are preserved. This official current ballot confirms five questions, resolving the unsupported NYC311 count of six for this ballot."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:25:35.314955+00:00",
+        "httpStatus": 200,
+        "rawHash": "a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b",
+        "reviewedEvidence": "Official style491 PDF linked directly by the Board of Elections public contest-list API.11 candidate contests and5 proposals."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543198549",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543198549",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:39:59.070Z",
+        "httpStatus": 200,
+        "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 209 Joralemon Street, 11201. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&callback=jQuery35104032844294618271_1792543198480&_=1792543198481",
+        "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&callback=jQuery35104032844294618271_1792543198480&_=1792543198481",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:00.250Z",
+        "httpStatus": 200,
+        "rawHash": "71ce94ffb357ca22979f2d14459d512aa01f3081da6c28ca0415a78f010d2ab9",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 209 Joralemon Street, 11201. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.69247530793299&longitude=-73.99048725326499&county=Kings&streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&districtkey=010/52",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.69247530793299&longitude=-73.99048725326499&county=Kings&streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&districtkey=010/52",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:00.425Z",
+        "httpStatus": 200,
+        "rawHash": "9f396256dd2f3925f5335cb64ccb9cff81fa9ea44d453added98dc75f74f8f16",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 209 Joralemon Street, 11201. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:00.977Z",
+        "httpStatus": 200,
+        "rawHash": "11124af05064c00b6ea73d6eda5f0b86ca953defdace157d5aea0e282af53289",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 209 Joralemon Street, 11201. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543202962",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543202962",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:03.137Z",
+        "httpStatus": 200,
+        "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 90-27 Sutphin Boulevard, 11435. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&callback=jQuery35106218545601709021_1792543202923&_=1792543202924",
+        "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&callback=jQuery35106218545601709021_1792543202923&_=1792543202924",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:04.217Z",
+        "httpStatus": 200,
+        "rawHash": "0df72f985830c307864446b83893f10dbda2d564a81ed97b00efa7177223fcc0",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 90-27 Sutphin Boulevard, 11435. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.702339700519126&longitude=-73.80814789883522&county=Queens&streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&districtkey=009/32",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.702339700519126&longitude=-73.80814789883522&county=Queens&streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&districtkey=009/32",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:04.384Z",
+        "httpStatus": 200,
+        "rawHash": "70ed366adf26fd4b10e58b4100e0830684ae87d348efb5935c5d5ccc28b879d7",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 90-27 Sutphin Boulevard, 11435. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:04.573Z",
+        "httpStatus": 200,
+        "rawHash": "f991083f49f009dcd56b44415a263b231a4c705cdd78dd309be10e2c3f150f51",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 90-27 Sutphin Boulevard, 11435. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543206423",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543206423",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:06.588Z",
+        "httpStatus": 200,
+        "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1932 Arthur Avenue, 10457. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&callback=jQuery351004322857486671483_1792543206277&_=1792543206278",
+        "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&callback=jQuery351004322857486671483_1792543206277&_=1792543206278",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:06.950Z",
+        "httpStatus": 200,
+        "rawHash": "b51b284a17926cffa8554a9f307d6d15d4027247867a00c9ed137faac68bb644",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1932 Arthur Avenue, 10457. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.84568434856727&longitude=-73.89329351020154&county=Bronx&streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&districtkey=004/79",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.84568434856727&longitude=-73.89329351020154&county=Bronx&streetnumber=1932&streetname=Arthur%20Avenue&postalcode=10457&districtkey=004/79",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:07.120Z",
+        "httpStatus": 200,
+        "rawHash": "45c07d844e6c0a9a64a6c93d83ac4815f877926ba0893d0fe6ff8c4c8fa96ef3",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1932 Arthur Avenue, 10457. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:07.327Z",
+        "httpStatus": 200,
+        "rawHash": "ad52ba38d5d41d5f92bc814637124429bef758bbd233add0b98fd71db2dd97ee",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1932 Arthur Avenue, 10457. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543210053",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543210053",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:10.223Z",
+        "httpStatus": 200,
+        "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&callback=jQuery351049603446973631293_1792543209911&_=1792543209912",
+        "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&callback=jQuery351049603446973631293_1792543209911&_=1792543209912",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:11.293Z",
+        "httpStatus": 200,
+        "rawHash": "28151be7a3992cf272b47e34406e30290511c67e72855a082d315fd01089e8ec",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.61903501853341&longitude=-74.06871683893752&county=Richmond&streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&districtkey=002/63",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.61903501853341&longitude=-74.06871683893752&county=Richmond&streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&districtkey=002/63",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:11.460Z",
+        "httpStatus": 200,
+        "rawHash": "ecec352b6a4542a6cee5c47672bc81c539e2a4644745b8bc66eb049ca08d656e",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:40:11.688Z",
+        "httpStatus": 200,
+        "rawHash": "b33dd18a208d34c8dddb8a4017c42456226ebd1c34c40c9ab159ad76661edd18",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
       }
     ]
   }

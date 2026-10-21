@@ -48,7 +48,13 @@ def candidates(block: str, vote_label: str) -> list[tuple[str, str]]:
 
 def county_contests(capture: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     text = clean_web((EVIDENCE / capture["textFile"]).read_text())
-    assert "November 3, 2026" in text or "NOVEMBER 3, 2026" in text
+    assert re.search(r"November 0?3, 2026", text, re.I)
+    if capture.get("bilingual"):
+        text = english_ballot(text)
+    if capture.get("reviewedFile"):
+        rows = json.loads((EVIDENCE / capture["reviewedFile"]).read_text())
+        assert (len(rows), sum(len(row[2]) for row in rows)) == tuple(capture["expected"])
+        return rows
     if capture.get("style") == "parentheses":
         return parenthesized_contests(capture, text)
     if capture.get("style") == "ballot-lines":
@@ -77,6 +83,19 @@ def county_contests(capture: dict) -> list[tuple[str, str, list[tuple[str, str]]
     expected = (11, 26) if capture["county"] == "winnebago" else (7, 14)
     assert (len(result), sum(len(c[2]) for c in result)) == expected
     return result
+
+
+def english_ballot(text: str) -> str:
+    # English and Spanish share each candidate name. Remove only the duplicate
+    # Spanish office/party labels so the English office blocks stay contiguous.
+    lines = []
+    for line in text.splitlines():
+        if re.fullmatch(r"Representante Ante (?:El Congreso|La Asamblea),?|Distrito \d+|Senador Del Estado, Distrito \d+|Alguacil|Oficial Del Circuito Tribunal", line.strip()):
+            continue
+        line = re.sub(r"^(\((?:Republican|Democratic|Independent|Wisconsin Green)\)).*$", r"\1", line)
+        line = re.sub(r"^Vote for 1 / Vote por 1$", "Vote for 1", line)
+        lines.append(line)
+    return "\n".join(lines) + "\n"
 
 
 def parenthesized_contests(capture: dict, text: str) -> list[tuple[str, str, list[tuple[str, str]]]]:
@@ -108,7 +127,7 @@ def parenthesized_contests(capture: dict, text: str) -> list[tuple[str, str, lis
 
 
 def ballot_contests(capture: dict, text: str) -> list[tuple[str, str, list[tuple[str, str]]]]:
-    pattern = re.compile(r"Representative in Congress,?\s+District (?P<cd>\d+)\s+Vote for 1|State Senator,?\s+District (?P<sd>\d+)\s+Vote for 1|Representative to the Assembly,?\s+District (?P<ad>\d+)\s+Vote for 1|^(?P<sheriff>Sheriff)\s+Vote for 1|^(?P<clerk>Clerk of Circuit Court)\s+Vote for 1", re.M)
+    pattern = re.compile(r"Representative in Congress,?\s+District (?P<cd>\d+)\s+Vote for 1|State Senator,?\s+District (?P<sd>\d+)\s+Vote for 1|Representative to the Assembly,?\s+District (?P<ad>\d+)\s+Vote for 1|^(?P<sheriff>Sheriff)\s+Vote for 1|^(?P<coroner>Coroner)\s+Vote for 1|^(?P<clerk>Clerk of Circuit Court)\s+Vote for 1", re.M)
     result = {}
     for start in pattern.finditer(text):
         fields = start.groupdict()
@@ -119,18 +138,20 @@ def ballot_contests(capture: dict, text: str) -> list[tuple[str, str, list[tuple
         elif fields["ad"]:
             title, division = f"Representative to the Assembly District {fields['ad']}", f"sldl:{fields['ad']}"
         else:
-            office = "Sheriff" if fields["sheriff"] else "Clerk of Circuit Court"
+            office = "Sheriff" if fields["sheriff"] else "Coroner" if fields["coroner"] else "Clerk of Circuit Court"
             page = str(text[:start.start()].count("\f") + 1)
             county = capture.get("countyPageOverrides", {}).get(page, capture["county"])
-            title, division = f"{county.title()} County {office}", f"county:{county}"
-        block = text[start.end():].split("write-in", 1)[0]
-        people = re.findall(r"^([^\n]+)\n\(?(Republican|Democratic|Wisconsin Green|Independent)\)?\s*$", block, re.M)
-        people = [(n.strip(), p) for n, p in people]
+            title, division = f"{county.replace('_', ' ').title()} County {office}", f"county:{county}"
+        block = re.split(r"write-in", text[start.end():], maxsplit=1, flags=re.I)[0]
+        if capture.get("partyFirst"):
+            people = [(n.strip(), p) for p, n in re.findall(r"^\((Republican|Democratic|Wisconsin Green|Independent)\)\n([^\n]+)$", block, re.M)]
+        else:
+            people = [(n.strip(), p) for n, p in re.findall(r"^([^\n]+)\n\(?(Republican|Democratic|Wisconsin Green|Independent)\)?\s*$", block, re.M)]
         assert people, title
         row = (title, "ocd-division/country:us/state:wi/" + division, people)
         assert title not in result or result[title] == row, title
         result[title] = row
-    assert (len(result), sum(len(c[2]) for c in result.values())) == tuple(capture["expected"])
+    assert (len(result), sum(len(c[2]) for c in result.values())) == tuple(capture["expected"]), (capture["textFile"], result)
     return list(result.values())
 
 
@@ -155,11 +176,31 @@ def run(apply: bool) -> dict:
             provenance = {"sourceUrl": capture["url"], "sourceOrg": capture["publisher"],
                           "collectedAt": capture["retrievedAt"], "verifiedAt": capture["retrievedAt"], "quote": title}
             contest = next((c for c in ballot["contests"] if c["title"] == title and c["ocdId"] == division), None)
+            if not people:
+                # The printed office is real. The current publication contract
+                # requires a named candidacy, so retain this source-backed
+                # write-in-only office explicitly until the contract supports it.
+                assert title == "Richland County Coroner"
+                if contest:
+                    assert not any(c["contestId"] == contest["id"] for c in ballot["candidacies"])
+                    assert contest["provenance"]["sourceUrl"] == capture["url"]
+                held_id = contest["id"] if contest else "ba01-pacific-wi-" + slug(title)
+                if not any(c["id"] == held_id for c in ballot.setdefault("heldContests", [])):
+                    ballot["heldContests"].append({**(contest or {"id": held_id,
+                        "electionId": ballot["election"]["id"], "ocdId": division,
+                        "title": title, "provenance": provenance}),
+                        "reason": "The official sample ballot prints only a write-in line and names no candidate. Publication currently requires a named candidacy.",
+                        "scopeNote": "Official sample ballot lists only a write-in line; no candidate is printed."})
+                if contest:
+                    ballot["contests"].remove(contest)
+                continue
             if contest is None:
                 contest = {"id": "ba01-pacific-wi-" + slug(title), "electionId": ballot["election"]["id"],
                            "ocdId": division, "divisionVintage": "2026", "title": title,
                            "type": "CANDIDACY", "voteFor": 1, "termYears": None,
-                           "candidateListComplete": True, "scopeNote": None, "provenance": provenance}
+                           "candidateListComplete": True,
+                           "scopeNote": "Official sample ballot lists only a write-in line; no candidate is printed." if not people else None,
+                           "provenance": provenance}
                 ballot["contests"].append(contest)
                 added_contests += 1
             for name, party in people:
@@ -189,14 +230,18 @@ def run(apply: bool) -> dict:
                     "quote": "Governor/Lieutenant Governor\n" + quote}})
     for key, old in prior["ballots"].items():
         for field in ["contests", "candidacies", "measures", "absences"]:
-            assert all(row in data["ballots"][key].get(field, []) for row in old.get(field, []))
+            assert all(row in data["ballots"][key].get(field, []) or field == "contests" and
+                       any(all(held.get(k) == v for k, v in row.items()) for held in data["ballots"][key].get("heldContests", []))
+                       for row in old.get(field, []))
+        assert all(row in data["ballots"][key].get("heldContests", []) for row in old.get("heldContests", []))
     if apply:
         data["sourceReceipt"]["reviewedAt"] = max(s["retrievedAt"] for s in data["sourceReceipt"]["sources"])
         data["sourceReceipt"]["reviewedBy"] = "ba01-pacific-wi-source-replay"
         PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     return {"state": "WI", "addedContests": added_contests, "addedCandidates": added_candidates,
             "totalContests": len(ballot["contests"]), "totalCandidacies": len(ballot["candidacies"]),
-            "sources": [{"county": c["county"], "url": c["url"]} for c in captures if c.get("county")]}
+            "heldContests": len(ballot.get("heldContests", [])),
+            "officialSourceCount": len(captures)}
 
 
 if __name__ == "__main__":

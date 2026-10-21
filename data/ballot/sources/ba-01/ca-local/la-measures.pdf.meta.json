@@ -1,0 +1,13 @@
+{
+  "url": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+  "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+  "retrievedAt": "2026-10-21T00:55:25.504898+00:00",
+  "httpStatus": 200,
+  "rawHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+  "file": "la-measures.pdf.gz",
+  "extractedText": {
+    "file": "la-measures.txt",
+    "sha256": "5dab2b4b66ba8168e30c4592ab2a08f53de2fe8c5dc34ad262ce834e93f97f60",
+    "command": "pdftotext -layout la-measures.pdf la-measures.txt"
+  }
+}

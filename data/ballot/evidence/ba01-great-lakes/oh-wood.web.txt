@@ -1,0 +1,92 @@
+Candidate List (https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List)
+【turn793213view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 5; Source: click({"ref_id":"turn990338view0","id":1}); Total lines: 89
+L0@P0: Candidate List for November 3, 2026 General Election
+L1@P0: This list has been certified by the Wood County Board of Election as of
+L2@P0: 08/26/2026
+L3@P0: Governor State of Ohio
+L4@P0: Democratic Amy Acton David Pepper
+L5@P0: Republican Vivek Ramaswamy Robert A. McColley
+L6@P0: Libertarian Don Kissick James L. Mills
+L7@P0: Write-In Candidate Timothy Grady Andrea Neutzling
+L8@P0: Write-In Candidate Renea Turner Jalen Turner
+L9@P0: Write-In Candidate Ron Ula Michael C. Lehnerd
+L10@P0: Write-In Candidate Heather Hill Patrick Manley
+L11@P0: Attorney General State of Ohio
+L12@P0: Democratic John J. Kulewicz
+L13@P0: Republican Keith Faber
+L14@P0: Auditor State of Ohio
+L15@P0: Democratic Annette Blackwell
+L16@P0-1: Tuesday, September 1, 2026 Page 1 of 5Republican Frank LaRose
+L17@P1: Secretary of State State of Ohio
+L18@P1: Democratic Allison Russo
+L19@P1: Republican Robert Sprague
+L20@P1: Libertarian Tom Pruss
+L21@P1: Treasurer State of Ohio
+L22@P1: Democratic Seth Walsh
+L23@P1: Republican Jay Edwards
+L24@P1: United States Senate (Unexpired Term Ending 01/03/2029) United States of America
+L25@P1: Democratic Sherrod Brown
+L26@P1: Republican Jon Husted
+L27@P1: Libertarian William B. Redpath
+L28@P1: Other-party candidate Greg Levy
+L29@P1: Write-In Candidate Stephen Faris
+L30@P1: Write-In Candidate Anthony Holliman
+L31@P1-2: Tuesday, September 1, 2026 Page 2 of 5Write-In Candidate Timothy Telymonde
+L32@P2: United States Congress 5th Congressional District
+L33@P2: Democratic Brian A. Shaver
+L34@P2: Republican Bob Latta
+L35@P2: Libertarian Michael J. Veloff
+L36@P2: United States Congress 9th Congressional District
+L37@P2: Democratic Marcy Kaptur
+L38@P2: 1841 Dority Rd Toledo 43615
+L39@P2: Republican Derek Merrin
+L40@P2: 4323 Lakeside Dr. U Maumee 43537
+L41@P2: Write-In Candidate Kathy McKinstry
+L42@P2: 321 Whittlesey St. Fremont 43420
+L43@P2: Justice of the Supreme Court (Term Commencing 01/01/2027) State of Ohio
+L44@P2: Democratic Marilyn Zayas
+L45@P2: Republican Daniel R. Hawkins
+L46@P2: Justice of the Supreme Court (Term Commencing 01/02/2027) State of Ohio
+L47@P2: Democratic Jennifer Brunner
+L48@P2: Republican Colleen O'Donnell
+L49@P2-3: Tuesday, September 1, 2026 Page 3 of 5Judge of Court of Appeals (Term Commencing 02/09/2027) 6th District Court of Appeals
+L50@P3: Republican Michael R. Goulding
+L51@P3: Judge of Court of Appeals (Term Commencing 02/10/2027) 6th District Court of Appeals
+L52@P3: Democratic Myron C. Duhart
+L53@P3: Republican CJ Kamm
+L54@P3: Ohio House of Representatives 44th House District
+L55@P3: Democratic David J. Fournier
+L56@P3: 9559 Rockingham Dr Whitehouse 43571
+L57@P3: Republican Edward L. Schimmel
+L58@P3: 2239 Richmond Dr. Northwood 43619
+L59@P3: Independent Lyndsey A. Stough
+L60@P3: 5763 Main St. Sylvania 43560
+L61@P3: Ohio House of Representatives 75th House District
+L62@P3: Democratic Richard J. Rettig
+L63@P3: 705 Hunters Run Perrysburg 43551
+L64@P3: Republican Haraz N. Ghanbari
+L65@P3: 26811 Dogwood Ln. Perrysburg 43551
+L66@P3: Judge of Common Pleas (Term Commencing 01/01/2027) Wood County
+L67@P3: Paul A. Dobson
+L68@P3: 29515 Shelbourne R Perrysburg 43551
+L69@P3: Joel M. Kuhlman
+L70@P3: 23302 Pargillis Rd. Perrysburg 43551
+L71@P3-4: Tuesday, September 1, 2026 Page 4 of 5Judge of Probate Court (Term Commencing 02/09/2027) Wood County
+L72@P4: Megan E. Newlove
+L73@P4: 672 Meadowview Dr Bowling Green 43402
+L74@P4: Doug Ruck
+L75@P4: 4613 Swan Rd. Pemberville 43450
+L76@P4: Commissioner (Term Commencing 01/01/2027) Wood County
+L77@P4: Democratic Brenna Reynolds
+L78@P4: 201 Eagle Point Rd. Rossford 43460
+L79@P4: Republican Ryan E. Lee
+L80@P4: 180 Main St. Jerry City 43437
+L81@P4: Independent Joseph R. DeMare
+L82@P4: 517 S. Main St. Bowling Green 43402
+L83@P4: Auditor (Term Commencing 03/08/2027) Wood County
+L84@P4: Democratic Mark Wongrowski
+L85@P4: 743 Brittany Ave Bowling Green 43402
+L86@P4: Republican Matthew R. Oestreich
+L87@P4: 11555 Caskie Rd. Wayne 43466
+L88@P4: Tuesday, September 1, 2026 Page 5 of 5
+

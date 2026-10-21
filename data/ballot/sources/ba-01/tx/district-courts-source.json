@@ -1,0 +1,11 @@
+{
+  "url": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+  "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:17:59.902777+00:00",
+  "rawHash": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+  "file": "district-courts-october-2026.pdf.gz",
+  "textFile": "district-courts-october-2026.txt",
+  "textHash": "e05e28333db994adc85ee1e825e79f1b89bb28f347a2c238fcd945436835d3e2",
+  "extraction": "pdftotext -raw -f 2 -l 2; alphabetical county-to-district list on page 2; map/title on page 1"
+}

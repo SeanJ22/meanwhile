@@ -73,7 +73,11 @@ for i, line in enumerate(lines):
     names = [(block[k - 1], block[k].removesuffix(" Party"))
              for k in range(1, len(block)) if block[k].endswith(" Party")]
     chamber = "sldu" if match[1] == "Senate" else "sldl"
-    add_contest(line, "ocd-division/country:us/state:ar/" + chamber + ":" + match[2],
+    special = lines[max(0, i - 2):i] == ["SPECIAL ELECTION FOR STATE", "REPRESENTATIVE DISTRICT 8"]
+    if special:
+        assert (match[1], match[2]) == ("Representative", "8")
+        block = lines[i - 2:j]
+    add_contest(line + (" (Special Election)" if special else ""), "ocd-division/country:us/state:ar/" + chamber + ":" + match[2],
                 names, "\n".join(block))
 
 # The county-wide circuit clerk is printed despite the ballot's explicit

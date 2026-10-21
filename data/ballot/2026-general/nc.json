@@ -10837,6 +10837,25 @@
             "collectedAt": "2026-10-20T23:03:17.096952+00:00",
             "verifiedAt": "2026-10-20T23:03:17.096952+00:00"
           }
+        },
+        {
+          "id": "nc-local-2026-70e587cc118caf18e6c8",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-10-20T22:52:21.488912+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488912+00:00",
+            "quote": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04"
+          }
         }
       ],
       "candidacies": [
@@ -28171,6 +28190,23 @@
             "verifiedAt": "2026-10-20T22:52:21.488912+00:00",
             "quote": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 21 | Rhonda L. Patterson-Wrighten | DEM"
           }
+        },
+        {
+          "id": "nc-local-2026-70e587cc118caf18e6c8:92c17da370c16249",
+          "contestId": "nc-local-2026-70e587cc118caf18e6c8",
+          "givenName": "",
+          "familyName": "Mark Jerrell",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-10-20T22:52:21.488912+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488912+00:00",
+            "quote": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04 |  | Mark Jerrell | DEM"
+          }
         }
       ],
       "measures": [
@@ -28259,8 +28295,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T22:52:21.488912+00:00",
-    "reviewedBy": "BA-01 exact official local candidate CSV replay",
+    "reviewedAt": "2026-10-20T23:28:56.824181Z",
+    "reviewedBy": "BA-01 official local district replay",
     "sources": [
       {
         "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
@@ -28381,6 +28417,26 @@
         "publisher": "North Carolina Judicial Branch",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "The Mecklenburg County court page explicitly identifies District Court District 26 and Prosecutorial District 26 for the county; superior court electoral subdivisions are not widened."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.488912+00:00",
+        "httpStatus": 200,
+        "rawHash": "2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe",
+        "reviewedEvidence": "Exact current general-election candidate row or rows, parties, websites when provided, and seat counts, scoped only to the specific council district."
+      },
+      {
+        "requestedUrl": "https://vote.mecknc.gov/Maps",
+        "finalUrl": "https://vote.mecknc.gov/Maps",
+        "publisher": "Mecklenburg County Board of Elections",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:28:56.824181Z",
+        "httpStatus": 200,
+        "rawHash": "2361fdb41fe68808e6fc8149ebbdb3f99a75aa2068398daf489b7ffa9a87a234",
+        "reviewedEvidence": "Official council district geography verified without widening a district election to county scope. Canonical division name separately checked against the saved Open Civic Data registry."
       }
     ]
   }

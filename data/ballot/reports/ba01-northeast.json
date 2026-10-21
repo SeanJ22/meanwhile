@@ -1,13 +1,13 @@
 {
   "step": "BA-01",
-  "checkedAt": "2026-10-20T23:32:35.625347+00:00",
+  "checkedAt": "2026-10-21T01:10:42.553182+00:00",
   "scope": "Official-source comparison of assigned northeast states. Counts are measurements, never publication gates. Live ZIP parity is not yet established.",
   "states": {
     "PA": {
       "held": {
-        "contests": 157,
-        "candidateContests": 153,
-        "candidacies": 262,
+        "contests": 188,
+        "candidateContests": 184,
+        "candidacies": 317,
         "measures": 4
       },
       "expectedRegularCandidateContests": 246,
@@ -17,8 +17,6 @@
         "cd": 17
       },
       "missingContestDivisions": [
-        "ocd-division/country:us/state:pa/cd:14",
-        "ocd-division/country:us/state:pa/cd:15",
         "ocd-division/country:us/state:pa/cd:7",
         "ocd-division/country:us/state:pa/sldl:100",
         "ocd-division/country:us/state:pa/sldl:101",
@@ -26,19 +24,11 @@
         "ocd-division/country:us/state:pa/sldl:107",
         "ocd-division/country:us/state:pa/sldl:108",
         "ocd-division/country:us/state:pa/sldl:109",
-        "ocd-division/country:us/state:pa/sldl:11",
         "ocd-division/country:us/state:pa/sldl:110",
         "ocd-division/country:us/state:pa/sldl:111",
         "ocd-division/country:us/state:pa/sldl:115",
-        "ocd-division/country:us/state:pa/sldl:12",
         "ocd-division/country:us/state:pa/sldl:122",
         "ocd-division/country:us/state:pa/sldl:123",
-        "ocd-division/country:us/state:pa/sldl:124",
-        "ocd-division/country:us/state:pa/sldl:126",
-        "ocd-division/country:us/state:pa/sldl:127",
-        "ocd-division/country:us/state:pa/sldl:128",
-        "ocd-division/country:us/state:pa/sldl:129",
-        "ocd-division/country:us/state:pa/sldl:130",
         "ocd-division/country:us/state:pa/sldl:132",
         "ocd-division/country:us/state:pa/sldl:133",
         "ocd-division/country:us/state:pa/sldl:134",
@@ -48,10 +38,7 @@
         "ocd-division/country:us/state:pa/sldl:138",
         "ocd-division/country:us/state:pa/sldl:139",
         "ocd-division/country:us/state:pa/sldl:14",
-        "ocd-division/country:us/state:pa/sldl:15",
         "ocd-division/country:us/state:pa/sldl:16",
-        "ocd-division/country:us/state:pa/sldl:17",
-        "ocd-division/country:us/state:pa/sldl:171",
         "ocd-division/country:us/state:pa/sldl:176",
         "ocd-division/country:us/state:pa/sldl:183",
         "ocd-division/country:us/state:pa/sldl:187",
@@ -60,18 +47,7 @@
         "ocd-division/country:us/state:pa/sldl:37",
         "ocd-division/country:us/state:pa/sldl:41",
         "ocd-division/country:us/state:pa/sldl:43",
-        "ocd-division/country:us/state:pa/sldl:48",
         "ocd-division/country:us/state:pa/sldl:49",
-        "ocd-division/country:us/state:pa/sldl:5",
-        "ocd-division/country:us/state:pa/sldl:50",
-        "ocd-division/country:us/state:pa/sldl:51",
-        "ocd-division/country:us/state:pa/sldl:52",
-        "ocd-division/country:us/state:pa/sldl:55",
-        "ocd-division/country:us/state:pa/sldl:56",
-        "ocd-division/country:us/state:pa/sldl:57",
-        "ocd-division/country:us/state:pa/sldl:58",
-        "ocd-division/country:us/state:pa/sldl:59",
-        "ocd-division/country:us/state:pa/sldl:60",
         "ocd-division/country:us/state:pa/sldl:62",
         "ocd-division/country:us/state:pa/sldl:63",
         "ocd-division/country:us/state:pa/sldl:64",
@@ -86,13 +62,10 @@
         "ocd-division/country:us/state:pa/sldl:73",
         "ocd-division/country:us/state:pa/sldl:75",
         "ocd-division/country:us/state:pa/sldl:76",
-        "ocd-division/country:us/state:pa/sldl:77",
         "ocd-division/country:us/state:pa/sldl:78",
         "ocd-division/country:us/state:pa/sldl:79",
-        "ocd-division/country:us/state:pa/sldl:8",
         "ocd-division/country:us/state:pa/sldl:80",
         "ocd-division/country:us/state:pa/sldl:81",
-        "ocd-division/country:us/state:pa/sldl:82",
         "ocd-division/country:us/state:pa/sldl:83",
         "ocd-division/country:us/state:pa/sldl:84",
         "ocd-division/country:us/state:pa/sldl:89",
@@ -102,13 +75,9 @@
         "ocd-division/country:us/state:pa/sldl:96",
         "ocd-division/country:us/state:pa/sldl:97",
         "ocd-division/country:us/state:pa/sldl:98",
-        "ocd-division/country:us/state:pa/sldl:99",
         "ocd-division/country:us/state:pa/sldu:14",
         "ocd-division/country:us/state:pa/sldu:18",
-        "ocd-division/country:us/state:pa/sldu:32",
         "ocd-division/country:us/state:pa/sldu:36",
-        "ocd-division/country:us/state:pa/sldu:46",
-        "ocd-division/country:us/state:pa/sldu:48",
         "ocd-division/country:us/state:pa/sldu:50"
       ],
       "basis": "Official 2026 primary returns contain 17 Congressional, 25 even-numbered Senate and 203 House office districts. The November Philadelphia sample combines Governor/Lieutenant Governor into one contest. This measures regular contest coverage; it does not establish a complete final certified general-election candidate list.",
@@ -117,22 +86,323 @@
         "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf"
       ],
       "originalReturnsSha256": "954119a4301f2dd6184b09cd25ff0d95c37b485ffbd92ec227f1b2b0b714b442",
-      "remaining": "Acquire all 93 missing regular districts and compare the entire final general-election candidate list; largest missing counties remain active acquisition work."
+      "remaining": "Acquire all 62 missing regular districts and compare the entire final general-election candidate list; largest missing counties remain active acquisition work."
     },
     "NY": {
       "held": {
-        "contests": 242,
-        "candidateContests": 242,
-        "candidacies": 442,
-        "measures": 0
+        "contests": 268,
+        "candidateContests": 263,
+        "candidacies": 523,
+        "measures": 5
       },
       "state": "NY",
       "officialContests": 242,
       "officialCandidates": 442,
       "mismatches": [],
-      "officialCandidateContests": 242,
-      "officialCandidacies": 442,
-      "remaining": "Eleven judicial-district contests and 52 distinct court candidacies in the certification remain to be imported with their geography; county and city ballot contents need sample comparison."
+      "before": [
+        268,
+        523
+      ],
+      "after": [
+        268,
+        523
+      ],
+      "judicialContests": 11,
+      "judicialCandidacies": 60,
+      "judicialCountyMemberships": 44,
+      "newYorkCityQuestions": 5,
+      "questionCountEvidence": "NYC311 says6; current official NYC Votes guide and Commission appendix list5. The official10001 sample subsequently confirms5; its exact ballot wording supersedes the guide wording.",
+      "officialCandidateContests": 253,
+      "officialCandidacies": 502,
+      "verifiedLocalCandidateContests": 10,
+      "verifiedLocalCandidacies": 21,
+      "boroughSamples": [
+        {
+          "county": "kings",
+          "address": "209 Joralemon Street",
+          "zip": "11201",
+          "sourceFile": "nyc-kings-3.json",
+          "pollsiteFile": "nyc-kings-2.json",
+          "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+          "officialContests": 13,
+          "officialCandidateContests": 8,
+          "officialCandidacies": 22,
+          "officialMeasures": 5,
+          "races": [
+            {
+              "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:comptroller",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:attorney-general",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-general:supreme-court-2",
+              "officialCandidacies": 5
+            },
+            {
+              "contestId": "ny-2026-kings-county-civil-court",
+              "officialCandidacies": 4
+            },
+            {
+              "contestId": "ny-boe:2026-general:cd:7",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldu:26",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldl:52",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-1",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-2",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-3",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-4",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-5",
+              "measure": true
+            }
+          ],
+          "differences": [],
+          "liveVerified": false,
+          "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+        },
+        {
+          "county": "queens",
+          "address": "90-27 Sutphin Boulevard",
+          "zip": "11435",
+          "sourceFile": "nyc-queens-3.json",
+          "pollsiteFile": "nyc-queens-2.json",
+          "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+          "officialContests": 14,
+          "officialCandidateContests": 9,
+          "officialCandidacies": 22,
+          "officialMeasures": 5,
+          "races": [
+            {
+              "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:comptroller",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:attorney-general",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-general:supreme-court-11",
+              "officialCandidacies": 5
+            },
+            {
+              "contestId": "ny-2026-queens-county-civil-court",
+              "officialCandidacies": 5
+            },
+            {
+              "contestId": "ny-boe:2026-general:cd:5",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldu:14",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldl:32",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-queens-county-municipal-court-4",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-1",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-2",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-3",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-4",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-5",
+              "measure": true
+            }
+          ],
+          "differences": [],
+          "liveVerified": false,
+          "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+        },
+        {
+          "county": "bronx",
+          "address": "1932 Arthur Avenue",
+          "zip": "10457",
+          "sourceFile": "nyc-bronx-3.json",
+          "pollsiteFile": "nyc-bronx-2.json",
+          "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+          "officialContests": 14,
+          "officialCandidateContests": 9,
+          "officialCandidacies": 17,
+          "officialMeasures": 5,
+          "races": [
+            {
+              "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:comptroller",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:attorney-general",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-bronx-county-surrogate",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-2026-general:supreme-court-12",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-boe:2026-general:cd:15",
+              "officialCandidacies": 5
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldu:32",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldl:79",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-bronx-county-municipal-court-2",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-1",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-2",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-3",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-4",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-5",
+              "measure": true
+            }
+          ],
+          "differences": [],
+          "liveVerified": false,
+          "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+        },
+        {
+          "county": "richmond",
+          "address": "1 Edgewater Street",
+          "zip": "10305",
+          "sourceFile": "nyc-richmond-3.json",
+          "pollsiteFile": "nyc-richmond-2.json",
+          "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+          "officialContests": 13,
+          "officialCandidateContests": 8,
+          "officialCandidacies": 16,
+          "officialMeasures": 5,
+          "races": [
+            {
+              "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:comptroller",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:attorney-general",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-general:supreme-court-13",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-richmond-county-civil-court",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:cd:11",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldu:23",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-boe:2026-general:sldl:63",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-1",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-2",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-3",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-4",
+              "measure": true
+            },
+            {
+              "contestId": "ny-2026-new-york-city-charter-proposal-5",
+              "measure": true
+            }
+          ],
+          "differences": [],
+          "liveVerified": false,
+          "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+        }
+      ],
+      "remaining": "All federal, statewide, legislative and Supreme Court certification candidate sets are imported. Five NYC official address styles for10001,11201,11435,10457 and10305 match race by race, including10 added local races/21 names and5 charter questions. NYC311's count6 is unsupported by the current ballots. Local-district address matching and live sample parity remain open; other county/city contents need comparison."
     },
     "NJ": {
       "held": {
@@ -141,9 +411,90 @@
         "candidacies": 304,
         "measures": 0
       },
+      "checkedAt": "2026-10-21T01:10:11.847419+00:00",
       "officialFederalContests": 13,
       "officialFederalCandidacies": 39,
-      "remaining": "All federal candidate sets checked. County/city/school coverage outside Morris County remains incomplete; statewide legislative absence needs an explicit final-office check."
+      "officialRegularNonFederalStatewideContests": 0,
+      "officialRegularLegislativeContests": 0,
+      "novemberLegislativeSpecialCertificationsListed": 0,
+      "generalCertificationNamedOffices": [
+        "U.S. Senator",
+        "U.S. House of Representatives, all 12 congressional districts"
+      ],
+      "separate2026SpecialElection": {
+        "office": "U.S. House of Representatives, Congressional District11",
+        "date": "2026-04-16",
+        "candidates": 3,
+        "onNovemberBallot": false
+      },
+      "basis": "The current official 2026 Division index and full primary/general certifications list Senate and House offices. Its only listed 2026 special-general certification is CD11 for April16. Official 2023 general-election records list State Senate; official 2025 general-election records list Governor and General Assembly, with a separate District 35 Senate special. Constitutional terms give senators four years after the post-census two-year term and Assembly members two years. These primary sources establish zero regular 2026 nonfederal statewide/legislative contests and no November legislative special in the authority’s published 2026 certification index.",
+      "generalCertificationDeclarationOcr": "the persons named on the attached sheets were nominated at the June 2, 2026 Primary Election, or by direct petition to nominate candidates, for the Office of United States Senator and Office of Member of the United States House of Representatives for the State’s Twelve Congressional Districts.",
+      "absenceLimit": "All 21 county sample ballots have not been exhaustively compared. No additional November legislative special is listed by the state authority in the current sources checked; this is not an independent county-by-county absence finding.",
+      "elecCorroboration": {
+        "sourceUrl": "https://www.elec.nj.gov/aboutelec/pressreleases.htm",
+        "publishedAt": "2026-08-17",
+        "indexedOfficialText": "Campaign finance reports filed for the first six months of 2026 by the so-called “Big Six” fundraising committees- the two state parties and four legislative leadership committees- show more activity than usual for a year with no state elections.",
+        "access": "Official-source indexed search text is corroboration only. Direct retrieval returned an Incapsula page with HTTP200 and did not yield the statement. It is not a successful fact receipt."
+      },
+      "sources": [
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/election-information-2026.shtml",
+          "finalUrl": "https://www.nj.gov/state/elections/election-information-2026.shtml",
+          "retrievedAt": "2026-10-21T01:04:38.990891+00:00",
+          "httpStatus": 200,
+          "rawHash": "0e6bcd95e9195e9fb1a3cfb7bb043d6964dc093caeb690c10c2b0e692f320ae0",
+          "sourceFile": "nj-2026-election-information-current.html"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-general-election-nominees_us-senate_us-house.pdf",
+          "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-general-election-nominees_us-senate_us-house.pdf",
+          "retrievedAt": "2026-10-21T01:04:59.213425+00:00",
+          "httpStatus": 200,
+          "rawHash": "c4c64097c2f4f99f1e6fda176c318b91d86098ab6d8a2e066fa3ce7b33b4f7ec",
+          "sourceFile": "2026-certification-of-general-election-nominees_us-senate_us-house.pdf"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-primary-nominees.pdf",
+          "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-primary-nominees.pdf",
+          "retrievedAt": "2026-10-21T01:04:57.566003+00:00",
+          "httpStatus": 200,
+          "rawHash": "a99c2e17c551dad46f7c029b866a44a47f405fda8b19d400198be79cc038330d",
+          "sourceFile": "2026-certification-of-primary-nominees.pdf"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-special-general-election-nominees.pdf",
+          "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-special-general-election-nominees.pdf",
+          "retrievedAt": "2026-10-21T01:04:57.685091+00:00",
+          "httpStatus": 200,
+          "rawHash": "6f506e72604150b604c76118782794883ffd4221d4323c5ecc4c5a8ee36c41a9",
+          "sourceFile": "2026-certification-of-special-general-election-nominees.pdf"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/redistricting/bylaws/legislative/",
+          "finalUrl": "https://www.nj.gov/redistricting/bylaws/legislative/",
+          "retrievedAt": "2026-10-21T01:06:05.277827+00:00",
+          "httpStatus": 200,
+          "rawHash": "24fc7a8907384062f0fac484ce46508c79fc59c1014e00e79b576244c4efc32d",
+          "sourceFile": "nj-legislative-election-constitutional-terms.html"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/election-information-2025.shtml",
+          "finalUrl": "https://www.nj.gov/state/elections/election-information-2025.shtml",
+          "retrievedAt": "2026-10-21T01:08:34.230586+00:00",
+          "httpStatus": 200,
+          "rawHash": "5b31b0d4aedd17cb7d789ef5e3c8154aa35eda457a014627e4a528c01f6f10d7",
+          "sourceFile": "nj-election-information-2025.html"
+        },
+        {
+          "requestedUrl": "https://www.nj.gov/state/elections/election-information-2023.shtml",
+          "finalUrl": "https://www.nj.gov/state/elections/election-information-2023.shtml",
+          "retrievedAt": "2026-10-21T01:08:35.724579+00:00",
+          "httpStatus": 200,
+          "rawHash": "82621ee7aa8345caae20d48da2c3f1a70f85df5f11934d0c789a4dbf0860a019",
+          "sourceFile": "nj-election-information-2023.html"
+        }
+      ],
+      "remaining": "All 13 federal races / 39 candidates match their official final lists. The current state primary/general/special certification set lists no November 3 state office contests. County/city/school coverage outside the verified Morris County inputs remains incomplete; all-county sample absence and live parity remain unverified."
     },
     "CT": {
       "held": {
@@ -222,7 +573,10 @@
       },
       "officialCandidateContests": 223,
       "officialCandidacies": 304,
-      "remaining": "District/county offices, local measures and exact address sample-ballot parity remain open. Governor's Council address-to-district matching must be connected."
+      "districtMemberships": 736,
+      "councilWholeMunicipalities": 348,
+      "councilWholeWards": 28,
+      "remaining": "District/county offices, local measures and exact address sample-ballot parity remain open. Council memberships cover 348 whole municipalities and 28 complete wards; split Boston/Cambridge wards and Braintree precinct matching remain open."
     },
     "VT": {
       "held": {
@@ -239,19 +593,884 @@
     },
     "NH": {
       "held": {
-        "contests": 13,
-        "candidateContests": 12,
-        "candidacies": 27,
-        "measures": 1
+        "contests": 98,
+        "candidateContests": 70,
+        "candidacies": 165,
+        "measures": 28
       },
-      "officialStatewideCount": null,
-      "remaining": "Current official statewide September 17 candidate PDF and election page returned403 through HTTP and web routes. Held general-election sample ballots cover limited Merrimack County areas. Full state Legislature and House District1 remain incomplete; do not count400 House seats as400 contests."
+      "expectedRegularFederalStateCandidateContests": 236,
+      "expectedHouseDistrictsByCounty": {
+        "Belknap": 8,
+        "Carroll": 8,
+        "Cheshire": 18,
+        "Coos": 7,
+        "Grafton": 18,
+        "Hillsborough": 45,
+        "Merrimack": 30,
+        "Rockingham": 40,
+        "Strafford": 21,
+        "Sullivan": 8
+      },
+      "expectedOtherRegularContests": {
+        "stateSenate": 24,
+        "executiveCouncil": 5,
+        "usHouse": 2,
+        "governor": 1,
+        "usSenate": 1
+      },
+      "heldRegularFederalStateCandidateContests": 47,
+      "missingRegularFederalStateCandidateContests": 189,
+      "officialStatewideCertifiedCandidateCount": null,
+      "verifiedNewSampleCandidateContests": 58,
+      "verifiedNewSampleCandidacies": 138,
+      "districtMemberships": 285,
+      "concordGeneralSamples": [
+        {
+          "place": "Concord Ward1",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 25,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-15",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-28",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward2",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 26,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-16",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-28",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward3",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 25,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-17",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-28",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward4",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 26,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-18",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-29",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward5",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 26,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-19",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-30",
+              "officialCandidacies": 2
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward6",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 27,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-20",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-30",
+              "officialCandidacies": 2
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward7",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 27,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-21",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-30",
+              "officialCandidacies": 2
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward8",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 27,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-22",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-30",
+              "officialCandidacies": 2
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward9",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 26,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-23",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-29",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        },
+        {
+          "place": "Concord Ward10",
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 25,
+          "officialGeneralBallotMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-senator-district-15",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-sheriff",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:county-treasurer",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "ballot-nh-merrimack:register-of-probate",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:merrimack-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-24",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-merrimack-county-district-29",
+              "officialCandidacies": 1
+            }
+          ],
+          "schoolBallotComparedSeparately": true,
+          "liveVerified": false
+        }
+      ],
+      "lebanonGeneralSamples": [
+        {
+          "place": "Lebanon Ward1",
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 24,
+          "officialMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "nh-2026-general:state-senator-district-5",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-13",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-17",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-sheriff",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-treasurer",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-probate",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            }
+          ],
+          "liveVerified": false
+        },
+        {
+          "place": "Lebanon Ward2",
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 24,
+          "officialMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "nh-2026-general:state-senator-district-5",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-14",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-17",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-sheriff",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-treasurer",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-probate",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            }
+          ],
+          "liveVerified": false
+        },
+        {
+          "place": "Lebanon Ward3",
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+          "officialCandidateContests": 13,
+          "officialCandidacies": 24,
+          "officialMeasures": 2,
+          "differences": [],
+          "races": [
+            {
+              "contestId": "nh-2026-general:state-senator-district-5",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-15",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:state-representative-grafton-county-district-17",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-sheriff",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-attorney",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-treasurer",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-deeds",
+              "officialCandidacies": 2
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-register-of-probate",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "nh-2026-general:grafton-county-commissioner-district-1",
+              "officialCandidacies": 1
+            },
+            {
+              "contestId": "ballot-nh-merrimack:governor",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-senate",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:us-house-2",
+              "officialCandidacies": 3
+            },
+            {
+              "contestId": "ballot-nh-merrimack:executive-council-2",
+              "officialCandidacies": 2
+            }
+          ],
+          "liveVerified": false
+        }
+      ],
+      "measureRecordExplanation": "28 measure records represent the statewide constitutional question, Goffstown's school property-tax question,12 mutually exclusive Manchester ward-wording variants,10 Concord ward-wording variants,3 Lebanon ward-wording variants and the Concord School District Dewey-property sale. Each city reader should match only their own ward variant.",
+      "sources": [
+        "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+        "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballots"
+      ],
+      "basis": "RSA662 defines all 203 House, 24 Senate, five Council and two congressional districts. November samples confirm Governor and U.S. Senate as well. This measures regular contest slots; the final statewide certified roster is still inaccessible.",
+      "remaining": "The full September17 statewide candidate PDF returns403; 189 regular state/federal races remain missing. Concord, Manchester, Goffstown and Lebanon samples supply imported names. Floterial and Council/commissioner matching uses whole-division memberships. Portsmouth remains acquired but unimported; Concord school-zone address matching remains open where wards1/2 have partial school-district boundaries. Other county/city/school coverage remains incomplete."
     },
     "ME": {
       "held": {
-        "contests": 190,
-        "candidateContests": 190,
-        "candidacies": 362,
+        "contests": 278,
+        "candidateContests": 278,
+        "candidacies": 470,
         "measures": 0
       },
       "officialCandidateContests": 190,
@@ -259,7 +1478,7 @@
       "officialNonWriteInCandidacies": 352,
       "officialStateWriteInCandidacies": 10,
       "differences": [],
-      "unimportedRegularLocalCandidatesByOfficeCode": {
+      "importedRegularLocalCandidatesByOfficeCode": {
         "JP": 8,
         "RP": 3,
         "CT": 13,
@@ -270,12 +1489,38 @@
         "KBC": 1,
         "ACC": 1
       },
+      "verifiedLocalCandidateContests": 88,
+      "verifiedLocalCandidacies": 108,
+      "countyOfficeCycleContests": 86,
+      "namedCountyContests": 85,
+      "supersedingOfficialValues": [
+        {
+          "candidateId": "me-sos-2026-us:4",
+          "field": "partyLabel",
+          "previousValue": "Democrat",
+          "previousProvenance": {
+            "sourceUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf",
+            "sourceOrg": "Maine Secretary of State, Division of Elections",
+            "collectedAt": "2026-10-14T05:10:11.581Z",
+            "verifiedAt": "2026-10-14T05:10:11.581Z"
+          },
+          "currentValue": "Democratic",
+          "supersedingProvenance": {
+            "sourceUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+            "sourceOrg": "Maine Secretary of State, Division of Elections",
+            "collectedAt": "2026-10-21T00:49:29.889706+00:00",
+            "verifiedAt": "2026-10-21T00:57:53.449631+00:00",
+            "quote": "Sigrid Ann Olson | Democratic"
+          }
+        }
+      ],
       "sources": [
         "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
-        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf",
+        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+        "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Special%20Cty%20Elect%20Candidate%20List%20-%20posting%2072226.xlsx",
         "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Post%20Primary%20Withdrawals%20%26%20Replacement%20Candidates%20-%20Updated%209.22.26_0.pdf"
       ],
-      "remaining": "All 190 federal/statewide/legislative races and 362 names+party labels match the official workbook plus 10 declared write-ins. County offices, special county elections, local measures and exact address samples remain open. The official www1.maine.gov host resolves the main-host 403."
+      "remaining": "All190 federal/statewide/legislative races and362 names+party labels match the official workbook plus10 current declared write-ins. Another88 local races/108 names from regular, special and current write-in lists are imported. Washington County Treasurer has no named candidate in those sources and still needs sample confirmation; municipal contests, local measures, partial/registry address matching and live delivery remain open. The official www1.maine.gov host resolves the main-host403."
     }
   },
   "sampleBallots": [
@@ -298,6 +1543,405 @@
       "zip": "05401",
       "zipMappingVerified": false,
       "liveVerified": false
+    },
+    {
+      "place": "Goffstown",
+      "candidateContests": 13,
+      "candidacies": 35,
+      "measures": 2,
+      "url": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+      "zip": "03045",
+      "zipMappingVerified": false,
+      "liveVerified": false
+    },
+    {
+      "place": "Manchester Ward1",
+      "candidateContests": 13,
+      "candidacies": 34,
+      "measures": 2,
+      "url": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%201%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223",
+      "zip": null,
+      "zipMappingVerified": false,
+      "liveVerified": false
+    },
+    {
+      "zip": "10001",
+      "address": "315 West29St",
+      "officialCandidateContests": 11,
+      "officialCandidacies": 32,
+      "officialMeasures": 5,
+      "officialContests": 16,
+      "differences": [],
+      "races": [
+        {
+          "officialContest": "Governor/Lieutenant Governor Citywide",
+          "heldId": "ny-boe:2026-general:governor-lieutenant-governor",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "State Comptroller Citywide",
+          "heldId": "ny-boe:2026-general:comptroller",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "Attorney General Citywide",
+          "heldId": "ny-boe:2026-general:attorney-general",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "Surrogate New York",
+          "heldId": "ny-2026-new-york-county-surrogate",
+          "candidacies": 1
+        },
+        {
+          "officialContest": "Justice of the Supreme Court 1st Judicial District",
+          "heldId": "ny-2026-general:supreme-court-1",
+          "candidacies": 11
+        },
+        {
+          "officialContest": "Judge of the Civil Court - County New York",
+          "heldId": "ny-2026-new-york-county-civil-court",
+          "candidacies": 3
+        },
+        {
+          "officialContest": "Representative in Congress 12th Congressional District",
+          "heldId": "ny-boe:2026-general:cd:12",
+          "candidacies": 4
+        },
+        {
+          "officialContest": "State Senator 47th Senatorial District",
+          "heldId": "ny-boe:2026-general:sldu:47",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "Member of the City Council 3rd Council District",
+          "heldId": "ny-2026-new-york-city-council-3",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "Member of the Assembly 75th Assembly District",
+          "heldId": "ny-boe:2026-general:sldl:75",
+          "candidacies": 2
+        },
+        {
+          "officialContest": "Judge of the Civil Court - District 3rd Municipal Court District - New York",
+          "heldId": "ny-2026-new-york-county-municipal-court-3",
+          "candidacies": 1
+        },
+        {
+          "officialContest": "Proposal Number 1, a Question: Proposed Charter Amendment: Speed Up Process for Granting a Revocable Consent to Use Public Space",
+          "heldId": "ny-2026-new-york-city-charter-proposal-1",
+          "measure": true
+        },
+        {
+          "officialContest": "Proposal Number 2, a Question: Proposed Charter Amendment: Reduce City Contractor Paperwork; Require Regular Meetings of Procurement Policy Board",
+          "heldId": "ny-2026-new-york-city-charter-proposal-2",
+          "measure": true
+        },
+        {
+          "officialContest": "Proposal Number 3, a Question: Proposed Charter Amendment: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing",
+          "heldId": "ny-2026-new-york-city-charter-proposal-3",
+          "measure": true
+        },
+        {
+          "officialContest": "Proposal Number 4, a Question: Proposed Charter Amendment: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings",
+          "heldId": "ny-2026-new-york-city-charter-proposal-4",
+          "measure": true
+        },
+        {
+          "officialContest": "Proposal Number 5, a Question: Proposed Charter Amendment: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves",
+          "heldId": "ny-2026-new-york-city-charter-proposal-5",
+          "measure": true
+        }
+      ],
+      "officialDistrictsVerified": true,
+      "liveVerified": false,
+      "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+      "remaining": "Live delivery and local municipal-court/City-Council address resolution remain unverified. This one address does not prove every address in the ZIP."
+    },
+    {
+      "county": "kings",
+      "address": "209 Joralemon Street",
+      "zip": "11201",
+      "sourceFile": "nyc-kings-3.json",
+      "pollsiteFile": "nyc-kings-2.json",
+      "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+      "officialContests": 13,
+      "officialCandidateContests": 8,
+      "officialCandidacies": 22,
+      "officialMeasures": 5,
+      "races": [
+        {
+          "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:comptroller",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:attorney-general",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-general:supreme-court-2",
+          "officialCandidacies": 5
+        },
+        {
+          "contestId": "ny-2026-kings-county-civil-court",
+          "officialCandidacies": 4
+        },
+        {
+          "contestId": "ny-boe:2026-general:cd:7",
+          "officialCandidacies": 3
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldu:26",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldl:52",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "measure": true
+        }
+      ],
+      "differences": [],
+      "liveVerified": false,
+      "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+    },
+    {
+      "county": "queens",
+      "address": "90-27 Sutphin Boulevard",
+      "zip": "11435",
+      "sourceFile": "nyc-queens-3.json",
+      "pollsiteFile": "nyc-queens-2.json",
+      "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+      "officialContests": 14,
+      "officialCandidateContests": 9,
+      "officialCandidacies": 22,
+      "officialMeasures": 5,
+      "races": [
+        {
+          "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:comptroller",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:attorney-general",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-general:supreme-court-11",
+          "officialCandidacies": 5
+        },
+        {
+          "contestId": "ny-2026-queens-county-civil-court",
+          "officialCandidacies": 5
+        },
+        {
+          "contestId": "ny-boe:2026-general:cd:5",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldu:14",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldl:32",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-queens-county-municipal-court-4",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "measure": true
+        }
+      ],
+      "differences": [],
+      "liveVerified": false,
+      "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+    },
+    {
+      "county": "bronx",
+      "address": "1932 Arthur Avenue",
+      "zip": "10457",
+      "sourceFile": "nyc-bronx-3.json",
+      "pollsiteFile": "nyc-bronx-2.json",
+      "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+      "officialContests": 14,
+      "officialCandidateContests": 9,
+      "officialCandidacies": 17,
+      "officialMeasures": 5,
+      "races": [
+        {
+          "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:comptroller",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:attorney-general",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-bronx-county-surrogate",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-2026-general:supreme-court-12",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-boe:2026-general:cd:15",
+          "officialCandidacies": 5
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldu:32",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldl:79",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-bronx-county-municipal-court-2",
+          "officialCandidacies": 1
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "measure": true
+        }
+      ],
+      "differences": [],
+      "liveVerified": false,
+      "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
+    },
+    {
+      "county": "richmond",
+      "address": "1 Edgewater Street",
+      "zip": "10305",
+      "sourceFile": "nyc-richmond-3.json",
+      "pollsiteFile": "nyc-richmond-2.json",
+      "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+      "officialContests": 13,
+      "officialCandidateContests": 8,
+      "officialCandidacies": 16,
+      "officialMeasures": 5,
+      "races": [
+        {
+          "contestId": "ny-boe:2026-general:governor-lieutenant-governor",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:comptroller",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:attorney-general",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-general:supreme-court-13",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-richmond-county-civil-court",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:cd:11",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldu:23",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-boe:2026-general:sldl:63",
+          "officialCandidacies": 2
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "measure": true
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "measure": true
+        }
+      ],
+      "differences": [],
+      "liveVerified": false,
+      "remaining": "This official address proves its ballot style. ZIP-wide address resolution and live delivery remain unverified."
     }
   ]
 }

@@ -2965,6 +2965,310 @@
             "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
             "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office?"
           }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Clerk and Recorder",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Clerk and Recorder\nVote for One\nSteve Schleiker Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-treasurer",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Treasurer\nVote for One\nChuck Broerman Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Assessor\nVote for One\nDavid 'Muka' Traenkle Democratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Sheriff\nVote for One\nMateo Montoya-Collis Democratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-coroner",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Coroner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Coroner\nVote for One\nEmily Russell-Kinsley Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Hilary Gurney — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Hilary Gurney of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Dennis L. McGuire — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Dennis L. McGuire of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Amanda J. Philipps — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Amanda J. Philipps of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Erin Lynn Sokol — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Erin Lynn Sokol of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Gregory Robert Werner — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Gregory Robert Werner of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Sam Burney — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Sam Burney of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Marika Frady — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Marika Frady of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Meredith Patrick Cord — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Meredith Patrick Cord of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Ann M. Rotolo — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Ann M. Rotolo of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-ballot-issue-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Ballot Issue 1A",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — William B. Bain — Retention",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge William B. Bain of the 4th Judicial District be retained in office?"
+          }
         }
       ],
       "candidacies": [
@@ -8394,6 +8698,312 @@
             "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
             "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office?"
           }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder-steve-schleiker",
+          "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "familyName": "Steve Schleiker",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Clerk and Recorder\nVote for One\nSteve Schleiker Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder-tracie-woods",
+          "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "familyName": "Tracie Woods",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Clerk and Recorder\nVote for One\nTracie Woods Democratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-treasurer-chuck-broerman",
+          "contestId": "co-el_paso-general-2026-county-treasurer",
+          "familyName": "Chuck Broerman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Treasurer\nVote for One\nChuck Broerman Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor-david-muka-traenkle",
+          "contestId": "co-el_paso-general-2026-county-assessor",
+          "familyName": "David 'Muka' Traenkle",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Assessor\nVote for One\nDavid 'Muka' Traenkle Democratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor-becky-fuller",
+          "contestId": "co-el_paso-general-2026-county-assessor",
+          "familyName": "Becky Fuller",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Assessor\nVote for One\nBecky Fuller Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff-mateo-montoya-collis",
+          "contestId": "co-el_paso-general-2026-county-sheriff",
+          "familyName": "Mateo Montoya-Collis",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Sheriff\nVote for One\nMateo Montoya-Collis Democratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff-joe-roybal",
+          "contestId": "co-el_paso-general-2026-county-sheriff",
+          "familyName": "Joe Roybal",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Sheriff\nVote for One\nJoe Roybal Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-coroner-emily-russell-kinsley",
+          "contestId": "co-el_paso-general-2026-county-coroner",
+          "familyName": "Emily Russell-Kinsley",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Coroner\nVote for One\nEmily Russell-Kinsley Republican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention-hilary-gurney",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+          "familyName": "Hilary Gurney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Hilary Gurney of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention-dennis-l-mcguire",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+          "familyName": "Dennis L. McGuire",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Dennis L. McGuire of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention-amanda-j-philipps",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+          "familyName": "Amanda J. Philipps",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Amanda J. Philipps of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention-erin-lynn-sokol",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+          "familyName": "Erin Lynn Sokol",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Erin Lynn Sokol of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention-gregory-robert-werner",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+          "familyName": "Gregory Robert Werner",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Gregory Robert Werner of the 4th Judicial District be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention-sam-burney",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+          "familyName": "Sam Burney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Sam Burney of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention-marika-frady",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+          "familyName": "Marika Frady",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Marika Frady of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention-meredith-patrick-cord",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+          "familyName": "Meredith Patrick Cord",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Meredith Patrick Cord of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention-ann-m-rotolo",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+          "familyName": "Ann M. Rotolo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge Ann M. Rotolo of the El Paso County Court be retained in office?"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention-william-b-bain",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+          "familyName": "William B. Bain",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "Shall Judge William B. Bain of the 4th Judicial District be retained in office?"
+          }
         }
       ],
       "measures": [
@@ -8676,6 +9286,20 @@
             "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
             "quote": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?"
           }
+        },
+        {
+          "id": "co-el_paso-general-2026-ballot-issue-1a#question",
+          "contestId": "co-el_paso-general-2026-ballot-issue-1a",
+          "officialNumber": "1A",
+          "questionText": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?"
+          }
         }
       ],
       "absences": [],
@@ -8739,6 +9363,17 @@
           "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
           "sourceHashKind": "CAPTURE_BYTES",
           "writtenAt": "2026-10-20T23:03:13.867465+00:00"
+        },
+        {
+          "contestId": "co-el_paso-general-2026-ballot-issue-1a",
+          "whatItDoes": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+          "sourceHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:38:46.797378+00:00"
         }
       ],
       "candidateTickets": [
@@ -8945,13 +9580,29 @@
             "quote": "Governor/Lieutenant Governor\n(Vote for One Pair)\nGreg Lopez /\nTaralyn Romero"
           }
         }
+      ],
+      "heldContests": [
+        {
+          "id": "co-el_paso-general-2026-county-surveyor",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "title": "County Surveyor",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "quote": "County Surveyor\nVote for One\nThere are no candidates for this office."
+          },
+          "reason": "No candidate appears on the official sample ballot"
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex BA-01 official-source replay",
-    "reviewedAt": "2026-10-20T23:03:13.867465+00:00",
+    "reviewedBy": "Codex BA-01 official county source replay",
+    "reviewedAt": "2026-10-20T23:38:46.797378+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
@@ -9163,6 +9814,17 @@
         "publisher": "Denver Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Saved full source document in denver-sample-ballot.txt; code extracted the exact published office, name, party or ballot text.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "finalUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "httpStatus": 200,
+        "rawHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+        "retrievedAt": "2026-10-20T23:38:46.797378+00:00",
+        "publisher": "El Paso County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November3,2026 master sample linked by clerkandrecorder.elpasoco.com/elections/election-information/. Colorado SOS .gov CountyElectionOffices directory explicitly links that official clerk site. Custom PDF font recovered by codepoint+29; five county office cells,every local retention question,and county1A were visually checked against saved rendered PDF excerpts. Commissioner districts and municipalities are not widened to the county. Surveyor has no candidate and is held separately.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

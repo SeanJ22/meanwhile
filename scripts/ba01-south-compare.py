@@ -9,6 +9,7 @@ import hashlib
 import html
 import json
 import re
+import runpy
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -154,32 +155,43 @@ path, _meta = capture("ks-all", "html")
 source = [row for row in cells(path.read_text()) if len(row) == 25]
 b = ballot("KS")
 normalize = lambda value: re.sub(r"[^a-z0-9]", "", value.lower())
-held = {normalize(printed_name(row)) for row in b["candidacies"]}
-source_names = {normalize(row[0]) for row in source}
-assert held <= source_names
-report("KS", "all offices in official candidate table", len({tuple(row[1:5]) for row in source}), len(source),
-       len([row for row in b["contests"] if row["type"] != "MEASURE"]), len(b["candidacies"]),
-       missing_judicial_contests=98, missing_judicial_candidates=99)
-
-# Nebraska's first 92 non-NRD rows cover every statewide-list contest currently
-# held. Two additional statewide workers' compensation retention names are in
-# the separate retention publication, not this candidate PDF.
-path, _meta = capture("ne", "pdf")
-source = []
-for page in (EVIDENCE / "ne-2026.txt").read_text().split("\f"):
-    lines = page.splitlines()
-    header = next((line for line in lines if line.startswith("Office") and "Candidate Name" in line), "")
-    if not header:
+source_races = defaultdict(set)
+for row in source:
+    title = row[1].removeprefix("Member, ")
+    for value, label in [(row[2], "District"), (row[3], "Position"), (row[4], "Division")]:
+        if value != "0":
+            title += " " + label + " " + value
+    source_races[normalize(title)].add((normalize(row[0]), row[5]))
+held_races = {}
+for contest in b["contests"]:
+    if contest["type"] == "MEASURE":
         continue
-    name_start, name_end = header.index("Candidate Name") - 2, header.index("City of Residence")
-    for line in lines:
-        if line.startswith("For ") and not line.startswith("For Board of Directors"):
-            source.append(line[name_start:name_end].strip())
-b = ballot("NE")
-held = {printed_name(row) for row in b["candidacies"]}
-assert len(source) == 92 and set(source) <= held
-report("NE", "non-NRD statewide candidate list", 42, len(source), 42, len(source),
-       separately_held_retention_names=sorted(held - set(source)), missing_nrd_candidate_rows=64)
+    key = normalize(contest["title"])
+    assert key not in held_races
+    held_races[key] = {(normalize(printed_name(row)), row["partyLabel"] or "")
+                       for row in b["candidacies"] if row["contestId"] == contest["id"]}
+assert len(source_races) == 247 and len(source) == 362
+assert held_races == source_races
+report("KS", "all offices in official candidate table, compared race by race", len(source_races), len(source),
+       len(held_races), len(b["candidacies"]), missing_judicial_contests=0, missing_judicial_candidates=0,
+       judicial_added_contests=98, judicial_added_candidates=99, whole_county_memberships=78,
+       limitation="County/city/school/special-district contests and local measures remain open; no live ZIP completeness claimed.")
+
+# The full official table has 521 candidate rows. Core offices are only the
+# first 92; wrapped continuation headings are not candidate rows.
+ne_inventory=runpy.run_path(str(ROOT/'scripts/ba01-south-ne-rows.py'))['result']
+b=ballot('NE');held={printed_name(row) for row in b['candidacies']}
+core={row['name'] for row in ne_inventory['rows'] if row['category']=='CORE'}
+assert len(core)==92 and core<=held
+categories=ne_inventory['categories']
+report('NE','entire official statewide candidate table, including regional and local offices',
+       sum(value['officeDistrictTermTuples'] for value in categories.values()),ne_inventory['candidateRows'],42,92,
+       core_contests=42,core_candidates=92,separately_held_retention_names=sorted(held-core),
+       missing_nrd_contests=categories['NATURAL_RESOURCES']['officeDistrictTermTuples'],
+       missing_nrd_candidate_rows=categories['NATURAL_RESOURCES']['candidateRows'],
+       missing_other_regional_local_contests=categories['OTHER_REGIONAL_LOCAL']['officeDistrictTermTuples'],
+       missing_other_regional_local_candidate_rows=categories['OTHER_REGIONAL_LOCAL']['candidateRows'],
+       limitation='Exact NRD, community-college, utility/power, educational-service, learning-community and reclamation electorates remain open. No live ZIP completeness claimed.')
 
 # Mississippi's statewide composite explicitly prints every one of these races;
 # regional judicial/DA districts cannot be replaced by a statewide division.
@@ -191,9 +203,19 @@ for match in re.finditer(r"(?m)^For (.*?)\nVote for ONE\n(.*?)\nWrite-in", text,
     source.append(("For " + " ".join(match[1].splitlines()), names))
 b = ballot("MS")
 held = {printed_name(row) for row in b["candidacies"]}
-assert {name for _title, names in source[:7] for name, _party in names} == held
+assert {name for _title, names in source[:7] for name, _party in names} <= held
+source_titles = {title.removeprefix("For "): names for title, names in source[7:]}
+held_titles = {row["title"]: row for row in b["contests"] if row["id"].startswith("ms-ba01-2026-") and row["title"] in source_titles}
+assert len(held_titles) == 93
+for title, contest in held_titles.items():
+    assert title in source_titles
+    assert {(printed_name(row), row["partyLabel"]) for row in b["candidacies"] if row["contestId"] == contest["id"]} == set(source_titles[title])
 report("MS", "entire statewide sample including regional judicial/DA races", len(source), sum(len(row[1]) for row in source),
-       len(b["contests"]), len(b["candidacies"]), missing_regional_contests=126, missing_regional_candidates=166,
+       7 + len(held_titles), 22 + sum(len(source_titles[title]) for title in held_titles),
+       missing_regional_contests=len(source) - 7 - len(held_titles), missing_regional_candidates=sum(len(row[1]) for row in source) - 22 - sum(len(source_titles[title]) for title in held_titles),
+       judicial_added_contests=92, judicial_added_candidates=119, special_da_added_contests=1, special_da_added_candidates=5, whole_county_memberships=139,
+       local_added_contests=2, local_added_candidates=2, package_contests=len(b["contests"]), package_candidates=len(b["candidacies"]),
+       limitation="Other appellate county relations and partial-county judicial/DA electorates remain open; no live ZIP completeness claimed.",
        federal_legislative_contests=7, federal_legislative_candidates=22)
 
 # Louisiana's federal/legislative selector has exactly eight offices; the other
@@ -210,8 +232,8 @@ report("LA", "federal/legislative candidate inquiry", 8, len(source), 8, len(sou
        other_office_selectors=317, limitation="Candidate inquiry status does not prove every selected office prints on every ballot.")
 
 # Arkansas's official 2026 running-for-office handbook states 1 Senate, 4 House,
-# 7 executive, 17 state Senate and 100 state House races. The three county
-# notices/sample ballots give the names currently acquired, not all nominees.
+# 7 executive, 17 state Senate and 100 state House races. The public roster's
+# candidate modal supplies explicit general-ballot and withdrawal status.
 _path, _meta = capture("ar-handbook", "pdf")
 handbook = (EVIDENCE / "ar-handbook-2026.txt").read_text()
 assert "One of two positions will be on the ballot in 2026" in handbook
@@ -221,7 +243,28 @@ assert "Seventeen (17) State Senate positions will be on the ballot" in handbook
 assert "All one hundred (100) State House positions will be on the ballot" in handbook
 b = ballot("AR")
 candidate_contests = [row for row in b["contests"] if row["type"] == "CANDIDACY" and
-                      not any(part in row["ocdId"] for part in ["/place:", "/county:"])]
-report("AR", "regular federal/statewide/legislative offices in official handbook", 129, None,
-       len(candidate_contests), sum(row["contestId"] in {contest["id"] for contest in candidate_contests} for row in b["candidacies"]),
-       missing_contests=129 - len(candidate_contests), limitation="The complete statewide certified November candidate list remains unacquired; specials may add offices.")
+                      not any(part in row["ocdId"] for part in ["/place:", "/county:", "/circuit_court:"])]
+roster_path = EVIDENCE / "ar-core/sos-general-roster.json"
+roster_meta = json.loads((EVIDENCE / "ar-core/sos-general-roster.source.json").read_text())
+assert hashlib.sha256(roster_path.read_bytes()).hexdigest() == roster_meta["sha256"]
+roster = json.loads(roster_path.read_text())
+assert roster["recordsTotal"] == roster["recordsFiltered"] == len(roster["data"]) == 198
+for capture_row in json.loads((EVIDENCE / "ar-core/sos-general-details.json").read_text())["sources"]:
+    assert hashlib.sha256(capture_row["body"].encode()).hexdigest() == capture_row["sha256"]
+    detail = json.loads(capture_row["body"])
+    assert detail["ElecCyDesc"] == "General and Nonpartisan Judicial Runoff"
+    assert detail["OnGeneralBallot"] == "True" and detail["Withdrawn"] == "False"
+regular = [row for row in candidate_contests if "special election" not in row["title"].lower()]
+special = [row for row in candidate_contests if "special election" in row["title"].lower()]
+assert len(regular) == 129 and len(special) == 2
+regular_ids = {row["id"] for row in regular}
+special_ids = {row["id"] for row in special}
+regular_candidates = sum(row["contestId"] in regular_ids for row in b["candidacies"])
+special_candidates = sum(row["contestId"] in special_ids for row in b["candidacies"])
+assert regular_candidates == 186 and special_candidates == 4
+assert {int(row["ocdId"].rsplit(":", 1)[1]) for row in regular if "/sldl:" in row["ocdId"]} == set(range(1, 101))
+assert {int(row["ocdId"].rsplit(":", 1)[1]) for row in regular if "/sldu:" in row["ocdId"]} == {2, 7, 9, 10, 11, 13, 14, 15, 16, 21, 24, 27, 28, 30, 31, 32, 35}
+report("AR", "regular federal/statewide/legislative general-ballot roster", 129, 186,
+       len(regular), regular_candidates, missing_contests=0, special_contests=2, special_candidates=4,
+       matched_regional_contests=3, matched_regional_candidates=6, missing_regional_contests=1, missing_regional_candidates=2,
+       limitation="The District 11-West prosecutor electorate and full local coverage remain open; no live ZIP completeness claimed.")

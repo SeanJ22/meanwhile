@@ -54,10 +54,12 @@ export function addMaricopaCountywide() {
         "The public community-college governing-board page explicitly states two at-large positions represent the entire county. The official Maricopa County candidate list and Scottsdale general sample explicitly identify the district and its at-large race." :
         "Official November 3, 2026 general election sample and full qualified write-in list. Eight individual appeals retention decisions and both college at-large candidates are printed; no college, appeals or clerk write-in is certified on the complete list.",
       reviewOutcome: "SUPPORTED" };
-    const held = state.sourceReceipt.sources.find((row: { rawHash: string }) => row.rawHash === captured.rawHash);
+    const held = state.sourceReceipt.sources.find((row: { rawHash: string; retrievedAt: string; requestedUrl: string; finalUrl: string }) =>
+      row.rawHash === captured.rawHash && row.retrievedAt === captured.retrievedAt && [row.requestedUrl, row.finalUrl].includes(captured.sourceUrl));
     if (held) Object.assign(held, checked); else state.sourceReceipt.sources.push(checked);
   }
-  state.sourceReceipt.reviewedAt = new Date().toISOString();
+  state.sourceReceipt.reviewedAt = new Date(Math.max(Date.now(), ...state.sourceReceipt.sources.map((row: { retrievedAt: string }) =>
+    Date.parse(row.retrievedAt)).filter(Number.isFinite))).toISOString();
   writeFileSync(file, JSON.stringify(state, null, 2) + "\n");
   return { addedCandidateContests: 9, addedCandidacies: 10 };
 }

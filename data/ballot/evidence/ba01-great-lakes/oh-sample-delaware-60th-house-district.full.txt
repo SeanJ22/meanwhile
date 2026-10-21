@@ -1,0 +1,400 @@
+https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-delaware-60th-house-district.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:           e
+L1:                 This sample ballot was produced by the Delaware County Board of Elections web site.
+L2: 
+L3: 
+L4: 
+L5: 
+L6:       p l
+L7:    007/1 Berlin A
+L8: 
+L9: 
+L10:     Instructions to Voter
+L11:     • To vote, darken the oval ( ) to the left of your choice.
+L12:                                                               OFFICIAL GENERAL ELECTION BALLOT
+L13:                                                                        Delaware County                                         November 3, 2026
+L14: 
+L15: 
+L16: 
+L17: 
+L18:    m
+L19:     • Note the permitted number of choices directly below each office title.
+L20:     • Do not mark the ballot for more choices than allowed. If you do, that contest or question will not be counted.
+L21: 
+L22: 
+L23: 
+L24: 
+L25:  a
+L26:     • To vote for a write-in candidate: darken the oval ( ) to the left of the blank line and write in the candidate's name.
+L27: 
+L28: 
+L29: 
+L30: 
+L31:             e
+L32:     • Only votes cast for candidates who filed as write-in candidates can be counted.
+L33:     • Do not write in a candidate's name if their name is already printed on the ballot for that same contest.
+L34: 
+L35: 
+L36: 
+L37: 
+L38: S mpl
+L39:     • If you make a mistake or want to change your vote, return your ballot to an election official and get a new ballot.
+L40:     • You may ask for a new ballot up to two times.
+L41: 
+L42:     For Governor and                                         For Justice of the                  For State Representative
+L43:     Lieutenant Governor                                      Supreme Court                       (60th District)
+L44:     (To vote for Governor and Lieutenant Governor,           (Full term commencing 1-1-2027)     (Vote for not more than 1)
+L45:     darken the oval at the left of the joint candidates of   (Vote for not more than 1)
+L46:     your choice)                                                                                       Shelby Kimball
+L47:                                                                                                        Democratic
+L48:           Amy Acton and                                            Daniel R. Hawkins
+L49: 
+L50: 
+L51: 
+L52: 
+L53:    a
+L54:           David Pepper                                             Republican
+L55:                                                                                                        Brian Lorenz
+L56: 
+L57: 
+L58: 
+L59: 
+L60:               e
+L61:           Democratic                                                                                   Republican
+L62:                                                                    Marilyn Zayas
+L63: 
+L64: 
+L65: 
+L66: 
+L67:  S mpl
+L68:                                                                    Democratic
+L69:           Don Kissick and                                                                        For Judge of the Court of
+L70:           James L. Mills                                     For Justice of the                  Appeals (5th District)
+L71:           Libertarian                                                                            (Full term commencing 2-9-2027)
+L72:                                                              Supreme Court                       (Vote for not more than 1)
+L73:                                                              (Full term commencing 1-2-2027)
+L74:                                                              (Vote for not more than 1)
+L75:           Vivek Ramaswamy and                                                                          Matthew George
+L76:           Robert A. McColley                                                                           Republican
+L77:           Republican
+L78:                                                                    Jennifer Brunner
+L79:                                                                    Democratic
+L80:                                                                                                  For Judge of the Court of
+L81: 
+L82: 
+L83: 
+L84: 
+L85:      a          e
+L86:                                                                    Colleen O'Donnell             Common Pleas
+L87:           Write-in
+L88:                                                                                                  (General Division)
+L89: 
+L90: 
+L91: 
+L92: 
+L93:   S mpl
+L94:                                                                    Republican
+L95:     For Attorney General                                                                         (Full term commencing 2-9-2027)
+L96:     (Vote for not more than 1)                                                                   (Vote for not more than 1)
+L97:                                                              For U.S. Senator
+L98:                                                              (Unexpired term ending 1-3-2029)
+L99:           Keith Faber                                        (Vote for not more than 1)                Marianne T. Hemmeter
+L100:           Republican
+L101:                                                                    Greg Levy                     For Judge of the Court of
+L102:                                                                    Other-party candidate         Common Pleas
+L103:           John J. Kulewicz
+L104:           Democratic                                                                             (General Division)
+L105:                                                                    William B. Redpath            (Unexpired term ending 12-31-2030)
+L106:                                                                    Libertarian                   (Vote for not more than 1)
+L107: 
+L108: 
+L109: 
+L110: 
+L111:        a
+L112:     For Auditor of State
+L113: 
+L114: 
+L115: 
+L116: 
+L117:                   e
+L118:     (Vote for not more than 1)
+L119:                                                                    Sherrod Brown                       Nickolas K. McCoy
+L120: 
+L121: 
+L122: 
+L123: 
+L124:     S mpl
+L125:                                                                    Democratic
+L126:           Annette Blackwell                                                                            Emma Mirles-Jones
+L127:           Democratic
+L128:                                                                    Jon Husted                    For Judge of the Court of
+L129:                                                                    Republican                    Common Pleas
+L130:           Frank LaRose
+L131:           Republican                                                                             (Probate/Juvenile Division)
+L132:                                                                                                  (Full term commencing 2-9-2027)
+L133:                                                                    Write-in
+L134:                                                                                                  (Vote for not more than 1)
+L135:     For Secretary of State                                   For Representative to
+L136:     (Vote for not more than 1)
+L137:                                                              Congress (12th District)                  David Hejmanowski
+L138: 
+L139: 
+L140: 
+L141: 
+L142:          a
+L143:                                                              (Vote for not more than 1)
+L144: 
+L145: 
+L146: 
+L147: 
+L148:                     e
+L149:           Tom Pruss                                                Jerrad Christian              For County Commissioner
+L150:           Libertarian                                              Democratic                    (Full term commencing 1-1-2027)
+L151: 
+L152: 
+L153: 
+L154: 
+L155:       S mpl
+L156:                                                                                                  (Vote for not more than 1)
+L157: 
+L158:           Allison Russo                                            Troy Balderson                      Ryan Grissinger
+L159:           Democratic                                               Republican                          Democratic
+L160: 
+L161:           Robert Sprague                                     For State Senator                         Reneé Vaughan
+L162:           Republican                                         (19th District)                           Republican
+L163:                                                              (Vote for not more than 1)
+L164: 
+L165:     For Treasurer of State                                         Scott Charland                For County Auditor
+L166:     (Vote for not more than 1)                                     Democratic                    (Vote for not more than 1)
+L167: 
+L168: 
+L169: 
+L170: 
+L171:         S  a
+L172:           Jay Edwards
+L173:           Republican
+L174: 
+L175:           Seth Walsh
+L176:           Democratic
+L177: 
+L178: 
+L179: 
+L180: 
+L181:   Page 1 of 2
+L182:                                                                    Ryan Rivers
+L183:                                                                    Republican
+L184:                                                                                                        George Kaitsa
+L185:                                                                                                        Republican
+L186: 
+L187: 
+L188: 
+L189: 
+L190:                                                                                                                 BOARD MEMBERS
+L191: 
+L192: 
+L193: 
+L194: 
+L195:   Vote All Sides                                                                                                                      00701
+L196: 
+L197:           e
+L198:                  This sample ballot was produced by the Delaware County Board of Elections web site.
+L199: 
+L200: 
+L201: 
+L202: 
+L203:       p l
+L204:     OFFICIAL QUESTIONS AND
+L205:     ISSUES BALLOT
+L206:     Issue 3
+L207:                                                                        Proposed Sales and Use Tax
+L208:                                                                        Delaware County Regional Transit
+L209:                                                                        Authority
+L210:                                                                        A majority affirmative vote is necessary for passage.
+L211:                                                                                                                                Proposed Tax Levy (Renewal)
+L212:                                                                                                                                Berlin Township
+L213:                                                                                                                                A majority affirmative vote is necessary for passage.
+L214: 
+L215: 
+L216: 
+L217: 
+L218:    m
+L219:     Proposed Constitutional
+L220:                                                                        Shall a sales and use tax be levied by the              A renewal of a tax for the benefit of Berlin
+L221:     Amendment                                                          Delaware County Regional Transit Authority              Township for the purpose of providing and
+L222: 
+L223: 
+L224: 
+L225: 
+L226:  a
+L227:     TO REQUIRE VOTERS TO PRESENT                                       for the purpose of providing additional                 maintaining fire apparatus, mechanical
+L228: 
+L229: 
+L230: 
+L231: 
+L232:             e
+L233:     PHOTO IDENTIFICATION IN ORDER TO                                   general revenues for a transit authority,               resuscitators, underwater rescue and
+L234:     VOTE                                                               funding a regional transportation                       recovery equipment, or other fire equipment
+L235: 
+L236: 
+L237: 
+L238: 
+L239: S mpl
+L240:     Proposed by Joint Resolution of the General Assembly
+L241:     To enact Section 5 of Article V of the Constitution of the State   improvement project under section 5595.06               and appliances, buildings and sites therefor,
+L242:     of Ohio
+L243:     A majority yes vote is required for the adoption of Section 5.     of the Revised Code, or funding public                  or sources of water supply and materials
+L244:                                                                        infrastructure projects as described in                 therefor, for the establishment and
+L245:                                                                        section 306.353 of the Revised Code, and to             maintenance of lines of fire-alarm
+L246:     This proposed amendment would:                                     pay the expenses of administering such levy             communications, for the payment of
+L247:      • Require voters to present an approved                           at a rate not exceeding 0.2 per cent for a              firefighting companies or permanent, part-
+L248:     form of government-issued photo                                    continuing period of time?                              time, or volunteer firefighting, emergency
+L249:                                                                                                                                medical service, administrative, or
+L250:     identification in order to vote.
+L251:                                                                                                                                communications personnel to operate the
+L252:      • Allow state law to provide for an                                     For the Sales and Use Tax                         same, including the payment of any
+L253: 
+L254: 
+L255: 
+L256: 
+L257:    a
+L258:     alternative method of verifying a voter’s                                                                                  employer contributions required for such
+L259: 
+L260: 
+L261: 
+L262: 
+L263:               e
+L264:     identity for a voter who has a sincere                                                                                     personnel under section 145.48 or 742.34 of
+L265:                                                                              Against the Sales and Use                         the Revised Code, for the purchase of
+L266: 
+L267: 
+L268: 
+L269: 
+L270:  S mpl
+L271:     religious objection to being photographed
+L272:                                                                                                                                ambulance equipment, for the provision of
+L273:     and, therefore, does not possess an                                      Tax                                               ambulance, paramedic, or other emergency
+L274:     approved form of government-issued photo                                                                                   medical services operated by a fire
+L275:     identification.                                                    Proposed Tax Levy (Additional)                          department or firefighting company, or for
+L276:                                                                        Delaware County Board of                                the payment of other related costs that the
+L277:      • Require that voters who do not vote in
+L278:                                                                        Developmental Disabilities                              county auditor estimates will collect
+L279:     person provide an approved form of
+L280:                                                                        A majority affirmative vote is necessary for passage.   $1,409,427 annually, at a rate not exceeding
+L281:     government-issued photo identification,                                                                                    2.95 mills for each $1 of taxable value, which
+L282:     unless the law authorizes those persons to                         An additional tax for the benefit of Delaware           amounts to $103 for each $100,000 of the
+L283:     vote by providing a signature and at least                         County for the purpose of community                     county auditor's market value, for 5 years,
+L284: 
+L285: 
+L286: 
+L287: 
+L288:      a
+L289:     one other specified unique identifier.                             developmental disabilities programs and                 commencing in 2027, first due in calendar
+L290: 
+L291: 
+L292: 
+L293: 
+L294:                 e
+L295:                                                                        services pursuant to Chapter 5126. of the               year 2028.
+L296:      • Define approved forms of government-
+L297:                                                                        Revised Code, except that such levies shall
+L298: 
+L299: 
+L300: 
+L301: 
+L302:   S mpl
+L303:     issued photo identification as an unexpired                        be subject to the procedures and                             For the Tax Levy
+L304:     Ohio driver license or state identification                        requirements of section 5705.222 of the
+L305:     card; a United States passport or passport                         Revised Code that the county auditor                         Against the Tax Levy
+L306:     card; or a United States military identification                   estimates will collect $25,448,490 annually,
+L307:     card, Ohio National Guard identification                           at a rate not exceeding 1.8 mills for each $1
+L308:                                                                        of taxable value, which amounts to $63 for
+L309:     card, or United States Department of
+L310:                                                                        each $100,000 of the county auditor's
+L311:     Veterans Affairs identification card.                              market value, for 5 years, commencing in
+L312:     If approved, the amendment shall take effect                       2026, first due in calendar year 2027.
+L313:     immediately.
+L314: 
+L315: 
+L316: 
+L317: 
+L318:        a
+L319:     A "YES" vote means approval of the                                       For the Tax Levy
+L320: 
+L321: 
+L322: 
+L323: 
+L324:                   e
+L325:     amendment.
+L326:                                                                              Against the Tax Levy
+L327: 
+L328: 
+L329: 
+L330: 
+L331:     S mpl
+L332:     A "NO" vote means disapproval of the
+L333:     amendment.                                                         Proposed Tax Levy
+L334:     SHALL THE AMENDMENT BE                                             (Renewal and Increase)
+L335:     APPROVED?                                                          Delaware-Morrow Mental Health &
+L336:            YES                                                         Recovery Services Board
+L337:                                                                        Delaware and Morrow Counties
+L338:            NO                                                          A majority affirmative vote is necessary for passage.
+L339: 
+L340:     Proposed Tax Levy                                                  A renewal of 1.5 mills and an increase of 0.5
+L341:     (Renewal and Decrease)                                             mill for each $1 of taxable value to constitute
+L342: 
+L343: 
+L344: 
+L345: 
+L346:          a
+L347:     Delaware Area Career Center                                        a tax for the benefit of Delaware-Morrow
+L348: 
+L349: 
+L350: 
+L351: 
+L352:                     e
+L353:     Delaware, Franklin, Marion, Morrow,                                Mental Health & Recovery Services Board
+L354:     and Union Counties                                                 for the purpose of current expenses that the
+L355: 
+L356: 
+L357: 
+L358: 
+L359:       S mpl
+L360:     A majority affirmative vote is necessary for passage.              county auditor estimates will collect
+L361:                                                                        $23,005,505 annually, at a rate not
+L362:     A renewal of part of an existing levy, being a                     exceeding 2 mills for each $1 of taxable
+L363:     reduction of 0.95 mill for each $1 of taxable                      value, which amounts to $50 for each
+L364:     value, to constitute a tax for the benefit of                      $100,000 of the county auditor's market
+L365:     Delaware Area Career Center for the                                value, for 5 years, commencing in 2027, first
+L366:     purpose of improving, renovating,                                  due in calendar year 2028.
+L367:     remodeling, enlarging, furnishing and
+L368:     equipping school buildings and facilities at a
+L369:     rate not exceeding 0.40 mill and for the                                 For the Tax Levy
+L370:     purpose of current expenses at a rate not
+L371: 
+L372: 
+L373: 
+L374: 
+L375:            a
+L376:     exceeding 0.35 mill, that the county auditor                             Against the Tax Levy
+L377:     estimates will collect $5,773,576 annually, at
+L378:     a combined rate not exceeding 0.75 mill for
+L379: 
+L380: 
+L381: 
+L382: 
+L383:         S
+L384:     each $1 of taxable value, which amounts to
+L385:     $18 for each $100,000 of the county
+L386:     auditor's market value, for 10 years,
+L387:     commencing in 2026, first due in calendar
+L388:     year 2027.
+L389: 
+L390: 
+L391:            For the Tax Levy
+L392:            Against the Tax Levy
+L393: 
+L394: 
+L395:   Page 2 of 2
+L396:   Vote All Sides                                                                                                                                                    00701
+L397: 

@@ -180,6 +180,41 @@ def lackawanna_rows():
     return sample_rows("pa-lackawanna-2026-sample-ballots.pdf", True)
 
 
+def other_sample_rows(filename):
+    """Read complete district groups in official county sample-ballot columns."""
+    rows = []
+    column = lambda x: 0 if x < 220 else 1 if x < 400 else 2
+    for lines in pdf_lines(COMMON.SOURCES / filename):
+        offices = []
+        for x, y, text in lines:
+            match = re.fullmatch(r"(\d+)(?:ST|ND|RD|TH) (?:(Congressional|Senatorial|Legislative) )?District", text, re.I)
+            if not match:
+                continue
+            if match[2]:
+                kind = {"congressional": "cd", "senatorial": "sldu", "legislative": "sldl"}[match[2].lower()]
+            else:
+                preceding = " ".join(t for hx, hy, t in lines if column(hx) == column(x) and 0 < y-hy < 42).upper()
+                kind = "cd" if "CONGRESS" in preceding else "sldu" if "SENATOR" in preceding else "sldl" if "ASSEMBLY" in preceding else None
+                if not kind:
+                    raise ValueError((filename, text, preceding))
+            offices.append((column(x), y, kind + ":" + str(int(match[1])), text))
+        for x, y, party in lines:
+            if party.lower() not in {"democratic", "republican", "libertarian", "green", "independent", "independent party"}:
+                continue
+            preceding = [o for o in offices if o[0] == column(x) and o[1] < y]
+            if not preceding:
+                continue
+            _, _, district, office = max(preceding, key=lambda o: o[1])
+            names = [(ny, t) for nx, ny, t in lines if abs(nx-x) < 8 and 0 < y-ny < 20]
+            if not names:
+                raise ValueError((filename, district, party))
+            name = max(names)[1]
+            if "WRITE" in name.upper() or "VOTE FOR" in name.upper():
+                raise ValueError((filename, district, name))
+            rows.append({"division": district, "office": office, "name": name, "party": party, "voteFor": 1, "termYears": None})
+    return rows
+
+
 def montgomery_rows():
     rows = []
     text = COMMON.pdf_text(COMMON.SOURCES / "pa-montgomery-2026-candidates.pdf")
@@ -205,6 +240,34 @@ def juniata_rows():
     return rows
 
 
+def berks_sample_rows(filename):
+    rows = []
+    for lines in pdf_lines(COMMON.SOURCES / filename):
+        offices = []
+        for x, y, text in lines:
+            match = re.fullmatch(r"(\d+)(?:st|nd|rd|th) District", text)
+            if not match:
+                continue
+            context = " ".join(t for xx, yy, t in lines if abs(xx-x) < 85 and 0 < y-yy < 26)
+            kind = "cd" if "Congress" in context else "sldu" if "Senator" in context else "sldl" if "Assembly" in context else None
+            if not kind:
+                raise ValueError((filename, text, context))
+            offices.append((int(x >= 220), y, kind + ":" + match[1], context + " " + text))
+        for x, y, text in lines:
+            party = text.split("/")[0]
+            if party not in {"Democratic", "Republican", "Green", "Libertarian", "Independent"}:
+                continue
+            preceding = [o for o in offices if o[0] == int(x >= 220) and o[1] < y]
+            if not preceding:
+                continue
+            _, _, district, title = max(preceding, key=lambda o: o[1])
+            names = [(yy, t) for xx, yy, t in lines if abs(xx-x) < 4 and 0 < y-yy < 12]
+            if not names:
+                raise ValueError((filename, district, party))
+            rows.append({"division": district, "office": title, "name": max(names)[1], "party": party, "voteFor": 1, "termYears": None})
+    return rows
+
+
 SOURCES = [
     (bucks_rows, "pa-bucks-2026-official-candidates.pdf", "https://www.buckscounty.gov/DocumentCenter/View/27847/2026-General-Election---Official-Candidate-Listing---UPD-09-17-2026?bidId=", "Bucks County Board of Elections"),
     (chester_rows, "pa-chester-2026-official-candidates.pdf", "https://www.chesco.org/DocumentCenter/View/85852/CHESTER_2026-GENERAL_OFFICIAL-LIST-OF-CANDIDATES?bidId=", "Chester County Voter Services"),
@@ -217,6 +280,10 @@ SOURCES = [
     (montgomery_rows, "pa-montgomery-2026-candidates.pdf", "https://assets.montgomerycountypa.gov/files/2026-08/2026%20GE%20Candidate%20List%208-27%20HEADER.pdf", "Montgomery County Voter Services"),
     (juniata_rows, "pa-juniata-2026-candidates.pdf", "https://www.juniatacountypa.gov/DocumentCenter/View/452/2026-Election-Candidate-List-PDF", "Juniata County Board of Elections"),
 ]
+for filename, url in json.loads((COMMON.SOURCES / "pa-berks-selected-sample-urls.json").read_text()).items():
+    SOURCES.append((lambda filename=filename: berks_sample_rows(filename), filename, url, "Berks County Board of Elections"))
+for filename, source in json.loads((COMMON.SOURCES / "pa-additional-selected-sources.json").read_text()).items():
+    SOURCES.append((lambda filename=filename: other_sample_rows(filename), filename, source["url"], source["publisher"]))
 
 
 def local_questions():
@@ -236,6 +303,7 @@ def update_pa(at):
     before = (len(ballot["contests"]), len(ballot["candidacies"]))
     reports = []
     for parse, filename, url, publisher in SOURCES:
+        captured_at = COMMON.capture_time(data, url, COMMON.SOURCES / filename)
         rows = parse()
         groups = {}
         for row in rows:
@@ -244,11 +312,21 @@ def update_pa(at):
         for district, candidates in groups.items():
             # Preserve existing complete candidate lists and their stable person IDs.
             # County lists overlap districts; a different printed name is reviewed separately.
-            if any(c["ocdId"] == "ocd-division/country:us/state:pa/" + district and c["type"] == "CANDIDACY" for c in ballot["contests"]):
+            existing = next((c for c in ballot["contests"] if c["ocdId"] == "ocd-division/country:us/state:pa/" + district and c["type"] == "CANDIDACY"), None)
+            if existing:
+                if existing.get("provenance", {}).get("sourceUrl") == url:
+                    held = [c for c in ballot["candidacies"] if c["contestId"] == existing["id"]]
+                    expected = {(COMMON.words(c["name"]), c["party"]) for c in candidates}
+                    actual = {(COMMON.words(c["givenName"] + " " + c["familyName"]), c["partyLabel"]) for c in held}
+                    if actual != expected:
+                        raise ValueError(f"Replayed county candidate list changed for {district}: {actual ^ expected}")
+                    existing["provenance"].update(collectedAt=captured_at, verifiedAt=at)
+                    for candidate in held:
+                        candidate["provenance"].update(collectedAt=captured_at, verifiedAt=at)
                 continue
             contest_id = "pa-dos:pa-2026-general:" + district.replace(":", "-")
             first = candidates[0]
-            provenance = {"sourceUrl": url, "sourceOrg": publisher, "collectedAt": at, "verifiedAt": at,
+            provenance = {"sourceUrl": url, "sourceOrg": publisher, "collectedAt": captured_at, "verifiedAt": at,
                           "quote": first["office"]}
             kind, number = district.split(":")
             title = {"cd": "Representative in Congress", "sldu": "Senator in the General Assembly", "sldl": "Representative in the General Assembly"}[kind] + " – District " + number
@@ -268,16 +346,21 @@ def update_pa(at):
             "Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."), at)
         reports.append({"publisher": publisher, "officialDistrictContests": len(groups), "officialDistrictCandidates": len(rows),
                         "addedContests": added_contests, "addedCandidates": added_candidates})
-    for county, title, question, (_, _, url, publisher) in local_questions():
+    for county, title, question, (_, filename, url, publisher) in local_questions():
         contest_id = "pa-2026-" + county + "-home-rule-charter-amendment"
+        captured_at = COMMON.capture_time(data, url, COMMON.SOURCES / filename)
+        provenance = {"sourceUrl": url, "sourceOrg": publisher, "collectedAt": captured_at, "verifiedAt": at, "quote": question}
         if not any(c["id"] == contest_id for c in ballot["contests"]):
-            provenance = {"sourceUrl": url, "sourceOrg": publisher, "collectedAt": at, "verifiedAt": at, "quote": question}
             ballot["contests"].append({"id": contest_id, "electionId": ballot["election"]["id"],
                 "ocdId": "ocd-division/country:us/state:pa/county:" + county, "divisionVintage": "2026", "title": title,
                 "type": "MEASURE", "measureTextUrl": url, "voteFor": 1, "termYears": None, "scopeNote": None, "provenance": provenance})
             ballot["measures"].append({"id": contest_id + "#question", "contestId": contest_id,
                 "questionText": question, "officialStatement": None, "provenance": provenance})
         measure = next(m for m in ballot["measures"] if m["contestId"] == contest_id)
+        if measure["questionText"] != question:
+            raise ValueError(f"Replayed county question changed: {county}")
+        next(c for c in ballot["contests"] if c["id"] == contest_id)["provenance"] = provenance
+        measure["provenance"] = provenance
         if measure.get("officialNumber") is None:
             measure.pop("officialNumber", None)
     current_candidates = sum(c["type"] == "CANDIDACY" for c in ballot["contests"])
@@ -292,7 +375,13 @@ def update_pa(at):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true")
+    parser.add_argument("--refresh-sources", action="store_true", help="capture official HTTP sources with actual response times before replay")
     args = parser.parse_args()
+    if args.refresh_sources:
+        path = COMMON.ROOT / "data/ballot/2026-general/pa.json"
+        data = json.loads(path.read_text())
+        COMMON.capture_http_sources(data, [(filename, url, publisher) for _, filename, url, publisher in SOURCES])
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     path, data, report = update_pa(datetime.datetime.now(datetime.timezone.utc).isoformat())
     if args.write:
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")

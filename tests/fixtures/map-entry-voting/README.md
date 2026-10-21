@@ -45,7 +45,7 @@ camera animation is enabled. All individual readings are under 3 seconds.
 ## Connected production responses
 
 The six connected browser lookups used this branch's production-built map and
-real responses from `https://meanwhileusa.com/api/voting-sites`. A request bridge
+real responses from production `/api/voting-sites` (`PUBLIC_SITE_ORIGIN`). A request bridge
 relayed the public API's exact response through the managed session proxy; no
 fixture supplied any API facts. Other reader API reads also used production.
 The frontend, styles and map worker were served by the local production build.

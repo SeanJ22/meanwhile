@@ -1,7 +1,7 @@
 {
   "origin": "http://127.0.0.1:3000",
   "controlledResponses": false,
-  "apiOrigin": "https://meanwhileusa.com",
+  "apiOrigin": "PUBLIC_SITE_ORIGIN",
   "transport": "Real public API requests through the managed session proxy; no response fixtures",
   "runId": "vs03-connected@2026-10-21T04:40:42.919Z",
   "results": [

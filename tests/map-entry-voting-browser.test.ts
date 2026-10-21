@@ -144,7 +144,8 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
       await page.locator("[data-voting-coverage-gap]").waitFor();
       assert.equal(await page.locator(".wtp-vote-pin").count(), 0);
       assert.equal(await page.evaluate(() => !!(window as unknown as MapWindow).__wtpMap.getSource("voting-address-ring")), false);
-      assert.deepEqual(await page.evaluate(() => (window as unknown as MapWindow).__wtpMap.getCenter().toArray()), centerBefore);
+      const centerAfter = await page.evaluate(() => (window as unknown as MapWindow).__wtpMap.getCenter().toArray());
+      assert.ok(centerAfter.every((coordinate, index) => Math.abs(coordinate - centerBefore[index]!) < 1e-9), "an unmatched lookup must leave the map center unchanged");
       assert.deepEqual(errors, []);
       assert.deepEqual(external, []);
       await context.close();

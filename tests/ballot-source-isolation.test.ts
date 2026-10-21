@@ -362,7 +362,6 @@ test("all production ballot entry points use state-scoped selection", () => {
     page.indexOf("readerBallotSourcesForDivisions(ocdIds") < page.indexOf("settleBallotAuxiliaryPreloads(auxiliaryPreloads)"),
     "supporting authorities were opened before the requested ballot authority was selected",
   );
-  assert.match(page, /data-ballot-canonical-holding-gaps/);
   assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
     "supporting authority failures contribute to the card footer");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);

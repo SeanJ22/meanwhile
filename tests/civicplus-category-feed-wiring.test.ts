@@ -73,6 +73,16 @@ function meetingsOf(row: MeetingBodyCrosswalkRow, text: string) {
     .filter((m) => m.bodyId === row.bodyId);
 }
 
+test("a government's saved calendar index can identify its feed without being a meeting route itself", async () => {
+  const walked = await walk(SITE());
+  const attempt = { ...walked.attempt, found: walked.attempt.found.filter(find => find.url !== INDEX_URL),
+    leads: walked.attempt.leads.filter(find => find.url !== INDEX_URL) };
+  const result = review(attempt, id => walked.bodies.get(id) ?? null);
+  assert.ok(result.accepted.some(({ row }) => row.route === BOS_FEED), JSON.stringify(result.held));
+  const missing = { ...attempt, steps: attempt.steps.filter(step => step.url !== INDEX_URL) };
+  assert.ok(!review(missing, id => walked.bodies.get(id) ?? null).accepted.some(({ row }) => row.route === BOS_FEED), "a page the worker never saved cannot be its feed's evidence");
+});
+
 test("COCHISE WIRES: the Board of Supervisors' category feed becomes its whole-feed row, cites the index that names it, and the adapter reads its sittings at their MST times", async () => {
   const walked = await walk(SITE());
   const result = review(walked.attempt, (id) => walked.bodies.get(id) ?? null);

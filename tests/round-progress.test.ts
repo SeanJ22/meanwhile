@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { RUNTIME_NO_PROGRESS_MS, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
 import { answerStallProbes, roundProgressReporter, RESEARCH_STALL_PROBE, STALL_REPORT_PREFIX } from "../lib/control-plane/scheduler/round-progress.ts";
 import { runLeaseWorkerProcesses } from "../lib/control-plane/workers/process-pool.ts";
+import { CENSUS_LANE_BUDGET_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);
@@ -111,8 +112,23 @@ test("the round wires its long phases to the reporter and ends a hung worker bef
   assert.match(round, /answerStallProbes\(\{ describe: \(\) => describePending\(pending\.snapshot\(\)\) \}\)/);
   for (const label of ["dispatch", "worker wave"]) assert.ok(round.includes(`roundProgress.note("${label}")`), label);
   assert.ok(!round.includes('roundProgress.note("meetings walks")'));
-  const census = readFileSync(new URL("../scripts/platform-census-runner.mts", import.meta.url), "utf8");
-  assert.match(census, /CENSUS_PROGRESS/);
+  const census = readFileSync(new URL("../lib/control-plane/discovery/platform-census-runtime.ts", import.meta.url), "utf8");
+  const watchdog = readFileSync(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url), "utf8");
+  assert.match(watchdog, /CENSUS_PROGRESS/);
+  assert.match(census, /platformCensusWatchdog\(deadline\)/);
+  for (const label of ["public page", "government", "control read", "registration read"]) assert.ok(census.includes(`progress.note("${label}")`), label);
+  assert.ok(CENSUS_LANE_BUDGET_MS - 60_000 < RUNTIME_NO_PROGRESS_MS);
   assert.match(round, /childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000/);
   assert.ok(RUNTIME_NO_PROGRESS_MS - 60_000 > 8 * 60_000, "a hunter's own 8-minute wall still ends it first");
+});
+
+test("a census blocked on an await is ended by its own wall before the parent limit", async () => {
+  const watchdog = JSON.stringify(new URL("../lib/control-plane/discovery/platform-census-watchdog.ts", import.meta.url).href);
+  const [result] = await runRuntimeChildren([{ id: "platform-census", executable: process.execPath,
+    args: ["--experimental-strip-types", "--input-type=module", "-e", `import { platformCensusWatchdog } from ${watchdog};
+      platformCensusWatchdog(Date.now() + 100); setInterval(() => {}, 1000); await new Promise(() => {});`] }],
+    { cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 3000 });
+  assert.equal(result!.termination, "EXITED");
+  assert.equal(result!.status, 1);
+  assert.match(result!.stderr, /CENSUS_PASS_TIMEOUT/);
 });

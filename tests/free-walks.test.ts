@@ -153,8 +153,8 @@ test("THE RUNNER IS WIRED: it reads the walk before dispatch", () => {
   const read = runner.indexOf("readFreeDiscoveryWalks(repos, freeWalkSubjects)");
   const dispatch = runner.indexOf("const cycle = await runCycle({");
   assert.ok(read > 0 && dispatch > read, "the reading is taken before dispatch");
-  const census = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
-  assert.match(census, /readPlatformCensusNeeds\(state, null, \{ repos, root \}/);
-  assert.match(census, /runCensusState\(\{ repos, state, needs: reading.needs/);
+  const census = readFileSync(join(ROOT, "lib/control-plane/discovery/platform-census-runtime.ts"), "utf8");
+  assert.match(census, /REGISTRATION_TARGETS.map/);
+  assert.match(census, /runPlatformCensusPass\(/);
   assert.match(runner, /const dispatchedDiscoveryIds = sync\.all\.filter\(row => row\.materializedBy === OWNER_DISPATCH\)/, "free standing inventory is never mistaken for an explicit paid dispatch");
 });

@@ -506,22 +506,22 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   );
 });
 
-test("M80: the promise changed in the same commit, on both surfaces", () => {
+test("M80: address routing is disclosed truthfully on the collection page", () => {
   const prompt = readFileSync(
     join(process.cwd(), "components", "address", "address-prompt.tsx"),
     "utf8",
   );
 
   // The unkeepable never-store promise is gone from the reader-facing copy.
-  const promptCopy = prompt.slice(prompt.indexOf("We ask for your street"));
   assert.ok(
-    !/never send it to us/.test(promptCopy),
+    !/never send it to us/.test(prompt),
     "the narrowing prompt still makes the unkeepable promise",
   );
 
-  // And the keepable one is on the prompt (what the site collects is stated
-  // once, on /transparency, so the page no longer describes the address).
-  for (const [name, page] of [["narrowing prompt", prompt]] as const) {
+  assert.doesNotMatch(prompt, /passes through our server|Census Bureau|address-prompt-promise/,
+    "privacy details belong on the collection page");
+  const collection = readFileSync(join(process.cwd(), "app", "transparency", "page.tsx"), "utf8");
+  for (const [name, page] of [["collection page", collection]] as const) {
     assert.ok(
       /passes through our server/.test(page),
       `${name} does not say the address passes through our server`,

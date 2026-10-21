@@ -62,7 +62,7 @@ const agendaDocumentLinksSql = (owned = "true") => `coalesce((
   ) links),'[]'::jsonb)`;
 
 /** The place indexes lead to bodies; live facts and canonical source calendars are read together. */
-export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED (
+const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_places AS MATERIALIZED (
   SELECT unnest($2::text[]) AS id
   UNION SELECT split_part(id,'#',1) FROM unnest($3::text[]) body(id) WHERE $9::boolean AND id LIKE 'ocd-division/%'
   UNION SELECT place_id FROM entity_place WHERE $9::boolean AND entity_id=ANY($3::text[])
@@ -337,10 +337,10 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
-SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
+SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
   coalesce((SELECT jsonb_agg(value ORDER BY text_id) FROM agenda_texts),'[]'::jsonb) AS agenda_texts,
-  (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') AS everyday_routing,
-  coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') END AS everyday_routing,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(jsonb_build_object(
       'bodyId',w.value#>'{autonomousPlan,publication,bodyId}','contractId',w.value#>'{autonomousPlan,publication,contractId}',
       'at',w.value#>'{publicationOutcome,at}','status',w.value#>'{publicationOutcome,status}','code',w.value#>'{publicationOutcome,code}',
       'sourceUrl',CASE WHEN w.value#>>'{autonomousPlan,contract,schemaVersion}'='2' THEN w.value#>'{autonomousPlan,contract,sourceScope,canonicalUrls,0}' ELSE NULL END,
@@ -348,8 +348,8 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
         jsonb_array_length(w.value#>'{publicationOutcome,acceptedRecordIds}'),jsonb_array_length(w.value#>'{publicationOutcome,bodyIds}')),
       'versionId',w.value#>'{publicationOutcome,versionId}') ORDER BY w.value#>>'{publicationOutcome,at}' DESC,w.id)
     FROM cp_work_items w WHERE $8::text[] IS NULL AND (w.value#>>'{autonomousPlan,publication,bodyId}')=ANY(ARRAY(SELECT id FROM bodies))
-      AND w.value ? 'publicationOutcome'),'[]'::jsonb) AS publication_attempts,
-  (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
+      AND w.value ? 'publicationOutcome'),'[]'::jsonb) ELSE '[]'::jsonb END AS publication_attempts,
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
       'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(b.item)) FROM runtime_bodies b),'[]'::jsonb),
       'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(d.item)) FROM runtime_divisions d WHERE d.value->>'ocdId' IN (SELECT id FROM runtime_division_ids)),'[]'::jsonb)),
@@ -367,12 +367,12 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
       'rosterPhotos',CASE WHEN $8::text[] IS NULL THEN coalesce((SELECT jsonb_object_agg(photo.key,reader_payload_value(photo.value))
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
-    FROM runtime_root root CROSS JOIN runtime_registry r) AS registry,
-  coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+    FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
-    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) AS governments,
-  coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
-    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places))),'[]'::jsonb) AS divisions,
+    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places))),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('division',coalesce(
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
@@ -386,6 +386,9 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
   coalesce((SELECT jsonb_agg(item) FROM archived_documents),'[]'::jsonb) AS archived_documents,
   coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links,
   coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts`;
+
+export const PLACE_PACKAGE_SQL = placePackageSql(false);
+const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
 
 type Row = Record<string, unknown>;
 export type AgendaDocumentLink = Pick<MeetingsSnapshot["agendaDocuments"][number], "meetingId" | "documentUrl">;
@@ -405,6 +408,8 @@ export interface PlacePackage {
 }
 
 type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean;
+  /** Ballot reads consume only body facts; their registry and directory come from the state package. */
+  readonly bodyFactsOnly?: boolean;
   /** Load these sittings and their merge/identity/URL context; ordinary body reads retain the complete calendar. */
   readonly meetingIds?: readonly string[];
   readonly neighbors?: boolean };
@@ -432,7 +437,7 @@ export function readPlacePackageHttp(input: PlaceInput): Promise<PlacePackage> {
 
 function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<PlacePackage> {
   const selected = { state: input.state.toUpperCase(), divisionIds: [...new Set(input.divisionIds)].sort(), bodyIds: [...new Set(input.bodyIds ?? [])].sort(),
-    allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false,
+    allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false, bodyFactsOnly: input.bodyFactsOnly ?? false,
     meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false };
   const key = JSON.stringify(selected), selection = currentReaderSelection();
   let request = selection ? requests.get(selection) : undefined;
@@ -452,7 +457,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   const state = input.state.toUpperCase();
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
-  const [row] = await query(PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], stateRoot,
+  const [row] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], stateRoot,
     input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false]);
   if (!row) throw new Error("PLACE_PACKAGE_READ_FAILED");
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;

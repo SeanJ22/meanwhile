@@ -47,7 +47,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
-    const local = readPlacePackage({ state, divisionIds: rawEntry?.ids ?? selection.divisions ?? [],
+    const local = readPlacePackage({ state, divisionIds: rawEntry?.ids ?? selection.divisions ?? [], bodyFactsOnly: true,
       bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
     const [held, facts] = await Promise.all([read, local]);
     return withStateRegistryFacts(held.registry, facts.bodies);

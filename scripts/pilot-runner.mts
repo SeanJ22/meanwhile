@@ -57,10 +57,11 @@ import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
   installNeonRequestDeadline,
+  neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
-import { receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
@@ -112,6 +113,7 @@ import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/prom
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
+import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 
 installConnectAttemptWindow();
@@ -976,10 +978,10 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
   }
   const directory = stagedReleaseDirectory(ROOT, targetSha);
 
-  if (!await applyRuntimeContracts(targetSha, directory)) return "DRAIN";
   const previous = RUNNING_CODE_SHA;
   CODE_ROOT = directory;
   RUNNING_CODE_SHA = targetSha;
+  runtimeContracts.request(targetSha, directory);
   console.log(`  release ${targetSha.slice(0, 8)} switched without a drain: new children start from it; children already running finish on ${previous?.slice(0, 8) ?? "the code they loaded"}; partition admissions continued`);
   return "SWITCHED";
 }
@@ -1052,8 +1054,9 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
   if (provider !== "postgres") return;
 
   const abort = nativeAbortLine(currentCycleErrors);
+  const failedRead = neonReadFailureLine(currentCycleErrors);
   const tail = currentCycleErrors.split("\n").filter(line => line && line.trim() !== abort).slice(-8).join("\n");
-  let lastError = [abort?.slice(0, 400), tail.slice(-1600)].filter(Boolean).join("\n") || null;
+  let lastError = [abort?.slice(0, 400), failedRead, tail.slice(-1600)].filter(Boolean).join("\n").slice(0, 2000) || null;
   if (lastError) {
     for (const [name, value] of Object.entries(process.env)) {
       if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) lastError = lastError.split(value).join("[private]");
@@ -1422,10 +1425,10 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   }
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
-    if (!await applyRuntimeContracts(RUNNING_CODE_SHA)) return 2;
     runtimeAdmissionsHeld = false;
     startStandingRuntimeClock();
     startAdminCopyClock();
+    runtimeContracts.request(RUNNING_CODE_SHA, CODE_ROOT);
     return null;
   }
 
@@ -1474,25 +1477,39 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     await persistRuntimeBoundaryFailure(applied, startedAt);
     return 2;
   }
-  if (!await applyRuntimeContracts(final.targetSha)) return 2;
   await discardStagedReleases(ROOT).catch(() => undefined);
   console.log(`  ${applied.detail}; exiting for the stable Scheduled Task launcher to relaunch this exact code`);
   return 0;
 }
 
-const runtimeContractsApplied = new Set<string>();
-async function applyRuntimeContracts(sha: string | null, cwd: string = CODE_ROOT): Promise<boolean> {
-  if (sha === null || runtimeContractsApplied.has(sha)) return sha !== null;
+let runtimeContractChild: ChildProcess | null = null;
+let runtimeContractsStopping = false;
+const runtimeContracts = runtimeContractRetry({
+  run: applyRuntimeContracts,
+  cancelActive: async () => { runtimeContractsStopping = true; if (runtimeContractChild) await endOwnedProcessTree(runtimeContractChild); },
+  onError: async (error, sha) => {
+    if (runtimeContractsStopping) return;
+    console.error(`  contract migration attempt failed: ${error instanceof Error ? error.message : String(error)}; collection continues`);
+    await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
+      "Production cleanup failed; collection continues and cleanup will retry automatically.", sha), new Date().toISOString(),
+      { taskId: "production-contract-migrations", headline: "PRODUCTION CLEANUP NEEDS ANOTHER TRY" });
+  },
+});
+async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+    deadlineMs: Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS,
+    onStarted: (_id, child) => { runtimeContractChild = child; },
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
-  });
-  if (result?.status === 0) { runtimeContractsApplied.add(sha); return true; }
+  }).finally(() => { runtimeContractChild = null; });
+  if (result?.status === 0) return true;
+  if (runtimeContractsStopping) return false;
   await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
-    "production contract migrations did not succeed; admissions remain held; see Admin's existing migration outcome", sha), new Date().toISOString());
+    "Production cleanup failed; collection continues and cleanup will retry automatically.", sha), new Date().toISOString(),
+    { taskId: "production-contract-migrations", headline: "PRODUCTION CLEANUP NEEDS ANOTHER TRY" });
   return false;
 }
 
@@ -1942,6 +1959,7 @@ while (cycle < CYCLES) {
 
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
+await runtimeContracts.stop();
 if (!standingDrainFailed) {
   try {
     await waitForRuntimeQuiescence(async () => {

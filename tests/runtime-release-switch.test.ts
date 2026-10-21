@@ -117,6 +117,7 @@ test("the runner starts every child from the switched checkout, behind its switc
   assert.doesNotMatch(runner, /\bcwd: ROOT\b/, "no child starts from the parent's checkout by name");
   assert.match(runner, /const RELEASE_QUICK_SWITCH = process\.env\.WTP_RELEASE_QUICK_SWITCH === "1";/);
   assert.match(runner, /if \(!RELEASE_QUICK_SWITCH \|\| PARENT_CODE_SHA === null\) return "DRAIN";/);
-  assert.match(runner, /applyRuntimeContracts\(targetSha, directory\)/, "contract migrations run at the switch, from the new code");
+  assert.match(runner, /CODE_ROOT = directory;\s*RUNNING_CODE_SHA = targetSha;\s*runtimeContracts.request\(targetSha, directory\);/,
+    "contract migrations run independently from the switched code without delaying admission");
   assert.match(runner, /researchCycleChild\.send\(\{ kind: "RUNTIME_RELEASE_DRAIN" \}/, "the drain path stays for a parent change");
 });

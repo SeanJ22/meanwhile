@@ -15,7 +15,8 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { legacyArtifactActivityRepositories, readLegacyActivityCaptures } from "../lib/control-plane/workers/activity.ts";
 import { persistVerifiedPublicationAnchors, readStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
@@ -128,7 +129,7 @@ import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadOperationalReferenceState } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
@@ -296,9 +297,6 @@ process.on("message", message => {
     console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
-
-const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
-  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 
 const ROOT = process.cwd();
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs", planningStateArg(process.argv.slice(2)) ?? "round");
@@ -491,6 +489,10 @@ if(STATE===null) {
 }
 
 const PLANNING_STATE=STATE;
+// The round supervisor only forks state planners and combines their small
+// summaries. The planner doing the work owns the research reservation.
+const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 await withReaderRoute(`control-planning:${PLANNING_STATE}`, () => withReaderSelection({keys:new Set([`state:${PLANNING_STATE.toUpperCase()}`])}, async () => {
 
 installNeonCircuitBreaker(ROOT, nowIso);
@@ -545,24 +547,9 @@ const startupReadRetry = {
     ),
 };
 
-let legacyOperationalReference:Awaited<ReturnType<typeof preloadOperationalReferenceBundle>>|null=null;
-let azOperationalReference:Awaited<ReturnType<typeof preloadAzOperationalReferenceBundle>>|null=null;
-if (PLANNING_STATE !== "system") {
-[legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
-  () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-}), retryStartupRead(
-  () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-})]);
-if (!legacyOperationalReference && !azOperationalReference) throw new Error(
-  "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
-);
-}
+const operationalReference = PLANNING_STATE === "system" ? null : await pending.step("startup:operational-reference", () => retryStartupRead(
+  () => preloadOperationalReferenceState(PLANNING_STATE), () => null, startupReadRetry,
+));
 
 {
   const doors = await refreshDoorsForPass(repos.doors);
@@ -725,7 +712,7 @@ const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 
 const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
   ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
+    operationalReference?.versionId ?? null) });
 const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
 
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
@@ -2160,7 +2147,10 @@ async function runAutonomousWave() {
   await refreshPlaceOrder();
   const fleet = await makeAutonomousFleet();
 
-  const held = await legacyHeldWorkOwed(ROOT, fleet) ? await planHeldWorkerFleet(ROOT, fleet, true) : [];
+  const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
+    () => readLegacyActivityCaptures(PLANNING_STATE));
+  const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : null;
+  const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && (item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject)),
     onSelectionSnapshot: items => { for (const item of items) if(item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject))workItemsById.set(item.id, item); },

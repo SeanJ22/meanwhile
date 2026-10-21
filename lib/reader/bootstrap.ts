@@ -71,7 +71,7 @@ const p=d.locations[zip]??null;
 if(p===null){if(window.__readerStart===start)start.expires=0;return null}
 if(!p||typeof p!=="object")throw new Error("Invalid ZIP location response");
 start.value=p;
-if(!previous&&window.__readerStart===start&&window.__readerBoundary){const reader=window.__readerBoundary;reader.request({kind:"prefetch",url:reader.url,zip:p.zip,lat:p.lat,lng:p.lng}).catch(()=>{})}
+if(!previous&&window.__readerStart===start&&window.__readerBoundary){const reader=window.__readerBoundary;reader.request({kind:"prefetch",url:reader.url,zip:p.zip,lat:p.lat,lng:p.lng,width:innerWidth,height:innerHeight}).catch(()=>{})}
 if(p.postal?.state)requests["/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip]=state;
 requests["/api/meetings?lat="+p.lat+"&lng="+p.lng+"&zip="+zip]=place;
 return p}).catch(error=>{if(window.__readerStart===start)start.expires=0;throw error});

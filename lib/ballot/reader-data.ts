@@ -80,13 +80,13 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
     return value;
   };
   const districtRead = entry().then(async value => {
-    await Promise.all(packages.map(async ({ read }) => primeStateDistrictPointers(await read)));
+    const pointersRead = Promise.all(packages.map(async ({ read }) => primeStateDistrictPointers(await read)));
     const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
       { recordClass: "CURATED_READER_RECORD" as const, scope: campaignFinanceStateScope(id) },
     ]);
     const missing = extra.filter(entry => !readerCanonicalEntry(entry.recordClass, entry.scope));
-    if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
+    await Promise.all([pointersRead, missing.length ? primeReaderCanonicalStore(missing, readCanonicalShelf(missing)) : Promise.resolve()]);
   });
   const canonicalRead = Promise.all([baseRead, districtRead]).then(() => undefined);
   const registryRead = Promise.all(places).then(values => {
@@ -124,8 +124,9 @@ export function ballotCandidateDetailsStatement(state: string, keys: readonly st
   const selectedArray = (value: string, field: string) => `coalesce((SELECT jsonb_agg(reader_payload_value(r.item) ORDER BY r.ordinal_index)
     FROM reader_payload_members(${value}->'${field}') r WHERE reader_payload_node(r.item)->>'candidateKey'=ANY($2::text[])
       OR reader_payload_node(r.item)->>'candidacyId'=ANY($2::text[])), '[]'::jsonb)`;
-  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,reader_payload_value(r.value))
-    FROM jsonb_each(reader_payload_node(${value})) r WHERE r.key=ANY($2::text[])), '{}'::jsonb)`;
+  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,reader_payload_value(object.value->r.key))
+    FROM (SELECT reader_payload_node(${value}) AS value) object,
+      (SELECT DISTINCT unnest($2::text[]) AS key) r WHERE object.value ? r.key), '{}'::jsonb)`;
   return {pointers,params:[pointers.map(pointer=>`${pointer.recordClass}:${pointer.scope}`),keys],text:`WITH pointer AS MATERIALIZED (
     ${selectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}
   ), roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published)

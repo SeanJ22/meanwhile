@@ -4,11 +4,11 @@ import { initialZoomForZip } from "./initial-zoom.ts";
 export type BoundaryRequest = { url: string } & (
   | { kind: "header" }
   | { kind: "tile"; z: number; x: number; y: number }
-  | { kind: "prefetch"; zip: string; lat: number; lng: number }
+  | { kind: "prefetch"; zip: string; lat: number; lng: number; width: number; height: number }
 );
 type Archive = Pick<PMTiles, "getHeader" | "getZxy">;
 
-/** Two bounded center tiles cover ZIP arrival and its automatic wider fit, off the UI thread. */
+/** The bounded arriving viewport and its wider fit load off the UI thread. */
 export function createBoundaryReader(create: (url: string) => Archive = url => new PMTiles(url)) {
   const archives = new Map<string, Archive>();
   const early = new Map<string, { controller: AbortController; value: Promise<RangeResponse | undefined> }>();
@@ -20,15 +20,23 @@ export function createBoundaryReader(create: (url: string) => Archive = url => n
     if (request.kind === "prefetch") {
       const header = await archive.getHeader();
       const zoom = Math.min(header.maxZoom, Math.max(header.minZoom, Math.floor(initialZoomForZip(request.zip))));
-      const place = `${request.url}:${request.zip}:${request.lat}:${request.lng}`;
+      const width = Math.min(2048, Math.max(1, request.width)), height = Math.min(2048, Math.max(1, request.height));
+      const place = `${request.url}:${request.zip}:${request.lat}:${request.lng}:${width}:${height}`;
       if (prefetchedPlace !== place) {
         for (const held of early.values()) held.controller.abort();
         early.clear(); prefetchedPlace = place;
       }
-      const reads = [...new Set([zoom, Math.max(header.minZoom,zoom-1)])].map(z=>{
+      const reads = [...new Set([zoom, Math.max(header.minZoom,zoom-1)])].flatMap(z=>{
       const scale = 2 ** z, lat = Math.max(-85.05112878, Math.min(85.05112878, request.lat)) * Math.PI / 180;
-      const x = Math.min(scale - 1, Math.max(0, Math.floor((request.lng + 180) / 360 * scale)));
-      const y = Math.min(scale - 1, Math.max(0, Math.floor((1 - Math.asinh(Math.tan(lat)) / Math.PI) / 2 * scale)));
+      const centerX = (request.lng + 180) / 360 * scale, centerY = (1 - Math.asinh(Math.tan(lat)) / Math.PI) / 2 * scale;
+      const tiles = new Set<string>();
+      for (let x=Math.floor(centerX-width/1024); x<=Math.floor(centerX+width/1024); x++) {
+        for (let y=Math.max(0,Math.floor(centerY-height/1024)); y<=Math.min(scale-1,Math.floor(centerY+height/1024)); y++) {
+          tiles.add(`${((x%scale)+scale)%scale}/${y}`);
+        }
+      }
+      return [...tiles].map(tile=>{
+      const [x,y] = tile.split("/").map(Number);
       const key = `${request.url}:${z}/${x}/${y}`;
       if (!early.has(key)) {
         const controller = new AbortController();
@@ -39,6 +47,7 @@ export function createBoundaryReader(create: (url: string) => Archive = url => n
         early.set(key,{ controller, value });
       }
       return early.get(key)!.value;
+      });
       });
       await Promise.all(reads);
       return undefined;

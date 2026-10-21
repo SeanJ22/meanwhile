@@ -23,7 +23,7 @@ test("the arriving page starts one state/place read before hydration and the rea
     const outlines=await loadStateOutlines();
     const reader=window.__readerBoundary;
     const boundary=await reader.request({kind:'header',url:reader.url});
-    await reader.request({kind:'prefetch',url:reader.url,zip:'85701',lat:32,lng:-110});
+    await reader.request({kind:'prefetch',url:reader.url,zip:'85701',lat:32,lng:-110,width:innerWidth,height:innerHeight});
     const tile=await reader.request({kind:'tile',url:reader.url,z:0,x:0,y:0});
     if(new Uint8Array(tile.data)[0]!==26)throw new Error('The prefetched tile did not cross the worker boundary');
     if(boundary.specVersion!==3||boundary.etag!==undefined)throw new Error('Invalid early boundary header');

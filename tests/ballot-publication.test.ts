@@ -125,7 +125,7 @@ test("state files publish within the pass even when a slow unfinished network so
   for (const ordered of [ordinary, ballotPublicationLaunchOrder(ordinary)]) {
     let time = 0;
     const runs = await runBoundedChildPass(ordered.map(({ task }) => ({ id: task.id, executable: process.execPath, args: [] })), {
-      cwd: process.cwd(), concurrency: 1,
+      cwd: process.cwd(), env: process.env, concurrency: 1,
       onStarting: () => { if (time >= 2) throw Error("PASS_TIME_BUDGET: work remains owed"); },
     }, async command => {
       time += command.id === "unfinished-network-source" ? 10 : 1;

@@ -1,0 +1,90 @@
+{
+  "controlledResponses": true,
+  "realMap": true,
+  "timings": [
+    {
+      "viewport": 1440,
+      "state": "AZ",
+      "input": "255 W Alameda St, Tucson, AZ 85701",
+      "ms": 1352,
+      "pins": 2
+    },
+    {
+      "viewport": 1440,
+      "state": "AZ",
+      "input": "85701",
+      "ms": 385,
+      "pins": 2
+    },
+    {
+      "viewport": 1440,
+      "state": "NH",
+      "input": "229 Main St, Nashua, NH 03060",
+      "ms": 1641,
+      "pins": 2
+    },
+    {
+      "viewport": 1440,
+      "state": "NH",
+      "input": "03060",
+      "ms": 1721,
+      "pins": 2
+    },
+    {
+      "viewport": 1440,
+      "state": "NJ",
+      "input": "1 E Main St, Rockaway, NJ 07866",
+      "ms": 1442,
+      "pins": 2
+    },
+    {
+      "viewport": 1440,
+      "state": "NJ",
+      "input": "07866",
+      "ms": 463,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "AZ",
+      "input": "255 W Alameda St, Tucson, AZ 85701",
+      "ms": 1368,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "AZ",
+      "input": "85701",
+      "ms": 1282,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "NH",
+      "input": "229 Main St, Nashua, NH 03060",
+      "ms": 1334,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "NH",
+      "input": "03060",
+      "ms": 1269,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "NJ",
+      "input": "1 E Main St, Rockaway, NJ 07866",
+      "ms": 1335,
+      "pins": 2
+    },
+    {
+      "viewport": 390,
+      "state": "NJ",
+      "input": "07866",
+      "ms": 1248,
+      "pins": 2
+    }
+  ]
+}

@@ -59,6 +59,12 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       if (data.address === "Server failure") {
         response.writeHead(503, { "content-type": "application/json" }).end("{}"); return;
       }
+      if (["KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA"].includes(data.address)) {
+        response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({
+          match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [],
+          googleFallback: { requested: true, available: false, reason: data.address },
+        })); return;
+      }
       if (data.address === "Stalled request") {
         response.writeHead(200, { "content-type": "application/x-ndjson" });
         response.write('{"pending":true}\n');
@@ -144,7 +150,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
       // Protocol failures assert no civic facts and use no database or invented SQL schema.
       await page.goto(`${origin}/adams`);
-      for (const input of ["Server failure", "Stalled request"]) {
+      for (const input of ["Server failure", "KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA", "Stalled request"]) {
         if (input === "Stalled request") await page.clock.install();
         await page.getByLabel("Your street address or ZIP").fill(input);
         await page.evaluate(() => {
@@ -183,13 +189,14 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         assert.match(await gap.innerText(), /working on getting this info/i);
         assert.equal(await gap.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);
         assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /Something went wrong/i);
+        assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /KEY_MISSING|GOOGLE_UNAVAILABLE|NO_DATA/);
       }
       assert.ok(diagnostics.some(line => line.includes('"stage":"reader-response"')));
       assert.ok(!diagnostics.some(line => line.includes('"stage":"reader-request"')), "the slow stream must not be aborted by the panel");
       assert.deepEqual(errors, []);
       await context.close();
     }
-    assert.equal(received.length, 8); assert.ok(received.every(row => row.googleFallback === undefined));
+    assert.equal(received.length, 14); assert.ok(received.every(row => row.googleFallback === undefined));
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

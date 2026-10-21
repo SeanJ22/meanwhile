@@ -969,6 +969,17 @@ function MapEntryInner() {
   const [selectedVotingSiteId, setSelectedVotingSiteId] = useState<string | null>(
     null,
   );
+  const onVotingSites = useCallback((sites: VotingSitePin[]) => {
+    setVotingPins(sites);
+    // ZIP answers may have no address point; their sites still locate the map.
+    const point = sites[0];
+    if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
+  }, []);
+  const onVotingAddressPoint = useCallback((point: { lat: number; lng: number } | null) => {
+    setVotingAddressPoint(point);
+    if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
+  }, []);
+
   const closePop = useCallback(() => {
     setPop(null);
     setVotingPins([]);
@@ -1615,8 +1626,8 @@ function MapEntryInner() {
               openOffice(office);
             }}
             onBoundsChange={onMapBounds}
-            votingSites={votingPins.filter(pin => contains(pin.lat, pin.lng))}
-            votingAddressPoint={votingAddressPoint && contains(votingAddressPoint.lat, votingAddressPoint.lng) ? votingAddressPoint : null}
+            votingSites={votingPins}
+            votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />}
@@ -1760,8 +1771,8 @@ function MapEntryInner() {
             {pop === "vote" && (
               <VotingSitesPanel
                 embedded
-                onSites={setVotingPins}
-                onAddressPoint={setVotingAddressPoint}
+                onSites={onVotingSites}
+                onAddressPoint={onVotingAddressPoint}
                 selectedSiteId={selectedVotingSiteId}
                 onSelectSite={setSelectedVotingSiteId}
                 onClose={closePop}

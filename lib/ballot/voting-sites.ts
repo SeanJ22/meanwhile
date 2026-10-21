@@ -234,6 +234,9 @@ export function censusOf(file: VotingSitesFile): VotingSitesCensus {
   };
 }
 
+/** Response diagnostics only; the reader panel never renders these reasons. */
+export type VotingFallbackReason = "KEY_MISSING" | "GOOGLE_UNAVAILABLE" | "NO_DATA";
+
 export interface VotingSitesAnswer {
   match: boolean;
   /** Only ever the resolved POINT, never the address that produced it. */
@@ -246,7 +249,7 @@ export interface VotingSitesAnswer {
   })[];
   outsideCoverage: boolean;
   precision?: "ADDRESS" | "ZIP";
-  googleFallback?: { available: boolean; requested: boolean; label?: string; message?: string };
+  googleFallback?: { available: boolean; requested: boolean; reason?: VotingFallbackReason; label?: string; message?: string };
   /** Transient Google results must disappear from an open panel within 24 hours. */
   expiresAt?: string;
 

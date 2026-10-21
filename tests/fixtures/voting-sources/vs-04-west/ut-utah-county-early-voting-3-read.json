@@ -1,0 +1,89 @@
+{
+  "doorId": "ut-utah-county-early_voting-3",
+  "sites": [
+    {
+      "id": "voting-d75737879debebd8a9187ff1",
+      "name": "Early Voting - Utah County Health and Justice Building",
+      "address": "151 S University Ave, Room 2500, Provo, UT 84606",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Utah County Elections",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "title": "Voting & Drop Box Locations - Utah County Elections",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+          "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+        }
+      ],
+      "hours": "8AM - 5PM October 26th-30th, November 2nd",
+      "countyFips": "49049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "8AM - 5PM October 26th-30th, November 2nd",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Utah County Elections",
+            "url": "https://vote.utahcounty.gov/voting-locations",
+            "title": "Voting & Drop Box Locations - Utah County Elections",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+            "documentUrl": "https://vote.utahcounty.gov/voting-locations"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Utah County Elections",
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "title": "Voting & Drop Box Locations - Utah County Elections",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://vote.utahcounty.gov/robots.txt",
+      "contentType": "text/plain",
+      "rawHash": "e5fe408d53086c05486685984be0b5043d3a8fa8907b5e1a59f7007c515d391b",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-9266f4dab6c4-e5fe408d5308.bin"
+    },
+    {
+      "url": "https://vote.utahcounty.gov/voting-locations",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "f778d970c382efdcf2726484737502b2dbacfc08514b4a081f860da6d541398d",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ut-353ad3a218d2-f778d970c382.html"
+    }
+  ],
+  "fileTitle": "Voting & Drop Box Locations - Utah County Elections",
+  "contacts": []
+}

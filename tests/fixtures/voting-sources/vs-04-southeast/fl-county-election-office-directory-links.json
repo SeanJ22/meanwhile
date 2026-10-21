@@ -1,0 +1,274 @@
+[
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LEE",
+    "label": "Lee"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LEO",
+    "label": "Leon"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LEV",
+    "label": "Levy"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LIB",
+    "label": "Liberty"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MAD",
+    "label": "Madison"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MAN",
+    "label": "Manatee"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MRN",
+    "label": "Marion"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MRT",
+    "label": "Martin"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=DAD",
+    "label": "Miami-Dade"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MON",
+    "label": "Monroe"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=NAS",
+    "label": "Nassau"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=OKA",
+    "label": "Okaloosa"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=OKE",
+    "label": "Okeechobee"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=ORA",
+    "label": "Orange"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=OSC",
+    "label": "Osceola"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=PAL",
+    "label": "Palm Beach"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=PAS",
+    "label": "Pasco"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=PIN",
+    "label": "Pinellas"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=POL",
+    "label": "Polk"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=PUT",
+    "label": "Putnam"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=SAN",
+    "label": "Santa Rosa"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=SAR",
+    "label": "Sarasota"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=SEM",
+    "label": "Seminole"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=STJ",
+    "label": "St. Johns"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=STL",
+    "label": "St. Lucie"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=SUM",
+    "label": "Sumter"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=SUW",
+    "label": "Suwannee"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=TAY",
+    "label": "Taylor"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=UNI",
+    "label": "Union"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=VOL",
+    "label": "Volusia"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=WAK",
+    "label": "Wakulla"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=WAL",
+    "label": "Walton"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=WAS",
+    "label": "Washington"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=ALA",
+    "label": "Alachua"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BAK",
+    "label": "Baker"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BAY",
+    "label": "Bay"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BRA",
+    "label": "Bradford"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BRE",
+    "label": "Brevard"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=BRO",
+    "label": "Broward"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CAL",
+    "label": "Calhoun"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CHA",
+    "label": "Charlotte"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CIT",
+    "label": "Citrus"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CLA",
+    "label": "Clay"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CLL",
+    "label": "Collier"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=CLM",
+    "label": "Columbia"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=DES",
+    "label": "DeSoto"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=DIX",
+    "label": "Dixie"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=DUV",
+    "label": "Duval"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=ESC",
+    "label": "Escambia"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=FLA",
+    "label": "Flagler"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=FRA",
+    "label": "Franklin"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=GAD",
+    "label": "Gadsden"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=GIL",
+    "label": "Gilchrist"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=GLA",
+    "label": "Glades"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=GUL",
+    "label": "Gulf"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HAM",
+    "label": "Hamilton"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HAR",
+    "label": "Hardee"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HEN",
+    "label": "Hendry"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HER",
+    "label": "Hernando"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HIG",
+    "label": "Highlands"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HIL",
+    "label": "Hillsborough"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=HOL",
+    "label": "Holmes"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=IND",
+    "label": "Indian River"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=JAC",
+    "label": "Jackson"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=JEF",
+    "label": "Jefferson"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LAF",
+    "label": "Lafayette"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=LAK",
+    "label": "Lake"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=lee",
+    "label": "Lee"
+  }
+]

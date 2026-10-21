@@ -1,0 +1,1766 @@
+[
+  {
+    "member": "UNI - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12125",
+      "FL",
+      "Union County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "SOE Office",
+        "Supervisor of Elections Office",
+        "175 W Main St, Lake Butler, Fl 32054",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "VOL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12127",
+      "FL",
+      "Volusia County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 9,
+    "sample": [
+      [
+        "SOE Office",
+        "Supervisor of Elections Office",
+        "1588 N Woodland Blvd, DeLand",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Wayne G Sanborn Center",
+        "Community Center",
+        "815 S Alabama Ave, DeLand",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "WAK - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12129",
+      "FL",
+      "Wakulla County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "WAKULLA COUNTY SOE OFFICE",
+        "Supervisor of Elections Office",
+        "3115-B CRAWFORDVILLE HWY CRAWFORDVILLE FL 32327",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "WAKULLA COUNTY COMMUNITY CENTER",
+        "Community Center",
+        "318 SHADEVILLE RD CRAWFORDVILLE FL 32327",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "WAL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12131",
+      "FL",
+      "Walton County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 4,
+    "sample": [
+      [
+        "Walton County Courthouse",
+        "Supervisor of Elections Office",
+        "571 US Hwy 90 East, DeFuniak Springs, FL 32433",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Walton County Courthouse Annex",
+        "Supervisor of Elections Office",
+        "31 Coastal Centre Blvd, Santa Rosa Beach, FL 32459",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "WAS - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12133",
+      "FL",
+      "Washington County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "Supervisor of Elections- Ag Center",
+        "Supervisor of Elections Office",
+        "1424 Jackson Avenue, Chipley, FL 32428",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Vernon City Hall",
+        "City Hall",
+        "2808 Yellow Jacket Drive, Vernon, FL 32462",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "ALA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12001",
+      "FL",
+      "Alachua County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 8,
+    "sample": [
+      [
+        "EV1 - SOE Office",
+        "Supervisor of Elections Office",
+        "515 North Main Street, Gainesville, Florida 32601",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "EV2 - Millhopper Library",
+        "Public Library",
+        "3145 NW 43rd Street, Gainesville, Florida 32606",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "BAK - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12003",
+      "FL",
+      "Baker County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Main Office",
+        "Supervisor of Elections Office",
+        "32 N. 5th Street, Suite A, Macclenny, FL 32063",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "BAY - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12005",
+      "FL",
+      "Bay County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 8,
+    "sample": [
+      [
+        "Frank Brown Park Community Center",
+        "Community Center",
+        "16200 PCB Parkway Panama City Beach, FL 32413",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Lyndell Conference Center",
+        "Community Center",
+        "423 Lyndell Ln Panama City Beach, FL 32407",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "BRA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12007",
+      "FL",
+      "Bradford County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Bradford Courthouse",
+        "Courthouse",
+        "945 N. Temple Ave",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "BRE - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12009",
+      "FL",
+      "Brevard County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 10,
+    "sample": [
+      [
+        "Dr. Joe Lee Smith Community Center",
+        "Community Center",
+        "415 Stone St, Cocoa, FL 32922",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Kiwanis Island Park Gymnasium",
+        "Community Center",
+        "950 Kiwanis Island Park Rd, Merritt Island, FL 32952",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "BRO - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12011",
+      "FL",
+      "Broward County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 30,
+    "sample": [
+      [
+        "African-American Research Library",
+        "Public Library",
+        "2650 Sistrunk Boulevard (NW 6th Street), Fort Lauderdale, FL 33311",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Broward College - A. Hugh Adams Central Campus",
+        "Wildcard",
+        "3501 Davie Road, Building 3, Room 117, Davie, FL 33314",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CAL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12013",
+      "FL",
+      "Calhoun County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "Election Office",
+        "Supervisor of Elections Office Blount s",
+        "20859 Central Ave. E. Rm 117, Blountstown, FL 32424",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Shelton Park Library",
+        "Public Library",
+        "25008 NW SR 73, Altha, FL 32421",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CHA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12015",
+      "FL",
+      "Charlotte County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 4,
+    "sample": [
+      [
+        "Centennial Park Recreation Center",
+        "Community Center",
+        "1120 Centennial Blvd Port Charlotte, FL 33953",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Charlotte Harbor Event and Conference Center",
+        "Convention Center",
+        "75 Taylor St Punta Gorda, FL 33950",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CIT - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12017",
+      "FL",
+      "Citrus County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "West Citrus Government Center - Early Vote Center",
+        "Supervisor of Elections Office",
+        "1500 N Meadowcrest Blvd Crystal River, FL 34428",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Homosassa Public Library",
+        "Public Library",
+        "4100 S Grandmarch Ave Homosassa, FL 34446",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CLA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12019",
+      "FL",
+      "Clay County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 7,
+    "sample": [
+      [
+        "Orange Park Library",
+        "Public Library",
+        "2054 Plainfield Ave., Orange Park, FL 32073",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Fleming Island Health Department",
+        "Wildcard",
+        "1845 Town Center Blvd., Bld 600, Fleming Island, FL 32003",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CLL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12021",
+      "FL",
+      "Collier County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 11,
+    "sample": [
+      [
+        "Collier County Government Complex",
+        "County Commission Building",
+        "3311 Tamiami Trail E, Naples, FL 34112",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Everglades City Hall",
+        "City Hall",
+        "102 Copeland Ave N, Everglades City, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "CLM - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12023",
+      "FL",
+      "Columbia County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "SOE Main Office",
+        "Supervisor of Elections Office",
+        "971 W Duval St. Suite 102 Lake City, FL",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Fort White",
+        "Community Center",
+        "17579 SW State Raod 47 Fort White, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "DAD - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12086",
+      "FL",
+      "Miami-Dade County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 28,
+    "sample": [
+      [
+        "Arcolas Lakes Branch Library",
+        "Public Library",
+        "8240 NW 7TH Avenue, Miami, FL 33150",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Coral Gables Branch Library",
+        "Public Library",
+        "3443 Segovia Street, Coral Gables, FL 33134",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "DES - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12027",
+      "FL",
+      "DeSoto County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "DeSoto County SOE Office",
+        "Supervisor of Elections Office",
+        "201 E. Oak St., Suite 104, Arcadia, FL 34266",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "DIX  - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12029",
+      "FL",
+      "Dixie County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Dixie County Elections Office",
+        "Supervisor of Elections Office",
+        "229 NE 351 Hwy, Suite A, Cross City, FL 32628",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "DUV - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12031",
+      "FL",
+      "Duval County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 24,
+    "sample": [
+      [
+        "Argyle Branch Library",
+        "Public Library",
+        "7973 Old Middleburg Rd S, Jacksonville, FL 32222",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Balis Community Center",
+        "Community Center",
+        "1513 La Salle St, Jacksonville, FL 32207",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "ESC - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12033",
+      "FL",
+      "Escambia County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 10,
+    "sample": [
+      [
+        "Escambia County Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "213 Palafox Place, 2nd Floor, Pensacola, FL 32502",
+        "Central",
+        "Yes"
+      ],
+      [
+        "West Florida Public Library",
+        "Public Library",
+        "239 Spring Street, Pensacola, FL 32502",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "FLA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12035",
+      "FL",
+      "Flagler County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "Flagler SOE Office",
+        "Supervisor of Elections Office",
+        "1769 E Moody Blvd, Bldg 2, Ste 101, Bunnell, FL 32110",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Flagler County Public Library",
+        "Public Library",
+        "2500 Palm Coast Parkway NW, Palm Coast, FL 32137",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "FRA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12037",
+      "FL",
+      "Franklin County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "Elections Office",
+        "Supervisor of Elections Office",
+        "34 Forbes Street, Suite 1, Apalachicola, FL",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Courthouse Annex",
+        "Courthouse",
+        "912 NW Ave A, Carrabelle, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "GAD - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12039",
+      "FL",
+      "Gadsden County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 4,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "16 S. Madison Street, Quincy, FL 32351",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    ]
+  },
+  {
+    "member": "GIL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12041",
+      "FL",
+      "Gilchrist County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Courthouse",
+        "112 S Main Street, Rm 137 Trenton, FL 32693",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "GLA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12043",
+      "FL",
+      "Glades County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Main Elections Center",
+        "Supervisor of Elections Office",
+        "998 S US HWY 27, Moore Haven, FL 33471",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "GUL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12045",
+      "FL",
+      "Gulf County",
+      [
+        "America/Chicago",
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "Port St. Joe SOE Office",
+        "Supervisor of Elections Office",
+        "401 Long Avenue, Port St. Joe, FL 32456",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Wewahitchka Library",
+        "Public Library",
+        "314 N. Second St., Wewahitchka, FL 32465",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HAM - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12047",
+      "FL",
+      "Hamilton County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "SOE OFFICE",
+        "Supervisor of Elections Office",
+        "1153 US HWY 41 NW, STE 1, JASPER FL 32052",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HAR - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12049",
+      "FL",
+      "Hardee County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Main Office",
+        "131 K. D. Revell Rd.; Wauchula, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HEN - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12051",
+      "FL",
+      "Hendry County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "LaBelle Office",
+        "Supervisor of Elections Office",
+        "25 E. Hickpochee Ave, LaBelle, FL",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Clewiston Office",
+        "Supervisor of Elections Office",
+        "1100 S. Olympia St, Clewiston, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HER - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12053",
+      "FL",
+      "Hernando County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "South Brooksville Community Center",
+        "Community Center",
+        "601 E Dr. Martin Luther King Jr BLVD. Brooksville, FL 34601",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Forest Oaks Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "7443 Forest Oaks BLVD. Spring Hill, FL 34606",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HIG - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12055",
+      "FL",
+      "Highlands County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 3,
+    "sample": [
+      [
+        "Penny Ogg Operations Center",
+        "Supervisor of Elections Office",
+        "4504 Kenilworth Blvd, Sebring, FL 33870",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Avon Park City Hall Council Chambers",
+        "City Hall",
+        "123 East Pine St., Avon Park, FL 33825",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HIL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12057",
+      "FL",
+      "Hillsborough County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 27,
+    "sample": [
+      [
+        "Apollo Beach Park & Recreation Center",
+        "Community Center",
+        "664 Golf and Sea Blvd, Apollo Beach, FL 33572",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Bloomingdale Regional Public Library",
+        "Public Library",
+        "1906 Bloomingdale Ave, Valrico, FL, 33596",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "HOL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12059",
+      "FL",
+      "Holmes County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 0,
+    "sample": []
+  },
+  {
+    "member": "IND - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12061",
+      "FL",
+      "Indian River County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 4,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "4375 43rd Ave, Vero Beach, FL 32967",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Sebastian City Hall Council Chambers",
+        "City Hall",
+        "1225 Main Street, Sebastian, FL 32958",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "JAC - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12063",
+      "FL",
+      "Jackson County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 3,
+    "sample": [
+      [
+        "SOE OFFICE",
+        "Supervisor of Elections Office",
+        "2851 Jefferson Street Marianna, FL 32448",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Graceville City Hall",
+        "City Hall",
+        "5348 Cliff Street, Graceville, Fl 32440",
+        "Central Yes",
+        ""
+      ]
+    ]
+  },
+  {
+    "member": "JEF - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12065",
+      "FL",
+      "Jefferson County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Election Office",
+        "Supervisor of Elections Office",
+        "1175 W Washington St., Monticello, FL 32344",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LAF - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12067",
+      "FL",
+      "Lafayette County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 2,
+    "sample": [
+      [
+        "SOE Office",
+        "Supervisor of Elections Office",
+        "120 W Main St, RM 210",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Mayo Community Center",
+        "Community Center",
+        "150 Community Circle Mayo, FL 32066",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LAK - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12069",
+      "FL",
+      "Lake County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 12,
+    "sample": [
+      [
+        "Clermont Arts & Rec Center",
+        "Community Center",
+        "3700 S Hwy 27, Clermont, FL 34711",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Cagan Crossings Library",
+        "Public Library",
+        "16729 Cagan Oaks, Clermont, FL 34714",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LEE - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12071",
+      "FL",
+      "Lee County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 12,
+    "sample": [
+      [
+        "Bonita Springs Elections Office",
+        "Supervisor of Elections Office",
+        "Bonita Commons, 25987 S. Tamiami Trail #105, Bonita Springs, FL 34134",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Cape Coral Elections Office",
+        "Supervisor of Elections Office",
+        "Commission John E. Manning Government Complex 1039 SE 9th Ave., Cape Coral, FL 33990",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LEO - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12073",
+      "FL",
+      "Leon County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 10,
+    "sample": [
+      [
+        "Leon County Courthouse",
+        "Courthouse",
+        "301 S Monroe St, Tallahassee, FL",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Leon County Elections Center",
+        "Supervisor of Elections Office",
+        "2990-1 Apalachee Pkwy, Tallahassee, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LEV - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12075",
+      "FL",
+      "Levy County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Supervisor of Elections",
+        "Supervisor of Elections Office",
+        "421 S Court St, Bronson FL 32621",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "LIB - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12077",
+      "FL",
+      "Liberty County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Bristol Courthouse",
+        "Courthouse",
+        "10818 NW State Road 20 Bristol, FL",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "MAD - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12079",
+      "FL",
+      "Madison County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 4,
+    "sample": [
+      [
+        "SOE Office",
+        "Supervisor of Elections Office",
+        "239 SW Pinckney Street, Madison, FL 32340",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Greenville Old American Legion Building",
+        "County Commission Building",
+        "133 SW Broad Ave., Greenville, FL 32331",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "MAN - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12081",
+      "FL",
+      "Manatee County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 8,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "600 301 Blvd W., Suite 118 Bradenton FL 34205",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Palmetto Library",
+        "Public Library",
+        "923 6th St W Palmetto FL 34221",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "MON - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12087",
+      "FL",
+      "Monroe County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "Key West SOE Office",
+        "County Commission Building",
+        "5200 College Road Key West, FL 33040",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Big Pine Key Community Park",
+        "Community Center",
+        "End of Sands Road 31009 Atlantis Drive Big Pine Key, FL 33043",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "MRN - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12083",
+      "FL",
+      "Marion County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 9,
+    "sample": [
+      [
+        "Freedom Public Library",
+        "Public Library",
+        "5870 SW 95th St, Ocala, FL 34476",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Dunnellon Public Library",
+        "Public Library",
+        "20351 Robinson Rd, Dunnellon, FL 34431",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "MRT - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12085",
+      "FL",
+      "Martin County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 6,
+    "sample": [
+      [
+        "Elections Center",
+        "Supervisor of Elections Office",
+        "135 SE Martin Luther King Jr. Blvd, Stuart, FL 34995",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Robert Morgade Library",
+        "Public Library",
+        "5851 SE Community Dr, Stuart, FL 34997",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "NAS - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12089",
+      "FL",
+      "Nassau County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "Atlantic Avenue Recreation Center",
+        "Community Center",
+        "2500 Atlantic Ave; Fernandina Beach FL 32034",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Hilliard Community Center",
+        "Community Center",
+        "37177 Pecan St; Hilliard FL 32046",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "OKA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12091",
+      "FL",
+      "Okaloosa County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 5,
+    "sample": [
+      [
+        "County Administration Buliding",
+        "County Commission Building",
+        "1250 Eglin Parkway, Shalimar",
+        "Central",
+        "Yes"
+      ],
+      [
+        "Crestview Library",
+        "Public Library",
+        "1446 Commerce Dr, Crestview",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "OKE - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12093",
+      "FL",
+      "Okeechobee County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "307 NW 5th Avenue, Okeechobee FL 34972",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "ORA - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12095",
+      "FL",
+      "Orange County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 27,
+    "sample": [
+      [
+        "Alafaya Library",
+        "Public Library",
+        "12000 E. Colonial Dr., Orlando, FL 32826",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Apopka Community Center",
+        "Community Center",
+        "519 S. Central Ave., Apopka, FL 32703",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "OSC - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12097",
+      "FL",
+      "Osceola County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 11,
+    "sample": [
+      [
+        "Osceola County Supervisor of Elections",
+        "Supervisor of Elections Office",
+        "2509 E. Irlo Bronson Memorial Highway Kissimmee, FL 34744",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "West Osceola Branch Library (Celebration)",
+        "Public Library",
+        "305 Campus Street Celebration, FL 34747",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "PAL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12099",
+      "FL",
+      "Palm Beach County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 28,
+    "sample": [
+      [
+        "Acreage Branch Library",
+        "Public Library",
+        "15801 Orange Blvd., Loxahatchee FL 33470",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Belle Glade Library",
+        "Public Library",
+        "725 NW 4th St., Belle Glade FL 33430",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "PAS - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12101",
+      "FL",
+      "Pasco County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 12,
+    "sample": [
+      [
+        "West Pasco Government Center",
+        "Supervisor of Elections Office",
+        "8731 Citizens Dr, New Port Richey FL 34654",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "East Pasco Government Center",
+        "County Commission Building",
+        "14236 6th St, Dade City FL 33523",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "PIN - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12103",
+      "FL",
+      "Pinellas County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 7,
+    "sample": [
+      [
+        "Election Service Center",
+        "Supervisor of Elections Office",
+        "13001 Starkey Rd. Largo, FL 33773",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Pinellas County Courthouse",
+        "Supervisor of Elections Office",
+        "315 Court St., Room 117, Clearwater, FL 33756",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "POL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12105",
+      "FL",
+      "Polk County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 10,
+    "sample": [
+      [
+        "Polk Street Community Center",
+        "Community Center",
+        "1255 Polk St, Bartow FL 33830",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Polk County Sheriff NE District Office",
+        "Community Center",
+        "1100 Dunson Rd, Davenport FL 33837",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "PUT - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12107",
+      "FL",
+      "Putnam County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 3,
+    "sample": [
+      [
+        "Elections Office",
+        "Supervisor of Elections Office",
+        "2509 Crill Avenue, Suite 900 Palatka Fl. 32177",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Interlachen Community Center",
+        "Community Center",
+        "135 S. County Road 315 Interlachen, Fl. 32148",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "SAN - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12113",
+      "FL",
+      "Santa Rosa County",
+      [
+        "America/Chicago"
+      ]
+    ],
+    "sites": 6,
+    "sample": [
+      [
+        "Administrative Office",
+        "Supervisor of Elections Office",
+        "6495 Caroline Street Suite F Milton, Fl 32570",
+        "Central",
+        "Yes"
+      ],
+      [
+        "South Service Center",
+        "Supervisor of Elections Office",
+        "5841 Gulf Breeze Pkwy., Gulf Breeze, Fl. 32563",
+        "Central",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "SAR - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12115",
+      "FL",
+      "Sarasota County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 11,
+    "sample": [
+      [
+        "Sarasota County Terrace Building",
+        "Supervisor of Elections Office",
+        "2001 Adams Lane Sarasota, FL 34237",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "R.L. Anderson Administration Center",
+        "Supervisor of Elections Office",
+        "4000 Tamiami Trail S. Venice, FL 34293",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "SEM - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12117",
+      "FL",
+      "Seminole County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 7,
+    "sample": [
+      [
+        "Casselberry Library",
+        "Public Library",
+        "215 Oxford Rd, Casselberry 32707",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Lake Mary Library",
+        "Public Library",
+        "580 Green Way Blvd, Lake Mary 32746",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "STJ - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12109",
+      "FL",
+      "St. Johns County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 10,
+    "sample": [
+      [
+        "Ponte Vedra Branch Library",
+        "Public Library",
+        "101 Library Blvd. Ponte Vedra Beach, FL 32082",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "The Players Community Senior Ctr",
+        "Senior Center",
+        "175 Landrum Ln. Ponte Vedra Beach, FL 32082",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "STL - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12111",
+      "FL",
+      "St. Lucie County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 8,
+    "sample": [
+      [
+        "Renaissance Business Park",
+        "Supervisor of Elections Office",
+        "4132 Okeechobee Rd., Fort Pierce, FL 34947 (Entrance 3)",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Zora Neale Hurston Library",
+        "Public Library",
+        "3008 Avenue D. Fort Pierce, FL 34947",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "SUM - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12119",
+      "FL",
+      "Sumter County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 7,
+    "sample": [
+      [
+        "Bushnell Community Building",
+        "Community Center",
+        "407 E Belt Ave., Bushnell",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Villages Sumter County Service Center",
+        "County Commission Building",
+        "7375 Powell Rd., Room 102, Wildwood",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "SUW - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12121",
+      "FL",
+      "Suwannee County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 3,
+    "sample": [
+      [
+        "Judicial Annex",
+        "Courthouse",
+        "218 Parshley St., Live Oak, FL 32064",
+        "Eastern",
+        "Yes"
+      ],
+      [
+        "Robert Leonard Library",
+        "Public Library",
+        "703 NW Suwannee Ave., Branford, FL 32008",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  },
+  {
+    "member": "TAY - EV and Secure Ballot Intake Station Locations - 2026 GE.pdf",
+    "county": [
+      "12123",
+      "FL",
+      "Taylor County",
+      [
+        "America/New_York"
+      ]
+    ],
+    "sites": 1,
+    "sample": [
+      [
+        "Supervisor of Elections Office",
+        "Supervisor of Elections Office",
+        "433 US 19 N, Perry, Florida, 32347",
+        "Eastern",
+        "Yes"
+      ]
+    ]
+  }
+]

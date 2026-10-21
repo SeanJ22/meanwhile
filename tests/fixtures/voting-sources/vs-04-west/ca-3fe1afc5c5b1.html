@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html lang="en">
+
+
+
+<head>
+	<title>Vote Centers - Alameda County Registrar of Voters</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="Displays Vote Center List with Location Details on Map">
+	<meta name="keywords" content="Alameda County, Vote Centers, Vote Center Locations, Voting Centers, Voting Center Locations, Vote Center Map, Vote Center Directions, Vote Center Address, ACGOV, ACVOTE, ROV">
+
+	<link type="text/css" rel="stylesheet" href="/rov_app/css/jquery.mobile-1.4.5.min.css" />
+
+	<script type="text/javascript" src="/ssi/deptpage.js"></script>
+	<script type="text/javascript" src="/rov_app/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/rov_app/js/locationlist.js?version=1.30"></script>
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
+	<script>
+     var t = {
+       vcaVBMNoAccessibleLocationsNeeded: "There are no accessible polling places available for this election.",
+       vcaAccessibleVotingLocationListUnavailable: "Accessible Voting Location List will become available 40 days before the next election."
+     };
+   </script>
+	<script type="text/javascript" src="/rov_app/js/jquery.mobile-1.4.5.min.js"></script>
+	<script type="text/javascript" src="/rovapps/ssi/googleanalytics.js"></script> 
+
+	<link type="text/css" rel="stylesheet" href="/rov_app/css/pollingLocation.css?v=60" />
+
+	<script>
+		var pollingLocation = new PollingLocation('/rov_app/pollinglist/election/', '260', 'true');
+	</script>
+
+	<style type="text/css">
+		#rovcol3 { display:none; }
+		#rovcol2 { min-height: 500px; }
+		#rovcol2 form { margin: 0px; padding: 0px; }
+		.style1 {color: #FF0000 }
+		 /* Fix ACVOTE header/footer styling without overlapping */
+	    .ui-page {
+	        position: static !important;   /* stops absolute positioning */
+	        min-height: 100vh;             /* ensures content fills viewport */
+	    }
+	
+	    .ui-footer {
+	        bottom: 0;
+	        width: 100%;
+	        background-color: #0055a4;     /* TI-blue fallback */
+	    }
+	</style>
+
+	<!-- Include acvote shared styles/scripts -->
+	
+	<link type="text/css" href="/rovapps/acvote-header-footer/rov-main-24102022.css?v=11" rel="stylesheet">
+<link type="text/css" href="/rovapps/acvote-header-footer/rovapps.css?v=3" rel="stylesheet">
+<link type="image/x-icon" href="https://acvote.alamedacountyca.gov/favicon.ico" rel="shortcut icon">
+<style>
+ .lang_link {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    display: block;
+    margin-top: 30px;
+    text-transform: uppercase;
+  }
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="/acvote/include/static/js/rov-vendor-bundle.js?v=3"></script>
+<script type="text/javascript" src="/acvote/include/static/js/rov-app-bundle-20180823.js?v=3"></script>
+-->
+<script type="text/javascript" src="/rovapps/acvote-header-footer/rov-vendor-bundle-1.js?v=9"></script>
+<script type="text/javascript" src="/rovapps/acvote-header-footer/rov-app-bundle-20200826-1.js?v=9"></script>
+
+
+<script>
+
+// Updated - 03/30/2026
+jQuery(document).on('click', 'a.lang_link', function (e) {
+
+  e.preventDefault();
+
+  const $link = $(this);
+
+  const mvpDtlpageElem = document.getElementById('dtlpage');
+  const mvpDtlpage = mvpDtlpageElem ? mvpDtlpageElem.value : 'N';
+
+  const lang = $link.attr('lang') || 'en';
+  const currentUrl = new URL(window.location.href);
+
+
+  // Set language-preference cookie for 7 days
+  const oneWeek = 60 * 60 * 24 * 7;
+  const secure = location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `language-preference=${lang}; path=/; max-age=${oneWeek}; domain=.alamedacountyca.gov; SameSite=Lax${secure}`;
+
+  if (mvpDtlpage === 'Y') {
+    window.location.reload();
+  } else {
+    window.location.href = currentUrl.toString();
+  }
+
+});
+
+</script>
+
+
+</head>
+
+<body data-ajax="false" style="margin:0;">
+
+	<!-- ACVOTE Header -->
+	<header>
+		
+		<div class="ls-row" id="siteheader">
+  <div class="ls-fxr" id="ls-gen44970035-ls-fxr">
+    <div class="ls-area" id="siteheader-area">
+      <div class="ls-area-body" id="ls-gen44970036-ls-area-body">
+        <div class="ls-cmp-wrap ls-1st" id="w1749995834894">
+          <div>
+            <div id="main-navigation" class="navbar navbar-fixed-top" role="application">
+              <div class="container">
+                <div class="navbar__skip_to_content"> <a href="#pageheader">Skip to Content</a> </div>
+                <div class="row">
+                  <div class="col-sm-8 navbar__logo_brand_wrapper">
+                    <a data-ajax="false" href="https://acvote.alamedacountyca.gov/" >
+                      <img class="navbar__logo"
+                        src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg"
+                        alt="AC Vote" />
+                    </a>
+                    <span class="navbar__brandname">Official Election Site of Alameda County</span>
+                  </div>
+                  <nav class="col-md-4 col-sm-6 navbar__tools_wrapper">
+                    <ul class="m-0 list-inline">
+                      <li class="p-0">
+                        <a id="mvplink" class="btn btn-link navbar__tool_button p-0" data-cookie="ACCESSIBILITY_LANG_POPUP"
+                          tabindex="0" href="javascript:void(0);" onclick="window.open('/rovmvp_app/mvp.do');"> Voter
+                          Profile</a>
+                      </li>
+                      <li class="p-0">
+                        <button data-main-navigation="language"
+                          class="btn btn-link p-0 navbar__tool_button_language_selector"><span>&#127760;</span> English <span
+                            class="caret ml-10"></span>
+                        </button>
+                      </li>
+                      <li class="p-0">
+                        <button data-main-navigation="search" class="btn btn-link navbar__tool_button p-0"
+                          name="Search Button" alt="Search Icon - Click here to reveal Search Controls"
+                          title="Search Icon - Click here to reveal Search Controls">
+                          <img class=""
+                            src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg"
+                            alt="Search" name="Search Icon">
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                  <nav class="col-md-8 col-sm-12 navbar__main_navigation hidden">
+                    <ul>
+                      <li>
+                        <a tabindex="-1" data-ajax="false" href="https://acvote.alamedacountyca.gov/"   aria-label="Official Election Site of Alameda County">
+                          <img class=""  alt="AC Vote" 
+                            src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg"
+                           />
+                        </a>
+                      </li>
+                      <li class="p-0">
+                        <div class="form-group m-0">
+                          <div class="input-group input-group-search">
+                            <input type="text" class="form-control" placeholder="Search" maxlength="2500">
+                            <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" name="Search Button"
+                                alt="Search Button - Click here to execute a Search"
+                                title="Search Button - Click here to execute a Search">
+                                <img class=""
+                                  src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg"
+                                  alt="Search" name="Search Icon">
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="p-0 ">
+                        <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+                          class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle"
+                          data-main-navigation="Elections">
+                          <span class="navbar__main_navigation_label">Elections</span>
+                          <span class="caret ml-10"></span>
+                        </button>
+                      </li>
+                      <li class="p-0 ">
+                        <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+                          class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle"
+                          data-main-navigation="Voting">
+                          <span class="navbar__main_navigation_label">Voting</span>
+                          <span class="caret ml-10"></span>
+                        </button>
+                      </li>
+                      <li class="p-0 ">
+                        <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+                          class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle"
+                          data-main-navigation="Resources">
+                          <span class="navbar__main_navigation_label">Resources</span>
+                          <span class="caret ml-10"></span>
+                        </button>
+                      </li>
+                      <li class="p-0 ">
+                        <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+                          class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle"
+                          data-main-navigation="Community">
+                          <span class="navbar__main_navigation_label">Community</span>
+                          <span class="caret ml-10"></span>
+                        </button>
+                      </li>
+                      <li class="p-0 ">
+                        <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+                          class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle"
+                          data-main-navigation="Candidates">
+                          <span class="navbar__main_navigation_label">Candidates</span>
+                          <span class="caret ml-10"></span>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                  <div class="col-md-4 hidden-sm hidden-md navbar__social_links">
+                    <ul class="list-inline">
+                      <li>
+                        <a data-ajax="false" id="first-social" href="https://www.facebook.com/acvote/" class="ml-md-20"
+                          alt="Facebook" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/fb_icon.png"
+                              alt="Facebook" name="Facebook">
+                          </figure>
+                        </a>
+                      </li>
+                      <li>
+                        <a data-ajax="false" href="https://twitter.com/ACVOTE" class="ml-md-20" alt="Twitter"
+                          target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/x-icon.png"
+                              alt="Twitter" name="Twitter">
+                          </figure>
+                        </a>
+                      </li>
+                      <li>
+                        <a data-ajax="false" href="https://www.instagram.com/acvote/" class="ml-md-20" alt="Instagram"
+                          target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/instagram_icon.png"
+                              alt="Instagram" name="Instagram">
+                          </figure>
+                        </a>
+                      </li>
+                      <li>
+                        <a data-ajax="false" href="https://www.youtube.com/channel/UCj5Xu4ud8uEgvVljSp2caDA"
+                          class="ml-md-20" alt="YouTube" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/youtube_icon.png"
+                              alt="YouTube" name="YouTube">
+                          </figure>
+                        </a>
+                      </li>
+                      <li>
+                        <a data-ajax="false"
+                          href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9"
+                          class="ml-md-20" alt="Election Results Subscription" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/mail_icon.png"
+                              alt="Election Results Subscription" name="Election Results Subscription">
+                          </figure>
+                        </a>
+                      </li>
+                    </ul>
+                    <!-- end  the static code for social media  -->
+                  </div>
+                  <div class="col-xs-12 navbar__main_navigation_detail">
+                    <div class="navbar__main_navigation_detail_wrapper">
+                      <nav>
+                        <ul class="p-0 hidden" data-main-navigation-links="Elections">
+                          <li class="hidden-lg hidden-md">
+                            <a data-ajax="false" data-main-navigation="Elections"
+                              class="navbar__main_navigation_detail_close">
+                              <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF">
+                                    <g transform="translate(102.000000, 497.000000)" id="Active-State">
+                                      <g transform="translate(668.000000, 0.000000)">
+                                        <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)">
+                                          <g id="left-arrow">
+                                            <g>
+                                              <path
+                                                d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7"
+                                                id="Shape"></path>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </svg>
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/election-information/elections"
+                              data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link"
+                              target="_self" alt="Election Information"> Election Information </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/election-information/archived-elections"
+                              data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link"
+                              target="_self" alt="Archived Elections"> Archived Elections </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/election-information/calendar" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Calendar </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/election-information/election-cost"
+                              data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link"
+                              target="_self"> Election Cost </a>
+                          </li>
+                        </ul>
+                      </nav>
+                      <nav>
+                        <ul class="p-0 hidden" data-main-navigation-links="Voting">
+                          <li class="hidden-lg hidden-md">
+                            <a data-ajax="false" data-main-navigation="Voting"
+                              class="navbar__main_navigation_detail_close">
+                              <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF">
+                                    <g transform="translate(102.000000, 497.000000)" id="Active-State">
+                                      <g transform="translate(668.000000, 0.000000)">
+                                        <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)">
+                                          <g id="left-arrow">
+                                            <g>
+                                              <path
+                                                d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7"
+                                                id="Shape"></path>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </svg>
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/voting/register-to-vote" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Register to
+                              Vote </a>
+                          </li>
+			    <li class="header_sub_link_li"> <a href="https://acvote.alamedacountyca.gov/vca" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voter's Choice Act </a> </li> 	
+                          <li class="header_sub_link_li">
+                            <a href="/rov_app/vcalist" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Vote Centers
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/voting/voting-rights" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voting Rights
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/voting/uocava" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Military and
+                              Overseas Voters </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/voting/ways-of-voting" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Ways of Voting
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="/rovapps/maps/ballotdropbox_map.htm" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> 24-Hour Drop
+                              Box Map </a>
+                          </li>
+			   <li class="header_sub_link_li"> <a href="https://acvote.alamedacountyca.gov/youthvoting" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Youth Voting </a> </li> 
+                        </ul>
+                      </nav>
+                      <nav>
+                        <ul class="p-0 hidden" data-main-navigation-links="Resources">
+                          <li class="hidden-lg hidden-md">
+                            <a data-ajax="false" data-main-navigation="Resources"
+                              class="navbar__main_navigation_detail_close">
+                              <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF">
+                                    <g transform="translate(102.000000, 497.000000)" id="Active-State">
+                                      <g transform="translate(668.000000, 0.000000)">
+                                        <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)">
+                                          <g id="left-arrow">
+                                            <g>
+                                              <path
+                                                d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7"
+                                                id="Shape"></path>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </svg>
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/accessibility" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Information
+                              for Voters with Disabilities </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/webpolicy" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Website
+                              Accessibility </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/language" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Language
+                              Assistance </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="/rov_app/edata" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Data </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/resources/how-to-guidelines" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> How-to
+                              Guidelines </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/resources/political-party-information"
+                              data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link"
+                              target="_self"> Political Party Contact Information </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/resources/faqs" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Frequently
+                              Asked Questions </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="/alcoecommrov_app/search.do" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_blank"> Store </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/resources/about-us" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> About Us </a>
+                          </li>
+                        </ul>
+                      </nav>
+                      <nav>
+                        <ul class="p-0 hidden" data-main-navigation-links="Community">
+                          <li class="hidden-lg hidden-md">
+                            <a data-ajax="false" data-main-navigation="Community"
+                              class="navbar__main_navigation_detail_close">
+                              <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF">
+                                    <g transform="translate(102.000000, 497.000000)" id="Active-State">
+                                      <g transform="translate(668.000000, 0.000000)">
+                                        <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)">
+                                          <g id="left-arrow">
+                                            <g>
+                                              <path
+                                                d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7"
+                                                id="Shape"></path>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </svg>
+                            </a>
+                          </li>
+			  <li class="header_sub_link_li"> <a href="https://acvote.alamedacountyca.gov/community/laac" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Language Accessibility Advisory Committee </a> </li> 
+                          <li class="header_sub_link_li"> <a href="https://acvote.alamedacountyca.gov/community/vaac" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voting Accessibility Advisory Committee </a> </li> 
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/community/events" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Events </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/community/partnerships" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Partnerships
+                            </a>
+                          </li>
+                            <li class="header_sub_link_li"> <a href="https://acvote.alamedacountyca.gov/community/become-an-election-worker" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Become an Election Worker </a> </li> 
+                        </ul>
+                      </nav>
+                      <nav>
+                        <ul class="p-0 hidden" data-main-navigation-links="Candidates">
+                          <li class="hidden-lg hidden-md">
+                            <a data-ajax="false" data-main-navigation="Candidates"
+                              class="navbar__main_navigation_detail_close">
+                              <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                  <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF">
+                                    <g transform="translate(102.000000, 497.000000)" id="Active-State">
+                                      <g transform="translate(668.000000, 0.000000)">
+                                        <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)">
+                                          <g id="left-arrow">
+                                            <g>
+                                              <path
+                                                d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7"
+                                                id="Shape"></path>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </svg>
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="https://acvote.alamedacountyca.gov/candidates/how-to-run" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> How to Run
+                            </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="http://www.netfile.com/agency/coa" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_blank"> Campaign
+                              Finance </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="/rov_app/electedofficials" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Elected
+                              Officials </a>
+                          </li>
+                          <li class="header_sub_link_li">
+                            <a href="/rov_app/candidatelist" data-ajax="false"
+                              class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Candidate List
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                      <ul class="p-0 mt-35 hidden" data-main-navigation-links="search">
+                        <form id="search-form" method="get" action="https://acsearch.acgov.org/s/search.html?"
+                          target="_parent">
+                          <input type="hidden" name="collection" value="acvote">
+                          <input type="hidden" name="form" value="acvote">
+                          <input type="hidden" name="profile" value="acvote">
+                          <div class="form-group">
+                            <label for="query" class="sr-only">Search criteria</label>
+                            <input class="navbar__main_navigation_search" required name="query" id="query"
+                              title="Search ACVOTE.org" type="text" value="" accesskey="q"
+                              placeholder="Search ACVOTE.org">
+                          </div>
+                        </form>
+                      </ul>
+                      <ul class="p-0 hidden" data-main-navigation-links="language">
+                        <div class="col-xs-2 pl-0">
+                          <li>
+                            <a data-ajax="false" href="javascript:void(0);" lang="en"
+                              class="lang_link">English</a>
+                          </li>
+                          <li>
+                            <a data-ajax="false" href="javascript:void(0);" lang="es"
+                              class="lang_link">Español</a>
+                          </li>
+                          <li>
+                            <a data-ajax="false" href="javascript:void(0);" lang="zh"
+                              class="lang_link">中文</a>
+                          </li>
+                        </div>
+                        <div class="col-xs-2 pl-0">
+                          <li>
+                            <a data-ajax="false" href="javascript:void(0);" lang="tl"
+                              class="lang_link">Tagalog</a>
+                          </li>
+                          <li>
+                            <a data-ajax="false" href="javascript:void(0);" lang="vi"
+                              class="lang_link">Tiếng
+                              Việt</a>
+                          </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="main-mobile-navigation" class="navbar navbar-fixed-top">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand navbar__logo_brand_wrapper" href="https://acvote.alamedacountyca.gov/">
+                    <img class="navbar__logo"
+                      src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg"
+                      alt="AC Vote" />
+                    <span class="navbar__brandname">Official Election Site of Alameda County</span>
+                  </a>
+                </div>
+                <nav id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="p-0">
+                      <form id="search-form" method="get" action="https://acsearch.acgov.org/s/search.html?"
+                        target="_parent">
+                        <div class="form-group m-0">
+                          <div class="form-group m-0">
+                            <div class="input-group input-group-search">
+                              <input type="hidden" name="collection" value="acvote">
+                              <input type="hidden" name="form" value="acvote">
+                              <input type="hidden" name="profile" value="acvote">
+                              <label for="query" class="sr-only">Search criteria</label>
+                              <input class="form-control" required name="query" id="query" title="Search ACVOTE.org"
+                                type="text" value="" accesskey="q" placeholder="search acvote.org">
+                              <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default" name="Search Button"
+                                  title="Search Button - Press here to execute a Search"
+                                  alt="Search Button - Press here to execute a Search">
+                                  <img class=""
+                                    src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg"
+                                    alt="Search" name="Search Icon">
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                      </form>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="#" class="dropdown-toggle headerbutton" data-toggle="dropdown" role="button"
+                        aria-haspopup="true" aria-expanded="false">Elections <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/election-information/elections"
+                            target="_self"> Election Information </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false"
+                            href="https://acvote.alamedacountyca.gov/election-information/archived-elections"
+                            target="_self"> Archived Elections </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/election-information/calendar"
+                            target="_self"> Calendar </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false"
+                            href="https://acvote.alamedacountyca.gov/election-information/election-cost" target="_self">
+                            Election Cost </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="#" class="dropdown-toggle headerbutton" data-toggle="dropdown" role="button"
+                        aria-haspopup="true" aria-expanded="false">Voting <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/voting/register-to-vote"
+                            target="_self"> Register to Vote </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/rov_app/vcalist" target="_self"> Vote
+                            Centers </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/voting/voting-rights"
+                            target="_self"> Voting Rights </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/voting/uocava" target="_self">
+                            Military and Overseas Voters </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/voting/ways-of-voting"
+                            target="_self"> Ways of Voting </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/rovapps/maps/ballotdropbox_map.htm" target="_self"> 24-Hour Drop
+                            Box Map </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                        aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/accessibility" target="_self">
+                            Information for Voters with Disabilities </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/webpolicy" target="_self">
+                            Website Accessibility </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/language" target="_self">
+                            Language Assistance </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/rov_app/edata" target="_self"> Data
+                          </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/resources/how-to-guidelines"
+                            target="_self"> How-to Guidelines </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false"
+                            href="https://acvote.alamedacountyca.gov/resources/political-party-information"
+                            target="_self"> Political Party Contact Information </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/resources/faqs" target="_self">
+                            Frequently Asked Questions </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/alcoecommrov_app/search.do" target="_blank"> Store </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/resources/about-us"
+                            target="_self"> About Us </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                        aria-haspopup="true" aria-expanded="false">Community <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/community/events"
+                            target="_self"> Events </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/community/partnerships"
+                            target="_self"> Partnerships </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                        aria-haspopup="true" aria-expanded="false">Candidates <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="https://acvote.alamedacountyca.gov/candidates/how-to-run"
+                            target="_self"> How to Run </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="http://www.netfile.com/agency/coa" target="_blank"> Campaign
+                            Finance </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/rov_app/electedofficials" target="_self"> Elected Officials </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="/rov_app/candidatelist" target="_self">
+                            Candidate List </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="javascript:void(0);" onclick="window.open('/rovmvp_app/mvp.do');" class="dropdown-toggle">
+                        Voter Profile </a>
+                    </li>
+                    <li class="dropdown">
+                      <a data-ajax="false" href="javascript:void(0);" class="dropdown-toggle"
+                        data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> English <span
+                          class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a data-ajax="false" href="javascript:void(0);"
+                            class="lang_link" lang="en"> English </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="javascript:void(0);"
+                            class="lang_link" lang="es"> Español</a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="javascript:void(0);"
+                            class="lang_link" lang="zh"> 中文 </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="javascript:void(0);"
+                            class="lang_link" lang="tl"> Tagalog </a>
+                        </li>
+                        <li>
+                          <a data-ajax="false" href="javascript:void(0);"
+                            class="lang_link" lang="vi"> Tiếng Việt </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <div class="clickout-navbar hidden"></div>
+            <div id="languageSelector" class="modal fade bs-example-modal-lg voter_profile" tabindex="-1" role="dialog"
+              aria-labelledby="languageSelector">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content modal-language voter_profile__wrapper">
+                  <div class="row">
+                    <div class="col-md-12 voter_profile__right_content">
+                      <h2 class="m-0 font-weight-500 font-family-roboto "> Select your Language Preference </h2>
+                      <hr class="orange mt-20">
+                      <div class="row">
+                        <div class="col-xs-4">
+                          <a data-ajax="false" href="javascript:void(0);" lang="en"
+                            class="lang_link">English</a>
+                          <a data-ajax="false" href="javascript:void(0);" lang="es"
+                            class="lang_link">Español</a>
+                          <a data-ajax="false" href="javascript:void(0);" lang="zh"
+                            class="lang_link">中文</a>
+                        </div>
+                        <div class="col-xs-4">
+                          <a data-ajax="false" href="javascript:void(0);" lang="tl"
+                            class="lang_link">Tagalog</a>
+                          <a data-ajax="false" href="javascript:void(0);" lang="vi"
+                            class="lang_link">Tiếng Việt</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="spacer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ls-row-clr"></div>
+  </div>
+</div>
+	</header>
+
+	<main id="pageheader">
+		<div data-role="page" style="top:0;left:0;">
+			<div id="rovbodysection">
+				<div id="rovmain">
+					<div id="rovcol2" class="container">
+						<form>
+							<h1 class="polling-list-title font-size-60 text-color-blue-dark">
+								Vote Centers
+							</h1>
+							
+								<div id="rovcol3"></div>
+								<div data-role="context" role="main" id="AVLApplication">
+									<input type="hidden" name="locationType" id="locationType"
+										value="VCA" />
+
+									
+										
+											<label for="electionEl" class="select-election-heading">
+												Select an election to display Voting Locations </label>
+											<select id="electionEl" name="electionEl" class="electionSelect">
+												
+													<option data-votebymail="false"
+														data-electiondate="20261103"
+														data-pastelection="false"
+														data-vcaListAvailable="true"
+														value="260">November 3, 2026 - General Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20260818"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="262">AUGUST 18, 2026 - CONGRESSIONAL DISTRICT 14 SPECIAL GENERAL ELECTION</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20260616"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="261">JUNE 16, 2026 - CONGRESSIONAL DISTRICT 14, SPECIAL PRIMARY ELECTION</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20260602"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="259">JUNE 2, 2026 - STATEWIDE DIRECT PRIMARY ELECTION</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20251104"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="258">November 4, 2025 - Statewide Special Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20250415"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="257">April 15, 2025 - City of Oakland Special Municipal Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20241105"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="252">November 05, 2024 - General Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20240702"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="256">July 2, 2024 - Sunol Glen Unified School District, Special Recall Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20240528"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="255">May 28, 2024 - City of Berkeley, District 4, Special Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20240416"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="254">April 16, 2024 - CITY OF BERKELEY, DISTRICT 7, SPECIAL ELECTION</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20240305"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="251">March 05, 2024 - Presidential Primary Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20231107"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="253">November 07, 2023 - Oakland Unified School District, District 5, Special Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20221108"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="248">November 08, 2022 - General Election</option>
+												
+													<option data-votebymail="false"
+														data-electiondate="20220607"
+														data-pastelection="true"
+														data-vcaListAvailable="true"
+														value="247">June 07, 2022 - Direct Primary Election</option>
+												
+											</select>
+										
+										
+									
+									 
+								 
+										<label for="votingDays" class="select-election-heading">
+											Select number of voting days </label> 
+											<select id="votingDays" name="votingDays"  class="electionSelect">
+											<option value="" >All</option>
+											<option value="4" >4 Days</option>
+											<option value="11" >11 Days</option>
+										</select>
+								 
+									<div data-role="popup" id="popupError"
+										class="ui-content polling-list-text" data-theme="e"
+										data-overlay-theme="a">
+										<p>There was a problem loading the voting location data.</p>
+									</div>
+
+									
+										<div id="pollingLocationListDiv" class="ui-content"
+											data-role="context" role="main">
+											
+
+
+
+
+
+
+<style>
+.vcaDate, .vcaHours { display:block}
+.vcaType {font-weight:bold}
+
+</style>
+
+	<div id="vcaMessage" class="vcaMessage">
+		<p>
+			<!-- Dynamically import the language-specific VCAlist_msg_LANG file -->
+           
+
+			
+		</p>
+	</div>
+	<div id="voting-hours" class="vca-message ml-20">
+		
+	</div>
+
+
+</ul>
+
+
+										</div>
+									
+
+									<div id="errorDiv" class="ui-content" data-role="context"
+										role="main"></div>
+								</div>
+						</form>
+
+						
+							
+								<div class="polling-list-text-footer">
+									<span class="bold-italic">Disclaimer:</span> 
+									Information on this site is current as of the time it was posted. Changes may occur after posting and will be updated prior to the election.
+								</div>
+							
+						
+
+						<br/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- ACVOTE Footer -->
+	
+	<div class="ls-row" id="sitefooter">
+  <div class="ls-fxr" id="ls-gen44970043-ls-fxr">
+    <div class="ls-area" id="sitefooter-area">
+      <div class="ls-area-body" id="ls-gen44970044-ls-area-body">
+        <div class="ls-cmp-wrap ls-1st" id="w1749995834895">
+          <div>
+            <footer class="footer sticky-stopper" data-role="footer" data-tap-toggle="false">
+              <div class="container">
+                <div class="row">
+                  <div id="footer-go-to-top" class="footer__go-top col-xs-12 text-center hidden-lg hidden-md hidden-sm">
+                    <figure>
+                      <img src="https://alamedacountyca.gov/acvote/include/static/img/common/arrow_up_icon.svg" alt="">
+                    </figure>
+                    <span class="display-block">top of page</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row footer__logo_social_wrapper ">
+                      <!-- social-links -->
+                      <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+                        <h4 class="font-weight-500 font-family-roboto text-transform-uppercase mt-30 mb-30">Follow Us
+                        </h4>
+                      </div>
+                      <!-- Added the static code for social media  -->
+                      <div id="footer-social-links"
+                        class="col-sm-4 col-sm-push-8 col-xs-12 bg-wheat text-right display-md-block display-flex justify-content-space-between">
+                        <a href="https://www.facebook.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/fb_icon.png"
+                              alt="Facebook" name="Facebook">
+                          </figure>
+                        </a>
+                        <a href="https://twitter.com/ACVOTE" class="ml-md-20" data-ajax="false" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/x-icon.png"
+                              alt="Twitter" name="Twitter">
+                          </figure>
+                        </a>
+                        <a href="https://www.instagram.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/instagram_icon.png"
+                              alt="Instagram" name="Instagram">
+                          </figure>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCj5Xu4ud8uEgvVljSp2caDA" class="ml-md-20"
+                          data-ajax="false" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/youtube_icon.png"
+                              alt="YouTube" name="YouTube">
+                          </figure>
+                        </a>
+                        <a href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9"
+                          class="ml-md-20" data-ajax="false" target="_blank">
+                          <figure class="display-inline-block">
+                            <img src="https://alamedacountyca.gov/acvote/include/static/img/social/mail_icon.png"
+                              alt="Election Results Subscription" name="Election Results Subscription">
+                          </figure>
+                        </a>
+                      </div>
+                      <!-- /social-links -->
+                      <div id="footer-rov-logo" class="footer__logo col-sm-8 col-sm-pull-4 col-xs-12 mt-60 mt-md-0">
+                        <a href="https://acvote.alamedacountyca.gov/" data-ajax="false">
+                          <figure>
+                            <img
+                              src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg"
+                              alt="AC Vote">
+                          </figure>
+                          <span class="ml-10">Official Election Site of Alameda County</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="footer-sitemap" class="row hidden-xs mt-40">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2> Elections </h2>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/election-information/elections" target="_self"> Election
+                      Information </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/election-information/archived-elections" target="_self">
+                      Archived Elections </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/election-information/calendar" target="_self"> Calendar
+                    </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/election-information/election-cost" target="_self">
+                      Election Cost </a>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2> Voting </h2>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/voting/register-to-vote" target="_self"> Register to Vote
+                    </a>
+ 		     <a class="display-block sitemap_link" data-ajax="false"
+                       href="https://acvote.alamedacountyca.gov/vca" target="_self"> Voter's Choice Act
+                    </a>
+
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/rov_app/vcalist" target="_self"> Vote Centers </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/voting/voting-rights" target="_self"> Voting Rights </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/voting/uocava" target="_self"> Military and Overseas
+                      Voters </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/voting/ways-of-voting" target="_self"> Ways of Voting
+                    </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/rovapps/maps/ballotdropbox_map.htm" target="_self"> 24-Hour Drop
+                      Box Map </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/youthvoting" target="_self">Youth Voting </a>
+ 
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2> Resources </h2>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/accessibility" target="_self"> Information for Voters
+                      with Disabilities </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/webpolicy" target="_self"> Website Accessibility </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/language" target="_self"> Language Assistance </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/rov_app/edata" target="_self"> Data </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/resources/how-to-guidelines" target="_self"> How-to
+                      Guidelines </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/resources/political-party-information" target="_self">
+                      Political Party Contact Information </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/resources/faqs" target="_self"> Frequently Asked
+                      Questions </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/alcoecommrov_app/search.do" target="_blank"> Store </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/resources/about-us" target="_self"> About Us </a>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2> Community </h2>
+                    <a class="display-block sitemap_link" data-ajax="false" href="https://acvote.alamedacountyca.gov/community/laac" target="_self"> Language Accessibility Advisory Committee </a> 
+            	    <a class="display-block sitemap_link" data-ajax="false" href="https://acvote.alamedacountyca.gov/community/vaac" target="_self"> Voting Accessibility Advisory Committee </a> 
+                    <a class="display-block sitemap_link" data-ajax="false" href="https://acvote.alamedacountyca.gov/community/events" target="_self"> Events </a> 
+                    <a class="display-block sitemap_link" data-ajax="false" href="https://acvote.alamedacountyca.gov/community/partnerships" target="_self"> Partnerships </a> 
+                    <a class="display-block sitemap_link" data-ajax="false" href="https://acvote.alamedacountyca.gov/community/become-an-election-worker" target="_self"> Become an Election Worker </a>                   </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2> Candidates </h2>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="https://acvote.alamedacountyca.gov/candidates/how-to-run" target="_self"> How to Run </a>
+                    <a class="display-block sitemap_link" data-ajax="false" href="http://www.netfile.com/agency/coa"
+                      target="_blank"> Campaign Finance </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/rov_app/electedofficials" target="_self"> Elected Officials </a>
+                    <a class="display-block sitemap_link" data-ajax="false"
+                      href="/rov_app/candidatelist" target="_self"> Candidate List </a>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                    <h2>Related Links</h2>
+                    <a class="display-block sitemap_link" data-ajax="false" target="_blank"
+                      href="https://alamedacountyca.gov/"> County of Alameda </a>
+                    <a class="display-block sitemap_link" data-ajax="false" target="_blank"
+                      href="http://www.sos.ca.gov/"> California Secretary of State </a>
+                    <a class="display-block sitemap_link" data-ajax="false" target="_blank"
+                      href="http://votersedge.org/ca"> Voter's Edge </a>
+                    <a class="display-block sitemap_link" data-ajax="false" target="_blank"
+                      href="https://sccvote.sccgov.org/coalition-bay-area-election-officials"> Coalition of Bay Area
+                      Election Officials </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 address_container text-center">
+                    <hr class="mb-10">
+                    <p>
+                      <span class="sitemap_link"> Registrar of Voters &#8226; 1225 Fallon Street, Rm. G-1, Oakland, CA
+                        94612 &#8226;TOLL-FREE 1 (800) 834-6454 &#8226; TEL (510) 272-6973 &#8226; FAX (510) 272-6982
+                        &#8226; TDD (510) 208-4967 </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ls-row-clr"></div>
+  </div>
+</div>
+
+	<script>
+	document.getElementById("electionEl").addEventListener("change", function() {
+	  const select = document.getElementById("electionEl");
+	  const selectedOption = select.options[select.selectedIndex];
+	  const vcaListAvailable = selectedOption.getAttribute("data-vcaListAvailable");
+	  votingDaysWrapper.style.display = (vcaListAvailable === "true") ? "block" : "none";
+	});
+	</script>
+
+</body>
+</html>

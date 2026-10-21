@@ -1,0 +1,14 @@
+[
+  {
+    "url": "https://www.scvotes.gov",
+    "label": "Return to scVOTES.gov"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Voter/Login",
+    "label": "MyscVOTES"
+  },
+  {
+    "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+    "label": "Download all State Locations"
+  }
+]

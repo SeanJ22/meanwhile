@@ -1,0 +1,2061 @@
+{
+  "doorId": "nv-washoe-vote-centers-2026",
+  "sites": [
+    {
+      "id": "voting-14f0063f9def61dc9a8db08c",
+      "name": "Bartley Ranch Regional Park",
+      "address": "6000 Bartley Ranch Rd, Reno, NV 89511",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-dc0574fd49f8fb9a16645bee",
+      "name": "Downtown Reno Library",
+      "address": "301 S Center St, Reno, NV 89501",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-dbab703b39eea4db7509d117",
+      "name": "Incline Village Library",
+      "address": "845 Alder Ave, Incline Village, NV 89451",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-9f9a4184009ef3e81581d2ba",
+      "name": "North Valleys Community Center",
+      "address": "8085 Silver Lake Road, Reno, NV 89506",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-97920ee8b0b091be61859a52",
+      "name": "North Valleys Library",
+      "address": "1075 N Hills Blvd, Ste 340, Reno, NV 89506",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-7a0dc95c6b5fb6fcf1cca78b",
+      "name": "Northwest Reno Library",
+      "address": "2325 Robb Dr, Reno, NV 89523",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-0e89ae60ab378fc37e4b6f6d",
+      "name": "Pyramid Lake Paiute Tribe, Administration Building",
+      "address": "208 Capitol Hill, Nixon, NV 89424",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-621920b691b4081ab39a37ba",
+      "name": "Reno Public Market",
+      "address": "299 E Plumb Ln, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-4b7a7912c14c7f4112ebe44f",
+      "name": "Reno Town Mall",
+      "address": "4001 S Virginia St, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c716060214072bea217ebc96",
+      "name": "Reno-Sparks Indian Colony, Administration Building",
+      "address": "34 Reservation Rd, Bldg A, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-24619aaa42a057c7b7c5b859",
+      "name": "Sierra Nevada Association of Realtors",
+      "address": "10509 Professional Cir, Ste 202, Reno, NV 89521",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a82e99f817fdc1f390128300",
+      "name": "South Valleys Library",
+      "address": "15650-A Wedge Pkwy, Reno, NV 89511",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-3188c3b435a5907c82c9b10f",
+      "name": "Spanish Springs Library",
+      "address": "7100-A Pyramid Hwy, Sparks, NV 89436",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-7767d484388ffd68a327c57a",
+      "name": "Sparks Library",
+      "address": "1125 12th St, Sparks, NV 89431",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4f55d42223495a5d0bc25b24",
+      "name": "Summit Lake Paiute Tribe, Administration Building",
+      "address": "2255 Green Vista Dr, Ste 401, Sparks, NV 89431",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-473efffd3b732c71eeece495",
+      "name": "Sun Valley Neighborhood Center",
+      "address": "115 W 6th Ave, Sun Valley, NV 89433",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-1ef4b9f55316383710142c27",
+      "name": "UNR, Joe Crowley Student Union",
+      "address": "1664 N Virginia St, Reno, NV 89557",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-928c128720f65281c54c4ec0",
+      "name": "Washoe County Administration Complex",
+      "address": "1001 E 9th St, Bldg A, Reno, NV 89512",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-22533292f214e059f49e5bb5",
+      "name": "Reno-Sparks Indian Colony, Pyramid Smoke Shop",
+      "address": "7655 Pyramid Hwy, Sparks, NV 89436",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-84bee4905d9793bbcb58c092",
+      "name": "Summerset Assisted Living",
+      "address": "6215 Sharlands Ave, Reno, NV 89523",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-08201dbcac8d4073d8fdf932",
+      "name": "Beck Elementary School",
+      "address": "1900 Sharon Way, Reno, NV 89509",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-63903df4e61434a9895725b7",
+      "name": "Billinghurst Middle School",
+      "address": "6685 Chesterfield Ln, Reno, NV 89523",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d7ea5c99e06f867a05eb27f3",
+      "name": "Caughlin Ranch Elementary School",
+      "address": "4885 Village Green Pkwy, Reno, NV 89519",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-167d21937965d1fab228259f",
+      "name": "Clayton Middle School",
+      "address": "1295 Wyoming Ave, Reno, NV 89503",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-771c93af9ec875278080eb88",
+      "name": "Cold Springs Middle School",
+      "address": "18235 Cody Ct, Reno, NV 89508",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4c3331fac6b1beb62779aea9",
+      "name": "Damonte Ranch High School",
+      "address": "10500 Rio Wrangler Pkwy, Reno, NV 89521",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7d468b01b6a08fa3a6369b51",
+      "name": "Depoali Middle School",
+      "address": "9300 Wilbur May Pkwy, Reno, NV 89521",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8e2b0f9769f81e8e857adf7d",
+      "name": "Dilworth Middle School",
+      "address": "255 Prater Way, Sparks, NV 89431",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-74929eb3c0e797e9ef55a568",
+      "name": "Donner Springs Elementary School",
+      "address": "5125 Escuela Way, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b0b4f7ab78f0dad60aa0bdfc",
+      "name": "Galena High School",
+      "address": "3600 Butch Cassidy Dr, Reno, NV 89511",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-84b70aa3a80125f07c9bec7c",
+      "name": "Hug High School",
+      "address": "3530 Sullivan Ln, Sparks, NV 89431",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b8755201459f427c55c08759",
+      "name": "Incline Middle School",
+      "address": "931 Southwood Blvd, Incline Village, NV 89451",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aa01800c5a8480a905517e88",
+      "name": "Mendive Middle School",
+      "address": "1900 Whitewood Dr, Sparks, NV 89434",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e284e450b008daf9993df9fe",
+      "name": "Natchez Elementary School",
+      "address": "1 Hwy 447, Wadsworth, NV 89442",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-175998f33ed371c924435624",
+      "name": "North Valleys High School",
+      "address": "1470 E Golden Valley Rd, Reno, NV 89506",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9ca7797d844edcb446b346ba",
+      "name": "O'Brien Middle School",
+      "address": "5000 Silver Lake Rd, Reno, NV 89506",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d16e29fa7a4250e8e69f6c8e",
+      "name": "Reed High School",
+      "address": "1350 Baring Blvd, Sparks, NV 89434",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0a5845183492b312c0a77542",
+      "name": "Reno High School",
+      "address": "395 Booth St, Reno, NV 89509",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-770b81d14fbe4c2fb5bf1618",
+      "name": "Reno-Sparks Convention Center",
+      "address": "4590 S Virginia St, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-41803790d4a7e5702623e578",
+      "name": "Reno-Sparks Indian Colony - Gym",
+      "address": "34 Reservation Rd, Bldg B, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-61ccf20596d81f1bc71bad10",
+      "name": "Sky Ranch Middle School",
+      "address": "1200 Windmill Farms Pkwy, Sparks, NV 89436",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-263fca654a5172b7a2e03d18",
+      "name": "Spanish Springs High School",
+      "address": "1065 Eagle Canyon Dr, Sparks, NV 89441",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f62bdb8c16c1a7d250bf7a9d",
+      "name": "The Church of Jesus Christ of Latter-day Saints",
+      "address": "440 McClellan Dr, New Washoe City, NV 89704",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-13c704ee71b5e24bc9f41c64",
+      "name": "Van Gorder Elementary School",
+      "address": "7650 Campello Dr, Sparks, NV 89436",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ecac56dd5cad723e901f90a3",
+      "name": "Verdi Elementary School",
+      "address": "250 Bridge St, Verdi, NV 89439",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e722f48e5e6fa15fc3c84c14",
+      "name": "Warner Elementary School",
+      "address": "3075 Heights Dr, Reno, NV 89503",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-57783f6aa4b6da4c391393e1",
+      "name": "Whitehead Elementary School",
+      "address": "3570 Waterfall Dr, Sparks, NV 89434",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cae7e1af22b26e3ecd36b264",
+      "name": "Wooster High School",
+      "address": "1331 E Plumb Ln, Reno, NV 89502",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Washoe County Registrar of Voters",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+          "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        }
+      ],
+      "countyFips": "32031",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "source": {
+            "publisher": "Washoe County Registrar of Voters",
+            "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+            "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+            "documentUrl": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Washoe County Registrar of Voters",
+      "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+      "title": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [
+    {
+      "id": "nv-washoe-vote-centers-2026:missing-sites:9721d1aa1f65",
+      "doorId": "nv-washoe-vote-centers-2026",
+      "scope": {
+        "state": "NV",
+        "ocdId": "ocd-division/country:us/state:nv/county:washoe",
+        "name": "Washoe County",
+        "countyFips": "32031"
+      },
+      "status": "open",
+      "reason": "missing-sites",
+      "owed": "Published Address: site name",
+      "tried": [
+        "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+      ],
+      "next": [
+        "Follow the chief election office's current election files and map services",
+        "Read the delegated county or town election office's public lists and files"
+      ]
+    }
+  ],
+  "attempts": [
+    {
+      "url": "https://www.washoecounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.washoecounty.gov/robots.txt",
+      "contentType": "text/plain; charset=UTF-8",
+      "rawHash": "419bf5ff97a46881c9c280c6893d0978a76c6e2de8d0640a03bfc29b871fc4b4",
+      "path": "tests/fixtures/voting-sources/vs-04-west/nv-448aea1ea17c.bin"
+    },
+    {
+      "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "rawHash": "fa034b343dfd6fa3a969584d170429763606e4becf44f3a6289faab5c8b6d91e",
+      "path": "tests/fixtures/voting-sources/vs-04-west/nv-9a4ec08bf0ec.xlsx"
+    }
+  ],
+  "fileTitle": "Washoe County 2026 General Election Vote Centers Early Voting 10/17 - 10/30 (10am - 6pm)",
+  "contacts": []
+}

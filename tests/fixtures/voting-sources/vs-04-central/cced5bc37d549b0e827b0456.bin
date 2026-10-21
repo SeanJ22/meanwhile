@@ -1,0 +1,21 @@
+User-agent: SiteimproveBot
+Allow: /
+ 
+User-agent: siteimprove-lookup
+Allow: /
+
+User-agent: *
+Disallow: /pdf/
+Disallow: /inc/
+Disallow: /App_Themes/
+Disallow: /aspnet_client/
+Disallow: /elections/
+Disallow: /forms/
+Disallow: /img/
+Disallow: /maps/
+Disallow: /media/
+Disallow: /meer/
+Disallow: /newsletter/
+Disallow: /videos/
+Disallow: /office_detail.aspx
+Disallow: /elected_officials.aspx

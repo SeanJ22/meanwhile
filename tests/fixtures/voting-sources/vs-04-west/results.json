@@ -1,0 +1,229 @@
+{
+  "capturedAt": "2026-10-21T04:41:50.991Z",
+  "states": [
+    {
+      "state": "AK",
+      "status": "blocked",
+      "coverage": null,
+      "uniqueAcquiredFacilities": 0,
+      "serviceObservations": 0,
+      "sourceIds": [],
+      "sourceUrls": [],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Alaska Division of Elections host returned HTTP 503 for root, non-www root, pollinglocations.php and A04.pdf, including browser-UA alternative. Anchorage, Juneau and Fairbanks borough alternatives were read. Fairbanks polling PDF explicitly covers the Regular Municipal Election; its sites were not relabeled as November 3 state-election sites. Reacquire the current state polling/absentee files when reachable and continue borough files that explicitly apply the general election."
+    },
+    {
+      "state": "AZ",
+      "status": "sites-acquired",
+      "coverage": "Cochise County",
+      "uniqueAcquiredFacilities": 23,
+      "serviceObservations": 23,
+      "sourceIds": [
+        "legacy:cochise:vote-center-pdf",
+        "cochise:ballot-box-table"
+      ],
+      "sourceUrls": [
+        "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+        "https://www.cochise.az.gov/509/Voter-Information"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "CA",
+      "status": "sites-acquired",
+      "coverage": "Alameda County",
+      "uniqueAcquiredFacilities": 100,
+      "serviceObservations": 100,
+      "sourceIds": [
+        "ca-alameda-vote-centers-2026"
+      ],
+      "sourceUrls": [
+        "https://alamedacountyca.gov/rov_app/vcalist"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "CO",
+      "status": "sites-acquired",
+      "coverage": "Arapahoe County",
+      "uniqueAcquiredFacilities": 56,
+      "serviceObservations": 73,
+      "sourceIds": [
+        "co-arapahoe-drop-boxes-2026",
+        "co-arapahoe-vote-centers-2026"
+      ],
+      "sourceUrls": [
+        "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+        "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "HI",
+      "status": "sites-acquired",
+      "coverage": "Statewide published tables, four county election offices",
+      "uniqueAcquiredFacilities": 60,
+      "serviceObservations": 71,
+      "sourceIds": [
+        "hi-hawaii-centers-1",
+        "hi-maui-centers-2",
+        "hi-maui-centers-3",
+        "hi-maui-centers-4",
+        "hi-kauai-centers-5",
+        "hi-honolulu-centers-6",
+        "hi-honolulu-centers-7",
+        "hi-hawaii-dropboxes-8",
+        "hi-hawaii-dropboxes-9",
+        "hi-maui-dropboxes-10",
+        "hi-maui-dropboxes-11",
+        "hi-kauai-dropboxes-12",
+        "hi-kauai-dropboxes-13",
+        "hi-kauai-dropboxes-14",
+        "hi-honolulu-dropboxes-15",
+        "hi-honolulu-dropboxes-16"
+      ],
+      "sourceUrls": [
+        "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Verify any additional county updates, Kalawao administrative coverage, coordinates, and voter-to-precinct assignments where applicable."
+    },
+    {
+      "state": "ID",
+      "status": "sites-acquired",
+      "coverage": "Canyon County early voting",
+      "uniqueAcquiredFacilities": 2,
+      "serviceObservations": 2,
+      "sourceIds": [
+        "id-canyon-early-voting-2026"
+      ],
+      "sourceUrls": [
+        "https://elections.canyoncounty.id.gov/upcoming/"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "MT",
+      "status": "sites-acquired",
+      "coverage": "Statewide polling and satellite workbook",
+      "uniqueAcquiredFacilities": 335,
+      "serviceObservations": 335,
+      "sourceIds": [
+        "mt-statewide-polling-2026",
+        "mt-statewide-satellite-2026"
+      ],
+      "sourceUrls": [
+        "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Resolve county and tribal IDs against registered geography; preserve precinct and satellite schedules."
+    },
+    {
+      "state": "NV",
+      "status": "sites-acquired",
+      "coverage": "Washoe County",
+      "uniqueAcquiredFacilities": 48,
+      "serviceObservations": 48,
+      "sourceIds": [
+        "nv-washoe-vote-centers-2026"
+      ],
+      "sourceUrls": [
+        "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Other Nevada counties and table-section extraction for Washoe early/day schedules remain open."
+    },
+    {
+      "state": "NM",
+      "status": "sites-acquired",
+      "coverage": "Santa Fe County",
+      "uniqueAcquiredFacilities": 37,
+      "serviceObservations": 42,
+      "sourceIds": [
+        "nm-santa-fe-early_voting-2026",
+        "nm-santa-fe-vote_center-2026"
+      ],
+      "sourceUrls": [
+        "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "OR",
+      "status": "sites-acquired",
+      "coverage": "Statewide published drop-site file, all 36 counties",
+      "uniqueAcquiredFacilities": 334,
+      "serviceObservations": 334,
+      "sourceIds": [
+        "or-statewide-drop-sites-2026"
+      ],
+      "sourceUrls": [
+        "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "County updates, missing service dates and assignments, and precinct boundaries remain open."
+    },
+    {
+      "state": "UT",
+      "status": "sites-acquired",
+      "coverage": "Utah County",
+      "uniqueAcquiredFacilities": 38,
+      "serviceObservations": 42,
+      "sourceIds": [
+        "ut-utah-county-vote_center-1",
+        "ut-utah-county-vote_center-2",
+        "ut-utah-county-early_voting-3",
+        "ut-utah-county-drop_box-4"
+      ],
+      "sourceUrls": [
+        "https://vote.utahcounty.gov/voting-locations"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    },
+    {
+      "state": "WA",
+      "status": "sites-acquired",
+      "coverage": "Statewide published list, all 39 counties",
+      "uniqueAcquiredFacilities": 627,
+      "serviceObservations": 627,
+      "sourceIds": [
+        "wa-statewide-dropboxes-2026"
+      ],
+      "sourceUrls": [
+        "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.xlsx"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "County updates, missing service dates and assignments, and precinct boundaries remain open."
+    },
+    {
+      "state": "WY",
+      "status": "sites-acquired",
+      "coverage": "Natrona County",
+      "uniqueAcquiredFacilities": 23,
+      "serviceObservations": 23,
+      "sourceIds": [
+        "wy-natrona-early-voting-2026",
+        "wy-natrona-polling-precincts"
+      ],
+      "sourceUrls": [
+        "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+        "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0"
+      ],
+      "verification": "Generic readVotingSource replay of saved source documents; production-copy publication proof is owned by production_copy.",
+      "remaining": "Counties beyond this acquired county, missing hours/dates, coordinates, and precinct assignments remain open."
+    }
+  ],
+  "notes": [
+    "Counts describe this acquisition batch, before merging prior reader holdings. They do not claim complete statewide coverage.",
+    "HTML/JSON fixtures use writeCapturedFixture. Manifest rawHash records original bytes; savedHash and redactions describe the saved sanitized document. Binary XLSX/PDF captures are original response bytes.",
+    "OR footer y40 is excluded with pdfBottom50; its published global closing hour is retained as a checked constant.",
+    "WY current-linked official map names one shared address both INDUSTRIAL BUILDING and 1700 FAIRGROUNDS RD; mergeVotingSiteRows logs the source conflict.",
+    "CO county drop-list physical CITY is omitted from the town matching unit so addresses shared with VSPC cards use the same county facility identity."
+  ]
+}

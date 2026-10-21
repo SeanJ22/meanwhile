@@ -1,0 +1,10 @@
+# Specification for robots file here: https://en.wikipedia.org/wiki/Robots_exclusion_standard#About_the_standard
+# Following are some specific things that have caused error reports for Voter Portal:
+
+User-agent: *
+Disallow: /ElectionResults/ElectionResults/Data*      # This one in particular causes hundreds of errors
+Disallow: /candidateinquiryhttps*
+Disallow: /SampleBallothttps*
+Disallow: /CandidateInquiry/Parish/
+Disallow: /CandidateInquiry/Statewide/
+Disallow: /Parish/Print*

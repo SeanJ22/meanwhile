@@ -5,6 +5,7 @@ import { applyVotingChangeNotices, arcgisVotingRows, fingerprintVotingPlatform, 
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 const fixture = (name: string) => new Uint8Array(readFileSync(`tests/fixtures/voting-sources/${name}`));
+const primaryDoor = JSON.parse(readFileSync("tests/fixtures/voting-sources/nc-primary-door.json", "utf8")) as VotingSourceDoor;
 const NC: VotingSourceDoor = { id: "nc-early", publisher: "North Carolina State Board of Elections", url: "https://vt.ncsbe.gov/OSSite?handler=StatewideList", shape: "file", covers: ["EARLY_VOTING"], scope: { state: "NC", ocdId: "ocd-division/country:us/state:nc", name: "North Carolina" }, electionDate: "2026-11-03", electionPageUrl: "https://vt.ncsbe.gov/EVSite/", extraction: { format: "tsv", headers: ["election", "county", "flag", "name", "street", "cityStateZip", "day", "hours"], columns: { name: "name", address: ["street", "cityStateZip"], days: "day", hours: "hours", election: "election" } } };
 const source = { publisher: NC.publisher, url: NC.url };
 
@@ -182,8 +183,7 @@ test("native vendor HTML shares one precinct-card reader across both counties", 
 });
 
 test("native statewide polling CSV decodes UTF-16 tab fields and retains earlier-election work", async () => {
-  const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
-  const door = doors.find(item => item.id === "nc-statewide-polling-primary-2026")!;
+  const door = primaryDoor;
   assert.ok(door);
   const bytes = fixture("nc-polling-place-20260303-native.csv.bin");
   const rows = await parseVotingCapture({ url: door.url, contentType: "application/octet-stream", bytes }, door);
@@ -236,8 +236,7 @@ test("an identity-locked state is answered from the native county list without v
 });
 
 test("an earlier election named only in the official file title stays an open blank in the same year", async () => {
-  const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
-  const original = doors.find(item => item.id === "nc-statewide-polling-primary-2026")!;
+  const original = primaryDoor;
   const door = structuredClone(original);
   delete door.extraction!.columns!.election;
   const bytes = fixture("nc-polling-place-20260303-native.csv.bin");

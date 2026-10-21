@@ -14,7 +14,7 @@ import { hostname } from "node:os";
 import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
-import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult,
+import { ballotPublicationDue, ballotPublicationHasNoInput, ballotPublicationLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
@@ -858,6 +858,22 @@ const ballotStamps = new Map<BallotState, string>();
 const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
 const ballotPublications = new Map<BallotState, BallotPublicationSummary>();
 let ballotPublicationRepos: Awaited<ReturnType<typeof createPgRepositories>> | null = null;
+async function recordBallotReport(report: BallotPublicationResult): Promise<void> {
+  ballotPublications.set(report.state, ballotPublicationSummary(report));
+  try {
+    if (!ballotPublicationRepos) {
+      const connection = controlPlaneUrlFromEnv();
+      if (!connection) throw new Error("Ballot publication history has no reporting connection.");
+      ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    }
+    await withControlPlaneConnectRetry(() => recordBallotPublication(ballotPublicationRepos!, report,
+      { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: `ballot-contests:${report.state}`, code: "BALLOT_PUBLICATION_HISTORY_UNWRITTEN", detail });
+    console.error(`RCD_BALLOT_REPORT ${report.state}: ${detail}; state publication history remains owed`);
+  }
+}
 const ballotStates = new Set(selectedTasks.flatMap(task => {
   const contract = parseStateBallotContractId(task.id);
   return contract?.family === "ballot-contests" ? [contract.state] : [];
@@ -1002,7 +1018,7 @@ for (const candidate of dueCandidates) {
 }
 
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of ballotPublicationLaunchOrder(placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs)))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -1162,6 +1178,16 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     return;
   }
 
+  const ballotTask = parseStateBallotContractId(pending.task.id);
+  const ballotReport = ballotTask?.family === "ballot-contests" ? parseBallotPublicationResult(output) : null;
+  if (ballotReport && ballotReport.state === ballotTask?.state && ballotPublicationHasNoInput(ballotReport) &&
+    run.termination === "EXITED" && run.status === 2 && !output.split(/\r?\n/).some(line => line.startsWith("RCD_RECEIPT=")) &&
+    await store.readPromotionIdentity(pending.task.recordClass, pending.task.scope) === null) {
+    await recordBallotReport(ballotReport);
+    attempted -= 1;
+    console.log(`RCD_DEFER ${pending.task.id}: no state ballot input is held; publication remains owed`);
+    return;
+  }
   const parsedReceipt = parseRoutineRunnerReceipt(output);
   const receiptOutcome = parsedReceipt.ok && successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt) === null
     ? "SUCCESS"
@@ -1177,27 +1203,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
-  const ballotTask = parseStateBallotContractId(pending.task.id);
   if (ballotTask?.family === "ballot-contests") {
-    const report = parseBallotPublicationResult(output);
+    const report = ballotReport;
     if (report?.state === ballotTask.state) {
       const settled: BallotPublicationResult = child.kind === "VERIFIED_SOURCE_SUCCESS"
         ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
         : { ...report, status: "HELD", versionId: null, reason: child.detail };
-      ballotPublications.set(ballotTask.state, ballotPublicationSummary(settled));
-      try {
-        if (!ballotPublicationRepos) {
-          const connection = controlPlaneUrlFromEnv();
-          if (!connection) throw new Error("Ballot publication history has no reporting connection.");
-          ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-        }
-        await withControlPlaneConnectRetry(() => recordBallotPublication(ballotPublicationRepos!, settled,
-          { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
-      } catch (error) {
-        const detail = safeFailure(sanitizedErrorDiagnostic(error));
-        supervisorFailures.push({ taskId: pending.task.id, code: "BALLOT_PUBLICATION_HISTORY_UNWRITTEN", detail });
-        console.error(`RCD_BALLOT_REPORT ${ballotTask.state}: ${detail}; state publication history remains owed`);
-      }
+      await recordBallotReport(settled);
     }
   }
   await recordHuntSourceProgress(pending.task,

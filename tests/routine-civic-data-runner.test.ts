@@ -1,6 +1,6 @@
 import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
-import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { REGISTRY_STATES, parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -62,6 +62,8 @@ import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { parseRoutineReaderRepairRecords, routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord } from "../lib/civic-data/reader-repair-protocol.ts";
+import { ballotPublicationHasNoInput, parseBallotPublicationResult, readLatestBallotPublication,
+  recordBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
 
 function functionSource(source:string,name:string):string {
   const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
@@ -119,6 +121,39 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
     assert.ok(lines.some(line => line.startsWith(`RCD_DEFER ${id}: WORKER_MEMORY_DEADLINE`)));
   }
+});
+
+test("a missing ballot file with no canonical state records an owed publication, without fabricating a source receipt", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const repos = createMemoryRepositories(), failures: unknown[] = [], lines: string[] = [];
+  const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "ballot-contests:GU")!;
+  const reason = "BALLOT_INPUT_MISSING_NO_HELD_STATE:GU: no verified state ballot data is available.";
+  const report: BallotPublicationResult = { kind: "BALLOT_PUBLICATION", state: "GU", inputHash: "a".repeat(64),
+    at: "2026-10-21T08:00:00.000Z", status: "HELD", versionId: null, merged: [], skipped: [{ file: "gu.json", reason }], reason };
+  let pointer: unknown = null;
+  const context = { laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([task.id]), startedSourceChildren: new Set([task.id]),
+    routineDeferral, childCrash, boundedExecutionFailure: () => null, supervisorFailures: failures, attempted: 1,
+    parseStateBallotContractId, parseBallotPublicationResult, ballotPublicationHasNoInput,
+    parseRoutineRunnerReceipt: () => { throw Error("source receipt check reached"); },
+    store: { readPromotionIdentity: async () => pointer },
+    recordBallotReport: (value: BallotPublicationResult) => recordBallotPublication(repos, value, { cycleId: "missing-input", testedSha: null }),
+    console: { log: (value: string) => lines.push(value) },
+  };
+  const settle = runInNewContext(transpileModule(functionSource(source, "settlePendingRunResult"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nsettlePendingRunResult", context);
+  const run = { id: task.id, termination: "EXITED", status: 2, signal: null,
+    stdout: "BALLOT_PUBLICATION_RESULT=" + JSON.stringify(report), stderr: "", errorMessage: null };
+  await settle({ id: task.id, kind: "SINGLE", task }, run);
+  assert.equal(context.attempted, 0);
+  assert.equal(failures.length, 0);
+  assert.equal((await readLatestBallotPublication(repos, "GU"))?.reason, reason);
+  assert.match(lines[0], /publication remains owed/);
+  pointer = { versionId: "unexpected-held-state" };
+  await assert.rejects(settle({ id: task.id, kind: "SINGLE", task }, run), /source receipt check reached/);
+  pointer = null;
+  await assert.rejects(settle({ id: task.id, kind: "SINGLE", task }, { ...run, status: 1 }), /source receipt check reached/);
+  await assert.rejects(settle({ id: task.id, kind: "SINGLE", task }, { ...run, stdout: run.stdout + '\nRCD_RECEIPT={}' }), /source receipt check reached/);
 });
 
 test("candidate findings missing a place stay visible without failing unrelated source passes, while an unreadable Box still fails", async () => {
@@ -1456,7 +1491,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);

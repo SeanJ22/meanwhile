@@ -31,6 +31,18 @@ export type BallotPublicationSummaries = Partial<Record<BallotState, BallotPubli
 const SUMMARY_FIELDS = ["kind", "state", "inputHash", "inputStamp", "at", "status", "versionId", "reason", "heldContestCount"] as const;
 const publicationLogKey = (state: BallotState) => `ballot-publication:${requireBallotState(state)}`;
 
+/** Due state files already hold source evidence; publish them before network work spends the pass's budget. */
+export function ballotPublicationLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
+  const publication = (job: T) => parseStateBallotContractId(job.task.id)?.family === "ballot-contests";
+  return [...jobs.filter(publication), ...jobs.filter(job => !publication(job))];
+}
+
+export function ballotPublicationHasNoInput(report: BallotPublicationResult): boolean {
+  return report.status === "HELD" && report.versionId === null && report.merged.length === 0 &&
+    report.skipped.length === 1 && report.skipped[0].reason === report.reason &&
+    report.reason?.startsWith(`BALLOT_INPUT_MISSING_NO_HELD_STATE:${report.state}:`) === true;
+}
+
 export function ballotPublicationSummary(report: BallotPublicationResult): BallotPublicationSummary {
   return { kind: report.kind, state: report.state, inputHash: report.inputHash,
     ...(report.inputStamp === undefined ? {} : { inputStamp: report.inputStamp }),

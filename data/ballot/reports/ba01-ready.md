@@ -1,14 +1,10 @@
-# BA-01 prepared national expansion
+# BA-01 verified national expansion
 
-Corrected inputs use the existing daily `ballot-contests:<ST>` assembler. River
-ships the branch; the runner publishes on its next daily pass; oversight checks
-live ballot pages. No production write credential goes to this lane. The first
-READY is `7e54e6ac5cdaae7dbcf718f8a3f5c59714641bfb`. This expansion cannot yet be
-marked READY because the ordinary publication path rejects distinct real source
-captures of identical bytes. Its exact one-line dependency is prepared in
-[`ba01-source-authority.patch`](ba01-source-authority.patch), outside Sean's
-explicit file ownership list. `lib/civic-data/source-authority.ts` is untouched.
-National source coverage and the requested live acceptance remain incomplete.
+Corrected inputs use the existing daily `ballot-contests:<ST>` assembler. This
+verified batch is READY for River. River ships the branch; the runner publishes
+on its next daily pass; oversight checks live ballot pages. No production write
+credential goes to this lane. National source coverage and the requested live
+acceptance remain incomplete.
 
 ## Verified reader data prepared
 
@@ -79,12 +75,9 @@ an existing observation's publisher; a partial update cannot rewrite the authori
 of a still-cited exact observation. Uncited observations are pruned independently.
 Malformed optional membership metadata cannot crash an otherwise usable ballot.
 
-The source-authority duplicate key currently omits retrieval time. The prepared
-patch adds that time; exact duplicate observations remain rejected. All expanded
-publication checks use an isolated loader for exactly that patch. They are
-preview validation, not a passing ordinary build. The ordinary focused regression
-still reproduces `MANUAL_SOURCE_PROOF_DUPLICATED`; that dependency must be applied
-by its owner, or Sean must explicitly extend this lane's scope, before READY.
+The source-authority duplicate key includes retrieval time. Separate actual
+captures of identical bytes are accepted, while exact duplicate observations
+remain rejected. Publication checks run through the ordinary path.
 
 The isolated Postgres-compatible copy applies all 46 real journaled migrations.
 They are byte-identical to fetched River `190700561a5a5c590e03cd8e22989ec18caac1a9`.
@@ -92,10 +85,12 @@ It seeds the prior checked-in ballots from the first READY, runs the actual
 assembler and Postgres store, and reads the typed promoted projection back.
 Checks require every incoming complete contest, candidate and measure to publish,
 every previous ballot ID to remain, and memberships and ticket mates to reach the
-reader. New territory inputs also exercise their first publication. All151 Node subtests pass in that exact preview, including all54 jurisdiction
-publications; all54 Python source-replay tests and TypeScript also pass. The
-ordinary source-identity regression remains a failure. Exact commands and limits
-are recorded in [`ba01-validation.json`](ba01-validation.json).
+reader. New territory inputs also exercise their first publication. All 163
+ordinary Node subtests pass, including all 54 jurisdiction publications and
+source-lineage/runner checks. The unchanged source inputs retain their 54 passing
+Python source-replay tests. TypeScript passes using the tracked test config,
+which excludes stale generated `.next` validators. Exact commands and limits are
+recorded in [`ba01-validation.json`](ba01-validation.json).
 
 The copy contains no production rows. Automatic approval review rejected the
 production snapshot read because it would transmit a configured database
@@ -129,5 +124,5 @@ No post-publication live acceptance is claimed. Austin, San Francisco and Miami
 lack resolved congressional districts in the saved live baseline; Detroit lacks
 a resolved state Senate district. Those resolver changes are outside the owned
 files and remain necessary for the live reader result. Oversight owns the final
-race-by-race checks after River and the runner. The first READY is pushed; this
-new expansion is prepared with its narrow dependency, not merged or deployed.
+race-by-race checks after River and the runner. This verified expansion awaits
+River integration, runner publication and those live checks.

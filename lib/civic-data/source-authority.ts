@@ -1038,7 +1038,7 @@ export function authorityForManualReceipt(
     if (!SHA256.test(source.rawHash) || !source.publisher.trim() || !source.reviewedEvidence.trim()) {
       return { ok: false, code: "MANUAL_SOURCE_PROOF_INCOMPLETE", detail: `${source.finalUrl} lacks exact bytes, publisher identity, or reviewed evidence.` };
     }
-    const identity = `${requested.href}\n${final.href}\n${source.rawHash}`;
+    const identity = `${requested.href}\n${final.href}\n${source.rawHash}\n${source.retrievedAt}`;
     if (seen.has(identity)) return { ok: false, code: "MANUAL_SOURCE_PROOF_DUPLICATED", detail: `${source.finalUrl} repeats the same reviewed bytes.` };
     seen.add(identity);
   }

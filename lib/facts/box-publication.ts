@@ -1,4 +1,4 @@
-import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, PUBLISHER, reopenBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { datesInQuote, electionFieldId, publishElectionFields } from "../civic-data/election-field-publication.ts";
@@ -11,17 +11,14 @@ import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
-import { learnOfficialHost } from "./entities.ts";
+import { ensureGoverningBody, learnOfficialHost } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, namesOtherOffice, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
-
-/** How far back the Box is read for findings to publish. */
-const HUNTER_FINDING_DAYS = 30;
 
 interface Finding {
   readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
@@ -143,7 +140,7 @@ const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quot
 const PHONE_IN_QUOTE = /\+?1?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_voting", "certified_outcome"];
 
-/** Box findings from the last month, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
+/** Box findings, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
 export async function publishBoxFindings(input: {
   readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "artifacts">;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
@@ -151,13 +148,13 @@ export async function publishBoxFindings(input: {
   readonly purge?: ReaderCachePurger;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
-  const now = new Date(input.now), since = new Date(now.getTime() - HUNTER_FINDING_DAYS * 86_400_000).toISOString();
+  const now = new Date(input.now);
   const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
-  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, since, limit: input.limit });
+  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, limit: input.limit });
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
     holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION }, input.now);
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
@@ -166,10 +163,10 @@ export async function publishBoxFindings(input: {
     place(row).waiting++;
   };
   const settle = async (row: BoxFinding, outcome: PublishOutcome, route: string) => {
-    const claim = await takeBoxFinding(repos.boxFindings, row.id, "fact-publisher", input.now, new Date(now.getTime() + 120_000).toISOString());
+    const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
-      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank }, input.now);
+      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, slots: FINDING_SLOTS_VERSION }, input.now);
       report.refused++; place(row).refused++;
       report.failuresByReason[outcome.blank] = (report.failuresByReason[outcome.blank] ?? 0) + 1;
     } else {
@@ -183,10 +180,11 @@ export async function publishBoxFindings(input: {
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   for (const row of rows) {
     report.looked++;
+    if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);
     if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
     const raw = findingFact(row);
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
-    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote);
+    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
@@ -196,7 +194,8 @@ export async function publishBoxFindings(input: {
       else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
       continue;
     }
-    const target = await targetOf(facts.query, row.subjectId);
+    let target = await targetOf(facts.query, row.subjectId);
+    if (!target) { await ensureGoverningBody(facts.query, row.subjectId); target = await targetOf(facts.query, row.subjectId); }
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
     if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
     ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
@@ -235,15 +234,21 @@ export async function publishBoxFindings(input: {
       continue;
     }
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
+    const forOffice: typeof ready = [];
     if (people.length) {
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
       const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
       const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
-      for (const { finding, slot: own, holder } of people) {
+      for (const entry of people) {
+        const { finding, slot: own, holder } = entry;
         const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
-        if (!name) { await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }, own.class); continue; }
+        if (!name) {
+          if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email") && !namesOtherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl)) forOffice.push({ ...entry, slot: { class: "office contacts", slot: own.slot === "phone" ? "office_phone" : "office_email" } });
+          else await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }, own.class);
+          continue;
+        }
         const recordId = `box:${nameKey(name)}`;
         const member = members.get(recordId) ?? { recordId, fields: {}, fieldSources: {} };
         const field = MEMBER_FIELD[own.slot as keyof typeof MEMBER_FIELD];
@@ -262,7 +267,7 @@ export async function publishBoxFindings(input: {
         if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
       }
     }
-    const own = group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts");
+    const own = [...group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts"), ...forOffice];
     if (!own.length) continue;
     const entity = (await readCheckEntity(facts.query, entityId))!;
     const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));

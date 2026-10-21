@@ -1,6 +1,6 @@
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry,peopleIdentityKeysSql} from "./selected-entry.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
-import { stateContainersStatement, geographyOfRows, type Slice, type GeographySlice, type ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
+import { stateContainersStatement, geographyOfRows, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
 import { readerDatabaseQuery } from "./database.ts";
 import { createHash } from "node:crypto";
 import { readPromotedCivicData, CivicDataStoreUnavailableError, type CivicDataReadResult, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
@@ -81,7 +81,7 @@ export function readStateDistricts(value: string): Promise<Slice<GeographySlice>
   return districts ?? pending.then(value => value.districts);
 }
 
-async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string, query: ReadOnlyQuery | null): Promise<ReaderStatePackage> {
+async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   let needsPresident = false;
   const presidentRead = readNationalPresident(() => {
@@ -99,7 +99,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...(!zip ? PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })) : []),
   ];
   const load = (ids: readonly string[]) => readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []],
-    query, statePackageStatement(state, ids, zip));
+    readerDatabaseQuery(), statePackageStatement(state, ids, zip));
   // The resident President reader requests its group only on a cache miss or refresh.
   const groupsRead = Promise.resolve().then(async () => load(zip && !divisionIds.length ? (await readZipPlace(zip))?.ids ?? [] : divisionIds));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
@@ -184,7 +184,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
 }
 
 /** Reuse one state's read within a request; other requests share only work still in progress. */
-export function readStatePackage(value: string, divisionIds: readonly string[] = [], zip?: string, query = readerDatabaseQuery()): Promise<ReaderStatePackage> {
+export function readStatePackage(value: string, divisionIds: readonly string[] = [], zip?: string): Promise<ReaderStatePackage> {
   const state = requireRegistryState(value.replace(/^US-/i, ""));
   const divisions = [...new Set(divisionIds)].sort();
   const base = `${state}|${divisions.join("|")}`, key = zip ? `${base}|zip:${zip}` : base;
@@ -195,7 +195,7 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
   if (held) return held;
   let read = states.get(key);
   if (!read) {
-    read = loadState(state, divisions, zip, key, query).finally(() => {
+    read = loadState(state, divisions, zip, key).finally(() => {
       if (states.get(key) === read) {
         states.delete(key);
         if (!divisions.length) districtReads.delete(key);

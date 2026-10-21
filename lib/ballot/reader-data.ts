@@ -26,8 +26,6 @@ import {lineupForContest} from "./general-lineup.ts";
 import {reconciledCandidacyIdForCard} from "../identity/az-2026.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../reader/selected-entry.ts";
 import {readerDatabaseQuery} from "../reader/database.ts";
-import {factReader} from "../facts/db.ts";
-import {installDatabaseTransferCounter} from "../db/transfer.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
@@ -38,13 +36,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   if (!states.length) return null;
   const point = place.centroid;
   const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
-  // This independent first query need not wait for a new socket session. Later
-  // ballot reads still share their socket pool; both paths use the same SQL.
-  installDatabaseTransferCounter();
-  const http = factReader();
-  const stateQuery = http ? async (statements: readonly {text: string; params: readonly unknown[]}[]) =>
-    Promise.all(statements.map(statement => http(statement.text, statement.params))) : readerDatabaseQuery();
-  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip, stateQuery), districts: readStateDistricts(state) }));
+  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip), districts: readStateDistricts(state) }));
   // Reserve these promises now: the ballot's early incumbent and portrait reads
   // consume the state query's verified ZIP slices instead of opening another read.
   if (zip) for (const {state,read} of packages) void primeStateReaderPointers(state,read).catch(()=>undefined);

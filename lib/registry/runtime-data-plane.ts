@@ -786,7 +786,7 @@ function registryCandidateFromIsolation(input: RegistryRuntimePackage, isolated:
   if (!isolated.hasProjectionMetadata) {
     issues.push("REGISTRY_PROJECTION_METADATA_UNSUPPORTED");
   }
-  if (isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentFactMembers === 0) {
+  if (!prior && isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentFactMembers === 0) {
     issues.push("REGISTRY_CURRENT_REVIEW_HAS_NO_VALID_SOURCE_SCOPED_FACT");
   }
   const sources = [...input.sourceReceipt.sources].sort((left, right) => `${left.finalUrl}\n${left.rawHash}`.localeCompare(`${right.finalUrl}\n${right.rawHash}`));

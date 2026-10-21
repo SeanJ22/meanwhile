@@ -109,14 +109,14 @@ export function stateForZip(zip: string): string | null {
   return /^\d{5}$/.test(zip) ? postalArea(zip)?.state || null : null;
 }
 
-/** A historical President remains retrievable without being presented as the current holder. */
+/** Current national executive memberships; historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
   const countryLinks = roster.divisions.filter(link => link.ocdId === "ocd-division/country:us");
   const currentIds = new Set(countryLinks.filter(link => {
     const holder = roster.officeholders.find(person => person.id === link.officeholderId);
     return holder && (!link.membershipId || holder.memberships?.find(membership => membership.id === link.membershipId)?.current !== false);
   }).map(link => link.officeholderId));
-  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^President(?: of the United States)?$/i.test(holder.officeTitle));
+  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^(?:President|Vice President)(?: of the United States)?$/i.test(holder.officeTitle));
   if (!officeholders.length) return null;
   const ids = new Set(officeholders.map(holder => holder.id));
   return { ...roster, officeholders, divisions: countryLinks.filter(link => ids.has(link.officeholderId)), unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
@@ -126,7 +126,7 @@ export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet
 const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
 export const currentNationalShelf = (): NationalShelf | null => national.value;
 
-/** A state needs the President immediately, independently of Congress's national directory load. */
+/** States read the national executives independently of Congress's national directory load. */
 export const readNationalPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
   const sources = ["statewide-executive-sources", "wikidata-people"];
   const canonical = await readCanonicalShelf(sources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) })));

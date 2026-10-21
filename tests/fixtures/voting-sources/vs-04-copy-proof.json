@@ -5463,7 +5463,7 @@
         "example": {
           "id": "voting-a924f78771bf4b8d313f6655",
           "name": "Abedon Lopez Comm. Center",
-          "address": "155 Camino De Quintana\n\nEspa\u00f1ola, NM 87532",
+          "address": "155 Camino De Quintana\n\nEspañola, NM 87532",
           "kinds": [
             "EARLY_VOTING"
           ]
@@ -5859,7 +5859,75 @@
         "passed": true,
         "buildPhase": "final-production-build"
       }
-    ]
+    ],
+    "riverTraceRepair": {
+      "checkedAt": "2026-10-21T10:03:18.939257+00:00",
+      "returnedReady": "96c0247812a3b5c82092a1df4df6e289044b99e0",
+      "return": "fix:db5d782b",
+      "change": "Move unchanged PDF text/OCR extraction out of shared evidence checks into voting-source-extraction.ts, imported only by acquisition readers and discovery.",
+      "scope": "Complete tracked source tree at returnedReady with the four candidate source files overlaid; independent copied dependencies and source files, without source symlinks or external workspace source in any trace. These checks supersede earlier isolated-copy build trace evidence for this repair.",
+      "builds": {
+        "default": {
+          "status": "PASS",
+          "exitCode": 0,
+          "command": "pnpm run build",
+          "prebuildAndPostbuildIncluded": true,
+          "logSha256": "13d4f7b5662c66a5de2627639a8d9f3bde3107d9e4057b6279630db95d783f87",
+          "traceManifests": 107,
+          "repoFilesTraced": 1053,
+          "testsTraced": 0,
+          "credentialShapes": 0,
+          "largestAppTrace": {
+            "files": 421,
+            "manifest": "server/app/api/reader/state/route.js.nft.json",
+            "ceiling": 430
+          },
+          "sourceHashes": {
+            "voting-source-evidence.ts": "33ae779f5d7ab074ca13a0e86e94c3d69f814194d0f7f2498a5ec67eac0065aa",
+            "voting-source-extraction.ts": "d7c845abefcc341f34e7c284c0ff207b709e6541c46f67264546f193c1e8744b",
+            "voting-source-readers.ts": "46499190cd5713e2b742f3a3e240cb9243865ee16035ca3fff34913e3f441928",
+            "voting-source-discovery.ts": "f2ddeb1013a4825b5d1f02ea05e3f2de884b307bc6774ca466d56d77b9691757"
+          }
+        },
+        "standalone": {
+          "status": "PASS",
+          "exitCode": 0,
+          "command": "NEXT_PRIVATE_STANDALONE=true pnpm run build",
+          "prebuildAndPostbuildIncluded": true,
+          "logSha256": "319db765e6d754f9aa4b7ecceb1f203951a7a4e624d6c71992ef5ab74be0539e",
+          "traceManifests": 212,
+          "repoFilesTraced": 2251,
+          "testsTraced": 0,
+          "credentialShapes": 0,
+          "largestAppTrace": {
+            "files": 421,
+            "manifest": "server/app/api/reader/state/route.js.nft.json",
+            "ceiling": 430
+          },
+          "sourceHashes": {
+            "voting-source-evidence.ts": "2305b71f2ae81457ae923ee806e3a6c4856b28b977a0b0f0f6f51662124ade0e",
+            "voting-source-extraction.ts": "d7c845abefcc341f34e7c284c0ff207b709e6541c46f67264546f193c1e8744b",
+            "voting-source-readers.ts": "46499190cd5713e2b742f3a3e240cb9243865ee16035ca3fff34913e3f441928",
+            "voting-source-discovery.ts": "f2ddeb1013a4825b5d1f02ea05e3f2de884b307bc6774ca466d56d77b9691757"
+          }
+        }
+      },
+      "standaloneAllManifestInspection": {
+        "tracedTestFiles": 0,
+        "tracedExtractorSourceFiles": 0,
+        "tracedPdfjsFiles": 0,
+        "tracedExternalWorkspaceSourceFiles": 0
+      },
+      "focusedTests": {
+        "passed": 39,
+        "failed": 0,
+        "skipped": 0,
+        "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/voting-source-central.test.ts tests/voting-source-isolation.test.ts tests/voting-source-discovery.test.ts tests/voting-source-readers.test.ts tests/voting-vermont-discovery.test.ts",
+        "logSha256": "416d79ab5c678b51d70b7b844449d0b5de8807bf3c86534c38179ceab441e4a1"
+      },
+      "lint": "PASS on the four changed source modules",
+      "productionWrites": 0
+    }
   },
   "siteInventory": {
     "file": "vs-04-sites-by-state.json",

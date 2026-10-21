@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { classifySourceContent, sourceBody, sourceLinks, SOURCE_FAMILIES, type SourceDisposition } from "../doors/source-content.ts";
 import { pageAddress } from "../doors/page-doors.ts";
-import { votingPdfText } from "./voting-source-evidence.ts";
+import { votingPdfText } from "./voting-source-extraction.ts";
 import { decodeVotingBytes, xlsxVotingTables } from "./voting-source-tables.ts";
 import type { SiteKind } from "./voting-sites.ts";
 import { fingerprintVotingPlatform } from "./voting-source-readers.ts";

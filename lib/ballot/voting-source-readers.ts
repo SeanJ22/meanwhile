@@ -7,7 +7,7 @@ import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTabl
 import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 import { readVotingBoundaries } from "./voting-source-boundaries.ts";
-import { votingPdfText } from "./voting-source-evidence.ts";
+import { votingPdfText } from "./voting-source-extraction.ts";
 
 const normalized = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const ALIASES: Partial<Record<VotingColumn, string[]>> = {

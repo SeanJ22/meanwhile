@@ -51,6 +51,27 @@ export function basemapStyle(choice: BasemapChoice, software: boolean): StyleSpe
   };
 }
 
+/** Cache the adjacent overview before arriving venues ask the camera to widen. */
+export async function prefetchRasterOverview(choice: BasemapChoice, point: {lat:number;lng:number}, zoom: number, signal: AbortSignal): Promise<void> {
+  const z=Math.max(0,Math.floor(zoom)-1),count=2**z;
+  const longitude=((point.lng+180)%360+360)%360;
+  const latitude=Math.max(-85.05112878,Math.min(85.05112878,point.lat))*Math.PI/180;
+  const centerX=Math.floor(longitude/360*count),centerY=Math.floor((1-Math.asinh(Math.tan(latitude))/Math.PI)/2*count);
+  const response=await fetch(choice.styleUrl.replace("/style.json?","/tiles.json?"),{signal});
+  if(!response.ok)return;
+  const source=await response.json() as {tiles?:string[];minzoom?:number;maxzoom?:number};
+  if(!source.tiles?.length||z<(source.minzoom??0)||z>(source.maxzoom??22))return;
+  const urls=new Set<string>();
+  for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++) {
+    const x=(centerX+dx+count)%count,y=centerY+dy;if(y<0||y>=count)continue;
+    const template=source.tiles[(x+y)%source.tiles.length];
+    urls.add(template.replaceAll("{z}",String(z)).replaceAll("{x}",String(x)).replaceAll("{y}",String(y)));
+  }
+  await Promise.all([...urls].map(async url=>{
+    try {const tile=await fetch(url,{signal});if(tile.ok)await tile.arrayBuffer();}catch{/* Ordinary map tile requests retain their own errors and retries. */}
+  }));
+}
+
 /**
  * Last resort when the remote style won't load: ground colour only, so the
  * map still initializes and pins, panels and the zip control keep working.

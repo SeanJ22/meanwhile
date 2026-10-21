@@ -29,6 +29,7 @@ import {
   CONUS_BOUNDS,
   FALLBACK_STYLE,
   basemapStyle,
+  prefetchRasterOverview,
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
@@ -388,6 +389,11 @@ export function MapCanvas({
     // frame and then discard it. The district source remains independent.
     const initialStyle = basemap && raster.kind === "software" ? basemapStyle(basemap, true) : FALLBACK_STYLE;
     if (typeof initialStyle !== "string") map.setStyle(withDistricts(initialStyle, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
+    const overview = new AbortController();
+    if (basemap && raster.kind === "software" && camera) {
+      void prefetchRasterOverview(basemap, camera, initialZoomForZip(camera.zip),
+        AbortSignal.any([overview.signal, AbortSignal.timeout(3000)])).catch(() => {});
+    }
 
     holdMapPresentation(map);
 
@@ -622,6 +628,7 @@ export function MapCanvas({
       };
 
     return () => {
+      overview.abort();
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
       map.off("sourcedata", onBoundaryData);

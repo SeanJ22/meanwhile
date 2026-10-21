@@ -3641,5 +3641,17 @@
     "tested_sha": "b8098b8f52b1f6299c33161faccc663ad9c2b955",
     "gates": "pass",
     "at": "2026-10-21T22:33:22Z"
+  },
+  {
+    "lane": "bp-01",
+    "steps": [
+      "BP-01"
+    ],
+    "ready_sha": "b5e9a62db19227b7c1a8f81f02b9b181adc2f0a3",
+    "merge_sha": "fcd957d166b595141865e2705179e6d1b9ad54c7",
+    "river_sha": "a21584a96b9554126077a6002c5a5ad6de7451fc",
+    "tested_sha": "a21584a96b9554126077a6002c5a5ad6de7451fc",
+    "gates": "pass",
+    "at": "2026-10-21T23:31:20Z"
   }
 ]

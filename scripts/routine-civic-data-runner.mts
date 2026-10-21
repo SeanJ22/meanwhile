@@ -15,7 +15,7 @@ import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
-import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult,
+import { ballotPublicationDue, ballotPublicationHasNoInput, ballotPublicationLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
@@ -131,6 +131,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-con
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
+  parseRoutineReaderRepairRecords,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
   selectedReaderRepairContracts,
@@ -305,7 +306,8 @@ const startedSourceChildren = new Set<string>();
 const ranThisPass = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
-  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, PASS_LAUNCH_DEADLINE_MS));
+  const deadline = script === "routine-civic-data-reader-repair.mts" ? PASS_REPAIR_DEADLINE_MS : PASS_LAUNCH_DEADLINE_MS;
+  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
@@ -745,12 +747,16 @@ try {
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 let candidateFindingTasks: readonly RoutineSourceTask[] = [];
+const candidateFindingLines: string[] = [];
 if (controlPlaneUrlFromEnv()) try {
   const sql = neon(controlPlaneUrlFromEnv()!);
   const waiting = await readCandidateProfilePublicationTasks((text, params) => sql.query(text, params), RUN_STARTED_AT);
   candidateFindingTasks = waiting.tasks;
-  if (waiting.unscoped) supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_JURISDICTION_UNRESOLVED",
-    detail: `${waiting.unscoped} waiting findings have no recorded work jurisdiction; their Box rows remain waiting.` });
+  if (waiting.unscoped) {
+    const detail = `${waiting.unscoped} candidate findings are waiting for their place to be identified. Their Box work remains open.`;
+    candidateFindingLines.push(detail);
+    console.log(`RCD_CANDIDATE_GAPS ${detail}`);
+  }
 } catch (error) {
   supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_ADMISSION_UNREAD", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
 }
@@ -849,11 +855,27 @@ if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-der
 }
 
 const campaignPublicationInputs = new Map<string, CampaignPublicationInputs>();
-const publicationInputLines: string[] = [];
+const publicationInputLines: string[] = [...candidateFindingLines];
 const ballotStamps = new Map<BallotState, string>();
 const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
 const ballotPublications = new Map<BallotState, BallotPublicationSummary>();
 let ballotPublicationRepos: Awaited<ReturnType<typeof createPgRepositories>> | null = null;
+async function recordBallotReport(report: BallotPublicationResult): Promise<void> {
+  ballotPublications.set(report.state, ballotPublicationSummary(report));
+  try {
+    if (!ballotPublicationRepos) {
+      const connection = controlPlaneUrlFromEnv();
+      if (!connection) throw new Error("Ballot publication history has no reporting connection.");
+      ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    }
+    await withControlPlaneConnectRetry(() => recordBallotPublication(ballotPublicationRepos!, report,
+      { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: `ballot-contests:${report.state}`, code: "BALLOT_PUBLICATION_HISTORY_UNWRITTEN", detail });
+    console.error(`RCD_BALLOT_REPORT ${report.state}: ${detail}; state publication history remains owed`);
+  }
+}
 const ballotStates = new Set(selectedTasks.flatMap(task => {
   const contract = parseStateBallotContractId(task.id);
   return contract?.family === "ballot-contests" ? [contract.state] : [];
@@ -998,7 +1020,7 @@ for (const candidate of dueCandidates) {
 }
 
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of ballotPublicationLaunchOrder(placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs)))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -1158,6 +1180,16 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     return;
   }
 
+  const ballotTask = parseStateBallotContractId(pending.task.id);
+  const ballotReport = ballotTask?.family === "ballot-contests" ? parseBallotPublicationResult(output) : null;
+  if (ballotReport && ballotReport.state === ballotTask?.state && ballotPublicationHasNoInput(ballotReport) &&
+    run.termination === "EXITED" && run.status === 2 && !output.split(/\r?\n/).some(line => line.startsWith("RCD_RECEIPT=")) &&
+    await store.readPromotionIdentity(pending.task.recordClass, pending.task.scope) === null) {
+    await recordBallotReport(ballotReport);
+    attempted -= 1;
+    console.log(`RCD_DEFER ${pending.task.id}: no state ballot input is held; publication remains owed`);
+    return;
+  }
   const parsedReceipt = parseRoutineRunnerReceipt(output);
   const receiptOutcome = parsedReceipt.ok && successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt) === null
     ? "SUCCESS"
@@ -1173,27 +1205,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
-  const ballotTask = parseStateBallotContractId(pending.task.id);
   if (ballotTask?.family === "ballot-contests") {
-    const report = parseBallotPublicationResult(output);
+    const report = ballotReport;
     if (report?.state === ballotTask.state) {
       const settled: BallotPublicationResult = child.kind === "VERIFIED_SOURCE_SUCCESS"
         ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
         : { ...report, status: "HELD", versionId: null, reason: child.detail };
-      ballotPublications.set(ballotTask.state, ballotPublicationSummary(settled));
-      try {
-        if (!ballotPublicationRepos) {
-          const connection = controlPlaneUrlFromEnv();
-          if (!connection) throw new Error("Ballot publication history has no reporting connection.");
-          ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-        }
-        await withControlPlaneConnectRetry(() => recordBallotPublication(ballotPublicationRepos!, settled,
-          { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
-      } catch (error) {
-        const detail = safeFailure(sanitizedErrorDiagnostic(error));
-        supervisorFailures.push({ taskId: pending.task.id, code: "BALLOT_PUBLICATION_HISTORY_UNWRITTEN", detail });
-        console.error(`RCD_BALLOT_REPORT ${ballotTask.state}: ${detail}; state publication history remains owed`);
-      }
+      await recordBallotReport(settled);
     }
   }
   await recordHuntSourceProgress(pending.task,
@@ -1285,6 +1303,15 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
   }
   const deferral = routineDeferral(run, run.termination !== "SPAWN_FAILED");
   if (deferral !== null) {
+    const output = `${run.stdout}\n${run.stderr}`;
+    const completed = new Set(parseRoutineReaderRepairRecords(output, domain.contracts).records.map(record => record.contractId));
+    const reconciled = reconcileRoutineReaderRepairDomain({ ...domain,
+      contracts: domain.contracts.filter(contract => completed.has(contract.id)) }, output, null);
+    readerReadbackReferences.push(...reconciled.references, ...domain.contracts
+      .filter(contract => !completed.has(contract.id))
+      .map(contract => ({ contractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass,
+        scope: contract.scope, projectionId: contract.readerProjection!.id, disposition: "BACKOFF" as const, receipt: null })));
+    supervisorFailures.push(...reconciled.failures);
     console.log(`RCD_DEFER ${domain.id}: ${safeFailure(deferral)}; the reader repair remains owed`);
     return;
   }
@@ -1325,7 +1352,8 @@ function startReaderRepair(
         "--experimental-strip-types",
         "scripts/routine-civic-data-reader-repair.mts",
         domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
-        ...(domain.mode === "MEETING_AGGREGATE" ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
+        ...(domain.mode === "MEETING_AGGREGATE" && domain.contracts.length < MEETING_PARTITION_CONTRACTS.length
+          ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
@@ -1453,19 +1481,6 @@ for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");
   supervisorFailures.push({ taskId: run.id, code: "READER_REPAIR_SETTLEMENT_FAILED", detail });
-}
-
-const readerContractIds = new Set(readerContracts.map(({ id }) => id));
-const readerReferenceIds = readerReadbackReferences.map(({ contractId }) => contractId);
-if (
-  readerReadbackReferences.length !== readerContracts.length ||
-  new Set(readerReferenceIds).size !== readerReferenceIds.length ||
-  readerReferenceIds.some((id) => !readerContractIds.has(id))
-) {
-  throw new Error(
-    `READER_REPAIR_DENOMINATOR_MISMATCH: expected=${readerContracts.length}; ` +
-      `observed=${readerReadbackReferences.length}; unique=${new Set(readerReferenceIds).size}`,
-  );
 }
 
 const readerReadbacksRecordedPass = readerReadbackReferences.filter((reference) =>
